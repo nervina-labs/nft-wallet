@@ -6,6 +6,6 @@ module.exports = {
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': ['error', { singleQuote: true, semi: false }],
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': 0,
   },
 }
