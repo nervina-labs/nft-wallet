@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import logo from './logo.svg'
+import { ReactComponent as Svg } from './logo.svg'
 import './App.css'
 
 const App: React.FC = () => {
@@ -8,7 +8,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" />
+        <Svg className="App-logo" />
         <p>Hello Vite + React!</p>
         <p>
           <button onClick={() => setCount((count) => count + 1)}>
