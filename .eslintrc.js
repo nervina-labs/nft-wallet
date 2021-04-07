@@ -7,5 +7,7 @@ module.exports = {
   rules: {
     'prettier/prettier': ['error', { singleQuote: true, semi: false }],
     'comma-dangle': 0,
+    '@typescript-eslint/space-before-function-paren': 0,
+    'multiline-ternary': 0,
   },
 }

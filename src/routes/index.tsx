@@ -15,38 +15,43 @@ import { Transfer } from '../views/Transfer'
 export enum RoutePath {
   Launch = '/',
   Login = '/login',
-  MyAccount = '/account',
+  Account = '/account',
   NFT = '/nft/:id',
-  NFTs = '/nfts/',
+  NFTs = '/nfts',
   NotFound = '/404',
   Transfer = '/transfer',
 }
 
-const routes: Array<RouteProps & { name: string }> = [
+const routes: Array<RouteProps & { key: string }> = [
   {
-    component: Login,
+    component: NFTs,
     exact: true,
-    name: Login.name,
+    key: NFTs.name,
+    path: RoutePath.NFTs,
   },
   {
     component: Account,
-    exact: false,
-    name: Account.name,
+    exact: true,
+    key: Account.name,
+    path: RoutePath.Account,
   },
   {
     component: NFT,
     exact: true,
-    name: NFT.name,
-  },
-  {
-    component: NFTs,
-    exact: true,
-    name: NFTs.name,
+    key: NFT.name,
+    path: RoutePath.NFT,
   },
   {
     component: Transfer,
-    exact: false,
-    name: Transfer.name,
+    exact: true,
+    key: Transfer.name,
+    path: RoutePath.Transfer,
+  },
+  {
+    component: Login,
+    exact: true,
+    key: Login.name,
+    path: RoutePath.Login,
   },
 ]
 
@@ -56,7 +61,7 @@ export const Routers: React.FC = () => {
     <BrowserRouter>
       <Switch>
         {routes.map((route) => (
-          <Route {...route} key={route.name} />
+          <Route {...route} key={route.key} path={route.path} />
         ))}
         <Redirect exact from={RoutePath.Launch} to={RoutePath.Login} />
       </Switch>

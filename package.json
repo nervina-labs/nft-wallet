@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "axios": "^0.21.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-query": "^3.13.4",
