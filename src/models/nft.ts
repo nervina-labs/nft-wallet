@@ -15,3 +15,16 @@ export interface NFTToken {
   token_class_total: number
   token_id: number
 }
+
+export interface NFTDetail {
+  name: string
+  description: string
+  renderer: string
+  issuer_info: {
+    name: string
+    uuid: string
+    avatar_url: string
+  }
+  total: number
+  issued: number
+}

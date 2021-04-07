@@ -1,6 +1,6 @@
 import { SERVER_URL } from '../constants'
-import { NFT, NFTWalletAPI } from '../models'
-import axios, { AxiosInstance } from 'axios'
+import { NFT, NFTDetail, NFTWalletAPI } from '../models'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 
 export class ServerWalletAPI implements NFTWalletAPI {
   private readonly address: string
@@ -11,14 +11,16 @@ export class ServerWalletAPI implements NFTWalletAPI {
     this.axios = axios.create({ baseURL: SERVER_URL })
   }
 
-  async getNFTs(page: number): Promise<NFT[]> {
-    const res = await this.axios.get(`/holder_tokens/${this.address}`, {
+  async getNFTs(page: number): Promise<AxiosResponse<NFT[]>> {
+    return await this.axios.get(`/holder_tokens/${this.address}`, {
       params: {
         page,
         limit: 15,
       },
     })
+  }
 
-    return res.data
+  async getNFTDetail(uuid: string): Promise<AxiosResponse<NFTDetail>> {
+    return await this.axios.get(`/token_class/${uuid}`)
   }
 }

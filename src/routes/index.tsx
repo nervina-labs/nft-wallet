@@ -19,7 +19,7 @@ export enum RoutePath {
   NFT = '/nft/:id',
   NFTs = '/nfts',
   NotFound = '/404',
-  Transfer = '/transfer',
+  Transfer = '/transfer/:id',
 }
 
 const routes: Array<RouteProps & { key: string }> = [

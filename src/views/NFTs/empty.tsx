@@ -25,6 +25,7 @@ const Container = styled.div`
 `
 
 export const Empty: React.FC = () => {
+  // TODO: 广阔宇宙地址
   return (
     <Container>
       <EmptySvg />

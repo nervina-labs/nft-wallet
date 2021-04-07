@@ -31,27 +31,28 @@ export interface AppbarProps {
   title: string
   left?: React.ReactNode
   right?: React.ReactNode
+  back?: boolean
 }
 
-export const Appbar: React.FC<AppbarProps> = ({
-  title,
-  left = null,
-  right,
-}) => {
-  const history = useHistory()
-  return (
-    <Header>
-      <span className="left">{left}</span>
-      <span className="title">{title}</span>
-      <span className="right">
-        {right ?? (
-          <AccountSvg
-            onClick={() => {
-              history.push(RoutePath.Account)
-            }}
-          />
-        )}
-      </span>
-    </Header>
-  )
-}
+// eslint-disable-next-line prettier/prettier
+export const Appbar: React.ForwardRefExoticComponent<AppbarProps & React.RefAttributes<HTMLElement>
+> = React.forwardRef(
+  ({ title, left = null, right }, ref: React.ForwardedRef<HTMLElement>) => {
+    const history = useHistory()
+    return (
+      <Header ref={ref}>
+        <span className="left">{left}</span>
+        <span className="title">{title}</span>
+        <span className="right">
+          {right ?? (
+            <AccountSvg
+              onClick={() => {
+                history.push(RoutePath.Account)
+              }}
+            />
+          )}
+        </span>
+      </Header>
+    )
+  }
+)
