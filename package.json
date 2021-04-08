@@ -6,9 +6,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "start": "node ./node_modules/.bin/vite preview",
-    "lint": "eslint src",
-    "heroku-postbuild": "npm run build"
+    "start": "vite preview",
+    "lint": "eslint src"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
