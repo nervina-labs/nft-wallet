@@ -1,10 +1,11 @@
 export interface NFT {
-  holder_info: HolderInfo
+  meta: NFTMeta
   token_list: NFTToken[]
+  holder_address: string
 }
 
-export interface HolderInfo {
-  address: string
+export interface NFTMeta {
+  current_page: string
   token_count: number
 }
 
