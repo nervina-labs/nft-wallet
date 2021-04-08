@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { NFTToken } from '../../models'
 import { LazyLoadImage } from '../Image'
@@ -49,8 +50,9 @@ const Container = styled.div`
 `
 
 export const Card: React.FC<CardProps> = ({ token }) => {
+  const history = useHistory()
   return (
-    <Container>
+    <Container onClick={() => history.push(`/nft/${token.token_class_uuid}`)}>
       <div className="media">
         <LazyLoadImage src={token.token_class_image} width={120} height={120} />
       </div>
