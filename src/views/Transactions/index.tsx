@@ -1,52 +1,154 @@
-import React, { useMemo } from 'react'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import React from 'react'
 import styled from 'styled-components'
-import QRCode from 'qrcode.react'
-import { Copyzone } from '../../components/Copyzone'
+import { useInfiniteQuery } from 'react-query'
+import { useWalletModel } from '../../hooks/useWallet'
+import {
+  Query,
+  TransactionDirection,
+  TransactionStatus,
+  Tx,
+} from '../../models'
+import Skeleton from '@material-ui/lab/Skeleton'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { CircularProgress, Divider } from '@material-ui/core'
+import { ReactComponent as SendSvg } from '../../assets/svg/send.svg'
+import { ReactComponent as ReceiveSvg } from '../../assets/svg/receive.svg'
+import { ReactComponent as PendingSvg } from '../../assets/svg/pending.svg'
 import { truncateMiddle } from '../../utils'
+import { PER_ITEM_LIMIT } from '../../constants'
 
 const Container = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 80px;
   flex-direction: column;
+  width: 100%;
 
-  .title {
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 19px;
-    color: rgba(0, 0, 0, 0.6);
-    margin-top: 0;
-    margin-bottom: 16px;
-  }
-  .qr-code {
-    width: 200px;
-    height: 200px;
-    margin-bottom: 16px;
+  .list {
+    margin-top: 16px;
+
+    h4 {
+      text-align: center;
+      color: rgba(0, 0, 0, 0.6);
+    }
   }
 `
 
+const ListItemContainer = styled.div`
+  display: flex;
+  height: 75px;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+  align-items: center;
+  margin: 0 16px;
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .content {
+    height: 42px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 17px;
+    color: #000000;
+    margin-left: 12px;
+    flex: 1;
+  }
+  .time {
+    margin-left: auto;
+    font-size: 12px;
+    line-height: 16px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+`
+
+const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
+  let icon =
+    tx.tx_direction === TransactionDirection.Receive ? (
+      <ReceiveSvg />
+    ) : (
+      <SendSvg />
+    )
+  if (tx.tx_state === TransactionStatus.Pending) {
+    icon = <PendingSvg />
+  }
+  return (
+    <ListItemContainer>
+      <div className="icon">{icon}</div>
+      <div className="content">
+        <span>
+          {tx.tx_direction === TransactionDirection.Receive
+            ? '接收秘宝'
+            : '发送秘宝'}
+        </span>
+        <span>
+          {tx.tx_direction === TransactionDirection.Receive
+            ? `至 ${truncateMiddle(tx.to_address, 10, 6)}`
+            : `自 ${truncateMiddle(tx.from_address, 10, 6)}`}
+        </span>
+      </div>
+      <div className="time">2021-11-10, 12:12:12</div>
+    </ListItemContainer>
+  )
+}
+
 export const Transactions: React.FC = () => {
-  const address = useMemo(() => {
-    return 'ckt1q3vvtay34wndv9nckl8hah6fzzcltcqwcrx79apwp2a5lkd07fdxxmyv07qpv9y9c0j2mnk6f3kyy4qszsq9gahxq6p'
-  }, [])
-  const qrCodeContent = useMemo(
-    () => (
-      <>
-        <QRCode
-          style={{ width: '200px', height: '200px' }}
-          className="qr-code"
-          value={address}
-        />
-        <Copyzone displayText={truncateMiddle(address, 10, 6)} text={address} />
-      </>
-    ),
-    [address]
+  const { api } = useWalletModel()
+  const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery(
+    Query.Transactions,
+    async ({ pageParam = 1 }) => {
+      const { data } = await api.getTransactions(pageParam)
+      return data
+    },
+    {
+      getNextPageParam: (lastPage) => {
+        const { meta } = lastPage
+        const current = meta.current_page
+        const total = meta.token_count
+        if (total <= current * PER_ITEM_LIMIT) {
+          return undefined
+        }
+        return meta.current_page + 1
+      },
+    }
   )
   return (
     <Container>
-      <h3 className="title">秘宝接收地址</h3>
-      {qrCodeContent}
+      {status === 'loading' && data === undefined ? (
+        <Skeleton />
+      ) : (
+        <section className="list">
+          <Divider />
+          <InfiniteScroll
+            dataLength={data!.pages.reduce(
+              (acc, tx) => tx.transaction_list.length + acc,
+              0
+            )}
+            next={fetchNextPage}
+            hasMore={hasNextPage!}
+            scrollThreshold="200px"
+            loader={
+              <h4>
+                加载中...
+                <CircularProgress size="1em" style={{ marginLeft: '10px' }} />
+              </h4>
+            }
+            endMessage={<h4>已经拉到底了</h4>}
+          >
+            {data?.pages?.map((group, i) => {
+              return (
+                <React.Fragment key={i}>
+                  {group.transaction_list.map((tx) => {
+                    return <ListItem tx={tx} key={tx.tx_hash} />
+                  })}
+                </React.Fragment>
+              )
+            })}
+          </InfiniteScroll>
+        </section>
+      )}
     </Container>
   )
 }

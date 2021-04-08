@@ -1,5 +1,5 @@
-import { SERVER_URL } from '../constants'
-import { NFT, NFTDetail, NFTWalletAPI } from '../models'
+import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
+import { NFT, NFTDetail, NFTWalletAPI, Transaction } from '../models'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 
 export class ServerWalletAPI implements NFTWalletAPI {
@@ -15,12 +15,21 @@ export class ServerWalletAPI implements NFTWalletAPI {
     return await this.axios.get(`/holder_tokens/${this.address}`, {
       params: {
         page,
-        limit: 15,
+        limit: PER_ITEM_LIMIT,
       },
     })
   }
 
   async getNFTDetail(uuid: string): Promise<AxiosResponse<NFTDetail>> {
     return await this.axios.get(`/token_class/${uuid}`)
+  }
+
+  async getTransactions(page: number): Promise<AxiosResponse<Transaction>> {
+    return await this.axios.get(`/holder_transactions/${this.address}`, {
+      params: {
+        page,
+        limit: PER_ITEM_LIMIT,
+      },
+    })
   }
 }

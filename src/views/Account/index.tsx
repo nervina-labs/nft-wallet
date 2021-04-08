@@ -9,7 +9,6 @@ import { Transactions } from '../Transactions'
 
 const Container = styled.main`
   display: flex;
-  height: 100vh;
   flex-direction: column;
 
   .detail {
