@@ -7,11 +7,14 @@ import { RoutePath } from '../../routes'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
 import { ReactComponent as ErrorSvg } from '../../assets/svg/error.svg'
+import { ReactComponent as SuccessSvg } from '../../assets/svg/success.svg'
+import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { Button } from '../../components/Button'
 import { Drawer } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { LazyLoadImage } from '../../components/Image'
 import { isValidCkbLongAddress, sleep } from '../../utils'
+import { ActionDialog } from '../../components/ActionDialog'
 
 const Container = styled.main`
   display: flex;
@@ -145,6 +148,8 @@ export const Transfer: React.FC = () => {
   const [ckbAddress, setCkbAddress] = useState('')
   const [isSendingNFT, setIsSendingNFT] = useState(false)
   const [isAddressValid, setIsAddressValid] = useState(false)
+  const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
+  const [isSendDialogFail, setIsSendDialogFail] = useState(false)
   const textareaOnChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const val = e.target.value
@@ -160,6 +165,8 @@ export const Transfer: React.FC = () => {
     setIsSendingNFT(true)
     await sleep(5000)
     setIsSendingNFT(false)
+    setIsDrawerOpen(false)
+    setIsSendDialogSuccess(true)
   }, [])
   const closeDrawer = (): void => setIsDrawerOpen(false)
   const { nftDetail } = location.state ?? {}
@@ -204,6 +211,20 @@ export const Transfer: React.FC = () => {
           <p>一旦转让，将无法撤回</p>
         </div>
       </div>
+      <ActionDialog
+        icon={<SuccessSvg />}
+        content="已提交转让交易"
+        detail="提示: 链上确认可能需要半分钟时间"
+        open={isSendDialogSuccess}
+        onConfrim={() => setIsSendDialogSuccess(false)}
+      />
+      <ActionDialog
+        icon={<FailSvg />}
+        content="发送失败，请检查当前网络情况，重新发送"
+        open={isSendDialogFail}
+        onConfrim={() => setIsSendDialogFail(false)}
+        onBackdropClick={() => setIsSendDialogFail(false)}
+      />
       <Drawer
         anchor="bottom"
         open={isDrawerOpen}
