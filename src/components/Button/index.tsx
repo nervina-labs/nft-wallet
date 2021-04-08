@@ -27,7 +27,6 @@ export const ButtonContainer = styled.button`
 
 export const Button: React.FC<ButtonProps> = (props) => {
   let bgColor = 'rgba(221, 221, 221, 0.5)'
-  console.log(props)
   if (props.type === 'primary') {
     bgColor = 'rgba(251, 207, 164, 0.5)'
   }
