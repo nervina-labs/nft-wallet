@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "start": "vite preview",
+    "start": "node ./node_modules/.bin/vite preview",
     "lint": "eslint src",
     "heroku-postbuild": "npm run build"
   },
