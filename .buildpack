@@ -1,2 +1,1 @@
-https://github.com/heroku/heroku-buildpack-nodejs.git#v164
-https://github.com/heroku/heroku-buildpack-static.git#v3
+https://github.com/mars/create-react-app-buildpack
