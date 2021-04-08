@@ -1,2 +1,2 @@
-https://github.com/heroku/heroku-buildpack-nodejs
-https://github.com/dokku/buildpack-nginx
+https://github.com/heroku/heroku-buildpack-nodejs.git#v164
+https://github.com/heroku/heroku-buildpack-static.git#v3
