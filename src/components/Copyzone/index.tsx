@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react'
 import { ReactComponent as CopySvg } from '../../assets/svg/copy.svg'
 import { ReactComponent as CheckSvg } from '../../assets/svg/check.svg'
 import { sleep } from '../../utils'
-import { Tooltip } from '@material-ui/core'
 import styled from 'styled-components'
 
 export interface CopyzoneProps {
@@ -44,13 +43,7 @@ export const Copyzone: React.FC<CopyzoneProps> = ({ text, displayText }) => {
   return (
     <Container>
       <span className="text">{displayText}</span>
-      {!isCopy ? (
-        <CopySvg onClick={onCopy} />
-      ) : (
-        <Tooltip open title="已复制" placement="top">
-          <CheckSvg />
-        </Tooltip>
-      )}
+      {!isCopy ? <CopySvg onClick={onCopy} /> : <CheckSvg />}
     </Container>
   )
 }
