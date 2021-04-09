@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import QRCode from 'qrcode.react'
 import { Copyzone } from '../../components/Copyzone'
 import { truncateMiddle } from '../../utils'
+import { useWalletModel } from '../../hooks/useWallet'
 
 const Container = styled.div`
   display: flex;
@@ -27,9 +28,7 @@ const Container = styled.div`
 `
 
 export const Info: React.FC = () => {
-  const address = useMemo(() => {
-    return 'ckt1q3vvtay34wndv9nckl8hah6fzzcltcqwcrx79apwp2a5lkd07fdxxmyv07qpv9y9c0j2mnk6f3kyy4qszsq9gahxq6p'
-  }, [])
+  const { address } = useWalletModel()
   const qrCodeContent = useMemo(
     () => (
       <>

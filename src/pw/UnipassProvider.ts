@@ -8,6 +8,7 @@ import {
   HashType,
 } from '@lay2/pw-core'
 import { createHash } from 'crypto'
+import { unipassCache } from '../cache'
 import { UNIPASS_URL } from '../constants'
 
 type UP_ACT = 'UP-READY' | 'UP-LOGIN' | 'UP-SIGN' | 'UP-CLOSE'
@@ -59,6 +60,15 @@ export default class UnipassProvider extends Provider {
   }
 
   async init(): Promise<UnipassProvider> {
+    const cachedEmail = unipassCache.getUnipassEmail()
+    const cachedAddress = unipassCache.getUnipassAddress()
+
+    if (cachedAddress != null && cachedEmail != null) {
+      this._email = cachedEmail
+      this.address = new Address(cachedAddress, AddressType.ckb)
+      return this
+    }
+
     return await new Promise((resolve) => {
       this.msgHandler = (event) => {
         if (typeof event.data === 'object' && 'upact' in event.data) {
@@ -91,8 +101,6 @@ export default class UnipassProvider extends Provider {
       this.msgHandler = (event) => {
         if (typeof event.data === 'object' && 'upact' in event.data) {
           const msg = event.data as UnipassMessage
-          // eslint-disable-next-line no-debugger
-          debugger
           if (msg.upact === 'UP-READY') {
             event.source != null &&
               (event.source as Window).postMessage(

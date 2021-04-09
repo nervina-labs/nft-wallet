@@ -41,7 +41,12 @@ export const Login: React.FC = () => {
     <Container>
       <Title>秘宝钱包</Title>
       <LogoSvg className="logo" />
-      <Button onClick={loginBtnOnClick} type="primary" disbaled={isLogining}>
+      <Button
+        onClick={loginBtnOnClick}
+        type="primary"
+        disbaled={isLogining}
+        isLoading={isLogining}
+      >
         登录
       </Button>
     </Container>

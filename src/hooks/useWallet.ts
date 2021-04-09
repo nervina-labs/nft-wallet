@@ -1,11 +1,11 @@
 import { createModel } from 'hox'
 import { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
-import { MOCK_ADDRESS } from '../mock'
 import { NFTWalletAPI } from '../models'
 import PWCore, { IndexerCollector } from '@lay2/pw-core'
 import { INDEXER_URL, NODE_URL, UNIPASS_URL } from '../constants'
 import UnipassProvider from '../pw/UnipassProvider'
+import { unipassCache } from '../cache'
 export interface UseWallet {
   api: NFTWalletAPI
   login: () => Promise<void>
@@ -22,14 +22,22 @@ function useWallet(): UseWallet {
         new UnipassProvider(UNIPASS_URL),
         new IndexerCollector(INDEXER_URL)
       )
+      const p = PWCore.provider as UnipassProvider
+      unipassCache.setUnipassAddress(p.address.toCKBAddress())
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      unipassCache.setUnipassEmail(p.email!)
+      setProvider(p)
     } catch (error) {
       //
     }
-    setProvider(PWCore.provider as UnipassProvider)
   }, [])
 
   const address = useMemo(() => {
-    return provider?.address?.toCKBAddress() ?? MOCK_ADDRESS
+    const cachedAddress = unipassCache.getUnipassAddress()
+    if (cachedAddress != null) {
+      return cachedAddress
+    }
+    return provider?.address?.toCKBAddress() ?? ''
   }, [provider])
 
   const api = useMemo(() => {

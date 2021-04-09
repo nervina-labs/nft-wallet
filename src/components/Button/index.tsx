@@ -1,7 +1,9 @@
+import { CircularProgress } from '@material-ui/core'
 import React from 'react'
 import styled from 'styled-components'
 
 export interface ButtonProps {
+  isLoading?: boolean
   type?: 'default' | 'primary'
   onClick?: () => void
   disbaled?: boolean
@@ -23,6 +25,10 @@ export const ButtonContainer = styled.button`
 
   /* Black/0.80 - Primary */
   color: rgba(0, 0, 0, 0.8);
+
+  .loading {
+    margin-left: 10px;
+  }
 `
 
 export const Button: React.FC<ButtonProps> = (props) => {
@@ -40,6 +46,9 @@ export const Button: React.FC<ButtonProps> = (props) => {
       style={{ background: bgColor }}
     >
       {props.children}
+      {props.isLoading === true ? (
+        <CircularProgress className="loading" size="1em" />
+      ) : null}
     </ButtonContainer>
   )
 }
