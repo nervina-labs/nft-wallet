@@ -9,7 +9,7 @@ import { PER_ITEM_LIMIT } from '../../constants'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { Empty } from './empty'
-import { CircularProgress } from '@material-ui/core'
+import { Loading } from '../../components/Loading'
 
 const Container = styled.main`
   display: flex;
@@ -51,22 +51,14 @@ export const NFTs: React.FC = () => {
       <Appbar title="我的秘宝" />
       {status === 'success' && dataLength === 0 ? <Empty /> : null}
       {data === undefined && status === 'loading' ? (
-        <h4>
-          加载中...
-          <CircularProgress size="1em" style={{ marginLeft: '10px' }} />
-        </h4>
+        <Loading />
       ) : (
         <InfiniteScroll
           dataLength={dataLength}
           next={fetchNextPage}
           hasMore={hasNextPage!}
           scrollThreshold="200px"
-          loader={
-            <h4>
-              加载中...
-              <CircularProgress size="1em" style={{ marginLeft: '10px' }} />
-            </h4>
-          }
+          loader={<Loading />}
           endMessage={<h4>已经拉到底了</h4>}
         >
           {data?.pages?.map((group, i) => {

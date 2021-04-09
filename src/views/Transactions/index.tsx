@@ -10,12 +10,13 @@ import {
   Tx,
 } from '../../models'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { CircularProgress, Divider } from '@material-ui/core'
+import { Divider } from '@material-ui/core'
 import { ReactComponent as SendSvg } from '../../assets/svg/send.svg'
 import { ReactComponent as ReceiveSvg } from '../../assets/svg/receive.svg'
 import { ReactComponent as PendingSvg } from '../../assets/svg/pending.svg'
 import { truncateMiddle } from '../../utils'
 import { PER_ITEM_LIMIT } from '../../constants'
+import { Loading } from '../../components/Loading'
 
 const Container = styled.div`
   display: flex;
@@ -115,10 +116,7 @@ export const Transactions: React.FC = () => {
   return (
     <Container>
       {status === 'loading' && data === undefined ? (
-        <h4>
-          加载中...
-          <CircularProgress size="1em" style={{ marginLeft: '10px' }} />
-        </h4>
+        <Loading />
       ) : (
         <section className="list">
           <Divider />
@@ -130,12 +128,7 @@ export const Transactions: React.FC = () => {
             next={fetchNextPage}
             hasMore={hasNextPage!}
             scrollThreshold="200px"
-            loader={
-              <h4>
-                加载中...
-                <CircularProgress size="1em" style={{ marginLeft: '10px' }} />
-              </h4>
-            }
+            loader={<Loading />}
             endMessage={<h4>已经拉到底了</h4>}
           >
             {data?.pages?.map((group, i) => {

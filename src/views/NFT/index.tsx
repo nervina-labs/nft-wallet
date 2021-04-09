@@ -6,13 +6,14 @@ import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { useHistory, useParams } from 'react-router'
 import Dialog from '@material-ui/core/Dialog'
 import { Button } from '../../components/Button'
-import { CircularProgress, makeStyles } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 import { Copyzone } from '../../components/Copyzone'
 import { LazyLoadImage } from '../../components/Image'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
+import { Loading } from '../../components/Loading'
 // import { useQuery } from 'react-query'
 
 const Container = styled.main`
@@ -137,10 +138,7 @@ export const NFT: React.FC = () => {
         />
       </div>
       {detail == null ? (
-        <h4 className="loading">
-          加载中...
-          <CircularProgress size="1em" style={{ marginLeft: '10px' }} />
-        </h4>
+        <Loading />
       ) : (
         <section className="detail">
           <div className="title">{detail?.name}</div>
