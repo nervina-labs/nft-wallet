@@ -11,7 +11,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     this.axios = axios.create({ baseURL: SERVER_URL })
   }
 
-  async getNFTs(page: number): Promise<AxiosResponse<NFT[]>> {
+  async getNFTs(page: number): Promise<AxiosResponse<NFT>> {
     return await this.axios.get(`/holder_tokens/${this.address}`, {
       params: {
         page,
@@ -21,7 +21,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getNFTDetail(uuid: string): Promise<AxiosResponse<NFTDetail>> {
-    return await this.axios.get(`/token_class/${uuid}`)
+    return await this.axios.get(`/token_classes/${uuid}`)
   }
 
   async getTransactions(page: number): Promise<AxiosResponse<Transaction>> {

@@ -216,7 +216,10 @@ export const Transfer: React.FC = () => {
         content="已提交转让交易"
         detail="提示: 链上确认可能需要半分钟时间"
         open={isSendDialogSuccess}
-        onConfrim={() => setIsSendDialogSuccess(false)}
+        onConfrim={() => {
+          setIsSendDialogSuccess(false)
+          history.push(RoutePath.Transactions)
+        }}
       />
       <ActionDialog
         icon={<FailSvg />}

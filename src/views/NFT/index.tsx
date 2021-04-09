@@ -3,14 +3,17 @@ import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import Dialog from '@material-ui/core/Dialog'
 import { Button } from '../../components/Button'
-import { makeStyles } from '@material-ui/core'
+import { CircularProgress, makeStyles } from '@material-ui/core'
 import { Copyzone } from '../../components/Copyzone'
 import { LazyLoadImage } from '../../components/Image'
 import { useWidth } from '../../hooks/useWidth'
-import { nftDetail } from '../../mock'
+import { useQuery } from 'react-query'
+import { Query } from '../../models'
+import { useWalletModel } from '../../hooks/useWallet'
+// import { useQuery } from 'react-query'
 
 const Container = styled.main`
   display: flex;
@@ -19,6 +22,10 @@ const Container = styled.main`
   .figure {
     background: linear-gradient(107.86deg, #e1e1e1 7.34%, #d3d3d3 92.99%);
     padding: 16px 36px;
+  }
+  .loading {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
   }
   .detail {
     margin: 0 36px;
@@ -95,13 +102,24 @@ export const NFT: React.FC = () => {
     return width !== undefined ? width - 72 : 0
   }, [width])
 
-  const detail = nftDetail
+  const { id } = useParams<{ id: string }>()
+  const { api } = useWalletModel()
+
+  const { data } = useQuery(
+    [Query.NFTDetail, id, api],
+    async () => {
+      const { data } = await api.getNFTDetail(id)
+      return data
+    },
+    { enabled: id != null }
+  )
+  const detail = data
 
   const tranfer = useCallback(() => {
-    history.push(`/transfer/${detail.issuer_info.uuid}`, {
+    history.push(`/transfer/${id}`, {
       nftDetail: detail,
     })
-  }, [history, detail])
+  }, [history, id, detail])
 
   return (
     <Container>
@@ -113,26 +131,33 @@ export const NFT: React.FC = () => {
       />
       <div className="figure">
         <LazyLoadImage
-          src={detail.renderer}
+          src={detail?.renderer ?? ''}
           width={imageWidth}
           height={imageWidth}
         />
       </div>
-      <section className="detail">
-        <div className="title">{detail.name}</div>
-        <div className="desc">{detail.description}</div>
-        <div className="row">
-          {detail.total === 0 ? '不限量' : `限量：${detail.total}`}
-        </div>
-        <div className="row last">
-          发行方：<a className="underline">{detail.issuer_info.name}</a>
-        </div>
-        <div className="action">
-          <Button type="primary" onClick={tranfer}>
-            转让
-          </Button>
-        </div>
-      </section>
+      {detail == null ? (
+        <h4 className="loading">
+          加载中...
+          <CircularProgress size="1em" style={{ marginLeft: '10px' }} />
+        </h4>
+      ) : (
+        <section className="detail">
+          <div className="title">{detail?.name}</div>
+          <div className="desc">{detail?.description}</div>
+          <div className="row">
+            {detail.total === 0 ? '不限量' : `限量：${detail.total}`}
+          </div>
+          <div className="row last">
+            发行方：<a className="underline">{detail.issuer_info.name}</a>
+          </div>
+          <div className="action">
+            <Button type="primary" onClick={tranfer}>
+              转让
+            </Button>
+          </div>
+        </section>
+      )}
       <DialogContainer
         open={isDialogOpen}
         classes={{ paper: style.paper }}

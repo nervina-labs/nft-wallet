@@ -3,7 +3,7 @@ import { NFT, NFTDetail } from './nft'
 import { Transaction } from './transactions'
 
 export interface NFTWalletAPI {
-  getNFTs: (page: number) => Promise<AxiosResponse<NFT[]>>
+  getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
 
   getNFTDetail: (uuid: string) => Promise<AxiosResponse<NFTDetail>>
 

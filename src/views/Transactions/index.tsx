@@ -9,7 +9,6 @@ import {
   TransactionStatus,
   Tx,
 } from '../../models'
-import Skeleton from '@material-ui/lab/Skeleton'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { CircularProgress, Divider } from '@material-ui/core'
 import { ReactComponent as SendSvg } from '../../assets/svg/send.svg'
@@ -22,14 +21,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  h4 {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+  }
 
   .list {
     margin-top: 16px;
-
-    h4 {
-      text-align: center;
-      color: rgba(0, 0, 0, 0.6);
-    }
   }
 `
 
@@ -117,7 +115,10 @@ export const Transactions: React.FC = () => {
   return (
     <Container>
       {status === 'loading' && data === undefined ? (
-        <Skeleton />
+        <h4>
+          加载中...
+          <CircularProgress size="1em" style={{ marginLeft: '10px' }} />
+        </h4>
       ) : (
         <section className="list">
           <Divider />
