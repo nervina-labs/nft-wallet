@@ -48,7 +48,7 @@ export const Appbar: React.ForwardRefExoticComponent<AppbarProps & React.RefAttr
           {right ?? (
             <AccountSvg
               onClick={() => {
-                history.push(RoutePath.Account)
+                history.push(RoutePath.Info)
               }}
             />
           )}
