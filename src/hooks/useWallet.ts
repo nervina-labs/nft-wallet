@@ -2,7 +2,7 @@ import { createModel } from 'hox'
 import { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
-import PWCore, { IndexerCollector } from '@lay2/pw-core'
+import PWCore, { ChainID, IndexerCollector } from '@lay2/pw-core'
 import { INDEXER_URL, NODE_URL, UNIPASS_URL } from '../constants'
 import UnipassProvider from '../pw/UnipassProvider'
 import { unipassCache } from '../cache'
@@ -20,7 +20,8 @@ function useWallet(): UseWallet {
     try {
       await new PWCore(NODE_URL).init(
         new UnipassProvider(UNIPASS_URL),
-        new IndexerCollector(INDEXER_URL)
+        new IndexerCollector(INDEXER_URL),
+        ChainID.ckb_testnet
       )
       const p = PWCore.provider as UnipassProvider
       unipassCache.setUnipassAddress(p.address.toCKBAddress())
