@@ -21,7 +21,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getNFTDetail(uuid: string): Promise<AxiosResponse<NFTDetail>> {
-    return await this.axios.get(`/token_classes/${uuid}`)
+    return await this.axios.get(`/tokens/${uuid}`)
   }
 
   async getTransactions(page: number): Promise<AxiosResponse<Transaction>> {

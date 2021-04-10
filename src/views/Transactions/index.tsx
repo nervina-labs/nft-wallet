@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { useInfiniteQuery } from 'react-query'
 import { useWalletModel } from '../../hooks/useWallet'
@@ -113,13 +113,23 @@ export const Transactions: React.FC = () => {
       },
     }
   )
+
+  const dataLength = useMemo(() => {
+    return (
+      data?.pages.reduce((acc, tx) => tx.transaction_list.length + acc, 0) ?? 0
+    )
+  }, [data])
+
   return (
     <Container>
-      {status === 'loading' && data === undefined ? (
-        <Loading />
-      ) : (
-        <section className="list">
-          <Divider />
+      <section className="list">
+        <Divider />
+        {status === 'success' && dataLength === 0 ? (
+          <h4>还没有交易...</h4>
+        ) : null}
+        {status === 'loading' && data === undefined ? (
+          <Loading />
+        ) : (
           <InfiniteScroll
             dataLength={data!.pages.reduce(
               (acc, tx) => tx.transaction_list.length + acc,
@@ -129,7 +139,7 @@ export const Transactions: React.FC = () => {
             hasMore={hasNextPage!}
             scrollThreshold="200px"
             loader={<Loading />}
-            endMessage={<h4>已经拉到底了</h4>}
+            endMessage={dataLength <= 9 ? null : <h4>已经拉到底了</h4>}
           >
             {data?.pages?.map((group, i) => {
               return (
@@ -141,8 +151,8 @@ export const Transactions: React.FC = () => {
               )
             })}
           </InfiniteScroll>
-        </section>
-      )}
+        )}
+      </section>
     </Container>
   )
 }

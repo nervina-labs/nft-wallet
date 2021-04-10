@@ -52,7 +52,7 @@ const Container = styled.div`
 export const Card: React.FC<CardProps> = ({ token }) => {
   const history = useHistory()
   return (
-    <Container onClick={() => history.push(`/nft/${token.token_class_uuid}`)}>
+    <Container onClick={() => history.push(`/nft/${token.token_uuid}`)}>
       <div className="media">
         <LazyLoadImage src={token.token_class_image} width={120} height={120} />
       </div>

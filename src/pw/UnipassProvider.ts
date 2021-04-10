@@ -1,11 +1,11 @@
 import {
   Address,
   AddressType,
-  getDefaultPrefix,
   Platform,
   Provider,
   Script,
   HashType,
+  AddressPrefix,
 } from '@lay2/pw-core'
 import { createHash } from 'crypto'
 import { unipassCache } from '../cache'
@@ -31,7 +31,7 @@ function pubkeyToAddress(pubkey: string): string {
     HashType.type
   )
 
-  return script.toAddress(getDefaultPrefix()).toCKBAddress()
+  return script.toAddress(AddressPrefix.ckt).toCKBAddress()
 }
 
 export interface UnipassAccount {

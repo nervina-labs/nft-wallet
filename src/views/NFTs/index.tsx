@@ -59,13 +59,13 @@ export const NFTs: React.FC = () => {
           hasMore={hasNextPage!}
           scrollThreshold="200px"
           loader={<Loading />}
-          endMessage={<h4>已经拉到底了</h4>}
+          endMessage={dataLength <= 5 ? null : <h4>已经拉到底了</h4>}
         >
           {data?.pages?.map((group, i) => {
             return (
               <React.Fragment key={i}>
                 {group.token_list.map((token) => {
-                  return <Card token={token} key={token.token_id} />
+                  return <Card token={token} key={token.token_class_uuid} />
                 })}
               </React.Fragment>
             )
