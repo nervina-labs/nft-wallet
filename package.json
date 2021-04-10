@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "craco start",
     "build": "craco build",
-    "start": "craco start",
+    "start": "serve -s build",
     "lint": "eslint src"
   },
   "dependencies": {
@@ -44,6 +44,7 @@
     "prettier": "^2.2.1",
     "react-scripts": "4.0.2",
     "rollup-plugin-node-builtins": "^2.1.2",
+    "serve": "^11.3.2",
     "typescript": "^4.1.2"
   },
   "browserslist": {
