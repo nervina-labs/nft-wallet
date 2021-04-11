@@ -88,7 +88,12 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
             : `自 ${truncateMiddle(tx.from_address, 10, 6)}`}
         </span>
       </div>
-      <div className="time">2021-11-10, 12:12:12</div>
+      <div className="time">
+        {tx.on_chain_timestamp === null &&
+        tx.tx_state === TransactionStatus.Pending
+          ? '等待中'
+          : '2021-11-10, 12:12:12'}
+      </div>
     </ListItemContainer>
   )
 }

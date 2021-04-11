@@ -25,7 +25,6 @@ const Container = styled.main`
   display: flex;
   height: 100%;
   flex-direction: column;
-  background: linear-gradient(187.7deg, #ffffff 4.33%, #f0f0f0 94.27%);
   .content {
     display: flex;
     flex-direction: column;

@@ -25,7 +25,7 @@ export const nftTransaction = Object.create({
       previous_output: {
         index: '0x0',
         tx_hash:
-          '0xb356e5a512ee54e920382c477f0a262afcb3a92b7a8817685075dda7be8d24ac',
+          '0xe9590e0247a6a0c0b18ba834380a6ce61807e96027c380aba96813e977ff94d6',
       },
       since: 0,
     },

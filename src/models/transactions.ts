@@ -17,6 +17,7 @@ export interface Tx {
   tx_hash: number
   tx_state: TransactionStatus
   tx_direction: TransactionDirection
+  on_chain_timestamp: string | null
 }
 
 export interface Transaction {

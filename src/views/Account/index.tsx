@@ -56,13 +56,13 @@ export const Account: React.FC = () => {
         <div className="tabs">
           <span
             className={`tab ${isInfo ? 'active' : ''}`}
-            onClick={() => !isInfo && history.push(RoutePath.Info)}
+            onClick={() => !isInfo && history.replace(RoutePath.Info)}
           >
             基本信息
           </span>
           <span
             className={`tab ${isTx ? 'active' : ''}`}
-            onClick={() => !isTx && history.push(RoutePath.Transactions)}
+            onClick={() => !isTx && history.replace(RoutePath.Transactions)}
           >
             交易
           </span>
