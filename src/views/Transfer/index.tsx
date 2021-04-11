@@ -13,8 +13,11 @@ import { Button } from '../../components/Button'
 import { Drawer } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { LazyLoadImage } from '../../components/Image'
-import { isValidCkbLongAddress, sleep } from '../../utils'
+import { isValidCkbLongAddress } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
+import { useWalletModel } from '../../hooks/useWallet'
+import { nftTransaction } from '../../mock/transaction'
+import { rawTransactionToPWTransaction } from '../../pw/toPwTransaction'
 
 const Container = styled.main`
   display: flex;
@@ -141,11 +144,18 @@ const DrawerContainer = styled.div`
   }
 `
 
+export enum FailedMessage {
+  SignFail = '签名失败，请重新签名',
+  TranferFail = '发送失败，请检查当前网络情况，重新发送',
+}
+
 export const Transfer: React.FC = () => {
   const location = useLocation<{ nftDetail?: NFTDetail }>()
   const history = useHistory()
+  const { signTransaction } = useWalletModel()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [ckbAddress, setCkbAddress] = useState('')
+  const [failedMessage, setFailedMessage] = useState(FailedMessage.TranferFail)
   const [isSendingNFT, setIsSendingNFT] = useState(false)
   const [isAddressValid, setIsAddressValid] = useState(false)
   const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
@@ -158,16 +168,31 @@ export const Transfer: React.FC = () => {
     },
     []
   )
+  const stopTranfer = (isSuccess: boolean): void => {
+    setIsSendingNFT(false)
+    setIsDrawerOpen(false)
+    if (isSuccess) {
+      setIsSendDialogSuccess(true)
+    } else {
+      setIsSendDialogFail(true)
+    }
+  }
   const transferOnClock = useCallback(() => {
     setIsDrawerOpen(true)
   }, [])
   const sendNFT = useCallback(async () => {
     setIsSendingNFT(true)
-    await sleep(5000)
-    setIsSendingNFT(false)
-    setIsDrawerOpen(false)
-    setIsSendDialogSuccess(true)
-  }, [])
+    try {
+      const tx = await rawTransactionToPWTransaction(nftTransaction)
+      const signedTx = await signTransaction(tx)
+      console.log(signedTx)
+    } catch (error) {
+      setFailedMessage(FailedMessage.SignFail)
+      stopTranfer(false)
+      return
+    }
+    stopTranfer(true)
+  }, [signTransaction])
   const closeDrawer = (): void => setIsDrawerOpen(false)
   const { nftDetail } = location.state ?? {}
   return nftDetail !== undefined ? (
@@ -223,7 +248,7 @@ export const Transfer: React.FC = () => {
       />
       <ActionDialog
         icon={<FailSvg />}
-        content="发送失败，请检查当前网络情况，重新发送"
+        content={failedMessage}
         open={isSendDialogFail}
         onConfrim={() => setIsSendDialogFail(false)}
         onBackdropClick={() => setIsSendDialogFail(false)}
@@ -249,7 +274,7 @@ export const Transfer: React.FC = () => {
           <p className="address">{ckbAddress}</p>
           <div className="center">
             <Button type="primary" onClick={sendNFT} disbaled={isSendingNFT}>
-              确认{' '}
+              确认
               {isSendingNFT ? (
                 <CircularProgress size="1em" className="loading" />
               ) : null}
