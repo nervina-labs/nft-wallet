@@ -1,6 +1,15 @@
 import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
-import { NFT, NFTDetail, NFTWalletAPI, Transaction } from '../models'
+import {
+  NFT,
+  NFTDetail,
+  NFTWalletAPI,
+  Transaction,
+  UnsignedTransaction,
+} from '../models'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import { Transaction as PwTransaction } from '@lay2/pw-core'
+import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
+import { transformers } from 'ckb-js-toolkit'
 
 export class ServerWalletAPI implements NFTWalletAPI {
   private readonly address: string
@@ -30,6 +39,30 @@ export class ServerWalletAPI implements NFTWalletAPI {
         page,
         limit: PER_ITEM_LIMIT,
       },
+    })
+  }
+
+  async getTransferNftTransaction(
+    uuid: string,
+    toAddress: string
+  ): Promise<PwTransaction> {
+    // eslint-disable-next-line prettier/prettier
+    const { data } = await this.axios.post<any, AxiosResponse<UnsignedTransaction>>('/token_ckb_transactions/', {
+      token_uuid: uuid,
+      from_address: this.address,
+      to_address: toAddress,
+    })
+
+    return await rawTransactionToPWTransaction(data.unsigned_tx)
+  }
+
+  async transfer(
+    uuid: string,
+    tx: PwTransaction
+  ): Promise<AxiosResponse<{ message: number }>> {
+    const rawTx = transformers.TransformTransaction(tx)
+    return await this.axios.put(`/token_ckb_transactions/${uuid}`, {
+      signed_tx: rawTx,
     })
   }
 }
