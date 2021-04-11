@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Redirect, useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
@@ -17,7 +17,9 @@ import { isValidCkbLongAddress } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel } from '../../hooks/useWallet'
 import { nftTransaction } from '../../mock/transaction'
+import { nftDetail as mockNftDetail } from '../../mock/nft'
 import { rawTransactionToPWTransaction } from '../../pw/toPwTransaction'
+import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
 
 const Container = styled.main`
   display: flex;
@@ -160,6 +162,8 @@ export const Transfer: React.FC = () => {
   const [isAddressValid, setIsAddressValid] = useState(false)
   const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
   const [isSendDialogFail, setIsSendDialogFail] = useState(false)
+  const [isScaning, setIsScaning] = useState(false)
+  const qrcodeScanerRef = useRef<QrcodeScaner>(null)
   const textareaOnChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const val = e.target.value
@@ -194,7 +198,17 @@ export const Transfer: React.FC = () => {
     stopTranfer(true)
   }, [signTransaction])
   const closeDrawer = (): void => setIsDrawerOpen(false)
-  const { nftDetail } = location.state ?? {}
+  const stopScan = (): void => {
+    setIsScaning(false)
+    qrcodeScanerRef.current?.stopScan()
+  }
+  const startScan = (): void => {
+    setIsScaning(true)
+    qrcodeScanerRef.current?.startScan()
+  }
+  const { nftDetail } = location.state ?? {
+    nftDetail: mockNftDetail,
+  }
   return nftDetail !== undefined ? (
     <Container>
       <Appbar
@@ -202,15 +216,26 @@ export const Transfer: React.FC = () => {
         left={<BackSvg onClick={() => history.goBack()} />}
         right={<div />}
       />
+      <QrcodeScaner
+        ref={qrcodeScanerRef}
+        isDrawerOpen={isScaning}
+        onCancel={stopScan}
+        onScanCkbAddress={(address) => {
+          setCkbAddress(address)
+          stopScan()
+          setIsAddressValid(true)
+        }}
+      />
       <div className="content">
         <label>接收方地址</label>
         <div className="form">
           <textarea
             className="input"
             placeholder="请输入 CKB 长地址"
+            value={ckbAddress}
             onChange={textareaOnChange}
           />
-          <ScanSvg />
+          <ScanSvg onClick={startScan} />
         </div>
         <div
           className="error"
