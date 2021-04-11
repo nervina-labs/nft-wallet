@@ -10,9 +10,9 @@ const Container = styled.main`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100%;
   flex-direction: column;
-  background-color: #fafafa;
+  background: linear-gradient(187.7deg, #ffffff 4.33%, #f0f0f0 94.27%);
   .logo {
     margin-top: 80px;
     margin-bottom: 56px;

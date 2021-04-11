@@ -14,9 +14,14 @@ import { Loading } from '../../components/Loading'
 const Container = styled.main`
   display: flex;
   flex-direction: column;
+  height: 100%;
   h4 {
     text-align: center;
     color: rgba(0, 0, 0, 0.6);
+  }
+  .list {
+    flex: 1;
+    background: linear-gradient(187.7deg, #ffffff 4.33%, #f0f0f0 94.27%);
   }
 `
 
@@ -49,29 +54,31 @@ export const NFTs: React.FC = () => {
   return (
     <Container>
       <Appbar title="我的秘宝" />
-      {status === 'success' && dataLength === 0 ? <Empty /> : null}
-      {data === undefined && status === 'loading' ? (
-        <Loading />
-      ) : (
-        <InfiniteScroll
-          dataLength={dataLength}
-          next={fetchNextPage}
-          hasMore={hasNextPage!}
-          scrollThreshold="200px"
-          loader={<Loading />}
-          endMessage={dataLength <= 5 ? null : <h4>已经拉到底了</h4>}
-        >
-          {data?.pages?.map((group, i) => {
-            return (
-              <React.Fragment key={i}>
-                {group.token_list.map((token) => {
-                  return <Card token={token} key={token.token_uuid} />
-                })}
-              </React.Fragment>
-            )
-          })}
-        </InfiniteScroll>
-      )}
+      <section className="list">
+        {status === 'success' && dataLength === 0 ? <Empty /> : null}
+        {data === undefined && status === 'loading' ? (
+          <Loading />
+        ) : (
+          <InfiniteScroll
+            dataLength={dataLength}
+            next={fetchNextPage}
+            hasMore={hasNextPage!}
+            scrollThreshold="200px"
+            loader={<Loading />}
+            endMessage={<h4>{dataLength <= 5 ? null : '已经拉到底了'}</h4>}
+          >
+            {data?.pages?.map((group, i) => {
+              return (
+                <React.Fragment key={i}>
+                  {group.token_list.map((token) => {
+                    return <Card token={token} key={token.token_uuid} />
+                  })}
+                </React.Fragment>
+              )
+            })}
+          </InfiniteScroll>
+        )}
+      </section>
     </Container>
   )
 }

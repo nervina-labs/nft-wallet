@@ -6,7 +6,7 @@ export const nftTransaction = Object.create({
       out_point: {
         tx_hash:
           '0x9687ac5e311d009df1505459afc83a55c46496eb292fc11e4f6c24df5dfd4de5',
-        index: 0,
+        index: '0x0',
       },
       dep_type: 'code',
     },
@@ -14,7 +14,7 @@ export const nftTransaction = Object.create({
       out_point: {
         tx_hash:
           '0xa105c3277ea36914e2af26e749adb307276f89f614dc945f9f44988b4be9c1d6',
-        index: 0,
+        index: '0x0',
       },
       dep_type: 'code',
     },
@@ -32,7 +32,7 @@ export const nftTransaction = Object.create({
   ],
   outputs: [
     {
-      capacity: 420337600000000,
+      capacity: 99900000000,
       lock: {
         code_hash:
           '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
