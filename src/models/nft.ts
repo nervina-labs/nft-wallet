@@ -6,7 +6,7 @@ export interface NFT {
 
 export interface ListMeta {
   current_page: number
-  token_count: number
+  total_count: number
 }
 
 export interface NFTToken {

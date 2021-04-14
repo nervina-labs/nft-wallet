@@ -13,6 +13,7 @@ export interface UseWallet {
   provider: UnipassProvider | undefined
   address: string
   signTransaction: (tx: Transaction) => Promise<Transaction | undefined>
+  isLogined: boolean
 }
 
 function useWallet(): UseWallet {
@@ -68,12 +69,17 @@ function useWallet(): UseWallet {
     return new ServerWalletAPI(address)
   }, [address])
 
+  const isLogined = useMemo(() => {
+    return address !== ''
+  }, [address])
+
   return {
     api,
     login,
     provider,
     address,
     signTransaction,
+    isLogined,
   }
 }
 

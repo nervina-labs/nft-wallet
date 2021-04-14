@@ -10,6 +10,7 @@ import { Account } from '../views/Account'
 import { Login } from '../views/Login'
 import { NFT } from '../views/NFT'
 import { NFTs } from '../views/NFTs'
+import { NotFound } from '../views/NotFound'
 import { Transfer } from '../views/Transfer'
 
 export enum RoutePath {
@@ -54,6 +55,11 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: true,
     key: Login.name,
     path: RoutePath.Login,
+  },
+  {
+    component: NotFound,
+    key: NotFound.name,
+    path: '*',
   },
 ]
 

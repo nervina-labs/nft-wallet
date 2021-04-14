@@ -10,6 +10,8 @@ import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { Empty } from './empty'
 import { Loading } from '../../components/Loading'
+import { Redirect } from 'react-router'
+import { RoutePath } from '../../routes'
 
 const Container = styled.main`
   display: flex;
@@ -26,7 +28,7 @@ const Container = styled.main`
 `
 
 export const NFTs: React.FC = () => {
-  const { api } = useWalletModel()
+  const { api, isLogined } = useWalletModel()
   const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery(
     Query.NFTList,
     async ({ pageParam = 1 }) => {
@@ -37,7 +39,7 @@ export const NFTs: React.FC = () => {
       getNextPageParam: (lastPage) => {
         const { meta } = lastPage
         const current = meta.current_page
-        const total = meta.token_count
+        const total = meta.total_count
         if (total <= current * PER_ITEM_LIMIT) {
           return undefined
         }
@@ -51,6 +53,11 @@ export const NFTs: React.FC = () => {
       data?.pages.reduce((acc, token) => token.token_list.length + acc, 0) ?? 0
     )
   }, [data])
+
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
+
   return (
     <Container>
       <Appbar title="我的秘宝" />
@@ -62,10 +69,10 @@ export const NFTs: React.FC = () => {
           <InfiniteScroll
             dataLength={dataLength}
             next={fetchNextPage}
-            hasMore={hasNextPage!}
+            hasMore={hasNextPage === true}
             scrollThreshold="200px"
             loader={<Loading />}
-            endMessage={<h4>{dataLength <= 5 ? null : '已经拉到底了'}</h4>}
+            endMessage={<h4>{dataLength <= 5 ? ' ' : '已经拉到底了'}</h4>}
           >
             {data?.pages?.map((group, i) => {
               return (

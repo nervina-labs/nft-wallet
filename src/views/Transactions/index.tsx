@@ -110,7 +110,7 @@ export const Transactions: React.FC = () => {
       getNextPageParam: (lastPage) => {
         const { meta } = lastPage
         const current = meta.current_page
-        const total = meta.token_count
+        const total = meta.total_count
         if (total <= current * PER_ITEM_LIMIT) {
           return undefined
         }

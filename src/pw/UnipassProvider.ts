@@ -71,7 +71,6 @@ export default class UnipassProvider extends Provider {
 
     return await new Promise((resolve) => {
       this.msgHandler = (event) => {
-        console.log(event)
         if (typeof event.data === 'object' && 'upact' in event.data) {
           const msg = event.data as UnipassMessage
           if (msg.upact === 'UP-READY') {

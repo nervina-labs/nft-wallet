@@ -1,11 +1,18 @@
 import React from 'react'
-import { Route, useHistory, useRouteMatch, Switch } from 'react-router'
+import {
+  Route,
+  useHistory,
+  useRouteMatch,
+  Switch,
+  Redirect,
+} from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { RoutePath } from '../../routes'
 import { Info } from '../Info'
 import { Transactions } from '../Transactions'
+import { useWalletModel } from '../../hooks/useWallet'
 
 const Container = styled.main`
   display: flex;
@@ -45,6 +52,11 @@ export const Account: React.FC = () => {
   const matchTx = useRouteMatch(RoutePath.Transactions)
   const isInfo = matchInfo?.isExact != null
   const isTx = matchTx?.isExact != null
+
+  const { isLogined } = useWalletModel()
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
   return (
     <Container>
       <Appbar
