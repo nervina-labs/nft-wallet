@@ -64,6 +64,7 @@ const ListItemContainer = styled.div`
   }
 `
 
+const TIME_FORMAT = 'YYYY-MM-DD, HH:mm:ss'
 const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
   let icon =
     tx.tx_direction === TransactionDirection.Receive ? (
@@ -74,6 +75,10 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
   if (tx.tx_state === TransactionStatus.Pending) {
     icon = <PendingSvg />
   }
+  const time =
+    tx.on_chain_timestamp === null
+      ? '等待中'
+      : dayjs(Number(tx.on_chain_timestamp + '000')).format(TIME_FORMAT)
   return (
     <ListItemContainer>
       <div className="icon">{icon}</div>
@@ -89,11 +94,7 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
             : `自 ${truncateMiddle(tx.from_address, 10, 6)}`}
         </span>
       </div>
-      <div className="time">
-        {tx.on_chain_timestamp === null
-          ? '等待中'
-          : dayjs(tx.on_chain_timestamp).format('YYYY-MM-DD, HH:mm:ss')}
-      </div>
+      <div className="time">{time}</div>
     </ListItemContainer>
   )
 }

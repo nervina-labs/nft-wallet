@@ -59,7 +59,6 @@ const routes: Array<RouteProps & { key: string }> = [
 ]
 
 export const Routers: React.FC = () => {
-  // TODO: logined redirect to nft, otherwise redirect to login
   return (
     <BrowserRouter>
       <Switch>
