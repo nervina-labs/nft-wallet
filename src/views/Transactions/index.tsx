@@ -9,6 +9,7 @@ import {
   TransactionStatus,
   Tx,
 } from '../../models'
+import dayjs from 'dayjs'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Divider } from '@material-ui/core'
 import { ReactComponent as SendSvg } from '../../assets/svg/send.svg'
@@ -89,10 +90,9 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
         </span>
       </div>
       <div className="time">
-        {tx.on_chain_timestamp === null &&
-        tx.tx_state === TransactionStatus.Pending
+        {tx.on_chain_timestamp === null
           ? '等待中'
-          : '2021-11-10, 12:12:12'}
+          : dayjs(tx.on_chain_timestamp).format('YYYY-MM-DD, HH:mm:ss')}
       </div>
     </ListItemContainer>
   )
@@ -100,7 +100,14 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
 
 export const Transactions: React.FC = () => {
   const { api } = useWalletModel()
-  const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery(
+  const {
+    data,
+    status,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+    isFetching,
+  } = useInfiniteQuery(
     Query.Transactions,
     async ({ pageParam = 1 }) => {
       const { data } = await api.getTransactions(pageParam)
@@ -127,11 +134,12 @@ export const Transactions: React.FC = () => {
 
   return (
     <Container>
-      <section className="list">
+      <section className="list" id="list">
         <Divider />
         {status === 'success' && dataLength === 0 ? (
           <h4>还没有交易...</h4>
         ) : null}
+        {isFetching && status !== 'loading' ? <Loading /> : null}
         {status === 'loading' && data === undefined ? (
           <Loading />
         ) : (
@@ -140,8 +148,13 @@ export const Transactions: React.FC = () => {
               (acc, tx) => tx.transaction_list.length + acc,
               0
             )}
+            pullDownToRefresh
+            refreshFunction={refetch}
             next={fetchNextPage}
-            hasMore={hasNextPage!}
+            hasMore={hasNextPage === true}
+            pullDownToRefreshContent={<h4>&#8595; 下拉刷新</h4>}
+            pullDownToRefreshThreshold={80}
+            releaseToRefreshContent={<h4>&#8593; 下拉刷新</h4>}
             scrollThreshold="200px"
             loader={<Loading />}
             endMessage={dataLength <= 9 ? null : <h4>已经拉到底了</h4>}

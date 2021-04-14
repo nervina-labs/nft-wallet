@@ -29,7 +29,14 @@ const Container = styled.main`
 
 export const NFTs: React.FC = () => {
   const { api, isLogined } = useWalletModel()
-  const { data, status, hasNextPage, fetchNextPage } = useInfiniteQuery(
+  const {
+    data,
+    status,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+    isFetching,
+  } = useInfiniteQuery(
     Query.NFTList,
     async ({ pageParam = 1 }) => {
       const { data } = await api.getNFTs(pageParam)
@@ -63,10 +70,16 @@ export const NFTs: React.FC = () => {
       <Appbar title="我的秘宝" />
       <section className="list">
         {status === 'success' && dataLength === 0 ? <Empty /> : null}
+        {isFetching && status !== 'loading' ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
           <Loading />
         ) : (
           <InfiniteScroll
+            pullDownToRefresh
+            refreshFunction={refetch}
+            pullDownToRefreshContent={<h4>&#8595; 下拉刷新</h4>}
+            pullDownToRefreshThreshold={80}
+            releaseToRefreshContent={<h4>&#8593; 下拉刷新</h4>}
             dataLength={dataLength}
             next={fetchNextPage}
             hasMore={hasNextPage === true}
