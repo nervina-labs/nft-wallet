@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { Redirect, useHistory, useLocation } from 'react-router'
+import { Redirect, useHistory, useLocation, useParams } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { NFTDetail } from '../../models'
@@ -16,9 +16,7 @@ import { LazyLoadImage } from '../../components/Image'
 import { isValidCkbLongAddress } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel } from '../../hooks/useWallet'
-import { nftTransaction } from '../../mock/transaction'
 import { nftDetail as mockNftDetail } from '../../mock/nft'
-import { rawTransactionToPWTransaction } from '../../pw/toPwTransaction'
 import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
 import { useWidth } from '../../hooks/useWidth'
 
@@ -155,7 +153,7 @@ export enum FailedMessage {
 export const Transfer: React.FC = () => {
   const location = useLocation<{ nftDetail?: NFTDetail }>()
   const history = useHistory()
-  const { signTransaction } = useWalletModel()
+  const { signTransaction, api } = useWalletModel()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [ckbAddress, setCkbAddress] = useState('')
   const [failedMessage, setFailedMessage] = useState(FailedMessage.TranferFail)
@@ -185,19 +183,38 @@ export const Transfer: React.FC = () => {
   const transferOnClock = useCallback(() => {
     setIsDrawerOpen(true)
   }, [])
+  const { id } = useParams<{ id: string }>()
+
   const sendNFT = useCallback(async () => {
     setIsSendingNFT(true)
     try {
-      const tx = await rawTransactionToPWTransaction(nftTransaction)
-      const signedTx = await signTransaction(tx)
-      console.log(signedTx)
+      const { uuid, tx } = await api
+        .getTransferNftTransaction(id, ckbAddress)
+        .catch((err) => {
+          setFailedMessage(FailedMessage.TranferFail)
+          stopTranfer(false)
+          throw new Error(err)
+        })
+
+      const signTx = await signTransaction(tx).catch((err) => {
+        setFailedMessage(FailedMessage.SignFail)
+        stopTranfer(false)
+        throw new Error(err)
+      })
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await api.transfer(uuid, signTx!).catch((err) => {
+        setFailedMessage(FailedMessage.TranferFail)
+        stopTranfer(false)
+        console.log(err)
+        throw err
+      })
     } catch (error) {
-      setFailedMessage(FailedMessage.SignFail)
-      stopTranfer(false)
+      console.log(error)
       return
     }
     stopTranfer(true)
-  }, [signTransaction])
+  }, [signTransaction, id, ckbAddress, api])
   const closeDrawer = (): void => setIsDrawerOpen(false)
   const stopScan = (): void => {
     setIsScaning(false)

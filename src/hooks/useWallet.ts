@@ -33,6 +33,7 @@ function useWallet(): UseWallet {
       setProvider(p)
       return p
     } catch (error) {
+      console.log(error)
       // TODO
     }
   }, [])

@@ -10,7 +10,7 @@ import {
   Transaction,
   Amount,
   AmountUnit,
-  DepType,
+  // DepType,
 } from '@lay2/pw-core'
 import { RPC as ToolKitRpc } from 'ckb-js-toolkit'
 import RPC from '@nervosnetwork/ckb-sdk-rpc'
@@ -18,10 +18,10 @@ import { NODE_URL } from '../constants'
 
 export const toolkitRPC = new ToolKitRpc(NODE_URL)
 
-const Secp256R1BinOutPoint = new OutPoint(
-  '0x9687ac5e311d009df1505459afc83a55c46496eb292fc11e4f6c24df5dfd4de5',
-  '0x0'
-)
+// const Secp256R1BinOutPoint = new OutPoint(
+//   '0x9687ac5e311d009df1505459afc83a55c46496eb292fc11e4f6c24df5dfd4de5',
+//   '0x0'
+// )
 const Secp256R1Args = {
   lock: '0x' + '0'.repeat(1128),
   input_type: '',
@@ -62,16 +62,11 @@ export async function rawTransactionToPWTransaction(
       )
   )
 
-  const r1CellDep: CellDep = new CellDep(DepType.code, Secp256R1BinOutPoint)
-
-  // TODO: remove it
-  console.log(cellDeps, r1CellDep)
-
   const tx = new Transaction(
     new RawTransaction(
       inputs,
       outputs,
-      [r1CellDep]
+      cellDeps
       // rawTx.header_deps,
       // rawTx.version
     ),

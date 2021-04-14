@@ -2,6 +2,7 @@ import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
 import {
   NFT,
   NFTDetail,
+  NFTTransaction,
   NFTWalletAPI,
   Transaction,
   UnsignedTransaction,
@@ -45,15 +46,19 @@ export class ServerWalletAPI implements NFTWalletAPI {
   async getTransferNftTransaction(
     uuid: string,
     toAddress: string
-  ): Promise<PwTransaction> {
+  ): Promise<NFTTransaction> {
     // eslint-disable-next-line prettier/prettier
-    const { data } = await this.axios.post<any, AxiosResponse<UnsignedTransaction>>('/token_ckb_transactions/', {
+    const { data } = await this.axios.post<any, AxiosResponse<UnsignedTransaction>>('/token_ckb_transactions', {
       token_uuid: uuid,
       from_address: this.address,
       to_address: toAddress,
     })
 
-    return await rawTransactionToPWTransaction(data.unsigned_tx)
+    const tx = await rawTransactionToPWTransaction(data.unsigned_tx)
+    return {
+      tx,
+      uuid: data.token_ckb_transaction_uuid,
+    }
   }
 
   async transfer(
@@ -61,8 +66,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     tx: PwTransaction
   ): Promise<AxiosResponse<{ message: number }>> {
     const rawTx = transformers.TransformTransaction(tx)
+    console.log(rawTx)
     return await this.axios.put(`/token_ckb_transactions/${uuid}`, {
-      signed_tx: rawTx,
+      signed_tx: JSON.stringify(rawTx),
     })
   }
 }

@@ -8,6 +8,11 @@ export interface UnsignedTransaction {
   token_ckb_transaction_uuid: string
 }
 
+export interface NFTTransaction {
+  tx: PwTransaction
+  uuid: string
+}
+
 export interface NFTWalletAPI {
   getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
 
@@ -18,7 +23,7 @@ export interface NFTWalletAPI {
   getTransferNftTransaction: (
     uuid: string,
     toAddress: string
-  ) => Promise<PwTransaction>
+  ) => Promise<NFTTransaction>
 
   transfer: (
     uuid: string,
