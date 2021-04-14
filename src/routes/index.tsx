@@ -56,11 +56,6 @@ const routes: Array<RouteProps & { key: string }> = [
     key: Login.name,
     path: RoutePath.Login,
   },
-  {
-    component: NotFound,
-    key: NotFound.name,
-    path: '*',
-  },
 ]
 
 export const Routers: React.FC = () => {
@@ -72,6 +67,7 @@ export const Routers: React.FC = () => {
           <Route {...route} key={route.key} path={route.path} />
         ))}
         <Redirect exact from={RoutePath.Launch} to={RoutePath.Login} />
+        <Route component={NotFound} path="*" />
       </Switch>
     </BrowserRouter>
   )

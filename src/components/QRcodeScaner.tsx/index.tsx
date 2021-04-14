@@ -10,11 +10,13 @@ import { Button } from '../Button'
 const Container = styled.div`
   display: flex;
   height: 100%;
-  width: 375px;
+  width: ${(props: { width?: number }) =>
+    props.width !== undefined ? `${props.width}px` : '375px'};
   flex-direction: column;
 
   video {
     margin-top: 2px;
+    max-width: 100%;
   }
 
   .result {
@@ -57,6 +59,7 @@ export interface QrcodeScanerProps {
   onDecode?: (result: string) => void
   onDecodeError?: ((error: string) => void) | undefined
   onStartError?: (error: any) => void
+  width?: number
 }
 
 export interface QrcodeScanerState {
@@ -123,10 +126,10 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
 
   render(): React.ReactNode {
     const { nonCkbAddressResult, isScaning } = this.state
-    const { onCancel, isDrawerOpen } = this.props
+    const { onCancel, isDrawerOpen, width } = this.props
     return (
       <Drawer open={isDrawerOpen}>
-        <Container>
+        <Container width={width}>
           <Appbar
             left={<BackSvg onClick={onCancel} />}
             title={nonCkbAddressResult === '' ? '二维码扫描' : '扫描结果'}

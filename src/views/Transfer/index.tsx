@@ -20,6 +20,7 @@ import { nftTransaction } from '../../mock/transaction'
 import { nftDetail as mockNftDetail } from '../../mock/nft'
 import { rawTransactionToPWTransaction } from '../../pw/toPwTransaction'
 import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
+import { useWidth } from '../../hooks/useWidth'
 
 const Container = styled.main`
   display: flex;
@@ -209,17 +210,21 @@ export const Transfer: React.FC = () => {
   const { nftDetail } = location.state ?? {
     nftDetail: mockNftDetail,
   }
+  const appRef = useRef(null)
+  const width = useWidth(appRef)
   return nftDetail !== undefined ? (
     <Container>
       <Appbar
         title="转让"
         left={<BackSvg onClick={() => history.goBack()} />}
         right={<div />}
+        ref={appRef}
       />
       <QrcodeScaner
         ref={qrcodeScanerRef}
         isDrawerOpen={isScaning}
         onCancel={stopScan}
+        width={width}
         onScanCkbAddress={(address) => {
           setCkbAddress(address)
           stopScan()
