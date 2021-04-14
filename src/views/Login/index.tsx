@@ -2,9 +2,13 @@ import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { ReactComponent as LogoSvg } from '../../assets/svg/logo.svg'
+import WalletBg from '../../assets/svg/wallet_bg.svg'
 import { Button } from '../../components/Button'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
+
+// @ts-expect-error
+const containerBg = WalletBg as string
 
 const Container = styled.main`
   display: flex;
@@ -12,7 +16,11 @@ const Container = styled.main`
   align-items: center;
   height: 100%;
   flex-direction: column;
-  background: linear-gradient(187.7deg, #ffffff 4.33%, #f0f0f0 94.27%);
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+  // @ts-ignore
+  background-image: url(${containerBg});
   .logo {
     margin-top: 80px;
     margin-bottom: 56px;
@@ -43,7 +51,7 @@ export const Login: React.FC = () => {
       <LogoSvg className="logo" />
       <Button
         onClick={loginBtnOnClick}
-        type="primary"
+        type="default"
         disbaled={isLogining}
         isLoading={isLogining}
       >
