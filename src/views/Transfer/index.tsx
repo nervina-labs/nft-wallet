@@ -19,6 +19,8 @@ import { useWalletModel } from '../../hooks/useWallet'
 import { nftDetail as mockNftDetail } from '../../mock/nft'
 import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
 import { useWidth } from '../../hooks/useWidth'
+import { Limited } from '../../components/Limited'
+import { Creator } from '../../components/Creator'
 
 const Container = styled.main`
   display: flex;
@@ -312,9 +314,14 @@ export const Transfer: React.FC = () => {
             <div className="info">
               <div className="title">{nftDetail.name}</div>
               <div className="row">
-                {nftDetail.total === 0 ? '不限量' : `限量：${nftDetail.total}`}
+                <Limited count={nftDetail.total} />
               </div>
-              <div className="row">发行方：{nftDetail.issuer_info.name}</div>
+              <div className="row">
+                <Creator
+                  name={nftDetail.issuer_info.name}
+                  url={nftDetail.issuer_info.avatar_url}
+                />
+              </div>
             </div>
           </div>
           <label>接收方地址：</label>

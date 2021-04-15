@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 
 export interface LazyLoadImageProps {
@@ -6,6 +6,8 @@ export interface LazyLoadImageProps {
   alt?: string
   width: number
   height: number
+  backup?: React.ReactNode
+  variant?: 'circle' | 'rect' | 'text'
 }
 
 export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
@@ -13,23 +15,37 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
   alt,
   width,
   height,
+  variant,
+  backup,
 }) => {
   const [loaded, setLoaded] = useState(false)
+  const [shouldUseBackup, setShouldUseBackup] = useState(false)
+  const onError = useCallback(() => {
+    if (backup != null) {
+      setShouldUseBackup(true)
+      setLoaded(true)
+    }
+  }, [backup])
   return (
     <>
-      <img
-        src={src}
-        onLoad={() => setLoaded(true)}
-        alt={alt}
-        style={{
-          objectFit: 'cover',
-          display: loaded ? 'block' : 'none',
-          width: `${width}px`,
-          height: `${height}px`,
-        }}
-      />
+      {shouldUseBackup ? (
+        backup
+      ) : (
+        <img
+          src={src}
+          onLoad={() => setLoaded(true)}
+          onError={onError}
+          alt={alt}
+          style={{
+            objectFit: 'cover',
+            display: loaded ? 'block' : 'none',
+            width: `${width}px`,
+            height: `${height}px`,
+          }}
+        />
+      )}
       {!loaded ? (
-        <Skeleton variant="rect" width={width} height={height} />
+        <Skeleton variant={variant ?? 'rect'} width={width} height={height} />
       ) : null}
     </>
   )

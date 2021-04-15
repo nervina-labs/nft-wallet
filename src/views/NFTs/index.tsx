@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import styled from 'styled-components'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -35,7 +35,6 @@ export const NFTs: React.FC = () => {
     hasNextPage,
     fetchNextPage,
     refetch,
-    isFetching,
   } = useInfiniteQuery(
     Query.NFTList,
     async ({ pageParam = 1 }) => {
@@ -55,6 +54,14 @@ export const NFTs: React.FC = () => {
     }
   )
 
+  const [isRefetching, setIsRefetching] = useState(false)
+
+  const refresh = useCallback(async () => {
+    setIsRefetching(true)
+    await refetch()
+    setIsRefetching(false)
+  }, [refetch])
+
   const dataLength = useMemo(() => {
     return (
       data?.pages.reduce((acc, token) => token.token_list.length + acc, 0) ?? 0
@@ -70,13 +77,13 @@ export const NFTs: React.FC = () => {
       <Appbar title="我的秘宝" />
       <section className="list">
         {status === 'success' && dataLength === 0 ? <Empty /> : null}
-        {isFetching && status !== 'loading' ? <Loading /> : null}
+        {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
           <Loading />
         ) : (
           <InfiniteScroll
             pullDownToRefresh
-            refreshFunction={refetch}
+            refreshFunction={refresh}
             pullDownToRefreshContent={<h4>&#8595; 下拉刷新</h4>}
             pullDownToRefreshThreshold={80}
             releaseToRefreshContent={<h4>&#8593; 下拉刷新</h4>}

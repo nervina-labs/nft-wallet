@@ -14,7 +14,8 @@ import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Loading } from '../../components/Loading'
-// import { useQuery } from 'react-query'
+import { Limited } from '../../components/Limited'
+import { Creator } from '../../components/Creator'
 
 const Container = styled.main`
   display: flex;
@@ -145,10 +146,14 @@ export const NFT: React.FC = () => {
           <div className="title">{detail?.name}</div>
           <div className="desc">{detail?.description}</div>
           <div className="row">
-            {detail.total === 0 ? '不限量' : `限量：${detail.total}`}
+            <Limited count={detail.total} fontSize={14} />
           </div>
           <div className="row last">
-            发行方：<a className="underline">{detail.issuer_info.name}</a>
+            <Creator
+              fontSize={14}
+              name={detail.issuer_info.name}
+              url={detail.issuer_info.avatar_url}
+            />
           </div>
           <div className="action">
             <Button type="primary" onClick={tranfer}>

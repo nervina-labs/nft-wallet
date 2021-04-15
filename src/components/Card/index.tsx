@@ -3,6 +3,8 @@ import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { NFTToken } from '../../models'
 import { LazyLoadImage } from '../Image'
+import { Limited } from '../Limited'
+import { Creator } from '../Creator'
 
 export interface CardProps {
   token: NFTToken
@@ -22,6 +24,9 @@ const Container = styled.div`
   }
   .content {
     margin: 8px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
     .title {
       font-weight: 600;
       font-size: 16px;
@@ -40,11 +45,32 @@ const Container = styled.div`
       -webkit-line-clamp: 3; /* number of lines to show */
       -webkit-box-orient: vertical;
     }
-    .limit {
+    .creator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       font-weight: 600;
       font-size: 12px;
       line-height: 17px;
       color: rgba(0, 0, 0, 0.6);
+      .avatar {
+        margin-left: 12px;
+        margin-right: 2px;
+        img {
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+        }
+        svg {
+          position: relative;
+          top: 2px;
+        }
+      }
+      .name {
+        color: rgba(0, 0, 0, 0.8);
+        font-weight: normal;
+        text-overflow: ellipsis;
+      }
     }
   }
 `
@@ -54,16 +80,16 @@ export const Card: React.FC<CardProps> = ({ token }) => {
   return (
     <Container onClick={() => history.push(`/nft/${token.token_uuid}`)}>
       <div className="media">
-        <LazyLoadImage src={token.token_class_image} width={120} height={120} />
+        <LazyLoadImage
+          src={token.token_class_bg_url}
+          width={120}
+          height={120}
+        />
       </div>
       <div className="content">
         <div className="title">{token.token_class_name}</div>
-        <div className="desc">{token.token_class_description}</div>
-        <div className="limit">
-          {token.token_class_total === 0
-            ? '不限量'
-            : `限量：${token.token_class_total}`}
-        </div>
+        <Limited count={token.token_class_total} />
+        <Creator url={token.issuer_avatar_url} name={token.issuer_name} />
       </div>
     </Container>
   )

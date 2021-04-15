@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useInfiniteQuery } from 'react-query'
 import { useWalletModel } from '../../hooks/useWallet'
@@ -15,8 +15,9 @@ import { Divider } from '@material-ui/core'
 import { ReactComponent as SendSvg } from '../../assets/svg/send.svg'
 import { ReactComponent as ReceiveSvg } from '../../assets/svg/receive.svg'
 import { ReactComponent as PendingSvg } from '../../assets/svg/pending.svg'
+import { ReactComponent as LinkSvg } from '../../assets/svg/link.svg'
 import { truncateMiddle } from '../../utils'
-import { PER_ITEM_LIMIT } from '../../constants'
+import { NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 
 const Container = styled.div`
@@ -62,6 +63,9 @@ const ListItemContainer = styled.div`
     line-height: 16px;
     color: rgba(0, 0, 0, 0.6);
   }
+  .link {
+    margin-left: 12px;
+  }
 `
 
 const TIME_FORMAT = 'YYYY-MM-DD, HH:mm:ss'
@@ -72,7 +76,7 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
     ) : (
       <SendSvg />
     )
-  if (tx.tx_state === TransactionStatus.Pending) {
+  if (tx.tx_state !== TransactionStatus.Committed) {
     icon = <PendingSvg />
   }
   const time =
@@ -83,18 +87,22 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
     <ListItemContainer>
       <div className="icon">{icon}</div>
       <div className="content">
+        <span>{tx.token_class_name}</span>
         <span>
           {tx.tx_direction === TransactionDirection.Receive
-            ? '接收秘宝'
-            : '发送秘宝'}
-        </span>
-        <span>
-          {tx.tx_direction === TransactionDirection.Receive
-            ? `至 ${truncateMiddle(tx.to_address, 10, 6)}`
-            : `自 ${truncateMiddle(tx.from_address, 10, 6)}`}
+            ? `至 ${truncateMiddle(tx.to_address, 8, 5)}`
+            : `自 ${truncateMiddle(tx.from_address, 8, 5)}`}
         </span>
       </div>
       <div className="time">{time}</div>
+      <a
+        className="link"
+        target="_blank"
+        rel="noopener noreferrer"
+        href={`${NFT_EXPLORER_URL}/nft_status/${tx.tx_hash}`}
+      >
+        <LinkSvg />
+      </a>
     </ListItemContainer>
   )
 }
@@ -107,7 +115,6 @@ export const Transactions: React.FC = () => {
     hasNextPage,
     fetchNextPage,
     refetch,
-    isFetching,
   } = useInfiniteQuery(
     Query.Transactions,
     async ({ pageParam = 1 }) => {
@@ -127,6 +134,14 @@ export const Transactions: React.FC = () => {
     }
   )
 
+  const [isRefetching, setIsRefetching] = useState(false)
+
+  const refresh = useCallback(async () => {
+    setIsRefetching(true)
+    await refetch()
+    setIsRefetching(false)
+  }, [refetch])
+
   const dataLength = useMemo(() => {
     return (
       data?.pages.reduce((acc, tx) => tx.transaction_list.length + acc, 0) ?? 0
@@ -140,7 +155,7 @@ export const Transactions: React.FC = () => {
         {status === 'success' && dataLength === 0 ? (
           <h4>还没有交易...</h4>
         ) : null}
-        {isFetching && status !== 'loading' ? <Loading /> : null}
+        {isRefetching ? <Loading /> : null}
         {status === 'loading' && data === undefined ? (
           <Loading />
         ) : (
@@ -150,7 +165,7 @@ export const Transactions: React.FC = () => {
               0
             )}
             pullDownToRefresh
-            refreshFunction={refetch}
+            refreshFunction={refresh}
             next={fetchNextPage}
             hasMore={hasNextPage === true}
             pullDownToRefreshContent={<h4>&#8595; 下拉刷新</h4>}

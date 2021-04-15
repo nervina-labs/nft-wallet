@@ -2,7 +2,7 @@ import { ListMeta } from './nft'
 
 export enum TransactionStatus {
   Pending = 'pending',
-  Committed = 'commited',
+  Committed = 'committed',
 }
 
 export enum TransactionDirection {
