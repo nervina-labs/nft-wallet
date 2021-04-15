@@ -106,7 +106,7 @@ export const NFT: React.FC = () => {
   }, [width])
 
   const { id } = useParams<{ id: string }>()
-  const { api } = useWalletModel()
+  const { api, address } = useWalletModel()
 
   const { data } = useQuery(
     [Query.NFTDetail, id, api],
@@ -155,11 +155,13 @@ export const NFT: React.FC = () => {
               url={detail.issuer_info.avatar_url}
             />
           </div>
-          <div className="action">
-            <Button type="primary" onClick={tranfer}>
-              转让
-            </Button>
-          </div>
+          {address !== '' ? (
+            <div className="action">
+              <Button type="primary" onClick={tranfer}>
+                {detail.is_submitting ? '转让中' : '转让'}
+              </Button>
+            </div>
+          ) : null}
         </section>
       )}
       <DialogContainer

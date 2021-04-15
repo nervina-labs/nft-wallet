@@ -31,4 +31,5 @@ export interface NFTDetail {
   }
   total: number
   issued: number
+  is_submitting: boolean
 }

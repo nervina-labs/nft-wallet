@@ -35,4 +35,5 @@ export const nftDetail: NFTDetail = {
     avatar_url: 'https://avatars.githubusercontent.com/u/12708910?v=4',
     uuid: '78561e51-2611-49b9-85bb-3babb92d8758',
   },
+  is_submitting: false,
 }

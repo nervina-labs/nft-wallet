@@ -1,8 +1,8 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { Redirect, useHistory, useLocation, useParams } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
-import { NFTDetail } from '../../models'
+import { NFTDetail, Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
@@ -16,11 +16,11 @@ import { LazyLoadImage } from '../../components/Image'
 import { isValidCkbLongAddress } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel } from '../../hooks/useWallet'
-import { nftDetail as mockNftDetail } from '../../mock/nft'
 import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
 import { useWidth } from '../../hooks/useWidth'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
+import { useQuery } from 'react-query'
 
 const Container = styled.main`
   display: flex;
@@ -155,7 +155,7 @@ export enum FailedMessage {
 export const Transfer: React.FC = () => {
   const location = useLocation<{ nftDetail?: NFTDetail }>()
   const history = useHistory()
-  const { signTransaction, api } = useWalletModel()
+  const { signTransaction, api, isLogined } = useWalletModel()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [ckbAddress, setCkbAddress] = useState('')
   const [failedMessage, setFailedMessage] = useState(FailedMessage.TranferFail)
@@ -226,12 +226,23 @@ export const Transfer: React.FC = () => {
     setIsScaning(true)
     qrcodeScanerRef.current?.startScan()
   }
-  const { nftDetail } = location.state ?? {
-    nftDetail: mockNftDetail,
-  }
+
+  const { data: remoteNftDetail } = useQuery(
+    [Query.NFTDetail, id, api],
+    async () => {
+      const { data } = await api.getNFTDetail(id)
+      return data
+    },
+    { enabled: id != null && location.state?.nftDetail == null }
+  )
+
+  const nftDetail = useMemo(() => {
+    return location.state?.nftDetail ?? remoteNftDetail
+  }, [location.state, remoteNftDetail])
+
   const appRef = useRef(null)
   const width = useWidth(appRef)
-  return nftDetail !== undefined ? (
+  return isLogined ? (
     <Container>
       <Appbar
         title="转让"
@@ -307,34 +318,36 @@ export const Transfer: React.FC = () => {
         open={isDrawerOpen}
         onBackdropClick={isSendingNFT ? undefined : closeDrawer}
       >
-        <DrawerContainer>
-          <label>转让：</label>
-          <div className="card">
-            <LazyLoadImage src={nftDetail.renderer} width={80} height={80} />
-            <div className="info">
-              <div className="title">{nftDetail.name}</div>
-              <div className="row">
-                <Limited count={nftDetail.total} />
-              </div>
-              <div className="row">
-                <Creator
-                  name={nftDetail.issuer_info.name}
-                  url={nftDetail.issuer_info.avatar_url}
-                />
+        {nftDetail !== undefined ? (
+          <DrawerContainer>
+            <label>转让：</label>
+            <div className="card">
+              <LazyLoadImage src={nftDetail.renderer} width={80} height={80} />
+              <div className="info">
+                <div className="title">{nftDetail.name}</div>
+                <div className="row">
+                  <Limited count={nftDetail.total} />
+                </div>
+                <div className="row">
+                  <Creator
+                    name={nftDetail.issuer_info.name}
+                    url={nftDetail.issuer_info.avatar_url}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <label>接收方地址：</label>
-          <p className="address">{ckbAddress}</p>
-          <div className="center">
-            <Button type="primary" onClick={sendNFT} disbaled={isSendingNFT}>
-              确认
-              {isSendingNFT ? (
-                <CircularProgress size="1em" className="loading" />
-              ) : null}
-            </Button>
-          </div>
-        </DrawerContainer>
+            <label>接收方地址：</label>
+            <p className="address">{ckbAddress}</p>
+            <div className="center">
+              <Button type="primary" onClick={sendNFT} disbaled={isSendingNFT}>
+                确认
+                {isSendingNFT ? (
+                  <CircularProgress size="1em" className="loading" />
+                ) : null}
+              </Button>
+            </div>
+          </DrawerContainer>
+        ) : null}
       </Drawer>
     </Container>
   ) : (
