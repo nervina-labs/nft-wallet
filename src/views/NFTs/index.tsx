@@ -76,7 +76,6 @@ export const NFTs: React.FC = () => {
     <Container>
       <Appbar title="我的秘宝" />
       <section className="list">
-        {status === 'success' && dataLength === 0 ? <Empty /> : null}
         {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
           <Loading />
@@ -103,6 +102,7 @@ export const NFTs: React.FC = () => {
                 </React.Fragment>
               )
             })}
+            {status === 'success' && dataLength === 0 ? <Empty /> : null}
           </InfiniteScroll>
         )}
       </section>

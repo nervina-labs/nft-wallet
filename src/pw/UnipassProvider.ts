@@ -8,7 +8,7 @@ import {
   AddressPrefix,
 } from '@lay2/pw-core'
 import { createHash } from 'crypto'
-import { unipassCache } from '../cache'
+// import { unipassCache } from '../cache'
 import { UNIPASS_URL } from '../constants'
 
 type UP_ACT = 'UP-READY' | 'UP-LOGIN' | 'UP-SIGN' | 'UP-CLOSE'
@@ -60,16 +60,16 @@ export default class UnipassProvider extends Provider {
   }
 
   async init(): Promise<UnipassProvider> {
-    const cachedEmail = unipassCache.getUnipassEmail()
-    const cachedAddress = unipassCache.getUnipassAddress()
+    // const cachedEmail = unipassCache.getUnipassEmail()
+    // const cachedAddress = unipassCache.getUnipassAddress()
 
-    if (cachedAddress != null && cachedEmail != null) {
-      this._email = cachedEmail
-      this.address = new Address(cachedAddress, AddressType.ckb)
-      return this
-    }
+    // if (cachedAddress != null && cachedEmail != null) {
+    //   this._email = cachedEmail
+    //   this.address = new Address(cachedAddress, AddressType.ckb)
+    //   return this
+    // }
 
-    return await new Promise((resolve) => {
+    return await new Promise((resolve, reject) => {
       this.msgHandler = (event) => {
         if (typeof event.data === 'object' && 'upact' in event.data) {
           const msg = event.data as UnipassMessage
@@ -78,7 +78,11 @@ export default class UnipassProvider extends Provider {
             event.source != null &&
               (event.source as Window).postMessage(msg, event.origin)
           } else if (msg.upact === 'UP-LOGIN') {
-            const { pubkey, email } = msg.payload as UnipassAccount
+            const { payload } = msg
+            if (payload === undefined || typeof payload === 'string') {
+              return
+            }
+            const { pubkey, email } = payload
             const ckbAddress = pubkeyToAddress(pubkey)
             this.address = new Address(ckbAddress, AddressType.ckb)
             this._email = email
@@ -112,7 +116,10 @@ export default class UnipassProvider extends Provider {
                 event.origin
               )
           } else if (msg.upact === 'UP-SIGN') {
-            const signature = msg.payload as string
+            const signature = msg.payload
+            if (typeof signature !== 'string') {
+              return
+            }
             console.log('[Sign] signature: ', signature)
             this.msgHandler != null &&
               window.removeEventListener('message', this.msgHandler)

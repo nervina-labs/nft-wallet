@@ -99,7 +99,7 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
         className="link"
         target="_blank"
         rel="noopener noreferrer"
-        href={`${NFT_EXPLORER_URL}/nft_status/${tx.tx_hash}`}
+        href={`${NFT_EXPLORER_URL}/transaction/${tx.tx_hash}`}
       >
         <LinkSvg />
       </a>
@@ -152,9 +152,6 @@ export const Transactions: React.FC = () => {
     <Container>
       <section className="list" id="list">
         <Divider />
-        {status === 'success' && dataLength === 0 ? (
-          <h4>还没有交易...</h4>
-        ) : null}
         {isRefetching ? <Loading /> : null}
         {status === 'loading' && data === undefined ? (
           <Loading />
@@ -184,6 +181,9 @@ export const Transactions: React.FC = () => {
                 </React.Fragment>
               )
             })}
+            {status === 'success' && dataLength === 0 ? (
+              <h4>还没有交易...</h4>
+            ) : null}
           </InfiniteScroll>
         )}
       </section>

@@ -40,20 +40,16 @@ function useWallet(): UseWallet {
 
   const signTransaction = useCallback(
     async (tx: Transaction) => {
-      const cachedEmail = unipassCache.getUnipassEmail()
-      const cachedAddress = unipassCache.getUnipassAddress()
       if (provider != null) {
         const signer = new UnipassSigner(provider)
         const signedTx = await signer.sign(tx)
         return signedTx
       }
-      if (cachedEmail !== '' && cachedAddress !== '') {
-        const p = await login()
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const signer = new UnipassSigner(p!)
-        const signedTx = await signer.sign(tx)
-        return signedTx
-      }
+      const p = await login()
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const signer = new UnipassSigner(p!)
+      const signedTx = await signer.sign(tx)
+      return signedTx
     },
     [provider, login]
   )
