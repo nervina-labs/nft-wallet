@@ -265,8 +265,10 @@ export const Transfer: React.FC = () => {
           stopScan()
           setIsAddressValid(true)
         }}
-        onDecodeError={() => {
-          setHasPermission(false)
+        onDecodeError={(e) => {
+          if (e.toString().includes('permission')) {
+            setHasPermission(false)
+          }
           stopScan()
         }}
       />
