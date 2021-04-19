@@ -60,6 +60,7 @@ const Container = styled.main`
         border: none;
         overflow: auto;
         outline: none;
+        border-radius: 0;
         -webkit-box-shadow: none;
         -moz-box-shadow: none;
         box-shadow: none;
@@ -155,7 +156,7 @@ export enum FailedMessage {
 export const Transfer: React.FC = () => {
   const location = useLocation<{ nftDetail?: NFTDetail }>()
   const history = useHistory()
-  const { signTransaction, api, isLogined } = useWalletModel()
+  const { signTransaction, api, isLogined, address } = useWalletModel()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [ckbAddress, setCkbAddress] = useState('')
   const [failedMessage, setFailedMessage] = useState(FailedMessage.TranferFail)
@@ -165,13 +166,16 @@ export const Transfer: React.FC = () => {
   const [isSendDialogFail, setIsSendDialogFail] = useState(false)
   const [isScaning, setIsScaning] = useState(false)
   const qrcodeScanerRef = useRef<QrcodeScaner>(null)
+  const isSameAddress = useMemo(() => {
+    return address !== '' && address === ckbAddress
+  }, [address, ckbAddress])
   const textareaOnChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const val = e.target.value
-      setIsAddressValid(isValidCkbLongAddress(val))
+      setIsAddressValid(isValidCkbLongAddress(val) && isSameAddress)
       setCkbAddress(val)
     },
-    []
+    [isSameAddress]
   )
   const stopTranfer = (isSuccess: boolean): void => {
     setIsSendingNFT(false)
@@ -291,7 +295,7 @@ export const Transfer: React.FC = () => {
           }}
         >
           <ErrorSvg />
-          请输入正确的 CKB 地址
+          {isSameAddress ? '无法转让秘宝给自己' : '请输入正确的 CKB 地址'}
         </div>
         <div className="action">
           <Button
