@@ -47,7 +47,7 @@ export const Login: React.FC = () => {
   }, [login, history])
   return (
     <Container>
-      <Title>秘宝钱包</Title>
+      <Title>秘宝账户</Title>
       <LogoSvg className="logo" />
       <Button
         onClick={loginBtnOnClick}
@@ -55,7 +55,7 @@ export const Login: React.FC = () => {
         disbaled={isLogining}
         isLoading={isLogining}
       >
-        登录
+        连接账户
       </Button>
     </Container>
   )

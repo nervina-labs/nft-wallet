@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "dev": "craco start",
+    "dev": "HTTPS=true craco start",
     "build": "craco build",
     "start": "serve -s build",
     "lint": "eslint src"
@@ -14,15 +14,15 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@nervosnetwork/ckb-sdk-core": "^0.40.0",
     "@types/qrcode.react": "^1.0.1",
+    "@zxing/library": "^0.18.5",
     "axios": "^0.21.1",
+    "dayjs": "1.10.4",
     "hox": "^1.1.3",
-    "qr-scanner": "^1.2.0",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-infinite-scroll-component": "^6.0.0",
     "react-query": "^3.13.4",
-    "dayjs": "1.10.4",
     "react-router-dom": "^5.2.0",
     "styled-components": "^5.2.3"
   },

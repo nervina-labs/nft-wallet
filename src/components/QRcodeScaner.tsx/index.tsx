@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react'
-import QrScanner from 'qr-scanner'
+import { BrowserQRCodeReader } from '@zxing/library'
 import styled from 'styled-components'
 import { Drawer } from '@material-ui/core'
 import { isValidCkbLongAddress } from '../../utils'
@@ -70,45 +72,42 @@ export interface QrcodeScanerState {
 // eslint-disable-next-line prettier/prettier
 export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScanerState> {
   private readonly videoRef = React.createRef<HTMLVideoElement>()
-  public scaner: QrScanner | null = null
+  public scaner: BrowserQRCodeReader | null = null
 
   state = {
     nonCkbAddressResult: '',
     isScaning: false,
   }
 
-  public startScan(): void {
+  public async startScan(): Promise<void> {
+    const { onDecode, onDecodeError, onScanCkbAddress } = this.props
+    if (this.scaner === null) {
+      this.scaner = new BrowserQRCodeReader()
+    }
+    const devices = await this.scaner.listVideoInputDevices()
+    const deviceId =
+      devices.find((d) => {
+        const label = d.label.toLowerCase()
+        return label.includes('back') || label.includes('后')
+      })?.deviceId ?? devices[0].deviceId
     this.setState({ nonCkbAddressResult: '', isScaning: true }, () => {
-      const {
-        onDecode,
-        onDecodeError,
-        onScanCkbAddress,
-        onStartError,
-      } = this.props
-      // eslint-disable-next-line no-debugger
-      // debugger
-      setTimeout(() => {
-        if (this.scaner === null) {
-          this.scaner = new QrScanner(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            this.videoRef.current!,
-            (result) => {
-              onDecode?.(result)
-              this.setState({ isScaning: false })
-              if (isValidCkbLongAddress(result)) {
-                this.setState({ nonCkbAddressResult: '' })
-                onScanCkbAddress(result)
-              } else {
-                this.setState({ nonCkbAddressResult: result })
-              }
-              this.stopScan()
-            },
-            onDecodeError
-          )
-
-          this.scaner.start().catch(onStartError)
-        }
-      }, 400)
+      this.scaner!.decodeOnceFromVideoDevice(deviceId, this.videoRef.current!)
+        .then((result) => {
+          if (result == null) {
+            return
+          }
+          const text = result.getText()
+          onDecode?.(text)
+          this.setState({ isScaning: false })
+          if (isValidCkbLongAddress(text)) {
+            this.setState({ nonCkbAddressResult: '' })
+            onScanCkbAddress(text)
+          } else {
+            this.setState({ nonCkbAddressResult: text })
+          }
+          this.stopScan()
+        })
+        .catch(onDecodeError)
     })
   }
 
@@ -118,8 +117,7 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
 
   public stopScan(): void {
     this.setState({ isScaning: false }, () => {
-      this.scaner?.stop()
-      this.scaner?.destroy()
+      this.scaner?.reset()
       this.scaner = null
     })
   }

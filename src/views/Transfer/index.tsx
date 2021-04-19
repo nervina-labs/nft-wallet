@@ -222,10 +222,15 @@ export const Transfer: React.FC = () => {
     setIsScaning(false)
     qrcodeScanerRef.current?.stopScan()
   }
-  const startScan = (): void => {
-    setIsScaning(true)
-    qrcodeScanerRef.current?.startScan()
-  }
+  const [hasPermission, setHasPermission] = useState(true)
+  const startScan = useCallback(() => {
+    if (hasPermission) {
+      setIsScaning(true)
+      qrcodeScanerRef.current?.startScan()
+    } else {
+      alert('没有摄像头权限，请刷新页面重新授权。')
+    }
+  }, [hasPermission])
 
   const { data: remoteNftDetail } = useQuery(
     [Query.NFTDetail, id, api],
@@ -259,6 +264,10 @@ export const Transfer: React.FC = () => {
           setCkbAddress(address)
           stopScan()
           setIsAddressValid(true)
+        }}
+        onDecodeError={() => {
+          setHasPermission(false)
+          stopScan()
         }}
       />
       <div className="content">
