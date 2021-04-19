@@ -1,21 +1,24 @@
-name: DEPLOY
+name: 'deploy'
 
+# yamllint disable-line rule:truthy
 on:
-  - push
+  push:
+    branches:
+      - develop
 
 jobs:
   deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Cloning repo
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Deploy to dokku
-        id: deploy
-        uses: idoberko2/dokku-deploy-github-action@v1
+      - name: Push to dokku
+        uses: dokku/github-action@master
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          dokku-host: ${{ secrets.DOKKU_HOST }}
-          app-name: 'wallet'
+          branch: 'develop'
+          git_remote_url: ${{ secrets.DOKKU_HOST }}
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          review_app_name: 'wallet'
