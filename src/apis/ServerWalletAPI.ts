@@ -31,10 +31,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getNFTDetail(uuid: string): Promise<AxiosResponse<NFTDetail>> {
+    const params: Record<string, unknown> = {
+      include_submitting: true,
+    }
+    if (this.address !== '') {
+      params.address = this.address
+    }
     return await this.axios.get(`/tokens/${uuid}`, {
-      params: {
-        include_submitting: true,
-      },
+      params,
     })
   }
 
