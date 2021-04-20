@@ -28,7 +28,7 @@ export const nftDetail: NFTDetail = {
   description: 'NFT NEWbee',
   total: 50,
   issued: 0,
-  renderer:
+  bg_image_url:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/230px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
   issuer_info: {
     name: '1enterpaise',

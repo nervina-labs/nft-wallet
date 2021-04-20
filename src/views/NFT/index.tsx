@@ -134,7 +134,7 @@ export const NFT: React.FC = () => {
       />
       <div className="figure">
         <LazyLoadImage
-          src={detail?.renderer ?? ''}
+          src={detail?.bg_image_url ?? ''}
           width={imageWidth}
           height={imageWidth}
         />

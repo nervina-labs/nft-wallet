@@ -337,7 +337,11 @@ export const Transfer: React.FC = () => {
           <DrawerContainer>
             <label>转让：</label>
             <div className="card">
-              <LazyLoadImage src={nftDetail.renderer} width={80} height={80} />
+              <LazyLoadImage
+                src={nftDetail.bg_image_url}
+                width={80}
+                height={80}
+              />
               <div className="info">
                 <div className="title">{nftDetail.name}</div>
                 <div className="row">

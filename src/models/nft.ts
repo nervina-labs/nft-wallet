@@ -23,7 +23,7 @@ export interface NFTToken {
 export interface NFTDetail {
   name: string
   description: string
-  renderer: string
+  bg_image_url: string
   issuer_info: {
     name: string
     uuid: string
