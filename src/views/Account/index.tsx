@@ -50,12 +50,17 @@ export const Account: React.FC = () => {
   const history = useHistory()
   const matchInfo = useRouteMatch(RoutePath.Info)
   const matchTx = useRouteMatch(RoutePath.Transactions)
+  const matchAccount = useRouteMatch(RoutePath.Account)
   const isInfo = matchInfo?.isExact != null
   const isTx = matchTx?.isExact != null
+  const isAccount = matchAccount?.isExact === true
 
   const { isLogined } = useWalletModel()
   if (!isLogined) {
     return <Redirect to={RoutePath.Login} />
+  }
+  if (isAccount) {
+    return <Redirect from={RoutePath.Account} exact to={RoutePath.Info} />
   }
   return (
     <Container>
@@ -82,6 +87,7 @@ export const Account: React.FC = () => {
         <Switch>
           <Route component={Info} path={RoutePath.Info} />
           <Route component={Transactions} path={RoutePath.Transactions} />
+          <Redirect to={RoutePath.Login} />
         </Switch>
       </section>
     </Container>
