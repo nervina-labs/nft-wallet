@@ -10,14 +10,15 @@ export interface ListMeta {
 }
 
 export interface NFTToken {
-  token_class_name: string
-  token_class_bg_url: string
-  token_class_uuid: string
-  token_class_description: string
-  token_class_total: number
+  class_name: string
+  class_bg_url: string
+  class_uuid: string
+  class_description: string
+  class_total: string
   token_uuid: string
   issuer_avatar_url: string
   issuer_name: string
+  is_submitting: boolean
 }
 
 export interface NFTDetail {
@@ -29,7 +30,7 @@ export interface NFTDetail {
     uuid: string
     avatar_url: string
   }
-  total: number
+  total: string
   issued: number
   is_submitting: boolean
 }

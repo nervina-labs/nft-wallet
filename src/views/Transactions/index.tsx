@@ -87,7 +87,7 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
     <ListItemContainer>
       <div className="icon">{icon}</div>
       <div className="content">
-        <span>{tx.token_class_name}</span>
+        <span>{tx.class_name}</span>
         <span>
           {tx.tx_direction === TransactionDirection.Receive
             ? `至 ${truncateMiddle(tx.to_address, 8, 5)}`

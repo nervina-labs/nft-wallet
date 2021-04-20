@@ -80,15 +80,11 @@ export const Card: React.FC<CardProps> = ({ token }) => {
   return (
     <Container onClick={() => history.push(`/nft/${token.token_uuid}`)}>
       <div className="media">
-        <LazyLoadImage
-          src={token.token_class_bg_url}
-          width={120}
-          height={120}
-        />
+        <LazyLoadImage src={token.class_bg_url} width={120} height={120} />
       </div>
       <div className="content">
-        <div className="title">{token.token_class_name}</div>
-        <Limited count={token.token_class_total} />
+        <div className="title">{token.class_name}</div>
+        <Limited count={token.class_total} />
         <Creator url={token.issuer_avatar_url} name={token.issuer_name} />
       </div>
     </Container>

@@ -16,12 +16,12 @@ const Container = styled.div`
 `
 
 export interface LimitedProps {
-  count: number
+  count: string
   fontSize?: number
 }
 
 export const Limited: React.FC<LimitedProps> = ({ count, fontSize }) => {
-  const isUnlimited = count === 0
+  const isUnlimited = count === '0'
   return (
     <Container fontSize={fontSize}>
       {isUnlimited ? null : <StarSvg />}
