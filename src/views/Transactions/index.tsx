@@ -59,7 +59,14 @@ const ListItemContainer = styled.div`
     line-height: 17px;
     color: #000000;
     margin-left: 12px;
+    overflow: hidden;
+    margin-right: 4px;
     flex: 1;
+    .name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
   .time {
     margin-left: auto;
@@ -91,7 +98,7 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
     <ListItemContainer>
       <div className="icon">{icon}</div>
       <div className="content">
-        <span>{tx.class_name}</span>
+        <span className="name">{tx.class_name}</span>
         <span>
           {tx.tx_direction === TransactionDirection.Receive
             ? `发送至 ${truncateMiddle(tx.to_address, 8, 5)}`
@@ -174,7 +181,7 @@ export const Transactions: React.FC = () => {
             releaseToRefreshContent={<h4>&#8593; 下拉刷新</h4>}
             scrollThreshold="200px"
             loader={<Loading />}
-            endMessage={dataLength <= 9 ? null : <h4>已经拉到底了</h4>}
+            endMessage={<h4>{dataLength <= 9 ? '' : '已经拉到底了'}</h4>}
           >
             {data?.pages?.map((group, i) => {
               return (
