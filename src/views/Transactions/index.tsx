@@ -14,11 +14,11 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { Divider } from '@material-ui/core'
 import { ReactComponent as SendSvg } from '../../assets/svg/send.svg'
 import { ReactComponent as ReceiveSvg } from '../../assets/svg/receive.svg'
-import { ReactComponent as PendingSvg } from '../../assets/svg/pending.svg'
 import { ReactComponent as LinkSvg } from '../../assets/svg/link.svg'
 import { truncateMiddle } from '../../utils'
 import { NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
+import pendingSrc from '../../assets/img/pending.png'
 
 const Container = styled.div`
   display: flex;
@@ -44,6 +44,10 @@ const ListItemContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    img {
+      width: 16px;
+      height: 16px;
+    }
   }
   .content {
     height: 42px;
@@ -77,7 +81,7 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
       <SendSvg />
     )
   if (tx.tx_state !== TransactionStatus.Committed) {
-    icon = <PendingSvg />
+    icon = <img src={pendingSrc as any} alt="pending" />
   }
   const time =
     tx.on_chain_timestamp === null
@@ -90,8 +94,8 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
         <span>{tx.class_name}</span>
         <span>
           {tx.tx_direction === TransactionDirection.Receive
-            ? `至 ${truncateMiddle(tx.to_address, 8, 5)}`
-            : `自 ${truncateMiddle(tx.from_address, 8, 5)}`}
+            ? `发送至 ${truncateMiddle(tx.to_address, 8, 5)}`
+            : `接收自 ${truncateMiddle(tx.from_address, 8, 5)}`}
         </span>
       </div>
       <div className="time">{time}</div>
