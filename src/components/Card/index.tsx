@@ -37,6 +37,7 @@ const Container = styled.div`
       color: #000000;
       text-overflow: ellipsis;
       overflow: hidden;
+      white-space: nowrap;
     }
     .desc {
       font-weight: normal;
