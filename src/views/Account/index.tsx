@@ -87,9 +87,9 @@ export const Account: React.FC = () => {
           </span>
         </div>
         <Switch>
-          <Route component={Info} path={RoutePath.Info} />
-          <Route component={Transactions} path={RoutePath.Transactions} />
-          <Redirect to={RoutePath.Login} />
+          <Route component={Info} path={RoutePath.Info} exact />
+          <Route component={Transactions} path={RoutePath.Transactions} exact />
+          <Redirect to={RoutePath.NotFound} />
         </Switch>
       </section>
     </Container>
