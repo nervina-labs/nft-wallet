@@ -1,25 +1,31 @@
-import { NFTDetail } from '../models'
+import { NFTDetail, NFTToken } from '../models'
 
-export const nfts: any[] = [
+export const nfts: NFTToken[] = [
   {
-    token_class_name: 'token_class_name',
-    token_class_bg_url:
+    class_name: 'class_name',
+    class_bg_url:
       'https://qph.fs.quoracdn.net/main-qimg-97e50536209bbed66e56ee3c97989013',
-    token_class_description:
+    class_description:
       '啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,',
-    token_class_total: 0,
+    class_total: '0',
     token_uuid: '1',
-    token_class_uuid: '123',
+    class_uuid: '123',
+    issuer_avatar_url: '',
+    issuer_name: 'wocaowocaowocaowocaowocaowocaowocaowocaowocao',
+    is_submitting: false,
   },
   {
-    token_class_name: '您尚未拥有任何秘宝',
-    token_class_bg_url:
+    class_name: '您尚未拥有任何秘宝',
+    class_bg_url:
       'https://qph.fs.quoracdn.net/main-qimg-97e50536209bbed66e56ee3c97989013',
-    token_class_description:
+    class_description:
       '啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,',
-    token_class_total: 100,
+    class_total: '100',
     token_uuid: '2',
-    token_class_uuid: '456',
+    class_uuid: '456',
+    issuer_avatar_url: '',
+    issuer_name: 'wocao',
+    is_submitting: false,
   },
 ]
 

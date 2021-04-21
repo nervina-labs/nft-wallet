@@ -23,10 +23,15 @@ const Container = styled.div`
       top: 2px;
     }
   }
+  .issuer {
+    white-space: nowrap;
+  }
   .name {
     color: rgba(0, 0, 0, 0.8);
     font-weight: normal;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 `
 

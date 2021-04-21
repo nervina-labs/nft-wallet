@@ -22,17 +22,21 @@ const Container = styled.div`
   .media {
     width: 120px;
     height: 120px;
+    min-width: 120px;
   }
   .content {
     margin: 8px;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
+    overflow: hidden;
     .title {
       font-weight: 600;
       font-size: 16px;
       line-height: 22px;
       color: #000000;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
     .desc {
       font-weight: normal;
