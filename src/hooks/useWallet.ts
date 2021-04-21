@@ -3,7 +3,12 @@ import { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
 import PWCore, { ChainID, IndexerCollector, Transaction } from '@lay2/pw-core'
-import { INDEXER_URL, NODE_URL, UNIPASS_URL } from '../constants'
+import {
+  INDEXER_URL,
+  NODE_URL,
+  UNIPASS_EXPIRED_TIME,
+  UNIPASS_URL,
+} from '../constants'
 import UnipassProvider from '../pw/UnipassProvider'
 import { unipassCache } from '../cache'
 import UnipassSigner from '../pw/UnipassSigner'
@@ -18,6 +23,7 @@ export interface UseWallet {
 
 function useWallet(): UseWallet {
   const [provider, setProvider] = useState<UnipassProvider>()
+  const [isLoginExpired, setIsLoginExpired] = useState(false)
 
   const login = useCallback(async () => {
     try {
@@ -31,6 +37,9 @@ function useWallet(): UseWallet {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       unipassCache.setUnipassEmail(p.email!)
       setProvider(p)
+      setTimeout(() => {
+        setIsLoginExpired(true)
+      }, UNIPASS_EXPIRED_TIME)
       return p
     } catch (error) {
       console.log(error)
@@ -40,7 +49,7 @@ function useWallet(): UseWallet {
 
   const signTransaction = useCallback(
     async (tx: Transaction) => {
-      if (provider != null) {
+      if (provider != null && !isLoginExpired) {
         const signer = new UnipassSigner(provider)
         const signedTx = await signer.sign(tx)
         return signedTx
@@ -51,7 +60,7 @@ function useWallet(): UseWallet {
       const signedTx = await signer.sign(tx)
       return signedTx
     },
-    [provider, login]
+    [provider, login, isLoginExpired]
   )
 
   const address = useMemo(() => {
