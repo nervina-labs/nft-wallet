@@ -46,6 +46,7 @@ const Container = styled(MainContainer)`
       color: rgba(0, 0, 0, 0.6);
       margin-top: 12px;
       margin-bottom: 24px;
+      white-space: pre-line;
     }
     .row {
       font-weight: 600;
