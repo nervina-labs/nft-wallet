@@ -22,6 +22,7 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { useQuery } from 'react-query'
 import { MainContainer } from '../../styles'
+import { CONTAINER_MAX_WIDTH } from '../../constants'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -251,10 +252,22 @@ export const Transfer: React.FC = () => {
   }, [location.state, remoteNftDetail])
 
   const appRef = useRef(null)
-  const width = useWidth(appRef)
+  const containerRef = useRef(null)
+  const containerWidth = useWidth(appRef)
+  const bodyWidth = useWidth(document.body)
+
+  const drawerLeft = useMemo(() => {
+    if (bodyWidth == null) {
+      return 0
+    }
+    if (bodyWidth <= CONTAINER_MAX_WIDTH) {
+      return 0
+    }
+    return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
+  }, [bodyWidth])
 
   return isLogined ? (
-    <Container>
+    <Container ref={containerRef}>
       <Appbar
         title="转让"
         left={<BackSvg onClick={() => history.goBack()} />}
@@ -265,7 +278,7 @@ export const Transfer: React.FC = () => {
         ref={qrcodeScanerRef}
         isDrawerOpen={isScaning}
         onCancel={stopScan}
-        width={width}
+        width={containerWidth}
         onScanCkbAddress={(address) => {
           setCkbAddress(address)
           stopScan()
@@ -334,6 +347,13 @@ export const Transfer: React.FC = () => {
         anchor="bottom"
         open={isDrawerOpen}
         onBackdropClick={isSendingNFT ? undefined : closeDrawer}
+        PaperProps={{
+          style: {
+            position: 'absolute',
+            width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
+            left: drawerLeft,
+          },
+        }}
       >
         {nftDetail !== undefined ? (
           <DrawerContainer>
