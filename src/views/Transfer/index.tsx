@@ -21,8 +21,9 @@ import { useWidth } from '../../hooks/useWidth'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { useQuery } from 'react-query'
+import { MainContainer } from '../../styles'
 
-const Container = styled.main`
+const Container = styled(MainContainer)`
   display: flex;
   height: 100%;
   flex-direction: column;

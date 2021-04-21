@@ -13,8 +13,9 @@ import { RoutePath } from '../../routes'
 import { Info } from '../Info'
 import { Transactions } from '../Transactions'
 import { useWalletModel } from '../../hooks/useWallet'
+import { MainContainer } from '../../styles'
 
-const Container = styled.main`
+const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
 
@@ -27,6 +28,7 @@ const Container = styled.main`
       display: flex;
       margin-top: 20px;
       .tab {
+        cursor: pointer;
         width: 120px;
         height: 40px;
         font-size: 16px;

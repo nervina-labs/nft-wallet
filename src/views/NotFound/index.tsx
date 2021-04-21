@@ -4,8 +4,9 @@ import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { Button } from '../../components/Button'
 import { RoutePath } from '../../routes'
+import { MainContainer } from '../../styles'
 
-const Container = styled.main`
+const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   height: 100%;

@@ -41,6 +41,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
             display: loaded ? 'block' : 'none',
             width: `${width}px`,
             height: `${height}px`,
+            maxWidth: '100%',
           }}
         />
       )}

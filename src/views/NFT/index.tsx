@@ -16,8 +16,9 @@ import { useWalletModel } from '../../hooks/useWallet'
 import { Loading } from '../../components/Loading'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
+import { MainContainer } from '../../styles'
 
-const Container = styled.main`
+const Container = styled(MainContainer)`
   display: flex;
   background: linear-gradient(187.7deg, #ffffff 4.33%, #f0f0f0 94.27%);
   height: 100%;

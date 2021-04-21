@@ -21,6 +21,9 @@ const Container = styled.div`
     color: rgba(0, 0, 0, 0.8);
     font-weight: 600;
   }
+  .copyable {
+    cursor: pointer;
+  }
   svg {
     min-width: 20px;
     margin-left: 10px;
@@ -43,7 +46,11 @@ export const Copyzone: React.FC<CopyzoneProps> = ({ text, displayText }) => {
   return (
     <Container>
       <span className="text">{displayText}</span>
-      {!isCopy ? <CopySvg onClick={onCopy} /> : <CheckSvg />}
+      {!isCopy ? (
+        <CopySvg onClick={onCopy} className="copyable" />
+      ) : (
+        <CheckSvg />
+      )}
     </Container>
   )
 }

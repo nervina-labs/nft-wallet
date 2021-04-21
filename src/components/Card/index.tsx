@@ -12,6 +12,7 @@ export interface CardProps {
 
 const Container = styled.div`
   display: flex;
+  cursor: pointer;
   margin-top: 16px;
   margin-left: 16px;
   margin-right: 16px;

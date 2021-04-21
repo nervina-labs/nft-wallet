@@ -26,6 +26,9 @@ const Header = styled.header`
     margin-right: 12px;
     width: 20px;
   }
+  svg {
+    cursor: pointer;
+  }
 `
 
 export interface AppbarProps {

@@ -12,6 +12,7 @@ export interface ButtonProps {
 export const ButtonContainer = styled.button`
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 20px;
+  cursor: pointer;
 
   font-weight: 600;
   font-size: 14px;

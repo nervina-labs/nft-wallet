@@ -12,8 +12,9 @@ import { Empty } from './empty'
 import { Loading } from '../../components/Loading'
 import { Redirect } from 'react-router'
 import { RoutePath } from '../../routes'
+import { MainContainer } from '../../styles'
 
-const Container = styled.main`
+const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   height: 100%;

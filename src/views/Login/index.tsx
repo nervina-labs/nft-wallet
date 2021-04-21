@@ -6,11 +6,12 @@ import WalletBg from '../../assets/svg/wallet_bg.svg'
 import { Button } from '../../components/Button'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
+import { MainContainer } from '../../styles'
 
 // @ts-expect-error
 const containerBg = WalletBg as string
 
-const Container = styled.main`
+const Container = styled(MainContainer)`
   display: flex;
   justify-content: center;
   align-items: center;
