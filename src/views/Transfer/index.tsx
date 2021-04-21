@@ -173,7 +173,7 @@ export const Transfer: React.FC = () => {
   const textareaOnChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const val = e.target.value
-      setIsAddressValid(isValidCkbLongAddress(val) && isSameAddress)
+      setIsAddressValid(isValidCkbLongAddress(val) || isSameAddress)
       setCkbAddress(val)
     },
     [isSameAddress]
@@ -252,6 +252,7 @@ export const Transfer: React.FC = () => {
 
   const appRef = useRef(null)
   const width = useWidth(appRef)
+
   return isLogined ? (
     <Container>
       <Appbar
