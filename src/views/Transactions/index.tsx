@@ -99,7 +99,7 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
         className="link"
         target="_blank"
         rel="noopener noreferrer"
-        href={`${NFT_EXPLORER_URL}/transaction/${tx.tx_hash}`}
+        href={`${NFT_EXPLORER_URL}/transaction/${tx.uuid}`}
       >
         <LinkSvg />
       </a>
