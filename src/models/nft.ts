@@ -11,7 +11,7 @@ export interface ListMeta {
 
 export interface NFTToken {
   class_name: string
-  class_bg_url: string
+  class_bg_image_url: string
   class_uuid: string
   class_description: string
   class_total: string

@@ -86,7 +86,11 @@ export const Card: React.FC<CardProps> = ({ token }) => {
   return (
     <Container onClick={() => history.push(`/nft/${token.token_uuid}`)}>
       <div className="media">
-        <LazyLoadImage src={token.class_bg_url} width={120} height={120} />
+        <LazyLoadImage
+          src={token.class_bg_image_url}
+          width={120}
+          height={120}
+        />
       </div>
       <div className="content">
         <div className="title">{token.class_name}</div>

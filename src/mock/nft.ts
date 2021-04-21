@@ -3,7 +3,7 @@ import { NFTDetail, NFTToken } from '../models'
 export const nfts: NFTToken[] = [
   {
     class_name: 'class_name',
-    class_bg_url:
+    class_bg_image_url:
       'https://qph.fs.quoracdn.net/main-qimg-97e50536209bbed66e56ee3c97989013',
     class_description:
       '啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,',
@@ -16,7 +16,7 @@ export const nfts: NFTToken[] = [
   },
   {
     class_name: '您尚未拥有任何秘宝',
-    class_bg_url:
+    class_bg_image_url:
       'https://qph.fs.quoracdn.net/main-qimg-97e50536209bbed66e56ee3c97989013',
     class_description:
       '啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,啊喔...您尚未拥有任何秘宝,',
