@@ -1,20 +1,16 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 
 export function useWidth(
-  elementRef: React.RefObject<HTMLElement> | HTMLElement
+  elementRef: React.RefObject<HTMLElement>
 ): number | undefined {
   const [width, setWidth] = useState<number>()
 
-  const element = useMemo(() => {
-    return elementRef instanceof HTMLElement ? elementRef : elementRef.current
-  }, [elementRef])
-
   const updateWidth = useCallback(() => {
-    if (element != null) {
-      const { width } = element.getBoundingClientRect()
+    if (elementRef?.current != null) {
+      const { width } = elementRef.current.getBoundingClientRect()
       setWidth(width)
     }
-  }, [element])
+  }, [elementRef])
 
   useEffect(() => {
     updateWidth()

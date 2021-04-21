@@ -254,7 +254,8 @@ export const Transfer: React.FC = () => {
   const appRef = useRef(null)
   const containerRef = useRef(null)
   const containerWidth = useWidth(appRef)
-  const bodyWidth = useWidth(document.body)
+  const bodyRef = useRef(document.body)
+  const bodyWidth = useWidth(bodyRef)
 
   const drawerLeft = useMemo(() => {
     if (bodyWidth == null) {
