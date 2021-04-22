@@ -9,6 +9,7 @@ import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
 import { ReactComponent as ErrorSvg } from '../../assets/svg/error.svg'
 import { ReactComponent as SuccessSvg } from '../../assets/svg/success.svg'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
+import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import { Button } from '../../components/Button'
 import { Drawer } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -99,13 +100,23 @@ const Container = styled(MainContainer)`
 const DrawerContainer = styled.div`
   margin: 32px 36px;
   margin-bottom: 0;
-  label {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 16px;
-    color: rgba(0, 0, 0, 0.6);
-    margin: 0;
+  .header {
+    display: flex;
+    align-items: center;
+    label {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 16px;
+      color: rgba(0, 0, 0, 0.6);
+      margin: 0;
+      display: flex;
+      align-items: center;
+    }
+    svg {
+      margin-left: auto;
+      cursor: pointer;
+    }
   }
   .card {
     margin-top: 8px;
@@ -122,8 +133,12 @@ const DrawerContainer = styled.div`
       font-weight: 600;
       font-size: 12px;
       line-height: 17px;
+      overflow: hidden;
       .title {
         color: #000000;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
       .row {
         color: rgba(0, 0, 0, 0.6);
@@ -358,7 +373,10 @@ export const Transfer: React.FC = () => {
       >
         {nftDetail !== undefined ? (
           <DrawerContainer>
-            <label>转让：</label>
+            <div className="header">
+              <label>转让：</label>
+              {isSendingNFT ? null : <CloseSvg onClick={closeDrawer} />}
+            </div>
             <div className="card">
               <LazyLoadImage
                 src={nftDetail.bg_image_url}
