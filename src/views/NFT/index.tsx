@@ -17,6 +17,7 @@ import { Loading } from '../../components/Loading'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { MainContainer } from '../../styles'
+import { NFT_EXPLORER_URL } from '../../constants'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -33,12 +34,16 @@ const Container = styled(MainContainer)`
   }
   .detail {
     margin: 0 36px;
+    padding-bottom: 16px;
     .title {
       font-weight: bold;
       font-size: 16px;
       line-height: 19px;
       color: #000000;
       margin-top: 16px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
     .desc {
       font-size: 14px;
@@ -96,10 +101,8 @@ export const NFT: React.FC = () => {
   const history = useHistory()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const style = useStyles()
-  const openDialog = (): void => setIsDialogOpen(true)
   const closeDialog = (): void => setIsDialogOpen(false)
 
-  const url = location.href
   const appRef = useRef(null)
   const width = useWidth(appRef)
   const imageWidth = useMemo(() => {
@@ -125,6 +128,16 @@ export const NFT: React.FC = () => {
       nftDetail: detail,
     })
   }, [history, id, detail])
+
+  const openDialog = useCallback(() => {
+    if (data !== undefined) {
+      setIsDialogOpen(true)
+    }
+  }, [data])
+
+  const explorerURL = useMemo(() => {
+    return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
+  }, [data])
 
   return (
     <Container>
@@ -172,7 +185,7 @@ export const NFT: React.FC = () => {
         onBackdropClick={closeDialog}
       >
         <div className="title">点击复制链接并分享至社交媒体</div>
-        <Copyzone text={url} displayText={url} />
+        <Copyzone text={explorerURL} displayText={explorerURL} />
         <div className="action">
           <Button onClick={closeDialog}>关闭</Button>
         </div>

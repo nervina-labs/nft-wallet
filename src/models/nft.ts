@@ -25,6 +25,7 @@ export interface NFTDetail {
   name: string
   description: string
   bg_image_url: string
+  class_uuid: string
   issuer_info: {
     name: string
     uuid: string
