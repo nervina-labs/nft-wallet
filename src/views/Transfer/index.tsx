@@ -183,17 +183,25 @@ export const Transfer: React.FC = () => {
   const [isSendDialogFail, setIsSendDialogFail] = useState(false)
   const [isScaning, setIsScaning] = useState(false)
   const qrcodeScanerRef = useRef<QrcodeScaner>(null)
-  const isSameAddress = useMemo(() => {
-    return address !== '' && address === ckbAddress
-  }, [address, ckbAddress])
+
   const textareaOnChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const val = e.target.value
-      setIsAddressValid(isValidCkbLongAddress(val) || isSameAddress)
+      let isValidAddress = isValidCkbLongAddress(val)
+      const isSameAddress = val !== '' && address === val
+      if (isSameAddress) {
+        isValidAddress = false
+      }
+      setIsAddressValid(isValidAddress)
       setCkbAddress(val)
     },
-    [isSameAddress]
+    [address]
   )
+
+  const isSameAddress = useMemo(() => {
+    return address !== '' && address === ckbAddress
+  }, [address, ckbAddress])
+
   const stopTranfer = (isSuccess: boolean): void => {
     setIsSendingNFT(false)
     setIsDrawerOpen(false)
