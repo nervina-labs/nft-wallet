@@ -19,6 +19,7 @@ export interface NFTToken {
   issuer_avatar_url: string
   issuer_name: string
   is_submitting: boolean
+  issuer_uuid: string
 }
 
 export interface NFTDetail {

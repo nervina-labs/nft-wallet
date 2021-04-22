@@ -96,7 +96,11 @@ export const Card: React.FC<CardProps> = ({ token }) => {
       <div className="content">
         <div className="title">{token.class_name}</div>
         <Limited count={token.class_total} />
-        <Creator url={token.issuer_avatar_url} name={token.issuer_name} />
+        <Creator
+          url={token.issuer_avatar_url}
+          name={token.issuer_name}
+          uuid={token.issuer_uuid}
+        />
       </div>
     </Container>
   )

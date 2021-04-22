@@ -173,6 +173,7 @@ export const NFT: React.FC = () => {
               fontSize={14}
               name={detail.issuer_info.name}
               url={detail.issuer_info.avatar_url}
+              uuid={detail.issuer_info.uuid}
             />
           </div>
           {address !== '' ? (

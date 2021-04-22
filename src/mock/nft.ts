@@ -13,6 +13,7 @@ export const nfts: NFTToken[] = [
     issuer_avatar_url: '',
     issuer_name: 'wocaowocaowocaowocaowocaowocaowocaowocaowocao',
     is_submitting: false,
+    issuer_uuid: '12',
   },
   {
     class_name: '您尚未拥有任何秘宝',
@@ -26,6 +27,7 @@ export const nfts: NFTToken[] = [
     issuer_avatar_url: '',
     issuer_name: 'wocao',
     is_submitting: false,
+    issuer_uuid: '12',
   },
 ]
 
