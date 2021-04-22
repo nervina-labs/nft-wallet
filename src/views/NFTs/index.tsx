@@ -17,7 +17,6 @@ import { MainContainer } from '../../styles'
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
-  height: 100%;
   h4 {
     text-align: center;
     color: rgba(0, 0, 0, 0.6);
