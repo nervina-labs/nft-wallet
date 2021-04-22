@@ -56,10 +56,12 @@ export class ServerWalletAPI implements NFTWalletAPI {
     toAddress: string
   ): Promise<NFTTransaction> {
     // eslint-disable-next-line prettier/prettier
-    const { data } = await this.axios.post<any, AxiosResponse<UnsignedTransaction>>('/token_ckb_transactions', {
-      token_uuid: uuid,
-      from_address: this.address,
-      to_address: toAddress,
+    const { data } = await this.axios.get<any, AxiosResponse<UnsignedTransaction>>('/token_ckb_transactions/new', {
+      params: {
+        token_uuid: uuid,
+        from_address: this.address,
+        to_address: toAddress,
+      },
     })
 
     const tx = await rawTransactionToPWTransaction(data.unsigned_tx)
@@ -71,12 +73,17 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async transfer(
     uuid: string,
-    tx: PwTransaction
+    tx: PwTransaction,
+    toAddress: string
   ): Promise<AxiosResponse<{ message: number }>> {
     const rawTx = transformers.TransformTransaction(tx)
-    console.log(rawTx)
-    return await this.axios.put(`/token_ckb_transactions/${uuid}`, {
+    const data = {
       signed_tx: JSON.stringify(rawTx),
-    })
+      token_uuid: uuid,
+      from_address: this.address,
+      to_address: toAddress,
+    }
+    console.log(data)
+    return await this.axios.post('/token_ckb_transactions', data)
   }
 }

@@ -101,8 +101,8 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
         <span className="name">{tx.class_name}</span>
         <span>
           {tx.tx_direction === TransactionDirection.Receive
-            ? `发送至 ${truncateMiddle(tx.to_address, 8, 5)}`
-            : `接收自 ${truncateMiddle(tx.from_address, 8, 5)}`}
+            ? `接收自 ${truncateMiddle(tx.to_address, 8, 5)}`
+            : `发送至 ${truncateMiddle(tx.from_address, 8, 5)}`}
         </span>
       </div>
       <div className="time">{time}</div>
@@ -130,7 +130,18 @@ export const Transactions: React.FC = () => {
     Query.Transactions,
     async ({ pageParam = 1 }) => {
       const { data } = await api.getTransactions(pageParam)
-      return data
+      return {
+        ...data,
+        transaction_list: data.transaction_list.sort((a, b) => {
+          if (a.on_chain_timestamp === null) {
+            return 1
+          }
+          if (b.on_chain_timestamp === null) {
+            return 1
+          }
+          return Number(a.on_chain_timestamp) - Number(b.on_chain_timestamp)
+        }),
+      }
     },
     {
       getNextPageParam: (lastPage) => {

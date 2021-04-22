@@ -196,7 +196,7 @@ export const Transfer: React.FC = () => {
   const sendNFT = useCallback(async () => {
     setIsSendingNFT(true)
     try {
-      const { uuid, tx } = await api
+      const { tx } = await api
         .getTransferNftTransaction(id, ckbAddress)
         .catch((err) => {
           setFailedMessage(FailedMessage.TranferFail)
@@ -211,7 +211,7 @@ export const Transfer: React.FC = () => {
       })
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await api.transfer(uuid, signTx!).catch((err) => {
+      await api.transfer(id, signTx!, ckbAddress).catch((err) => {
         setFailedMessage(FailedMessage.TranferFail)
         stopTranfer(false)
         console.log(err)
