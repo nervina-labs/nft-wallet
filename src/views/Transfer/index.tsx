@@ -370,7 +370,6 @@ export const Transfer: React.FC = () => {
       <Drawer
         anchor="bottom"
         open={isDrawerOpen}
-        onBackdropClick={isSendingNFT ? undefined : closeDrawer}
         PaperProps={{
           style: {
             position: 'absolute',
