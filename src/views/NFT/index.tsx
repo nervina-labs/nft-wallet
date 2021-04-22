@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import { useHistory, useParams } from 'react-router'
+import { Redirect, useHistory, useParams } from 'react-router'
 import Dialog from '@material-ui/core/Dialog'
 import { Button } from '../../components/Button'
 import { makeStyles } from '@material-ui/core'
@@ -18,6 +18,7 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { MainContainer } from '../../styles'
 import { NFT_EXPLORER_URL } from '../../constants'
+import { RoutePath } from '../../routes'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -111,7 +112,7 @@ export const NFT: React.FC = () => {
   }, [width])
 
   const { id } = useParams<{ id: string }>()
-  const { api, address } = useWalletModel()
+  const { api, address, isLogined } = useWalletModel()
 
   const { data } = useQuery(
     [Query.NFTDetail, id, api],
@@ -138,6 +139,10 @@ export const NFT: React.FC = () => {
   const explorerURL = useMemo(() => {
     return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
   }, [data])
+
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
 
   return (
     <Container>
