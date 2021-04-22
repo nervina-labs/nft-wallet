@@ -67,6 +67,14 @@ const ListItemContainer = styled.div`
       overflow: hidden;
       white-space: nowrap;
     }
+    .creator {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      .a {
+        color: #000000;
+      }
+    }
   }
   .time {
     margin-left: auto;
@@ -99,11 +107,25 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
       <div className="icon">{icon}</div>
       <div className="content">
         <span className="name">{tx.class_name}</span>
-        <span>
-          {tx.tx_direction === TransactionDirection.Receive
-            ? `接收自 ${truncateMiddle(tx.to_address, 8, 5)}`
-            : `发送至 ${truncateMiddle(tx.from_address, 8, 5)}`}
-        </span>
+        {tx.issuer_uuid !== '' ? (
+          <span className="creator">
+            接收自&nbsp;
+            <a
+              className="a"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`${NFT_EXPLORER_URL}/issuer/tokens/${tx.issuer_uuid}`}
+            >
+              {tx.from_address}
+            </a>
+          </span>
+        ) : (
+          <span>
+            {tx.tx_direction === TransactionDirection.Receive
+              ? `接收自 ${truncateMiddle(tx.from_address, 8, 5)}`
+              : `发送至 ${truncateMiddle(tx.to_address, 8, 5)}`}
+          </span>
+        )}
       </div>
       <div className="time">{time}</div>
       <a
@@ -139,7 +161,7 @@ export const Transactions: React.FC = () => {
           if (b.on_chain_timestamp === null) {
             return 1
           }
-          return Number(a.on_chain_timestamp) - Number(b.on_chain_timestamp)
+          return Number(b.on_chain_timestamp) - Number(a.on_chain_timestamp)
         }),
       }
     },

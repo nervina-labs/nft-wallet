@@ -19,6 +19,8 @@ export interface Tx {
   tx_direction: TransactionDirection
   on_chain_timestamp: string | null
   uuid: string
+  issuer_avatar_url: string
+  issuer_uuid: string
 }
 
 export interface Transaction {

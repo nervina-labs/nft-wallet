@@ -41,6 +41,7 @@ export interface CreatorProps {
   url: string
   name: string
   uuid?: string
+  title?: React.ReactNode
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -48,10 +49,11 @@ export const Creator: React.FC<CreatorProps> = ({
   url,
   name,
   uuid,
+  title,
 }) => {
   const content = (
     <Container fontSize={fontSize}>
-      <span className="issuer">创作者</span>
+      {title ?? <span className="issuer">创作者</span>}
       <span className="avatar">
         <LazyLoadImage
           src={url}
