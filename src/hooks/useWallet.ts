@@ -23,7 +23,6 @@ export interface UseWallet {
 
 function useWallet(): UseWallet {
   const [provider, setProvider] = useState<UnipassProvider>()
-  const [isLoginExpired, setIsLoginExpired] = useState(false)
 
   const login = useCallback(async () => {
     try {
@@ -37,9 +36,6 @@ function useWallet(): UseWallet {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       unipassCache.setUnipassEmail(p.email!)
       setProvider(p)
-      setTimeout(() => {
-        setIsLoginExpired(true)
-      }, UNIPASS_EXPIRED_TIME)
       return p
     } catch (error) {
       console.log(error)
@@ -49,7 +45,13 @@ function useWallet(): UseWallet {
 
   const signTransaction = useCallback(
     async (tx: Transaction) => {
-      if (provider != null && !isLoginExpired) {
+      const now = Date.now()
+      const loginDate = unipassCache.getUnipassLoginDate()
+      if (
+        provider != null &&
+        loginDate != null &&
+        Number(loginDate) + UNIPASS_EXPIRED_TIME > now
+      ) {
         const signer = new UnipassSigner(provider)
         const signedTx = await signer.sign(tx)
         return signedTx
@@ -60,7 +62,7 @@ function useWallet(): UseWallet {
       const signedTx = await signer.sign(tx)
       return signedTx
     },
-    [provider, login, isLoginExpired]
+    [provider, login]
   )
 
   const address = useMemo(() => {

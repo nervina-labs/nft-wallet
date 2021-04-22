@@ -8,6 +8,7 @@ import {
   AddressPrefix,
 } from '@lay2/pw-core'
 import { createHash } from 'crypto'
+import { unipassCache } from '../cache'
 // import { unipassCache } from '../cache'
 import { UNIPASS_URL } from '../constants'
 
@@ -85,6 +86,7 @@ export default class UnipassProvider extends Provider {
             const { pubkey, email } = payload
             const ckbAddress = pubkeyToAddress(pubkey)
             this.address = new Address(ckbAddress, AddressType.ckb)
+            unipassCache.setUnipassLoginDate(`${Date.now()}`)
             this._email = email
             this.msgHandler != null &&
               window.removeEventListener('message', this.msgHandler)

@@ -1,5 +1,6 @@
 const UNIPASS_ADDRESS_KEY = 'unipass_address_key'
 const UNIPASS_EMAIL_KEY = 'unipass_email_key'
+const UNIPASS_LOGIN_DATE = 'unipass_login_date'
 
 export const unipassCache = {
   getUnipassAddress(): string | null {
@@ -13,5 +14,11 @@ export const unipassCache = {
   },
   setUnipassEmail(email: string): void {
     localStorage.setItem(UNIPASS_EMAIL_KEY, email)
+  },
+  getUnipassLoginDate(): string | null {
+    return localStorage.getItem(UNIPASS_LOGIN_DATE)
+  },
+  setUnipassLoginDate(date: string) {
+    localStorage.setItem(UNIPASS_LOGIN_DATE, date)
   },
 }
