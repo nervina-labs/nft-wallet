@@ -23,6 +23,7 @@ const Container = styled.div`
     width: 120px;
     height: 120px;
     min-width: 120px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
   }
   .content {
     margin: 8px;
