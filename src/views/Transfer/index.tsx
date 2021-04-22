@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Redirect, useHistory, useLocation, useParams } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
@@ -59,6 +59,7 @@ const Container = styled(MainContainer)`
       justify-content: center;
       align-items: center;
       .input {
+        background: transparent;
         width: 100%;
         border: none;
         overflow: auto;
@@ -168,6 +169,7 @@ const DrawerContainer = styled.div`
 export enum FailedMessage {
   SignFail = '签名失败，请重新签名',
   TranferFail = '发送失败，请检查当前网络情况，重新发送',
+  NoCamera = '没有找到摄像头',
 }
 
 export const Transfer: React.FC = () => {
@@ -180,7 +182,7 @@ export const Transfer: React.FC = () => {
   const [isSendingNFT, setIsSendingNFT] = useState(false)
   const [isAddressValid, setIsAddressValid] = useState(false)
   const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
-  const [isSendDialogFail, setIsSendDialogFail] = useState(false)
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isScaning, setIsScaning] = useState(false)
   const qrcodeScanerRef = useRef<QrcodeScaner>(null)
 
@@ -208,7 +210,7 @@ export const Transfer: React.FC = () => {
     if (isSuccess) {
       setIsSendDialogSuccess(true)
     } else {
-      setIsSendDialogFail(true)
+      setIsErrorDialogOpen(true)
     }
   }
   const transferOnClock = useCallback(() => {
@@ -252,14 +254,29 @@ export const Transfer: React.FC = () => {
     qrcodeScanerRef.current?.stopScan()
   }
   const [hasPermission, setHasPermission] = useState(true)
+  const [hasVideoDevice, setHasVideoDevice] = useState(false)
   const startScan = useCallback(() => {
+    if (!hasVideoDevice) {
+      setFailedMessage(FailedMessage.NoCamera)
+      setIsErrorDialogOpen(true)
+      return
+    }
     if (hasPermission) {
       setIsScaning(true)
       qrcodeScanerRef.current?.startScan()
     } else {
       alert('没有摄像头权限，请刷新页面重新授权。')
     }
-  }, [hasPermission])
+  }, [hasPermission, hasVideoDevice])
+
+  useEffect(() => {
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then((devices) => {
+        setHasVideoDevice(devices.some((d) => d.kind === 'videoinput'))
+      })
+      .catch(Boolean)
+  }, [])
 
   const { data: remoteNftDetail } = useQuery(
     [Query.NFTDetail, id, api],
@@ -363,9 +380,9 @@ export const Transfer: React.FC = () => {
       <ActionDialog
         icon={<FailSvg />}
         content={failedMessage}
-        open={isSendDialogFail}
-        onConfrim={() => setIsSendDialogFail(false)}
-        onBackdropClick={() => setIsSendDialogFail(false)}
+        open={isErrorDialogOpen}
+        onConfrim={() => setIsErrorDialogOpen(false)}
+        onBackdropClick={() => setIsErrorDialogOpen(false)}
       />
       <Drawer
         anchor="bottom"

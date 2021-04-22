@@ -178,7 +178,11 @@ export const NFT: React.FC = () => {
           </div>
           {address !== '' ? (
             <div className="action">
-              <Button type="primary" onClick={tranfer}>
+              <Button
+                type="primary"
+                onClick={tranfer}
+                disbaled={detail.is_submitting}
+              >
                 {detail.is_submitting ? '转让中' : '转让'}
               </Button>
             </div>
