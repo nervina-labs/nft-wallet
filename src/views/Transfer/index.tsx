@@ -12,7 +12,6 @@ import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import { Button } from '../../components/Button'
 import { Drawer } from '@material-ui/core'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { LazyLoadImage } from '../../components/Image'
 import { isValidCkbLongAddress } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
@@ -427,11 +426,13 @@ export const Transfer: React.FC = () => {
             <label>接收方地址：</label>
             <p className="address">{ckbAddress}</p>
             <div className="center">
-              <Button type="primary" onClick={sendNFT} disbaled={isSendingNFT}>
-                确认
-                {isSendingNFT ? (
-                  <CircularProgress size="1em" className="loading" />
-                ) : null}
+              <Button
+                type="primary"
+                onClick={sendNFT}
+                disbaled={isSendingNFT}
+                isLoading={isSendingNFT}
+              >
+                {isSendingNFT ? '身份验证中' : '确认'}
               </Button>
             </div>
           </DrawerContainer>
