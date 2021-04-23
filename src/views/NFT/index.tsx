@@ -114,7 +114,7 @@ export const NFT: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { api, address, isLogined } = useWalletModel()
 
-  const { data } = useQuery(
+  const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api],
     async () => {
       const { data } = await api.getNFTDetail(id)
@@ -142,6 +142,10 @@ export const NFT: React.FC = () => {
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Login} />
+  }
+
+  if (failureCount >= 1) {
+    return <Redirect to={RoutePath.NotFound} />
   }
 
   return (

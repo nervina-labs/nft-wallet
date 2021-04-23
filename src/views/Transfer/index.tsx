@@ -278,7 +278,7 @@ export const Transfer: React.FC = () => {
       .catch(Boolean)
   }, [])
 
-  const { data: remoteNftDetail } = useQuery(
+  const { data: remoteNftDetail, failureCount } = useQuery(
     [Query.NFTDetail, id, api],
     async () => {
       const { data } = await api.getNFTDetail(id)
@@ -306,6 +306,10 @@ export const Transfer: React.FC = () => {
     }
     return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
   }, [bodyWidth])
+
+  if (failureCount >= 1) {
+    return <Redirect to={RoutePath.NotFound} />
+  }
 
   return isLogined ? (
     <Container ref={containerRef}>
