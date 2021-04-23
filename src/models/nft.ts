@@ -18,7 +18,7 @@ export interface NFTToken {
   token_uuid: string
   issuer_avatar_url: string
   issuer_name: string
-  is_submitting: boolean
+  is_transferring: boolean
   issuer_uuid: string
 }
 
@@ -34,5 +34,5 @@ export interface NFTDetail {
   }
   total: string
   issued: number
-  is_submitting: boolean
+  is_transferring: boolean
 }

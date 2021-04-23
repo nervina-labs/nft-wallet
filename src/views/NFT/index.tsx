@@ -185,9 +185,9 @@ export const NFT: React.FC = () => {
               <Button
                 type="primary"
                 onClick={tranfer}
-                disbaled={detail.is_submitting}
+                disbaled={detail.is_transferring}
               >
-                {detail.is_submitting ? '转让中' : '转让'}
+                {detail.is_transferring ? '转让中' : '转让'}
               </Button>
             </div>
           ) : null}

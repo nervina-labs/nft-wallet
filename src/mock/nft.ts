@@ -12,7 +12,7 @@ export const nfts: NFTToken[] = [
     class_uuid: '123',
     issuer_avatar_url: '',
     issuer_name: 'wocaowocaowocaowocaowocaowocaowocaowocaowocao',
-    is_submitting: false,
+    is_transferring: false,
     issuer_uuid: '12',
   },
   {
@@ -26,7 +26,7 @@ export const nfts: NFTToken[] = [
     class_uuid: '456',
     issuer_avatar_url: '',
     issuer_name: 'wocao',
-    is_submitting: false,
+    is_transferring: false,
     issuer_uuid: '12',
   },
 ]
@@ -44,5 +44,5 @@ export const nftDetail: NFTDetail = {
     avatar_url: 'https://avatars.githubusercontent.com/u/12708910?v=4',
     uuid: '78561e51-2611-49b9-85bb-3babb92d8758',
   },
-  is_submitting: false,
+  is_transferring: false,
 }
