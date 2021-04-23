@@ -69,6 +69,7 @@ export const Creator: React.FC<CreatorProps> = ({
   if (uuid != null) {
     return (
       <a
+        onClick={(e) => e.stopPropagation()}
         target="_blank"
         style={{ textDecoration: 'none' }}
         rel="noopener noreferrer"
