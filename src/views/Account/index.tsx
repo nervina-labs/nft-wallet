@@ -68,7 +68,7 @@ export const Account: React.FC = () => {
     <Container>
       <Appbar
         title="我的帐号"
-        left={<BackSvg onClick={() => history.goBack()} />}
+        left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
         right={<div />}
       />
       <section className="detail">
