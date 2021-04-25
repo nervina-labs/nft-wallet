@@ -306,7 +306,7 @@ export const Transfer: React.FC = () => {
     return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
   }, [bodyWidth])
 
-  if (failureCount >= 1) {
+  if (failureCount >= 1 || remoteNftDetail?.is_transferring === true) {
     return <Redirect to={RoutePath.NotFound} />
   }
 
