@@ -432,7 +432,7 @@ export const Transfer: React.FC = () => {
                 disbaled={isSendingNFT}
                 isLoading={isSendingNFT}
               >
-                {isSendingNFT ? '身份验证中' : '确认'}
+                {isSendingNFT ? '签名中' : '确认'}
               </Button>
             </div>
           </DrawerContainer>

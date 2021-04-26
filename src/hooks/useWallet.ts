@@ -7,6 +7,8 @@ import { INDEXER_URL, NODE_URL, UNIPASS_URL } from '../constants'
 import UnipassProvider from '../pw/UnipassProvider'
 import { unipassCache } from '../cache'
 import UnipassSigner from '../pw/UnipassSigner'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../routes'
 export interface UseWallet {
   api: NFTWalletAPI
   login: () => Promise<UnipassProvider | undefined>
@@ -14,10 +16,12 @@ export interface UseWallet {
   address: string
   signTransaction: (tx: Transaction) => Promise<Transaction | undefined>
   isLogined: boolean
+  logout: () => void
 }
 
 function useWallet(): UseWallet {
   const [provider, setProvider] = useState<UnipassProvider>()
+  const history = useHistory()
 
   const login = useCallback(async () => {
     try {
@@ -37,6 +41,12 @@ function useWallet(): UseWallet {
       // TODO
     }
   }, [])
+
+  const logout = useCallback(() => {
+    localStorage.clear()
+    setProvider(undefined)
+    history.push(RoutePath.Login)
+  }, [history])
 
   const signTransaction = useCallback(
     async (tx: Transaction) => {
@@ -77,6 +87,7 @@ function useWallet(): UseWallet {
     address,
     signTransaction,
     isLogined,
+    logout,
   }
 }
 
