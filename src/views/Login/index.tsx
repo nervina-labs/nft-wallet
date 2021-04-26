@@ -7,6 +7,8 @@ import { Button } from '../../components/Button'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
+import { MAIN_NET_URL, TEST_NET_URL } from '../../constants'
+import { NetChange } from '../../components/NetChange'
 
 // @ts-expect-error
 const containerBg = WalletBg as string
@@ -22,6 +24,19 @@ const Container = styled(MainContainer)`
   background-size: cover;
   // @ts-ignore
   background-image: url(${containerBg});
+
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .status {
+      margin-right: 4px;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 17px;
+      color: #000000;
+    }
+  }
   .logo {
     margin-top: 80px;
     margin-bottom: 56px;
@@ -46,9 +61,13 @@ export const Login: React.FC = () => {
     setIsLoging(false)
     history.push(RoutePath.NFTs)
   }, [login, history])
+
   return (
     <Container>
-      <Title>秘宝账户</Title>
+      <div className="header">
+        <Title style={{ marginRight: '8px' }}>秘宝账户</Title>
+        <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
+      </div>
       <LogoSvg className="logo" />
       <Button
         onClick={loginBtnOnClick}

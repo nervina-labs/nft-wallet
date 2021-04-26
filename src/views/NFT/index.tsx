@@ -4,10 +4,7 @@ import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Redirect, useHistory, useParams } from 'react-router'
-import Dialog from '@material-ui/core/Dialog'
 import { Button } from '../../components/Button'
-import { makeStyles } from '@material-ui/core'
-import { Copyzone } from '../../components/Copyzone'
 import { LazyLoadImage } from '../../components/Image'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
@@ -16,6 +13,7 @@ import { useWalletModel } from '../../hooks/useWallet'
 import { Loading } from '../../components/Loading'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
+import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
 import { NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
@@ -76,32 +74,9 @@ const Container = styled(MainContainer)`
   }
 `
 
-const DialogContainer = styled(Dialog)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .title {
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
-    margin: 32px 32px 16px 32px;
-    text-align: center;
-  }
-  .action {
-    display: flex;
-    justify-content: center;
-    margin: 32px;
-  }
-`
-
-const useStyles = makeStyles(() => ({
-  paper: { minWidth: '320px', maxWidth: '320px' },
-}))
-
 export const NFT: React.FC = () => {
   const history = useHistory()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const style = useStyles()
   const closeDialog = (): void => setIsDialogOpen(false)
 
   const appRef = useRef(null)
@@ -193,17 +168,12 @@ export const NFT: React.FC = () => {
           ) : null}
         </section>
       )}
-      <DialogContainer
-        open={isDialogOpen}
-        classes={{ paper: style.paper }}
-        onBackdropClick={closeDialog}
-      >
-        <div className="title">点击复制链接并分享至社交媒体</div>
-        <Copyzone text={explorerURL} displayText={explorerURL} />
-        <div className="action">
-          <Button onClick={closeDialog}>关闭</Button>
-        </div>
-      </DialogContainer>
+      <Share
+        isDialogOpen={isDialogOpen}
+        closeDialog={closeDialog}
+        displayText={explorerURL}
+        copyText={explorerURL}
+      />
     </Container>
   )
 }
