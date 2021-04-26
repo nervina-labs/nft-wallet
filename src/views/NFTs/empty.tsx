@@ -26,7 +26,6 @@ const Container = styled.div`
 `
 
 export const Empty: React.FC = () => {
-  // TODO: 广阔宇宙地址
   return (
     <Container>
       <EmptySvg />
@@ -37,7 +36,7 @@ export const Empty: React.FC = () => {
         rel="noopener noreferrer"
         href={NFT_EXPLORER_URL}
       >
-        快去探索秘宝的广阔宇宙
+        探索秘宝的广阔宇宙
       </a>
     </Container>
   )

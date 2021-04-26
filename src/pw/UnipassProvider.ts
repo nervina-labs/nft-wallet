@@ -6,8 +6,8 @@ import {
   Script,
   HashType,
   AddressPrefix,
+  Blake2bHasher,
 } from '@lay2/pw-core'
-import { createHash } from 'crypto'
 import { unipassCache } from '../cache'
 // import { unipassCache } from '../cache'
 import { UNIPASS_URL } from '../constants'
@@ -58,18 +58,14 @@ function openIframe(
 
 function pubkeyToAddress(pubkey: string): string {
   const pubKeyBuffer = Buffer.from(pubkey.replace('0x', ''), 'hex')
-  const hashHex =
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    '0x' +
-    createHash('SHA256')
-      .update(pubKeyBuffer)
-      .digest('hex')
-      .toString()
-      .slice(0, 40)
-  // console.log('hashHex', hashHex);
+  const hashHex = new Blake2bHasher()
+    .update(pubKeyBuffer.buffer)
+    .digest()
+    .serializeJson()
+    .slice(0, 42)
 
   const script = new Script(
-    '0x6843c5fe3acb7f4dc2230392813cb9c12dbced5597fca30a52f13aa519de8d33',
+    '0x124a60cd799e1fbca664196de46b3f7f0ecb7138133dcaea4893c51df5b02be6',
     hashHex,
     HashType.type
   )
@@ -161,7 +157,7 @@ export default class UnipassProvider extends Provider {
             this.msgHandler != null &&
               window.removeEventListener('message', this.msgHandler)
             blackOut?.remove()
-            resolve('0x' + signature)
+            resolve(`0x01${signature.replace('0x', '')}`)
           }
         }
       }

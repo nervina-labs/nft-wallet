@@ -22,8 +22,8 @@ export const toolkitRPC = new ToolKitRpc(NODE_URL)
 //   '0x9687ac5e311d009df1505459afc83a55c46496eb292fc11e4f6c24df5dfd4de5',
 //   '0x0'
 // )
-const Secp256R1Args = {
-  lock: '0x' + '0'.repeat(1128),
+const UnipassWitnessArgs = {
+  lock: '0x' + '0'.repeat(2082),
   input_type: '',
   output_type: '',
 }
@@ -70,7 +70,7 @@ export async function rawTransactionToPWTransaction(
       // rawTx.header_deps,
       // rawTx.version
     ),
-    [Secp256R1Args]
+    [UnipassWitnessArgs]
   )
 
   return tx

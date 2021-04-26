@@ -30,6 +30,7 @@ const Container = styled(MainContainer)`
     justify-content: center;
     align-items: center;
     > span {
+      font-size: 16px;
       margin-right: 8px;
     }
     > div {

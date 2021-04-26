@@ -31,6 +31,7 @@ const PopoverContainer = styled.div`
     color: black;
     font-size: 12px;
     line-height: 17px;
+    text-align: center;
     margin: 5px 0;
     padding: 0 16px;
     &:hover {

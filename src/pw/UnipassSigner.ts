@@ -1,9 +1,7 @@
-import { Signer, Message, Provider } from '@lay2/pw-core'
-import Sha256Hasher from './Sha256Hasher'
-
+import { Signer, Message, Provider, Blake2bHasher } from '@lay2/pw-core'
 export default class UnipassSigner extends Signer {
   constructor(public readonly provider: Provider) {
-    super(new Sha256Hasher())
+    super(new Blake2bHasher())
   }
 
   async signMessages(messages: Message[]): Promise<string[]> {
