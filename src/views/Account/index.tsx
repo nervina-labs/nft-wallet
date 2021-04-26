@@ -9,6 +9,7 @@ import {
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import { ReactComponent as LogoutSvg } from '../../assets/svg/logout.svg'
 import { RoutePath } from '../../routes'
 import { Info } from '../Info'
 import { Transactions } from '../Transactions'
@@ -50,6 +51,7 @@ const Container = styled(MainContainer)`
 
 export const Account: React.FC = () => {
   const history = useHistory()
+  const { logout } = useWalletModel()
   const matchInfo = useRouteMatch(RoutePath.Info)
   const matchTx = useRouteMatch(RoutePath.Transactions)
   const matchAccount = useRouteMatch(RoutePath.Account)
@@ -69,7 +71,7 @@ export const Account: React.FC = () => {
       <Appbar
         title="我的帐号"
         left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
-        right={<div />}
+        right={<LogoutSvg onClick={logout.bind(null, history)} />}
       />
       <section className="detail">
         <div className="tabs">

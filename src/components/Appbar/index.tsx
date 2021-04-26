@@ -21,6 +21,9 @@ const Header = styled.header`
     flex: 1;
     font-weight: 600;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .right {
     margin-right: 12px;
@@ -32,7 +35,7 @@ const Header = styled.header`
 `
 
 export interface AppbarProps {
-  title: string
+  title: React.ReactNode
   left?: React.ReactNode
   right?: React.ReactNode
   back?: boolean

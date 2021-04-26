@@ -45,4 +45,5 @@ export const nftDetail: NFTDetail = {
     uuid: '78561e51-2611-49b9-85bb-3babb92d8758',
   },
   is_transferring: false,
+  current_holder_address: '',
 }

@@ -35,4 +35,5 @@ export interface NFTDetail {
   total: string
   issued: number
   is_transferring: boolean
+  current_holder_address: string
 }
