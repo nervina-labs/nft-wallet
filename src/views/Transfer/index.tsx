@@ -309,7 +309,8 @@ export const Transfer: React.FC = () => {
   if (
     failureCount >= 1 ||
     remoteNftDetail?.is_transferring === true ||
-    remoteNftDetail?.current_holder_address !== address
+    (remoteNftDetail?.current_holder_address !== address &&
+      remoteNftDetail?.current_holder_address !== undefined)
   ) {
     return <Redirect to={RoutePath.NotFound} />
   }

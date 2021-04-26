@@ -5,6 +5,7 @@ import { Appbar } from '../../components/Appbar'
 import { Button } from '../../components/Button'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
+import { ReactComponent as AccountSvg } from '../../assets/svg/account.svg'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -13,7 +14,6 @@ const Container = styled(MainContainer)`
 
   .main {
     flex: 1;
-    background: linear-gradient(187.7deg, #ffffff 4.33%, #f0f0f0 94.27%);
     margin-top: 180px;
     .content {
       display: flex;
@@ -44,7 +44,17 @@ export const NotFound: React.FC = () => {
   const history = useHistory()
   return (
     <Container>
-      <Appbar title="页面丢失" />
+      <Appbar
+        title="页面丢失"
+        left={
+          <AccountSvg
+            onClick={() => {
+              history.push(RoutePath.Info)
+            }}
+          />
+        }
+        right={<div />}
+      />
       <section className="main">
         <div className="content">
           <div className="title">404</div>
