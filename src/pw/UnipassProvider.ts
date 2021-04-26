@@ -24,16 +24,21 @@ function openIframe(
   onload: (this: GlobalEventHandlers, ev: Event) => unknown
 ): IFrame {
   const uniFrame = document.createElement('iframe')
+  const blackOut = document.createElement('div')
   uniFrame.src = url
   uniFrame.style.width = '80%'
   uniFrame.style.height = '80%'
   uniFrame.style.backgroundColor = '#FFF'
   uniFrame.setAttribute('scrolling', 'no')
   uniFrame.setAttribute('frameborder', 'no')
-  uniFrame.onload = onload
+  // uniFrame.style.display = 'none'
+  uniFrame.onload = function (this: GlobalEventHandlers, ev: Event) {
+    blackOut.style.visibility = 'visible'
+    return onload.call(this, ev)
+  }
 
-  const blackOut = document.createElement('div')
   blackOut.id = 'uni-frame'
+  blackOut.style.visibility = 'hidden'
   blackOut.style.position = 'absolute'
   blackOut.style.zIndex = '9999'
   blackOut.style.left = '0'
