@@ -3,12 +3,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
 import PWCore, { ChainID, IndexerCollector, Transaction } from '@lay2/pw-core'
-import {
-  INDEXER_URL,
-  NODE_URL,
-  UNIPASS_EXPIRED_TIME,
-  UNIPASS_URL,
-} from '../constants'
+import { INDEXER_URL, NODE_URL, UNIPASS_URL } from '../constants'
 import UnipassProvider from '../pw/UnipassProvider'
 import { unipassCache } from '../cache'
 import UnipassSigner from '../pw/UnipassSigner'
@@ -45,13 +40,7 @@ function useWallet(): UseWallet {
 
   const signTransaction = useCallback(
     async (tx: Transaction) => {
-      const now = Date.now()
-      const loginDate = unipassCache.getUnipassLoginDate()
-      if (
-        provider != null &&
-        loginDate != null &&
-        Number(loginDate) + UNIPASS_EXPIRED_TIME > now
-      ) {
+      if (provider != null) {
         const signer = new UnipassSigner(provider)
         const signedTx = await signer.sign(tx)
         return signedTx
