@@ -37,7 +37,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
           onError={onError}
           alt={alt}
           style={{
-            objectFit: 'contain',
+            objectFit: variant === 'circle' ? 'cover' : 'contain',
             display: loaded ? 'block' : 'none',
             width: `${width}px`,
             height: `${height}px`,
