@@ -13,6 +13,7 @@ const Header = styled.header`
   height: 44px;
   align-items: center;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.06);
+  z-index: 100;
   .left {
     margin-left: 12px;
     width: 20px;
