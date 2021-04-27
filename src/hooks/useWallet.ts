@@ -2,8 +2,8 @@ import { createModel } from 'hox'
 import { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
-import PWCore, { ChainID, IndexerCollector, Transaction } from '@lay2/pw-core'
-import { INDEXER_URL, NODE_URL, UNIPASS_URL } from '../constants'
+import { Transaction } from '@lay2/pw-core'
+import { UNIPASS_URL } from '../constants'
 import UnipassProvider from '../pw/UnipassProvider'
 import { unipassCache } from '../cache'
 import UnipassSigner from '../pw/UnipassSigner'
@@ -24,12 +24,7 @@ function useWallet(): UseWallet {
 
   const login = useCallback(async () => {
     try {
-      await new PWCore(NODE_URL).init(
-        new UnipassProvider(UNIPASS_URL),
-        new IndexerCollector(INDEXER_URL),
-        ChainID.ckb_testnet
-      )
-      const p = PWCore.provider as UnipassProvider
+      const p = await new UnipassProvider(UNIPASS_URL).init()
       unipassCache.setUnipassAddress(p.address.toCKBAddress())
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       unipassCache.setUnipassEmail(p.email!)
@@ -54,13 +49,13 @@ function useWallet(): UseWallet {
         const signedTx = await signer.sign(tx)
         return signedTx
       }
-      const p = await login()
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const signer = new UnipassSigner(p!)
+      const p = await new UnipassProvider(UNIPASS_URL).connect()
+      const signer = new UnipassSigner(p)
       const signedTx = await signer.sign(tx)
+      setProvider(p)
       return signedTx
     },
-    [provider, login]
+    [provider]
   )
 
   const address = useMemo(() => {

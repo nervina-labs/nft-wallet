@@ -10,7 +10,7 @@ import {
 } from '@lay2/pw-core'
 import { unipassCache } from '../cache'
 // import { unipassCache } from '../cache'
-import { UNIPASS_URL } from '../constants'
+import { IS_MAINNET, UNIPASS_URL } from '../constants'
 
 type UP_ACT = 'UP-READY' | 'UP-LOGIN' | 'UP-SIGN' | 'UP-CLOSE'
 interface IFrame {
@@ -70,7 +70,9 @@ function pubkeyToAddress(pubkey: string): string {
     HashType.type
   )
 
-  return script.toAddress(AddressPrefix.ckt).toCKBAddress()
+  return script
+    .toAddress(IS_MAINNET ? AddressPrefix.ckb : AddressPrefix.ckt)
+    .toCKBAddress()
 }
 
 export interface UnipassAccount {
@@ -96,6 +98,18 @@ export default class UnipassProvider extends Provider {
 
   constructor(private readonly UNIPASS_BASE = UNIPASS_URL) {
     super(Platform.ckb)
+  }
+
+  async connect(): Promise<UnipassProvider> {
+    const cachedAddress = unipassCache.getUnipassAddress()
+    const cachedEmail = unipassCache.getUnipassEmail()
+    if (cachedAddress !== null && cachedEmail !== null) {
+      this.address = new Address(cachedAddress, AddressType.ckb)
+      this._email = cachedEmail
+      return await Promise.resolve(this)
+    }
+
+    return await this.init()
   }
 
   async init(): Promise<UnipassProvider> {
