@@ -6,6 +6,7 @@ import {
   RouteProps,
   Switch,
 } from 'react-router-dom'
+import { useWalletModel } from '../hooks/useWallet'
 import { Account } from '../views/Account'
 import { Login } from '../views/Login'
 import { NFT } from '../views/NFT'
@@ -59,13 +60,18 @@ const routes: Array<RouteProps & { key: string }> = [
 ]
 
 export const Routers: React.FC = () => {
+  const { isLogined } = useWalletModel()
   return (
     <BrowserRouter>
       <Switch>
         {routes.map((route) => (
           <Route {...route} key={route.key} path={route.path} />
         ))}
-        <Redirect exact from={RoutePath.Launch} to={RoutePath.Login} />
+        <Redirect
+          exact
+          from={RoutePath.Launch}
+          to={isLogined ? RoutePath.NFTs : RoutePath.Login}
+        />
         <Route component={NotFound} path="*" />
       </Switch>
     </BrowserRouter>
