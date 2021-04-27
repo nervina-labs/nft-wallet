@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { ReactComponent as CopySvg } from '../../assets/svg/copy.svg'
 import { ReactComponent as CheckSvg } from '../../assets/svg/check.svg'
-import { sleep } from '../../utils'
+import { copyFallback, sleep } from '../../utils'
 import * as clipboard from 'clipboard-polyfill/text'
 import styled from 'styled-components'
 
@@ -36,9 +36,9 @@ export const Copyzone: React.FC<CopyzoneProps> = ({ text, displayText }) => {
   const onCopy = useCallback(async () => {
     setIsCopy(true)
     try {
-      await clipboard?.writeText(text)
+      await clipboard.writeText(text)
     } catch (error) {
-      //
+      copyFallback(text)
     }
     await sleep(1000)
     setIsCopy(false)
