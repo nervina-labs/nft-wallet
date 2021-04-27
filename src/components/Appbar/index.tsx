@@ -23,6 +23,7 @@ const Header = styled.header`
     text-align: center;
     display: flex;
     align-items: center;
+    font-size: 16px;
     justify-content: center;
   }
   .right {

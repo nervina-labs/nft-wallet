@@ -23,17 +23,12 @@ function useWallet(): UseWallet {
   const [provider, setProvider] = useState<UnipassProvider>()
 
   const login = useCallback(async () => {
-    try {
-      const p = await new UnipassProvider(UNIPASS_URL).init()
-      unipassCache.setUnipassAddress(p.address.toCKBAddress())
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      unipassCache.setUnipassEmail(p.email!)
-      setProvider(p)
-      return p
-    } catch (error) {
-      console.log(error)
-      // TODO
-    }
+    const p = await new UnipassProvider(UNIPASS_URL).init()
+    unipassCache.setUnipassAddress(p.address.toCKBAddress())
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    unipassCache.setUnipassEmail(p.email!)
+    setProvider(p)
+    return p
   }, [])
 
   const logout = useCallback((h: History<unknown>) => {

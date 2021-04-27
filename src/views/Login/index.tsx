@@ -57,9 +57,13 @@ export const Login: React.FC = () => {
   const [isLogining, setIsLoging] = useState(false)
   const loginBtnOnClick = useCallback(async () => {
     setIsLoging(true)
-    await login()
-    setIsLoging(false)
-    history.push(RoutePath.NFTs)
+    try {
+      await login()
+      setIsLoging(false)
+      history.push(RoutePath.NFTs)
+    } catch (error) {
+      setIsLoging(false)
+    }
   }, [login, history])
 
   return (

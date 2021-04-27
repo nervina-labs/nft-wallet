@@ -21,7 +21,8 @@ interface IFrame {
 function openIframe(
   title: string,
   url: string,
-  onload: (this: GlobalEventHandlers, ev: Event) => unknown
+  onload: (this: GlobalEventHandlers, ev: Event) => unknown,
+  reject?: (r: any) => void
 ): IFrame {
   const uniFrame = document.createElement('iframe')
   const blackOut = document.createElement('div')
@@ -50,7 +51,26 @@ function openIframe(
   blackOut.style.justifyContent = 'center'
   blackOut.style.alignItems = 'center'
 
+  const closebtn = document.createElement('span')
+  closebtn.style.position = 'absolute'
+  closebtn.style.top = '0'
+  closebtn.style.right = '10px'
+  closebtn.innerHTML = '&times;'
+  closebtn.style.color = 'white'
+  closebtn.style.fontSize = '36px'
+  closebtn.style.cursor = 'pointer'
+
+  closebtn.addEventListener(
+    'click',
+    () => {
+      document.body.removeChild(blackOut)
+      reject?.(new Error('user denied'))
+    },
+    false
+  )
+
   blackOut.appendChild(uniFrame)
+  blackOut.appendChild(closebtn)
   document.body.appendChild(blackOut)
 
   return { blackOut, uniFrame }
@@ -113,7 +133,7 @@ export default class UnipassProvider extends Provider {
   }
 
   async init(): Promise<UnipassProvider> {
-    return await new Promise((resolve) => {
+    return await new Promise((resolve, reject) => {
       const { blackOut, uniFrame } = openIframe(
         'login',
         `${this.UNIPASS_BASE}/#/login`,
@@ -122,7 +142,8 @@ export default class UnipassProvider extends Provider {
             upact: 'UP-LOGIN',
           }
           uniFrame.contentWindow?.postMessage(msg, this.UNIPASS_BASE)
-        }
+        },
+        reject
       )
 
       this.msgHandler = (event) => {
@@ -150,7 +171,7 @@ export default class UnipassProvider extends Provider {
 
   async sign(message: string): Promise<string> {
     console.log('[UnipassProvider] message to sign', message)
-    return await new Promise((resolve) => {
+    return await new Promise((resolve, reject) => {
       const { blackOut, uniFrame } = openIframe(
         'sign',
         `${this.UNIPASS_BASE}/#/sign`,
@@ -160,7 +181,8 @@ export default class UnipassProvider extends Provider {
             payload: message,
           }
           uniFrame.contentWindow?.postMessage(msg, this.UNIPASS_BASE)
-        }
+        },
+        reject
       )
       this.msgHandler = (event) => {
         if (typeof event.data === 'object' && 'upact' in event.data) {

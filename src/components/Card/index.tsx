@@ -62,7 +62,7 @@ const Container = styled.div`
       color: rgba(0, 0, 0, 0.6);
       .avatar {
         margin-left: 12px;
-        margin-right: 2px;
+        margin-right: 6px;
         img {
           border-radius: 50%;
           width: 24px;
