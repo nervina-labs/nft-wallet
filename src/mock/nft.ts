@@ -1,4 +1,4 @@
-import { NFTDetail, NFTToken } from '../models'
+import { NFTDetail, NFTToken, TransactionStatus } from '../models'
 
 export const nfts: NFTToken[] = [
   {
@@ -14,6 +14,7 @@ export const nfts: NFTToken[] = [
     issuer_name: 'wocaowocaowocaowocaowocaowocaowocaowocaowocao',
     is_transferring: false,
     issuer_uuid: '12',
+    tx_state: TransactionStatus.Pending,
   },
   {
     class_name: '您尚未拥有任何秘宝',
@@ -28,6 +29,7 @@ export const nfts: NFTToken[] = [
     issuer_name: 'wocao',
     is_transferring: false,
     issuer_uuid: '12',
+    tx_state: TransactionStatus.Pending,
   },
 ]
 

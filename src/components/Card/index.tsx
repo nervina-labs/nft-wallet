@@ -1,13 +1,97 @@
 import React from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { NFTToken } from '../../models'
+import { NFTToken, TransactionStatus } from '../../models'
 import { LazyLoadImage } from '../Image'
 import { Limited } from '../Limited'
 import { Creator } from '../Creator'
 
 export interface CardProps {
   token: NFTToken
+  address: string
+}
+
+interface LabelProps {
+  nft: NFTToken
+  address: string
+}
+
+const LabelContainer = styled.div`
+  position: absolute;
+  color: white;
+  top: 12px;
+  right: 0;
+  font-size: 10px;
+  line-height: 16px;
+  width: 46px;
+  text-align: center;
+  border-radius: 2px 0px 0px 2px;
+`
+
+enum LabelStatus {
+  Receiving,
+  Comfirming,
+  Tranferring,
+  None,
+}
+
+interface LabelResult {
+  color: string
+  text: string
+}
+
+const Label: React.FC<LabelProps> = ({ nft, address }) => {
+  if (nft.tx_state === TransactionStatus.Committed) {
+    return null
+  }
+
+  let status: LabelStatus = LabelStatus.None
+
+  if (
+    address === nft?.from_address &&
+    nft.tx_state === TransactionStatus.Pending
+  ) {
+    status = LabelStatus.Tranferring
+  }
+
+  if (
+    address === nft?.to_address &&
+    nft.tx_state === TransactionStatus.Pending
+  ) {
+    status = LabelStatus.Receiving
+  }
+
+  if (nft.tx_state === TransactionStatus.Submitting) {
+    status = LabelStatus.Comfirming
+  }
+
+  const statusMap: Record<LabelStatus, LabelResult | null> = {
+    [LabelStatus.Comfirming]: {
+      color: 'rgba(255, 165, 90, 0.8)',
+      text: '确认中',
+    },
+    [LabelStatus.Receiving]: {
+      color: '#61D8A4',
+      text: '接收中',
+    },
+    [LabelStatus.Tranferring]: {
+      color: 'rgba(89, 106, 255, 0.7)',
+      text: '转让中',
+    },
+    [LabelStatus.None]: null,
+  }
+
+  if (status === LabelStatus.None) {
+    return null
+  }
+
+  const bgColor = statusMap[status]?.color
+
+  return (
+    <LabelContainer style={{ backgroundColor: bgColor }}>
+      {statusMap[status]?.text}
+    </LabelContainer>
+  )
 }
 
 const Container = styled.div`
@@ -19,6 +103,7 @@ const Container = styled.div`
   background: #fff;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
+  position: relative;
   .media {
     width: 120px;
     height: 120px;
@@ -82,7 +167,7 @@ const Container = styled.div`
   }
 `
 
-export const Card: React.FC<CardProps> = ({ token }) => {
+export const Card: React.FC<CardProps> = ({ token, address }) => {
   const history = useHistory()
   return (
     <Container onClick={() => history.push(`/nft/${token.token_uuid}`)}>
@@ -102,6 +187,7 @@ export const Card: React.FC<CardProps> = ({ token }) => {
           uuid={token.issuer_uuid}
         />
       </div>
+      <Label nft={token} address={address} />
     </Container>
   )
 }

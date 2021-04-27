@@ -142,7 +142,13 @@ export const NFTs: React.FC = () => {
               return (
                 <React.Fragment key={i}>
                   {group.token_list.map((token) => {
-                    return <Card token={token} key={token.token_uuid} />
+                    return (
+                      <Card
+                        token={token}
+                        key={token.token_uuid}
+                        address={address}
+                      />
+                    )
                   })}
                 </React.Fragment>
               )

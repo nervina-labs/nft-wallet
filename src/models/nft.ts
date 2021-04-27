@@ -1,3 +1,5 @@
+import { TransactionStatus } from './transactions'
+
 export interface NFT {
   meta: ListMeta
   token_list: NFTToken[]
@@ -18,8 +20,11 @@ export interface NFTToken {
   token_uuid: string
   issuer_avatar_url: string
   issuer_name: string
-  is_transferring: boolean
+  is_transferring?: boolean
   issuer_uuid: string
+  tx_state: TransactionStatus
+  from_address?: string
+  to_address?: string
 }
 
 export interface NFTDetail {

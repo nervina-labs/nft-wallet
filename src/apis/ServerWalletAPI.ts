@@ -26,6 +26,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       params: {
         page,
         limit: PER_ITEM_LIMIT,
+        include_submitting: true,
       },
     })
   }
