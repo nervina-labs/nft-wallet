@@ -116,6 +116,7 @@ const Container = styled.div`
     justify-content: space-between;
     flex-direction: column;
     overflow: hidden;
+    width: 100%;
     .title {
       font-weight: 600;
       font-size: 16px;
@@ -179,7 +180,17 @@ export const Card: React.FC<CardProps> = ({ token, address }) => {
         />
       </div>
       <div className="content">
-        <div className="title">{token.class_name}</div>
+        <div
+          className="title"
+          style={{
+            width:
+              token.tx_state === TransactionStatus.Committed
+                ? '100%'
+                : 'calc(100% - 46px)',
+          }}
+        >
+          {token.class_name}
+        </div>
         <Limited count={token.class_total} />
         <Creator
           url={token.issuer_avatar_url}
