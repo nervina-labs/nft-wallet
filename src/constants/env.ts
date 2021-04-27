@@ -7,3 +7,6 @@ export const NFT_EXPLORER_URL = 'https://ckb-nft-explorer.staging.nervina.cn'
 export const TEST_NET_URL = 'https://wallet.staging.nervina.cn'
 export const MAIN_NET_URL = 'https://wallet.nervina.cn'
 export const IS_MAINNET: boolean = false
+export const IS_WEXIN = navigator.userAgent
+  .toLowerCase()
+  .includes('micromessenger')

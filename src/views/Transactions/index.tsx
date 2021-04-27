@@ -16,7 +16,7 @@ import { ReactComponent as SendSvg } from '../../assets/svg/send.svg'
 import { ReactComponent as ReceiveSvg } from '../../assets/svg/receive.svg'
 import { ReactComponent as LinkSvg } from '../../assets/svg/link.svg'
 import { truncateMiddle } from '../../utils'
-import { NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
+import { IS_WEXIN, NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 import pendingSrc from '../../assets/img/pending.png'
 
@@ -187,7 +187,7 @@ export const Transactions: React.FC = () => {
               (acc, tx) => tx.transaction_list.length + acc,
               0
             )}
-            pullDownToRefresh
+            pullDownToRefresh={!IS_WEXIN}
             refreshFunction={refresh}
             next={fetchNextPage}
             hasMore={hasNextPage === true}

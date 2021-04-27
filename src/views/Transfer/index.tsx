@@ -26,13 +26,13 @@ import { CONTAINER_MAX_WIDTH } from '../../constants'
 
 const Container = styled(MainContainer)`
   display: flex;
-  height: 100%;
   flex-direction: column;
   .content {
     display: flex;
     flex-direction: column;
     margin: 0 36px;
     height: 100%;
+    flex: 1;
     label {
       font-weight: 600;
       font-size: 14px;

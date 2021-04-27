@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Appbar } from '../../components/Appbar'
 import { Card } from '../../components/Card'
-import { NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
+import { IS_WEXIN, NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { Empty } from './empty'
@@ -126,7 +126,7 @@ export const NFTs: React.FC = () => {
           <Loading />
         ) : (
           <InfiniteScroll
-            pullDownToRefresh
+            pullDownToRefresh={!IS_WEXIN}
             refreshFunction={refresh}
             pullDownToRefreshContent={<h4>&#8595; 下拉刷新</h4>}
             pullDownToRefreshThreshold={80}
