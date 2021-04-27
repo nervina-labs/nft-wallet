@@ -328,10 +328,10 @@ export const Transfer: React.FC = () => {
         isDrawerOpen={isScaning}
         onCancel={stopScan}
         width={containerWidth}
-        onScanCkbAddress={(address) => {
-          setCkbAddress(address)
+        onScanCkbAddress={(addr) => {
+          setCkbAddress(addr)
           stopScan()
-          setIsAddressValid(true)
+          setIsAddressValid(address !== addr)
         }}
         onDecodeError={(e) => {
           if (e.toString().includes('permission')) {
