@@ -90,10 +90,14 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
   if (tx.tx_state !== TransactionStatus.Committed) {
     icon = <img src={pendingSrc as any} alt="pending" />
   }
-  const time =
+  let time =
     tx.on_chain_timestamp === null
       ? '等待中'
       : dayjs(Number(tx.on_chain_timestamp + '000')).format(TIME_FORMAT)
+
+  if (tx.tx_state === TransactionStatus.Submitting) {
+    time = '确认中'
+  }
   return (
     <ListItemContainer>
       <div className="icon">{icon}</div>
@@ -202,13 +206,13 @@ export const Transactions: React.FC = () => {
               return (
                 <React.Fragment key={i}>
                   {group.transaction_list.map((tx) => {
-                    return <ListItem tx={tx} key={tx.tx_hash} />
+                    return <ListItem tx={tx} key={tx.uuid} />
                   })}
                 </React.Fragment>
               )
             })}
             {status === 'success' && dataLength === 0 ? (
-              <h4>还没有交易...</h4>
+              <h4>还没有记录...</h4>
             ) : null}
           </InfiniteScroll>
         )}

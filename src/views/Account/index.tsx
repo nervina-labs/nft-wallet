@@ -85,7 +85,7 @@ export const Account: React.FC = () => {
             className={`tab ${isTx ? 'active' : ''}`}
             onClick={() => !isTx && history.replace(RoutePath.Transactions)}
           >
-            交易
+            流转记录
           </span>
         </div>
         <Switch>
