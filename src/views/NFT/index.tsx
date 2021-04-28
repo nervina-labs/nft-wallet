@@ -115,6 +115,17 @@ export const NFT: React.FC = () => {
     return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
   }, [data])
 
+  const isTransferable = useMemo(() => {
+    if (detail === undefined) {
+      return false
+    }
+    return (
+      address !== '' &&
+      detail.tx_state !== 'pending' &&
+      address === detail.to_address
+    )
+  }, [address, detail])
+
   if (!isLogined) {
     return <Redirect to={RoutePath.Login} />
   }
@@ -155,14 +166,10 @@ export const NFT: React.FC = () => {
               uuid={detail.issuer_info.uuid}
             />
           </div>
-          {address !== '' ? (
+          {isTransferable ? (
             <div className="action">
-              <Button
-                type="primary"
-                onClick={tranfer}
-                disbaled={detail.is_transferring}
-              >
-                {detail.is_transferring ? '转让中' : '转让'}
+              <Button type="primary" onClick={tranfer}>
+                转让
               </Button>
             </div>
           ) : null}

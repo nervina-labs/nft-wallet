@@ -306,12 +306,16 @@ export const Transfer: React.FC = () => {
     return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
   }, [bodyWidth])
 
-  if (
-    failureCount >= 1 ||
-    remoteNftDetail?.is_transferring === true ||
-    (remoteNftDetail?.current_holder_address !== address &&
-      remoteNftDetail?.current_holder_address !== undefined)
-  ) {
+  const isInValid = useMemo(() => {
+    return (
+      failureCount >= 1 ||
+      remoteNftDetail?.tx_state === 'pending' ||
+      (remoteNftDetail?.to_address !== address &&
+        remoteNftDetail?.to_address !== undefined)
+    )
+  }, [address, remoteNftDetail, failureCount])
+
+  if (isInValid) {
     return <Redirect to={RoutePath.NotFound} />
   }
 

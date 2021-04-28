@@ -20,7 +20,6 @@ export interface NFTToken {
   token_uuid: string
   issuer_avatar_url: string
   issuer_name: string
-  is_transferring?: boolean
   issuer_uuid: string
   tx_state: TransactionStatus
   from_address?: string
@@ -39,6 +38,7 @@ export interface NFTDetail {
   }
   total: string
   issued: number
-  is_transferring: boolean
-  current_holder_address: string
+  tx_state: TransactionStatus
+  from_address?: string
+  to_address?: string
 }
