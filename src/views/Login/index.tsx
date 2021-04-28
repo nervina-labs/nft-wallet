@@ -1,17 +1,15 @@
 import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { ReactComponent as LogoSvg } from '../../assets/svg/logo.svg'
-import WalletBg from '../../assets/svg/wallet_bg.svg'
-import { Button } from '../../components/Button'
+import Logo from '../../assets/img/logo.png'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { MAIN_NET_URL, TEST_NET_URL } from '../../constants'
 import { NetChange } from '../../components/NetChange'
-
-// @ts-expect-error
-const containerBg = WalletBg as string
+import Button from '@material-ui/core/Button'
+import ButtonGroup from '@material-ui/core/ButtonGroup'
+import { CircularProgress } from '@material-ui/core'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -22,8 +20,6 @@ const Container = styled(MainContainer)`
   background-position: bottom;
   background-repeat: no-repeat;
   background-size: cover;
-  // @ts-ignore
-  background-image: url(${containerBg});
 
   .header {
     display: flex;
@@ -38,8 +34,36 @@ const Container = styled(MainContainer)`
     }
   }
   .logo {
-    margin-top: 80px;
-    margin-bottom: 56px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 340px;
+  }
+`
+
+const BtnGroup = styled(ButtonGroup)`
+  width: calc(100% - 40px);
+  button {
+    color: black;
+    font-weight: 500;
+    padding: 12px 6px 12px 16px;
+    .MuiButton-label {
+      justify-content: flex-start;
+      text-transform: none;
+      font-size: 14px;
+      line-height: 22px;
+    }
+    &:disabled {
+      font-weight: 300;
+      color: rgba(0, 0, 0, 0.6);
+    }
+    &.MuiButton-outlinedPrimary {
+      border: 1px solid rgba(0, 0, 0, 0.23);
+      border-bottom: none;
+      &:last-child {
+        border: 1px solid rgba(0, 0, 0, 0.23);
+      }
+      /* border-bottom: none; */
+    }
   }
 `
 
@@ -72,15 +96,21 @@ export const Login: React.FC = () => {
         <Title style={{ marginRight: '8px' }}>秘宝账户</Title>
         <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
       </div>
-      <LogoSvg className="logo" />
-      <Button
-        onClick={loginBtnOnClick}
-        type="default"
-        disbaled={isLogining}
-        isLoading={isLogining}
+      <img src={Logo as any} className="logo" />
+      <BtnGroup
+        orientation="vertical"
+        color="primary"
+        aria-label="vertical outlined primary button group"
       >
-        连接账户
-      </Button>
+        <Button disabled={isLogining} onClick={loginBtnOnClick}>
+          连接 Unipass（推荐）
+          {isLogining ? (
+            <CircularProgress className="loading" size="1em" />
+          ) : null}
+        </Button>
+        <Button disabled>连接 Metamask（筹备中...）</Button>
+        <Button disabled>连接 Wallet Connect（筹备中...）</Button>
+      </BtnGroup>
     </Container>
   )
 }
