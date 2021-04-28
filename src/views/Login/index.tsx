@@ -16,13 +16,13 @@ const Container = styled(MainContainer)`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
   flex-direction: column;
   background-position: bottom;
   background-repeat: no-repeat;
   background-size: cover;
 
   .header {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,6 +42,7 @@ const Container = styled(MainContainer)`
 
 const BtnGroup = styled(ButtonGroup)`
   width: calc(100% - 40px);
+  margin-bottom: 20px;
   button {
     color: black;
     font-weight: 500;
@@ -97,7 +98,7 @@ export const Login: React.FC = () => {
         <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
       </div>
       <div className="logo">
-        <LazyLoadImage src={Logo as any} width={340} height={410} />
+        <LazyLoadImage src={Logo as any} width={340} height={415} />
       </div>
       <BtnGroup
         orientation="vertical"

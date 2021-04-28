@@ -331,6 +331,7 @@ export const Transfer: React.FC = () => {
         ref={qrcodeScanerRef}
         isDrawerOpen={isScaning}
         onCancel={stopScan}
+        history={history}
         width={containerWidth}
         onScanCkbAddress={(addr) => {
           setCkbAddress(addr)
@@ -338,8 +339,12 @@ export const Transfer: React.FC = () => {
           setIsAddressValid(address !== addr)
         }}
         onDecodeError={(e) => {
-          if (e.toString().includes('permission')) {
+          const msg = e.toString()
+          if (msg.includes('permission')) {
             setHasPermission(false)
+          }
+          if (msg.includes('before any code')) {
+            return
           }
           stopScan()
         }}
