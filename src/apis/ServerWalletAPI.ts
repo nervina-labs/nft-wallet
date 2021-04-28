@@ -35,9 +35,6 @@ export class ServerWalletAPI implements NFTWalletAPI {
     const params: Record<string, unknown> = {
       include_submitting: true,
     }
-    if (this.address !== '') {
-      params.address = this.address
-    }
     return await this.axios.get(`/tokens/${uuid}`, {
       params,
     })
