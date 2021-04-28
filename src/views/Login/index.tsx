@@ -10,6 +10,7 @@ import { NetChange } from '../../components/NetChange'
 import Button from '@material-ui/core/Button'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import { CircularProgress } from '@material-ui/core'
+import { LazyLoadImage } from '../../components/Image'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -36,7 +37,6 @@ const Container = styled(MainContainer)`
   .logo {
     margin-top: 20px;
     margin-bottom: 20px;
-    width: 340px;
   }
 `
 
@@ -96,7 +96,9 @@ export const Login: React.FC = () => {
         <Title style={{ marginRight: '8px' }}>秘宝账户</Title>
         <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
       </div>
-      <img src={Logo as any} className="logo" />
+      <div className="logo">
+        <LazyLoadImage src={Logo as any} width={340} height={410} />
+      </div>
       <BtnGroup
         orientation="vertical"
         color="primary"
