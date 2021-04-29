@@ -10,7 +10,7 @@ import {
 } from '@lay2/pw-core'
 import { unipassCache } from '../cache'
 // import { unipassCache } from '../cache'
-import { IS_MAINNET, UNIPASS_URL } from '../constants'
+import { IS_MAINNET, PW_CODE_HASH, UNIPASS_URL } from '../constants'
 
 type UP_ACT = 'UP-READY' | 'UP-LOGIN' | 'UP-SIGN' | 'UP-CLOSE'
 interface IFrame {
@@ -84,11 +84,7 @@ function pubkeyToAddress(pubkey: string): string {
     .serializeJson()
     .slice(0, 42)
 
-  const script = new Script(
-    '0x124a60cd799e1fbca664196de46b3f7f0ecb7138133dcaea4893c51df5b02be6',
-    hashHex,
-    HashType.type
-  )
+  const script = new Script(PW_CODE_HASH, hashHex, HashType.type)
 
   return script
     .toAddress(IS_MAINNET ? AddressPrefix.ckb : AddressPrefix.ckt)
