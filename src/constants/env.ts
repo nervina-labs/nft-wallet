@@ -25,3 +25,4 @@ export const PW_CODE_HASH =
 export const IS_WEXIN = navigator.userAgent
   .toLowerCase()
   .includes('micromessenger')
+export const IS_ANDROID = navigator.userAgent.toLowerCase().includes('android')

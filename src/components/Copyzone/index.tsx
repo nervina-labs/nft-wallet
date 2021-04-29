@@ -4,6 +4,7 @@ import { ReactComponent as CheckSvg } from '../../assets/svg/check.svg'
 import { copyFallback, sleep } from '../../utils'
 import * as clipboard from 'clipboard-polyfill/text'
 import styled from 'styled-components'
+import { IS_ANDROID, IS_WEXIN } from '../../constants'
 
 export interface CopyzoneProps {
   text: string
@@ -36,7 +37,12 @@ export const Copyzone: React.FC<CopyzoneProps> = ({ text, displayText }) => {
   const onCopy = useCallback(async () => {
     setIsCopy(true)
     try {
-      await clipboard.writeText(text)
+      const isAndroidWeChat = IS_WEXIN && IS_ANDROID
+      await clipboard.writeText(
+        isAndroidWeChat
+          ? text.replace('https://', '').replace('http://', '')
+          : text
+      )
     } catch (error) {
       copyFallback(text)
     }
