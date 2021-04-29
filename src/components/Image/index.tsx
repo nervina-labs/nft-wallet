@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 
 export interface LazyLoadImageProps {
-  src: string
+  src: string | undefined
   alt?: string
   width: number
   height: number
