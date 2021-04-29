@@ -147,6 +147,13 @@ export const NFT: React.FC = () => {
           src={detail?.bg_image_url ?? ''}
           width={imageWidth}
           height={imageWidth}
+          backup={
+            <LazyLoadImage
+              width={imageWidth}
+              height={imageWidth}
+              src={`${location.origin}/logo512.png`}
+            />
+          }
         />
       </div>
       {detail == null ? (

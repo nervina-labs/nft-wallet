@@ -109,6 +109,9 @@ const Container = styled.div`
     height: 120px;
     min-width: 120px;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .content {
     margin: 8px;
@@ -177,6 +180,13 @@ export const Card: React.FC<CardProps> = ({ token, address }) => {
           src={token.class_bg_image_url}
           width={120}
           height={120}
+          backup={
+            <LazyLoadImage
+              width={90}
+              height={90}
+              src={`${location.origin}/logo512.png`}
+            />
+          }
         />
       </div>
       <div className="content">
