@@ -1,11 +1,26 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as UpSvg } from '../../assets/svg/up.svg'
 import { ReactComponent as DownSvg } from '../../assets/svg/down.svg'
 import { IS_MAINNET } from '../../constants'
-import { Popover } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+
+const useStyles = makeStyles(() => ({
+  root: {
+    position: 'relative',
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 20,
+    right: 0,
+    left: 0,
+    zIndex: 1,
+  },
+}))
 
 const Container = styled.div`
+  position: relative;
   .area {
     cursor: pointer;
     display: flex;
@@ -25,6 +40,10 @@ const PopoverContainer = styled.div`
   padding: 0 2px;
   font-size: 12px;
   line-height: 17px;
+  background: #ffffff;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  width: 72px;
   .change {
     display: block;
     text-decoration: none;
@@ -34,6 +53,7 @@ const PopoverContainer = styled.div`
     text-align: center;
     margin: 5px 0;
     padding: 0 16px;
+    font-weight: normal;
     &:hover {
       background: #c4c4c4;
       border-radius: 2px;
@@ -54,50 +74,35 @@ export const NetChange: React.FC<NetChangeProps> = ({
   const testnet = '测试网'
   const netStatus = IS_MAINNET ? mainnet : testnet
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null)
+  const classes = useStyles()
+  const [open, setOpen] = useState(false)
 
-  const handleClose = (): void => {
-    setAnchorEl(null)
+  const handleClick = (): void => {
+    setOpen((prev) => !prev)
   }
 
-  const containerRef = useRef(null)
-
-  const open = useMemo(() => Boolean(anchorEl), [anchorEl])
   return (
-    <Container>
-      <div
-        className="area"
-        ref={containerRef}
-        onClick={(e) => {
-          setAnchorEl(e.currentTarget)
-        }}
-      >
-        <span className="status">{netStatus}</span>
-        {open ? <UpSvg /> : <DownSvg />}
-      </div>
-      <Popover
-        anchorEl={anchorEl}
-        open={open}
-        onBackdropClick={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        onClose={handleClose}
-      >
-        <PopoverContainer>
-          <a href={mainnetURL} className="change">
-            {mainnet}
-          </a>
-          <a href={testnetURL} className="change">
-            {testnet}
-          </a>
-        </PopoverContainer>
-      </Popover>
-    </Container>
+    <ClickAwayListener
+      onClickAway={() => {
+        setOpen(false)
+      }}
+    >
+      <Container>
+        <div className="area" onClick={handleClick}>
+          <span className="status">{netStatus}</span>
+          {open ? <UpSvg /> : <DownSvg />}
+        </div>
+        {open ? (
+          <PopoverContainer className={classes.dropdown}>
+            <a href={mainnetURL} className="change">
+              {mainnet}
+            </a>
+            <a href={testnetURL} className="change">
+              {testnet}
+            </a>
+          </PopoverContainer>
+        ) : null}
+      </Container>
+    </ClickAwayListener>
   )
 }
