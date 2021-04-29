@@ -21,7 +21,6 @@ import { RoutePath } from '../../routes'
 const Container = styled(MainContainer)`
   display: flex;
   background: linear-gradient(187.7deg, #ffffff 4.33%, #f0f0f0 94.27%);
-  min-height: 100%;
   flex-direction: column;
   .figure {
     background: linear-gradient(107.86deg, #e1e1e1 7.34%, #d3d3d3 92.99%);

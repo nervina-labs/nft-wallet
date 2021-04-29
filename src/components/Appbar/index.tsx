@@ -5,8 +5,10 @@ import { RoutePath } from '../../routes'
 import { ReactComponent as AccountSvg } from '../../assets/svg/account.svg'
 
 const Header = styled.header`
-  position: sticky;
+  position: fixed;
   top: 0;
+  width: 100%;
+  max-width: 500px;
   display: flex;
   background: #fff;
   flex-direction: row;
