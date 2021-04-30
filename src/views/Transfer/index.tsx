@@ -411,6 +411,8 @@ export const Transfer: React.FC = () => {
             left: drawerLeft,
           },
         }}
+        disableEnforceFocus
+        disableEscapeKeyDown
       >
         {nftDetail !== undefined ? (
           <DrawerContainer>

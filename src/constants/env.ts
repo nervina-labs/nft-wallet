@@ -8,7 +8,8 @@ export const NODE_URL =
 export const INDEXER_URL =
   process.env.REACT_APP_INDEXER_URL ?? 'https://testnet.ckb.dev/indexer'
 export const UNIPASS_URL =
-  process.env.REACT_APP_UNIPASS_URL ?? 'https://unipass.me'
+  process.env.REACT_APP_UNIPASS_URL ??
+  'https://unipass-me-git-dev-lay2.vercel.app'
 export const NFT_EXPLORER_URL =
   process.env.REACT_APP_NFT_EXPLORER_URL ??
   'https://ckb-nft-explorer.staging.nervina.cn'

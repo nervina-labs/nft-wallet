@@ -14,66 +14,45 @@ import { IS_MAINNET, PW_CODE_HASH, UNIPASS_URL } from '../constants'
 
 type UP_ACT = 'UP-READY' | 'UP-LOGIN' | 'UP-SIGN' | 'UP-CLOSE'
 interface IFrame {
-  blackOut: HTMLDivElement
   uniFrame: HTMLIFrameElement
 }
+
+let uniFrame: HTMLIFrameElement
 
 function openIframe(
   title: string,
   url: string,
-  onload: (this: GlobalEventHandlers, ev: Event) => unknown,
+  onload?: (this: GlobalEventHandlers, ev: Event) => unknown,
   reject?: (r: any) => void
 ): IFrame {
-  const uniFrame = document.createElement('iframe')
-  const blackOut = document.createElement('div')
+  if (uniFrame !== undefined) closeFrame(uniFrame)
+  document.body.style.margin = '0'
+  document.body.style.height = '100%'
+  document.body.style.overflow = 'hidden'
+
+  const container = document.createElement('div')
+  container.style.visibility = 'hidden'
+  uniFrame = document.createElement('iframe')
   uniFrame.src = url
-  uniFrame.style.width = '80%'
-  uniFrame.style.height = '80%'
-  uniFrame.style.backgroundColor = '#FFF'
+  uniFrame.style.visibility = 'hidden'
+  uniFrame.style.width = '100%'
+  uniFrame.style.height = '100%'
+  uniFrame.style.zIndex = '2147483649'
+  uniFrame.style.position = 'absolute'
+  uniFrame.style.backgroundColor = 'rgba(0,0,0,.65)'
+  const { left, top } = document.documentElement.getBoundingClientRect()
+  uniFrame.style.left = `${left}px`
+  uniFrame.style.top = `${-top}px`
   uniFrame.setAttribute('scrolling', 'no')
   uniFrame.setAttribute('frameborder', 'no')
-  // uniFrame.style.display = 'none'
   uniFrame.onload = function (this: GlobalEventHandlers, ev: Event) {
-    blackOut.style.visibility = 'visible'
-    return onload.call(this, ev)
+    uniFrame.style.visibility = 'visible'
+    return onload?.call(this, ev)
   }
 
-  blackOut.id = 'uni-frame'
-  blackOut.style.visibility = 'hidden'
-  blackOut.style.position = 'absolute'
-  blackOut.style.zIndex = '9999'
-  blackOut.style.left = '0'
-  blackOut.style.top = '0'
-  blackOut.style.width = '100%'
-  blackOut.style.height = '100%'
-  blackOut.style.backgroundColor = 'rgba(0,0,0,.65)'
-  blackOut.style.display = 'flex'
-  blackOut.style.justifyContent = 'center'
-  blackOut.style.alignItems = 'center'
+  document.body.appendChild(uniFrame)
 
-  const closebtn = document.createElement('span')
-  closebtn.style.position = 'absolute'
-  closebtn.style.top = '0'
-  closebtn.style.right = '10px'
-  closebtn.innerHTML = '&times;'
-  closebtn.style.color = 'white'
-  closebtn.style.fontSize = '36px'
-  closebtn.style.cursor = 'pointer'
-
-  closebtn.addEventListener(
-    'click',
-    () => {
-      document.body.removeChild(blackOut)
-      reject?.(new Error('user denied'))
-    },
-    false
-  )
-
-  blackOut.appendChild(uniFrame)
-  blackOut.appendChild(closebtn)
-  document.body.appendChild(blackOut)
-
-  return { blackOut, uniFrame }
+  return { uniFrame }
 }
 
 function pubkeyToAddress(pubkey: string): string {
@@ -89,6 +68,11 @@ function pubkeyToAddress(pubkey: string): string {
   return script
     .toAddress(IS_MAINNET ? AddressPrefix.ckb : AddressPrefix.ckt)
     .toCKBAddress()
+}
+
+function closeFrame(frame: HTMLIFrameElement): void {
+  console.log('[UnipassProvider] close frame')
+  frame.remove()
 }
 
 export interface UnipassAccount {
@@ -130,7 +114,7 @@ export default class UnipassProvider extends Provider {
 
   async init(): Promise<UnipassProvider> {
     return await new Promise((resolve, reject) => {
-      const { blackOut, uniFrame } = openIframe(
+      const { uniFrame } = openIframe(
         'login',
         `${this.UNIPASS_BASE}/#/login`,
         () => {
@@ -138,8 +122,7 @@ export default class UnipassProvider extends Provider {
             upact: 'UP-LOGIN',
           }
           uniFrame.contentWindow?.postMessage(msg, this.UNIPASS_BASE)
-        },
-        reject
+        }
       )
 
       this.msgHandler = (event) => {
@@ -149,37 +132,28 @@ export default class UnipassProvider extends Provider {
             const { pubkey, email } = msg.payload as UnipassAccount
             const ckbAddress = pubkeyToAddress(pubkey)
             this.address = new Address(ckbAddress, AddressType.ckb)
-            unipassCache.setUnipassLoginDate(`${Date.now()}`)
-            unipassCache.setUnipassEmail(email)
+            console.log('address', this.address)
             unipassCache.setUnipassAddress(ckbAddress)
+            unipassCache.setUnipassEmail(email)
             this._email = email
             this.msgHandler != null &&
               window.removeEventListener('message', this.msgHandler)
-            blackOut?.remove()
+            uniFrame !== undefined && closeFrame(uniFrame)
+            resolve(this)
+          } else if (msg.upact === 'UP-CLOSE') {
+            uniFrame !== undefined && closeFrame(uniFrame)
             resolve(this)
           }
         }
       }
-
       window.addEventListener('message', this.msgHandler, false)
     })
   }
 
   async sign(message: string): Promise<string> {
     console.log('[UnipassProvider] message to sign', message)
-    return await new Promise((resolve, reject) => {
-      const { blackOut, uniFrame } = openIframe(
-        'sign',
-        `${this.UNIPASS_BASE}/#/sign`,
-        () => {
-          const msg: UnipassMessage = {
-            upact: 'UP-SIGN',
-            payload: message,
-          }
-          uniFrame.contentWindow?.postMessage(msg, this.UNIPASS_BASE)
-        },
-        reject
-      )
+    return await new Promise((resolve) => {
+      const { uniFrame } = openIframe('sign', `${this.UNIPASS_BASE}/#/sign`)
       this.msgHandler = (event) => {
         if (typeof event.data === 'object' && 'upact' in event.data) {
           const msg = event.data as UnipassMessage
@@ -188,8 +162,31 @@ export default class UnipassProvider extends Provider {
             console.log('[Sign] signature: ', signature)
             this.msgHandler != null &&
               window.removeEventListener('message', this.msgHandler)
-            blackOut?.remove()
+            uniFrame !== undefined && closeFrame(uniFrame)
             resolve(`0x01${signature.replace('0x', '')}`)
+          } else if (msg.upact === 'UP-READY') {
+            console.log('[UnipassProvider] sign READY')
+            const msg: UnipassMessage = {
+              upact: 'UP-SIGN',
+              payload: message,
+            }
+            uniFrame.contentWindow?.postMessage(msg, this.UNIPASS_BASE)
+            console.log('[UnipassProvider] opend')
+          } else if (msg.upact === 'UP-LOGIN') {
+            const { pubkey, email } = msg.payload as UnipassAccount
+            const ckbAddress = pubkeyToAddress(pubkey)
+            this.address = new Address(ckbAddress, AddressType.ckb)
+            unipassCache.setUnipassAddress(ckbAddress)
+            unipassCache.setUnipassEmail(email)
+            this._email = email
+            this.msgHandler != null &&
+              window.removeEventListener('message', this.msgHandler)
+            uniFrame !== undefined && closeFrame(uniFrame)
+            // window.location.reload();
+            resolve('0x')
+          } else if (msg.upact === 'UP-CLOSE') {
+            uniFrame !== undefined && closeFrame(uniFrame)
+            resolve('N/A')
           }
         }
       }

@@ -36,15 +36,14 @@ export const Copyzone: React.FC<CopyzoneProps> = ({ text, displayText }) => {
   const [isCopy, setIsCopy] = useState(false)
   const onCopy = useCallback(async () => {
     setIsCopy(true)
+    const isAndroidWeChat = IS_WEXIN && IS_ANDROID
+    const content = isAndroidWeChat
+      ? text.replace('https://', '').replace('http://', '')
+      : text
     try {
-      const isAndroidWeChat = IS_WEXIN && IS_ANDROID
-      await clipboard.writeText(
-        isAndroidWeChat
-          ? text.replace('https://', '').replace('http://', '')
-          : text
-      )
+      await clipboard.writeText(content)
     } catch (error) {
-      copyFallback(text)
+      copyFallback(content)
     }
     await sleep(1000)
     setIsCopy(false)
