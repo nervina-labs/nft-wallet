@@ -73,6 +73,7 @@ function pubkeyToAddress(pubkey: string): string {
 function closeFrame(frame: HTMLIFrameElement): void {
   console.log('[UnipassProvider] close frame')
   frame.remove()
+  document.body.style.removeProperty('overflow')
 }
 
 export interface UnipassAccount {
