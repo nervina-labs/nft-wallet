@@ -1,4 +1,4 @@
-import {
+import PWCore, {
   Address,
   AddressType,
   Platform,
@@ -7,12 +7,16 @@ import {
   HashType,
   AddressPrefix,
   Blake2bHasher,
+  ChainID,
 } from '@lay2/pw-core'
 import { unipassCache } from '../cache'
 // import { unipassCache } from '../cache'
 import { IS_MAINNET, PW_CODE_HASH, UNIPASS_URL } from '../constants'
 
 type UP_ACT = 'UP-READY' | 'UP-LOGIN' | 'UP-SIGN' | 'UP-CLOSE'
+
+PWCore.chainId = IS_MAINNET ? ChainID.ckb : ChainID.ckb_testnet
+
 interface IFrame {
   uniFrame: HTMLIFrameElement
 }
@@ -64,7 +68,6 @@ function pubkeyToAddress(pubkey: string): string {
     .slice(0, 42)
 
   const script = new Script(PW_CODE_HASH, hashHex, HashType.type)
-
   return script
     .toAddress(IS_MAINNET ? AddressPrefix.ckb : AddressPrefix.ckt)
     .toCKBAddress()

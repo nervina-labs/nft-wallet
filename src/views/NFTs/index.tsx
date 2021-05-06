@@ -5,7 +5,13 @@ import styled from 'styled-components'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Appbar } from '../../components/Appbar'
 import { Card } from '../../components/Card'
-import { IS_WEXIN, NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
+import {
+  IS_WEXIN,
+  MAIN_NET_URL,
+  NFT_EXPLORER_URL,
+  PER_ITEM_LIMIT,
+  TEST_NET_URL,
+} from '../../constants'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { Empty } from './empty'
@@ -108,7 +114,7 @@ export const NFTs: React.FC = () => {
         title={
           <div className="center">
             <span>我的秘宝</span>
-            <NetChange mainnetURL="" testnetURL="" />
+            <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
           </div>
         }
         left={

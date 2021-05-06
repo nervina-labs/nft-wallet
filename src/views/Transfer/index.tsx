@@ -22,7 +22,7 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { useQuery } from 'react-query'
 import { MainContainer } from '../../styles'
-import { CONTAINER_MAX_WIDTH } from '../../constants'
+import { CONTAINER_MAX_WIDTH, IS_MAINNET } from '../../constants'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -191,6 +191,12 @@ export const Transfer: React.FC = () => {
       let isValidAddress = isValidCkbLongAddress(val)
       const isSameAddress = val !== '' && address === val
       if (isSameAddress) {
+        isValidAddress = false
+      }
+      if (IS_MAINNET && val.startsWith('ckt')) {
+        isValidAddress = false
+      }
+      if (!IS_MAINNET && val.startsWith('ckb')) {
         isValidAddress = false
       }
       setIsAddressValid(isValidAddress)
