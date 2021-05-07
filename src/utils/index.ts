@@ -39,3 +39,5 @@ export function copyFallback(data: string): void {
   document.execCommand('copy')
   document.body.removeChild(input)
 }
+
+export const noop: () => void = () => {}
