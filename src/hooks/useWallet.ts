@@ -7,7 +7,6 @@ import { UNIPASS_URL } from '../constants'
 import UnipassProvider from '../pw/UnipassProvider'
 import UnipassSigner from '../pw/UnipassSigner'
 import { History } from 'history'
-import { RoutePath } from '../routes'
 import { useLocalStorage } from './useLocalStorage'
 import { usePrevious } from './usePrevious'
 
@@ -54,6 +53,16 @@ function useWallet(): UseWallet {
     return unipassAccount?.walletType
   }, [unipassAccount?.walletType])
 
+  const logout = useCallback(
+    (h?: History<unknown>) => {
+      setProvider(undefined)
+      setUnipassAccount(null)
+      localStorage.clear()
+      provider?.close()
+    },
+    [provider, setUnipassAccount]
+  )
+
   const walletAddressOnChange = useCallback(
     (addr?: Address) => {
       if (unipassAccount?.walletType === WalletType.Unipass) {
@@ -63,8 +72,7 @@ function useWallet(): UseWallet {
         return
       }
       if (!addr) {
-        setUnipassAccount(null)
-        localStorage.clear()
+        logout()
         return
       }
       const ckbAddress = addr.toCKBAddress()
@@ -73,7 +81,7 @@ function useWallet(): UseWallet {
         walletType: unipassAccount?.walletType,
       })
     },
-    [setUnipassAccount, unipassAccount?.walletType]
+    [setUnipassAccount, unipassAccount?.walletType, logout]
   )
 
   const loginUnipass = useCallback(async () => {
@@ -105,6 +113,31 @@ function useWallet(): UseWallet {
     return p
   }, [setUnipassAccount, walletAddressOnChange])
 
+  const loginWalletConnect = useCallback(async () => {
+    const Web3Modal = (await import('web3modal')).default
+    const walletconnectProvider = (await import('@walletconnect/web3-provider'))
+      .default
+    const web3Modal = new Web3Modal({
+      cacheProvider: false,
+      providerOptions: {
+        walletconnect: {
+          package: walletconnectProvider,
+          options: { infuraId: '89a648e271d54224ba4827d348cbaa54' },
+        },
+      },
+    })
+    const provider = await web3Modal.connectTo('walletconnect')
+    const Web3 = (await import('web3')).default
+    const web3 = new Web3(provider)
+    const p = await new Web3Provider(web3, walletAddressOnChange).init()
+    setUnipassAccount({
+      address: p.address.toCKBAddress(),
+      walletType: WalletType.WalletConnect,
+    })
+    setProvider(p)
+    return p
+  }, [setUnipassAccount, walletAddressOnChange])
+
   const login = useCallback(
     async (walletType: WalletType = WalletType.Unipass) => {
       switch (walletType) {
@@ -112,21 +145,13 @@ function useWallet(): UseWallet {
           return await loginUnipass()
         case WalletType.Metamask:
           return await loginMetamask()
+        case WalletType.WalletConnect:
+          return await loginWalletConnect()
         default:
           return await loginUnipass()
       }
     },
-    [loginMetamask, loginUnipass]
-  )
-
-  const logout = useCallback(
-    (h: History<unknown>) => {
-      localStorage.clear()
-      h.push(RoutePath.Login)
-      provider?.close()
-      setProvider(undefined)
-    },
-    [provider]
+    [loginMetamask, loginUnipass, loginWalletConnect]
   )
 
   const signUnipass = useCallback(

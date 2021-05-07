@@ -81,6 +81,7 @@ export const Login: React.FC = () => {
   const history = useHistory()
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
+  const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
       case WalletType.Metamask:
@@ -90,7 +91,7 @@ export const Login: React.FC = () => {
         setIsUnipassLoging(loading)
         break
       case WalletType.WalletConnect:
-        setIsUnipassLoging(loading)
+        setIsWalletConnectLoging(loading)
         break
       default:
         setIsUnipassLoging(loading)
@@ -126,7 +127,9 @@ export const Login: React.FC = () => {
         aria-label="vertical outlined primary button group"
       >
         <Button
-          disabled={isUnipassLogining || isMetamaskLoging}
+          disabled={
+            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+          }
           onClick={loginBtnOnClick}
         >
           连接 Unipass（推荐）
@@ -135,7 +138,9 @@ export const Login: React.FC = () => {
           ) : null}
         </Button>
         <Button
-          disabled={isUnipassLogining || isMetamaskLoging}
+          disabled={
+            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+          }
           onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
         >
           连接 Metamask&nbsp;
@@ -143,7 +148,17 @@ export const Login: React.FC = () => {
             <CircularProgress className="loading" size="1em" />
           ) : null}
         </Button>
-        <Button disabled>连接 Wallet Connect（筹备中...）</Button>
+        <Button
+          disabled={
+            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+          }
+          onClick={loginBtnOnClick.bind(null, WalletType.WalletConnect)}
+        >
+          连接 Wallet Connect&nbsp;
+          {isWalletConnectLoging ? (
+            <CircularProgress className="loading" size="1em" />
+          ) : null}
+        </Button>
       </BtnGroup>
     </Container>
   )
