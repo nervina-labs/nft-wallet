@@ -9,9 +9,9 @@ import PWCore, {
   Blake2bHasher,
   ChainID,
 } from '@lay2/pw-core'
-import { unipassCache } from '../cache'
 // import { unipassCache } from '../cache'
-import { IS_MAINNET, PW_CODE_HASH, UNIPASS_URL } from '../constants'
+import { IS_MAINNET, PW_CODE_HASH } from '../constants'
+import { UnipassAccount as Account } from '../hooks/useWallet'
 
 type UP_ACT = 'UP-READY' | 'UP-LOGIN' | 'UP-SIGN' | 'UP-CLOSE'
 
@@ -96,20 +96,25 @@ export default class UnipassProvider extends Provider {
   | ((this: Window, event: MessageEvent) => unknown)
   | undefined
 
+  private readonly setStorage: (account: Account) => void
+
   get email(): string | undefined {
     return this._email
   }
 
-  constructor(private readonly UNIPASS_BASE = UNIPASS_URL) {
+  constructor(
+    private readonly UNIPASS_BASE: string,
+    setStorage: (newValue: Account | null) => void
+  ) {
     super(Platform.ckb)
+    this.setStorage = setStorage
   }
 
-  async connect(): Promise<UnipassProvider> {
-    const cachedAddress = unipassCache.getUnipassAddress()
-    const cachedEmail = unipassCache.getUnipassEmail()
-    if (cachedAddress !== null && cachedEmail !== null) {
-      this.address = new Address(cachedAddress, AddressType.ckb)
-      this._email = cachedEmail
+  async connect(account: Account | null): Promise<UnipassProvider> {
+    if (account !== null) {
+      const { address, email } = account
+      this.address = new Address(address, AddressType.ckb)
+      this._email = email
       return await Promise.resolve(this)
     }
 
@@ -132,13 +137,16 @@ export default class UnipassProvider extends Provider {
       this.msgHandler = (event) => {
         if (typeof event.data === 'object' && 'upact' in event.data) {
           const msg = event.data as UnipassMessage
+          console.log(msg)
           if (msg.upact === 'UP-LOGIN') {
             const { pubkey, email } = msg.payload as UnipassAccount
             const ckbAddress = pubkeyToAddress(pubkey)
             this.address = new Address(ckbAddress, AddressType.ckb)
             console.log('address', this.address)
-            unipassCache.setUnipassAddress(ckbAddress)
-            unipassCache.setUnipassEmail(email)
+            this.setStorage({
+              address: ckbAddress,
+              email: email,
+            })
             this._email = email
             this.msgHandler != null &&
               window.removeEventListener('message', this.msgHandler)
@@ -161,6 +169,7 @@ export default class UnipassProvider extends Provider {
       this.msgHandler = (event) => {
         if (typeof event.data === 'object' && 'upact' in event.data) {
           const msg = event.data as UnipassMessage
+          console.log('log', msg)
           if (msg.upact === 'UP-SIGN') {
             const signature = msg.payload as string
             console.log('[Sign] signature: ', signature)
@@ -180,8 +189,10 @@ export default class UnipassProvider extends Provider {
             const { pubkey, email } = msg.payload as UnipassAccount
             const ckbAddress = pubkeyToAddress(pubkey)
             this.address = new Address(ckbAddress, AddressType.ckb)
-            unipassCache.setUnipassAddress(ckbAddress)
-            unipassCache.setUnipassEmail(email)
+            this.setStorage({
+              address: ckbAddress,
+              email: email,
+            })
             this._email = email
             this.msgHandler != null &&
               window.removeEventListener('message', this.msgHandler)
@@ -202,5 +213,10 @@ export default class UnipassProvider extends Provider {
   close(): void {
     this.msgHandler != null &&
       window.removeEventListener('message', this.msgHandler)
+  }
+
+  terminate(): void {
+    this.close()
+    uniFrame !== undefined && closeFrame(uniFrame)
   }
 }

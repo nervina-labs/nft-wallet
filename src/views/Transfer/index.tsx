@@ -23,6 +23,7 @@ import { Creator } from '../../components/Creator'
 import { useQuery } from 'react-query'
 import { MainContainer } from '../../styles'
 import { CONTAINER_MAX_WIDTH, IS_MAINNET } from '../../constants'
+import UnipassProvider from '../../pw/UnipassProvider'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -174,7 +175,14 @@ export enum FailedMessage {
 export const Transfer: React.FC = () => {
   const location = useLocation<{ nftDetail?: NFTDetail }>()
   const history = useHistory()
-  const { signTransaction, api, isLogined, address } = useWalletModel()
+  const {
+    signTransaction,
+    api,
+    isLogined,
+    address,
+    prevAddress,
+    provider,
+  } = useWalletModel()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [ckbAddress, setCkbAddress] = useState('')
   const [failedMessage, setFailedMessage] = useState(FailedMessage.TranferFail)
@@ -184,6 +192,18 @@ export const Transfer: React.FC = () => {
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isScaning, setIsScaning] = useState(false)
   const qrcodeScanerRef = useRef<QrcodeScaner>(null)
+
+  useEffect(() => {
+    if (
+      prevAddress &&
+      address &&
+      prevAddress !== address &&
+      provider instanceof UnipassProvider
+    ) {
+      provider.terminate()
+      history.replace(RoutePath.NFT)
+    }
+  }, [prevAddress, address, provider, history])
 
   const textareaOnChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
