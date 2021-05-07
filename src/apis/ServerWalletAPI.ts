@@ -51,7 +51,8 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async getTransferNftTransaction(
     uuid: string,
-    toAddress: string
+    toAddress: string,
+    isUnipass = true
   ): Promise<NFTTransaction> {
     // eslint-disable-next-line prettier/prettier
     const { data } = await this.axios.get<any, AxiosResponse<UnsignedTransaction>>('/token_ckb_transactions/new', {
@@ -62,7 +63,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       },
     })
 
-    const tx = await rawTransactionToPWTransaction(data.unsigned_tx)
+    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, isUnipass)
     return {
       tx,
       uuid: data.token_ckb_transaction_uuid,

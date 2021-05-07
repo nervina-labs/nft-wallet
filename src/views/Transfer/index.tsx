@@ -15,7 +15,7 @@ import { Drawer } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import { isValidCkbLongAddress } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
 import { useWidth } from '../../hooks/useWidth'
 import { Limited } from '../../components/Limited'
@@ -182,6 +182,7 @@ export const Transfer: React.FC = () => {
     address,
     prevAddress,
     provider,
+    walletType,
   } = useWalletModel()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [ckbAddress, setCkbAddress] = useState('')
@@ -247,7 +248,11 @@ export const Transfer: React.FC = () => {
     setIsSendingNFT(true)
     try {
       const { tx } = await api
-        .getTransferNftTransaction(id, ckbAddress)
+        .getTransferNftTransaction(
+          id,
+          ckbAddress,
+          walletType === WalletType.Unipass
+        )
         .catch((err) => {
           setFailedMessage(FailedMessage.TranferFail)
           stopTranfer(false)
@@ -272,7 +277,7 @@ export const Transfer: React.FC = () => {
       return
     }
     stopTranfer(true)
-  }, [signTransaction, id, ckbAddress, api])
+  }, [signTransaction, id, ckbAddress, api, walletType])
   const closeDrawer = (): void => setIsDrawerOpen(false)
   const stopScan = (): void => {
     setIsScaning(false)

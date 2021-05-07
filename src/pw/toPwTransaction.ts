@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
-  // Builder,
   Cell,
   CellDep,
   OutPoint,
@@ -10,11 +9,16 @@ import {
   Transaction,
   Amount,
   AmountUnit,
-  // DepType,
+  Builder,
+  CHAIN_SPECS,
 } from '@lay2/pw-core'
 import { RPC as ToolKitRpc } from 'ckb-js-toolkit'
 import RPC from '@nervosnetwork/ckb-sdk-rpc'
-import { NODE_URL } from '../constants'
+import { IS_MAINNET, NODE_URL } from '../constants'
+
+const chainSpec = IS_MAINNET ? CHAIN_SPECS.Lina : CHAIN_SPECS.Aggron
+
+const pwDeps = [chainSpec.defaultLock.cellDep, chainSpec.pwLock.cellDep]
 
 export const toolkitRPC = new ToolKitRpc(NODE_URL)
 
@@ -29,7 +33,8 @@ const UnipassWitnessArgs = {
 }
 
 export async function rawTransactionToPWTransaction(
-  rawTx: RPC.RawTransaction
+  rawTx: RPC.RawTransaction,
+  isUnipass = true
 ): Promise<Transaction> {
   const inputs = await Promise.all(
     rawTx.inputs.map(
@@ -66,11 +71,11 @@ export async function rawTransactionToPWTransaction(
     new RawTransaction(
       inputs,
       outputs,
-      cellDeps
+      cellDeps.concat(!isUnipass ? pwDeps : [])
       // rawTx.header_deps,
       // rawTx.version
     ),
-    [UnipassWitnessArgs]
+    [!isUnipass ? Builder.WITNESS_ARGS.Secp256k1 : UnipassWitnessArgs]
   )
 
   return tx

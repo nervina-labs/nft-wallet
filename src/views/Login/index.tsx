@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import Logo from '../../assets/img/logo.png'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { MAIN_NET_URL, TEST_NET_URL } from '../../constants'
@@ -80,16 +80,19 @@ export const Login: React.FC = () => {
   const { login } = useWalletModel()
   const history = useHistory()
   const [isLogining, setIsLoging] = useState(false)
-  const loginBtnOnClick = useCallback(async () => {
-    setIsLoging(true)
-    try {
-      await login()
-      setIsLoging(false)
-      history.push(RoutePath.NFTs)
-    } catch (error) {
-      setIsLoging(false)
-    }
-  }, [login, history])
+  const loginBtnOnClick = useCallback(
+    async (walletType = WalletType) => {
+      setIsLoging(true)
+      try {
+        await login(walletType)
+        setIsLoging(false)
+        history.push(RoutePath.NFTs)
+      } catch (error) {
+        setIsLoging(false)
+      }
+    },
+    [login, history]
+  )
 
   return (
     <Container>
@@ -111,7 +114,12 @@ export const Login: React.FC = () => {
             <CircularProgress className="loading" size="1em" />
           ) : null}
         </Button>
-        <Button disabled>连接 Metamask（筹备中...）</Button>
+        <Button onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}>
+          连接 Metamask
+          {isLogining ? (
+            <CircularProgress className="loading" size="1em" />
+          ) : null}
+        </Button>
         <Button disabled>连接 Wallet Connect（筹备中...）</Button>
       </BtnGroup>
     </Container>
