@@ -14,6 +14,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@nervosnetwork/ckb-sdk-core": "^0.40.0",
     "@types/qrcode.react": "^1.0.1",
+    "@walletconnect/web3-provider": "^1.4.1",
     "@zxing/library": "^0.18.5",
     "axios": "^0.21.1",
     "clipboard-polyfill": "^3.0.3",

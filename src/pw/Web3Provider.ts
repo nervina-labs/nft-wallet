@@ -40,6 +40,9 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
           }
         }
       )
+      this.web3.currentProvider.on('disconnect', () => {
+        this.onAddressChanged(undefined)
+      })
     }
 
     return this
