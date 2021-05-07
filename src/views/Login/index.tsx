@@ -79,16 +79,33 @@ const Title = styled.h2`
 export const Login: React.FC = () => {
   const { login } = useWalletModel()
   const history = useHistory()
-  const [isLogining, setIsLoging] = useState(false)
+  const [isUnipassLogining, setIsUnipassLoging] = useState(false)
+  const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
+  const setLoading = (loading: boolean, walletType: WalletType): void => {
+    switch (walletType) {
+      case WalletType.Metamask:
+        setIsMetamaskLoging(loading)
+        break
+      case WalletType.Unipass:
+        setIsUnipassLoging(loading)
+        break
+      case WalletType.WalletConnect:
+        setIsUnipassLoging(loading)
+        break
+      default:
+        setIsUnipassLoging(loading)
+        break
+    }
+  }
   const loginBtnOnClick = useCallback(
-    async (walletType = WalletType) => {
-      setIsLoging(true)
+    async (walletType = WalletType.Unipass) => {
+      setLoading(true, walletType)
       try {
         await login(walletType)
-        setIsLoging(false)
+        setLoading(false, walletType)
         history.push(RoutePath.NFTs)
       } catch (error) {
-        setIsLoging(false)
+        setLoading(false, walletType)
       }
     },
     [login, history]
@@ -108,15 +125,21 @@ export const Login: React.FC = () => {
         color="primary"
         aria-label="vertical outlined primary button group"
       >
-        <Button disabled={isLogining} onClick={loginBtnOnClick}>
+        <Button
+          disabled={isUnipassLogining || isMetamaskLoging}
+          onClick={loginBtnOnClick}
+        >
           连接 Unipass（推荐）
-          {isLogining ? (
+          {isUnipassLogining ? (
             <CircularProgress className="loading" size="1em" />
           ) : null}
         </Button>
-        <Button onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}>
-          连接 Metamask
-          {isLogining ? (
+        <Button
+          disabled={isUnipassLogining || isMetamaskLoging}
+          onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+        >
+          连接 Metamask&nbsp;
+          {isMetamaskLoging ? (
             <CircularProgress className="loading" size="1em" />
           ) : null}
         </Button>
