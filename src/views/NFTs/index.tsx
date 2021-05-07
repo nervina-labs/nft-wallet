@@ -60,7 +60,7 @@ export const NFTs: React.FC = () => {
     fetchNextPage,
     refetch,
   } = useInfiniteQuery(
-    Query.NFTList,
+    [Query.NFTList, address],
     async ({ pageParam = 1 }) => {
       const { data } = await api.getNFTs(pageParam)
       return data

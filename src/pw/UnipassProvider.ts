@@ -8,14 +8,16 @@ import PWCore, {
   AddressPrefix,
   Blake2bHasher,
   ChainID,
+  CHAIN_SPECS,
 } from '@lay2/pw-core'
 // import { unipassCache } from '../cache'
 import { IS_MAINNET, PW_CODE_HASH } from '../constants'
-import { UnipassAccount as Account } from '../hooks/useWallet'
+import { UnipassAccount as Account, WalletType } from '../hooks/useWallet'
 
 type UP_ACT = 'UP-READY' | 'UP-LOGIN' | 'UP-SIGN' | 'UP-CLOSE'
 
 PWCore.chainId = IS_MAINNET ? ChainID.ckb : ChainID.ckb_testnet
+PWCore.config = IS_MAINNET ? CHAIN_SPECS.Lina : CHAIN_SPECS.Aggron
 
 interface IFrame {
   uniFrame: HTMLIFrameElement
@@ -146,6 +148,7 @@ export default class UnipassProvider extends Provider {
             this.setStorage({
               address: ckbAddress,
               email: email,
+              walletType: WalletType.Unipass,
             })
             this._email = email
             this.msgHandler != null &&
@@ -192,6 +195,7 @@ export default class UnipassProvider extends Provider {
             this.setStorage({
               address: ckbAddress,
               email: email,
+              walletType: WalletType.Unipass,
             })
             this._email = email
             this.msgHandler != null &&
