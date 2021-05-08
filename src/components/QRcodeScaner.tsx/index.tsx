@@ -10,6 +10,7 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as CameraSvg } from '../../assets/svg/camera.svg'
 import { Appbar } from '../Appbar'
 import { Button } from '../Button'
+import { verifyEthAddress } from '@lay2/pw-core'
 
 const Container = styled.div`
   display: flex;
@@ -68,7 +69,7 @@ export interface QrcodeScanerProps {
 }
 
 export interface QrcodeScanerState {
-  nonCkbAddressResult: string
+  nonAddressResult: string
   isScaning: boolean
 }
 
@@ -80,7 +81,7 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
   public scaner: BrowserQRCodeReader | null = null
 
   state = {
-    nonCkbAddressResult: '',
+    nonAddressResult: '',
     isScaning: false,
   }
 
@@ -110,7 +111,7 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
         deviceId
     }
     this.currentDeviceId = deviceId
-    this.setState({ nonCkbAddressResult: '', isScaning: true }, () => {
+    this.setState({ nonAddressResult: '', isScaning: true }, () => {
       this.scaner!.decodeOnceFromVideoDevice(deviceId, this.videoRef.current!)
         .then((result) => {
           if (result == null) {
@@ -119,11 +120,11 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
           const text = result.getText()
           onDecode?.(text)
           this.setState({ isScaning: false })
-          if (isValidCkbLongAddress(text)) {
-            this.setState({ nonCkbAddressResult: '' })
+          if (isValidCkbLongAddress(text) || verifyEthAddress(text)) {
+            this.setState({ nonAddressResult: '' })
             onScanCkbAddress(text)
           } else {
-            this.setState({ nonCkbAddressResult: text })
+            this.setState({ nonAddressResult: text })
           }
           this.stopScan()
         })
@@ -143,7 +144,7 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
   }
 
   render(): React.ReactNode {
-    const { nonCkbAddressResult, isScaning } = this.state
+    const { nonAddressResult: nonCkbAddressResult, isScaning } = this.state
     const { onCancel, isDrawerOpen, width } = this.props
     return (
       <Drawer open={isDrawerOpen}>
@@ -158,7 +159,9 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
             <div className="result">
               <h3 className="title">已识别到的二维码内容</h3>
               <div className="qrcode">{nonCkbAddressResult}</div>
-              <div className="error">请扫描正确的CKB地址二维码</div>
+              <div className="error">
+                请扫描正确的 CKB 或 Ethereum 地址二维码
+              </div>
               <Button type="primary" onClick={this.startScan.bind(this)}>
                 重新扫描
               </Button>

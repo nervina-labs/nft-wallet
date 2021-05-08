@@ -86,7 +86,7 @@ export const Routers: React.FC = () => {
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
       login(walletType).catch((e) => {
-        console.log(e, 'error')
+        console.log('login-error', e)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
