@@ -10,6 +10,7 @@ import { ReactComponent as ErrorSvg } from '../../assets/svg/error.svg'
 import { ReactComponent as SuccessSvg } from '../../assets/svg/success.svg'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
+import InfoIcon from '@material-ui/icons/Info'
 import { Button } from '../../components/Button'
 import { Drawer } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
@@ -24,6 +25,7 @@ import { useQuery } from 'react-query'
 import { MainContainer } from '../../styles'
 import { CONTAINER_MAX_WIDTH, IS_MAINNET } from '../../constants'
 import UnipassProvider from '../../pw/UnipassProvider'
+import { Address, AddressType, verifyEthAddress } from '@lay2/pw-core'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -42,16 +44,24 @@ const Container = styled(MainContainer)`
       margin-top: 120px;
       margin-bottom: 12px;
     }
-    .error {
+    .alert {
       font-weight: 600;
       font-size: 12px;
       line-height: 17px;
-      color: #d03a3a;
       display: flex;
       align-items: center;
       margin-top: 10px;
+      height: 34px;
       svg {
+        width: 12px;
+        height: 12px;
         margin-right: 4px;
+      }
+      &.error {
+        color: #d03a3a;
+      }
+      &.info {
+        color: #2196f3;
       }
     }
     .form {
@@ -220,15 +230,25 @@ export const Transfer: React.FC = () => {
       if (!IS_MAINNET && val.startsWith('ckb')) {
         isValidAddress = false
       }
+      if (verifyEthAddress(val)) {
+        isValidAddress = true
+      }
       setIsAddressValid(isValidAddress)
       setCkbAddress(val)
     },
     [address]
   )
 
+  const isEthAddress = useMemo(() => {
+    return verifyEthAddress(ckbAddress)
+  }, [ckbAddress])
+
   const isSameAddress = useMemo(() => {
+    if (isEthAddress) {
+      return new Address(ckbAddress, AddressType.eth).toCKBAddress() === address
+    }
     return address !== '' && address === ckbAddress
-  }, [address, ckbAddress])
+  }, [address, ckbAddress, isEthAddress])
 
   const stopTranfer = (isSuccess: boolean): void => {
     setIsSendingNFT(false)
@@ -247,10 +267,14 @@ export const Transfer: React.FC = () => {
   const sendNFT = useCallback(async () => {
     setIsSendingNFT(true)
     try {
+      const sentAddress = new Address(
+        ckbAddress,
+        isEthAddress ? AddressType.eth : AddressType.ckb
+      ).toCKBAddress()
       const { tx } = await api
         .getTransferNftTransaction(
           id,
-          ckbAddress,
+          sentAddress,
           walletType === WalletType.Unipass
         )
         .catch((err) => {
@@ -266,7 +290,7 @@ export const Transfer: React.FC = () => {
       })
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await api.transfer(id, signTx!, ckbAddress).catch((err) => {
+      await api.transfer(id, signTx!, sentAddress).catch((err) => {
         setFailedMessage(FailedMessage.TranferFail)
         stopTranfer(false)
         console.log(err)
@@ -277,7 +301,7 @@ export const Transfer: React.FC = () => {
       return
     }
     stopTranfer(true)
-  }, [signTransaction, id, ckbAddress, api, walletType])
+  }, [signTransaction, id, ckbAddress, api, walletType, isEthAddress])
   const closeDrawer = (): void => setIsDrawerOpen(false)
   const stopScan = (): void => {
     setIsScaning(false)
@@ -337,7 +361,7 @@ export const Transfer: React.FC = () => {
     return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
   }, [bodyWidth])
 
-  const isInValid = useMemo(() => {
+  const isInvalid = useMemo(() => {
     return (
       failureCount >= 1 ||
       remoteNftDetail?.tx_state === 'pending' ||
@@ -346,7 +370,29 @@ export const Transfer: React.FC = () => {
     )
   }, [address, remoteNftDetail, failureCount])
 
-  if (isInValid) {
+  const alertMsg = useMemo(() => {
+    if (ckbAddress.startsWith('0x') && !verifyEthAddress(ckbAddress)) {
+      return '请输入正确的以太坊地址'
+    }
+    if (
+      (ckbAddress.startsWith('ckt') || ckbAddress.startsWith('ckb')) &&
+      !isValidCkbLongAddress(ckbAddress)
+    ) {
+      return '请输入正确的 CKB 地址'
+    }
+    if (isEthAddress) {
+      return isSameAddress
+        ? '无法转让秘宝给自己'
+        : '当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「秘宝账户」应用，方可查看收到的秘宝'
+    }
+    return isSameAddress
+      ? '无法转让秘宝给自己'
+      : '请输入正确的 CKB 地址或以太坊地址'
+  }, [isSameAddress, isEthAddress, ckbAddress])
+
+  useEffect(() => {}, [])
+
+  if (isInvalid) {
     return <Redirect to={RoutePath.NotFound} />
   }
 
@@ -385,21 +431,24 @@ export const Transfer: React.FC = () => {
         <div className="form">
           <textarea
             className="input"
-            placeholder="请输入 CKB 长地址"
+            placeholder="请输入 CKB 长地址或以太坊地址"
             value={ckbAddress}
             onChange={textareaOnChange}
           />
           <ScanSvg onClick={startScan} />
         </div>
         <div
-          className="error"
+          className={`alert ${isEthAddress ? 'info' : 'error'}`}
           style={{
             visibility:
-              !isAddressValid && ckbAddress !== '' ? 'visible' : 'hidden',
+              (!isAddressValid && ckbAddress !== '') ||
+              (isEthAddress && isAddressValid)
+                ? 'visible'
+                : 'hidden',
           }}
         >
-          <ErrorSvg />
-          {isSameAddress ? '无法转让秘宝给自己' : '请输入正确的 CKB 地址'}
+          {isEthAddress ? <InfoIcon /> : <ErrorSvg />}
+          {alertMsg}
         </div>
         <div className="action">
           <Button
