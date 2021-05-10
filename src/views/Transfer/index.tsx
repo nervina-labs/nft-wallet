@@ -14,7 +14,11 @@ import InfoIcon from '@material-ui/icons/Info'
 import { Button } from '../../components/Button'
 import { Drawer } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
-import { verifyCkbLongAddress, verifyEthAddress } from '../../utils'
+import {
+  verifyEthContractAddress,
+  verifyCkbLongAddress,
+  verifyEthAddress,
+} from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
@@ -180,6 +184,7 @@ export enum FailedMessage {
   SignFail = '签名失败，请重新签名',
   TranferFail = '发送失败，请检查当前网络情况，重新发送',
   NoCamera = '没有找到摄像头',
+  ContractAddress = '无法转让到以太坊合约地址',
 }
 
 export const Transfer: React.FC = () => {
@@ -228,7 +233,7 @@ export const Transfer: React.FC = () => {
   }, [address, ckbAddress, isEthAddress])
 
   const textareaOnChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const val = e.target.value
       let isValidAddress = verifyCkbLongAddress(val)
       let isSameAddress = val !== '' && address === val
@@ -264,9 +269,17 @@ export const Transfer: React.FC = () => {
       setIsErrorDialogOpen(true)
     }
   }
-  const transferOnClock = useCallback(() => {
+  const transferOnClick = useCallback(async () => {
+    if (isEthAddress) {
+      const isContract = await verifyEthContractAddress(ckbAddress)
+      if (isContract) {
+        setFailedMessage(FailedMessage.ContractAddress)
+        setIsErrorDialogOpen(true)
+        return
+      }
+    }
     setIsDrawerOpen(true)
-  }, [])
+  }, [isEthAddress, ckbAddress])
   const { id } = useParams<{ id: string }>()
 
   const sendNFT = useCallback(async () => {
@@ -460,7 +473,7 @@ export const Transfer: React.FC = () => {
         <div className="action">
           <Button
             type="primary"
-            onClick={transferOnClock}
+            onClick={transferOnClick}
             disbaled={!isAddressValid}
           >
             转让

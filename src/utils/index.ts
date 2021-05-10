@@ -1,5 +1,6 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import Web3 from 'web3'
+import { INFURA_ID } from '../constants'
 
 export const sleep = async (ms: number): Promise<void> =>
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -19,6 +20,23 @@ export const verifyCkbLongAddress = (address: string): boolean => {
 
 export const verifyEthAddress = (addr: string): boolean => {
   return Web3.utils.isAddress(addr)
+}
+
+export const verifyEthContractAddress = async (
+  addr: string
+): Promise<boolean> => {
+  try {
+    const provider = new Web3.providers.HttpProvider(
+      `https://mainnet.infura.io/v3/${INFURA_ID}`
+    )
+    const web3 = new Web3(provider)
+    const code = await web3.eth.getCode(addr)
+    provider.disconnect()
+    return code !== '0x'
+  } catch (error) {
+    console.log(error)
+    return true
+  }
 }
 
 export function truncateMiddle(
