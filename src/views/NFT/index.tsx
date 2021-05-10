@@ -129,7 +129,7 @@ export const NFT: React.FC = () => {
     return <Redirect to={RoutePath.Login} />
   }
 
-  if (failureCount >= 1) {
+  if (failureCount >= 2) {
     return <Redirect to={RoutePath.NotFound} />
   }
 
