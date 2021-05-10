@@ -86,7 +86,7 @@ export const Routers: React.FC = () => {
 
   useEffect(() => {
     if (IS_IMTOKEN) {
-      login(walletType).catch((e) => {
+      login(WalletType.Metamask).catch((e) => {
         console.log('login-error', e)
       })
     } else if (isLogined && walletType && walletType !== WalletType.Unipass) {
