@@ -116,7 +116,7 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
           if (result == null) {
             return
           }
-          const text = result.getText()
+          const text = result.getText().replace(/^ethereum:/, '')
           onDecode?.(text)
           this.setState({ isScaning: false })
           if (verifyCkbLongAddress(text) || verifyEthAddress(text)) {
