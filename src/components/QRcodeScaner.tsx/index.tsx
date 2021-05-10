@@ -5,12 +5,11 @@ import { BrowserQRCodeReader } from '@zxing/library'
 import styled from 'styled-components'
 import { Drawer } from '@material-ui/core'
 import { History } from 'history'
-import { isValidCkbLongAddress } from '../../utils'
+import { verifyCkbLongAddress, verifyEthAddress } from '../../utils'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as CameraSvg } from '../../assets/svg/camera.svg'
 import { Appbar } from '../Appbar'
 import { Button } from '../Button'
-import { verifyEthAddress } from '@lay2/pw-core'
 
 const Container = styled.div`
   display: flex;
@@ -120,7 +119,7 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
           const text = result.getText()
           onDecode?.(text)
           this.setState({ isScaning: false })
-          if (isValidCkbLongAddress(text) || verifyEthAddress(text)) {
+          if (verifyCkbLongAddress(text) || verifyEthAddress(text)) {
             this.setState({ nonAddressResult: '' })
             onScanCkbAddress(text)
           } else {

@@ -14,7 +14,7 @@ import InfoIcon from '@material-ui/icons/Info'
 import { Button } from '../../components/Button'
 import { Drawer } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
-import { isValidCkbLongAddress } from '../../utils'
+import { verifyCkbLongAddress, verifyEthAddress } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
@@ -25,7 +25,7 @@ import { useQuery } from 'react-query'
 import { MainContainer } from '../../styles'
 import { CONTAINER_MAX_WIDTH, IS_MAINNET } from '../../constants'
 import UnipassProvider from '../../pw/UnipassProvider'
-import { Address, AddressType, verifyEthAddress } from '@lay2/pw-core'
+import { Address, AddressType } from '@lay2/pw-core'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -230,7 +230,7 @@ export const Transfer: React.FC = () => {
   const textareaOnChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const val = e.target.value
-      let isValidAddress = isValidCkbLongAddress(val)
+      let isValidAddress = verifyCkbLongAddress(val)
       let isSameAddress = val !== '' && address === val
       const isEthAddress = verifyEthAddress(val)
       if (isEthAddress) {
@@ -381,7 +381,7 @@ export const Transfer: React.FC = () => {
     }
     if (
       (ckbAddress.startsWith('ckt') || ckbAddress.startsWith('ckb')) &&
-      !isValidCkbLongAddress(ckbAddress)
+      !verifyCkbLongAddress(ckbAddress)
     ) {
       return '请输入正确的 CKB 地址'
     }

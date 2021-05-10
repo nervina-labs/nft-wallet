@@ -1,9 +1,10 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
+import Web3 from 'web3'
 
 export const sleep = async (ms: number): Promise<void> =>
   await new Promise((resolve) => setTimeout(resolve, ms))
 
-export const isValidCkbLongAddress = (address: string): boolean => {
+export const verifyCkbLongAddress = (address: string): boolean => {
   try {
     parseAddress(address)
   } catch {
@@ -14,6 +15,15 @@ export const isValidCkbLongAddress = (address: string): boolean => {
     (address.startsWith('ckb') || address.startsWith('ckt')) &&
     /^[A-Za-z0-9]+$/.test(address)
   )
+}
+
+export const verifyEthAddress = (addr: string): boolean => {
+  try {
+    addr = Web3.utils.toChecksumAddress(addr)
+    return true
+  } catch (error) {
+    return false
+  }
 }
 
 export function truncateMiddle(
