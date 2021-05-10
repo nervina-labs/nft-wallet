@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react'
-import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import Logo from '../../assets/img/logo.png'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
@@ -14,6 +13,7 @@ import { LazyLoadImage } from '../../components/Image'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
+import { Redirect } from 'react-router'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -80,8 +80,7 @@ const Title = styled.h2`
 `
 
 export const Login: React.FC = () => {
-  const { login } = useWalletModel()
-  const history = useHistory()
+  const { login, isLogined } = useWalletModel()
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
@@ -121,13 +120,16 @@ export const Login: React.FC = () => {
         }
         await login(walletType)
         setLoading(false, walletType)
-        history.push(RoutePath.NFTs)
       } catch (error) {
         setLoading(false, walletType)
       }
     },
-    [login, history]
+    [login]
   )
+
+  if (isLogined) {
+    return <Redirect to={RoutePath.NFTs} />
+  }
 
   return (
     <Container>
