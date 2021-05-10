@@ -162,7 +162,7 @@ export const Login: React.FC = () => {
           }
           onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
         >
-          连接 Metamask&nbsp;
+          连接 MetaMask&nbsp;
           {isMetamaskLoging ? (
             <CircularProgress className="loading" size="1em" />
           ) : null}
