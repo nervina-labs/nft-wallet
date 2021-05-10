@@ -35,7 +35,7 @@ export const verifyEthContractAddress = async (
     return code !== '0x'
   } catch (error) {
     console.log(error)
-    return true
+    return false
   }
 }
 
