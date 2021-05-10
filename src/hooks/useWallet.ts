@@ -63,12 +63,9 @@ function useWallet(): UseWallet {
     [provider, setUnipassAccount]
   )
 
-  const walletAddressOnChange = useCallback(
+  const web3WalletAddressOnChange = useCallback(
     (addr?: Address) => {
       if (unipassAccount?.walletType === WalletType.Unipass) {
-        return
-      }
-      if (!unipassAccount?.walletType) {
         return
       }
       if (!addr) {
@@ -78,10 +75,10 @@ function useWallet(): UseWallet {
       const ckbAddress = addr.toCKBAddress()
       setUnipassAccount({
         address: ckbAddress,
-        walletType: unipassAccount?.walletType,
+        walletType: unipassAccount?.walletType ?? WalletType.Metamask,
       })
     },
-    [setUnipassAccount, unipassAccount?.walletType, logout]
+    [setUnipassAccount, unipassAccount, logout]
   )
 
   const loginUnipass = useCallback(async () => {
@@ -104,14 +101,14 @@ function useWallet(): UseWallet {
     const provider = await web3Modal.connect()
     const Web3 = (await import('web3')).default
     const web3 = new Web3(provider)
-    const p = await new Web3Provider(web3, walletAddressOnChange).init()
+    const p = await new Web3Provider(web3, web3WalletAddressOnChange).init()
     setUnipassAccount({
       address: p.address.toCKBAddress(),
       walletType: WalletType.Metamask,
     })
     setProvider(p)
     return p
-  }, [setUnipassAccount, walletAddressOnChange])
+  }, [setUnipassAccount, web3WalletAddressOnChange])
 
   const loginWalletConnect = useCallback(async () => {
     const Web3Modal = (await import('web3modal')).default
@@ -129,14 +126,14 @@ function useWallet(): UseWallet {
     const provider = await web3Modal.connectTo('walletconnect')
     const Web3 = (await import('web3')).default
     const web3 = new Web3(provider)
-    const p = await new Web3Provider(web3, walletAddressOnChange).init()
+    const p = await new Web3Provider(web3, web3WalletAddressOnChange).init()
     setUnipassAccount({
       address: p.address.toCKBAddress(),
       walletType: WalletType.WalletConnect,
     })
     setProvider(p)
     return p
-  }, [setUnipassAccount, walletAddressOnChange])
+  }, [setUnipassAccount, web3WalletAddressOnChange])
 
   const login = useCallback(
     async (walletType: WalletType = WalletType.Unipass) => {
