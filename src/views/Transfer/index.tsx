@@ -381,7 +381,7 @@ export const Transfer: React.FC = () => {
 
   const isInvalid = useMemo(() => {
     return (
-      failureCount >= 1 ||
+      failureCount >= 2 ||
       remoteNftDetail?.tx_state === 'pending' ||
       (remoteNftDetail?.to_address !== address &&
         remoteNftDetail?.to_address !== undefined)
