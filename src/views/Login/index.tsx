@@ -11,6 +11,9 @@ import Button from '@material-ui/core/Button'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import { CircularProgress } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
+import { ActionDialog } from '../../components/ActionDialog'
+import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
+import detectEthereumProvider from '@metamask/detect-provider'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -82,6 +85,7 @@ export const Login: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
       case WalletType.Metamask:
@@ -102,6 +106,14 @@ export const Login: React.FC = () => {
     async (walletType = WalletType.Unipass) => {
       setLoading(true, walletType)
       try {
+        if (walletType === WalletType.Metamask) {
+          const provider = await detectEthereumProvider()
+          if (!provider) {
+            setIsErrorDialogOpen(true)
+            setLoading(false, walletType)
+            return
+          }
+        }
         await login(walletType)
         setLoading(false, walletType)
         history.push(RoutePath.NFTs)
@@ -121,6 +133,13 @@ export const Login: React.FC = () => {
       <div className="logo">
         <LazyLoadImage src={Logo as any} width={340} height={415} />
       </div>
+      <ActionDialog
+        icon={<FailSvg />}
+        content="当前环境 MetaMask 不可用"
+        open={isErrorDialogOpen}
+        onConfrim={() => setIsErrorDialogOpen(false)}
+        onBackdropClick={() => setIsErrorDialogOpen(false)}
+      />
       <BtnGroup
         orientation="vertical"
         color="primary"
