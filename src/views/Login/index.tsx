@@ -5,7 +5,7 @@ import Logo from '../../assets/img/logo.png'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { MAIN_NET_URL, TEST_NET_URL } from '../../constants'
+import { IS_IMTOKEN, MAIN_NET_URL, TEST_NET_URL } from '../../constants'
 import { NetChange } from '../../components/NetChange'
 import Button from '@material-ui/core/Button'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
@@ -107,6 +107,11 @@ export const Login: React.FC = () => {
       setLoading(true, walletType)
       try {
         if (walletType === WalletType.Metamask) {
+          if (IS_IMTOKEN) {
+            setIsErrorDialogOpen(true)
+            setLoading(false, walletType)
+            return
+          }
           const provider = await detectEthereumProvider()
           if (!provider) {
             setIsErrorDialogOpen(true)
