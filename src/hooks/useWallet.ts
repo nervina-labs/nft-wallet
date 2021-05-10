@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
 import { Address, DefaultSigner, Provider, Transaction } from '@lay2/pw-core'
-import { UNIPASS_URL } from '../constants'
+import { INFURA_ID, UNIPASS_URL } from '../constants'
 import UnipassProvider from '../pw/UnipassProvider'
 import UnipassSigner from '../pw/UnipassSigner'
 import { History } from 'history'
@@ -122,7 +122,7 @@ function useWallet(): UseWallet {
       providerOptions: {
         walletconnect: {
           package: walletconnectProvider,
-          options: { infuraId: '89a648e271d54224ba4827d348cbaa54' },
+          options: { infuraId: INFURA_ID },
         },
       },
     })
