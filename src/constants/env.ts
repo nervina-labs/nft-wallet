@@ -26,4 +26,5 @@ export const INFURA_ID = '89a648e271d54224ba4827d348cbaa54'
 export const IS_WEXIN = navigator.userAgent
   .toLowerCase()
   .includes('micromessenger')
+export const IS_IMTOKEN = navigator.userAgent.toLowerCase().includes('imtoken')
 export const IS_ANDROID = navigator.userAgent.toLowerCase().includes('android')
