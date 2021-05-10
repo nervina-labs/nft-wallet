@@ -148,7 +148,7 @@ export const Login: React.FC = () => {
             <CircularProgress className="loading" size="1em" />
           ) : null}
         </Button>
-        <Button
+        {/* <Button
           disabled={
             isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
           }
@@ -158,7 +158,7 @@ export const Login: React.FC = () => {
           {isWalletConnectLoging ? (
             <CircularProgress className="loading" size="1em" />
           ) : null}
-        </Button>
+        </Button> */}
       </BtnGroup>
     </Container>
   )
