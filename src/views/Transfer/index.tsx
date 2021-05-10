@@ -216,29 +216,6 @@ export const Transfer: React.FC = () => {
     }
   }, [prevAddress, address, provider, history])
 
-  const textareaOnChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const val = e.target.value
-      let isValidAddress = isValidCkbLongAddress(val)
-      const isSameAddress = val !== '' && address === val
-      if (isSameAddress) {
-        isValidAddress = false
-      }
-      if (IS_MAINNET && val.startsWith('ckt')) {
-        isValidAddress = false
-      }
-      if (!IS_MAINNET && val.startsWith('ckb')) {
-        isValidAddress = false
-      }
-      if (verifyEthAddress(val)) {
-        isValidAddress = true
-      }
-      setIsAddressValid(isValidAddress)
-      setCkbAddress(val)
-    },
-    [address]
-  )
-
   const isEthAddress = useMemo(() => {
     return verifyEthAddress(ckbAddress)
   }, [ckbAddress])
@@ -249,6 +226,34 @@ export const Transfer: React.FC = () => {
     }
     return address !== '' && address === ckbAddress
   }, [address, ckbAddress, isEthAddress])
+
+  const textareaOnChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const val = e.target.value
+      let isValidAddress = isValidCkbLongAddress(val)
+      let isSameAddress = val !== '' && address === val
+      const isEthAddress = verifyEthAddress(val)
+      if (isEthAddress) {
+        isSameAddress =
+          new Address(val, AddressType.eth).toCKBAddress() === address
+      }
+      if (isSameAddress) {
+        isValidAddress = false
+      }
+      if (IS_MAINNET && val.startsWith('ckt')) {
+        isValidAddress = false
+      }
+      if (!IS_MAINNET && val.startsWith('ckb')) {
+        isValidAddress = false
+      }
+      if (isEthAddress && !isSameAddress) {
+        isValidAddress = true
+      }
+      setIsAddressValid(isValidAddress)
+      setCkbAddress(val)
+    },
+    [address]
+  )
 
   const stopTranfer = (isSuccess: boolean): void => {
     setIsSendingNFT(false)
@@ -438,7 +443,9 @@ export const Transfer: React.FC = () => {
           <ScanSvg onClick={startScan} />
         </div>
         <div
-          className={`alert ${isEthAddress ? 'info' : 'error'}`}
+          className={`alert ${
+            isEthAddress && isAddressValid ? 'info' : 'error'
+          }`}
           style={{
             visibility:
               (!isAddressValid && ckbAddress !== '') ||
