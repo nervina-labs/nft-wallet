@@ -18,12 +18,7 @@ export const verifyCkbLongAddress = (address: string): boolean => {
 }
 
 export const verifyEthAddress = (addr: string): boolean => {
-  try {
-    addr = Web3.utils.toChecksumAddress(addr)
-    return true
-  } catch (error) {
-    return false
-  }
+  return Web3.utils.isAddress(addr)
 }
 
 export function truncateMiddle(
