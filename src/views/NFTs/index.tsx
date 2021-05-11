@@ -23,6 +23,7 @@ import { ReactComponent as AccountSvg } from '../../assets/svg/account.svg'
 import { NetChange } from '../../components/NetChange'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Share } from '../../components/Share'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -52,6 +53,7 @@ const Container = styled(MainContainer)`
 
 export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
+  const { t } = useTranslation('translations')
   const history = useHistory()
   const {
     data,
@@ -113,7 +115,7 @@ export const NFTs: React.FC = () => {
       <Appbar
         title={
           <div className="center">
-            <span>我的秘宝</span>
+            <span>{t('nfts.title')}</span>
             <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
           </div>
         }
@@ -134,15 +136,21 @@ export const NFTs: React.FC = () => {
           <InfiniteScroll
             pullDownToRefresh={!IS_WEXIN}
             refreshFunction={refresh}
-            pullDownToRefreshContent={<h4>&#8595; 下拉刷新</h4>}
+            pullDownToRefreshContent={
+              <h4>&#8595; {t('common.pull-down-refresh')}</h4>
+            }
             pullDownToRefreshThreshold={80}
-            releaseToRefreshContent={<h4>&#8593; 下拉刷新</h4>}
+            releaseToRefreshContent={
+              <h4>&#8593; {t('common.pull-down-refresh')}</h4>
+            }
             dataLength={dataLength}
             next={fetchNextPage}
             hasMore={hasNextPage === true}
             scrollThreshold="200px"
             loader={<Loading />}
-            endMessage={<h4>{dataLength <= 5 ? ' ' : '已经拉到底了'}</h4>}
+            endMessage={
+              <h4>{dataLength <= 5 ? ' ' : t('common.pull-to-down')}</h4>
+            }
           >
             {data?.pages?.map((group, i) => {
               return (

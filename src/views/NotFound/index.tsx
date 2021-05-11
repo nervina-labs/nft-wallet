@@ -6,6 +6,7 @@ import { Button } from '../../components/Button'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { ReactComponent as AccountSvg } from '../../assets/svg/account.svg'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -42,10 +43,11 @@ const Container = styled(MainContainer)`
 
 export const NotFound: React.FC = () => {
   const history = useHistory()
+  const { t } = useTranslation('translations')
   return (
     <Container>
       <Appbar
-        title="页面丢失"
+        title={t('404.title')}
         left={
           <AccountSvg
             onClick={() => {
@@ -58,9 +60,9 @@ export const NotFound: React.FC = () => {
       <section className="main">
         <div className="content">
           <div className="title">404</div>
-          <div className="desc">您所寻找的页面不存在</div>
+          <div className="desc">{t('404.not-found')}</div>
           <Button type="default" onClick={() => history.push(RoutePath.NFTs)}>
-            返回我的秘宝
+            {t('404.back')}
           </Button>
         </div>
       </section>

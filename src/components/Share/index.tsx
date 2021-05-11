@@ -4,6 +4,7 @@ import Dialog from '@material-ui/core/Dialog'
 import { Button } from '../../components/Button'
 import { makeStyles } from '@material-ui/core'
 import { Copyzone } from '../../components/Copyzone'
+import { useTranslation } from 'react-i18next'
 
 const DialogContainer = styled(Dialog)`
   display: flex;
@@ -41,6 +42,7 @@ export const Share: React.FC<ShareProps> = ({
   copyText,
 }) => {
   const style = useStyles()
+  const { t } = useTranslation('translations')
 
   return (
     <DialogContainer
@@ -48,10 +50,10 @@ export const Share: React.FC<ShareProps> = ({
       classes={{ paper: style.paper }}
       onBackdropClick={closeDialog}
     >
-      <div className="title">点击复制链接并分享至社交媒体</div>
+      <div className="title">{t('common.share.copy')}</div>
       <Copyzone text={copyText} displayText={displayText} />
       <div className="action">
-        <Button onClick={closeDialog}>关闭</Button>
+        <Button onClick={closeDialog}>{t('common.share.close')}</Button>
       </div>
     </DialogContainer>
   )

@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react'
 import { BrowserQRCodeReader } from '@zxing/library'
+import { TFunction } from 'react-i18next'
 import styled from 'styled-components'
 import { Drawer } from '@material-ui/core'
 import { History } from 'history'
@@ -65,6 +66,7 @@ export interface QrcodeScanerProps {
   onStartError?: (error: any) => void
   width?: number
   history: History<unknown>
+  t: TFunction<'translations'>
 }
 
 export interface QrcodeScanerState {
@@ -144,25 +146,27 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
 
   render(): React.ReactNode {
     const { nonAddressResult: nonCkbAddressResult, isScaning } = this.state
-    const { onCancel, isDrawerOpen, width } = this.props
+    const { onCancel, isDrawerOpen, width, t } = this.props
     return (
       <Drawer open={isDrawerOpen}>
         <Container width={width}>
           <Appbar
             left={<BackSvg onClick={onCancel} />}
-            title={nonCkbAddressResult === '' ? '二维码扫描' : '扫描结果'}
+            title={
+              nonCkbAddressResult === ''
+                ? t('transfer.scan.qrcode')
+                : t('transfer.scan.result')
+            }
             right={<CameraSvg onClick={this.toggle} />}
           />
           {isScaning ? <video ref={this.videoRef} /> : null}
           {nonCkbAddressResult === '' ? null : (
             <div className="result">
-              <h3 className="title">已识别到的二维码内容</h3>
+              <h3 className="title">{t('transfer.scan.detected')}</h3>
               <div className="qrcode">{nonCkbAddressResult}</div>
-              <div className="error">
-                请扫描正确的 CKB 或 Ethereum 地址二维码
-              </div>
+              <div className="error">{t('transfer.scan.error')}</div>
               <Button type="primary" onClick={this.startScan.bind(this)}>
-                重新扫描
+                {t('transfer.scan.rescan')}
               </Button>
             </div>
           )}

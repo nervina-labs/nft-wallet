@@ -17,6 +17,7 @@ import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
 import { NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -75,6 +76,7 @@ const Container = styled(MainContainer)`
 
 export const NFT: React.FC = () => {
   const history = useHistory()
+  const { t } = useTranslation('translations')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const closeDialog = (): void => setIsDialogOpen(false)
 
@@ -136,7 +138,7 @@ export const NFT: React.FC = () => {
   return (
     <Container>
       <Appbar
-        title="秘宝细节"
+        title={t('nft.title')}
         left={<BackSvg onClick={() => history.goBack()} />}
         right={<ShareSvg onClick={openDialog} />}
         ref={appRef}
@@ -175,7 +177,7 @@ export const NFT: React.FC = () => {
           {isTransferable ? (
             <div className="action">
               <Button type="primary" onClick={tranfer}>
-                转让
+                {t('nft.transfer')}
               </Button>
             </div>
           ) : null}
