@@ -5,6 +5,7 @@ import { ReactComponent as DownSvg } from '../../assets/svg/down.svg'
 import { IS_MAINNET } from '../../constants'
 import { makeStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -70,8 +71,9 @@ export const NetChange: React.FC<NetChangeProps> = ({
   mainnetURL,
   testnetURL,
 }) => {
-  const mainnet = '主网'
-  const testnet = '测试网'
+  const { t } = useTranslation('translations')
+  const mainnet = t('common.chain.mainnet')
+  const testnet = t('common.chain.testnet')
   const netStatus = IS_MAINNET ? mainnet : testnet
 
   const classes = useStyles()

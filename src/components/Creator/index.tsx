@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { LazyLoadImage } from '../Image'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { NFT_EXPLORER_URL } from '../../constants'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   display: flex;
@@ -57,6 +58,7 @@ export const Creator: React.FC<CreatorProps> = ({
   uuid,
   title,
 }) => {
+  const { t } = useTranslation('translations')
   const creator = (
     <>
       <span className="avatar">
@@ -73,7 +75,7 @@ export const Creator: React.FC<CreatorProps> = ({
   )
   return (
     <Container fontSize={fontSize}>
-      {title ?? <span className="issuer">创作者</span>}
+      {title ?? <span className="issuer">{t('common.creator')}</span>}
       {uuid != null ? (
         <a
           onClick={(e) => e.stopPropagation()}

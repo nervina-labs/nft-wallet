@@ -30,6 +30,7 @@ import { MainContainer } from '../../styles'
 import { CONTAINER_MAX_WIDTH, IS_MAINNET } from '../../constants'
 import UnipassProvider from '../../pw/UnipassProvider'
 import { Address, AddressType } from '@lay2/pw-core'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -181,10 +182,10 @@ const DrawerContainer = styled.div`
 `
 
 export enum FailedMessage {
-  SignFail = '签名失败，请重新签名',
-  TranferFail = '发送失败，请检查当前网络情况，重新发送',
-  NoCamera = '没有找到摄像头',
-  ContractAddress = '无法转让到以太坊合约地址',
+  SignFail = 'sign-fail',
+  TranferFail = 'tranfer-fail',
+  NoCamera = 'no-camera',
+  ContractAddress = 'contract-address',
 }
 
 export const Transfer: React.FC = () => {
@@ -201,13 +202,18 @@ export const Transfer: React.FC = () => {
   } = useWalletModel()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [ckbAddress, setCkbAddress] = useState('')
-  const [failedMessage, setFailedMessage] = useState(FailedMessage.TranferFail)
+  const [failedStatus, setFailedMessage] = useState(FailedMessage.TranferFail)
   const [isSendingNFT, setIsSendingNFT] = useState(false)
   const [isAddressValid, setIsAddressValid] = useState(false)
   const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isScaning, setIsScaning] = useState(false)
   const qrcodeScanerRef = useRef<QrcodeScaner>(null)
+  const { t } = useTranslation('translations')
+
+  const failedMessage = useMemo(() => {
+    return t(`transfer.error.${failedStatus}`)
+  }, [t, failedStatus])
 
   useEffect(() => {
     if (
@@ -337,9 +343,9 @@ export const Transfer: React.FC = () => {
       setIsScaning(true)
       qrcodeScanerRef.current?.startScan()
     } else {
-      alert('没有摄像头权限，请刷新页面重新授权。')
+      alert(t('transfer.error.camera-auth'))
     }
-  }, [hasPermission, hasVideoDevice])
+  }, [hasPermission, hasVideoDevice, t])
 
   useEffect(() => {
     navigator.mediaDevices
@@ -390,23 +396,21 @@ export const Transfer: React.FC = () => {
 
   const alertMsg = useMemo(() => {
     if (ckbAddress.startsWith('0x') && !verifyEthAddress(ckbAddress)) {
-      return '请输入正确的以太坊地址'
+      return t('transfer.error.eth')
     }
     if (
       (ckbAddress.startsWith('ckt') || ckbAddress.startsWith('ckb')) &&
       !verifyCkbLongAddress(ckbAddress)
     ) {
-      return '请输入正确的 CKB 地址'
+      return t('transfer.error.ckb')
     }
     if (isEthAddress) {
       return isSameAddress
-        ? '无法转让秘宝给自己'
-        : '当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「秘宝账户」应用，方可查看收到的秘宝'
+        ? t('transfer.error.self')
+        : t('transfer.error.receive-eth')
     }
-    return isSameAddress
-      ? '无法转让秘宝给自己'
-      : '请输入正确的 CKB 地址或以太坊地址'
-  }, [isSameAddress, isEthAddress, ckbAddress])
+    return isSameAddress ? t('transfer.error.self') : t('transfer.error.common')
+  }, [isSameAddress, isEthAddress, ckbAddress, t])
 
   useEffect(() => {}, [])
 
@@ -417,7 +421,7 @@ export const Transfer: React.FC = () => {
   return isLogined ? (
     <Container ref={containerRef}>
       <Appbar
-        title="转让"
+        title={t('transfer.transfer')}
         left={<BackSvg onClick={() => history.goBack()} />}
         right={<div />}
         ref={appRef}
@@ -428,6 +432,7 @@ export const Transfer: React.FC = () => {
         onCancel={stopScan}
         history={history}
         width={containerWidth}
+        t={t}
         onScanCkbAddress={(addr) => {
           setCkbAddress(addr)
           stopScan()
@@ -445,11 +450,11 @@ export const Transfer: React.FC = () => {
         }}
       />
       <div className="content">
-        <label>接收方地址</label>
+        <label>{t('transfer.address')}</label>
         <div className="form">
           <textarea
             className="input"
-            placeholder="请输入 CKB 长地址或以太坊地址"
+            placeholder={t('transfer.placeholder')}
             value={ckbAddress}
             onChange={textareaOnChange}
           />
@@ -476,18 +481,18 @@ export const Transfer: React.FC = () => {
             onClick={transferOnClick}
             disbaled={!isAddressValid}
           >
-            转让
+            {t('transfer.transfer')}
           </Button>
         </div>
         <div className="desc">
-          <p>请仔细检查输入的地址，</p>
-          <p>一旦转让，将无法撤回</p>
+          <p>{t('transfer.check')}</p>
+          <p>{t('transfer.once-transfer')}</p>
         </div>
       </div>
       <ActionDialog
         icon={<SuccessSvg />}
-        content="已提交转让交易"
-        detail="提示: 链上确认可能需要半分钟时间"
+        content={t('transfer.submitted')}
+        detail={t('transfer.tips')}
         open={isSendDialogSuccess}
         onConfrim={() => {
           setIsSendDialogSuccess(false)
@@ -517,7 +522,7 @@ export const Transfer: React.FC = () => {
         {nftDetail !== undefined ? (
           <DrawerContainer>
             <div className="header">
-              <label>转让：</label>
+              <label>{`${t('transfer.transfer')}${t('common.colon')}`}</label>
               {isSendingNFT ? null : <CloseSvg onClick={closeDrawer} />}
             </div>
             <div className="card">
@@ -539,7 +544,7 @@ export const Transfer: React.FC = () => {
                 </div>
               </div>
             </div>
-            <label>接收方地址：</label>
+            <label>{`${t('transfer.address')}${t('common.colon')}`}</label>
             <p className="address">{ckbAddress}</p>
             <div className="center">
               <Button
@@ -548,7 +553,7 @@ export const Transfer: React.FC = () => {
                 disbaled={isSendingNFT}
                 isLoading={isSendingNFT}
               >
-                {isSendingNFT ? '签名中' : '确认'}
+                {isSendingNFT ? t('transfer.signing') : t('transfer.comfirm')}
               </Button>
             </div>
           </DrawerContainer>
