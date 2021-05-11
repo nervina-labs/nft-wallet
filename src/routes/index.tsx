@@ -7,7 +7,6 @@ import {
   Switch,
   useHistory,
 } from 'react-router-dom'
-import { IS_IMTOKEN } from '../constants'
 import { useWalletModel, WalletType } from '../hooks/useWallet'
 import { Account } from '../views/Account'
 import { Login } from '../views/Login'
@@ -85,11 +84,7 @@ export const Routers: React.FC = () => {
   const { isLogined, walletType, login } = useWalletModel()
 
   useEffect(() => {
-    if (IS_IMTOKEN) {
-      login(WalletType.Metamask).catch((e) => {
-        console.log('login-error', e)
-      })
-    } else if (isLogined && walletType && walletType !== WalletType.Unipass) {
+    if (isLogined && walletType && walletType !== WalletType.Unipass) {
       login(walletType).catch((e) => {
         console.log('login-error', e)
       })

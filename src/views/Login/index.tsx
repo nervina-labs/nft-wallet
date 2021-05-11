@@ -79,12 +79,18 @@ const Title = styled.h2`
   margin: 0;
 `
 
+enum ErrorMsg {
+  NotSupport = '当前环境 MetaMask 不可用',
+  Imtoken = '用户拒绝授权，请重新打开页面重新授权',
+}
+
 export const Login: React.FC = () => {
   const { login, isLogined } = useWalletModel()
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(ErrorMsg.NotSupport)
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
       case WalletType.Metamask:
@@ -106,13 +112,9 @@ export const Login: React.FC = () => {
       setLoading(true, walletType)
       try {
         if (walletType === WalletType.Metamask) {
-          if (IS_IMTOKEN) {
-            setIsErrorDialogOpen(true)
-            setLoading(false, walletType)
-            return
-          }
           const provider = await detectEthereumProvider()
           if (!provider) {
+            setErrorMsg(ErrorMsg.NotSupport)
             setIsErrorDialogOpen(true)
             setLoading(false, walletType)
             return
@@ -122,6 +124,11 @@ export const Login: React.FC = () => {
         setLoading(false, walletType)
       } catch (error) {
         setLoading(false, walletType)
+        if (IS_IMTOKEN) {
+          setErrorMsg(ErrorMsg.Imtoken)
+          setIsErrorDialogOpen(true)
+          setLoading(false, walletType)
+        }
       }
     },
     [login]
@@ -142,7 +149,7 @@ export const Login: React.FC = () => {
       </div>
       <ActionDialog
         icon={<FailSvg />}
-        content="当前环境 MetaMask 不可用"
+        content={errorMsg}
         open={isErrorDialogOpen}
         onConfrim={() => setIsErrorDialogOpen(false)}
         onBackdropClick={() => setIsErrorDialogOpen(false)}
