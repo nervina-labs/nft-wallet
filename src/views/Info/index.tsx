@@ -4,6 +4,7 @@ import QRCode from 'qrcode.react'
 import { Copyzone } from '../../components/Copyzone'
 import { truncateMiddle } from '../../utils'
 import { useWalletModel } from '../../hooks/useWallet'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   display: flex;
@@ -29,6 +30,7 @@ const Container = styled.div`
 
 export const Info: React.FC = () => {
   const { address } = useWalletModel()
+  const { t } = useTranslation('translations')
   const qrCodeContent = useMemo(
     () => (
       <>
@@ -44,7 +46,7 @@ export const Info: React.FC = () => {
   )
   return (
     <Container>
-      <h3 className="title">秘宝接收地址</h3>
+      <h3 className="title">{t('info.title')}</h3>
       {qrCodeContent}
     </Container>
   )

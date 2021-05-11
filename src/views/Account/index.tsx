@@ -15,6 +15,7 @@ import { Info } from '../Info'
 import { Transactions } from '../Transactions'
 import { useWalletModel } from '../../hooks/useWallet'
 import { MainContainer } from '../../styles'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -51,6 +52,7 @@ const Container = styled(MainContainer)`
 
 export const Account: React.FC = () => {
   const history = useHistory()
+  const { t } = useTranslation('translations')
   const { logout } = useWalletModel()
   const matchInfo = useRouteMatch(RoutePath.Info)
   const matchTx = useRouteMatch(RoutePath.Transactions)
@@ -69,7 +71,7 @@ export const Account: React.FC = () => {
   return (
     <Container>
       <Appbar
-        title="我的帐号"
+        title={t('account.title')}
         left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
         right={<LogoutSvg onClick={logout.bind(null, history)} />}
       />
@@ -79,13 +81,13 @@ export const Account: React.FC = () => {
             className={`tab ${isInfo ? 'active' : ''}`}
             onClick={() => !isInfo && history.replace(RoutePath.Info)}
           >
-            基本信息
+            {t('account.info')}
           </span>
           <span
             className={`tab ${isTx ? 'active' : ''}`}
             onClick={() => !isTx && history.replace(RoutePath.Transactions)}
           >
-            流转记录
+            {t('account.transactions')}
           </span>
         </div>
         <Switch>

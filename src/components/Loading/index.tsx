@@ -1,5 +1,6 @@
 import { CircularProgress } from '@material-ui/core'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 const LoadingContainer = styled.h4`
@@ -11,9 +12,10 @@ const LoadingContainer = styled.h4`
 `
 
 export const Loading: React.FC = () => {
+  const { t } = useTranslation('translations')
   return (
     <LoadingContainer>
-      加载中...
+      {t('common.actions.loading')}
       <CircularProgress size="1em" className="loading" />
     </LoadingContainer>
   )

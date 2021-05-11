@@ -3,6 +3,7 @@ import Dialog, { DialogProps } from '@material-ui/core/Dialog'
 import styled from 'styled-components'
 import { Button } from '../Button'
 import { makeStyles } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
 
 const DialogContainer = styled(Dialog)`
   display: flex;
@@ -48,6 +49,7 @@ export const ActionDialog: React.FC<DialogProps & ActionDialogProps> = (
 ) => {
   const { onConfrim, icon, content, detail, ...dialogProps } = props
   const style = useStyles()
+  const { t } = useTranslation('translations')
   return (
     <DialogContainer {...dialogProps} classes={{ paper: style.paper }}>
       <div className="svg">{icon}</div>
@@ -57,7 +59,7 @@ export const ActionDialog: React.FC<DialogProps & ActionDialogProps> = (
       </div>
       <div className="comfirm">
         <Button onClick={onConfrim} type="primary">
-          确认
+          {t('common.actions.comfirm')}
         </Button>
       </div>
     </DialogContainer>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { ReactComponent as StarSvg } from '../../assets/svg/star.svg'
 
@@ -22,6 +23,7 @@ export interface LimitedProps {
 
 export const Limited: React.FC<LimitedProps> = ({ count, fontSize }) => {
   const isUnlimited = count === '0'
+  const { t } = useTranslation('translations')
   return (
     <Container fontSize={fontSize}>
       {isUnlimited ? null : <StarSvg />}
@@ -29,7 +31,9 @@ export const Limited: React.FC<LimitedProps> = ({ count, fontSize }) => {
         className={`${isUnlimited ? 'unlimit' : ''}`}
         style={{ marginLeft: isUnlimited ? 0 : '4px' }}
       >
-        {isUnlimited ? '不限量' : `限量 ${count}`}
+        {isUnlimited
+          ? t('common.limit.unlimit')
+          : `${t('common.limit.limit')} ${count}`}
       </span>
     </Container>
   )

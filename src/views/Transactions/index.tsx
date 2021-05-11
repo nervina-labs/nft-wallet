@@ -19,6 +19,7 @@ import { truncateMiddle } from '../../utils'
 import { IS_WEXIN, NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 import pendingSrc from '../../assets/img/pending.png'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   display: flex;
@@ -81,6 +82,7 @@ const ListItemContainer = styled.div`
 
 const TIME_FORMAT = 'YYYY-MM-DD, HH:mm:ss'
 const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
+  const { t } = useTranslation('translations')
   let icon =
     tx.tx_direction === TransactionDirection.Receive ? (
       <ReceiveSvg />
@@ -92,11 +94,11 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
   }
   let time =
     tx.on_chain_timestamp === null
-      ? '等待中'
+      ? t('transactions.status.waiting')
       : dayjs(Number(tx.on_chain_timestamp + '000')).format(TIME_FORMAT)
 
   if (tx.tx_state === TransactionStatus.Submitting) {
-    time = '确认中'
+    time = t('transactions.status.comfirming')
   }
   return (
     <ListItemContainer>
@@ -105,12 +107,16 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
         <span className="name">{tx.class_name}</span>
         <span>
           {tx.tx_direction === TransactionDirection.Receive
-            ? `接收自 ${
+            ? `${t('transactions.receive-from')} ${
                 tx.issuer_uuid !== ''
                   ? tx.from_address
                   : truncateMiddle(tx.from_address, 8, 5)
               }`
-            : `发送至 ${truncateMiddle(tx.to_address, 8, 5)}`}
+            : `${t('transactions.send-to')} ${truncateMiddle(
+                tx.to_address,
+                8,
+                5
+              )}`}
         </span>
       </div>
       <div className="time">{time}</div>
@@ -128,6 +134,7 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
 
 export const Transactions: React.FC = () => {
   const { api } = useWalletModel()
+  const { t } = useTranslation('translations')
   const {
     data,
     status,
@@ -195,12 +202,18 @@ export const Transactions: React.FC = () => {
             refreshFunction={refresh}
             next={fetchNextPage}
             hasMore={hasNextPage === true}
-            pullDownToRefreshContent={<h4>&#8595; 下拉刷新</h4>}
+            pullDownToRefreshContent={
+              <h4>&#8595; {t('common.pull-down-refresh')}</h4>
+            }
             pullDownToRefreshThreshold={80}
-            releaseToRefreshContent={<h4>&#8593; 下拉刷新</h4>}
+            releaseToRefreshContent={
+              <h4>&#8593; {t('common.pull-down-refresh')}</h4>
+            }
             scrollThreshold="200px"
             loader={<Loading />}
-            endMessage={<h4>{dataLength <= 9 ? '' : '已经拉到底了'}</h4>}
+            endMessage={
+              <h4>{dataLength <= 9 ? '' : t('common.pull-to-down')}</h4>
+            }
           >
             {data?.pages?.map((group, i) => {
               return (
@@ -212,7 +225,7 @@ export const Transactions: React.FC = () => {
               )
             })}
             {status === 'success' && dataLength === 0 ? (
-              <h4>还没有记录...</h4>
+              <h4>{t('transactions.no-data')}</h4>
             ) : null}
           </InfiniteScroll>
         )}

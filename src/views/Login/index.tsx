@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../../assets/img/logo.png'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
@@ -14,6 +14,7 @@ import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -80,17 +81,23 @@ const Title = styled.h2`
 `
 
 enum ErrorMsg {
-  NotSupport = '当前环境不支持连接以太坊',
-  Imtoken = '用户拒绝授权，请重新打开页面进行授权',
+  NotSupport = 'not-support',
+  Imtoken = 'refuse',
 }
 
 export const Login: React.FC = () => {
   const { login, isLogined } = useWalletModel()
+  const { t } = useTranslation('translations')
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
-  const [errorMsg, setErrorMsg] = useState(ErrorMsg.NotSupport)
+  const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
+
+  const errorMsg = useMemo(() => {
+    return t(`login.errors.${errorStatus}`)
+  }, [errorStatus, t])
+
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
       case WalletType.Metamask:
@@ -141,7 +148,7 @@ export const Login: React.FC = () => {
   return (
     <Container>
       <div className="header">
-        <Title style={{ marginRight: '8px' }}>秘宝账户</Title>
+        <Title style={{ marginRight: '8px' }}>{t('login.title')}</Title>
         <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
       </div>
       <div className="logo">
@@ -165,7 +172,7 @@ export const Login: React.FC = () => {
           }
           onClick={loginBtnOnClick}
         >
-          连接 Unipass（推荐）
+          {t('login.connect.unipass')}
           {isUnipassLogining ? (
             <CircularProgress className="loading" size="1em" />
           ) : null}
@@ -176,7 +183,7 @@ export const Login: React.FC = () => {
           }
           onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
         >
-          连接以太坊环境&nbsp;
+          {t('login.connect.metamask')}&nbsp;
           {isMetamaskLoging ? (
             <CircularProgress className="loading" size="1em" />
           ) : null}
@@ -187,7 +194,7 @@ export const Login: React.FC = () => {
           }
           onClick={loginBtnOnClick.bind(null, WalletType.WalletConnect)}
         >
-          连接 Wallet Connect&nbsp;
+          {t('login.connect.wallet-connect')}&nbsp;
           {isWalletConnectLoging ? (
             <CircularProgress className="loading" size="1em" />
           ) : null}

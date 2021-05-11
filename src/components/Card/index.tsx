@@ -5,6 +5,7 @@ import { NFTToken, TransactionStatus } from '../../models'
 import { LazyLoadImage } from '../Image'
 import { Limited } from '../Limited'
 import { Creator } from '../Creator'
+import { useTranslation } from 'react-i18next'
 
 export interface CardProps {
   token: NFTToken
@@ -41,6 +42,7 @@ interface LabelResult {
 }
 
 const Label: React.FC<LabelProps> = ({ nft, address }) => {
+  const { t } = useTranslation('translations')
   if (nft.tx_state === TransactionStatus.Committed) {
     return null
   }
@@ -68,15 +70,15 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
   const statusMap: Record<LabelStatus, LabelResult | null> = {
     [LabelStatus.Comfirming]: {
       color: 'rgba(255, 165, 90, 0.8)',
-      text: '确认中',
+      text: t('nfts.status.comfirming'),
     },
     [LabelStatus.Receiving]: {
-      color: '#61D8A4',
-      text: '接收中',
+      color: '#030303',
+      text: t('nfts.status.receiving'),
     },
     [LabelStatus.Tranferring]: {
       color: 'rgba(89, 106, 255, 0.7)',
-      text: '转让中',
+      text: t('nfts.status.tranferring'),
     },
     [LabelStatus.None]: null,
   }

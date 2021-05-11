@@ -7,6 +7,7 @@ import {
   Switch,
   useHistory,
 } from 'react-router-dom'
+import { I18nextProvider } from 'react-i18next'
 import { useWalletModel, WalletType } from '../hooks/useWallet'
 import { Account } from '../views/Account'
 import { Login } from '../views/Login'
@@ -14,6 +15,7 @@ import { NFT } from '../views/NFT'
 import { NFTs } from '../views/NFTs'
 import { NotFound } from '../views/NotFound'
 import { Transfer } from '../views/Transfer'
+import i18n from '../i18n'
 
 export enum RoutePath {
   Launch = '/',
@@ -93,20 +95,22 @@ export const Routers: React.FC = () => {
   }, [])
 
   return (
-    <BrowserRouter>
-      <WalletChange>
-        <Switch>
-          {routes.map((route) => (
-            <Route {...route} key={route.key} path={route.path} />
-          ))}
-          <Redirect
-            exact
-            from={RoutePath.Launch}
-            to={isLogined ? RoutePath.NFTs : RoutePath.Login}
-          />
-          <Route component={NotFound} path="*" />
-        </Switch>
-      </WalletChange>
-    </BrowserRouter>
+    <I18nextProvider i18n={i18n}>
+      <BrowserRouter>
+        <WalletChange>
+          <Switch>
+            {routes.map((route) => (
+              <Route {...route} key={route.key} path={route.path} />
+            ))}
+            <Redirect
+              exact
+              from={RoutePath.Launch}
+              to={isLogined ? RoutePath.NFTs : RoutePath.Login}
+            />
+            <Route component={NotFound} path="*" />
+          </Switch>
+        </WalletChange>
+      </BrowserRouter>
+    </I18nextProvider>
   )
 }
