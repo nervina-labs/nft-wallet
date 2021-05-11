@@ -80,7 +80,7 @@ const Title = styled.h2`
 `
 
 enum ErrorMsg {
-  NotSupport = '当前环境 MetaMask 不可用',
+  NotSupport = '当前环境不支持连接以太坊',
   Imtoken = '用户拒绝授权，请重新打开页面重新授权',
 }
 
