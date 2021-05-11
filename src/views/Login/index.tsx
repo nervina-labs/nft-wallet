@@ -81,7 +81,7 @@ const Title = styled.h2`
 
 enum ErrorMsg {
   NotSupport = '当前环境不支持连接以太坊',
-  Imtoken = '用户拒绝授权，请重新打开页面重新授权',
+  Imtoken = '用户拒绝授权，请重新打开页面进行授权',
 }
 
 export const Login: React.FC = () => {
@@ -124,7 +124,7 @@ export const Login: React.FC = () => {
         setLoading(false, walletType)
       } catch (error) {
         setLoading(false, walletType)
-        if (IS_IMTOKEN) {
+        if (IS_IMTOKEN && walletType === WalletType.Metamask) {
           setErrorMsg(ErrorMsg.Imtoken)
           setIsErrorDialogOpen(true)
           setLoading(false, walletType)
