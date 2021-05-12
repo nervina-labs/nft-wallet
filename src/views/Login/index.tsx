@@ -189,6 +189,7 @@ export const Login: React.FC = () => {
     if (i18n.language === lang) return
     await i18n.changeLanguage(lang)
     LocalCache.setI18nLng(lang)
+    document.title = t('common.title')
   }
 
   if (isLogined) {
