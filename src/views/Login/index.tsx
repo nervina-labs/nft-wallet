@@ -24,6 +24,7 @@ const Container = styled(MainContainer)`
   flex-direction: column;
   background: white;
   padding: 20px 0;
+  min-height: 100%;
 
   .center {
     display: flex;
