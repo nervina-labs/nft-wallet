@@ -27,6 +27,12 @@
     -->
     <title>秘宝账户</title>
   </head>
+  <script>
+    var lang = localStorage.getItem('i18nextLng')
+    if (lang === 'en') {
+      document.title = 'NFT Account'
+    }
+  </script>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root" style="height: 100%"></div>
