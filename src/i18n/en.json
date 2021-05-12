@@ -47,7 +47,9 @@
         "tranferring": "Transferring"
       },
       "no-data": "Awwww... You do not yet own any NFT",
-      "link": "Explore NFT Meta-universe"
+      "link": "Explore NFT Meta-universe",
+      "welcome": "Welcome to NFT universe",
+      "hi": "Hi, NFT collector"
     },
     "transfer": {
       "scan": {

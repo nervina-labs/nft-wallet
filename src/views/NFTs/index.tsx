@@ -22,6 +22,7 @@ import { MainContainer } from '../../styles'
 import { ReactComponent as AccountSvg } from '../../assets/svg/account.svg'
 import { NetChange } from '../../components/NetChange'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
+import Bg from '../../assets/img/nft-bg.png'
 import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
 
@@ -31,6 +32,35 @@ const Container = styled(MainContainer)`
   h4 {
     text-align: center;
     color: rgba(0, 0, 0, 0.6);
+  }
+  .bg {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: 500px;
+    height: 215px;
+    background: darkgray url(${Bg});
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    display: flex;
+    flex-direction: column-reverse;
+    /* padding-left: 16px; */
+    h3 {
+      font-size: 16px;
+      margin: 0;
+      margin-left: 16px;
+      color: whitesmoke;
+      font-weight: normal;
+    }
+
+    p {
+      font-size: 12px;
+      margin-left: 16px;
+      color: whitesmoke;
+      margin-top: 6px;
+      margin-bottom: 45px;
+    }
   }
   .center {
     display: flex;
@@ -47,7 +77,12 @@ const Container = styled(MainContainer)`
   }
   .list {
     flex: 1;
-    background: linear-gradient(187.7deg, #ffffff 4.33%, #f0f0f0 94.27%);
+    background-color: white;
+    background: #ecf2f5;
+    border-radius: 35px 35px 0px 0px;
+    margin-top: 140px;
+    padding-top: 19px;
+    z-index: 2;
   }
 `
 
@@ -128,6 +163,10 @@ export const NFTs: React.FC = () => {
         }
         right={<ShareSvg onClick={openDialog} />}
       />
+      <div className="bg">
+        <p>{t('nfts.hi')}</p>
+        <h3>{t('nfts.welcome')}</h3>
+      </div>
       <section className="list">
         {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
