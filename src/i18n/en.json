@@ -1,1 +1,110 @@
-{}
+{
+  "translations": {
+    "common": {
+      "actions": {
+        "comfirm": "Confirm",
+        "loading": "Loading",
+        "pull-to-down": "No More NFT~",
+        "pull-down-refresh": " Pull down to refresh",
+        "release-refresh": " Release down to refresh"
+      },
+      "creator": "Creator",
+      "chain": {
+        "mainnet": "Mainet",
+        "testnet": "Testnet"
+      },
+      "share": {
+        "copy": "Click to copy the link and share to social media",
+        "close": "Close"
+      },
+      "limit": {
+        "limit": "Limit",
+        "unlimit": "Unlimit"
+      },
+      "colon": ":",
+      "title": "NFT Account",
+      "description": "View and manage your NFT anytime, anywhere"
+    },
+    "login": {
+      "title": "NFT Account",
+      "connect": {
+        "unipass": "Connect to Unipass (Recommend)",
+        "metamask": "Connect to Ethereum Environment",
+        "wallet-connect": "Connect to Wallet Connect"
+      },
+      "errors": {
+        "not-support": "The current environment does not support connecting to Ethereum",
+        "refuse": "User rejects authorization, please reopen the page for authorization"
+      },
+      "desc-1": "View and manage",
+      "desc-2": "your NFT anytime, anywhere"
+    },
+    "nfts": {
+      "title": "My NFT",
+      "status": {
+        "comfirming": "Confirming",
+        "receiving": "Receiving",
+        "tranferring": "Transferring"
+      },
+      "no-data": "Awwww... You do not yet own any NFT",
+      "link": "Explore NFT Meta-universe"
+    },
+    "transfer": {
+      "scan": {
+        "qrcode": "Scan QR code",
+        "result": "Scan result",
+        "detected": "The content that was recognized",
+        "error": "Please scan the correct CKB or Ethereum address",
+        "rescan": "Rescan"
+      },
+      "error": {
+        "eth": "Please enter the correct Ethereum address",
+        "ckb": "Please enter the correct CKB full address",
+        "self": "Unable to transfer NFT to yourself",
+        "receive-eth": "This address is an Ethereum address, please remind the receiver to open NFT Account with Ethereum wallet to view the NFT received",
+        "common": "Please enter the correct Ethereum address",
+        "sign-fail": "Transaction rejected",
+        "tranfer-fail": "Fail to send transaction, please check network conditions and resend",
+        "no-camera": "No camera found",
+        "contract-address": "Unable to transfer NFT to an Ethereum contract address",
+        "camera-auth": "No camera permission, please refresh the page to re-authorize"
+      },
+      "transfer": "Transfer",
+      "address": "Receiver address",
+      "placeholder": "Please enter CKB full address/Ethereum EOA address",
+      "check": "Please double check the address entered,",
+      "once-transfer": "Once transferred, it cannot be withdrawn",
+      "submitted": "Transfer transaction submitted",
+      "tips": "On-chain confirmation may take 1-2 minutes",
+      "comfirm": "Confirm",
+      "signing": "Signing"
+    },
+    "404": {
+      "title": "Page is missing",
+      "not-found": "The page you are looking for does not exist",
+      "back": "Back to my NFT"
+    },
+    "transactions": {
+      "no-data": "No record...",
+      "pull-down-refresh": "Refresh",
+      "receive-from": "Receive from ",
+      "send-to": "Send to",
+      "status": {
+        "waiting": "Waiting",
+        "comfirming": "Confirming"
+      }
+    },
+    "info": {
+      "title": "Use this address to receive NFT"
+    },
+    "nft": {
+      "title": "NFT Details",
+      "transfer": "Transfer"
+    },
+    "account": {
+      "title": "My Account",
+      "info": "Address",
+      "transactions": "Activity"
+    }
+  }
+}

@@ -137,11 +137,11 @@ export const NFTs: React.FC = () => {
             pullDownToRefresh={!IS_WEXIN}
             refreshFunction={refresh}
             pullDownToRefreshContent={
-              <h4>&#8595; {t('common.pull-down-refresh')}</h4>
+              <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
             }
             pullDownToRefreshThreshold={80}
             releaseToRefreshContent={
-              <h4>&#8593; {t('common.pull-down-refresh')}</h4>
+              <h4>&#8593; {t('common.actions.release-refresh')}</h4>
             }
             dataLength={dataLength}
             next={fetchNextPage}
@@ -149,7 +149,9 @@ export const NFTs: React.FC = () => {
             scrollThreshold="200px"
             loader={<Loading />}
             endMessage={
-              <h4>{dataLength <= 5 ? ' ' : t('common.pull-to-down')}</h4>
+              <h4>
+                {dataLength <= 5 ? ' ' : t('common.actions.pull-to-down')}
+              </h4>
             }
           >
             {data?.pages?.map((group, i) => {
