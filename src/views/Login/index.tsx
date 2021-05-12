@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../../assets/img/logo.png'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
@@ -7,7 +7,6 @@ import { MainContainer } from '../../styles'
 import { IS_IMTOKEN, MAIN_NET_URL, TEST_NET_URL } from '../../constants'
 import { NetChange } from '../../components/NetChange'
 import Button from '@material-ui/core/Button'
-import ButtonGroup from '@material-ui/core/ButtonGroup'
 import { CircularProgress } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import { ActionDialog } from '../../components/ActionDialog'
@@ -15,18 +14,26 @@ import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { useWidth } from '../../hooks/useWidth'
+import { LocalCache } from '../../cache'
 
 const Container = styled(MainContainer)`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-position: bottom;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background: white;
+  padding: 20px 0;
+
+  .center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+  }
 
   .header {
-    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,35 +46,61 @@ const Container = styled(MainContainer)`
     }
   }
   .logo {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 50px;
+    margin-right: 50px;
   }
-`
 
-const BtnGroup = styled(ButtonGroup)`
-  width: calc(100% - 40px);
-  margin-bottom: 20px;
-  button {
-    color: black;
-    font-weight: 500;
-    padding: 12px 6px 12px 16px;
-    .MuiButton-label {
-      justify-content: flex-start;
-      text-transform: none;
-      font-size: 14px;
-      line-height: 22px;
-    }
+  .desc {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    color: #191919;
+    line-height: 26px;
+  }
+
+  .connect {
+    border: 1px solid #d2d2d2;
+    border-radius: 25px;
+    width: calc(100% - 150px);
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 12px;
     &:disabled {
-      font-weight: 300;
-      color: rgba(0, 0, 0, 0.6);
+      color: rgb(214, 214, 214) !important;
+      background-color: white !important;
     }
-    &.MuiButton-outlinedPrimary {
-      border: 1px solid rgba(0, 0, 0, 0.23);
-      border-bottom: none;
-      &:last-child {
-        border: 1px solid rgba(0, 0, 0, 0.23);
-      }
-      /* border-bottom: none; */
+    &.MuiButton-text {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-transform: none;
+    }
+    &.recommend {
+      background: #2b454e;
+      width: calc(100% - 100px);
+      color: white;
+      margin-top: 15px;
+      font-size: 16px;
+    }
+  }
+
+  .lang {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #232222;
+    font-size: 12px;
+    margin-top: 30px;
+    .pointer {
+      cursor: pointer;
+    }
+    .divider {
+      margin: 0 15px;
+    }
+    .active {
+      font-weight: bold;
+      color: #2b454e;
     }
   }
 `
@@ -87,7 +120,7 @@ enum ErrorMsg {
 
 export const Login: React.FC = () => {
   const { login, isLogined } = useWalletModel()
-  const { t } = useTranslation('translations')
+  const [t, i18n] = useTranslation('translations')
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
@@ -97,6 +130,17 @@ export const Login: React.FC = () => {
   const errorMsg = useMemo(() => {
     return t(`login.errors.${errorStatus}`)
   }, [errorStatus, t])
+
+  const containerRef = useRef(null)
+  const containerWidth = useWidth(containerRef)
+  const width = useMemo(() => {
+    const w = containerWidth ?? 0
+    if (w === 0) {
+      return 0
+    }
+    // 100 = margin * 2
+    return w - 100
+  }, [containerWidth])
 
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
@@ -141,18 +185,24 @@ export const Login: React.FC = () => {
     [login]
   )
 
+  const setLanguage = (lang: 'zh' | 'en') => async () => {
+    if (i18n.language === lang) return
+    await i18n.changeLanguage(lang)
+    LocalCache.setI18nLng(lang)
+  }
+
   if (isLogined) {
     return <Redirect to={RoutePath.NFTs} />
   }
 
   return (
-    <Container>
+    <Container ref={containerRef}>
       <div className="header">
         <Title style={{ marginRight: '8px' }}>{t('login.title')}</Title>
         <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
       </div>
       <div className="logo">
-        <LazyLoadImage src={Logo as any} width={340} height={415} />
+        <LazyLoadImage src={Logo as any} width={width} height={width * 1.091} />
       </div>
       <ActionDialog
         icon={<FailSvg />}
@@ -161,34 +211,50 @@ export const Login: React.FC = () => {
         onConfrim={() => setIsErrorDialogOpen(false)}
         onBackdropClick={() => setIsErrorDialogOpen(false)}
       />
-      <BtnGroup
-        orientation="vertical"
-        color="primary"
-        aria-label="vertical outlined primary button group"
+      <div className="center">
+        <p className="desc">{t('login.desc-1')}</p>
+        <p className="desc">{t('login.desc-2')}</p>
+      </div>
+      <Button
+        className="recommend connect"
+        disabled={
+          isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+        }
+        onClick={loginBtnOnClick}
       >
-        <Button
-          disabled={
-            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-          }
-          onClick={loginBtnOnClick}
+        {t('login.connect.unipass')}
+        {isUnipassLogining ? (
+          <CircularProgress className="loading" size="1em" />
+        ) : null}
+      </Button>
+      <Button
+        className="connect"
+        disabled={
+          isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+        }
+        onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+      >
+        {t('login.connect.metamask')}&nbsp;
+        {isMetamaskLoging ? (
+          <CircularProgress className="loading" size="1em" />
+        ) : null}
+      </Button>
+      <div className="lang">
+        <span
+          className={`${i18n.language === 'zh' ? 'active' : 'pointer'}`}
+          onClick={setLanguage('zh')}
         >
-          {t('login.connect.unipass')}
-          {isUnipassLogining ? (
-            <CircularProgress className="loading" size="1em" />
-          ) : null}
-        </Button>
-        <Button
-          disabled={
-            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-          }
-          onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+          中文
+        </span>
+        <span className="divider">|</span>
+        <span
+          onClick={setLanguage('en')}
+          className={`${i18n.language === 'en' ? 'active' : 'pointer'}`}
         >
-          {t('login.connect.metamask')}&nbsp;
-          {isMetamaskLoging ? (
-            <CircularProgress className="loading" size="1em" />
-          ) : null}
-        </Button>
-        {/* <Button
+          English
+        </span>
+      </div>
+      {/* <Button
           disabled={
             isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
           }
@@ -199,7 +265,6 @@ export const Login: React.FC = () => {
             <CircularProgress className="loading" size="1em" />
           ) : null}
         </Button> */}
-      </BtnGroup>
     </Container>
   )
 }

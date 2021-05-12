@@ -5,7 +5,8 @@
         "comfirm": "确认",
         "loading": "加载中",
         "pull-to-down": "已经拉到底了",
-        "pull-down-refresh": " 下拉刷新"
+        "pull-down-refresh": " 下拉刷新",
+        "release-refresh": " 下拉刷新"
       },
       "creator": "创作者",
       "chain": {
@@ -34,7 +35,9 @@
       "errors": {
         "not-support": "当前环境不支持连接以太坊",
         "refuse": "用户拒绝授权，请重新打开页面进行授权"
-      }
+      },
+      "desc-1": "随时随地查看",
+      "desc-2": "并管理你持有的秘宝"
     },
     "nfts": {
       "title": "我的秘宝",

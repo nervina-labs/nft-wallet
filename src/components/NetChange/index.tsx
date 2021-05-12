@@ -22,6 +22,7 @@ const useStyles = makeStyles(() => ({
 
 const Container = styled.div`
   position: relative;
+  color: #090909;
   .area {
     cursor: pointer;
     display: flex;
@@ -33,6 +34,10 @@ const Container = styled.div`
       font-size: 12px;
       line-height: 17px;
       margin-right: 4px;
+      opacity: 0.6;
+    }
+    svg {
+      opacity: 0.6;
     }
   }
 `
