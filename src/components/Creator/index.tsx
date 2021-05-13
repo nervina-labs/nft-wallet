@@ -13,7 +13,6 @@ const Container = styled.div`
   line-height: 17px;
   color: rgba(0, 0, 0, 0.6);
   .avatar {
-    margin-left: 12px;
     margin-right: 6px;
     img {
       border-radius: 50%;
@@ -28,9 +27,11 @@ const Container = styled.div`
   }
   .issuer {
     white-space: nowrap;
+    margin-right: 12px;
   }
   .name {
-    color: rgba(5, 1, 1, 0.8);
+    color: ${(props: { color?: string }) =>
+      `${props.color ?? 'rgba(5, 1, 1, 0.8)'}`};
     font-weight: normal;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -49,6 +50,7 @@ export interface CreatorProps {
   name: string
   uuid?: string
   title?: React.ReactNode
+  color?: string
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -57,6 +59,7 @@ export const Creator: React.FC<CreatorProps> = ({
   name,
   uuid,
   title,
+  color,
 }) => {
   const { t } = useTranslation('translations')
   const creator = (
@@ -74,7 +77,7 @@ export const Creator: React.FC<CreatorProps> = ({
     </>
   )
   return (
-    <Container fontSize={fontSize}>
+    <Container fontSize={fontSize} color={color}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
       {uuid != null ? (
         <a

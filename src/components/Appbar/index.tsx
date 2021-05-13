@@ -10,19 +10,25 @@ const Header = styled.header`
   width: 100%;
   max-width: 500px;
   display: flex;
-  background: #fff;
+  background: ${(props: { bgColor?: string }) => `${props.bgColor ?? '#fff'}`};
   flex-direction: row;
   height: 44px;
   align-items: center;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: ${(props: { bgColor?: string }) =>
+    `${
+      props.bgColor !== 'transparent'
+        ? '0px 4px 12px rgba(0, 0, 0, 0.06)'
+        : 'none'
+    }`};
   z-index: 100;
   .left {
     margin-left: 12px;
     width: 20px;
   }
   .title {
+    color: ${(props: { bgColor?: string }) =>
+      `${props.bgColor === 'transparent' ? '#fff' : '#000'}`};
     flex: 1;
-    font-weight: 600;
     text-align: center;
     display: flex;
     align-items: center;
@@ -33,8 +39,26 @@ const Header = styled.header`
     margin-right: 12px;
     width: 20px;
   }
+  .right,
+  .left {
+    img,
+    svg {
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+    }
+  }
   svg {
     cursor: pointer;
+
+    path {
+      fill: ${(props: { bgColor?: string }) =>
+        `${props.bgColor === 'transparent' ? '#fff' : '#000'}`};
+    }
+    ellipse {
+      fill: ${(props: { bgColor?: string }) =>
+        `${props.bgColor === 'transparent' ? '#fff' : '#000'}`};
+    }
   }
 `
 
@@ -43,15 +67,19 @@ export interface AppbarProps {
   left?: React.ReactNode
   right?: React.ReactNode
   back?: boolean
+  bgColor?: string
 }
 
 // eslint-disable-next-line prettier/prettier
 export const Appbar: React.ForwardRefExoticComponent<AppbarProps & React.RefAttributes<HTMLElement>
 > = React.forwardRef(
-  ({ title, left = null, right }, ref: React.ForwardedRef<HTMLElement>) => {
+  (
+    { title, left = null, right, bgColor },
+    ref: React.ForwardedRef<HTMLElement>
+  ) => {
     const history = useHistory()
     return (
-      <Header ref={ref}>
+      <Header ref={ref} bgColor={bgColor}>
         <span className="left">{left}</span>
         <span className="title">{title}</span>
         <span className="right">

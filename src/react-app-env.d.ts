@@ -31,7 +31,8 @@ declare module '*.jpeg' {
 }
 
 declare module '*.png' {
-  const src: string
+  const value: any;
+  export = value;
 }
 
 declare module '*.webp' {

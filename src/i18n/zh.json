@@ -4,7 +4,7 @@
       "actions": {
         "comfirm": "确认",
         "loading": "加载中",
-        "pull-to-down": "已经拉到底了",
+        "pull-to-down": "暂无更多秘宝~",
         "pull-down-refresh": " 下拉刷新",
         "release-refresh": " 下拉刷新"
       },
@@ -23,7 +23,8 @@
       },
       "colon": "：",
       "title": "秘宝账户",
-      "description": "随时随地查看并管理你的秘宝"
+      "description": "随时随地查看并管理你的秘宝",
+      "img-lost": "图片失联"
     },
     "login": {
       "title": "秘宝账户",

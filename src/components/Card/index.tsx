@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { NFTToken, TransactionStatus } from '../../models'
@@ -6,6 +6,7 @@ import { LazyLoadImage } from '../Image'
 import { Limited } from '../Limited'
 import { Creator } from '../Creator'
 import { useTranslation } from 'react-i18next'
+import FallbackImg from '../../assets/img/card-fallback.png'
 
 export interface CardProps {
   token: NFTToken
@@ -18,15 +19,13 @@ interface LabelProps {
 }
 
 const LabelContainer = styled.div`
-  position: absolute;
-  color: white;
-  top: 12px;
-  right: 0;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 16px;
-  width: 46px;
-  text-align: center;
-  border-radius: 2px 0px 0px 2px;
+  border-radius: 30px;
+  padding: 3px 8px;
+  border: 1px solid;
+  margin-left: auto;
+  white-space: nowrap;
 `
 
 enum LabelStatus {
@@ -69,15 +68,15 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
 
   const statusMap: Record<LabelStatus, LabelResult | null> = {
     [LabelStatus.Comfirming]: {
-      color: 'rgba(255, 165, 90, 0.8)',
+      color: '#F9A44C',
       text: t('nfts.status.comfirming'),
     },
     [LabelStatus.Receiving]: {
-      color: '#030303',
+      color: '#67D696',
       text: t('nfts.status.receiving'),
     },
     [LabelStatus.Tranferring]: {
-      color: 'rgba(89, 106, 255, 0.7)',
+      color: '#00A0E9',
       text: t('nfts.status.tranferring'),
     },
     [LabelStatus.None]: null,
@@ -87,10 +86,10 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
     return null
   }
 
-  const bgColor = statusMap[status]?.color
+  const color = statusMap[status]?.color
 
   return (
-    <LabelContainer style={{ backgroundColor: bgColor }}>
+    <LabelContainer style={{ color: color, borderColor: color }}>
       {statusMap[status]?.text}
     </LabelContainer>
   )
@@ -99,37 +98,59 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
 const Container = styled.div`
   display: flex;
   cursor: pointer;
-  margin-top: 16px;
+  margin-bottom: 28px;
   margin-left: 16px;
   margin-right: 16px;
   background: #fff;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
+  border-radius: 10px;
   position: relative;
+  /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); */
   .media {
-    width: 120px;
-    height: 120px;
-    min-width: 120px;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    width: 100px;
+    height: 125px;
+    min-width: 100px;
+    /* border-right: 1px solid rgba(0, 0, 0, 0.1); */
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 10px;
+    position: relative;
+    top: -12px;
+    right: -12px;
+    img {
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+    .fallback {
+      position: absolute;
+      bottom: 8px;
+      font-size: 10px;
+      color: #2b2b2b;
+      opacity: 0.6;
+    }
   }
   .content {
-    margin: 8px;
+    margin: 12px;
+    padding-left: 12px;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     overflow: hidden;
     width: 100%;
     .title {
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 22px;
+      font-size: 14px;
+      line-height: 26px;
       color: #000000;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
+      width: 100%;
+      display: flex;
+      /* justify-content: center; */
+      align-items: center;
+      > span {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        /* margin-right: 4px; */
+      }
     }
     .desc {
       font-weight: normal;
@@ -175,42 +196,49 @@ const Container = styled.div`
 
 export const Card: React.FC<CardProps> = ({ token, address }) => {
   const history = useHistory()
+  const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(false)
+  const [t] = useTranslation('translations')
   return (
     <Container onClick={() => history.push(`/nft/${token.token_uuid}`)}>
       <div className="media">
         <LazyLoadImage
           src={token.class_bg_image_url}
-          width={120}
-          height={120}
+          width={100}
+          height={125}
+          skeletonStyle={{ borderRadius: '10px' }}
+          cover
           backup={
             <LazyLoadImage
-              width={90}
-              height={90}
-              src={`${location.origin}/logo512.png`}
+              skeletonStyle={{ borderRadius: '10px' }}
+              width={100}
+              height={125}
+              src={FallbackImg}
+              onLoaded={() => setFallBackImgLoaded(true)}
             />
           }
         />
+        {isFallBackImgLoaded ? (
+          <span className="fallback">{t('common.img-lost')}</span>
+        ) : null}
       </div>
       <div className="content">
-        <div
-          className="title"
-          style={{
-            width:
-              token.tx_state === TransactionStatus.Committed
-                ? '100%'
-                : 'calc(100% - 46px)',
-          }}
-        >
-          {token.class_name}
+        <div className="title">
+          <span>{token.class_name}</span>
+          <Label nft={token} address={address} />
         </div>
-        <Limited count={token.class_total} />
+        <Limited
+          count={token.class_total}
+          bold={false}
+          color="rgba(63, 63, 63, 0.66) !important"
+        />
         <Creator
+          title=""
           url={token.issuer_avatar_url}
           name={token.issuer_name}
           uuid={token.issuer_uuid}
+          color="rgba(63, 63, 63, 0.66)"
         />
       </div>
-      <Label nft={token} address={address} />
     </Container>
   )
 }
