@@ -4,11 +4,9 @@ import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Redirect, useHistory, useParams } from 'react-router'
-import { Button } from '../../components/Button'
-import { LazyLoadImage } from '../../components/Image'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
-import { Query } from '../../models'
+import { NFTDetail, Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Loading } from '../../components/Loading'
 import { Limited } from '../../components/Limited'
@@ -18,66 +16,148 @@ import { MainContainer } from '../../styles'
 import { NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
+import { ParallaxTilt } from '../../components/ParallaxTilt'
 
 const Container = styled(MainContainer)`
   display: flex;
-  background: linear-gradient(187.7deg, #ffffff 4.33%, #f0f0f0 94.27%);
   flex-direction: column;
+  background: ${(props: { bgColor?: string }) =>
+    `${
+      props.bgColor?.startsWith('radial')
+        ? '#393d41'
+        : 'linear-gradient(107.86deg, #e1e1e1 7.34%, #d3d3d3 92.99%)'
+    }`};
   .figure {
-    background: linear-gradient(107.86deg, #e1e1e1 7.34%, #d3d3d3 92.99%);
-    padding: 16px 36px;
+    background: ${(props: { bgColor?: string }) =>
+      `${
+        props.bgColor ??
+        'linear-gradient(107.86deg, #e1e1e1 7.34%, #d3d3d3 92.99%)'
+      }`};
+    flex: 1;
+    padding: 36px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    .fallback {
+      position: absolute;
+      bottom: 20px;
+      font-size: 16px;
+      color: #2b2b2b;
+      opacity: 0.7;
+      color: #fffdfd;
+    }
   }
   .loading {
     text-align: center;
     color: rgba(0, 0, 0, 0.6);
   }
   .detail {
-    margin: 0 36px;
-    padding-bottom: 16px;
+    padding: 0 25px;
+    border-radius: 25px 25px 0px 0px;
+    height: 300px;
+    max-height: 300px;
+    position: relative;
+    background-color: #f7fafd;
     .title {
-      font-weight: bold;
-      font-size: 16px;
-      line-height: 19px;
-      color: #000000;
-      margin-top: 16px;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 41px;
+      color: #0e0e0e;
+      margin-top: 45px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
     .desc {
       font-size: 14px;
-      line-height: 16px;
-      color: rgba(0, 0, 0, 0.6);
-      margin-top: 12px;
-      margin-bottom: 24px;
+      line-height: 18px;
+      color: #484848;
+      margin-top: 18px;
       white-space: pre-line;
     }
-    .row {
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 16px;
-      color: rgba(0, 0, 0, 0.8);
-      margin-bottom: 12px;
-      .underline {
-        text-decoration-line: underline;
-      }
-
-      &.last {
-        margin-bottom: 32px;
-      }
-    }
-    .action {
+    .transfer {
+      background-color: #fd5c31;
+      width: 70px;
+      height: 70px;
+      cursor: pointer;
+      position: absolute;
+      right: 25px;
+      top: -20px;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-size: 10px;
+      border-radius: 50%;
+      color: white;
+      &.disabled {
+        background-color: #ddd;
+        color: #898989;
+        cursor: not-allowed;
+      }
+      .arrow {
+        font-size: 14px;
+        font-weight: bold;
+      }
     }
   }
 `
+
+const FooterContaienr = styled.footer`
+  position: fixed;
+  bottom: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 35px 35px 0px 0px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.06);
+  > div {
+    &:first-child {
+      margin-left: 23px;
+      flex: 1;
+      width: 200px;
+    }
+    &:last-child {
+      margin-left: 4px;
+      margin-right: 23px;
+    }
+  }
+`
+
+interface FooterProps {
+  nft: NFTDetail
+}
+
+const Footer: React.FC<FooterProps> = ({ nft }) => {
+  return (
+    <FooterContaienr>
+      <Creator
+        title=""
+        url={nft.issuer_info.avatar_url}
+        name={nft.issuer_info.name}
+        uuid={nft.issuer_info.uuid}
+        color="#000"
+        fontSize={14}
+      />
+      <Limited
+        count={nft.total}
+        bold={false}
+        fontSize={14}
+        // color="rgba(63, 63, 63, 0.66) !important"
+      />
+    </FooterContaienr>
+  )
+}
 
 export const NFT: React.FC = () => {
   const history = useHistory()
   const { t } = useTranslation('translations')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(false)
+  const [imageColor, setImageColor] = useState<string>()
   const closeDialog = (): void => setIsDialogOpen(false)
 
   const appRef = useRef(null)
@@ -112,6 +192,13 @@ export const NFT: React.FC = () => {
     }
   }, [data])
 
+  const bgColor = useMemo(() => {
+    if (isFallBackImgLoaded) {
+      return 'rgb(178, 217, 229)'
+    }
+    return imageColor
+  }, [isFallBackImgLoaded, imageColor])
+
   const explorerURL = useMemo(() => {
     return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
   }, [data])
@@ -136,7 +223,7 @@ export const NFT: React.FC = () => {
   }
 
   return (
-    <Container>
+    <Container bgColor={bgColor}>
       <Appbar
         title={t('nft.title')}
         left={<BackSvg onClick={() => history.goBack()} />}
@@ -144,44 +231,32 @@ export const NFT: React.FC = () => {
         ref={appRef}
       />
       <div className="figure">
-        <LazyLoadImage
+        <ParallaxTilt
           src={detail?.bg_image_url}
           width={imageWidth}
           height={imageWidth}
-          backup={
-            <LazyLoadImage
-              width={imageWidth}
-              height={imageWidth}
-              src={`${location.origin}/logo512.png`}
-            />
-          }
+          onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
+          onColorDetected={(color) => setImageColor(color)}
         />
+        {isFallBackImgLoaded ? <span className="fallback"></span> : null}
       </div>
       {detail == null ? (
         <Loading />
       ) : (
-        <section className="detail">
-          <div className="title">{detail?.name}</div>
-          <div className="desc">{detail?.description}</div>
-          <div className="row">
-            <Limited count={detail.total} fontSize={14} />
-          </div>
-          <div className="row last">
-            <Creator
-              fontSize={14}
-              name={detail.issuer_info.name}
-              url={detail.issuer_info.avatar_url}
-              uuid={detail.issuer_info.uuid}
-            />
-          </div>
-          {isTransferable ? (
-            <div className="action">
-              <Button type="primary" onClick={tranfer}>
-                {t('nft.transfer')}
-              </Button>
+        <>
+          <section className="detail">
+            <div
+              className={`${!isTransferable ? 'disabled' : ''} transfer`}
+              onClick={isTransferable ? tranfer : undefined}
+            >
+              <span className="arrow">&#8594;</span>
+              <span>{t('nft.transfer')}</span>
             </div>
-          ) : null}
-        </section>
+            <div className="title">{detail?.name}</div>
+            <div className="desc">{detail?.description}</div>
+          </section>
+          <Footer nft={detail} />
+        </>
       )}
       <Share
         isDialogOpen={isDialogOpen}
