@@ -8,6 +8,9 @@ export interface LazyLoadImageProps {
   height: number
   backup?: React.ReactNode
   variant?: 'circle' | 'rect' | 'text'
+  cover?: boolean
+  skeletonStyle?: React.CSSProperties
+  onLoaded?: () => void
 }
 
 export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
@@ -17,6 +20,9 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
   height,
   variant,
   backup,
+  cover,
+  skeletonStyle,
+  onLoaded,
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
@@ -33,11 +39,14 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
       ) : (
         <img
           src={src}
-          onLoad={() => setLoaded(true)}
+          onLoad={() => {
+            setLoaded(true)
+            onLoaded?.()
+          }}
           onError={onError}
           alt={alt}
           style={{
-            objectFit: variant === 'circle' ? 'cover' : 'contain',
+            objectFit: variant === 'circle' || cover ? 'cover' : 'contain',
             display: loaded ? 'block' : 'none',
             width: `${width}px`,
             height: `${height}px`,
@@ -46,7 +55,12 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
         />
       )}
       {!loaded ? (
-        <Skeleton variant={variant ?? 'rect'} width={width} height={height} />
+        <Skeleton
+          variant={variant ?? 'rect'}
+          width={width}
+          height={height}
+          style={skeletonStyle}
+        />
       ) : null}
     </>
   )

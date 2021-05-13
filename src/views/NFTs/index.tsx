@@ -19,7 +19,7 @@ import { Loading } from '../../components/Loading'
 import { Redirect, useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { ReactComponent as AccountSvg } from '../../assets/svg/account.svg'
+import AccountPng from '../../assets/img/account.png'
 import { NetChange } from '../../components/NetChange'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import Bg from '../../assets/img/nft-bg.png'
@@ -70,10 +70,6 @@ const Container = styled(MainContainer)`
       font-size: 16px;
       margin-right: 8px;
     }
-    > div {
-      position: relative;
-      top: 1px;
-    }
   }
   .list {
     flex: 1;
@@ -81,8 +77,15 @@ const Container = styled(MainContainer)`
     background: #ecf2f5;
     border-radius: 35px 35px 0px 0px;
     margin-top: 140px;
-    padding-top: 19px;
     z-index: 2;
+    padding-top: 10px;
+    .infinite-scroll-component {
+      > div {
+        &:nth-child(2) {
+          margin-top: 20px;
+        }
+      }
+    }
   }
 `
 
@@ -148,14 +151,20 @@ export const NFTs: React.FC = () => {
   return (
     <Container>
       <Appbar
+        bgColor="transparent"
         title={
           <div className="center">
             <span>{t('nfts.title')}</span>
-            <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
+            <NetChange
+              mainnetURL={MAIN_NET_URL}
+              testnetURL={TEST_NET_URL}
+              transparent
+            />
           </div>
         }
         left={
-          <AccountSvg
+          <img
+            src={AccountPng}
             onClick={() => {
               history.push(RoutePath.Info)
             }}
@@ -175,6 +184,7 @@ export const NFTs: React.FC = () => {
           <InfiniteScroll
             pullDownToRefresh={!IS_WEXIN}
             refreshFunction={refresh}
+            height={window.innerHeight - 194}
             pullDownToRefreshContent={
               <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
             }
@@ -185,10 +195,10 @@ export const NFTs: React.FC = () => {
             dataLength={dataLength}
             next={fetchNextPage}
             hasMore={hasNextPage === true}
-            scrollThreshold="200px"
+            scrollThreshold="250px"
             loader={<Loading />}
             endMessage={
-              <h4>
+              <h4 className="end">
                 {dataLength <= 5 ? ' ' : t('common.actions.pull-to-down')}
               </h4>
             }
