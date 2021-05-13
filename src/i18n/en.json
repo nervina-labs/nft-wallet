@@ -6,7 +6,7 @@
         "loading": "Loading",
         "pull-to-down": "No More NFT~",
         "pull-down-refresh": " Pull down to refresh",
-        "release-refresh": " Release down to refresh"
+        "release-refresh": " Release to refresh"
       },
       "creator": "Creator",
       "chain": {
@@ -23,7 +23,8 @@
       },
       "colon": ":",
       "title": "NFT Account",
-      "description": "View and manage your NFT anytime, anywhere"
+      "description": "View and manage your NFT anytime, anywhere",
+      "img-lost": "Image lost"
     },
     "login": {
       "title": "NFT Account",

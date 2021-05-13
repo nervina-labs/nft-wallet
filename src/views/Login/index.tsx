@@ -24,7 +24,6 @@ const Container = styled(MainContainer)`
   flex-direction: column;
   background: white;
   padding: 20px 0;
-  min-height: 100%;
 
   .center {
     display: flex;
@@ -204,7 +203,7 @@ export const Login: React.FC = () => {
         <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
       </div>
       <div className="logo">
-        <LazyLoadImage src={Logo as any} width={width} height={width * 1.091} />
+        <LazyLoadImage src={Logo} width={width} height={width * 1.091} />
       </div>
       <ActionDialog
         icon={<FailSvg />}

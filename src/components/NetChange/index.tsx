@@ -29,7 +29,8 @@ const Container = styled.div`
     align-items: center;
     justify-items: center;
     .status {
-      color: black;
+      color: ${(props: { transparent?: boolean }) =>
+        props.transparent ? '#fff' : '#000'};
       font-weight: normal;
       font-size: 12px;
       line-height: 17px;
@@ -70,11 +71,13 @@ const PopoverContainer = styled.div`
 export interface NetChangeProps {
   mainnetURL: string
   testnetURL: string
+  transparent?: boolean
 }
 
 export const NetChange: React.FC<NetChangeProps> = ({
   mainnetURL,
   testnetURL,
+  transparent,
 }) => {
   const { t } = useTranslation('translations')
   const mainnet = t('common.chain.mainnet')
@@ -94,7 +97,7 @@ export const NetChange: React.FC<NetChangeProps> = ({
         setOpen(false)
       }}
     >
-      <Container>
+      <Container transparent={transparent}>
         <div className="area" onClick={handleClick}>
           <span className="status">{netStatus}</span>
           {open ? <UpSvg /> : <DownSvg />}
