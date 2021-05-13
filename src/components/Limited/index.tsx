@@ -31,7 +31,7 @@ export interface LimitedProps {
 export const Limited: React.FC<LimitedProps> = ({
   count,
   fontSize,
-  bold = true,
+  bold = false,
   color,
 }) => {
   const isUnlimited = count === '0'
