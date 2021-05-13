@@ -90,7 +90,7 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
       <SendSvg />
     )
   if (tx.tx_state !== TransactionStatus.Committed) {
-    icon = <img src={pendingSrc as any} alt="pending" />
+    icon = <img src={pendingSrc} alt="pending" />
   }
   let time =
     tx.on_chain_timestamp === null
