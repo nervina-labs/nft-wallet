@@ -23,12 +23,12 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
 }) => {
   const [isTiltEnable, setIsTileEnable] = useState(false)
   return (
-    <Tilt tiltReverse tiltEnable={isTiltEnable} style={{ display: 'flex' }}>
+    <Tilt tiltReverse tiltEnable={isTiltEnable} style={{ margin: 'auto' }}>
       <LazyLoadImage
         src={src}
         width={width}
         height={height}
-        imageStyle={{ borderRadius: '15px' }}
+        imageStyle={{ borderRadius: '10px' }}
         setImageHeight={false}
         onLoaded={async (img) => {
           if (img === null) {
