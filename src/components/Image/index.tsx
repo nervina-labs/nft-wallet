@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 
 export interface LazyLoadImageProps {
@@ -10,7 +10,9 @@ export interface LazyLoadImageProps {
   variant?: 'circle' | 'rect' | 'text'
   cover?: boolean
   skeletonStyle?: React.CSSProperties
-  onLoaded?: () => void
+  onLoaded?: (img: HTMLImageElement | null) => void
+  imageStyle?: React.CSSProperties
+  setImageHeight?: boolean
 }
 
 export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
@@ -23,6 +25,8 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
   cover,
   skeletonStyle,
   onLoaded,
+  imageStyle,
+  setImageHeight = true,
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
@@ -32,6 +36,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
       setLoaded(true)
     }
   }, [backup])
+  const imgRef = useRef(null)
   return (
     <>
       {shouldUseBackup ? (
@@ -39,17 +44,19 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
       ) : (
         <img
           src={src}
+          ref={imgRef}
           onLoad={() => {
             setLoaded(true)
-            onLoaded?.()
+            onLoaded?.(imgRef.current)
           }}
           onError={onError}
           alt={alt}
           style={{
+            ...imageStyle,
             objectFit: variant === 'circle' || cover ? 'cover' : 'contain',
             display: loaded ? 'block' : 'none',
             width: `${width}px`,
-            height: `${height}px`,
+            height: setImageHeight ? `${height}px` : 'auto',
             maxWidth: '100%',
           }}
         />
