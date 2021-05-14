@@ -75,7 +75,13 @@ export async function rawTransactionToPWTransaction(
       // rawTx.header_deps,
       // rawTx.version
     ),
-    [!isUnipass ? Builder.WITNESS_ARGS.Secp256k1 : UnipassWitnessArgs]
+    [
+      !isUnipass
+        ? IS_MAINNET
+          ? Builder.WITNESS_ARGS.RawSecp256k1
+          : Builder.WITNESS_ARGS.Secp256k1
+        : UnipassWitnessArgs,
+    ]
   )
 
   return tx
