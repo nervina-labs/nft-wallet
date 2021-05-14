@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Tilt from 'react-parallax-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
@@ -22,25 +22,50 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   onFallBackImageLoaded,
 }) => {
   const [isTiltEnable, setIsTileEnable] = useState(false)
+  const timer = useRef<NodeJS.Timeout>()
+  const tilt = useRef<Tilt>(null)
+  // const [boxShadow, setBoxShadow] = useState('rgb(240 46 170 / 40%) -10px 10px')
   return (
-    <Tilt tiltReverse tiltEnable={isTiltEnable} style={{ margin: 'auto' }}>
+    <Tilt
+      ref={tilt}
+      tiltReverse
+      reset={false}
+      tiltEnable={isTiltEnable}
+      tiltAngleYInitial={-15}
+      style={{ margin: 'auto' }}
+      transitionSpeed={1000}
+      onEnter={() => {
+        timer.current && clearInterval()
+      }}
+      onLeave={() => {
+        timer.current && clearTimeout(timer.current)
+        timer.current = setTimeout(() => {
+          const autoResetEvent = new CustomEvent('autoreset')
+          // @ts-expect-error
+          tilt.current?.onMove(autoResetEvent)
+        }, 1500)
+      }}
+    >
       <LazyLoadImage
         src={src}
         width={width}
         height={height}
-        imageStyle={{ borderRadius: '10px' }}
+        imageStyle={{
+          borderRadius: '10px',
+          maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
+        }}
         setImageHeight={false}
         onLoaded={async (img) => {
-          if (img === null) {
+          if (img === null || !src) {
             return
           }
-          // img.crossOrigin = 'anonymous'
           try {
-            const palette = await Vibrant.from(src!).getPalette()
-            onColorDetected(
-              // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-              `radial-gradient(${palette.Vibrant?.hex!}, #393d41)`
-            )
+            const palette = await Vibrant.from(src).getPalette()
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+            const v = palette.Vibrant!
+            // const [r, g, b] = v.getRgb()
+            // setBoxShadow(`rgb(${r} ${g} ${b} / 40%) -5px 5px`)
+            onColorDetected(`radial-gradient(${v.hex}, #393d41)`)
           } catch (error) {
             console.log(error)
           }

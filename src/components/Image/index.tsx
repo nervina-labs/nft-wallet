@@ -45,9 +45,13 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
         <img
           src={src}
           ref={imgRef}
-          onLoad={() => {
+          onLoad={async () => {
+            try {
+              await onLoaded?.(imgRef.current)
+            } catch (error) {
+              //
+            }
             setLoaded(true)
-            onLoaded?.(imgRef.current)
           }}
           onError={onError}
           alt={alt}
