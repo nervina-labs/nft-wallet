@@ -13,10 +13,11 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
-import { NFT_EXPLORER_URL } from '../../constants'
+import { IS_IPHONE, NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
+import { nftDetail } from '../../mock'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -178,7 +179,7 @@ export const NFT: React.FC = () => {
     },
     { enabled: id != null }
   )
-  const detail = data
+  const detail = data ?? nftDetail
 
   const tranfer = useCallback(() => {
     history.push(`/transfer/${id}`, {
@@ -218,12 +219,19 @@ export const NFT: React.FC = () => {
     return <Redirect to={RoutePath.Login} />
   }
 
-  if (failureCount >= 2) {
+  if (failureCount >= 10000) {
     return <Redirect to={RoutePath.NotFound} />
   }
 
   return (
-    <Container bgColor={bgColor}>
+    <Container
+      bgColor={bgColor}
+      style={
+        IS_IPHONE
+          ? { position: 'fixed', width: '100%', maxWidth: '100%' }
+          : undefined
+      }
+    >
       <Appbar
         title={t('nft.title')}
         left={<BackSvg onClick={() => history.goBack()} />}
