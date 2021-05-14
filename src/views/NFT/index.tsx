@@ -34,7 +34,6 @@ const Container = styled(MainContainer)`
         'linear-gradient(107.86deg, #e1e1e1 7.34%, #d3d3d3 92.99%)'
       }`};
     flex: 1;
-    padding: 36px;
     display: flex;
     justify-content: center;
     position: relative;
@@ -74,6 +73,7 @@ const Container = styled(MainContainer)`
       color: #484848;
       margin-top: 18px;
       white-space: pre-line;
+      padding-bottom: 80px;
     }
     .transfer {
       background-color: #fd5c31;
@@ -230,7 +230,10 @@ export const NFT: React.FC = () => {
         right={<ShareSvg onClick={openDialog} />}
         ref={appRef}
       />
-      <div className="figure">
+      <div
+        className="figure"
+        style={{ minHeight: `${window.innerHeight - 44 - 300}px` }}
+      >
         <ParallaxTilt
           src={detail?.bg_image_url}
           width={imageWidth}
@@ -241,7 +244,9 @@ export const NFT: React.FC = () => {
         {isFallBackImgLoaded ? <span className="fallback"></span> : null}
       </div>
       {detail == null ? (
-        <Loading />
+        <section className="detail">
+          <Loading />
+        </section>
       ) : (
         <>
           <section className="detail">
