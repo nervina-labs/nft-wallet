@@ -22,7 +22,9 @@ export const IS_MAINNET: boolean = CHAIN_ID !== 'testnet'
 export const PW_CODE_HASH =
   process.env.REACT_APP_PW_CODE_HASH ??
   '0x124a60cd799e1fbca664196de46b3f7f0ecb7138133dcaea4893c51df5b02be6'
+export const INFURA_ID = '89a648e271d54224ba4827d348cbaa54'
 export const IS_WEXIN = navigator.userAgent
   .toLowerCase()
   .includes('micromessenger')
+export const IS_IMTOKEN = navigator.userAgent.toLowerCase().includes('imtoken')
 export const IS_ANDROID = navigator.userAgent.toLowerCase().includes('android')

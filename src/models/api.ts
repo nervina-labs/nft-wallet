@@ -22,7 +22,8 @@ export interface NFTWalletAPI {
 
   getTransferNftTransaction: (
     uuid: string,
-    toAddress: string
+    toAddress: string,
+    isUnipass?: boolean
   ) => Promise<NFTTransaction>
 
   transfer: (

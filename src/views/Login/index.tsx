@@ -1,16 +1,19 @@
 import React, { useCallback, useState } from 'react'
-import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import Logo from '../../assets/img/logo.png'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { MAIN_NET_URL, TEST_NET_URL } from '../../constants'
+import { IS_IMTOKEN, MAIN_NET_URL, TEST_NET_URL } from '../../constants'
 import { NetChange } from '../../components/NetChange'
 import Button from '@material-ui/core/Button'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import { CircularProgress } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
+import { ActionDialog } from '../../components/ActionDialog'
+import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
+import detectEthereumProvider from '@metamask/detect-provider'
+import { Redirect } from 'react-router'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -76,20 +79,64 @@ const Title = styled.h2`
   margin: 0;
 `
 
+enum ErrorMsg {
+  NotSupport = '当前环境不支持连接以太坊',
+  Imtoken = '用户拒绝授权，请重新打开页面进行授权',
+}
+
 export const Login: React.FC = () => {
-  const { login } = useWalletModel()
-  const history = useHistory()
-  const [isLogining, setIsLoging] = useState(false)
-  const loginBtnOnClick = useCallback(async () => {
-    setIsLoging(true)
-    try {
-      await login()
-      setIsLoging(false)
-      history.push(RoutePath.NFTs)
-    } catch (error) {
-      setIsLoging(false)
+  const { login, isLogined } = useWalletModel()
+  const [isUnipassLogining, setIsUnipassLoging] = useState(false)
+  const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
+  const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(ErrorMsg.NotSupport)
+  const setLoading = (loading: boolean, walletType: WalletType): void => {
+    switch (walletType) {
+      case WalletType.Metamask:
+        setIsMetamaskLoging(loading)
+        break
+      case WalletType.Unipass:
+        setIsUnipassLoging(loading)
+        break
+      case WalletType.WalletConnect:
+        setIsWalletConnectLoging(loading)
+        break
+      default:
+        setIsUnipassLoging(loading)
+        break
     }
-  }, [login, history])
+  }
+  const loginBtnOnClick = useCallback(
+    async (walletType = WalletType.Unipass) => {
+      setLoading(true, walletType)
+      try {
+        if (walletType === WalletType.Metamask) {
+          const provider = await detectEthereumProvider()
+          if (!provider) {
+            setErrorMsg(ErrorMsg.NotSupport)
+            setIsErrorDialogOpen(true)
+            setLoading(false, walletType)
+            return
+          }
+        }
+        await login(walletType)
+        setLoading(false, walletType)
+      } catch (error) {
+        setLoading(false, walletType)
+        if (IS_IMTOKEN && walletType === WalletType.Metamask) {
+          setErrorMsg(ErrorMsg.Imtoken)
+          setIsErrorDialogOpen(true)
+          setLoading(false, walletType)
+        }
+      }
+    },
+    [login]
+  )
+
+  if (isLogined) {
+    return <Redirect to={RoutePath.NFTs} />
+  }
 
   return (
     <Container>
@@ -100,19 +147,51 @@ export const Login: React.FC = () => {
       <div className="logo">
         <LazyLoadImage src={Logo as any} width={340} height={415} />
       </div>
+      <ActionDialog
+        icon={<FailSvg />}
+        content={errorMsg}
+        open={isErrorDialogOpen}
+        onConfrim={() => setIsErrorDialogOpen(false)}
+        onBackdropClick={() => setIsErrorDialogOpen(false)}
+      />
       <BtnGroup
         orientation="vertical"
         color="primary"
         aria-label="vertical outlined primary button group"
       >
-        <Button disabled={isLogining} onClick={loginBtnOnClick}>
+        <Button
+          disabled={
+            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+          }
+          onClick={loginBtnOnClick}
+        >
           连接 Unipass（推荐）
-          {isLogining ? (
+          {isUnipassLogining ? (
             <CircularProgress className="loading" size="1em" />
           ) : null}
         </Button>
-        <Button disabled>连接 Metamask（筹备中...）</Button>
-        <Button disabled>连接 Wallet Connect（筹备中...）</Button>
+        <Button
+          disabled={
+            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+          }
+          onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+        >
+          连接以太坊环境&nbsp;
+          {isMetamaskLoging ? (
+            <CircularProgress className="loading" size="1em" />
+          ) : null}
+        </Button>
+        {/* <Button
+          disabled={
+            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+          }
+          onClick={loginBtnOnClick.bind(null, WalletType.WalletConnect)}
+        >
+          连接 Wallet Connect&nbsp;
+          {isWalletConnectLoging ? (
+            <CircularProgress className="loading" size="1em" />
+          ) : null}
+        </Button> */}
       </BtnGroup>
     </Container>
   )

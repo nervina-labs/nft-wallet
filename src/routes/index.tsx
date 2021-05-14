@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   BrowserRouter,
   Redirect,
   Route,
   RouteProps,
   Switch,
+  useHistory,
 } from 'react-router-dom'
-import { useWalletModel } from '../hooks/useWallet'
+import { useWalletModel, WalletType } from '../hooks/useWallet'
 import { Account } from '../views/Account'
 import { Login } from '../views/Login'
 import { NFT } from '../views/NFT'
@@ -24,6 +25,26 @@ export enum RoutePath {
   Transfer = '/transfer/:id',
   Info = '/account/info',
   Transactions = '/account/tx',
+}
+
+const WalletChange: React.FC = ({ children }) => {
+  const { address, prevAddress, walletType } = useWalletModel()
+  const history = useHistory()
+
+  useEffect(() => {
+    if (
+      prevAddress &&
+      address &&
+      prevAddress !== address &&
+      walletType &&
+      walletType !== WalletType.Unipass
+    ) {
+      history.push(RoutePath.NFTs)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prevAddress, address, walletType])
+
+  return <>{children}</>
 }
 
 const routes: Array<RouteProps & { key: string }> = [
@@ -60,20 +81,32 @@ const routes: Array<RouteProps & { key: string }> = [
 ]
 
 export const Routers: React.FC = () => {
-  const { isLogined } = useWalletModel()
+  const { isLogined, walletType, login } = useWalletModel()
+
+  useEffect(() => {
+    if (isLogined && walletType && walletType !== WalletType.Unipass) {
+      login(walletType).catch((e) => {
+        console.log('login-error', e)
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <BrowserRouter>
-      <Switch>
-        {routes.map((route) => (
-          <Route {...route} key={route.key} path={route.path} />
-        ))}
-        <Redirect
-          exact
-          from={RoutePath.Launch}
-          to={isLogined ? RoutePath.NFTs : RoutePath.Login}
-        />
-        <Route component={NotFound} path="*" />
-      </Switch>
+      <WalletChange>
+        <Switch>
+          {routes.map((route) => (
+            <Route {...route} key={route.key} path={route.path} />
+          ))}
+          <Redirect
+            exact
+            from={RoutePath.Launch}
+            to={isLogined ? RoutePath.NFTs : RoutePath.Login}
+          />
+          <Route component={NotFound} path="*" />
+        </Switch>
+      </WalletChange>
     </BrowserRouter>
   )
 }
