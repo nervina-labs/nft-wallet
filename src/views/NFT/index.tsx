@@ -40,7 +40,6 @@ const Container = styled(MainContainer)`
         : 'linear-gradient(107.86deg, #e1e1e1 7.34%, #d3d3d3 92.99%)'
     }`};
   .figure {
-    background: transparent;
     flex: 1;
     display: flex;
     justify-content: center;
@@ -245,18 +244,22 @@ export const NFT: React.FC = () => {
         right={<ShareSvg onClick={openDialog} />}
         ref={appRef}
       />
-      {!isFallBackImgLoaded ? (
+      {!isFallBackImgLoaded && !IS_IPHONE ? (
         <Background
           url={detail?.bg_image_url}
-          style={{ minHeight: `${window.innerHeight - 44 - 300}px` }}
+          style={{ height: `${window.innerHeight - 44 - 300}px` }}
         />
       ) : null}
       <div
         className="figure"
         style={{
-          minHeight: `${window.innerHeight - 44 - 300}px`,
+          height: `${window.innerHeight - 44 - 300}px`,
           background: `${
-            isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
+            isFallBackImgLoaded
+              ? 'rgb(178, 217, 229)'
+              : IS_IPHONE
+              ? 'radial-gradient(rgb(100, 75, 50),#393d41)'
+              : 'transparent'
           }`,
         }}
       >
