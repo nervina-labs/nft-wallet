@@ -8,14 +8,14 @@ export const NODE_URL =
 export const INDEXER_URL =
   process.env.REACT_APP_INDEXER_URL ?? 'https://testnet.ckb.dev/indexer'
 export const UNIPASS_URL =
-  process.env.REACT_APP_UNIPASS_URL ?? 'https://unipass.me'
+  process.env.REACT_APP_UNIPASS_URL ?? 'https://t.unipass.me'
 export const NFT_EXPLORER_URL =
   process.env.REACT_APP_NFT_EXPLORER_URL ??
   'https://ckb-nft-explorer.staging.nervina.cn'
 export const TEST_NET_URL =
   process.env.REACT_APP_TEST_NET_URL ?? 'https://wallet.staging.nervina.cn'
 export const MAIN_NET_URL =
-  process.env.REACT_APP_MAIN_NET_URL ?? 'https://wallet.nervina.cn'
+  process.env.REACT_APP_MAIN_NET_URL ?? 'https://wallet.jinse.cc'
 export const CHAIN_ID: ChainType =
   (process.env.REACT_APP_CHAIN_TYPE as ChainType) ?? 'testnet'
 export const IS_MAINNET: boolean = CHAIN_ID !== 'testnet'
