@@ -17,7 +17,18 @@ import { IS_IPHONE, NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
-import { nftDetail } from '../../mock'
+
+const Background = styled.div`
+  position: fixed;
+  top: 44px;
+  background-image: url(${(props: { url?: string }) => props.url});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(50px);
+  width: 100%;
+  max-width: 500px;
+`
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -29,11 +40,7 @@ const Container = styled(MainContainer)`
         : 'linear-gradient(107.86deg, #e1e1e1 7.34%, #d3d3d3 92.99%)'
     }`};
   .figure {
-    background: ${(props: { bgColor?: string }) =>
-      `${
-        props.bgColor ??
-        'linear-gradient(107.86deg, #e1e1e1 7.34%, #d3d3d3 92.99%)'
-      }`};
+    background: transparent;
     flex: 1;
     display: flex;
     justify-content: center;
@@ -179,7 +186,7 @@ export const NFT: React.FC = () => {
     },
     { enabled: id != null }
   )
-  const detail = data ?? nftDetail
+  const detail = data
 
   const tranfer = useCallback(() => {
     history.push(`/transfer/${id}`, {
@@ -238,9 +245,20 @@ export const NFT: React.FC = () => {
         right={<ShareSvg onClick={openDialog} />}
         ref={appRef}
       />
+      {!isFallBackImgLoaded ? (
+        <Background
+          url={detail?.bg_image_url}
+          style={{ minHeight: `${window.innerHeight - 44 - 300}px` }}
+        />
+      ) : null}
       <div
         className="figure"
-        style={{ minHeight: `${window.innerHeight - 44 - 300}px` }}
+        style={{
+          minHeight: `${window.innerHeight - 44 - 300}px`,
+          background: `${
+            isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
+          }`,
+        }}
       >
         <ParallaxTilt
           src={detail?.bg_image_url}
