@@ -11,6 +11,7 @@ import FallbackImg from '../../assets/img/card-fallback.png'
 export interface CardProps {
   token: NFTToken
   address: string
+  className?: string
 }
 
 interface LabelProps {
@@ -104,6 +105,9 @@ const Container = styled.div`
   background: #fff;
   border-radius: 10px;
   position: relative;
+  &.first {
+    margin-top: 20px;
+  }
   /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); */
   .media {
     width: 100px;
@@ -194,12 +198,15 @@ const Container = styled.div`
   }
 `
 
-export const Card: React.FC<CardProps> = ({ token, address }) => {
+export const Card: React.FC<CardProps> = ({ token, address, className }) => {
   const history = useHistory()
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(false)
   const [t] = useTranslation('translations')
   return (
-    <Container onClick={() => history.push(`/nft/${token.token_uuid}`)}>
+    <Container
+      onClick={() => history.push(`/nft/${token.token_uuid}`)}
+      className={className}
+    >
       <div className="media">
         <LazyLoadImage
           src={token.class_bg_image_url}
