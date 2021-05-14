@@ -5,6 +5,7 @@ import {
   verifyEthAddress,
   Web3ModalProvider as OriginPWWeb3ModalProvider,
 } from '@lay2/pw-core'
+import { IS_MAINNET } from '../constants'
 
 const noop: OnAddressChangedCallback = () => {}
 
@@ -46,5 +47,48 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
     }
 
     return this
+  }
+
+  async sign(message: string): Promise<string> {
+    if (!IS_MAINNET) {
+      return await super.sign(message)
+    }
+    return await new Promise((resolve, reject) => {
+      const from = this.address.addressString
+
+      const handleResult = (result: string): string => {
+        let v = Number.parseInt(result.slice(-2), 16)
+        if (v >= 27) v -= 27
+        result = result.slice(0, -2) + v.toString(16).padStart(2, '0')
+        return result
+      }
+
+      if (typeof window.ethereum !== 'undefined') {
+        window.ethereum
+          .request({ method: 'personal_sign', params: [from, message] })
+          .then((result: string) => {
+            resolve(handleResult(result))
+          })
+      } else if (window.web3) {
+        window.web3.currentProvider.sendAsync(
+          { method: 'personal_sign', params: [message, from], from },
+          (err: any, result: any) => {
+            if (err) {
+              reject(err)
+            }
+            if (result.error) {
+              reject(result.error)
+            }
+            resolve(handleResult(result.result))
+          }
+        )
+      } else {
+        reject(
+          new Error(
+            'window.ethereum/window.web3 is undefined, Ethereum environment is required.'
+          )
+        )
+      }
+    })
   }
 }
