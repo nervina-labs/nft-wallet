@@ -10,7 +10,7 @@
       },
       "creator": "Creator",
       "chain": {
-        "mainnet": "Mainet",
+        "mainnet": "Mainnet",
         "testnet": "Testnet"
       },
       "share": {
