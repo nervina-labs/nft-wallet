@@ -13,13 +13,13 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
-import { IS_IPHONE, NFT_EXPLORER_URL } from '../../constants'
+import { NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
 
 const Background = styled.div`
-  position: fixed;
+  position: absolute;
   top: 44px;
   background-image: url(${(props: { url?: string }) => props.url});
   background-position: center;
@@ -230,21 +230,14 @@ export const NFT: React.FC = () => {
   }
 
   return (
-    <Container
-      bgColor={bgColor}
-      style={
-        IS_IPHONE
-          ? { position: 'fixed', width: '100%', maxWidth: '100%' }
-          : undefined
-      }
-    >
+    <Container bgColor={bgColor}>
       <Appbar
         title={t('nft.title')}
         left={<BackSvg onClick={() => history.goBack()} />}
         right={<ShareSvg onClick={openDialog} />}
         ref={appRef}
       />
-      {!isFallBackImgLoaded && !IS_IPHONE ? (
+      {!isFallBackImgLoaded ? (
         <Background
           url={detail?.bg_image_url}
           style={{ height: `${window.innerHeight - 44 - 300}px` }}
@@ -255,11 +248,7 @@ export const NFT: React.FC = () => {
         style={{
           height: `${window.innerHeight - 44 - 300}px`,
           background: `${
-            isFallBackImgLoaded
-              ? 'rgb(178, 217, 229)'
-              : IS_IPHONE
-              ? 'radial-gradient(rgb(100, 75, 50),#393d41)'
-              : 'transparent'
+            isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
           }`,
         }}
       >
