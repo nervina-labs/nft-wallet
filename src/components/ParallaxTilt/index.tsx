@@ -4,7 +4,6 @@ import Tilt from 'react-parallax-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import Vibrant from 'node-vibrant'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -58,16 +57,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         onLoaded={async (img) => {
           if (img === null || !src) {
             return
-          }
-          try {
-            const palette = await Vibrant.from(src).getPalette()
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            const v = palette.Vibrant!
-            // const [r, g, b] = v.getRgb()
-            // setBoxShadow(`rgb(${r} ${g} ${b} / 40%) -5px 5px`)
-            onColorDetected(`radial-gradient(${v.hex}, #393d41)`)
-          } catch (error) {
-            console.log(error)
           }
           setIsTileEnable(true)
         }}
