@@ -112,13 +112,13 @@ function useWallet(): UseWallet {
 
   const loginWalletConnect = useCallback(async () => {
     const Web3Modal = (await import('web3modal')).default
-    const walletconnectProvider = (await import('@walletconnect/web3-provider'))
-      .default
+    // const walletconnectProvider = (await import('@walletconnect/web3-provider'))
+    // .default
     const web3Modal = new Web3Modal({
       cacheProvider: false,
       providerOptions: {
         walletconnect: {
-          package: walletconnectProvider,
+          package: Object.create(null),
           options: { infuraId: INFURA_ID },
         },
       },
