@@ -28,4 +28,4 @@ export const IS_WEXIN = navigator.userAgent
   .includes('micromessenger')
 export const IS_IMTOKEN = navigator.userAgent.toLowerCase().includes('imtoken')
 export const IS_ANDROID = navigator.userAgent.toLowerCase().includes('android')
-export const IS_IPHONE = navigator.userAgent.toLowerCase().includes('IS_IPHONE')
+export const IS_IPHONE = navigator.userAgent.toLowerCase().includes('iphone')
