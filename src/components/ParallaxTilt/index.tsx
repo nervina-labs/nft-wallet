@@ -31,7 +31,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       tiltReverse
       reset={false}
       tiltEnable={isTiltEnable}
-      tiltAngleYInitial={-10}
+      tiltAngleYInitial={10}
       style={{ margin: 'auto' }}
       transitionSpeed={1000}
       onEnter={() => {
