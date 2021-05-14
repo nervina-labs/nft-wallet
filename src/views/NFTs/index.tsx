@@ -6,6 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { Appbar } from '../../components/Appbar'
 import { Card } from '../../components/Card'
 import {
+  IS_IPHONE,
   IS_WEXIN,
   MAIN_NET_URL,
   NFT_EXPLORER_URL,
@@ -176,7 +177,14 @@ export const NFTs: React.FC = () => {
         <p>{t('nfts.hi')}</p>
         <h3>{t('nfts.welcome')}</h3>
       </div>
-      <section className="list">
+      <section
+        className="list"
+        style={
+          IS_IPHONE
+            ? { position: 'fixed', width: '100%', maxWidth: '100%' }
+            : undefined
+        }
+      >
         {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
           <Loading />
