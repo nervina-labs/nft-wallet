@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react'
 import Tilt from 'react-parallax-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
+import { IS_IPHONE } from '../../constants'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
 export interface ParallaxTiltProps {
@@ -59,6 +60,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
             return
           }
           setIsTileEnable(true)
+          if (IS_IPHONE) {
+            onColorDetected('radial-gradient(rgb(100, 75, 50), #393d41)')
+          }
         }}
         backup={
           <LazyLoadImage
