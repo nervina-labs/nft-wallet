@@ -121,6 +121,7 @@ const Container = styled.div`
     position: relative;
     top: -12px;
     right: -12px;
+    background-color: white;
     img {
       box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
       border-radius: 10px;
