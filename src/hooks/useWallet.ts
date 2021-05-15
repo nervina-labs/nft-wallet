@@ -23,7 +23,7 @@ export interface UseWallet {
   walletType?: WalletType
 }
 
-export const UNIPASS_ACCOUNT_KEY = 'unipass_account'
+export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
 
 export interface UnipassAccount {
   address: string
