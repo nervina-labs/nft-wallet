@@ -7,6 +7,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@supports (-webkit-touch-callout: none) {
+  html {
+    height  : 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  body {
+    height  : 100%;
+    overflow: auto;
+    position: relative;
+  }
+}
+
 html,
 body {
     height: 100%;
