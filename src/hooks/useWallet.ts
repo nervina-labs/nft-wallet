@@ -11,6 +11,7 @@ import { useLocalStorage } from './useLocalStorage'
 import { usePrevious } from './usePrevious'
 
 import { Web3Provider } from '../pw/Web3Provider'
+import dayjs from 'dayjs'
 export interface UseWallet {
   api: NFTWalletAPI
   login: (walletType?: WalletType) => Promise<Provider>
@@ -29,6 +30,7 @@ export interface UnipassAccount {
   address: string
   email?: string
   walletType: WalletType
+  expireTime?: string
 }
 
 export enum WalletType {
@@ -40,10 +42,24 @@ export enum WalletType {
 function useWallet(): UseWallet {
   const [provider, setProvider] = useState<Provider>()
 
-  const [
-    unipassAccount,
-    setUnipassAccount,
-  ] = useLocalStorage<UnipassAccount | null>(UNIPASS_ACCOUNT_KEY, null)
+  const [unipassAccount, setAccount] = useLocalStorage<UnipassAccount | null>(
+    UNIPASS_ACCOUNT_KEY,
+    null
+  )
+
+  const setUnipassAccount = useCallback(
+    (account: UnipassAccount | null) => {
+      setAccount(
+        account === null
+          ? null
+          : {
+              ...account,
+              expireTime: dayjs().add(1, 'day').toISOString(),
+            }
+      )
+    },
+    [setAccount]
+  )
 
   const address = useMemo(() => {
     return unipassAccount?.address ?? ''
@@ -206,9 +222,18 @@ function useWallet(): UseWallet {
     return new ServerWalletAPI(address)
   }, [address])
 
+  const expireTime = useMemo(() => {
+    return unipassAccount?.expireTime ?? dayjs('1970').toISOString()
+  }, [unipassAccount?.expireTime])
+
   const isLogined = useMemo(() => {
+    const now = dayjs()
+    const isExpired = now.isAfter(dayjs(expireTime))
+    if (isExpired) {
+      return false
+    }
     return address !== ''
-  }, [address])
+  }, [address, expireTime])
 
   const prevAddress = usePrevious(address)
 

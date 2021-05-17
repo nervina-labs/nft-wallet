@@ -53,31 +53,31 @@ const routes: Array<RouteProps & { key: string }> = [
   {
     component: NFTs,
     exact: true,
-    key: NFTs.name,
+    key: 'NFTs',
     path: RoutePath.NFTs,
   },
   {
     component: Account,
     exact: false,
-    key: Account.name,
+    key: 'Account',
     path: RoutePath.Account,
   },
   {
     component: NFT,
     exact: true,
-    key: NFT.name,
+    key: 'NFT',
     path: RoutePath.NFT,
   },
   {
     component: Transfer,
     exact: true,
-    key: Transfer.name,
+    key: 'Transfer',
     path: RoutePath.Transfer,
   },
   {
     component: Login,
     exact: true,
-    key: Login.name,
+    key: 'Login',
     path: RoutePath.Login,
   },
 ]
