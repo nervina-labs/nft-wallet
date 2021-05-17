@@ -20,22 +20,26 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   onFallBackImageLoaded,
 }) => {
   const [isTiltEnable, setIsTileEnable] = useState(false)
+  const [enableGyroscope, setEnableGyroscope] = useState(true)
   const timer = useRef<NodeJS.Timeout>()
   const tilt = useRef<Tilt>(null)
   // const [boxShadow, setBoxShadow] = useState('rgb(240 46 170 / 40%) -10px 10px')
   return (
     <Tilt
       ref={tilt}
-      tiltReverse
+      tiltReverse={!enableGyroscope}
       reset={false}
       tiltEnable={isTiltEnable}
       tiltAngleYInitial={15}
       style={{ margin: 'auto' }}
       transitionSpeed={1000}
+      gyroscope={enableGyroscope}
       onEnter={() => {
+        setEnableGyroscope(false)
         timer.current && clearInterval()
       }}
       onLeave={() => {
+        setEnableGyroscope(true)
         timer.current && clearTimeout(timer.current)
         timer.current = setTimeout(() => {
           const autoResetEvent = new CustomEvent('autoreset')

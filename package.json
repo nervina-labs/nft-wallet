@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "dev": "craco start",
+    "dev": "HTTPS=true craco start",
     "build": "craco build",
     "start": "serve -s build",
     "lint": "eslint src"
