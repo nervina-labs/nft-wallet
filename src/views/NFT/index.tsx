@@ -27,7 +27,7 @@ const Background = styled.div`
   background-size: cover;
   filter: blur(50px);
   width: 100%;
-  max-width: 500px;
+  max-width: 499px;
 `
 
 const Container = styled(MainContainer)`
@@ -80,6 +80,7 @@ const Container = styled(MainContainer)`
       color: #484848;
       margin-top: 18px;
       white-space: pre-line;
+      word-break: break-all;
       padding-bottom: 80px;
     }
     .transfer {
@@ -240,7 +241,7 @@ export const NFT: React.FC = () => {
       {!isFallBackImgLoaded ? (
         <Background
           url={detail?.bg_image_url}
-          style={{ height: `${window.innerHeight - 44 - 300}px` }}
+          style={{ height: `${window.innerHeight - 44 - 280}px` }}
         />
       ) : null}
       <div
