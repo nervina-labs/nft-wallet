@@ -8,9 +8,8 @@ import {
   UnsignedTransaction,
 } from '../models'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { Transaction as PwTransaction } from '@lay2/pw-core'
+import { Transaction as PwTransaction, transformers } from '@lay2/pw-core'
 import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
-import { transformers } from 'ckb-js-toolkit'
 
 export class ServerWalletAPI implements NFTWalletAPI {
   private readonly address: string

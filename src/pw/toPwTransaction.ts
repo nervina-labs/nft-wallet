@@ -11,8 +11,8 @@ import {
   AmountUnit,
   Builder,
   CHAIN_SPECS,
+  RPC as ToolKitRpc,
 } from '@lay2/pw-core'
-import { RPC as ToolKitRpc } from 'ckb-js-toolkit'
 import RPC from '@nervosnetwork/ckb-sdk-rpc'
 import { IS_MAINNET, NODE_URL } from '../constants'
 
