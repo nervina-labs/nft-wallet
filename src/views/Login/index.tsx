@@ -4,8 +4,7 @@ import Logo from '../../assets/img/logo.png'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { IS_IMTOKEN, MAIN_NET_URL, TEST_NET_URL } from '../../constants'
-import { NetChange } from '../../components/NetChange'
+import { IS_IMTOKEN } from '../../constants'
 import Button from '@material-ui/core/Button'
 import { CircularProgress } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
@@ -200,7 +199,6 @@ export const Login: React.FC = () => {
     <Container ref={containerRef}>
       <div className="header">
         <Title style={{ marginRight: '8px' }}>{t('login.title')}</Title>
-        <NetChange mainnetURL={MAIN_NET_URL} testnetURL={TEST_NET_URL} />
       </div>
       <div className="logo">
         <LazyLoadImage src={Logo} width={width} height={width * 1.091} />

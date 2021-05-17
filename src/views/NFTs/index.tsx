@@ -8,10 +8,8 @@ import { Card } from '../../components/Card'
 import {
   IS_IPHONE,
   IS_WEXIN,
-  MAIN_NET_URL,
   NFT_EXPLORER_URL,
   PER_ITEM_LIMIT,
-  TEST_NET_URL,
 } from '../../constants'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
@@ -21,7 +19,6 @@ import { Redirect, useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import AccountPng from '../../assets/img/account.png'
-import { NetChange } from '../../components/NetChange'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import Bg from '../../assets/img/nft-bg.png'
 import { Share } from '../../components/Share'
@@ -156,11 +153,6 @@ export const NFTs: React.FC = () => {
         title={
           <div className="center">
             <span>{t('nfts.title')}</span>
-            <NetChange
-              mainnetURL={MAIN_NET_URL}
-              testnetURL={TEST_NET_URL}
-              transparent
-            />
           </div>
         }
         left={
