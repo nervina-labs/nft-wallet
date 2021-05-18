@@ -238,9 +238,8 @@ export const Transfer: React.FC = () => {
     return address !== '' && address === ckbAddress
   }, [address, ckbAddress, isEthAddress])
 
-  const textareaOnChange = useCallback(
-    async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const val = e.target.value
+  const inputOnChange = useCallback(
+    (val: string) => {
       let isValidAddress = verifyCkbLongAddress(val)
       let isSameAddress = val !== '' && address === val
       const isEthAddress = verifyEthAddress(val)
@@ -264,6 +263,14 @@ export const Transfer: React.FC = () => {
       setCkbAddress(val)
     },
     [address]
+  )
+
+  const textareaOnChange = useCallback(
+    async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const val = e.target.value
+      inputOnChange(val)
+    },
+    [inputOnChange]
   )
 
   const stopTranfer = (isSuccess: boolean): void => {
@@ -434,9 +441,8 @@ export const Transfer: React.FC = () => {
         width={containerWidth}
         t={t}
         onScanCkbAddress={(addr) => {
-          setCkbAddress(addr)
+          inputOnChange(addr)
           stopScan()
-          setIsAddressValid(address !== addr)
         }}
         onDecodeError={(e) => {
           const msg = e.toString()
