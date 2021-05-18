@@ -152,7 +152,7 @@ export const NFTs: React.FC = () => {
   return (
     <Container>
       <Appbar
-        bgColor="transparent"
+        transparent
         title={
           <div className="center">
             <span>{t('nfts.title')}</span>
