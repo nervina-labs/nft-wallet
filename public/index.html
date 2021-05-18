@@ -28,9 +28,19 @@
     <title>秘宝账户</title>
   </head>
   <script>
-    var lang = localStorage.getItem('i18nextLng')
+    var lang = localStorage.getItem('i18nextLng');
     if (lang === 'en') {
-      document.title = 'NFT Account'
+      document.title = 'NFT Account';
+    }
+    var _hmt = _hmt || [];
+    var isMainnet = '%REACT_APP_CHAIN_TYPE%' !== 'testnet';
+    if (isMainnet) {
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?2f171cc3124e72e954fc28fb4fd5eda5";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
     }
   </script>
   <body>
