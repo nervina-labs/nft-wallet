@@ -33,7 +33,7 @@
       document.title = 'NFT Account';
     }
     var _hmt = _hmt || [];
-    var isMainnet = '%REACT_APP_CHAIN_TYPE%' !== 'testnet';
+    var isMainnet = '%REACT_APP_CHAIN_TYPE%' === 'mainnet';
     if (isMainnet) {
       (function() {
         var hm = document.createElement("script");
