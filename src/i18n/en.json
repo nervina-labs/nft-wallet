@@ -94,7 +94,7 @@
     "transactions": {
       "no-data": "No record...",
       "pull-down-refresh": "Refresh",
-      "receive-from": "Receive from ",
+      "receive-from": "Receive from",
       "send-to": "Send to",
       "status": {
         "waiting": "Waiting",

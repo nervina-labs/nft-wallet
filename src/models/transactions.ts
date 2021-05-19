@@ -22,6 +22,8 @@ export interface Tx {
   uuid: string
   issuer_avatar_url: string
   issuer_uuid: string
+  is_issuer_banned: boolean
+  is_class_banned: boolean
 }
 
 export interface Transaction {

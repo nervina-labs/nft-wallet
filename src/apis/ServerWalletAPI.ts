@@ -43,6 +43,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     return await this.axios.get(`/holder_transactions/${this.address}`, {
       params: {
         page,
+        source: 'wallet',
         limit: PER_ITEM_LIMIT,
       },
     })
