@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import Tilt from 'react-parallax-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
@@ -20,14 +20,24 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   onFallBackImageLoaded,
 }) => {
   const [isTiltEnable, setIsTileEnable] = useState(false)
-  const [enableGyroscope, setEnableGyroscope] = useState(true)
+  const isTouchDevice = useMemo(() => {
+    return 'ontouchstart' in document.documentElement
+  }, [])
+  const [enableGyroscope, setEnableGyroscope] = useState(isTouchDevice)
+  const shouldReverseTilt = useMemo(() => {
+    if (!isTouchDevice) {
+      return true
+    }
+
+    return !enableGyroscope
+  }, [isTouchDevice, enableGyroscope])
   const timer = useRef<NodeJS.Timeout>()
   const tilt = useRef<Tilt>(null)
   // const [boxShadow, setBoxShadow] = useState('rgb(240 46 170 / 40%) -10px 10px')
   return (
     <Tilt
       ref={tilt}
-      tiltReverse={!enableGyroscope}
+      tiltReverse={shouldReverseTilt}
       reset={false}
       tiltEnable={isTiltEnable}
       tiltAngleYInitial={15}
@@ -54,10 +64,11 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         height={height}
         imageStyle={{
           borderRadius: '10px',
+          // 44 = header, 300 = nft detail, 30 * 2 = margin
           maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
         }}
         setImageHeight={false}
-        onLoaded={async (img) => {
+        onLoaded={(img) => {
           if (img === null || !src) {
             return
           }
