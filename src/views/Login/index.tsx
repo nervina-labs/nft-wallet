@@ -102,6 +102,22 @@ const Container = styled(MainContainer)`
       color: #2b454e;
     }
   }
+
+  .beian {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+    color: #000000;
+    opacity: 0.4;
+    a {
+      text-decoration: none;
+      font-size: 10px;
+      margin-left: 4px;
+      &:visited {
+        color: #000000;
+      }
+    }
+  }
 `
 
 const Title = styled.h2`
@@ -252,6 +268,15 @@ export const Login: React.FC = () => {
         >
           English
         </span>
+      </div>
+      <div className="beian">
+        <a
+          href="https://beian.miit.gov.cn/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('common.beian')}
+        </a>
       </div>
       {/* <Button
           disabled={
