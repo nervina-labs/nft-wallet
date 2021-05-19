@@ -2,6 +2,10 @@
   "name": "nft-wallet",
   "version": "0.0.1",
   "license": "MIT",
+  "engines": {
+    "node": "14",
+    "yarn": "1.22.10"
+  },
   "scripts": {
     "dev": "craco start",
     "build": "craco build",
