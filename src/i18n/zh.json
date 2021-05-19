@@ -1,6 +1,7 @@
 {
   "translations": {
     "common": {
+      "beian": "浙ICP备2021006943号-3",
       "actions": {
         "comfirm": "确认",
         "loading": "加载中",
