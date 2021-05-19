@@ -21,6 +21,10 @@
         "limit": "Limit",
         "unlimit": "Unlimit"
       },
+      "baned": {
+        "nft": "This NFT is not be displayed",
+        "issuer": "This creator is not be displayed"
+      },
       "colon": ":",
       "title": "NFT Account",
       "description": "View and manage your NFT anytime, anywhere",

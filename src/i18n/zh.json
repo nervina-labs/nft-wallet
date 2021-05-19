@@ -21,6 +21,10 @@
         "limit": "限量",
         "unlimit": "不限量"
       },
+      "baned": {
+        "nft": "该秘宝暂不予显示",
+        "issuer": "该创作者暂不予显示"
+      },
       "colon": "：",
       "title": "秘宝账户",
       "description": "随时随地查看并管理你的秘宝",

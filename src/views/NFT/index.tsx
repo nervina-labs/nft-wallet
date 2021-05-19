@@ -226,7 +226,12 @@ export const NFT: React.FC = () => {
     return <Redirect to={RoutePath.Login} />
   }
 
-  if (failureCount >= 3) {
+  if (
+    failureCount >= 3 ||
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    detail?.is_class_banned ||
+    detail?.is_issuer_banned
+  ) {
     return <Redirect to={RoutePath.NotFound} />
   }
 

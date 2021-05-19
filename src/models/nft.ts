@@ -24,6 +24,8 @@ export interface NFTToken {
   tx_state: TransactionStatus
   from_address?: string
   to_address?: string
+  is_issuer_banned: boolean
+  is_class_banned: boolean
 }
 
 export interface NFTDetail {
@@ -41,4 +43,6 @@ export interface NFTDetail {
   tx_state: TransactionStatus
   from_address?: string
   to_address?: string
+  is_issuer_banned: boolean
+  is_class_banned: boolean
 }
