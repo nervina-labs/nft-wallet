@@ -22,8 +22,8 @@
         "unlimit": "Unlimit"
       },
       "baned": {
-        "nft": "This NFT is not be displayed",
-        "issuer": "This creator is not be displayed"
+        "nft": "Invalid NFT",
+        "issuer": "Invalid Creator"
       },
       "colon": ":",
       "title": "NFT Account",

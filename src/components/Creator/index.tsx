@@ -70,13 +70,17 @@ export const Creator: React.FC<CreatorProps> = ({
   const creator = (
     <>
       <span className="avatar">
-        <LazyLoadImage
-          src={url}
-          width={24}
-          height={24}
-          variant="circle"
-          backup={<PeopleSvg />}
-        />
+        {baned ? (
+          <PeopleSvg />
+        ) : (
+          <LazyLoadImage
+            src={url}
+            width={24}
+            height={24}
+            variant="circle"
+            backup={<PeopleSvg />}
+          />
+        )}
       </span>
       <span className={`name ${baned ? 'error' : ''}`}>
         {baned ? t('common.baned.issuer') : name}
