@@ -11104,6 +11104,11 @@ react-app-polyfill@^2.0.0:
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
 
+react-better-tilt@1.5.12:
+  version "1.5.12"
+  resolved "https://registry.yarnpkg.com/react-better-tilt/-/react-better-tilt-1.5.12.tgz#574ccb7b7ac2c096e503dc5de4cd9d222f4f0f1c"
+  integrity sha512-uwVgVlJoQa+zkHlJ5gyozmIb+i+xCBUhQrTmsRxjhjmDKPOFo90nNsnDE1dakUqDfj/HSJ+Q8lRXPko5K477lg==
+
 react-dev-utils@^11.0.2:
   version "11.0.4"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-11.0.4.tgz#a7ccb60257a1ca2e0efe7a83e38e6700d17aa37a"
@@ -11182,11 +11187,6 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
-
-react-parallax-tilt@^1.5.11:
-  version "1.5.11"
-  resolved "https://registry.yarnpkg.com/react-parallax-tilt/-/react-parallax-tilt-1.5.11.tgz#04a212820b57a5f25715fc00d2eb81e2f524bae7"
-  integrity sha512-iy16dbuWWXsKAIwbRj44A7Gv+SxYzTEhdc301GIPLn1H2hCRNdAJ4jQudL8+lruSNsjwpakMCAE0afXn93g9yw==
 
 react-query@^3.13.4:
   version "3.13.4"
