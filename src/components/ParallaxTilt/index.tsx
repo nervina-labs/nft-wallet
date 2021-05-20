@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useMemo, useRef, useState } from 'react'
-import Tilt from 'react-parallax-tilt'
+import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
 
@@ -40,7 +40,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       tiltReverse={shouldReverseTilt}
       reset={false}
       tiltEnable={isTiltEnable}
-      tiltAngleYInitial={15}
+      tiltAngleYInitial={isTouchDevice ? 15 : undefined}
+      adjustGyroscope
       style={{ margin: 'auto' }}
       transitionSpeed={1000}
       gyroscope={enableGyroscope}
@@ -51,11 +52,13 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       onLeave={() => {
         setEnableGyroscope(true)
         timer.current && clearTimeout(timer.current)
-        timer.current = setTimeout(() => {
-          const autoResetEvent = new CustomEvent('autoreset')
-          // @ts-expect-error
-          tilt.current?.onMove(autoResetEvent)
-        }, 1500)
+        if (!isTouchDevice) {
+          timer.current = setTimeout(() => {
+            const autoResetEvent = new CustomEvent('autoreset')
+            // @ts-expect-error
+            tilt.current?.onMove(autoResetEvent)
+          }, 1500)
+        }
       }}
     >
       <LazyLoadImage
