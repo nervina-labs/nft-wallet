@@ -40,7 +40,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       tiltReverse={shouldReverseTilt}
       reset={false}
       tiltEnable={isTiltEnable}
-      tiltAngleYInitial={isTouchDevice ? 15 : undefined}
+      tiltAngleYInitial={!isTouchDevice ? 15 : undefined}
       adjustGyroscope
       style={{ margin: 'auto' }}
       transitionSpeed={1000}
