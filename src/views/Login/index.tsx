@@ -112,6 +112,7 @@ const Container = styled(MainContainer)`
     a {
       text-decoration: none;
       font-size: 10px;
+      color: #000000;
       &:visited {
         color: #000000;
       }
