@@ -355,12 +355,16 @@ export const Transfer: React.FC = () => {
   }, [hasPermission, hasVideoDevice, t])
 
   useEffect(() => {
-    navigator.mediaDevices
-      .enumerateDevices()
-      .then((devices) => {
-        setHasVideoDevice(devices.some((d) => d.kind === 'videoinput'))
-      })
-      .catch(Boolean)
+    try {
+      navigator.mediaDevices
+        .enumerateDevices()
+        .then((devices) => {
+          setHasVideoDevice(devices.some((d) => d.kind === 'videoinput'))
+        })
+        .catch(Boolean)
+    } catch (error) {
+      setHasVideoDevice(true)
+    }
   }, [])
 
   const { data: remoteNftDetail, failureCount } = useQuery(
