@@ -27,7 +27,7 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { useQuery } from 'react-query'
 import { MainContainer } from '../../styles'
-import { CONTAINER_MAX_WIDTH, IS_MAINNET } from '../../constants'
+import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
 import UnipassProvider from '../../pw/UnipassProvider'
 import { Address, AddressType } from '@lay2/pw-core'
 import { useTranslation } from 'react-i18next'
@@ -186,6 +186,7 @@ export enum FailedMessage {
   TranferFail = 'tranfer-fail',
   NoCamera = 'no-camera',
   ContractAddress = 'contract-address',
+  IOSWebkit = 'ios-webkit',
 }
 
 export const Transfer: React.FC = () => {
@@ -342,7 +343,9 @@ export const Transfer: React.FC = () => {
   const [hasVideoDevice, setHasVideoDevice] = useState(false)
   const startScan = useCallback(() => {
     if (!hasVideoDevice) {
-      setFailedMessage(FailedMessage.NoCamera)
+      setFailedMessage(
+        IS_IPHONE ? FailedMessage.IOSWebkit : FailedMessage.NoCamera
+      )
       setIsErrorDialogOpen(true)
       return
     }
@@ -363,7 +366,7 @@ export const Transfer: React.FC = () => {
         })
         .catch(Boolean)
     } catch (error) {
-      setHasVideoDevice(true)
+      setHasVideoDevice(false)
     }
   }, [])
 
