@@ -71,7 +71,8 @@
         "tranfer-fail": "Fail to send transaction, please check network conditions and resend",
         "no-camera": "No camera found",
         "contract-address": "Unable to transfer NFT to an Ethereum contract address",
-        "camera-auth": "No camera permission, please refresh the page to re-authorize"
+        "camera-auth": "No camera permission, please refresh the page to re-authorize",
+        "ios-webkit": "Please upgrade your operating system to iOS 14.3+, or use Safari to scan QR code"
       },
       "transfer": "Transfer",
       "address": "Receiver address",

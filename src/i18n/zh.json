@@ -71,7 +71,8 @@
         "tranfer-fail": "发送失败，请检查当前网络情况，重新发送",
         "no-camera": "没有找到摄像头",
         "contract-address": "无法转让到以太坊合约地址",
-        "camera-auth": "没有摄像头权限，请刷新页面重新授权"
+        "camera-auth": "没有摄像头权限，请刷新页面重新授权",
+        "ios-webkit": "请升级操作系统至 iOS 14.3+，或使用 Safari 浏览器进行扫码"
       },
       "transfer": "转让",
       "address": "接收方地址",
