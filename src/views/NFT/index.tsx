@@ -153,6 +153,7 @@ const Footer: React.FC<FooterProps> = ({ nft }) => {
       <Limited
         count={nft.total}
         bold={false}
+        sn={nft.n_token_id}
         fontSize={14}
         // color="rgba(63, 63, 63, 0.66) !important"
       />
@@ -226,7 +227,12 @@ export const NFT: React.FC = () => {
     return <Redirect to={RoutePath.Login} />
   }
 
-  if (failureCount >= 3) {
+  if (
+    failureCount >= 3 ||
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    detail?.is_class_banned ||
+    detail?.is_issuer_banned
+  ) {
     return <Redirect to={RoutePath.NotFound} />
   }
 

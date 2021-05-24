@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 // import { ReactComponent as StarSvg } from '../../assets/svg/star.svg'
@@ -26,6 +26,8 @@ export interface LimitedProps {
   fontSize?: number
   bold?: boolean
   color?: string
+  banned?: boolean
+  sn?: number
 }
 
 export const Limited: React.FC<LimitedProps> = ({
@@ -33,12 +35,26 @@ export const Limited: React.FC<LimitedProps> = ({
   fontSize,
   bold = false,
   color,
+  banned = false,
+  sn,
 }) => {
   const isUnlimited = count === '0'
   const { t } = useTranslation('translations')
+  const content = useMemo(() => {
+    if (banned) {
+      return ''
+    }
+    const no = sn != null ? `#${sn} / ` : ''
+    return (
+      no +
+      (isUnlimited
+        ? t('common.limit.unlimit')
+        : `${t('common.limit.limit')} ${count}`)
+    )
+  }, [t, isUnlimited, banned, count, sn])
   return (
     <Container fontSize={fontSize} color={color}>
-      {isUnlimited ? null : <img src={goldBox} />}
+      {isUnlimited || banned ? null : <img src={goldBox} />}
       <span
         className={`${isUnlimited ? 'unlimit' : ''}`}
         style={{
@@ -46,9 +62,7 @@ export const Limited: React.FC<LimitedProps> = ({
           fontWeight: bold ? 'bold' : 'normal',
         }}
       >
-        {isUnlimited
-          ? t('common.limit.unlimit')
-          : `${t('common.limit.limit')} ${count}`}
+        {content}
       </span>
     </Container>
   )

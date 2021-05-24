@@ -50,6 +50,9 @@ const ListItemContainer = styled.div`
       height: 16px;
     }
   }
+  .error {
+    color: #d03a3a;
+  }
   .content {
     height: 42px;
     display: flex;
@@ -83,13 +86,14 @@ const ListItemContainer = styled.div`
 const TIME_FORMAT = 'YYYY-MM-DD, HH:mm:ss'
 const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
   const { t } = useTranslation('translations')
+  const isBanned = tx.is_class_banned || tx.is_issuer_banned
   let icon =
     tx.tx_direction === TransactionDirection.Receive ? (
       <ReceiveSvg />
     ) : (
       <SendSvg />
     )
-  if (tx.tx_state !== TransactionStatus.Committed) {
+  if (tx.tx_state === TransactionStatus.Pending) {
     icon = <img src={pendingSrc} alt="pending" />
   }
   let time =
@@ -100,34 +104,44 @@ const ListItem: React.FC<{ tx: Tx }> = ({ tx }) => {
   if (tx.tx_state === TransactionStatus.Submitting) {
     time = t('transactions.status.comfirming')
   }
+
+  const creator = useMemo(() => {
+    if (tx.is_issuer_banned) {
+      return (
+        <>
+          {t('transactions.receive-from')}&nbsp;
+          <span className="error">{t('common.baned.issuer')}</span>
+        </>
+      )
+    }
+    return tx.tx_direction === TransactionDirection.Receive
+      ? `${t('transactions.receive-from')} ${
+          tx.issuer_uuid !== ''
+            ? tx.from_address
+            : truncateMiddle(tx.from_address, 8, 5)
+        }`
+      : `${t('transactions.send-to')} ${truncateMiddle(tx.to_address, 8, 5)}`
+  }, [tx, t])
+
+  const Link = isBanned ? 'div' : 'a'
   return (
     <ListItemContainer>
       <div className="icon">{icon}</div>
       <div className="content">
-        <span className="name">{tx.class_name}</span>
-        <span>
-          {tx.tx_direction === TransactionDirection.Receive
-            ? `${t('transactions.receive-from')} ${
-                tx.issuer_uuid !== ''
-                  ? tx.from_address
-                  : truncateMiddle(tx.from_address, 8, 5)
-              }`
-            : `${t('transactions.send-to')} ${truncateMiddle(
-                tx.to_address,
-                8,
-                5
-              )}`}
+        <span className={`name ${isBanned ? 'error' : ''}`}>
+          {isBanned ? t('common.baned.nft') : tx.class_name}
         </span>
+        <span>{creator}</span>
       </div>
       <div className="time">{time}</div>
-      <a
+      <Link
         className="link"
         target="_blank"
         rel="noopener noreferrer"
         href={`${NFT_EXPLORER_URL}/transaction/${tx.uuid}`}
       >
         <LinkSvg />
-      </a>
+      </Link>
     </ListItemContainer>
   )
 }

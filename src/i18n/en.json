@@ -19,8 +19,12 @@
         "close": "Close"
       },
       "limit": {
-        "limit": "Limit",
-        "unlimit": "Unlimit"
+        "limit": "Limited",
+        "unlimit": "Unlimited"
+      },
+      "baned": {
+        "nft": "Invalid NFT",
+        "issuer": "Invalid creator"
       },
       "colon": ":",
       "title": "NFT Account",
@@ -92,7 +96,7 @@
     "transactions": {
       "no-data": "No record...",
       "pull-down-refresh": "Refresh",
-      "receive-from": "Receive from ",
+      "receive-from": "Receive from",
       "send-to": "Send to",
       "status": {
         "waiting": "Waiting",

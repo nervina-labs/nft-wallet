@@ -14,6 +14,9 @@ export const nfts: NFTToken[] = [
     issuer_name: 'wocaowocaowocaowocaowocaowocaowocaowocaowocao',
     issuer_uuid: '12',
     tx_state: TransactionStatus.Pending,
+    is_issuer_banned: false,
+    is_class_banned: false,
+    n_token_id: 0,
   },
   {
     class_name: '您尚未拥有任何秘宝',
@@ -28,6 +31,9 @@ export const nfts: NFTToken[] = [
     issuer_name: 'wocao',
     issuer_uuid: '12',
     tx_state: TransactionStatus.Pending,
+    is_issuer_banned: false,
+    is_class_banned: false,
+    n_token_id: 1,
   },
 ]
 
@@ -47,4 +53,7 @@ export const nftDetail: NFTDetail = {
   tx_state: TransactionStatus.Pending,
   from_address: '',
   to_address: '',
+  is_issuer_banned: false,
+  is_class_banned: false,
+  n_token_id: 0,
 }

@@ -400,6 +400,10 @@ export const Transfer: React.FC = () => {
   }, [bodyWidth])
 
   const isInvalid = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    if (remoteNftDetail?.is_class_banned || remoteNftDetail?.is_issuer_banned) {
+      return true
+    }
     return (
       failureCount >= 2 ||
       remoteNftDetail?.tx_state === 'pending' ||
