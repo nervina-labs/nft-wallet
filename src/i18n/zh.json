@@ -19,7 +19,8 @@
       },
       "limit": {
         "limit": "限量",
-        "unlimit": "不限量"
+        "unlimit": "不限量",
+        "sn": "编号"
       },
       "baned": {
         "nft": "该秘宝暂不予显示",

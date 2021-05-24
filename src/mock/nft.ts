@@ -16,6 +16,7 @@ export const nfts: NFTToken[] = [
     tx_state: TransactionStatus.Pending,
     is_issuer_banned: false,
     is_class_banned: false,
+    n_token_id: 0,
   },
   {
     class_name: '您尚未拥有任何秘宝',
@@ -32,6 +33,7 @@ export const nfts: NFTToken[] = [
     tx_state: TransactionStatus.Pending,
     is_issuer_banned: false,
     is_class_banned: false,
+    n_token_id: 1,
   },
 ]
 
@@ -53,4 +55,5 @@ export const nftDetail: NFTDetail = {
   to_address: '',
   is_issuer_banned: false,
   is_class_banned: false,
+  n_token_id: 0,
 }

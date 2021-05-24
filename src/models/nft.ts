@@ -26,6 +26,7 @@ export interface NFTToken {
   to_address?: string
   is_issuer_banned: boolean
   is_class_banned: boolean
+  n_token_id: number
 }
 
 export interface NFTDetail {
@@ -45,4 +46,5 @@ export interface NFTDetail {
   to_address?: string
   is_issuer_banned: boolean
   is_class_banned: boolean
+  n_token_id: number
 }
