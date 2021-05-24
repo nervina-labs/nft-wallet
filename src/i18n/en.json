@@ -18,8 +18,8 @@
         "close": "Close"
       },
       "limit": {
-        "limit": "Limit",
-        "unlimit": "Unlimit",
+        "limit": "Limited",
+        "unlimit": "Unlimited",
         "sn": "No."
       },
       "baned": {

@@ -44,7 +44,7 @@ export const Limited: React.FC<LimitedProps> = ({
     if (banned) {
       return ''
     }
-    const no = sn != null ? `${t('common.limit.sn')} ${sn} / ` : ''
+    const no = sn != null ? `#${sn} / ` : ''
     return (
       no +
       (isUnlimited
