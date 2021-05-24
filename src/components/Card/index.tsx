@@ -253,6 +253,7 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
           banned={isBanned}
           count={token.class_total}
           bold={false}
+          sn={token.n_token_id}
           color="rgba(63, 63, 63, 0.66) !important"
         />
         <Creator

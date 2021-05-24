@@ -153,6 +153,7 @@ const Footer: React.FC<FooterProps> = ({ nft }) => {
       <Limited
         count={nft.total}
         bold={false}
+        sn={nft.n_token_id}
         fontSize={14}
         // color="rgba(63, 63, 63, 0.66) !important"
       />

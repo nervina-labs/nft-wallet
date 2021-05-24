@@ -27,6 +27,7 @@ export interface LimitedProps {
   bold?: boolean
   color?: string
   banned?: boolean
+  sn?: number
 }
 
 export const Limited: React.FC<LimitedProps> = ({
@@ -35,6 +36,7 @@ export const Limited: React.FC<LimitedProps> = ({
   bold = false,
   color,
   banned = false,
+  sn,
 }) => {
   const isUnlimited = count === '0'
   const { t } = useTranslation('translations')
@@ -42,10 +44,14 @@ export const Limited: React.FC<LimitedProps> = ({
     if (banned) {
       return ''
     }
-    return isUnlimited
-      ? t('common.limit.unlimit')
-      : `${t('common.limit.limit')} ${count}`
-  }, [t, isUnlimited, banned, count])
+    const no = sn != null ? `${t('common.limit.sn')} ${sn} / ` : ''
+    return (
+      no +
+      (isUnlimited
+        ? t('common.limit.unlimit')
+        : `${t('common.limit.limit')} ${count}`)
+    )
+  }, [t, isUnlimited, banned, count, sn])
   return (
     <Container fontSize={fontSize} color={color}>
       {isUnlimited || banned ? null : <img src={goldBox} />}

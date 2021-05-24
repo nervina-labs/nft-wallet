@@ -19,7 +19,8 @@
       },
       "limit": {
         "limit": "Limit",
-        "unlimit": "Unlimit"
+        "unlimit": "Unlimit",
+        "sn": "No."
       },
       "baned": {
         "nft": "Invalid NFT",
