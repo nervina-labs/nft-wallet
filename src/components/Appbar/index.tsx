@@ -70,18 +70,19 @@ export interface AppbarProps {
   right?: React.ReactNode
   back?: boolean
   transparent?: boolean
+  className?: string
 }
 
 // eslint-disable-next-line prettier/prettier
 export const Appbar: React.ForwardRefExoticComponent<AppbarProps & React.RefAttributes<HTMLElement>
 > = React.forwardRef(
   (
-    { title, left = null, right, transparent },
+    { title, left = null, right, transparent, className },
     ref: React.ForwardedRef<HTMLElement>
   ) => {
     const history = useHistory()
     return (
-      <Header ref={ref} transparent={transparent}>
+      <Header ref={ref} transparent={transparent} className={className}>
         <span className="left">{left}</span>
         <span className="title">{title}</span>
         <span className="right">
