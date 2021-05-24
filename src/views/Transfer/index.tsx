@@ -6,12 +6,13 @@ import { RoutePath } from '../../routes'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
 import { ReactComponent as ErrorSvg } from '../../assets/svg/error.svg'
-import { ReactComponent as SuccessSvg } from '../../assets/svg/success.svg'
-import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
+import ArrowPng from '../../assets/img/arrow.png'
+import SuccessPng from '../../assets/img/success.png'
+import FailPng from '../../assets/img/fail.png'
 import InfoIcon from '@material-ui/icons/Info'
 import { Button } from '../../components/Button'
-import { Drawer } from '@material-ui/core'
+import { Drawer, TextareaAutosize } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import {
   verifyEthContractAddress,
@@ -22,14 +23,12 @@ import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
 import { useWidth } from '../../hooks/useWidth'
-import { Limited } from '../../components/Limited'
-import { Creator } from '../../components/Creator'
 import { useQuery } from 'react-query'
 import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
 import UnipassProvider from '../../pw/UnipassProvider'
 import { Address, AddressType } from '@lay2/pw-core'
 import { useTranslation } from 'react-i18next'
-import { Container, DrawerContainer } from './styled'
+import { Box, Container, DrawerContainer } from './styled'
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -280,7 +279,10 @@ export const Transfer: React.FC = () => {
     return isSameAddress ? t('transfer.error.self') : t('transfer.error.common')
   }, [isSameAddress, isEthAddress, ckbAddress, t])
 
-  useEffect(() => {}, [])
+  const colonWithSpace = useMemo(() => {
+    const c = t('common.colon')
+    return c === ':' ? ': ' : c
+  }, [t])
 
   if (isInvalid) {
     return <Redirect to={RoutePath.NotFound} />
@@ -316,50 +318,74 @@ export const Transfer: React.FC = () => {
           stopScan()
         }}
       />
-      <div className="content">
-        <label>{t('transfer.address')}</label>
-        <div className="form">
-          <textarea
-            className="input"
-            placeholder={t('transfer.placeholder')}
-            value={ckbAddress}
-            onChange={textareaOnChange}
-          />
-          <ScanSvg onClick={startScan} />
-        </div>
-        <div
-          className={`alert ${
-            isEthAddress && isAddressValid ? 'info' : 'error'
-          }`}
-          style={{
-            visibility:
-              (!isAddressValid && ckbAddress !== '') ||
-              (isEthAddress && isAddressValid)
-                ? 'visible'
-                : 'hidden',
-          }}
-        >
-          {isEthAddress ? <InfoIcon /> : <ErrorSvg />}
-          {alertMsg}
-        </div>
-        <div className="action">
-          <Button
-            type="primary"
-            onClick={transferOnClick}
-            disbaled={!isAddressValid}
-          >
-            {t('transfer.transfer')}
-          </Button>
+      <section className="main">
+        <div className="boxes">
+          <Box>
+            <label>{t('transfer.address')}</label>
+            <div className="form">
+              <TextareaAutosize
+                className="input"
+                placeholder={t('transfer.placeholder')}
+                value={ckbAddress}
+                onChange={textareaOnChange}
+                rowsMax={4}
+              />
+              <ScanSvg onClick={startScan} />
+            </div>
+            <div
+              className={`alert ${
+                isEthAddress && isAddressValid ? 'info' : 'error'
+              }`}
+              style={{
+                visibility:
+                  (!isAddressValid && ckbAddress !== '') ||
+                  (isEthAddress && isAddressValid)
+                    ? 'visible'
+                    : 'hidden',
+              }}
+            >
+              {isEthAddress ? <InfoIcon /> : <ErrorSvg />}
+              {alertMsg}
+            </div>
+            <div className="action">
+              <div
+                className={`${!isAddressValid ? 'disabled' : ''} transfer`}
+                onClick={isAddressValid ? transferOnClick : undefined}
+              >
+                <img src={ArrowPng} />
+              </div>
+            </div>
+          </Box>
+          <Box
+            style={{
+              margin: '0 22px',
+              opacity: '.6',
+              top: '-210px',
+              zIndex: 2,
+            }}
+          ></Box>
+          <Box
+            style={{
+              margin: '0 29px',
+              opacity: '.3',
+              top: '-420px',
+              zIndex: 1,
+            }}
+          ></Box>
         </div>
         <div className="desc">
-          <p>{t('transfer.check')}</p>
-          <p>{t('transfer.once-transfer')}</p>
+          {t('transfer.check')}
+          {t('transfer.once-transfer')}
         </div>
-      </div>
+      </section>
       <ActionDialog
-        icon={<SuccessSvg />}
-        content={t('transfer.submitted')}
-        detail={t('transfer.tips')}
+        icon={<img src={SuccessPng} />}
+        content={t('transfer.tips')}
+        extra={
+          <p style={{ color: '#1FD345', fontSize: '13px' }}>
+            {t('transfer.submitted')}
+          </p>
+        }
         open={isSendDialogSuccess}
         onConfrim={() => {
           setIsSendDialogSuccess(false)
@@ -367,7 +393,7 @@ export const Transfer: React.FC = () => {
         }}
       />
       <ActionDialog
-        icon={<FailSvg />}
+        icon={<img src={FailPng} />}
         content={failedMessage}
         open={isErrorDialogOpen}
         onConfrim={() => setIsErrorDialogOpen(false)}
@@ -381,6 +407,7 @@ export const Transfer: React.FC = () => {
             position: 'absolute',
             width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
             left: drawerLeft,
+            borderRadius: '20px 20px 0px 0px',
           },
         }}
         disableEnforceFocus
@@ -389,7 +416,7 @@ export const Transfer: React.FC = () => {
         {nftDetail !== undefined ? (
           <DrawerContainer>
             <div className="header">
-              <label>{`${t('transfer.transfer')}${t('common.colon')}`}</label>
+              <span></span>
               {isSendingNFT ? null : <CloseSvg onClick={closeDrawer} />}
             </div>
             <div className="card">
@@ -397,22 +424,15 @@ export const Transfer: React.FC = () => {
                 src={nftDetail.bg_image_url}
                 width={80}
                 height={80}
+                imageStyle={{ borderRadius: '10px' }}
               />
-              <div className="info">
-                <div className="title">{nftDetail.name}</div>
-                <div className="row">
-                  <Limited count={nftDetail.total} />
-                </div>
-                <div className="row">
-                  <Creator
-                    name={nftDetail.issuer_info.name}
-                    url={nftDetail.issuer_info.avatar_url}
-                  />
-                </div>
-              </div>
             </div>
-            <label>{`${t('transfer.address')}${t('common.colon')}`}</label>
-            <p className="address">{ckbAddress}</p>
+            <div className="title">
+              {`${t('transfer.transfer')}${colonWithSpace}${nftDetail.name}`}
+            </div>
+            <p className="address">
+              {`${t('transfer.address')}${colonWithSpace}${address}`}
+            </p>
             <div className="center">
               <Button
                 type="primary"
