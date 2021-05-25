@@ -211,7 +211,7 @@ export const NFTs: React.FC = () => {
                       <Card
                         className={i === 0 && j === 0 ? 'first' : ''}
                         token={token}
-                        key={token.token_uuid ?? i + j}
+                        key={token.token_uuid ?? `${i}${j}`}
                         address={address}
                       />
                     )
