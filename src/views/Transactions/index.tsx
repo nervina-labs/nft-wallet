@@ -11,7 +11,6 @@ import {
 } from '../../models'
 import dayjs from 'dayjs'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Divider } from '@material-ui/core'
 import { ReactComponent as SendSvg } from '../../assets/svg/send.svg'
 import { ReactComponent as ReceiveSvg } from '../../assets/svg/receive.svg'
 import { ReactComponent as LinkSvg } from '../../assets/svg/link.svg'
@@ -202,7 +201,6 @@ export const Transactions: React.FC = () => {
   return (
     <Container>
       <section className="list" id="list">
-        <Divider />
         {isRefetching ? <Loading /> : null}
         {status === 'loading' && data === undefined ? (
           <Loading />

@@ -5,8 +5,8 @@ import { Appbar } from '../../components/Appbar'
 import { Button } from '../../components/Button'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { ReactComponent as AccountSvg } from '../../assets/svg/account.svg'
 import NotFoundPng from '../../assets/img/404.png'
+import AccountPng from '../../assets/img/account-black.png'
 import { useTranslation } from 'react-i18next'
 
 const Container = styled(MainContainer)`
@@ -51,7 +51,8 @@ export const NotFound: React.FC = () => {
       <Appbar
         title={t('404.title')}
         left={
-          <AccountSvg
+          <img
+            src={AccountPng}
             onClick={() => {
               history.push(RoutePath.Info)
             }}
