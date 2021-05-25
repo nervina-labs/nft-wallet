@@ -6,12 +6,18 @@ import { Button } from '../../components/Button'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { ReactComponent as AccountSvg } from '../../assets/svg/account.svg'
+import NotFoundPng from '../../assets/img/404.png'
 import { useTranslation } from 'react-i18next'
 
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  > header {
+    background: transparent;
+    box-shadow: none;
+  }
 
   .main {
     flex: 1;
@@ -21,18 +27,14 @@ const Container = styled(MainContainer)`
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      .title {
-        font-weight: bold;
-        font-size: 20px;
-        line-height: 24px;
-        color: rgba(0, 0, 0, 0.6);
+      img {
+        width: 220px;
       }
       .desc {
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 22px;
-        color: rgba(0, 0, 0, 0.6);
         margin-top: 16px;
+        line-height: 16px;
+        font-size: 12px;
+        color: #0e0e0e;
       }
       button {
         margin-top: 32px;
@@ -59,9 +61,9 @@ export const NotFound: React.FC = () => {
       />
       <section className="main">
         <div className="content">
-          <div className="title">404</div>
+          <img src={NotFoundPng} alt={t('404.not-found')} />
           <div className="desc">{t('404.not-found')}</div>
-          <Button type="default" onClick={() => history.push(RoutePath.NFTs)}>
+          <Button type="primary" onClick={() => history.push(RoutePath.NFTs)}>
             {t('404.back')}
           </Button>
         </div>

@@ -15,20 +15,24 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 32px;
+  margin-top: 12px;
   .text {
     word-break: break-all;
     font-size: 14px;
     line-height: 16px;
-    color: rgba(0, 0, 0, 0.8);
-    font-weight: 600;
+    color: #333;
   }
   .copyable {
     cursor: pointer;
+    path {
+      fill: #6e8ae6;
+    }
   }
   svg {
     min-width: 20px;
-    margin-left: 10px;
+    margin-left: 4px;
+    width: 14px;
+    height: 14px;
   }
 `
 
