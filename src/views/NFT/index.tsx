@@ -237,7 +237,7 @@ export const NFT: React.FC = () => {
   }
 
   return (
-    <Container bgColor={bgColor}>
+    <Container bgColor={bgColor} style={{ background: bgColor }}>
       <Appbar
         title={t('nft.title')}
         left={<BackSvg onClick={() => history.goBack()} />}
