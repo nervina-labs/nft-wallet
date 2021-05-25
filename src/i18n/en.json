@@ -104,7 +104,9 @@
       }
     },
     "info": {
-      "title": "Use this address to receive NFT"
+      "title": "Use this address to receive NFT",
+      "copy": "Copy",
+      "copied": "Copied"
     },
     "nft": {
       "title": "NFT Details",
