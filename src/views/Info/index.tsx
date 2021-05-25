@@ -67,7 +67,7 @@ export const Info: React.FC = () => {
     } catch (error) {
       copyFallback(address)
     }
-    await sleep(1500)
+    await sleep(2000)
     setIsCopy(false)
   }, [address])
 

@@ -417,7 +417,12 @@ export const Transfer: React.FC = () => {
           <DrawerContainer>
             <div className="header">
               <span></span>
-              {isSendingNFT ? null : <CloseSvg onClick={closeDrawer} />}
+              {
+                <CloseSvg
+                  style={{ visibility: isSendingNFT ? 'hidden' : 'visible' }}
+                  onClick={closeDrawer}
+                />
+              }
             </div>
             <div className="card">
               <LazyLoadImage
