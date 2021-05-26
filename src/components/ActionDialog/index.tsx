@@ -31,6 +31,8 @@ const DialogContainer = styled(Dialog)`
   }
   .content {
     text-align: center;
+    margin-left: 15px;
+    margin-right: 15px;
     p {
       margin: 0;
       margin-top: 10px;
