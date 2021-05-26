@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import Dialog from '@material-ui/core/Dialog'
 import { Button } from '../../components/Button'
@@ -19,6 +19,7 @@ const DialogContainer = styled(Dialog)`
     color: #333;
     font-weight: bold;
     word-break: break-all;
+    cursor: pointer;
   }
   .action {
     margin-top: 30px;
@@ -53,6 +54,7 @@ export const Share: React.FC<ShareProps> = ({
 }) => {
   const style = useStyles()
   const { t } = useTranslation('translations')
+  const copyzoneRef = useRef<Copyzone>(null)
 
   return (
     <DialogContainer
@@ -61,8 +63,14 @@ export const Share: React.FC<ShareProps> = ({
       onBackdropClick={closeDialog}
     >
       <img src={SharePng} alt={t('common.share.copy')} />
-      <div className="content">{copyText}</div>
-      <Copyzone text={copyText} displayText={t('common.share.copy')} />
+      <div className="content" onClick={() => copyzoneRef?.current?.onCopy?.()}>
+        {copyText}
+      </div>
+      <Copyzone
+        ref={copyzoneRef}
+        text={copyText}
+        displayText={t('common.share.copy')}
+      />
       <div className="action">
         <Button type="primary" onClick={closeDialog}>
           {t('common.share.close')}
