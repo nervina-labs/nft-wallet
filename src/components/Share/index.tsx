@@ -28,8 +28,8 @@ const DialogContainer = styled(Dialog)`
 
 const useStyles = makeStyles(() => ({
   paper: {
-    minWidth: '320px',
-    maxWidth: '320px',
+    minWidth: '280px',
+    maxWidth: '280px',
     borderRadius: '20px',
     display: 'flex',
     alignItems: 'center',
