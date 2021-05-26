@@ -21,13 +21,24 @@ import { ParallaxTilt } from '../../components/ParallaxTilt'
 const Background = styled.div`
   position: absolute;
   top: 44px;
-  background-image: url(${(props: { url?: string }) => props.url});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  filter: blur(50px);
   width: 100%;
-  max-width: 499px;
+  max-width: 500px;
+  overflow: hidden;
+  &:before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: url(${(props: { url?: string }) => props.url}) 50% / cover
+      border-box padding-box;
+    content: '';
+    border-color: transparent;
+    background-clip: border-box;
+    border-color: transparent;
+    background-clip: border-box;
+    filter: blur(50px);
+  }
 `
 
 const Container = styled(MainContainer)`
@@ -43,15 +54,6 @@ const Container = styled(MainContainer)`
     flex: 1;
     display: flex;
     justify-content: center;
-    position: relative;
-    .fallback {
-      position: absolute;
-      bottom: 20px;
-      font-size: 16px;
-      color: #2b2b2b;
-      opacity: 0.7;
-      color: #fffdfd;
-    }
   }
   .loading {
     text-align: center;
@@ -237,7 +239,7 @@ export const NFT: React.FC = () => {
   }
 
   return (
-    <Container bgColor={bgColor} style={{ background: bgColor }}>
+    <Container bgColor={bgColor}>
       <Appbar
         title={t('nft.title')}
         left={<BackSvg onClick={() => history.goBack()} />}
@@ -266,7 +268,6 @@ export const NFT: React.FC = () => {
           onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
           onColorDetected={(color) => setImageColor(color)}
         />
-        {isFallBackImgLoaded ? <span className="fallback"></span> : null}
       </div>
       {detail == null ? (
         <section className="detail">
