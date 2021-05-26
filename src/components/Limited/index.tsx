@@ -60,6 +60,7 @@ export const Limited: React.FC<LimitedProps> = ({
         style={{
           marginLeft: isUnlimited ? 0 : '8px',
           fontWeight: bold ? 'bold' : 'normal',
+          whiteSpace: 'nowrap',
         }}
       >
         {content}

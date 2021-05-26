@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import { ReactComponent as CopySvg } from '../../assets/svg/copy.svg'
 import { ReactComponent as CheckSvg } from '../../assets/svg/check.svg'
 import { copyFallback, sleep } from '../../utils'
@@ -21,6 +21,7 @@ const Container = styled.div`
     font-size: 14px;
     line-height: 16px;
     color: #333;
+    word-break: break-word;
   }
   .copyable {
     cursor: pointer;
@@ -36,10 +37,19 @@ const Container = styled.div`
   }
 `
 
-export const Copyzone: React.FC<CopyzoneProps> = ({ text, displayText }) => {
-  const [isCopy, setIsCopy] = useState(false)
-  const onCopy = useCallback(async () => {
-    setIsCopy(true)
+export interface CopyzoneState {
+  isCopy: boolean
+}
+export class Copyzone extends React.Component<CopyzoneProps, CopyzoneState> {
+  state = {
+    isCopy: false,
+  }
+
+  onCopy = async (): Promise<void> => {
+    const { text } = this.props
+    this.setState({
+      isCopy: true,
+    })
     const isAndroidWeChat = IS_WEXIN && IS_ANDROID
     const content = isAndroidWeChat
       ? text.replace('https://', '').replace('http://', '')
@@ -50,17 +60,23 @@ export const Copyzone: React.FC<CopyzoneProps> = ({ text, displayText }) => {
       copyFallback(content)
     }
     await sleep(1000)
-    setIsCopy(false)
-  }, [text])
+    this.setState({
+      isCopy: false,
+    })
+  }
 
-  return (
-    <Container>
-      <span className="text">{displayText}</span>
-      {!isCopy ? (
-        <CopySvg onClick={onCopy} className="copyable" />
-      ) : (
-        <CheckSvg />
-      )}
-    </Container>
-  )
+  render(): React.ReactNode {
+    const { isCopy } = this.state
+    const { displayText } = this.props
+    return (
+      <Container>
+        <span className="text">{displayText}</span>
+        {!isCopy ? (
+          <CopySvg onClick={this.onCopy} className="copyable" />
+        ) : (
+          <CheckSvg />
+        )}
+      </Container>
+    )
+  }
 }

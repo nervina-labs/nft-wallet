@@ -374,7 +374,7 @@ export const Transfer: React.FC = () => {
           ></Box>
         </div>
         <div className="desc">
-          {t('transfer.check')}
+          {t('transfer.check')}&nbsp;
           {t('transfer.once-transfer')}
         </div>
       </section>
@@ -427,8 +427,9 @@ export const Transfer: React.FC = () => {
             <div className="card">
               <LazyLoadImage
                 src={nftDetail.bg_image_url}
-                width={80}
-                height={80}
+                width={100}
+                height={100}
+                cover
                 imageStyle={{ borderRadius: '10px' }}
               />
             </div>

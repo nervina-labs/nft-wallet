@@ -27,6 +27,7 @@ export const Container = styled(MainContainer)`
       font-size: 12px;
       color: #8d8989;
       line-height: 16px;
+      margin: 0 15px;
       margin-top: 10px;
       text-align: center;
     }

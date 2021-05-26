@@ -55,7 +55,7 @@ const Container = styled.div`
 
 const ListItemContainer = styled.div`
   display: flex;
-  height: 90px;
+  height: 80px;
   align-items: center;
   background: #ffffff;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
@@ -97,11 +97,12 @@ const ListItemContainer = styled.div`
     }
     .creator {
       font-weight: normal;
+      font-size: 10px;
     }
   }
   .status {
     margin-left: auto;
-    font-size: 12px;
+    font-size: 10px;
     line-height: 16px;
     height: 42px;
     display: flex;
@@ -156,9 +157,9 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
       ? `${t('transactions.receive-from')} ${
           tx.issuer_uuid !== ''
             ? tx.from_address
-            : truncateMiddle(tx.from_address, 8, 5)
+            : truncateMiddle(tx.from_address, 5, 5)
         }`
-      : `${t('transactions.send-to')} ${truncateMiddle(tx.to_address, 8, 5)}`
+      : `${t('transactions.send-to')} ${truncateMiddle(tx.to_address, 5, 5)}`
   }, [tx, t])
 
   const Link = isBanned ? 'div' : 'a'
