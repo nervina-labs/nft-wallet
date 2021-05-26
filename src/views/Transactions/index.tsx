@@ -116,6 +116,7 @@ const ListItemContainer = styled.div`
       color: #fd821f;
     }
     .comfirming {
+      text-align: right;
       font-weight: bold;
       color: #779be3;
     }
