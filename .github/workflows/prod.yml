@@ -21,4 +21,4 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
           dokku-host: ${{ secrets.DOKKU_HOST_PROD }}
           app-name: 'wallet'
-          remote-branch: 'develop'
+          remote-branch: 'master'
