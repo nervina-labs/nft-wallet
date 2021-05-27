@@ -15,7 +15,7 @@ const Container = styled.div`
   }
   .desc {
     margin-top: 30px;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 22px;
     color: rgba(0, 0, 0, 0.6);
     font-weight: 600;

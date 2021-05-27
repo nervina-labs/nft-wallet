@@ -1,0 +1,24 @@
+name: DEPLOY PRODUCTION
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Deploy to dokku
+        id: deploy
+        uses: idoberko2/dokku-deploy-github-action@v1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
+          dokku-host: ${{ secrets.DOKKU_HOST_PROD }}
+          app-name: 'wallet'
+          remote-branch: 'master'

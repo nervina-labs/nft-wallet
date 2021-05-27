@@ -108,6 +108,9 @@ const Container = styled.div`
   &.first {
     margin-top: 20px;
   }
+  .error {
+    color: #d03a3a;
+  }
   /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); */
   .media {
     width: 100px;
@@ -201,16 +204,26 @@ const Container = styled.div`
 
 export const Card: React.FC<CardProps> = ({ token, address, className }) => {
   const history = useHistory()
-  const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(false)
+  const isClassBanned = token.is_class_banned
+  const isIssuerBaned = token.is_issuer_banned
+  const isBanned = isClassBanned || isIssuerBaned
+  const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(isBanned)
   const [t] = useTranslation('translations')
+
   return (
     <Container
-      onClick={() => history.push(`/nft/${token.token_uuid}`)}
+      onClick={() => {
+        if (isBanned) return
+        history.push(`/nft/${token.token_uuid}`)
+      }}
       className={className}
+      style={{
+        cursor: isBanned ? 'default' : 'pointer',
+      }}
     >
       <div className="media">
         <LazyLoadImage
-          src={token.class_bg_image_url}
+          src={isBanned ? FallbackImg : token.class_bg_image_url}
           width={100}
           height={125}
           skeletonStyle={{ borderRadius: '10px' }}
@@ -231,16 +244,21 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
       </div>
       <div className="content">
         <div className="title">
-          <span>{token.class_name}</span>
+          <span className={isBanned ? 'error' : ''}>
+            {isBanned ? t('common.baned.nft') : token.class_name}
+          </span>
           <Label nft={token} address={address} />
         </div>
         <Limited
+          banned={isBanned}
           count={token.class_total}
           bold={false}
+          sn={token.n_token_id}
           color="rgba(63, 63, 63, 0.66) !important"
         />
         <Creator
           title=""
+          baned={isIssuerBaned}
           url={token.issuer_avatar_url}
           name={token.issuer_name}
           uuid={token.issuer_uuid}

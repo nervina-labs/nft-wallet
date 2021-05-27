@@ -7,8 +7,10 @@ import styled from 'styled-components'
 import { Drawer } from '@material-ui/core'
 import { History } from 'history'
 import { verifyCkbLongAddress, verifyEthAddress } from '../../utils'
+import Backpng from '../../assets/img/back-circle.png'
+import ScanError from '../../assets/img/scan-error.png'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
-import { ReactComponent as CameraSvg } from '../../assets/svg/camera.svg'
+import SwitchCam from '../../assets/img/switch-cam.png'
 import { Appbar } from '../Appbar'
 import { Button } from '../Button'
 
@@ -20,39 +22,62 @@ const Container = styled.div`
   flex-direction: column;
 
   video {
-    margin-top: 2px;
     max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  > header {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  p {
+    margin: 0;
+    text-align: center;
+    font-size: 14px;
+    &.white {
+      color: white;
+    }
+  }
+
+  .dot {
+    height: 5px;
+    width: 5px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
   }
 
   .result {
     margin: 0 36px;
-    margin-top: 80px;
+    margin-top: -44px;
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    .title {
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 22px;
-      color: rgba(0, 0, 0, 0.6);
-      margin: 0;
-      margin-bottom: 12px;
+    img {
+      width: 220px;
     }
-    .qrcode {
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 22px;
-      color: #000;
-      word-break: break-all;
-    }
-    .error {
-      font-weight: 600;
+    p {
       font-size: 12px;
-      line-height: 17px;
-      text-align: center;
-      color: #d03a3a;
-      margin: 32px 0;
+      line-height: 16px;
+      margin: 0;
+      margin-top: 12px;
+    }
+    .warn {
+      color: #f77d48;
+    }
+    .detect {
+      color: #4c4c4c;
+    }
+    .content {
+      color: #4c4c4c;
+      opacity: 0.8;
+    }
+
+    button {
+      margin-top: 32px;
     }
   }
 `
@@ -149,22 +174,38 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
     const { onCancel, isDrawerOpen, width, t } = this.props
     return (
       <Drawer open={isDrawerOpen}>
-        <Container width={width}>
+        <Container
+          width={width}
+          style={{ backgroundColor: isScaning ? '#000' : '#fff' }}
+        >
           <Appbar
-            left={<BackSvg onClick={onCancel} />}
-            title={
-              nonCkbAddressResult === ''
-                ? t('transfer.scan.qrcode')
-                : t('transfer.scan.result')
+            left={
+              isScaning ? (
+                <img src={Backpng} onClick={onCancel} />
+              ) : (
+                <BackSvg onClick={onCancel} />
+              )
             }
-            right={<CameraSvg onClick={this.toggle} />}
+            title={nonCkbAddressResult === '' ? '' : t('transfer.scan.result')}
+            right={<img src={SwitchCam} onClick={this.toggle} />}
           />
-          {isScaning ? <video ref={this.videoRef} /> : null}
+          {isScaning ? (
+            <>
+              <video ref={this.videoRef} />
+              <div style={{ textAlign: 'center' }}>
+                <p className="white">{t('transfer.scan.qrcode')}</p>
+                <p style={{ lineHeight: '10px' }}>
+                  <span className="dot"></span>
+                </p>
+              </div>
+            </>
+          ) : null}
           {nonCkbAddressResult === '' ? null : (
             <div className="result">
-              <h3 className="title">{t('transfer.scan.detected')}</h3>
-              <div className="qrcode">{nonCkbAddressResult}</div>
-              <div className="error">{t('transfer.scan.error')}</div>
+              <img src={ScanError} alt={t('transfer.scan.error')} />
+              <p className="warn">{t('transfer.scan.error')}</p>
+              <p className="detect">{t('transfer.scan.detected')}</p>
+              <p className="content">{nonCkbAddressResult}</p>
               <Button type="primary" onClick={this.startScan.bind(this)}>
                 {t('transfer.scan.rescan')}
               </Button>

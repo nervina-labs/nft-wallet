@@ -12,6 +12,9 @@ const Container = styled.div`
   font-size: ${(props: { fontSize?: number }) => `${props.fontSize ?? 12}px`};
   line-height: 17px;
   color: rgba(0, 0, 0, 0.6);
+  .error {
+    color: #d03a3a;
+  }
   .avatar {
     margin-right: 6px;
     img {
@@ -51,6 +54,7 @@ export interface CreatorProps {
   uuid?: string
   title?: React.ReactNode
   color?: string
+  baned?: boolean
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -60,20 +64,27 @@ export const Creator: React.FC<CreatorProps> = ({
   uuid,
   title,
   color,
+  baned = false,
 }) => {
   const { t } = useTranslation('translations')
   const creator = (
     <>
       <span className="avatar">
-        <LazyLoadImage
-          src={url}
-          width={24}
-          height={24}
-          variant="circle"
-          backup={<PeopleSvg />}
-        />
+        {baned ? (
+          <PeopleSvg />
+        ) : (
+          <LazyLoadImage
+            src={url}
+            width={24}
+            height={24}
+            variant="circle"
+            backup={<PeopleSvg />}
+          />
+        )}
       </span>
-      <span className="name">{name}</span>
+      <span className={`name ${baned ? 'error' : ''}`}>
+        {baned ? t('common.baned.issuer') : name}
+      </span>
     </>
   )
   return (

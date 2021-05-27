@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Redirect, useHistory, useLocation, useParams } from 'react-router'
-import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { NFTDetail, Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
 import { ReactComponent as ErrorSvg } from '../../assets/svg/error.svg'
-import { ReactComponent as SuccessSvg } from '../../assets/svg/success.svg'
-import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
+import ArrowPng from '../../assets/img/arrow.png'
+import SuccessPng from '../../assets/img/success.png'
+import FailPng from '../../assets/img/fail.png'
 import InfoIcon from '@material-ui/icons/Info'
 import { Button } from '../../components/Button'
-import { Drawer } from '@material-ui/core'
+import { Drawer, TextareaAutosize } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import {
   verifyEthContractAddress,
@@ -23,163 +23,12 @@ import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
 import { useWidth } from '../../hooks/useWidth'
-import { Limited } from '../../components/Limited'
-import { Creator } from '../../components/Creator'
 import { useQuery } from 'react-query'
-import { MainContainer } from '../../styles'
 import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
 import UnipassProvider from '../../pw/UnipassProvider'
 import { Address, AddressType } from '@lay2/pw-core'
 import { useTranslation } from 'react-i18next'
-
-const Container = styled(MainContainer)`
-  display: flex;
-  flex-direction: column;
-  .content {
-    display: flex;
-    flex-direction: column;
-    margin: 0 36px;
-    height: 100%;
-    flex: 1;
-    label {
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 16px;
-      color: rgba(0, 0, 0, 0.6);
-      margin-top: 120px;
-      margin-bottom: 12px;
-    }
-    .alert {
-      font-weight: 600;
-      font-size: 12px;
-      line-height: 17px;
-      display: flex;
-      align-items: center;
-      margin-top: 10px;
-      height: 34px;
-      svg {
-        width: 12px;
-        height: 12px;
-        margin-right: 4px;
-      }
-      &.error {
-        color: #d03a3a;
-      }
-      &.info {
-        color: #2196f3;
-      }
-    }
-    .form {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .input {
-        background: transparent;
-        width: 100%;
-        border: none;
-        overflow: auto;
-        outline: none;
-        border-radius: 0;
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
-        box-shadow: none;
-        resize: none;
-        border-bottom: 1px solid #000000;
-      }
-      svg {
-        margin-left: 10px;
-      }
-    }
-    .action {
-      display: flex;
-      justify-content: center;
-      margin-top: 35px;
-    }
-    .desc {
-      margin-top: auto;
-      margin-bottom: 50px;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      color: rgba(0, 0, 0, 0.6);
-      p {
-        margin: 0;
-      }
-    }
-  }
-`
-
-const DrawerContainer = styled.div`
-  margin: 32px 36px;
-  margin-bottom: 0;
-  .header {
-    display: flex;
-    align-items: center;
-    label {
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 16px;
-      color: rgba(0, 0, 0, 0.6);
-      margin: 0;
-      display: flex;
-      align-items: center;
-    }
-    svg {
-      margin-left: auto;
-      cursor: pointer;
-    }
-  }
-  .card {
-    margin-top: 8px;
-    margin-bottom: 32px;
-    display: flex;
-    height: 80px;
-    .info {
-      margin: 4px 0;
-      flex: 1;
-      margin-left: 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      font-weight: 600;
-      font-size: 12px;
-      line-height: 17px;
-      overflow: hidden;
-      .title {
-        color: #000000;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-      }
-      .row {
-        color: rgba(0, 0, 0, 0.6);
-      }
-    }
-  }
-  .address {
-    margin-top: 12px;
-    font-size: 14px;
-    line-height: 16px;
-    color: #000000;
-    font-weight: 600;
-    word-break: break-all;
-  }
-  .center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 32px;
-    margin-bottom: 40px;
-    .loading {
-      margin-left: 10px;
-    }
-  }
-`
+import { Box, Container, DrawerContainer } from './styled'
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -400,6 +249,10 @@ export const Transfer: React.FC = () => {
   }, [bodyWidth])
 
   const isInvalid = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    if (remoteNftDetail?.is_class_banned || remoteNftDetail?.is_issuer_banned) {
+      return true
+    }
     return (
       failureCount >= 2 ||
       remoteNftDetail?.tx_state === 'pending' ||
@@ -426,7 +279,10 @@ export const Transfer: React.FC = () => {
     return isSameAddress ? t('transfer.error.self') : t('transfer.error.common')
   }, [isSameAddress, isEthAddress, ckbAddress, t])
 
-  useEffect(() => {}, [])
+  const colonWithSpace = useMemo(() => {
+    const c = t('common.colon')
+    return c === ':' ? ': ' : c
+  }, [t])
 
   if (isInvalid) {
     return <Redirect to={RoutePath.NotFound} />
@@ -462,50 +318,74 @@ export const Transfer: React.FC = () => {
           stopScan()
         }}
       />
-      <div className="content">
-        <label>{t('transfer.address')}</label>
-        <div className="form">
-          <textarea
-            className="input"
-            placeholder={t('transfer.placeholder')}
-            value={ckbAddress}
-            onChange={textareaOnChange}
-          />
-          <ScanSvg onClick={startScan} />
-        </div>
-        <div
-          className={`alert ${
-            isEthAddress && isAddressValid ? 'info' : 'error'
-          }`}
-          style={{
-            visibility:
-              (!isAddressValid && ckbAddress !== '') ||
-              (isEthAddress && isAddressValid)
-                ? 'visible'
-                : 'hidden',
-          }}
-        >
-          {isEthAddress ? <InfoIcon /> : <ErrorSvg />}
-          {alertMsg}
-        </div>
-        <div className="action">
-          <Button
-            type="primary"
-            onClick={transferOnClick}
-            disbaled={!isAddressValid}
-          >
-            {t('transfer.transfer')}
-          </Button>
+      <section className="main">
+        <div className="boxes">
+          <Box>
+            <label>{t('transfer.address')}</label>
+            <div className="form">
+              <TextareaAutosize
+                className="input"
+                placeholder={t('transfer.placeholder')}
+                value={ckbAddress}
+                onChange={textareaOnChange}
+                rowsMax={4}
+              />
+              <ScanSvg onClick={startScan} />
+            </div>
+            <div
+              className={`alert ${
+                isEthAddress && isAddressValid ? 'info' : 'error'
+              }`}
+              style={{
+                visibility:
+                  (!isAddressValid && ckbAddress !== '') ||
+                  (isEthAddress && isAddressValid)
+                    ? 'visible'
+                    : 'hidden',
+              }}
+            >
+              {isEthAddress ? <InfoIcon /> : <ErrorSvg />}
+              {alertMsg}
+            </div>
+            <div className="action">
+              <div
+                className={`${!isAddressValid ? 'disabled' : ''} transfer`}
+                onClick={isAddressValid ? transferOnClick : undefined}
+              >
+                <img src={ArrowPng} />
+              </div>
+            </div>
+          </Box>
+          <Box
+            style={{
+              margin: '0 22px',
+              opacity: '.6',
+              top: '-210px',
+              zIndex: 2,
+            }}
+          ></Box>
+          <Box
+            style={{
+              margin: '0 29px',
+              opacity: '.3',
+              top: '-420px',
+              zIndex: 1,
+            }}
+          ></Box>
         </div>
         <div className="desc">
-          <p>{t('transfer.check')}</p>
-          <p>{t('transfer.once-transfer')}</p>
+          {t('transfer.check')}&nbsp;
+          {t('transfer.once-transfer')}
         </div>
-      </div>
+      </section>
       <ActionDialog
-        icon={<SuccessSvg />}
-        content={t('transfer.submitted')}
-        detail={t('transfer.tips')}
+        icon={<img src={SuccessPng} />}
+        content={t('transfer.tips')}
+        extra={
+          <p style={{ color: '#1FD345', fontSize: '13px' }}>
+            {t('transfer.submitted')}
+          </p>
+        }
         open={isSendDialogSuccess}
         onConfrim={() => {
           setIsSendDialogSuccess(false)
@@ -513,7 +393,7 @@ export const Transfer: React.FC = () => {
         }}
       />
       <ActionDialog
-        icon={<FailSvg />}
+        icon={<img src={FailPng} />}
         content={failedMessage}
         open={isErrorDialogOpen}
         onConfrim={() => setIsErrorDialogOpen(false)}
@@ -527,6 +407,7 @@ export const Transfer: React.FC = () => {
             position: 'absolute',
             width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
             left: drawerLeft,
+            borderRadius: '20px 20px 0px 0px',
           },
         }}
         disableEnforceFocus
@@ -535,30 +416,29 @@ export const Transfer: React.FC = () => {
         {nftDetail !== undefined ? (
           <DrawerContainer>
             <div className="header">
-              <label>{`${t('transfer.transfer')}${t('common.colon')}`}</label>
-              {isSendingNFT ? null : <CloseSvg onClick={closeDrawer} />}
+              <span></span>
+              {
+                <CloseSvg
+                  style={{ visibility: isSendingNFT ? 'hidden' : 'visible' }}
+                  onClick={closeDrawer}
+                />
+              }
             </div>
             <div className="card">
               <LazyLoadImage
                 src={nftDetail.bg_image_url}
-                width={80}
-                height={80}
+                width={100}
+                height={100}
+                cover
+                imageStyle={{ borderRadius: '10px' }}
               />
-              <div className="info">
-                <div className="title">{nftDetail.name}</div>
-                <div className="row">
-                  <Limited count={nftDetail.total} />
-                </div>
-                <div className="row">
-                  <Creator
-                    name={nftDetail.issuer_info.name}
-                    url={nftDetail.issuer_info.avatar_url}
-                  />
-                </div>
-              </div>
             </div>
-            <label>{`${t('transfer.address')}${t('common.colon')}`}</label>
-            <p className="address">{ckbAddress}</p>
+            <div className="title">
+              {`${t('transfer.transfer')}${colonWithSpace}${nftDetail.name}`}
+            </div>
+            <p className="address">
+              {`${t('transfer.address')}${colonWithSpace}${address}`}
+            </p>
             <div className="center">
               <Button
                 type="primary"

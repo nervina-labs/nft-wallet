@@ -9,44 +9,67 @@ import {
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
-import { ReactComponent as LogoutSvg } from '../../assets/svg/logout.svg'
+import LogoutPng from '../../assets/img/logout.png'
 import { RoutePath } from '../../routes'
 import { Info } from '../Info'
 import { Transactions } from '../Transactions'
 import { useWalletModel } from '../../hooks/useWallet'
 import { MainContainer } from '../../styles'
 import { useTranslation } from 'react-i18next'
+import Bg from '../../assets/img/account-bg.png'
 
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
 
-  .detail {
-    height: 100%;
+  .bg {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: 500px;
+    height: 215px;
+    background: darkgray url(${Bg});
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     display: flex;
-    align-items: center;
-    flex-direction: column;
+    justify-content: center;
     .tabs {
       display: flex;
-      margin-top: 20px;
+      margin-top: 100px;
+      border-radius: 20px;
+      background-color: rgba(255, 255, 255, 0.65);
+      padding: 5px;
+      height: 40px;
+      font-size: 14px;
+      line-height: 18px;
       .tab {
         cursor: pointer;
         width: 120px;
         height: 40px;
-        font-size: 16px;
-        font-weight: 600;
-        color: rgba(0, 0, 0, 0.6);
-        line-height: 22px;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 28px;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: #0e0e0e;
         &.active {
-          background: rgba(251, 207, 164, 0.5);
-          color: rgba(0, 0, 0, 0.8);
-          border-radius: 8px;
+          background-color: white;
+          border-radius: 20px;
         }
       }
     }
+    /* padding-left: 16px; */
+  }
+
+  .detail {
+    flex: 1;
+    background-color: white;
+    border-radius: 35px 35px 0px 0px;
+    margin-top: 140px;
+    z-index: 2;
+    padding-top: 10px;
   }
 `
 
@@ -71,11 +94,12 @@ export const Account: React.FC = () => {
   return (
     <Container>
       <Appbar
+        transparent
         title={t('account.title')}
         left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
-        right={<LogoutSvg onClick={logout.bind(null, history)} />}
+        right={<img src={LogoutPng} onClick={logout.bind(null, history)} />}
       />
-      <section className="detail">
+      <div className="bg">
         <div className="tabs">
           <span
             className={`tab ${isInfo ? 'active' : ''}`}
@@ -90,6 +114,8 @@ export const Account: React.FC = () => {
             {t('account.transactions')}
           </span>
         </div>
+      </div>
+      <section className="detail">
         <Switch>
           <Route component={Info} path={RoutePath.Info} exact />
           <Route component={Transactions} path={RoutePath.Transactions} exact />
