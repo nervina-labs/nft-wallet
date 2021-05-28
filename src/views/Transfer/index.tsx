@@ -437,7 +437,7 @@ export const Transfer: React.FC = () => {
               {`${t('transfer.transfer')}${colonWithSpace}${nftDetail.name}`}
             </div>
             <p className="address">
-              {`${t('transfer.address')}${colonWithSpace}${address}`}
+              {`${t('transfer.address')}${colonWithSpace}${ckbAddress}`}
             </p>
             <div className="center">
               <Button
