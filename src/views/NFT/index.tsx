@@ -197,11 +197,27 @@ export const NFT: React.FC = () => {
     })
   }, [history, id, detail])
 
+  const explorerURL = useMemo(() => {
+    return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
+  }, [data])
+
   const openDialog = useCallback(() => {
     if (data !== undefined) {
-      setIsDialogOpen(true)
+      if (navigator.share) {
+        navigator
+          .share({
+            url: explorerURL,
+            text: 'Share test',
+            title: t('common.title'),
+          })
+          .catch(() => {
+            console.error('share failed')
+          })
+      } else {
+        setIsDialogOpen(true)
+      }
     }
-  }, [data])
+  }, [data, t, explorerURL])
 
   const bgColor = useMemo(() => {
     if (isFallBackImgLoaded) {
@@ -209,10 +225,6 @@ export const NFT: React.FC = () => {
     }
     return imageColor
   }, [isFallBackImgLoaded, imageColor])
-
-  const explorerURL = useMemo(() => {
-    return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
-  }, [data])
 
   const isTransferable = useMemo(() => {
     if (detail === undefined) {
