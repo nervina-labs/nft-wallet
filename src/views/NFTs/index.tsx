@@ -137,8 +137,20 @@ export const NFTs: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const openDialog = useCallback(() => {
-    setIsDialogOpen(true)
-  }, [])
+    if (navigator.share) {
+      navigator
+        .share({
+          url: explorerURL,
+          text: 'Share test',
+          title: t('common.title'),
+        })
+        .catch(() => {
+          console.error('share failed')
+        })
+    } else {
+      setIsDialogOpen(true)
+    }
+  }, [explorerURL, t])
 
   const closeDialog = (): void => setIsDialogOpen(false)
 
