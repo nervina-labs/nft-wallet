@@ -36,7 +36,8 @@
       "connect": {
         "unipass": "连接 Unipass（推荐）",
         "metamask": "连接以太坊环境",
-        "wallet-connect": "连接 Wallet Connect"
+        "wallet-connect": "连接 Wallet Connect",
+        "imtoken": ""
       },
       "errors": {
         "not-support": "当前环境不支持连接以太坊",
