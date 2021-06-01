@@ -63,13 +63,7 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
         return result
       }
 
-      if (typeof window.ethereum !== 'undefined') {
-        window.ethereum
-          .request({ method: 'personal_sign', params: [from, message] })
-          .then((result: string) => {
-            resolve(handleResult(result))
-          })
-      } else if (window.web3) {
+      if (window.web3) {
         window.web3.currentProvider.sendAsync(
           { method: 'personal_sign', params: [message, from], from },
           (err: any, result: any) => {
@@ -82,6 +76,12 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
             resolve(handleResult(result.result))
           }
         )
+      } else if (typeof window.ethereum !== 'undefined') {
+        window.ethereum
+          .request({ method: 'personal_sign', params: [from, message] })
+          .then((result: string) => {
+            resolve(handleResult(result))
+          })
       } else {
         reject(
           new Error(
