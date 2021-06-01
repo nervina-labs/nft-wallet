@@ -255,7 +255,7 @@ export const Login: React.FC = () => {
         }
         onClick={loginBtnOnClick}
       >
-        {t('login.connect.unipass')}
+        {t('login.connect.unipass')}&nbsp;
         {isUnipassLogining ? (
           <CircularProgress className="loading" size="1em" />
         ) : null}
