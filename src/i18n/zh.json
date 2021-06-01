@@ -34,10 +34,11 @@
     "login": {
       "title": "秘宝账户",
       "connect": {
-        "unipass": "连接 Unipass（推荐）",
+        "unipass": "连接 Unipass",
         "metamask": "连接以太坊环境",
         "wallet-connect": "连接 Wallet Connect",
-        "imtoken": ""
+        "connect": "连接",
+        "recommend": "（推荐）"
       },
       "errors": {
         "not-support": "当前环境不支持连接以太坊",
