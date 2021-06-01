@@ -37,7 +37,7 @@
         "unipass": "Connect to Unipass",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
-        "connect": "Connect",
+        "connect": "Connect to",
         "recommend": "(recommand)"
       },
       "errors": {
