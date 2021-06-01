@@ -253,7 +253,7 @@ export const Login: React.FC = () => {
         <p className="desc">{t('login.desc-2')}</p>
       </div>
       <Button
-        className="recommend connect"
+        className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
         disabled={
           isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
         }
@@ -265,13 +265,13 @@ export const Login: React.FC = () => {
         ) : null}
       </Button>
       <Button
-        className="connect"
+        className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}
         disabled={
           isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
         }
         onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
       >
-        {t('login.connect.metamask')}&nbsp;
+        {t(`login.connect.${IS_IMTOKEN ? 'imtoken' : 'metamask'}`)}&nbsp;
         {isMetamaskLoging ? (
           <CircularProgress className="loading" size="1em" />
         ) : null}

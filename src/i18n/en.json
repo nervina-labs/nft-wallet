@@ -36,7 +36,8 @@
       "connect": {
         "unipass": "Connect to Unipass (Recommend)",
         "metamask": "Connect to Ethereum Environment",
-        "wallet-connect": "Connect to Wallet Connect"
+        "wallet-connect": "Connect to Wallet Connect",
+        "imtoken": ""
       },
       "errors": {
         "not-support": "The current environment does not support connecting to Ethereum",
