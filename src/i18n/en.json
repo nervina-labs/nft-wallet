@@ -34,10 +34,11 @@
     "login": {
       "title": "NFT Account",
       "connect": {
-        "unipass": "Connect to Unipass (Recommend)",
+        "unipass": "Connect to Unipass",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
-        "imtoken": ""
+        "connect": "Connect",
+        "recommend": "(recommand)"
       },
       "errors": {
         "not-support": "The current environment does not support connecting to Ethereum",

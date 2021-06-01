@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../../assets/img/logo.png'
+import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -85,9 +86,26 @@ const Container = styled(MainContainer)`
     margin-left: 50px;
     margin-right: 50px;
     margin-top: 12px;
+
+    .imtoken {
+      margin: 0 4px;
+    }
+
+    svg {
+      g {
+        fill: white;
+      }
+    }
+
     &:disabled {
       color: rgb(214, 214, 214) !important;
       background-color: white !important;
+
+      svg {
+        g {
+          fill: rgb(214, 214, 214);
+        }
+      }
     }
     &.MuiButton-text {
       padding-top: 12px;
@@ -260,6 +278,7 @@ export const Login: React.FC = () => {
         onClick={loginBtnOnClick}
       >
         {t('login.connect.unipass')}
+        {IS_IMTOKEN ? '' : t('login.connect.recommend')}
         {isUnipassLogining ? (
           <CircularProgress className="loading" size="1em" />
         ) : null}
@@ -271,7 +290,16 @@ export const Login: React.FC = () => {
         }
         onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
       >
-        {t(`login.connect.${IS_IMTOKEN ? 'imtoken' : 'metamask'}`)}&nbsp;
+        {IS_IMTOKEN ? (
+          <>
+            {t('login.connect.connect')}
+            <ImtokenSvg className="imtoken" />
+            {t('login.connect.recommend')}
+          </>
+        ) : (
+          t('login.connect.metamask')
+        )}
+        &nbsp;
         {isMetamaskLoging ? (
           <CircularProgress className="loading" size="1em" />
         ) : null}
