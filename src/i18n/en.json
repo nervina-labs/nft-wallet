@@ -38,7 +38,7 @@
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
         "connect": "Connect to",
-        "recommend": "(recommand)"
+        "recommend": "(recommend)"
       },
       "errors": {
         "not-support": "The current environment does not support connecting to Ethereum",

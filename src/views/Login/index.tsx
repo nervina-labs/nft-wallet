@@ -272,7 +272,6 @@ export const Login: React.FC = () => {
           <>
             {t('login.connect.connect')}
             <ImtokenSvg className="imtoken" />
-            {t('login.connect.recommend')}
           </>
         ) : (
           t('login.connect.metamask')
