@@ -256,7 +256,6 @@ export const Login: React.FC = () => {
         onClick={loginBtnOnClick}
       >
         {t('login.connect.unipass')}
-        {IS_IMTOKEN ? '' : t('login.connect.recommend')}
         {isUnipassLogining ? (
           <CircularProgress className="loading" size="1em" />
         ) : null}
