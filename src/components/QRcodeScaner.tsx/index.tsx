@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react'
-import { BrowserQRCodeReader } from '@zxing/library'
+import { BrowserQRCodeReader, Result } from '@zxing/library'
 import { TFunction } from 'react-i18next'
 import styled from 'styled-components'
 import { Drawer } from '@material-ui/core'
@@ -111,14 +111,25 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
     isScaning: false,
   }
 
+  private facingMode: 'user' | 'environment' = 'environment'
+
   private readonly toggle = async (): Promise<void> => {
     await this.startScan(true)
+  }
+
+  private isSupportedFacingMode(): boolean {
+    return (
+      navigator?.mediaDevices?.getSupportedConstraints?.()?.facingMode ?? false
+    )
   }
 
   public async startScan(toggle = false): Promise<void> {
     const { onDecode, onDecodeError, onScanCkbAddress } = this.props
     if (this.scaner === null) {
       this.scaner = new BrowserQRCodeReader()
+    }
+    if (toggle) {
+      this.scaner.reset()
     }
     const devices = await this.scaner.listVideoInputDevices()
     let deviceId =
@@ -137,24 +148,35 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
         deviceId
     }
     this.currentDeviceId = deviceId
+    const handleResult = (result?: Result): void => {
+      if (result == null) {
+        return
+      }
+      const text = result.getText().replace(/^ethereum:/, '')
+      onDecode?.(text)
+      this.setState({ isScaning: false })
+      if (verifyCkbLongAddress(text) || verifyEthAddress(text)) {
+        this.setState({ nonAddressResult: '' })
+        onScanCkbAddress(text)
+      } else {
+        this.setState({ nonAddressResult: text })
+      }
+      this.stopScan()
+    }
     this.setState({ nonAddressResult: '', isScaning: true }, () => {
-      this.scaner!.decodeOnceFromVideoDevice(deviceId, this.videoRef.current!)
-        .then((result) => {
-          if (result == null) {
-            return
-          }
-          const text = result.getText().replace(/^ethereum:/, '')
-          onDecode?.(text)
-          this.setState({ isScaning: false })
-          if (verifyCkbLongAddress(text) || verifyEthAddress(text)) {
-            this.setState({ nonAddressResult: '' })
-            onScanCkbAddress(text)
-          } else {
-            this.setState({ nonAddressResult: text })
-          }
-          this.stopScan()
-        })
-        .catch(onDecodeError)
+      if (this.isSupportedFacingMode()) {
+        this.scaner?.decodeFromConstraints(
+          { video: { facingMode: this.facingMode } },
+          this.videoRef.current!,
+          handleResult
+        )
+        this.facingMode =
+          this.facingMode === 'environment' ? 'user' : 'environment'
+      } else {
+        this.scaner!.decodeOnceFromVideoDevice(deviceId, this.videoRef.current!)
+          .then(handleResult)
+          .catch(onDecodeError)
+      }
     })
   }
 
