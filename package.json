@@ -7,7 +7,7 @@
     "yarn": "1.22.10"
   },
   "scripts": {
-    "dev": "HTTPS=true craco start",
+    "dev": "craco start",
     "build": "craco build",
     "start": "serve -s build",
     "lint": "eslint src"
@@ -23,11 +23,11 @@
     "@zxing/library": "^0.18.5",
     "axios": "^0.21.1",
     "china-division": "^2.3.1",
+    "classnames": "^2.3.1",
     "clipboard-polyfill": "^3.0.3",
     "dayjs": "1.10.4",
     "hox": "^1.1.3",
     "i18next": "^20.2.2",
-    "jslib-html5-camera-photo": "^3.1.6",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.0",
     "react-better-tilt": "1.5.12",
@@ -45,13 +45,11 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.1.1",
-    "@types/jslib-html5-camera-photo": "^3.1.1",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.9",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
-    "@vitejs/plugin-react-refresh": "^1.3.1",
     "babel-plugin-styled-components": "^1.12.0",
     "eslint": "7",
     "eslint-config-standard-with-typescript": "^20.0.0",
@@ -63,7 +61,6 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.2.1",
     "react-scripts": "4.0.2",
-    "rollup-plugin-node-builtins": "^2.1.2",
     "typescript": "^4.1.2"
   },
   "browserslist": {
