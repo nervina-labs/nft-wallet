@@ -45,6 +45,9 @@ const Header = styled.header<HeaderProps>`
   }
   .right,
   .left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     img,
     svg {
       cursor: pointer;
