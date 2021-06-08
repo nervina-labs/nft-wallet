@@ -2182,6 +2182,11 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
+"@types/jslib-html5-camera-photo@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@types/jslib-html5-camera-photo/-/jslib-html5-camera-photo-3.1.1.tgz#0939884c675b074790407955c380deec7023a818"
+  integrity sha512-/o/18TdMy/U/nq4Svx7000JoU1WG4dcYT73LwyLUTrB6tYQEPLuQvWYyZtqsoQdhQpOUzWcI3ahQRJJFysv2Gg==
+
 "@types/json-schema@*", "@types/json-schema@^7.0.3", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.6":
   version "7.0.7"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.7.tgz#98a993516c859eb0d5c4c8f098317a9ea68db9ad"
@@ -4042,6 +4047,11 @@ check-types@^11.1.1:
   version "11.1.2"
   resolved "https://registry.yarnpkg.com/check-types/-/check-types-11.1.2.tgz#86a7c12bf5539f6324eb0e70ca8896c0e38f3e2f"
   integrity sha512-tzWzvgePgLORb9/3a0YenggReLKAIb2owL03H2Xdoe5pKcUyWRSEQ8xfCar8t2SIAuEDwtmx2da1YB52YuHQMQ==
+
+china-division@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/china-division/-/china-division-2.3.1.tgz#a49fa806af01d1852747466ad3c30bf0be988511"
+  integrity sha512-mOfLagVRZ+lRmbIIZ0sci0+9Sr+uGyPCp9an4Orov2KxLf3DGSB/4qyao/jy3pegW4Weppvh0yzGfs+dAPJA7A==
 
 chokidar@^2.1.8:
   version "2.1.8"
@@ -8305,6 +8315,11 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0=
 
+jslib-html5-camera-photo@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/jslib-html5-camera-photo/-/jslib-html5-camera-photo-3.1.6.tgz#7ee73b941fedbaddd5b22a3f1c357a8420d7a915"
+  integrity sha512-0vatC1Nl1D0fxewh7e0xI9pQ7KrUIGUALnSOcSw0cFCbbi70QbeoJJJMscLQDE5DSfXLbkaQg3wxzsyT92p/pg==
+
 json-buffer@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.0.tgz#5b1f397afc75d677bde8bcfc0e47e1f9a3d9a898"
@@ -11188,6 +11203,11 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-mobile-datepicker@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-mobile-datepicker/-/react-mobile-datepicker-4.0.2.tgz#b2574405088dfbeb17d257d7e743bb5c798c2b1e"
+  integrity sha512-B83IF3fCcq7U2Q/ZX83PUfcdaHhXpTgYXqkZW1AffOSappDtKYd7Tc1IgSBCBnON8UghWdFbj0xtnkofZsLzzw==
+
 react-query@^3.13.4:
   version "3.13.4"
   resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.13.4.tgz#8924c4453bf8e1332bfec994390e734c41ce8dc2"
@@ -11321,6 +11341,11 @@ react-transition-group@^4.4.0:
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
+
+react-webcam@^5.2.4:
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/react-webcam/-/react-webcam-5.2.4.tgz#714b4460ea43ac7ed081824299cd2a580f764478"
+  integrity sha512-Qqj14t68Ke1eoEYjFde+N48HtuIJg0ePIQRpFww9eZt5oBcDpe/l60h+m3VRFJAR5/E3dOhSU5R8EJEcdCq/Eg==
 
 react@^16.8.6:
   version "16.14.0"
