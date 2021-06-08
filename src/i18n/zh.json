@@ -152,6 +152,11 @@
       "female": "女",
       "comfirm": "确认",
       "reshot": "重拍"
+    },
+    "explore": {
+      "all": "全部",
+      "metaverse": "元宇宙",
+      "my": "我的"
     }
   }
 }

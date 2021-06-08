@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { NFT, NFTDetail } from './nft'
+import { ClassList } from './class-list'
 import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 
@@ -25,6 +26,11 @@ export interface NFTWalletAPI {
     toAddress: string,
     isUnipass?: boolean
   ) => Promise<NFTTransaction>
+
+  getClassListByTagId: (
+    uuid: string,
+    page: number
+  ) => Promise<AxiosResponse<ClassList>>
 
   transfer: (
     uuid: string,

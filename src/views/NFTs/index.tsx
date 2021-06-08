@@ -23,6 +23,7 @@ import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import Bg from '../../assets/img/nft-bg.png'
 import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
+import { HiddenBar } from '../../components/HiddenBar'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -229,6 +230,7 @@ export const NFTs: React.FC = () => {
         closeDialog={closeDialog}
         isDialogOpen={isDialogOpen}
       />
+      <HiddenBar />
     </Container>
   )
 }
