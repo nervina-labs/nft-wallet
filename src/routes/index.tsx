@@ -19,6 +19,7 @@ import i18n from '../i18n'
 import { Profile } from '../views/Profile'
 import { ImagePreview } from '../views/Profile/ImagePreview'
 import { TakePhoto } from '../views/Profile/TakePhoto'
+import { Explore } from '../views/Explore'
 
 export enum RoutePath {
   Launch = '/',
@@ -33,6 +34,7 @@ export enum RoutePath {
   Profile = '/profile',
   ImagePreview = '/avatar/preview',
   TakePhoto = '/avatar/camera',
+  Explore = '/metaverse',
 }
 
 const WalletChange: React.FC = ({ children }) => {
@@ -103,6 +105,12 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: true,
     key: 'TakePhoto',
     path: RoutePath.TakePhoto,
+  },
+  {
+    component: Explore,
+    exact: true,
+    key: 'Explore',
+    path: RoutePath.Explore,
   },
 ]
 
