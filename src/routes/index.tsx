@@ -16,6 +16,9 @@ import { NFTs } from '../views/NFTs'
 import { NotFound } from '../views/NotFound'
 import { Transfer } from '../views/Transfer'
 import i18n from '../i18n'
+import { Profile } from '../views/Profile'
+import { ImagePreview } from '../views/Profile/ImagePreview'
+import { TakePhoto } from '../views/Profile/TakePhoto'
 
 export enum RoutePath {
   Launch = '/',
@@ -27,6 +30,9 @@ export enum RoutePath {
   Transfer = '/transfer/:id',
   Info = '/account/info',
   Transactions = '/account/tx',
+  Profile = '/profile',
+  ImagePreview = '/avatar/preview',
+  TakePhoto = '/avatar/camera',
 }
 
 const WalletChange: React.FC = ({ children }) => {
@@ -79,6 +85,24 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: true,
     key: 'Login',
     path: RoutePath.Login,
+  },
+  {
+    component: Profile,
+    exact: true,
+    key: 'Profile',
+    path: RoutePath.Profile,
+  },
+  {
+    component: ImagePreview,
+    exact: true,
+    key: 'ImagePreview',
+    path: RoutePath.ImagePreview,
+  },
+  {
+    component: TakePhoto,
+    exact: true,
+    key: 'TakePhoto',
+    path: RoutePath.TakePhoto,
   },
 ]
 
