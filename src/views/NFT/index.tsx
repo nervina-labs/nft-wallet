@@ -240,7 +240,7 @@ export const NFT: React.FC = () => {
     )
   }, [address, detail])
 
-  if (!isLogined && matchTokenClass?.isExact === false) {
+  if (!isLogined && matchTokenClass?.isExact !== true) {
     return <Redirect to={RoutePath.Explore} />
   }
 

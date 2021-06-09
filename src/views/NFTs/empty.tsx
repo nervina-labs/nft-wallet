@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import Emptypng from '../../assets/img/empty.png'
 import { NFT_EXPLORER_URL } from '../../constants'
 import { LazyLoadImage } from '../../components/Image'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../../routes'
 
 const Container = styled.div`
   margin-top: 80px;
@@ -32,6 +34,7 @@ const Container = styled.div`
 
 export const Empty: React.FC = () => {
   const { t } = useTranslation('translations')
+  const history = useHistory()
   return (
     <Container>
       <LazyLoadImage src={Emptypng} width={260} height={172} />
@@ -41,6 +44,10 @@ export const Empty: React.FC = () => {
         target="_blank"
         rel="noopener noreferrer"
         href={NFT_EXPLORER_URL}
+        onClick={(e) => {
+          e.preventDefault()
+          history.push(RoutePath.Explore)
+        }}
       >
         {t('nfts.link')}
       </a>
