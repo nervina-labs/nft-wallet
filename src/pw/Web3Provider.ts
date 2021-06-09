@@ -49,6 +49,39 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
     return this
   }
 
+  async signMsg(message: string): Promise<string> {
+    return await new Promise((resolve, reject) => {
+      const from = this.address.addressString
+
+      if (typeof window.ethereum !== 'undefined') {
+        window.ethereum
+          .request({ method: 'personal_sign', params: [from, message] })
+          .then((result: string) => {
+            resolve(result)
+          })
+      } else if (window.web3) {
+        window.web3.currentProvider.sendAsync(
+          { method: 'personal_sign', params: [message, from], from },
+          (err: any, result: any) => {
+            if (err) {
+              reject(err)
+            }
+            if (result.error) {
+              reject(result.error)
+            }
+            resolve(result.result)
+          }
+        )
+      } else {
+        reject(
+          new Error(
+            'window.ethereum/window.web3 is undefined, Ethereum environment is required.'
+          )
+        )
+      }
+    })
+  }
+
   async sign(message: string): Promise<string> {
     if (!IS_MAINNET) {
       return await super.sign(message)
