@@ -113,7 +113,7 @@ export const Profile: React.FC = () => {
   const { isLogined } = useWalletModel()
 
   if (!isLogined) {
-    return <Redirect to={RoutePath.Login} />
+    return <Redirect to={RoutePath.Explore} />
   }
 
   return (

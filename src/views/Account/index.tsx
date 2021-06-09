@@ -86,7 +86,7 @@ export const Account: React.FC = () => {
 
   const { isLogined } = useWalletModel()
   if (!isLogined) {
-    return <Redirect to={RoutePath.Login} />
+    return <Redirect to={RoutePath.Explore} />
   }
   if (isAccount) {
     return <Redirect from={RoutePath.Account} exact to={RoutePath.Info} />
