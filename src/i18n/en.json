@@ -55,7 +55,8 @@
       "no-data": "Awwww... You do not yet own any NFT",
       "link": "Explore NFT Meta-universe",
       "welcome": "Welcome to NFT universe",
-      "hi": "Hi, NFT collector"
+      "hi": "Hi, NFT collector",
+      "share": "Share"
     },
     "transfer": {
       "scan": {
