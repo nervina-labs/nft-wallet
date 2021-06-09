@@ -144,7 +144,7 @@ export const Routers: React.FC = () => {
             <Redirect
               exact
               from={RoutePath.Launch}
-              to={isLogined ? RoutePath.NFTs : RoutePath.Login}
+              to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
             />
             <Route component={NotFound} path="*" />
           </Switch>

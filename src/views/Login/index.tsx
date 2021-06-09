@@ -10,8 +10,9 @@ import { CircularProgress } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
+import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { Redirect } from 'react-router'
+import { Redirect, useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
 import { LocalCache } from '../../cache'
@@ -23,6 +24,18 @@ const Container = styled(MainContainer)`
   flex-direction: column;
   background: white;
   padding: 20px 0;
+
+  .close {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    cursor: pointer;
+  }
 
   .center {
     display: flex;
@@ -141,7 +154,7 @@ export const Login: React.FC = () => {
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
-
+  const history = useHistory()
   const errorMsg = useMemo(() => {
     return t(`login.errors.${errorStatus}`)
   }, [errorStatus, t])
@@ -213,6 +226,9 @@ export const Login: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
+      <div className="close" onClick={() => history.push(RoutePath.Explore)}>
+        <CloseSvg />
+      </div>
       <div className="header">
         <Title style={{ marginRight: '8px' }}>{t('login.title')}</Title>
       </div>
