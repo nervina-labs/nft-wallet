@@ -61,6 +61,7 @@ export const Share: React.FC<ShareProps> = ({
       open={isDialogOpen}
       classes={{ paper: style.paper }}
       onBackdropClick={closeDialog}
+      disableScrollLock={window.innerWidth >= 500}
     >
       <img src={SharePng} alt={t('common.share.copy')} />
       <div className="content" onClick={() => copyzoneRef?.current?.onCopy?.()}>
