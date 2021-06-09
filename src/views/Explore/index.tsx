@@ -35,8 +35,14 @@ const Container = styled(MainContainer)`
     overflow-x: auto;
     word-break: keep-all;
 
-    &::-webkit-scrollbar {
+    /* &::-webkit-scrollbar {
       display: none;
+    } */
+
+    @media (max-width: 500px) {
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     .tag {
