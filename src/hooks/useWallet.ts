@@ -22,6 +22,7 @@ export interface UseWallet {
   logout: (h: History<unknown>) => void
   prevAddress: string | undefined
   walletType?: WalletType
+  signMessage: (msg: string) => Promise<string>
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
@@ -37,6 +38,14 @@ export enum WalletType {
   Unipass = 'Unipass',
   Metamask = 'Metamask',
   WalletConnect = 'WalletConnect',
+}
+
+function toHex(str: string): string {
+  let result = ''
+  for (let i = 0; i < str.length; i++) {
+    result += str.charCodeAt(i).toString(16)
+  }
+  return result
 }
 
 function useWallet(): UseWallet {
@@ -202,6 +211,32 @@ function useWallet(): UseWallet {
     [provider, loginMetamask]
   )
 
+  const signMessage = useCallback(
+    async (msg: string) => {
+      if (unipassAccount?.walletType === WalletType.Unipass) {
+        if (provider != null) {
+          const sig = await provider.sign(toHex(msg))
+          return sig.slice(4)
+        }
+        const p = await new UnipassProvider(
+          UNIPASS_URL,
+          setUnipassAccount
+        ).connect(unipassAccount)
+        setProvider(p)
+        const sig = await p.sign(toHex(msg))
+        return sig.slice(4)
+      }
+      if (provider != null) {
+        const sig = await (provider as Web3Provider).signMsg(msg)
+        return sig
+      }
+      const p = await loginMetamask()
+      setProvider(p)
+      return await (p as Web3Provider).signMsg(msg)
+    },
+    [unipassAccount, provider, setUnipassAccount, loginMetamask]
+  )
+
   const signTransaction = useCallback(
     async (tx: Transaction) => {
       switch (unipassAccount?.walletType) {
@@ -247,6 +282,7 @@ function useWallet(): UseWallet {
     logout,
     prevAddress,
     walletType,
+    signMessage,
   }
 }
 
