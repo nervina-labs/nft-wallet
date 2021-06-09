@@ -29,7 +29,7 @@ const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  /* padding: 0; */
+  padding: 0;
   position: relative;
   h4 {
     text-align: center;
@@ -54,6 +54,12 @@ const Container = styled(MainContainer)`
     color: #333;
     svg {
       margin-right: 6px;
+    }
+  }
+
+  @media (min-width: 500px) {
+    .share {
+      right: calc(50% - 250px);
     }
   }
   .account {
@@ -112,7 +118,7 @@ const Container = styled(MainContainer)`
     background-color: white;
     background: #ecf2f5;
     border-radius: 35px 35px 0px 0px;
-    margin-top: 140px;
+    margin-top: 184px;
     z-index: 2;
     padding-top: 10px;
     .infinite-scroll-component {

@@ -37,6 +37,12 @@ const Container = styled(MainContainer)`
     cursor: pointer;
   }
 
+  @media (min-width: 500px) {
+    .close {
+      left: calc(50% - 250px);
+    }
+  }
+
   .center {
     display: flex;
     flex-direction: column;
