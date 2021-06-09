@@ -3,6 +3,9 @@ import { ListMeta } from './nft'
 export interface Tag {
   uuid: string
   name: string
+  locales: {
+    [key: string]: string
+  }
 }
 
 export interface TokenClass {
