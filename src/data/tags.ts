@@ -5,23 +5,23 @@ export const tags = !IS_MAINNET
       en: [
         {
           uuid: 'fa9d8bd1-a24d-4cec-a75f-686caac28ba4',
-          name: 'art',
+          name: 'Art',
         },
         {
           uuid: '8d87dd9b-7e9d-45bc-b117-16c8ad556aaa',
-          name: 'souvenir',
+          name: 'Souvenir',
         },
         {
           uuid: '580e3c76-1bf9-46cf-8ba0-31bec267d926',
-          name: 'photography',
+          name: 'Photography',
         },
         {
           uuid: '07ca6fbe-b078-481f-9a12-1cae551b42cc',
-          name: 'rights',
+          name: 'Rights',
         },
         {
           uuid: 'fba08f99-622e-4726-bd47-fd36d7bd6c1d',
-          name: 'model',
+          name: 'Memes',
         },
       ],
       zh: [
@@ -43,7 +43,7 @@ export const tags = !IS_MAINNET
         },
         {
           uuid: 'fba08f99-622e-4726-bd47-fd36d7bd6c1d',
-          name: '模型',
+          name: 'Memes',
         },
       ],
     }
