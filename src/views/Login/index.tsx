@@ -226,7 +226,7 @@ export const Login: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
-      <div className="close" onClick={() => history.push(RoutePath.Explore)}>
+      <div className="close" onClick={() => history.goBack()}>
         <CloseSvg />
       </div>
       <div className="header">
