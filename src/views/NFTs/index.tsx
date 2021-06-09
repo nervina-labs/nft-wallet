@@ -49,6 +49,12 @@ const Container = styled(MainContainer)`
     border-bottom-left-radius: 20px;
     z-index: 10;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    line-height: 18px;
+    color: #333;
+    svg {
+      margin-right: 6px;
+    }
   }
   .account {
     background: rgba(255, 246, 235, 0.553224);
@@ -182,6 +188,7 @@ export const NFTs: React.FC = () => {
     <Container>
       <div className="share" onClick={openDialog}>
         <ShareSvg />
+        {t('nfts.share')}
       </div>
       <div className="bg">
         <p>{t('nfts.hi')}</p>
