@@ -11,6 +11,8 @@ export interface TokenClass {
   description: string
   issued: string
   is_issuer_banned: boolean
+  is_class_banned: boolean
+  uuid: string
   issuer_info: {
     name: string
     avatar_url: string
