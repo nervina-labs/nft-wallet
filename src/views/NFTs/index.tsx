@@ -3,7 +3,6 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import styled from 'styled-components'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Appbar } from '../../components/Appbar'
 import { Card } from '../../components/Card'
 import {
   IS_IPHONE,
@@ -18,9 +17,10 @@ import { Loading } from '../../components/Loading'
 import { Redirect, useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import AccountPng from '../../assets/img/account.png'
-import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import Bg from '../../assets/img/nft-bg.png'
+// import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
+import { ReactComponent as ShareSvg } from '../../assets/svg/share-new.svg'
+import { ReactComponent as AccountSvg } from '../../assets/svg/account-new.svg'
+import Bg from '../../assets/svg/home-bg.svg'
 import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
 import { HiddenBar } from '../../components/HiddenBar'
@@ -28,9 +28,40 @@ import { HiddenBar } from '../../components/HiddenBar'
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
+  min-height: 100%;
+  /* padding: 0; */
+  position: relative;
   h4 {
     text-align: center;
     color: rgba(0, 0, 0, 0.6);
+  }
+  .share {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px 6px 15px;
+    background: rgba(255, 246, 235, 0.553224);
+    backdrop-filter: blur(13px);
+    position: fixed;
+    right: 0;
+    top: 15px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    z-index: 10;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  .account {
+    background: rgba(255, 246, 235, 0.553224);
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    cursor: pointer;
   }
   .bg {
     position: fixed;
@@ -38,10 +69,10 @@ const Container = styled(MainContainer)`
     width: 100%;
     max-width: 500px;
     height: 215px;
-    background: darkgray url(${Bg});
+    background: darkgray url(${Bg as any});
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: bottom;
+    background-position: 0 -80px;
     display: flex;
     flex-direction: column-reverse;
     /* padding-left: 16px; */
@@ -149,34 +180,22 @@ export const NFTs: React.FC = () => {
 
   return (
     <Container>
-      <Appbar
-        transparent
-        title={
-          <div className="center">
-            <span>{t('nfts.title')}</span>
-          </div>
-        }
-        left={
-          <img
-            src={AccountPng}
-            onClick={() => {
-              history.push(RoutePath.Info)
-            }}
-          />
-        }
-        right={<ShareSvg onClick={openDialog} />}
-      />
+      <div className="share" onClick={openDialog}>
+        <ShareSvg />
+      </div>
       <div className="bg">
         <p>{t('nfts.hi')}</p>
         <h3>{t('nfts.welcome')}</h3>
+        <div
+          className="account"
+          onClick={() => history.push(RoutePath.Account)}
+        >
+          <AccountSvg />
+        </div>
       </div>
       <section
         className="list"
-        style={
-          IS_IPHONE
-            ? { position: 'fixed', width: '100%', maxWidth: '100%' }
-            : undefined
-        }
+        style={IS_IPHONE ? { width: '100%', maxWidth: '100%' } : undefined}
       >
         {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
