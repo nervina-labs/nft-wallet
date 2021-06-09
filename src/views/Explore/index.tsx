@@ -1,13 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { tags } from '../../data/tags'
 // import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { TokenClass } from '../../models/class-list'
 import { Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import { LazyLoadImage } from '../../components/Image'
 import FallbackImg from '../../assets/img/card-fallback.png'
@@ -172,9 +171,27 @@ const Card: React.FC<CardProps> = ({ token }) => {
 export const Explore: React.FC = () => {
   const [t, i18n] = useTranslation('translations')
   const [currentTag, setCurrentTag] = useState('all')
-  const allTags = [{ name: t('explore.all'), uuid: 'all' }].concat(
-    tags[i18n.language as 'zh']
+  const { data: tagsResult } = useQuery(
+    Query.Tags,
+    async () => {
+      const { data } = await api.getTags()
+      return data
+    },
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
   )
+  const allTags = useMemo(() => {
+    const tags =
+      tagsResult?.tags.map((tag) => {
+        return {
+          uuid: tag.uuid,
+          name: tag.locales[i18n.language],
+        }
+      }) ?? []
+    return [{ name: t('explore.all'), uuid: 'all' }].concat(tags)
+  }, [tagsResult, i18n.language, t])
 
   const { api } = useWalletModel()
   const {
@@ -184,7 +201,7 @@ export const Explore: React.FC = () => {
     refetch,
     status,
   } = useInfiniteQuery(
-    [Query.explore + currentTag, currentTag],
+    [Query.Explore + currentTag, currentTag],
     async ({ pageParam = 1 }) => {
       const { data } = await api.getClassListByTagId(currentTag, pageParam)
       return data
