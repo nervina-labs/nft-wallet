@@ -17,6 +17,7 @@ const Container = styled.div`
   }
   .avatar {
     margin-right: 6px;
+    max-height: 24px;
     img {
       border-radius: 50%;
       width: 24px;
@@ -24,8 +25,8 @@ const Container = styled.div`
       min-width: 24px;
     }
     svg {
-      position: relative;
-      top: 2px;
+      width: 24px;
+      height: 24px;
     }
   }
   .issuer {
