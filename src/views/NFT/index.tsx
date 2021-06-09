@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import { Redirect, useHistory, useParams } from 'react-router'
+import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { NFTDetail, Query } from '../../models'
@@ -17,6 +17,7 @@ import { NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
+import { TokenClass } from '../../models/class-list'
 
 const Background = styled.div`
   position: absolute;
@@ -138,7 +139,7 @@ const FooterContaienr = styled.footer`
 `
 
 interface FooterProps {
-  nft: NFTDetail
+  nft: NFTDetail | TokenClass
 }
 
 const Footer: React.FC<FooterProps> = ({ nft }) => {
@@ -155,12 +156,16 @@ const Footer: React.FC<FooterProps> = ({ nft }) => {
       <Limited
         count={nft.total}
         bold={false}
-        sn={nft.n_token_id}
+        sn={isTokenClass(nft) ? undefined : nft.n_token_id}
         fontSize={14}
         // color="rgba(63, 63, 63, 0.66) !important"
       />
     </FooterContaienr>
   )
+}
+
+function isTokenClass(data?: TokenClass | NFTDetail): data is TokenClass {
+  return !!data && !('tx_state' in data)
 }
 
 export const NFT: React.FC = () => {
@@ -170,7 +175,7 @@ export const NFT: React.FC = () => {
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(false)
   const [imageColor, setImageColor] = useState<string>()
   const closeDialog = (): void => setIsDialogOpen(false)
-
+  const matchTokenClass = useRouteMatch(RoutePath.TokenClass)
   const appRef = useRef(null)
   const width = useWidth(appRef)
   const imageWidth = useMemo(() => {
@@ -184,6 +189,10 @@ export const NFT: React.FC = () => {
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api],
     async () => {
+      if (matchTokenClass?.isExact) {
+        const { data } = await api.getTokenClass(id)
+        return data
+      }
       const { data } = await api.getNFTDetail(id)
       return data
     },
@@ -211,11 +220,17 @@ export const NFT: React.FC = () => {
   }, [isFallBackImgLoaded, imageColor])
 
   const explorerURL = useMemo(() => {
+    if (isTokenClass(data)) {
+      return `${NFT_EXPLORER_URL}/nft/${id ?? ''}`
+    }
     return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
-  }, [data])
+  }, [data, id])
 
   const isTransferable = useMemo(() => {
     if (detail === undefined) {
+      return false
+    }
+    if (isTokenClass(detail)) {
       return false
     }
     return (
@@ -225,8 +240,8 @@ export const NFT: React.FC = () => {
     )
   }, [address, detail])
 
-  if (!isLogined) {
-    return <Redirect to={RoutePath.Login} />
+  if (!isLogined && matchTokenClass?.isExact === false) {
+    return <Redirect to={RoutePath.Explore} />
   }
 
   if (
@@ -276,13 +291,15 @@ export const NFT: React.FC = () => {
       ) : (
         <>
           <section className="detail">
-            <div
-              className={`${!isTransferable ? 'disabled' : ''} transfer`}
-              onClick={isTransferable ? tranfer : undefined}
-            >
-              <span className="arrow">&#8594;</span>
-              <span>{t('nft.transfer')}</span>
-            </div>
+            {isTokenClass(detail) ? null : (
+              <div
+                className={`${!isTransferable ? 'disabled' : ''} transfer`}
+                onClick={isTransferable ? tranfer : undefined}
+              >
+                <span className="arrow">&#8594;</span>
+                <span>{t('nft.transfer')}</span>
+              </div>
+            )}
             <div className="title">{detail?.name}</div>
             <div className="desc">{detail?.description}</div>
           </section>

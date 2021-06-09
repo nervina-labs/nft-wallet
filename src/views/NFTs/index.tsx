@@ -144,7 +144,7 @@ export const NFTs: React.FC = () => {
   const closeDialog = (): void => setIsDialogOpen(false)
 
   if (!isLogined) {
-    return <Redirect to={RoutePath.Login} />
+    return <Redirect to={RoutePath.Explore} />
   }
 
   return (
@@ -185,7 +185,6 @@ export const NFTs: React.FC = () => {
           <InfiniteScroll
             pullDownToRefresh={!IS_WEXIN}
             refreshFunction={refresh}
-            height={window.innerHeight - 194}
             pullDownToRefreshContent={
               <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
             }

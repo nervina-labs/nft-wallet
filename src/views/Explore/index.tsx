@@ -17,6 +17,7 @@ import { Masonry } from '../../components/Masonry'
 import { Loading } from '../../components/Loading'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { HiddenBar } from '../../components/HiddenBar'
+import { useHistory } from 'react-router'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -78,6 +79,7 @@ const CardContainer = styled.div`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   flex-direction: column;
   overflow: hidden;
+  cursor: pointer;
 
   .media {
     img {
@@ -120,8 +122,13 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ token }) => {
   const width = ((window.innerWidth > 500 ? 500 : window.innerWidth) - 48) / 2
+  const history = useHistory()
   return (
-    <CardContainer>
+    <CardContainer
+      onClick={() => {
+        history.push(`class/${token.uuid}`)
+      }}
+    >
       <div className="media">
         <LazyLoadImage
           src={token.bg_image_url}
@@ -169,8 +176,7 @@ export const Explore: React.FC = () => {
     hasNextPage,
     fetchNextPage,
     refetch,
-    isFetching,
-    isFetchingNextPage,
+    status,
   } = useInfiniteQuery(
     [Query.explore + currentTag, currentTag],
     async ({ pageParam = 1 }) => {
@@ -187,7 +193,6 @@ export const Explore: React.FC = () => {
         }
         return meta.current_page + 1
       },
-      refetchOnWindowFocus: false,
     }
   )
 
@@ -225,7 +230,8 @@ export const Explore: React.FC = () => {
         ))}
       </div>
       <section className="content">
-        {(isFetching && !isFetchingNextPage) || isRefetching ? (
+        {isRefetching ? <Loading /> : null}
+        {data === undefined && status === 'loading' ? (
           <Loading />
         ) : (
           <InfiniteScroll

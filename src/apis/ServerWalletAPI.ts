@@ -10,7 +10,7 @@ import {
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { Transaction as PwTransaction, transformers } from '@lay2/pw-core'
 import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
-import { ClassList } from '../models/class-list'
+import { ClassList, TokenClass } from '../models/class-list'
 
 export class ServerWalletAPI implements NFTWalletAPI {
   private readonly address: string
@@ -60,6 +60,10 @@ export class ServerWalletAPI implements NFTWalletAPI {
         limit: PER_ITEM_LIMIT,
       },
     })
+  }
+
+  async getTokenClass(uuid: string): Promise<AxiosResponse<TokenClass>> {
+    return await this.axios.get(`/token_classes/${uuid}`)
   }
 
   async getTransferNftTransaction(

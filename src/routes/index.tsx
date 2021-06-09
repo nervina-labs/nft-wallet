@@ -26,6 +26,7 @@ export enum RoutePath {
   Login = '/login',
   Account = '/account',
   NFT = '/nft/:id',
+  TokenClass = '/class/:id',
   NFTs = '/nfts',
   NotFound = '/404',
   Transfer = '/transfer/:id',
@@ -75,6 +76,12 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: true,
     key: 'NFT',
     path: RoutePath.NFT,
+  },
+  {
+    component: NFT,
+    exact: true,
+    key: 'TokenClass',
+    path: RoutePath.TokenClass,
   },
   {
     component: Transfer,

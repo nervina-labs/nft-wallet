@@ -454,6 +454,6 @@ export const Transfer: React.FC = () => {
       </Drawer>
     </Container>
   ) : (
-    <Redirect to={RoutePath.Login} />
+    <Redirect to={RoutePath.Explore} />
   )
 }
