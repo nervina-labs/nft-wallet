@@ -89,7 +89,7 @@ const Container = styled(MainContainer)`
       margin-left: 16px;
       color: whitesmoke;
       margin-top: 6px;
-      margin-bottom: 45px;
+      margin-bottom: 55px;
     }
   }
   .center {
