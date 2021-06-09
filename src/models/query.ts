@@ -3,5 +3,6 @@ export enum Query {
   NFTDetail = 'nft-detail',
   NFTList = 'nft-list',
   Transfer = 'transfer',
-  explore = 'explore',
+  Explore = 'explore',
+  Tags = 'tags',
 }

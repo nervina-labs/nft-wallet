@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { NFT, NFTDetail } from './nft'
-import { ClassList, TokenClass } from './class-list'
+import { ClassList, Tag, TokenClass } from './class-list'
 import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 
@@ -33,6 +33,8 @@ export interface NFTWalletAPI {
   ) => Promise<AxiosResponse<ClassList>>
 
   getTokenClass: (uuid: string) => Promise<AxiosResponse<TokenClass>>
+
+  getTags: () => Promise<AxiosResponse<{ tags: Tag[] }>>
 
   transfer: (
     uuid: string,
