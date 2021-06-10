@@ -35,7 +35,7 @@ export enum RoutePath {
   Profile = '/profile',
   ImagePreview = '/avatar/preview',
   TakePhoto = '/avatar/camera',
-  Explore = '/metaverse',
+  Explore = '/explore',
 }
 
 const WalletChange: React.FC = ({ children }) => {
