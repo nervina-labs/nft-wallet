@@ -117,6 +117,47 @@
       "title": "My Account",
       "info": "Address",
       "transactions": "Activity"
+    },
+    "profile": {
+      "title": "Edit Profile",
+      "username": "Name",
+      "gender": "Gender",
+      "birthday": "Birthday",
+      "region": "Region",
+      "description": "Description",
+      "input": "Please enter",
+      "select": "Please select ",
+      "user-name": {
+        "edit": "Edit Name",
+        "desc": "2-24 characters",
+        "placeholder": "Please enter the name "
+      },
+      "desc": {
+        "edit": "Edit description",
+        "desc": "0-100 characters",
+        "placeholder": "Please enter the description"
+      },
+      "edit-birthday": "Select the birthday",
+      "regions": {
+        "edit": "Select the region",
+        "location": "Location",
+        "all": "All"
+      },
+      "avatar": {
+        "camera": "Take a Photo",
+        "photo-lib": "Pick from Library"
+      },
+      "save": "Save",
+      "cancel": "Cancel",
+      "male": "Male",
+      "female": "Female",
+      "comfirm": "Confirm",
+      "reshot": "Retake"
+    },
+    "explore": {
+      "all": "All",
+      "metaverse": "Explore",
+      "my": "My"
     }
   }
 }
