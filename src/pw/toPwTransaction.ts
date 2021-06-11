@@ -54,7 +54,7 @@ export async function rawTransactionToPWTransaction(
         o.type != null
           ? new Script(o.type.code_hash, o.type.args, o.type.hash_type)
           : undefined,
-        undefined
+        new OutPoint(o.previous_output.tx_hash, o.previous_output.index)
       )
   )
 
