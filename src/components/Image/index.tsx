@@ -13,6 +13,13 @@ export interface LazyLoadImageProps {
   onLoaded?: (img: HTMLImageElement | null) => void
   imageStyle?: React.CSSProperties
   setImageHeight?: boolean
+  disableContextMenu?: boolean
+}
+
+const disableConext: React.MouseEventHandler = (e): boolean => {
+  e.preventDefault()
+  e.stopPropagation()
+  return false
 }
 
 export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
@@ -27,6 +34,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
   onLoaded,
   imageStyle,
   setImageHeight = true,
+  disableContextMenu = true,
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
@@ -46,6 +54,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
         <img
           src={src}
           ref={imgRef}
+          onContextMenu={disableContextMenu ? disableConext : undefined}
           onLoad={async () => {
             try {
               await onLoaded?.(imgRef.current)
