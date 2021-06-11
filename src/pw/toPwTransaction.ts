@@ -37,8 +37,8 @@ export async function rawTransactionToPWTransaction(
   rawTx: RPC.RawTransaction,
   isUnipass = true
 ): Promise<Transaction> {
-  const [input] = rawTx.inputs
-  const inputs = input.previous_output != null ? await Promise.all(
+  const [input]: any[] = rawTx.inputs
+  const inputs = input.lock == null && input.type == null ? await Promise.all(
     rawTx.inputs.map(
       async (i) =>
         await Cell.loadFromBlockchain(
