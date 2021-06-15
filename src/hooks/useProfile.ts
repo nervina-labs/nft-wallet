@@ -9,7 +9,7 @@ export type Gender = 'male' | 'female'
 
 export interface Profile {
   username?: string
-  gender?: Gender
+  gender?: string
   birthday?: string
   region?: string
   description?: string
@@ -20,11 +20,6 @@ export interface Profile {
 export interface UseProfile {
   profile: Profile | null
   setProfile: (profile: Partial<Profile>) => void
-  setAvatar: (c: string) => void
-  setUsername: (c: string) => void
-  setGender: (c: Gender) => void
-  setRegion: (c: string) => void
-  setDescription: (c: string) => void
   setPreviewImageData: React.Dispatch<React.SetStateAction<string>>
   showEditSuccess: boolean
   setShowEditSuccess: React.Dispatch<React.SetStateAction<boolean>>
@@ -33,10 +28,14 @@ export interface UseProfile {
   setRemoteProfile: (user: Partial<User>, ext?: string) => Promise<void>
 }
 
+export interface Auths {
+  [key: string]: Profile
+}
+
 function useProfile(): UseProfile {
   const { address, walletType, signMessage, api, provider } = useWalletModel()
-  const [profile, _setProfile] = useLocalStorage<Profile | null>(
-    `profile:${address}`,
+  const [profile, _setProfile] = useLocalStorage<Auths | null>(
+    'mibao_account_profile',
     null
   )
 
@@ -44,16 +43,20 @@ function useProfile(): UseProfile {
 
   const setProfile = useCallback(
     (p: Partial<Profile>) => {
-      return _setProfile({
-        ...profile,
-        ...p,
+      return _setProfile((pp) => {
+        return {
+          ...pp,
+          ...{
+            [address]: p,
+          },
+        }
       })
     },
-    [profile, _setProfile]
+    [_setProfile, address]
   )
 
   const getAuth: () => Promise<Auth> = useCallback(async () => {
-    let signature = profile?.auth
+    let signature = profile?.[address]?.auth
 
     if (!signature) {
       signature = await signMessage(address)
@@ -88,45 +91,9 @@ function useProfile(): UseProfile {
     [getAuth, api]
   )
 
-  const setAvatar = useCallback(
-    async (avatar: string) => {
-      setProfile({ avatar })
-    },
-    [setProfile]
-  )
-  const setUsername = useCallback(
-    async (username: string) => {
-      setProfile({ username })
-    },
-    [setProfile]
-  )
-  const setGender = useCallback(
-    async (gender: Gender) => {
-      setProfile({ gender })
-    },
-    [setProfile]
-  )
-  const setRegion = useCallback(
-    async (region: string) => {
-      setProfile({ region })
-    },
-    [setProfile]
-  )
-  const setDescription = useCallback(
-    async (description: string) => {
-      setProfile({ description })
-    },
-    [setProfile]
-  )
-
   return {
     profile,
     setProfile,
-    setDescription,
-    setRegion,
-    setGender,
-    setUsername,
-    setAvatar,
     previewImageData,
     setPreviewImageData,
     getAuth,

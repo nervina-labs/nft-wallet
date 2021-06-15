@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useCallback, useMemo, useState } from 'react'
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import styled from 'styled-components'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Card } from '../../components/Card'
@@ -17,13 +17,21 @@ import { Loading } from '../../components/Loading'
 import { Redirect, useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-// import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share-new.svg'
 import { ReactComponent as AccountSvg } from '../../assets/svg/account-new.svg'
 import Bg from '../../assets/svg/home-bg.svg'
 import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
 import { HiddenBar } from '../../components/HiddenBar'
+import { LazyLoadImage } from '../../components/Image'
+import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
+import { ReactComponent as SettingSvg } from '../../assets/svg/setting.svg'
+import { ReactComponent as MaleSvg } from '../../assets/svg/male.svg'
+import { ReactComponent as FemaleSvg } from '../../assets/svg/female.svg'
+import dayjs from 'dayjs'
+import { getRegionFromCode } from '../Profile/SetRegion'
+import { CircularProgress } from '@material-ui/core'
+import classNames from 'classnames'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -80,28 +88,104 @@ const Container = styled(MainContainer)`
     top: 0;
     width: 100%;
     max-width: 500px;
-    height: 215px;
+    height: 245px;
     background: darkgray url(${Bg as any});
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 -80px;
     display: flex;
-    flex-direction: column-reverse;
-    /* padding-left: 16px; */
-    h3 {
-      font-size: 16px;
-      margin: 0;
-      margin-left: 16px;
-      color: whitesmoke;
-      font-weight: normal;
+    flex-direction: column;
+    &.loading {
+      align-items: center;
+      justify-content: center;
     }
+    /* padding-left: 16px; */
+    .user {
+      margin-left: 25px;
+      margin-top: 65px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .avatar {
+        height: 56px;
+        svg {
+          width: 56px;
+          height: 56px;
+        }
+      }
+      .content {
+        margin-left: 16px;
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        color: white;
+        flex-direction: column;
+        height: calc(100% - 8px);
+        &.empty {
+          justify-content: center;
+        }
+        .nickname {
+          color: white;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+        }
+        .info {
+          color: white;
+          font-size: 12px;
+          display: flex;
+          align-items: center;
+          span {
+            margin-right: 6px;
+          }
+          .gender {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            width: 21px;
+            height: 21px;
+            background: rgba(240, 240, 240, 0.5);
+          }
+        }
+      }
+      .action {
+        display: flex;
+        /* justify-content: flex-end; */
+        height: 100%;
+        flex-direction: column-reverse;
+        margin-right: 25px;
 
-    p {
-      font-size: 12px;
-      margin-left: 16px;
-      color: whitesmoke;
-      margin-top: 6px;
-      margin-bottom: 55px;
+        .icon {
+          cursor: pointer;
+          background: rgba(255, 246, 235, 0.553224);
+          width: 24px;
+          height: 24px;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          top: -5px;
+        }
+      }
+    }
+    .desc {
+      margin-left: 25px;
+      margin-right: 25px;
+      margin-top: 16px;
+      color: white;
+      font-size: 14px;
+      line-height: 16px;
+      white-space: pre-line;
+      word-break: break-all;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3; /* number of lines to show */
+      -webkit-box-orient: vertical;
     }
   }
   .center {
@@ -118,7 +202,7 @@ const Container = styled(MainContainer)`
     background-color: white;
     background: #ecf2f5;
     border-radius: 35px 35px 0px 0px;
-    margin-top: 184px;
+    margin-top: 199px;
     z-index: 2;
     padding-top: 10px;
     .infinite-scroll-component {
@@ -131,10 +215,42 @@ const Container = styled(MainContainer)`
   }
 `
 
+const GotoProfile: React.FC = ({ children }) => {
+  const history = useHistory()
+  return (
+    <span
+      style={{ cursor: 'pointer' }}
+      onClick={() => history.push(RoutePath.Profile)}
+    >
+      {children}
+    </span>
+  )
+}
+
+const Gender: React.FC<{ gender: string }> = ({ gender }) => {
+  return (
+    <span className="gender">
+      {gender === 'male' ? <MaleSvg /> : <FemaleSvg />}
+    </span>
+  )
+}
+
 export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const history = useHistory()
+
+  const { data: user, isLoading: isUserLoading } = useQuery(
+    [Query.Profile, address],
+    async () => {
+      const profile = await api.getProfile()
+      return profile
+    },
+    {
+      enabled: !!address,
+    }
+  )
+
   const {
     data,
     status,
@@ -186,6 +302,23 @@ export const NFTs: React.FC = () => {
 
   const closeDialog = (): void => setIsDialogOpen(false)
 
+  const isInfoEmpty = useMemo(() => {
+    return !user?.birthday && !user?.gender && !user?.region
+  }, [user])
+
+  const userInfo = useMemo(() => {
+    const y = dayjs().year() - dayjs(user?.birthday ?? Date.now()).year()
+    const years = user?.birthday ? t('profile.years', { year: y }) : null
+    const region = getRegionFromCode(user?.region, i18n.language as 'zh')
+    return (
+      <>
+        {user?.gender ? <Gender gender={user?.gender} /> : null}
+        {years ? <span>{years}</span> : null}
+        {region ? <span>{region}</span> : null}
+      </>
+    )
+  }, [user, t, i18n.language])
+
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -196,9 +329,54 @@ export const NFTs: React.FC = () => {
         <ShareSvg />
         {t('nfts.share')}
       </div>
-      <div className="bg">
-        <p>{t('nfts.hi')}</p>
-        <h3>{t('nfts.welcome')}</h3>
+      <div className={classNames('bg', { loading: isUserLoading })}>
+        {isUserLoading ? (
+          <CircularProgress size="20px" style={{ color: 'white' }} />
+        ) : (
+          <>
+            <div className="user">
+              <div className="avatar">
+                {user?.avatar_url ? (
+                  <LazyLoadImage
+                    src={user?.avatar_url}
+                    width={56}
+                    height={56}
+                    imageStyle={{ borderRadius: '50%' }}
+                    variant="circle"
+                    backup={<PeopleSvg />}
+                  />
+                ) : (
+                  <PeopleSvg />
+                )}
+              </div>
+              <div className={classNames('content', { empty: isInfoEmpty })}>
+                <div className="nickname">
+                  {user?.nickname ? (
+                    user?.nickname
+                  ) : (
+                    <GotoProfile>{t('profile.user-name.empty')}</GotoProfile>
+                  )}
+                </div>
+                {!isInfoEmpty ? <div className="info">{userInfo}</div> : null}
+              </div>
+              <div className="action">
+                <div
+                  className="icon"
+                  onClick={() => history.push(RoutePath.Profile)}
+                >
+                  <SettingSvg />
+                </div>
+              </div>
+            </div>
+            <div className="desc">
+              {user?.description ? (
+                user?.description
+              ) : (
+                <GotoProfile>{t('profile.desc.empty')}</GotoProfile>
+              )}
+            </div>
+          </>
+        )}
         <div
           className="account"
           onClick={() => history.push(RoutePath.Account)}

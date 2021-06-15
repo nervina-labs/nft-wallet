@@ -157,7 +157,8 @@
       "female": "Female",
       "comfirm": "Confirm",
       "reshot": "Retake",
-      "success": "Profile updated"
+      "success": "Profile updated",
+      "years": "{{year}} years old"
     },
     "explore": {
       "all": "All",

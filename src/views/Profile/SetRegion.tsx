@@ -9,6 +9,8 @@ import { allRegions } from '../../data/regions'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { ProfilePath, RoutePath } from '../../routes'
 import { useProfileModel } from '../../hooks/useProfile'
+import { useQueryClient } from 'react-query'
+import { Query } from '../../models'
 
 export interface SetUsernameProps {
   open: boolean
@@ -110,17 +112,38 @@ const Item: React.FC<ItemProps> = ({
 }
 
 export const getRegionFromCode = (
-  region: string,
-  locale: 'zh' | 'en'
-): [string | undefined, string | undefined] => {
-  const [countryCode, province] = region.split(';;')
-  const country = allRegions.find((r) => r.code === countryCode)?.[locale]
-  return [
-    country,
-    country && country === 'CN'
-      ? pc.find((p) => p.code === province)?.name
-      : undefined,
+  region?: string,
+  locale?: string
+): string | null => {
+  if (!region) {
+    return null
+  }
+
+  const [countryCode, cityCode] = region.split(';;')
+  const country = allRegions.find((r) => r.code === countryCode)?.[
+    locale as 'zh'
   ]
+  const isChinese = locale === 'zh'
+  if (!isChinese || !cityCode) {
+    return country ?? null
+  }
+  let city = ''
+  let province = ''
+
+  for (let i = 0; i < pc.length; i++) {
+    const p = pc[i]
+    if (cityCode.startsWith(p.code)) {
+      province = p.name
+      for (let j = 0; j < p.children.length; j++) {
+        const c = p.children[j]
+        if (c.code === cityCode) {
+          city = c.name
+        }
+      }
+    }
+  }
+
+  return `${province}，${city}`
 }
 
 export const SetRegion: React.FC<SetUsernameProps> = ({
@@ -164,7 +187,7 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
           code={r.code}
           onClick={(code) => {
             if (hasNext) {
-              setValue('')
+              // setValue('')
               history.push(ProfilePath.Provinces)
             } else {
               setValue(code)
@@ -206,7 +229,7 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
           code={r.code}
           onClick={(code) => {
             setCurrentProvince(code)
-            setValue('')
+            // setValue('')
             history.push(ProfilePath.Cities)
           }}
         />
@@ -224,6 +247,7 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
     history,
   ])
 
+  const qc = useQueryClient()
   const onSave = useCallback(async () => {
     if (isSaving) {
       return
@@ -238,9 +262,10 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
       //
       console.log(error)
     } finally {
+      await qc.refetchQueries(Query.Profile)
       setIsSaving(false)
     }
-  }, [value, setRemoteProfile, history, isSaving])
+  }, [value, setRemoteProfile, history, isSaving, qc])
 
   return (
     <DrawerConfig

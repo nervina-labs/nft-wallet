@@ -1,8 +1,10 @@
 import { InputAdornment, InputBase, makeStyles } from '@material-ui/core'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
 import { useProfileModel } from '../../hooks/useProfile'
+import { Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
 
@@ -45,6 +47,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
   const [isSaving, setIsSaving] = useState(false)
   const history = useHistory()
   const { setRemoteProfile } = useProfileModel()
+  const qc = useQueryClient()
   const onSave = useCallback(async () => {
     if (isSaving) {
       return
@@ -59,9 +62,10 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
       //
       console.log(error)
     } finally {
+      await qc.refetchQueries(Query.Profile)
       setIsSaving(false)
     }
-  }, [value, setRemoteProfile, history, isSaving])
+  }, [value, setRemoteProfile, history, isSaving, qc])
 
   useEffect(() => {
     if (!open) {
