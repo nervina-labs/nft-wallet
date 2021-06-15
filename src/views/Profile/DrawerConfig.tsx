@@ -7,6 +7,8 @@ import { useWidth } from '../../hooks/useWidth'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 
 const DrawerContainer = styled.div`
+  height: 100%;
+  background-color: ${(props: { bg: string }) => props.bg};
   .username {
     margin: 0 20px;
     margin-top: 38px;
@@ -64,6 +66,7 @@ const Header = styled.header`
   justify-content: center;
   align-items: center;
   height: 78px;
+  background: white;
   color: #2c454c;
   border-bottom: 1px solid #ccc;
   .left {
@@ -106,6 +109,7 @@ export interface DrawerConfigProps {
   isValid: boolean
   onSaving?: () => void
   onClose?: () => void
+  bg?: string
 }
 
 export const DrawerConfig: React.FC<DrawerConfigProps> = ({
@@ -117,11 +121,11 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
   isValid,
   onSaving,
   onClose,
+  bg = 'white',
 }) => {
   const [t] = useTranslation('translations')
   const bodyRef = useRef(document.body)
   const bodyWidth = useWidth(bodyRef)
-
   const drawerLeft = useMemo(() => {
     if (bodyWidth == null) {
       return 0
@@ -149,7 +153,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
         },
       }}
     >
-      <DrawerContainer>
+      <DrawerContainer bg={bg}>
         <Header>
           <span className="left" onClick={close}>
             <BackSvg />

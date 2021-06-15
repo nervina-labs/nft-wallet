@@ -36,6 +36,11 @@ export interface NFTWalletAPI {
 
   getTags: () => Promise<AxiosResponse<{ tags: Tag[] }>>
 
+  getRegion: (
+    longitude: string,
+    latitude: string
+  ) => Promise<AxiosResponse<{ region: string }>>
+
   transfer: (
     uuid: string,
     tx: PwTransaction,

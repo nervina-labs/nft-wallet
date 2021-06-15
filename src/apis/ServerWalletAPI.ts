@@ -66,6 +66,18 @@ export class ServerWalletAPI implements NFTWalletAPI {
     return await this.axios.get('/tags')
   }
 
+  async getRegion(
+    latitude: string,
+    longitude: string
+  ): Promise<AxiosResponse<{ region: string }>> {
+    return await this.axios.get('/regions', {
+      params: {
+        latitude,
+        longitude,
+      },
+    })
+  }
+
   async getTokenClass(uuid: string): Promise<AxiosResponse<TokenClass>> {
     return await this.axios.get(`/token_classes/${uuid}`)
   }
