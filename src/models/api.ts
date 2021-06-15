@@ -3,6 +3,7 @@ import { NFT, NFTDetail } from './nft'
 import { ClassList, Tag, TokenClass } from './class-list'
 import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
+import { Auth, User, UserResponse } from './user'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -31,6 +32,14 @@ export interface NFTWalletAPI {
     uuid: string,
     page: number
   ) => Promise<AxiosResponse<ClassList>>
+
+  setProfile: (
+    user: Partial<User>,
+    auth: Auth,
+    ext?: string
+  ) => Promise<AxiosResponse<object>>
+
+  getProfile: () => Promise<UserResponse>
 
   getTokenClass: (uuid: string) => Promise<AxiosResponse<TokenClass>>
 

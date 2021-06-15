@@ -131,12 +131,14 @@
       "user-name": {
         "edit": "修改名称",
         "desc": "请输入 2-24 个字符",
-        "placeholder": "请输入名称"
+        "placeholder": "请输入名称",
+        "empty": "点击设置昵称"
       },
       "desc": {
         "edit": "修改个人简介",
         "desc": "请输入 0-100 个字符",
-        "placeholder": "请输入简介"
+        "placeholder": "请输入简介",
+        "empty": "您还没有填写个人简介，请点击添加"
       },
       "edit-birthday": "请选择生日",
       "regions": {
@@ -156,7 +158,8 @@
       "male": "男",
       "female": "女",
       "comfirm": "确认",
-      "reshot": "重拍"
+      "reshot": "重拍",
+      "success": "设置成功"
     },
     "explore": {
       "all": "全部",

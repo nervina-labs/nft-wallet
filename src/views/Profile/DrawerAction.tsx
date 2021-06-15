@@ -78,6 +78,8 @@ export const DrawerAcion: React.FC<DrawerConfigProps> = ({
           borderTopRightRadius: '25px',
         },
       }}
+      disableEnforceFocus
+      disableEscapeKeyDown
     >
       <DrawerContainer>
         {actions.map((action) => {

@@ -1,7 +1,9 @@
-import React, { useMemo } from 'react'
+import { CircularProgress } from '@material-ui/core'
+import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Redirect, useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
+import { useProfileModel } from '../../hooks/useProfile'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 
@@ -57,20 +59,26 @@ const Container = styled(MainContainer)`
     }
   }
 `
+interface HistoryData {
+  datauri?: string
+  ext?: string
+}
 
 export const ImagePreview: React.FC = () => {
   const width = `${(window.innerWidth > 500 ? 500 : window.innerWidth) - 50}px`
   const [t] = useTranslation('translations')
   const history = useHistory()
-  const location = useLocation<{ datauri?: string }>()
+  const location = useLocation<HistoryData>()
+  const [isSaving, setIsSaving] = useState(false)
+  const { setRemoteProfile } = useProfileModel()
 
-  const datauri = useMemo(() => {
-    return location.state.datauri
+  const [datauri, ext] = useMemo(() => {
+    return [location.state.datauri, location.state.ext]
   }, [location.state])
 
   const isBlob = useMemo(() => datauri?.startsWith('blob:'), [datauri])
 
-  useMemo(() => {
+  useEffect(() => {
     return () => {
       if (isBlob) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -79,6 +87,27 @@ export const ImagePreview: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const onSave = useCallback(async () => {
+    if (isSaving) {
+      return
+    }
+    setIsSaving(true)
+    try {
+      await setRemoteProfile(
+        {
+          avatar: datauri,
+        },
+        ext
+      )
+      history.push(RoutePath.Profile)
+    } catch (error) {
+      //
+      alert('upload failed')
+    } finally {
+      setIsSaving(false)
+    }
+  }, [datauri, setRemoteProfile, history, isSaving, ext])
 
   if (datauri == null) {
     return <Redirect to={RoutePath.Profile} />
@@ -106,7 +135,9 @@ export const ImagePreview: React.FC = () => {
             {t('profile.cancel')}
           </div>
         )}
-        <div className="comfirm">{t('profile.comfirm')}</div>
+        <div className="comfirm" onClick={onSave}>
+          {isSaving ? <CircularProgress size="1em" /> : t('profile.comfirm')}
+        </div>
       </footer>
     </Container>
   )

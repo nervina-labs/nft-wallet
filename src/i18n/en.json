@@ -131,18 +131,21 @@
       "user-name": {
         "edit": "Edit Name",
         "desc": "2-24 characters",
-        "placeholder": "Please enter the name "
+        "placeholder": "Please enter the name",
+        "empty": "Click to set nickname"
       },
       "desc": {
         "edit": "Edit description",
         "desc": "0-100 characters",
-        "placeholder": "Please enter the description"
+        "placeholder": "Please enter the description",
+        "empty": "Click to set personal profile"
       },
       "edit-birthday": "Select the birthday",
       "regions": {
         "edit": "Select the region",
         "location": "Location",
-        "all": "All"
+        "all": "All",
+        "selected": "Selected"
       },
       "avatar": {
         "camera": "Take a Photo",
@@ -153,7 +156,8 @@
       "male": "Male",
       "female": "Female",
       "comfirm": "Confirm",
-      "reshot": "Retake"
+      "reshot": "Retake",
+      "success": "Profile updated"
     },
     "explore": {
       "all": "All",

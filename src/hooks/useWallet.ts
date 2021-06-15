@@ -40,7 +40,7 @@ export enum WalletType {
   WalletConnect = 'WalletConnect',
 }
 
-function toHex(str: string): string {
+export function toHex(str: string): string {
   let result = ''
   for (let i = 0; i < str.length; i++) {
     result += str.charCodeAt(i).toString(16)
@@ -216,7 +216,7 @@ function useWallet(): UseWallet {
       if (unipassAccount?.walletType === WalletType.Unipass) {
         if (provider != null) {
           const sig = await provider.sign(toHex(msg))
-          return sig.slice(4)
+          return sig
         }
         const p = await new UnipassProvider(
           UNIPASS_URL,
@@ -224,7 +224,7 @@ function useWallet(): UseWallet {
         ).connect(unipassAccount)
         setProvider(p)
         const sig = await p.sign(toHex(msg))
-        return sig.slice(4)
+        return sig
       }
       if (provider != null) {
         const sig = await (provider as Web3Provider).signMsg(msg)

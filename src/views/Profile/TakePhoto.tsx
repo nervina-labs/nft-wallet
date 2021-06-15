@@ -83,7 +83,7 @@ export const TakePhoto: React.FC = () => {
         audio={false}
         videoConstraints={{ facingMode }}
         style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-        screenshotFormat="image/webp"
+        screenshotFormat="image/jpeg"
         screenshotQuality={0.92}
         height={window.innerHeight}
         onUserMediaError={() => {
