@@ -47,7 +47,7 @@ const Container = styled(MainContainer)`
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin: 0 25px;
+    max-width: 100%;
     color: white;
     font-size: 16px;
     .cancel {

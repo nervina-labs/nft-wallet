@@ -16,7 +16,9 @@ export interface SetUsernameProps {
   birthday?: string
 }
 
-const defaultDate = new Date('2000-01-01')
+const defaultDate = new Date('1990-01-01')
+const minDate = new Date('1926-08-17')
+const maxDate = new Date()
 
 export const SetBirthday: React.FC<SetUsernameProps> = ({
   open,
@@ -109,6 +111,8 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
       <div className="birthday">
         <Datepicker
           isPopup={false}
+          min={minDate}
+          max={maxDate}
           showCaption
           dateConfig={dateConfig}
           confirmText=""

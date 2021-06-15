@@ -135,6 +135,9 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
     }
     return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
   }, [bodyWidth])
+  const height = useMemo(() => {
+    return window.innerHeight - 44
+  }, [])
 
   return (
     <Drawer
@@ -149,7 +152,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
           left: drawerLeft,
           borderTopLeftRadius: '25px',
           borderTopRightRadius: '25px',
-          height: `${window.innerHeight - 44}px`,
+          height: `${height}px`,
         },
       }}
       disableEnforceFocus
