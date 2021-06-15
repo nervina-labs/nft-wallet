@@ -107,9 +107,9 @@ const Row: React.FC<RowProps> = ({ label, value, onClick, placeholder }) => {
 export const Profile: React.FC = () => {
   const history = useHistory()
   const { t } = useTranslation('translations')
-  const [isEditingUsername, setIsEditingUsername] = useState(false)
-  const [isEditingDesc, setIsEditingDesc] = useState(false)
-  const [isEditingBirthDay, setIsEditingBirthday] = useState(false)
+  // const [isEditingUsername, setIsEditingUsername] = useState(false)
+  // const [isEditingDesc, setIsEditingDesc] = useState(false)
+  // const [isEditingBirthDay, setIsEditingBirthday] = useState(false)
   const [showGenderAction, setShowGenderAction] = useState(false)
   const [showAvatarAction, setShowAvatarAction] = useState(false)
   const { isLogined } = useWalletModel()
@@ -117,6 +117,12 @@ export const Profile: React.FC = () => {
     path: ProfilePath.Regions,
     strict: false,
   })
+  const matchBirthday = useRouteMatch({
+    path: ProfilePath.Birthday,
+    strict: true,
+  })
+  const matchDesc = useRouteMatch(ProfilePath.Description)
+  const matchUsername = useRouteMatch(ProfilePath.Username)
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
@@ -143,7 +149,7 @@ export const Profile: React.FC = () => {
           label={t('profile.username')}
           placeholder={t('profile.input')}
           onClick={() => {
-            setIsEditingUsername(true)
+            history.push(ProfilePath.Username)
           }}
         />
         <Row
@@ -154,7 +160,7 @@ export const Profile: React.FC = () => {
         <Row
           label={t('profile.birthday')}
           placeholder={t('profile.select')}
-          onClick={() => setIsEditingBirthday(true)}
+          onClick={() => history.push(ProfilePath.Birthday)}
         />
         <Row
           label={t('profile.region')}
@@ -164,17 +170,17 @@ export const Profile: React.FC = () => {
         <Row
           label={t('profile.description')}
           placeholder={t('profile.input')}
-          onClick={() => setIsEditingDesc(true)}
+          onClick={() => history.push(ProfilePath.Description)}
         />
       </section>
       <SetUsername
-        open={isEditingUsername}
-        close={() => setIsEditingUsername(false)}
+        open={!!matchUsername?.isExact}
+        close={() => history.goBack()}
       />
-      <SetDesc open={isEditingDesc} close={() => setIsEditingDesc(false)} />
+      <SetDesc open={!!matchDesc?.isExact} close={() => history.goBack()} />
       <SetBirthday
-        open={isEditingBirthDay}
-        close={() => setIsEditingBirthday(false)}
+        open={!!matchBirthday?.isExact}
+        close={() => history.goBack()}
       />
       <SetRegion
         open={matchRegion != null}

@@ -125,6 +125,9 @@ export enum ProfilePath {
   Regions = '/profile/regions',
   Provinces = '/profile/regions/provinces',
   Cities = '/profile/regions/cities',
+  Username = '/profile/username',
+  Description = '/profile/description',
+  Birthday = '/profile/birthday',
 }
 
 export const Routers: React.FC = () => {
