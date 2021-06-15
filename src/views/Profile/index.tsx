@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Redirect, useHistory } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
@@ -18,6 +18,13 @@ import { ProfilePath, RoutePath } from '../../routes'
 import { useWalletModel } from '../../hooks/useWallet'
 import { SetRegion } from './SetRegion'
 import { useRouteMatch } from 'react-router-dom'
+import Snackbar from '@material-ui/core/Snackbar'
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
+import { useProfileModel } from '../../hooks/useProfile'
+
+const Alert: React.FC<AlertProps> = (props: AlertProps) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />
+}
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -107,9 +114,6 @@ const Row: React.FC<RowProps> = ({ label, value, onClick, placeholder }) => {
 export const Profile: React.FC = () => {
   const history = useHistory()
   const { t } = useTranslation('translations')
-  // const [isEditingUsername, setIsEditingUsername] = useState(false)
-  // const [isEditingDesc, setIsEditingDesc] = useState(false)
-  // const [isEditingBirthDay, setIsEditingBirthday] = useState(false)
   const [showGenderAction, setShowGenderAction] = useState(false)
   const [showAvatarAction, setShowAvatarAction] = useState(false)
   const { isLogined } = useWalletModel()
@@ -123,6 +127,26 @@ export const Profile: React.FC = () => {
   })
   const matchDesc = useRouteMatch(ProfilePath.Description)
   const matchUsername = useRouteMatch(ProfilePath.Username)
+  const { showEditSuccess, setShowEditSuccess } = useProfileModel()
+  const closeEditSuccess = (): void => setShowEditSuccess(false)
+
+  const { setRemoteProfile } = useProfileModel()
+  const onSaveGender = useCallback(
+    async (gender: string) => {
+      try {
+        await setRemoteProfile({
+          gender,
+        })
+        history.push(RoutePath.Profile)
+      } catch (error) {
+        //
+        alert('set profile failed')
+      } finally {
+        setShowGenderAction(false)
+      }
+    },
+    [setRemoteProfile, history]
+  )
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
@@ -130,6 +154,15 @@ export const Profile: React.FC = () => {
 
   return (
     <Container>
+      <Snackbar
+        open={showEditSuccess}
+        autoHideDuration={2000}
+        onClose={closeEditSuccess}
+      >
+        <Alert onClose={closeEditSuccess} severity="success">
+          {t('profile.success')}
+        </Alert>
+      </Snackbar>
       <Appbar
         title={t('profile.title')}
         left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
@@ -195,7 +228,7 @@ export const Profile: React.FC = () => {
           { content: t('profile.male'), value: 'male' },
           { content: t('profile.female'), value: 'female' },
         ]}
-        actionOnClick={(val) => console.log(val)}
+        actionOnClick={onSaveGender}
       />
       <DrawerAcion
         isDrawerOpen={showAvatarAction}
@@ -212,9 +245,11 @@ export const Profile: React.FC = () => {
                   accept="image/*"
                   onChange={(e) => {
                     const [file] = e.target.files ?? []
+                    const [, ext] = file == null ? [] : file?.type?.split('/')
                     if (file) {
                       history.push(RoutePath.ImagePreview, {
                         datauri: URL.createObjectURL(file),
+                        ext,
                       })
                     }
                   }}

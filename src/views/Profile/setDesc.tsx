@@ -1,6 +1,9 @@
 import { InputAdornment, InputBase, makeStyles } from '@material-ui/core'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+import { useProfileModel } from '../../hooks/useProfile'
+import { RoutePath } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
 
 const useStyles = makeStyles((theme) => ({
@@ -39,6 +42,27 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
 
   const classes = useStyles()
 
+  const [isSaving, setIsSaving] = useState(false)
+  const history = useHistory()
+  const { setRemoteProfile } = useProfileModel()
+  const onSave = useCallback(async () => {
+    if (isSaving) {
+      return
+    }
+    setIsSaving(true)
+    try {
+      await setRemoteProfile({
+        description: value,
+      })
+      history.push(RoutePath.Profile)
+    } catch (error) {
+      //
+      console.log(error)
+    } finally {
+      setIsSaving(false)
+    }
+  }, [value, setRemoteProfile, history, isSaving])
+
   useEffect(() => {
     if (!open) {
       setValue(desc ?? '')
@@ -50,6 +74,8 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
       close={close}
       title={t('profile.desc.edit')}
       isValid={len <= 100}
+      isSaving={isSaving}
+      onSaving={onSave}
     >
       <div className="username">
         <InputBase

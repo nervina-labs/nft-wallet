@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { createModel } from 'hox'
 import { useCallback, useState } from 'react'
+import { Auth, User } from '../models/user'
 import { useLocalStorage } from './useLocalStorage'
-import { useWalletModel } from './useWallet'
+import { useWalletModel, WalletType } from './useWallet'
 
 export type Gender = 'male' | 'female'
 
@@ -12,6 +14,7 @@ export interface Profile {
   region?: string
   description?: string
   avatar?: string
+  auth?: string
 }
 
 export interface UseProfile {
@@ -23,11 +26,15 @@ export interface UseProfile {
   setRegion: (c: string) => void
   setDescription: (c: string) => void
   setPreviewImageData: React.Dispatch<React.SetStateAction<string>>
+  showEditSuccess: boolean
+  setShowEditSuccess: React.Dispatch<React.SetStateAction<boolean>>
   previewImageData: string
+  getAuth: () => Promise<Auth>
+  setRemoteProfile: (user: Partial<User>, ext?: string) => Promise<void>
 }
 
 function useProfile(): UseProfile {
-  const { address } = useWalletModel()
+  const { address, walletType, signMessage, api, provider } = useWalletModel()
   const [profile, _setProfile] = useLocalStorage<Profile | null>(
     `profile:${address}`,
     null
@@ -43,6 +50,42 @@ function useProfile(): UseProfile {
       })
     },
     [profile, _setProfile]
+  )
+
+  const getAuth: () => Promise<Auth> = useCallback(async () => {
+    let signature = profile?.auth
+
+    if (!signature) {
+      signature = await signMessage(address)
+      if (signature.includes('N/A')) {
+        throw new Error('signing: user denied')
+      } else {
+        setProfile({
+          auth: signature,
+        })
+      }
+    }
+
+    const addr =
+      walletType === WalletType.Unipass
+        ? address
+        : (provider?.address?.addressString as string)
+    return {
+      address: addr,
+      message: address,
+      signature,
+    }
+  }, [signMessage, walletType, address, profile, setProfile, provider])
+
+  const [showEditSuccess, setShowEditSuccess] = useState(false)
+
+  const setRemoteProfile = useCallback(
+    async (user: Partial<User>, ext?: string) => {
+      const auth = await getAuth()
+      await api.setProfile(user, auth, ext)
+      setShowEditSuccess(true)
+    },
+    [getAuth, api]
   )
 
   const setAvatar = useCallback(
@@ -86,6 +129,10 @@ function useProfile(): UseProfile {
     setAvatar,
     previewImageData,
     setPreviewImageData,
+    getAuth,
+    setRemoteProfile,
+    showEditSuccess,
+    setShowEditSuccess,
   }
 }
 

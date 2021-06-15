@@ -152,6 +152,8 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
           height: `${window.innerHeight - 44}px`,
         },
       }}
+      disableEnforceFocus
+      disableEscapeKeyDown
     >
       <DrawerContainer bg={bg}>
         <Header>

@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import dayjs from 'dayjs'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+import { useProfileModel } from '../../hooks/useProfile'
+import { RoutePath } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Datepicker = require('react-mobile-datepicker')
@@ -68,12 +72,35 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
     },
   }
 
+  const [isSaving, setIsSaving] = useState(false)
+  const history = useHistory()
+  const { setRemoteProfile } = useProfileModel()
+  const onSave = useCallback(async () => {
+    if (isSaving) {
+      return
+    }
+    setIsSaving(true)
+    try {
+      await setRemoteProfile({
+        birthday: dayjs(value).format('YYYY-MM-DD'),
+      })
+      history.push(RoutePath.Profile)
+    } catch (error) {
+      //
+      console.log(error)
+    } finally {
+      setIsSaving(false)
+    }
+  }, [value, setRemoteProfile, history, isSaving])
+
   return (
     <DrawerConfig
       isDrawerOpen={open}
       close={close}
       title={t('profile.edit-birthday')}
       isValid
+      onSaving={onSave}
+      isSaving={isSaving}
     >
       <div className="birthday">
         <Datepicker

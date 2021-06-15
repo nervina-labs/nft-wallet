@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/indent */
 import styled from 'styled-components'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DrawerConfig } from './DrawerConfig'
 import { ReactComponent as RightSvg } from '../../assets/svg/right-arrow.svg'
 import pc from 'china-division/dist/pc-code.json'
 import { allRegions } from '../../data/regions'
 import { useHistory, useRouteMatch } from 'react-router-dom'
-import { ProfilePath } from '../../routes'
+import { ProfilePath, RoutePath } from '../../routes'
+import { useProfileModel } from '../../hooks/useProfile'
 
 export interface SetUsernameProps {
   open: boolean
@@ -129,6 +130,7 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
 }) => {
   const [t, i18n] = useTranslation('translations')
   const [value, setValue] = useState(region ?? '')
+  const [isSaving, setIsSaving] = useState(false)
   const history = useHistory()
   const matchProvince = useRouteMatch(ProfilePath.Provinces)
   const matchCity = useRouteMatch(ProfilePath.Cities)
@@ -136,6 +138,7 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
   const [selectedCountry, selectedCity] = useMemo(() => {
     return value.split(';;')
   }, [value])
+  const { setRemoteProfile } = useProfileModel()
 
   useEffect(() => {
     if (!open) {
@@ -221,12 +224,23 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
     history,
   ])
 
-  // useEffect(() => {
-  //   if (!open) {
-  //     setCurrentCountry('')
-  //     setCurrentProvince('')
-  //   }
-  // }, [open])
+  const onSave = useCallback(async () => {
+    if (isSaving) {
+      return
+    }
+    setIsSaving(true)
+    try {
+      await setRemoteProfile({
+        region: value,
+      })
+      history.push(RoutePath.Profile)
+    } catch (error) {
+      //
+      console.log(error)
+    } finally {
+      setIsSaving(false)
+    }
+  }, [value, setRemoteProfile, history, isSaving])
 
   return (
     <DrawerConfig
@@ -237,6 +251,8 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
       title={t('profile.regions.edit')}
       isValid={!!value}
       bg="#F5F5F5"
+      onSaving={onSave}
+      isSaving={isSaving}
     >
       <Region>
         <div className="label">{t('profile.regions.all')}</div>
