@@ -23,6 +23,7 @@ import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
+import { Skeleton } from '@material-ui/lab'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -149,7 +150,7 @@ export const Profile: React.FC = () => {
   const { showEditSuccess, setShowEditSuccess } = useProfileModel()
   const closeEditSuccess = (): void => setShowEditSuccess(false)
 
-  const { data: user } = useQuery(
+  const { data: user, isLoading } = useQuery(
     [Query.Profile, address],
     async () => {
       const profile = await api.getProfile()
@@ -206,14 +207,18 @@ export const Profile: React.FC = () => {
             style={{ textAlign: 'center' }}
             onClick={() => setShowAvatarAction(true)}
           >
-            <LazyLoadImage
-              width={90}
-              imageStyle={{ borderRadius: '50%' }}
-              height={90}
-              variant="circle"
-              src={user?.avatar_url}
-              backup={<img src={PeopleSvg as any} />}
-            />
+            {isLoading ? (
+              <Skeleton variant="circle" width={90} height={90} />
+            ) : (
+              <LazyLoadImage
+                width={90}
+                imageStyle={{ borderRadius: '50%' }}
+                height={90}
+                variant="circle"
+                src={user?.avatar_url ?? ''}
+                backup={<img src={PeopleSvg as any} />}
+              />
+            )}
             <CameraSvg className="cam" />
           </div>
         </div>
