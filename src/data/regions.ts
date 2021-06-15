@@ -772,7 +772,7 @@ export const allRegions = [
   {
     code: 'TW',
     zh: '中国台湾',
-    en: 'Taiwan',
+    en: 'Taiwan, China',
   },
   {
     code: 'TJ',

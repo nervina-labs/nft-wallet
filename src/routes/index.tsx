@@ -97,7 +97,7 @@ const routes: Array<RouteProps & { key: string }> = [
   },
   {
     component: Profile,
-    exact: true,
+    exact: false,
     key: 'Profile',
     path: RoutePath.Profile,
   },
@@ -120,6 +120,12 @@ const routes: Array<RouteProps & { key: string }> = [
     path: RoutePath.Explore,
   },
 ]
+
+export enum ProfilePath {
+  Regions = '/profile/regions',
+  Provinces = '/profile/regions/provinces',
+  Cities = '/profile/regions/cities',
+}
 
 export const Routers: React.FC = () => {
   const { isLogined, walletType, login } = useWalletModel()

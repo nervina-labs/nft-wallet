@@ -14,8 +14,10 @@ import { SetUsername } from './SetUsername'
 import { SetDesc } from './setDesc'
 import { SetBirthday } from './setBirthday'
 import { DrawerAcion } from './DrawerAction'
-import { RoutePath } from '../../routes'
+import { ProfilePath, RoutePath } from '../../routes'
 import { useWalletModel } from '../../hooks/useWallet'
+import { SetRegion } from './SetRegion'
+import { useRouteMatch } from 'react-router-dom'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -111,6 +113,10 @@ export const Profile: React.FC = () => {
   const [showGenderAction, setShowGenderAction] = useState(false)
   const [showAvatarAction, setShowAvatarAction] = useState(false)
   const { isLogined } = useWalletModel()
+  const matchRegion = useRouteMatch({
+    path: ProfilePath.Regions,
+    strict: false,
+  })
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
@@ -153,7 +159,7 @@ export const Profile: React.FC = () => {
         <Row
           label={t('profile.region')}
           placeholder={t('profile.select')}
-          onClick={() => ({})}
+          onClick={() => history.push(ProfilePath.Regions)}
         />
         <Row
           label={t('profile.description')}
@@ -169,6 +175,12 @@ export const Profile: React.FC = () => {
       <SetBirthday
         open={isEditingBirthDay}
         close={() => setIsEditingBirthday(false)}
+      />
+      <SetRegion
+        open={matchRegion != null}
+        close={() => {
+          history.push(RoutePath.Profile)
+        }}
       />
       <DrawerAcion
         isDrawerOpen={showGenderAction}

@@ -142,7 +142,10 @@
       "regions": {
         "edit": "请选择地区",
         "location": "定位到的位置",
-        "all": "全部"
+        "locating": "定位中...",
+        "all": "全部",
+        "error": "定位失败",
+        "selected": "已选地区"
       },
       "avatar": {
         "camera": "拍照",
