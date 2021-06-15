@@ -159,7 +159,8 @@
       "female": "女",
       "comfirm": "确认",
       "reshot": "重拍",
-      "success": "设置成功"
+      "success": "设置成功",
+      "years": "{{year}} 岁"
     },
     "explore": {
       "all": "全部",

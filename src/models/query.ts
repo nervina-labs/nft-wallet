@@ -5,4 +5,5 @@ export enum Query {
   Transfer = 'transfer',
   Explore = 'explore',
   Tags = 'tags',
+  Profile = 'profile',
 }

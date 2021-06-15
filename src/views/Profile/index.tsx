@@ -16,11 +16,13 @@ import { SetBirthday } from './setBirthday'
 import { DrawerAcion } from './DrawerAction'
 import { ProfilePath, RoutePath } from '../../routes'
 import { useWalletModel } from '../../hooks/useWallet'
-import { SetRegion } from './SetRegion'
+import { getRegionFromCode, SetRegion } from './SetRegion'
 import { useRouteMatch } from 'react-router-dom'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useProfileModel } from '../../hooks/useProfile'
+import { useQuery, useQueryClient } from 'react-query'
+import { Query } from '../../models'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -46,7 +48,13 @@ const Container = styled(MainContainer)`
       flex-direction: column;
       cursor: pointer;
 
-      svg {
+      img {
+        display: block;
+        width: 90px;
+        height: 90px;
+      }
+
+      .cam {
         position: relative;
         top: -10px;
       }
@@ -81,7 +89,18 @@ const RowContainer = styled.div`
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     .value {
+      flex: 1;
+      text-align: right;
+      margin-left: 30px;
       color: #333;
+      display: -moz-box;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+      word-break: break-all;
+      text-overflow: ellipsis;
     }
 
     .arrow {
@@ -113,10 +132,10 @@ const Row: React.FC<RowProps> = ({ label, value, onClick, placeholder }) => {
 
 export const Profile: React.FC = () => {
   const history = useHistory()
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const [showGenderAction, setShowGenderAction] = useState(false)
   const [showAvatarAction, setShowAvatarAction] = useState(false)
-  const { isLogined } = useWalletModel()
+  const { isLogined, address, api } = useWalletModel()
   const matchRegion = useRouteMatch({
     path: ProfilePath.Regions,
     strict: false,
@@ -130,7 +149,19 @@ export const Profile: React.FC = () => {
   const { showEditSuccess, setShowEditSuccess } = useProfileModel()
   const closeEditSuccess = (): void => setShowEditSuccess(false)
 
+  const { data: user } = useQuery(
+    [Query.Profile, address],
+    async () => {
+      const profile = await api.getProfile()
+      return profile
+    },
+    {
+      enabled: !!address,
+    }
+  )
+
   const { setRemoteProfile } = useProfileModel()
+  const qc = useQueryClient()
   const onSaveGender = useCallback(
     async (gender: string) => {
       try {
@@ -143,9 +174,10 @@ export const Profile: React.FC = () => {
         alert('set profile failed')
       } finally {
         setShowGenderAction(false)
+        await qc.refetchQueries(Query.Profile)
       }
     },
-    [setRemoteProfile, history]
+    [setRemoteProfile, history, qc]
   )
 
   if (!isLogined) {
@@ -174,13 +206,21 @@ export const Profile: React.FC = () => {
             style={{ textAlign: 'center' }}
             onClick={() => setShowAvatarAction(true)}
           >
-            <LazyLoadImage width={90} height={90} src={PeopleSvg as any} />
-            <CameraSvg />
+            <LazyLoadImage
+              width={90}
+              imageStyle={{ borderRadius: '50%' }}
+              height={90}
+              variant="circle"
+              src={user?.avatar_url}
+              backup={<img src={PeopleSvg as any} />}
+            />
+            <CameraSvg className="cam" />
           </div>
         </div>
         <Row
           label={t('profile.username')}
           placeholder={t('profile.input')}
+          value={user?.nickname}
           onClick={() => {
             history.push(ProfilePath.Username)
           }}
@@ -188,35 +228,46 @@ export const Profile: React.FC = () => {
         <Row
           label={t('profile.gender')}
           placeholder={t('profile.select')}
+          value={user?.gender ? t(`profile.${user?.gender}`) : undefined}
           onClick={() => setShowGenderAction(true)}
         />
         <Row
           label={t('profile.birthday')}
           placeholder={t('profile.select')}
+          value={user?.birthday}
           onClick={() => history.push(ProfilePath.Birthday)}
         />
         <Row
           label={t('profile.region')}
           placeholder={t('profile.select')}
+          value={getRegionFromCode(user?.region, i18n.language)}
           onClick={() => history.push(ProfilePath.Regions)}
         />
         <Row
           label={t('profile.description')}
           placeholder={t('profile.input')}
+          value={user?.description}
           onClick={() => history.push(ProfilePath.Description)}
         />
       </section>
       <SetUsername
+        username={user?.nickname}
         open={!!matchUsername?.isExact}
         close={() => history.goBack()}
       />
-      <SetDesc open={!!matchDesc?.isExact} close={() => history.goBack()} />
+      <SetDesc
+        desc={user?.description}
+        open={!!matchDesc?.isExact}
+        close={() => history.goBack()}
+      />
       <SetBirthday
         open={!!matchBirthday?.isExact}
         close={() => history.goBack()}
+        birthday={user?.birthday}
       />
       <SetRegion
         open={matchRegion != null}
+        region={user?.region}
         close={() => {
           history.push(RoutePath.Profile)
         }}

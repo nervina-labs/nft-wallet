@@ -1,9 +1,11 @@
 import { CircularProgress } from '@material-ui/core'
 import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
 import { Redirect, useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
 import { useProfileModel } from '../../hooks/useProfile'
+import { Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 
@@ -88,6 +90,7 @@ export const ImagePreview: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const qc = useQueryClient()
   const onSave = useCallback(async () => {
     if (isSaving) {
       return
@@ -105,9 +108,10 @@ export const ImagePreview: React.FC = () => {
       //
       alert('upload failed')
     } finally {
+      await qc.refetchQueries(Query.Profile)
       setIsSaving(false)
     }
-  }, [datauri, setRemoteProfile, history, isSaving, ext])
+  }, [datauri, setRemoteProfile, history, isSaving, ext, qc])
 
   if (datauri == null) {
     return <Redirect to={RoutePath.Profile} />

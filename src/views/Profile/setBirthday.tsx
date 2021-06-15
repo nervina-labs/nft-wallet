@@ -1,8 +1,10 @@
 import dayjs from 'dayjs'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
 import { useProfileModel } from '../../hooks/useProfile'
+import { Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -75,6 +77,7 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
   const [isSaving, setIsSaving] = useState(false)
   const history = useHistory()
   const { setRemoteProfile } = useProfileModel()
+  const qc = useQueryClient()
   const onSave = useCallback(async () => {
     if (isSaving) {
       return
@@ -89,9 +92,10 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
       //
       console.log(error)
     } finally {
+      await qc.refetchQueries(Query.Profile)
       setIsSaving(false)
     }
-  }, [value, setRemoteProfile, history, isSaving])
+  }, [value, setRemoteProfile, history, isSaving, qc])
 
   return (
     <DrawerConfig

@@ -37,6 +37,11 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     }
   }, [backup])
   const imgRef = useRef(null)
+
+  if (!src) {
+    return backup as any
+  }
+
   return (
     <>
       {shouldUseBackup ? (
