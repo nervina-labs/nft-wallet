@@ -28,7 +28,6 @@ const Container = styled(MainContainer)`
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin: 0 25px;
     color: white;
     font-size: 18px;
     .cancel {
