@@ -158,7 +158,8 @@
       "comfirm": "Confirm",
       "reshot": "Retake",
       "success": "Profile updated",
-      "years": "{{year}} years old"
+      "years": "{{year}} years old",
+      "size-limit": "Please select image that less than 5M"
     },
     "explore": {
       "all": "All",

@@ -20,6 +20,8 @@ import { Profile } from '../views/Profile'
 import { ImagePreview } from '../views/Profile/ImagePreview'
 import { TakePhoto } from '../views/Profile/TakePhoto'
 import { Explore } from '../views/Explore'
+import { ActionDialog } from '../components/ActionDialog'
+import { ReactComponent as FailSvg } from '../assets/svg/fail.svg'
 
 export enum RoutePath {
   Launch = '/',
@@ -131,7 +133,14 @@ export enum ProfilePath {
 }
 
 export const Routers: React.FC = () => {
-  const { isLogined, walletType, login } = useWalletModel()
+  const {
+    isLogined,
+    walletType,
+    login,
+    errorMsg,
+    isErrorDialogOpen,
+    setIsErrorDialogOpen,
+  } = useWalletModel()
 
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
@@ -157,6 +166,13 @@ export const Routers: React.FC = () => {
             />
             <Route component={NotFound} path="*" />
           </Switch>
+          <ActionDialog
+            icon={<FailSvg />}
+            content={errorMsg}
+            open={isErrorDialogOpen}
+            onConfrim={() => setIsErrorDialogOpen(false)}
+            onBackdropClick={() => setIsErrorDialogOpen(false)}
+          />
         </WalletChange>
       </BrowserRouter>
     </I18nextProvider>
