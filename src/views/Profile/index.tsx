@@ -258,7 +258,7 @@ export const Profile: React.FC = () => {
         open={matchRegion != null}
         region={user?.region}
         close={() => {
-          history.push(RoutePath.Profile)
+          history.goBack()
         }}
       />
       <DrawerAcion

@@ -161,7 +161,8 @@
       "reshot": "重拍",
       "success": "设置成功",
       "years": "{{year}} 岁",
-      "size-limit": "文件过大，请选择小于 5M 的图片"
+      "size-limit": "文件过大，请选择小于 5M 的图片",
+      "save-edit": "是否保存修改？"
     },
     "explore": {
       "all": "全部",

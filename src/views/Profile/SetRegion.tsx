@@ -11,6 +11,8 @@ import { ProfilePath, RoutePath } from '../../routes'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useQueryClient } from 'react-query'
 import { Query } from '../../models'
+import { usePrevious } from '../../hooks/usePrevious'
+import { useWalletModel } from '../../hooks/useWallet'
 
 export interface SetUsernameProps {
   open: boolean
@@ -156,6 +158,8 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
     return value.split(';;')
   }, [value])
   const { setRemoteProfile } = useProfileModel()
+  const prevValue = usePrevious(value)
+  const { confirm } = useWalletModel()
 
   useEffect(() => {
     if (!open) {
@@ -261,12 +265,17 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
     }
   }, [value, setRemoteProfile, history, isSaving, qc])
 
+  const onClose = useCallback(() => {
+    if (prevValue !== value) {
+      confirm(t('profile.save-edit'), onSave, close)
+    } else {
+      close()
+    }
+  }, [onSave, close, t, prevValue, value, confirm])
   return (
     <DrawerConfig
       isDrawerOpen={open}
-      close={() => {
-        history.goBack()
-      }}
+      close={onClose}
       title={t('profile.regions.edit')}
       isValid={!!value}
       bg="#F5F5F5"

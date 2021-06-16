@@ -3,7 +3,9 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
+import { usePrevious } from '../../hooks/usePrevious'
 import { useProfileModel } from '../../hooks/useProfile'
+import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { DrawerConfig } from './DrawerConfig'
 
@@ -37,9 +39,11 @@ export interface SetUsernameProps {
 export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
   const [t] = useTranslation('translations')
   const [value, setValue] = useState(desc ?? '')
+  const prevValue = usePrevious(value)
   const len = useMemo(() => {
     return value.length
   }, [value])
+  const { confirm } = useWalletModel()
 
   const classes = useStyles()
 
@@ -71,10 +75,18 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
       setValue(desc ?? '')
     }
   }, [open, desc])
+
+  const onClose = useCallback(() => {
+    if (prevValue !== value) {
+      confirm(t('profile.save-edit'), onSave, close)
+    } else {
+      close()
+    }
+  }, [onSave, close, t, prevValue, value, confirm])
   return (
     <DrawerConfig
       isDrawerOpen={open}
-      close={close}
+      close={onClose}
       title={t('profile.desc.edit')}
       isValid={len <= 100}
       isSaving={isSaving}

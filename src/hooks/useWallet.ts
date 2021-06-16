@@ -12,6 +12,9 @@ import { usePrevious } from './usePrevious'
 
 import { Web3Provider } from '../pw/Web3Provider'
 import dayjs from 'dayjs'
+
+export type PromiseFunc = () => Promise<void> | void
+
 export interface UseWallet {
   api: NFTWalletAPI
   login: (walletType?: WalletType) => Promise<Provider>
@@ -27,6 +30,15 @@ export interface UseWallet {
   isErrorDialogOpen: boolean
   errorMsg?: React.ReactNode
   toast: (msg: React.ReactNode) => void
+  confirm: (
+    msg: React.ReactNode,
+    onConfirm: PromiseFunc,
+    onClose: PromiseFunc
+  ) => void
+  confirmContent: React.ReactNode
+  showConfirmDialog: boolean
+  onDialogConfirm: PromiseFunc
+  onDialogClose: PromiseFunc
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
@@ -52,6 +64,8 @@ export function toHex(str: string): string {
   return result
 }
 
+const noop: any = (): void => {}
+
 function useWallet(): UseWallet {
   const [provider, setProvider] = useState<Provider>()
 
@@ -62,6 +76,34 @@ function useWallet(): UseWallet {
 
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [errorMsg, setErrorMsg] = useState<React.ReactNode>('')
+  const [confirmContent, setConfirmContent] = useState<React.ReactNode>('')
+  const [showConfirmDialog, setShowConfifrmDialog] = useState(false)
+  const [onDialogConfirm, setOnDialogConfirm] = useState<PromiseFunc>(noop)
+  const [onDialogClose, setOnDialogClose] = useState<PromiseFunc>(noop)
+
+  const confirm = useCallback(
+    (
+      content: React.ReactNode,
+      onConfirm: PromiseFunc,
+      onClose: PromiseFunc
+    ) => {
+      setConfirmContent(content)
+      setShowConfifrmDialog(true)
+      setOnDialogConfirm(() => {
+        return async () => {
+          await onConfirm()
+          setShowConfifrmDialog(false)
+        }
+      })
+      setOnDialogClose(() => {
+        return async () => {
+          await onClose()
+          setShowConfifrmDialog(false)
+        }
+      })
+    },
+    []
+  )
 
   const toast = useCallback((errorMsg: React.ReactNode) => {
     setIsErrorDialogOpen(true)
@@ -299,6 +341,11 @@ function useWallet(): UseWallet {
     isErrorDialogOpen,
     errorMsg,
     toast,
+    confirmContent,
+    showConfirmDialog,
+    onDialogClose,
+    onDialogConfirm,
+    confirm,
   }
 }
 
