@@ -21,6 +21,7 @@ import { ImagePreview } from '../views/Profile/ImagePreview'
 import { TakePhoto } from '../views/Profile/TakePhoto'
 import { Explore } from '../views/Explore'
 import { ActionDialog } from '../components/ActionDialog'
+import { Comfirm } from '../components/Confirm'
 import { ReactComponent as FailSvg } from '../assets/svg/fail.svg'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
@@ -190,6 +191,7 @@ export const Routers: React.FC = () => {
               {snackbarMsg}
             </Alert>
           </Snackbar>
+          <Comfirm open disableBackdropClick />
         </WalletChange>
       </BrowserRouter>
     </I18nextProvider>

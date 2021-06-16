@@ -3,7 +3,9 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
+import { usePrevious } from '../../hooks/usePrevious'
 import { useProfileModel } from '../../hooks/useProfile'
+import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
@@ -29,6 +31,9 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
   const [value, setValue] = useState(
     birthday ? new Date(birthday) : defaultDate
   )
+
+  const prevValue = usePrevious(value)
+  const { confirm } = useWalletModel()
 
   const isChinese = i18n.language !== 'en'
 
@@ -99,10 +104,18 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
     }
   }, [value, setRemoteProfile, history, isSaving, qc])
 
+  const onClose = useCallback(() => {
+    if (prevValue !== value) {
+      confirm(t('profile.save-edit'), onSave, close)
+    } else {
+      close()
+    }
+  }, [onSave, close, t, prevValue, value, confirm])
+
   return (
     <DrawerConfig
       isDrawerOpen={open}
-      close={close}
+      close={onClose}
       title={t('profile.edit-birthday')}
       isValid
       onSaving={onSave}

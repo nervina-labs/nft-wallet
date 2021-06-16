@@ -5,6 +5,7 @@ import { useQueryClient } from 'react-query'
 import { Redirect, useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
 import { useProfileModel } from '../../hooks/useProfile'
+import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -82,6 +83,7 @@ export const ImagePreview: React.FC = () => {
       location.state.fromCamera,
     ]
   }, [location.state])
+  const { confirm } = useWalletModel()
 
   const isBlob = useMemo(() => datauri?.startsWith('blob:'), [datauri])
 
@@ -122,6 +124,16 @@ export const ImagePreview: React.FC = () => {
     }
   }, [datauri, setRemoteProfile, history, isSaving, ext, qc, fromCamera])
 
+  const onClose = useCallback(() => {
+    confirm(t('profile.save-edit'), onSave, () => {
+      if (fromCamera) {
+        history.go(-2)
+      } else {
+        history.goBack()
+      }
+    })
+  }, [confirm, onSave, history, t, fromCamera])
+
   if (datauri == null) {
     return <Redirect to={RoutePath.Profile} />
   }
@@ -141,10 +153,7 @@ export const ImagePreview: React.FC = () => {
             {t('profile.reshot')}
           </div>
         ) : (
-          <div
-            className="cancel"
-            onClick={() => history.push(RoutePath.Profile)}
-          >
+          <div className="cancel" onClick={onClose}>
             {t('profile.cancel')}
           </div>
         )}

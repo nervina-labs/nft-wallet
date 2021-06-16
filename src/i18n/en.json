@@ -159,7 +159,8 @@
       "reshot": "Retake",
       "success": "Profile updated",
       "years": "{{year}} years old",
-      "size-limit": "Please select image that less than 5M"
+      "size-limit": "Please select image that less than 5M",
+      "save-edit": "Do you want to save the changes?"
     },
     "explore": {
       "all": "All",
