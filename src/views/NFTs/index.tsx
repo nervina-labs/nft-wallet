@@ -140,11 +140,16 @@ const Container = styled(MainContainer)`
           align-items: center;
           span {
             margin-right: 6px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
+            &.region {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
+            }
+            &.year {
+              white-space: nowrap;
+            }
           }
           .gender {
             display: flex;
@@ -153,6 +158,7 @@ const Container = styled(MainContainer)`
             border-radius: 50%;
             width: 21px;
             height: 21px;
+            min-width: 21px;
             background: rgba(240, 240, 240, 0.5);
           }
         }
@@ -326,8 +332,8 @@ export const NFTs: React.FC = () => {
     return (
       <>
         {user?.gender ? <Gender gender={user?.gender} /> : null}
-        {years ? <span>{years}</span> : null}
-        {region ? <span>{region}</span> : null}
+        {years ? <span className="year">{years}</span> : null}
+        {region ? <span className="region">{region}</span> : null}
       </>
     )
   }, [user, t, i18n.language])
