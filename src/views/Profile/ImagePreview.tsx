@@ -84,7 +84,7 @@ export const ImagePreview: React.FC = () => {
       location.state.fromCamera,
     ]
   }, [location.state])
-  const { confirm } = useWalletModel()
+  const { confirm, toast } = useWalletModel()
 
   const isBlob = useMemo(() => datauri?.startsWith('blob:'), [datauri])
 
@@ -117,13 +117,32 @@ export const ImagePreview: React.FC = () => {
         history.goBack()
       }
     } catch (error) {
-      //
-      alert('upload failed')
+      // axios error
+      if (error?.message?.includes('Network Error')) {
+        toast(t('profile.image-network-error'))
+      } else if (error?.detail?.includes('should be less than')) {
+        toast(t('profile.size-limit'))
+      } else if (error?.detail?.includes('allowed types')) {
+        toast(t('profile.wrong-image-format'))
+      } else {
+        toast(error?.detail ?? error?.message ?? error)
+      }
+      // alert('upload failed')
     } finally {
       await qc.refetchQueries(Query.Profile)
       setIsSaving(false)
     }
-  }, [datauri, setRemoteProfile, history, isSaving, ext, qc, fromCamera])
+  }, [
+    datauri,
+    setRemoteProfile,
+    history,
+    isSaving,
+    ext,
+    qc,
+    fromCamera,
+    toast,
+    t,
+  ])
 
   const onClose = useCallback(() => {
     confirm(t('profile.save-edit'), onSave, () => {

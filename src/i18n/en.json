@@ -160,7 +160,9 @@
       "success": "Profile updated",
       "years": "{{year}} years old",
       "size-limit": "Please select image that less than 5M",
-      "save-edit": "Do you want to save the changes?"
+      "save-edit": "Do you want to save the changes?",
+      "wrong-image-format": "Only supports upload png, jpeg, jpg, gif, svg, webp format images for now",
+      "image-network-error": "Fail to upload, please check network conditions and re-upload"
     },
     "explore": {
       "all": "All",
