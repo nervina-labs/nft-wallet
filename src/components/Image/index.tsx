@@ -53,6 +53,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
               //
             }
             setLoaded(true)
+            setShouldUseBackup(false)
           }}
           onError={onError}
           alt={alt}

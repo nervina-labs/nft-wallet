@@ -143,7 +143,7 @@ export const Profile: React.FC = () => {
   const matchDesc = useRouteMatch(ProfilePath.Description)
   const matchUsername = useRouteMatch(ProfilePath.Username)
 
-  const { data: user, isLoading } = useQuery(
+  const { data: user, isFetching } = useQuery(
     [Query.Profile, address],
     async () => {
       const profile = await api.getProfile()
@@ -151,6 +151,7 @@ export const Profile: React.FC = () => {
     },
     {
       enabled: !!address,
+      refetchOnWindowFocus: false,
     }
   )
 
@@ -191,7 +192,7 @@ export const Profile: React.FC = () => {
             style={{ textAlign: 'center' }}
             onClick={() => setShowAvatarAction(true)}
           >
-            {isLoading ? (
+            {isFetching ? (
               <Skeleton variant="circle" width={90} height={90} />
             ) : (
               <LazyLoadImage
