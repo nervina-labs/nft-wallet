@@ -73,6 +73,7 @@ export const TakePhoto: React.FC = () => {
     const datauri = camera.current?.getScreenshot()
     history.push(RoutePath.ImagePreview, {
       datauri,
+      fromCamera: true,
     })
   }, [history])
 

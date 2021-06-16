@@ -64,6 +64,7 @@ const Container = styled(MainContainer)`
 interface HistoryData {
   datauri?: string
   ext?: string
+  fromCamera?: boolean
 }
 
 export const ImagePreview: React.FC = () => {
@@ -74,8 +75,12 @@ export const ImagePreview: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false)
   const { setRemoteProfile } = useProfileModel()
 
-  const [datauri, ext] = useMemo(() => {
-    return [location.state.datauri, location.state.ext]
+  const [datauri, ext, fromCamera] = useMemo(() => {
+    return [
+      location.state.datauri,
+      location.state.ext,
+      location.state.fromCamera,
+    ]
   }, [location.state])
 
   const isBlob = useMemo(() => datauri?.startsWith('blob:'), [datauri])
@@ -103,7 +108,11 @@ export const ImagePreview: React.FC = () => {
         },
         ext
       )
-      history.push(RoutePath.Profile)
+      if (fromCamera) {
+        history.go(-2)
+      } else {
+        history.goBack()
+      }
     } catch (error) {
       //
       alert('upload failed')
@@ -111,7 +120,7 @@ export const ImagePreview: React.FC = () => {
       await qc.refetchQueries(Query.Profile)
       setIsSaving(false)
     }
-  }, [datauri, setRemoteProfile, history, isSaving, ext, qc])
+  }, [datauri, setRemoteProfile, history, isSaving, ext, qc, fromCamera])
 
   if (datauri == null) {
     return <Redirect to={RoutePath.Profile} />
@@ -127,7 +136,7 @@ export const ImagePreview: React.FC = () => {
         {!isBlob ? (
           <div
             className="cancel"
-            onClick={() => history.push(RoutePath.TakePhoto)}
+            onClick={() => history.replace(RoutePath.TakePhoto)}
           >
             {t('profile.reshot')}
           </div>

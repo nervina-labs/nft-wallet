@@ -22,6 +22,13 @@ import { TakePhoto } from '../views/Profile/TakePhoto'
 import { Explore } from '../views/Explore'
 import { ActionDialog } from '../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../assets/svg/fail.svg'
+import Snackbar from '@material-ui/core/Snackbar'
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
+import { useProfileModel } from '../hooks/useProfile'
+
+const Alert: React.FC<AlertProps> = (props: AlertProps) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />
+}
 
 export enum RoutePath {
   Launch = '/',
@@ -141,6 +148,7 @@ export const Routers: React.FC = () => {
     isErrorDialogOpen,
     setIsErrorDialogOpen,
   } = useWalletModel()
+  const { showEditSuccess, closeSnackbar, snackbarMsg } = useProfileModel()
 
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
@@ -173,6 +181,15 @@ export const Routers: React.FC = () => {
             onConfrim={() => setIsErrorDialogOpen(false)}
             onBackdropClick={() => setIsErrorDialogOpen(false)}
           />
+          <Snackbar
+            open={showEditSuccess}
+            autoHideDuration={2000}
+            onClose={closeSnackbar}
+          >
+            <Alert onClose={closeSnackbar} severity="success">
+              {snackbarMsg}
+            </Alert>
+          </Snackbar>
         </WalletChange>
       </BrowserRouter>
     </I18nextProvider>

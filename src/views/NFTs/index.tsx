@@ -32,6 +32,7 @@ import dayjs from 'dayjs'
 import { getRegionFromCode } from '../Profile/SetRegion'
 import { CircularProgress } from '@material-ui/core'
 import classNames from 'classnames'
+import { DrawerImage } from '../Profile/DrawerImage'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -223,7 +224,12 @@ interface GotoProfileProps {
 const GotoProfile: React.FC<GotoProfileProps> = ({ children, path }) => {
   const history = useHistory()
   return (
-    <span style={{ cursor: 'pointer' }} onClick={() => history.push(path)}>
+    <span
+      style={{ cursor: 'pointer' }}
+      onClick={() => {
+        history.push(path)
+      }}
+    >
       {children}
     </span>
   )
@@ -241,7 +247,7 @@ export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
   const { t, i18n } = useTranslation('translations')
   const history = useHistory()
-
+  const [showAvatarAction, setShowAvatarAction] = useState(false)
   const { data: user, isLoading: isUserLoading } = useQuery(
     [Query.Profile, address],
     async () => {
@@ -341,7 +347,7 @@ export const NFTs: React.FC = () => {
                 className="avatar"
                 onClick={() => {
                   if (!user?.avatar_url) {
-                    history.push(RoutePath.Profile)
+                    setShowAvatarAction(true)
                   }
                 }}
               >
@@ -451,6 +457,10 @@ export const NFTs: React.FC = () => {
         copyText={explorerURL}
         closeDialog={closeDialog}
         isDialogOpen={isDialogOpen}
+      />
+      <DrawerImage
+        showAvatarAction={showAvatarAction}
+        setShowAvatarAction={setShowAvatarAction}
       />
       <HiddenBar />
     </Container>

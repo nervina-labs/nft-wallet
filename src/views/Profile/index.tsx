@@ -18,16 +18,11 @@ import { ProfilePath, RoutePath } from '../../routes'
 import { useWalletModel } from '../../hooks/useWallet'
 import { getRegionFromCode, SetRegion } from './SetRegion'
 import { useRouteMatch } from 'react-router-dom'
-import Snackbar from '@material-ui/core/Snackbar'
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { Skeleton } from '@material-ui/lab'
-
-const Alert: React.FC<AlertProps> = (props: AlertProps) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />
-}
+import { DrawerImage } from './DrawerImage'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -136,7 +131,7 @@ export const Profile: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const [showGenderAction, setShowGenderAction] = useState(false)
   const [showAvatarAction, setShowAvatarAction] = useState(false)
-  const { isLogined, address, api, toast } = useWalletModel()
+  const { isLogined, address, api } = useWalletModel()
   const matchRegion = useRouteMatch({
     path: ProfilePath.Regions,
     strict: false,
@@ -147,8 +142,6 @@ export const Profile: React.FC = () => {
   })
   const matchDesc = useRouteMatch(ProfilePath.Description)
   const matchUsername = useRouteMatch(ProfilePath.Username)
-  const { showEditSuccess, setShowEditSuccess } = useProfileModel()
-  const closeEditSuccess = (): void => setShowEditSuccess(false)
 
   const { data: user, isLoading } = useQuery(
     [Query.Profile, address],
@@ -187,15 +180,6 @@ export const Profile: React.FC = () => {
 
   return (
     <Container>
-      <Snackbar
-        open={showEditSuccess}
-        autoHideDuration={2000}
-        onClose={closeEditSuccess}
-      >
-        <Alert onClose={closeEditSuccess} severity="success">
-          {t('profile.success')}
-        </Alert>
-      </Snackbar>
       <Appbar
         title={t('profile.title')}
         left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
@@ -286,45 +270,9 @@ export const Profile: React.FC = () => {
         ]}
         actionOnClick={onSaveGender}
       />
-      <DrawerAcion
-        isDrawerOpen={showAvatarAction}
-        close={() => setShowAvatarAction(false)}
-        actions={[
-          { content: t('profile.avatar.camera'), value: 'camera' },
-          {
-            content: (
-              <label htmlFor="upload" className="label">
-                {t('profile.avatar.photo-lib')}
-                <input
-                  type="file"
-                  id="upload"
-                  accept="image/png, image/jpeg, image/jpg, image/gif, image/svg, image/webp"
-                  onChange={(e) => {
-                    const [file] = e.target.files ?? []
-                    const [, ext] = file == null ? [] : file?.type?.split('/')
-                    if (file) {
-                      if (file.size >= 5242880) {
-                        toast(t('profile.size-limit'))
-                        return
-                      }
-                      history.push(RoutePath.ImagePreview, {
-                        datauri: URL.createObjectURL(file),
-                        ext,
-                      })
-                    }
-                  }}
-                  style={{ display: 'none' }}
-                />
-              </label>
-            ),
-            value: 'lib',
-          },
-        ]}
-        actionOnClick={(val) => {
-          if (val === 'camera') {
-            history.push(RoutePath.TakePhoto)
-          }
-        }}
+      <DrawerImage
+        showAvatarAction={showAvatarAction}
+        setShowAvatarAction={setShowAvatarAction}
       />
     </Container>
   )
