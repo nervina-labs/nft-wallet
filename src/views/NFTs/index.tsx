@@ -15,7 +15,7 @@ import { Query } from '../../models'
 import { Empty } from './empty'
 import { Loading } from '../../components/Loading'
 import { Redirect, useHistory } from 'react-router'
-import { ProfilePath, RoutePath } from '../../routes'
+import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share-new.svg'
 import { ReactComponent as AccountSvg } from '../../assets/svg/account-new.svg'
@@ -33,6 +33,9 @@ import { getRegionFromCode } from '../Profile/SetRegion'
 import { CircularProgress } from '@material-ui/core'
 import classNames from 'classnames'
 import { DrawerImage } from '../Profile/DrawerImage'
+import { useRouteMatch } from 'react-router-dom'
+import { SetUsername } from '../Profile/SetUsername'
+import { SetDesc } from '../Profile/setDesc'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -227,6 +230,11 @@ const Container = styled(MainContainer)`
   }
 `
 
+enum ProfilePath {
+  Username = '/nfts/username',
+  Description = '/nfts/description',
+}
+
 interface GotoProfileProps {
   path: ProfilePath
   children: React.ReactNode
@@ -318,6 +326,9 @@ export const NFTs: React.FC = () => {
   const openDialog = useCallback(() => {
     setIsDialogOpen(true)
   }, [])
+
+  const matchDesc = useRouteMatch(ProfilePath.Description)
+  const matchUsername = useRouteMatch(ProfilePath.Username)
 
   const closeDialog = (): void => setIsDialogOpen(false)
 
@@ -472,6 +483,16 @@ export const NFTs: React.FC = () => {
       <DrawerImage
         showAvatarAction={showAvatarAction}
         setShowAvatarAction={setShowAvatarAction}
+      />
+      <SetUsername
+        username={user?.nickname}
+        open={!!matchUsername?.isExact}
+        close={() => history.goBack()}
+      />
+      <SetDesc
+        desc={user?.description}
+        open={!!matchDesc?.isExact}
+        close={() => history.goBack()}
       />
       <HiddenBar />
     </Container>
