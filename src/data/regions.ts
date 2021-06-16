@@ -166,7 +166,7 @@ export const allRegions = [
   },
   {
     code: 'CN',
-    zh: '中国',
+    zh: '中国大陆',
     en: 'China',
   },
   {
@@ -898,5 +898,28 @@ export const allRegions = [
     code: 'ZW',
     zh: '津巴布韦',
     en: 'Zimbabwe',
+  },
+]
+
+export const ChinaRegions = [
+  {
+    code: 'CN',
+    zh: '中国大陆',
+    en: 'China',
+  },
+  {
+    code: 'HK',
+    zh: '中国香港特别行政区',
+    en: 'Hongkong SAR China',
+  },
+  {
+    code: 'MO',
+    zh: '中国澳门特别行政区',
+    en: 'Macao SAR China',
+  },
+  {
+    code: 'TW',
+    zh: '中国台湾',
+    en: 'Taiwan, China',
   },
 ]
