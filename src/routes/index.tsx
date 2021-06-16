@@ -71,7 +71,7 @@ const WalletChange: React.FC = ({ children }) => {
 const routes: Array<RouteProps & { key: string }> = [
   {
     component: NFTs,
-    exact: true,
+    exact: false,
     key: 'NFTs',
     path: RoutePath.NFTs,
   },

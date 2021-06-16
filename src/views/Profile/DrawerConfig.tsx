@@ -157,6 +157,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
       }}
       disableEnforceFocus
       disableEscapeKeyDown
+      disableScrollLock={window.innerWidth >= 500}
     >
       <DrawerContainer bg={bg}>
         <Header>
