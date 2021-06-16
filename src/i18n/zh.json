@@ -162,7 +162,9 @@
       "success": "设置成功",
       "years": "{{year}} 岁",
       "size-limit": "文件过大，请选择小于 5M 的图片",
-      "save-edit": "是否保存修改？"
+      "save-edit": "是否保存修改？",
+      "wrong-image-format": "当前仅支持上传 png, jpeg, jpg, gif, svg, webp 格式图片",
+      "image-network-error": "上传失败，请检查当前网络情况并重新上传"
     },
     "explore": {
       "all": "全部",

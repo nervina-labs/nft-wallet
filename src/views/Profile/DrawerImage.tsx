@@ -9,6 +9,9 @@ export interface DrawerImageProps {
   setShowAvatarAction: React.Dispatch<React.SetStateAction<boolean>>
 }
 
+const allowedTypes =
+  'image/png, image/jpeg, image/jpg, image/gif, image/svg+xml, image/webp'
+
 export const DrawerImage: React.FC<DrawerImageProps> = ({
   showAvatarAction,
   setShowAvatarAction,
@@ -29,13 +32,16 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
               <input
                 type="file"
                 id="upload"
-                accept="image/png, image/jpeg, image/jpg, image/gif, image/svg, image/webp"
+                accept={allowedTypes}
                 onChange={(e) => {
                   const [file] = e.target.files ?? []
                   const [, ext] = file == null ? [] : file?.type?.split('/')
                   if (file) {
                     if (file.size >= 5242880) {
                       toast(t('profile.size-limit'))
+                      return
+                    } else if (!allowedTypes.split(', ').includes(file.type)) {
+                      toast(t('profile.wrong-image-format'))
                       return
                     }
                     history.push(RoutePath.ImagePreview, {
