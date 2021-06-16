@@ -100,7 +100,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
           value={value}
           multiline
           rows={8}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => setValue(e.target.value.slice(0, 100))}
           endAdornment={
             <InputAdornment position="end" style={{ alignItems: 'baseline' }}>
               <span className="adornment">{`${len}/100`}</span>

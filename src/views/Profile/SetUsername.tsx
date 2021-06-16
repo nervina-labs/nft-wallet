@@ -99,7 +99,7 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
           placeholder={t('profile.user-name.placeholder')}
           type="text"
           value={value}
-          onChange={(e) => setValue(e.target.value.trim())}
+          onChange={(e) => setValue(e.target.value.trim().slice(0, 24))}
           endAdornment={
             <InputAdornment position="end">
               <span className="adornment">{`${len}/24`}</span>
