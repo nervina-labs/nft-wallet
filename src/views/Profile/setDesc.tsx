@@ -5,7 +5,6 @@ import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
 import { useProfileModel } from '../../hooks/useProfile'
 import { Query } from '../../models'
-import { RoutePath } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
 
 const useStyles = makeStyles((theme) => ({
@@ -57,7 +56,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
       await setRemoteProfile({
         description: value,
       })
-      history.push(RoutePath.Profile)
+      history.goBack()
     } catch (error) {
       //
       console.log(error)

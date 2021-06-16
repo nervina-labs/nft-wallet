@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { createModel } from 'hox'
-import { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
+import i18n from '../i18n'
 import { Auth, User } from '../models/user'
 import { useLocalStorage } from './useLocalStorage'
 import { useWalletModel, WalletType } from './useWallet'
@@ -26,6 +27,9 @@ export interface UseProfile {
   previewImageData: string
   getAuth: () => Promise<Auth>
   setRemoteProfile: (user: Partial<User>, ext?: string) => Promise<void>
+  snackbarMsg: React.ReactNode
+  snackbar: (msg: React.ReactNode) => void
+  closeSnackbar: () => void
 }
 
 export interface Auths {
@@ -81,14 +85,24 @@ function useProfile(): UseProfile {
   }, [signMessage, walletType, address, profile, setProfile, provider])
 
   const [showEditSuccess, setShowEditSuccess] = useState(false)
+  const [snackbarMsg, setSnackbarMsg] = useState<React.ReactNode>()
+
+  const snackbar = useCallback((message: React.ReactNode) => {
+    setShowEditSuccess(true)
+    setSnackbarMsg(message)
+  }, [])
+
+  const closeSnackbar = useCallback(() => {
+    setShowEditSuccess(false)
+  }, [])
 
   const setRemoteProfile = useCallback(
     async (user: Partial<User>, ext?: string) => {
       const auth = await getAuth()
       await api.setProfile(user, auth, ext)
-      setShowEditSuccess(true)
+      snackbar(i18n.t('profile.success', { ns: 'translations' }))
     },
-    [getAuth, api]
+    [getAuth, api, snackbar]
   )
 
   return {
@@ -100,6 +114,9 @@ function useProfile(): UseProfile {
     setRemoteProfile,
     showEditSuccess,
     setShowEditSuccess,
+    snackbarMsg,
+    snackbar,
+    closeSnackbar,
   }
 }
 
