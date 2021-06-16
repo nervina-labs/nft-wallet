@@ -121,7 +121,7 @@
     },
     "profile": {
       "title": "编辑资料",
-      "username": "名称",
+      "username": "昵称",
       "gender": "性别",
       "birthday": "生日",
       "region": "地区",
@@ -131,7 +131,7 @@
       "user-name": {
         "edit": "修改名称",
         "desc": "请输入 2-24 个字符",
-        "placeholder": "请输入名称",
+        "placeholder": "请输入昵称",
         "empty": "点击设置昵称"
       },
       "desc": {

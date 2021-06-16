@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { DrawerConfig } from './DrawerConfig'
 import { ReactComponent as RightSvg } from '../../assets/svg/right-arrow.svg'
 import pc from 'china-division/dist/pc-code.json'
-import { allRegions } from '../../data/regions'
+import { allRegions, ChinaRegions } from '../../data/regions'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { ProfilePath, RoutePath } from '../../routes'
 import { useProfileModel } from '../../hooks/useProfile'
@@ -67,18 +67,12 @@ const sortRegions = (
   isChinese: boolean
 ): typeof allRegions => {
   if (isChinese) {
-    return [
-      {
-        code: 'CN',
-        zh: '中国',
-        en: 'China',
-      },
-    ].concat(
+    return ChinaRegions.concat(
       regions
         .sort((a, b) => {
           return a.zh.localeCompare(b.zh, 'zh')
         })
-        .filter((a) => a.code !== 'CN')
+        .filter((a) => !ChinaRegions.some((r) => r.code === a.code))
     )
   }
   return regions
