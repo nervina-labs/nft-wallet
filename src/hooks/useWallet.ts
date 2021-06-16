@@ -281,12 +281,20 @@ function useWallet(): UseWallet {
         return sig
       }
       if (provider != null) {
-        const sig = await (provider as Web3Provider).signMsg(msg)
-        return sig
+        try {
+          const sig = await (provider as Web3Provider).signMsg(msg)
+          return sig
+        } catch (error) {
+          return 'N/A'
+        }
       }
       const p = await loginMetamask()
       setProvider(p)
-      return await (p as Web3Provider).signMsg(msg)
+      try {
+        return await (p as Web3Provider).signMsg(msg)
+      } catch (error) {
+        return 'N/A'
+      }
     },
     [unipassAccount, provider, setUnipassAccount, loginMetamask]
   )
