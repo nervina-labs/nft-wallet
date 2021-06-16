@@ -1,5 +1,5 @@
 import { createModel } from 'hox'
-import { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
 import { Address, DefaultSigner, Provider, Transaction } from '@lay2/pw-core'
@@ -23,6 +23,10 @@ export interface UseWallet {
   prevAddress: string | undefined
   walletType?: WalletType
   signMessage: (msg: string) => Promise<string>
+  setIsErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isErrorDialogOpen: boolean
+  errorMsg?: React.ReactNode
+  toast: (msg: React.ReactNode) => void
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
@@ -55,6 +59,14 @@ function useWallet(): UseWallet {
     UNIPASS_ACCOUNT_KEY,
     null
   )
+
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<React.ReactNode>('')
+
+  const toast = useCallback((errorMsg: React.ReactNode) => {
+    setIsErrorDialogOpen(true)
+    setErrorMsg(errorMsg)
+  }, [])
 
   const setUnipassAccount = useCallback(
     (account: UnipassAccount | null) => {
@@ -283,6 +295,10 @@ function useWallet(): UseWallet {
     prevAddress,
     walletType,
     signMessage,
+    setIsErrorDialogOpen,
+    isErrorDialogOpen,
+    errorMsg,
+    toast,
   }
 }
 

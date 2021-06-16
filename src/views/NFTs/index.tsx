@@ -15,7 +15,7 @@ import { Query } from '../../models'
 import { Empty } from './empty'
 import { Loading } from '../../components/Loading'
 import { Redirect, useHistory } from 'react-router'
-import { RoutePath } from '../../routes'
+import { ProfilePath, RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share-new.svg'
 import { ReactComponent as AccountSvg } from '../../assets/svg/account-new.svg'
@@ -215,13 +215,15 @@ const Container = styled(MainContainer)`
   }
 `
 
-const GotoProfile: React.FC = ({ children }) => {
+interface GotoProfileProps {
+  path: ProfilePath
+  children: React.ReactNode
+}
+
+const GotoProfile: React.FC<GotoProfileProps> = ({ children, path }) => {
   const history = useHistory()
   return (
-    <span
-      style={{ cursor: 'pointer' }}
-      onClick={() => history.push(RoutePath.Profile)}
-    >
+    <span style={{ cursor: 'pointer' }} onClick={() => history.push(path)}>
       {children}
     </span>
   )
@@ -335,7 +337,14 @@ export const NFTs: React.FC = () => {
         ) : (
           <>
             <div className="user">
-              <div className="avatar">
+              <div
+                className="avatar"
+                onClick={() => {
+                  if (!user?.avatar_url) {
+                    history.push(RoutePath.Profile)
+                  }
+                }}
+              >
                 {user?.avatar_url ? (
                   <LazyLoadImage
                     src={user?.avatar_url}
@@ -354,7 +363,9 @@ export const NFTs: React.FC = () => {
                   {user?.nickname ? (
                     user?.nickname
                   ) : (
-                    <GotoProfile>{t('profile.user-name.empty')}</GotoProfile>
+                    <GotoProfile path={ProfilePath.Username}>
+                      {t('profile.user-name.empty')}
+                    </GotoProfile>
                   )}
                 </div>
                 {!isInfoEmpty ? <div className="info">{userInfo}</div> : null}
@@ -372,7 +383,9 @@ export const NFTs: React.FC = () => {
               {user?.description ? (
                 user?.description
               ) : (
-                <GotoProfile>{t('profile.desc.empty')}</GotoProfile>
+                <GotoProfile path={ProfilePath.Description}>
+                  {t('profile.desc.empty')}
+                </GotoProfile>
               )}
             </div>
           </>

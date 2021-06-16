@@ -136,7 +136,7 @@ export const Profile: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const [showGenderAction, setShowGenderAction] = useState(false)
   const [showAvatarAction, setShowAvatarAction] = useState(false)
-  const { isLogined, address, api } = useWalletModel()
+  const { isLogined, address, api, toast } = useWalletModel()
   const matchRegion = useRouteMatch({
     path: ProfilePath.Regions,
     strict: false,
@@ -298,11 +298,15 @@ export const Profile: React.FC = () => {
                 <input
                   type="file"
                   id="upload"
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/jpg, image/gif, image/svg, image/webp"
                   onChange={(e) => {
                     const [file] = e.target.files ?? []
                     const [, ext] = file == null ? [] : file?.type?.split('/')
                     if (file) {
+                      if (file.size >= 5242880) {
+                        toast(t('profile.size-limit'))
+                        return
+                      }
                       history.push(RoutePath.ImagePreview, {
                         datauri: URL.createObjectURL(file),
                         ext,
