@@ -12,6 +12,7 @@ import { MainContainer } from '../../styles'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
+  max-height: 100%;
   padding: 0;
   position: relative;
   max-width: 500px;
