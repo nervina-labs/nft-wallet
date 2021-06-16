@@ -140,6 +140,11 @@ const Container = styled(MainContainer)`
           align-items: center;
           span {
             margin-right: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
           }
           .gender {
             display: flex;
