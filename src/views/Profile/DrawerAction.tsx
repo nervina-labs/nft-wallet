@@ -94,7 +94,7 @@ export const DrawerAcion: React.FC<DrawerConfigProps> = ({
           )
         })}
         <Action
-          style={{ paddingBottom: '50px', marginTop: '10px' }}
+          style={{ paddingBottom: '16px', marginTop: '10px' }}
           onClick={close}
         >
           {t('profile.cancel')}
