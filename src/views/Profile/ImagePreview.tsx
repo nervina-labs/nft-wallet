@@ -120,12 +120,14 @@ export const ImagePreview: React.FC = () => {
       // axios error
       if (error?.message?.includes('Network Error')) {
         toast(t('profile.image-network-error'))
-      } else if (error?.detail?.includes('should be less than')) {
+      } else if (
+        error?.response?.data?.detail?.includes('should be less than')
+      ) {
         toast(t('profile.size-limit'))
-      } else if (error?.detail?.includes('allowed types')) {
+      } else if (error?.response?.data?.detail?.includes('allowed types')) {
         toast(t('profile.wrong-image-format'))
       } else {
-        toast(error?.detail ?? error?.message ?? error)
+        toast(error?.response?.data?.detail ?? error?.message ?? error)
       }
       // alert('upload failed')
     } finally {
