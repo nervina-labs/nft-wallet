@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Redirect, useHistory } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
@@ -14,8 +14,15 @@ import { SetUsername } from './SetUsername'
 import { SetDesc } from './setDesc'
 import { SetBirthday } from './setBirthday'
 import { DrawerAcion } from './DrawerAction'
-import { RoutePath } from '../../routes'
+import { ProfilePath, RoutePath } from '../../routes'
 import { useWalletModel } from '../../hooks/useWallet'
+import { getRegionFromCode, SetRegion } from './SetRegion'
+import { useRouteMatch } from 'react-router-dom'
+import { useProfileModel } from '../../hooks/useProfile'
+import { useQuery, useQueryClient } from 'react-query'
+import { Query } from '../../models'
+import { Skeleton } from '@material-ui/lab'
+import { DrawerImage } from './DrawerImage'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -37,7 +44,13 @@ const Container = styled(MainContainer)`
       flex-direction: column;
       cursor: pointer;
 
-      svg {
+      img {
+        display: block;
+        width: 90px;
+        height: 90px;
+      }
+
+      .cam {
         position: relative;
         top: -10px;
       }
@@ -72,7 +85,18 @@ const RowContainer = styled.div`
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     .value {
+      flex: 1;
+      text-align: right;
+      margin-left: 30px;
       color: #333;
+      display: -moz-box;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+      word-break: break-all;
+      text-overflow: ellipsis;
     }
 
     .arrow {
@@ -104,13 +128,52 @@ const Row: React.FC<RowProps> = ({ label, value, onClick, placeholder }) => {
 
 export const Profile: React.FC = () => {
   const history = useHistory()
-  const { t } = useTranslation('translations')
-  const [isEditingUsername, setIsEditingUsername] = useState(false)
-  const [isEditingDesc, setIsEditingDesc] = useState(false)
-  const [isEditingBirthDay, setIsEditingBirthday] = useState(false)
+  const { t, i18n } = useTranslation('translations')
   const [showGenderAction, setShowGenderAction] = useState(false)
   const [showAvatarAction, setShowAvatarAction] = useState(false)
-  const { isLogined } = useWalletModel()
+  const { isLogined, address, api } = useWalletModel()
+  const matchRegion = useRouteMatch({
+    path: ProfilePath.Regions,
+    strict: false,
+  })
+  const matchBirthday = useRouteMatch({
+    path: ProfilePath.Birthday,
+    strict: true,
+  })
+  const matchDesc = useRouteMatch(ProfilePath.Description)
+  const matchUsername = useRouteMatch(ProfilePath.Username)
+
+  const { data: user, isFetching } = useQuery(
+    [Query.Profile, address],
+    async () => {
+      const profile = await api.getProfile()
+      return profile
+    },
+    {
+      enabled: !!address,
+      refetchOnWindowFocus: false,
+    }
+  )
+
+  const { setRemoteProfile } = useProfileModel()
+  const qc = useQueryClient()
+  const onSaveGender = useCallback(
+    async (gender: string) => {
+      try {
+        await setRemoteProfile({
+          gender,
+        })
+        history.push(RoutePath.Profile)
+      } catch (error) {
+        //
+        alert('set profile failed')
+      } finally {
+        setShowGenderAction(false)
+        await qc.refetchQueries(Query.Profile)
+      }
+    },
+    [setRemoteProfile, history, qc]
+  )
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
@@ -129,46 +192,75 @@ export const Profile: React.FC = () => {
             style={{ textAlign: 'center' }}
             onClick={() => setShowAvatarAction(true)}
           >
-            <LazyLoadImage width={90} height={90} src={PeopleSvg as any} />
-            <CameraSvg />
+            {isFetching ? (
+              <Skeleton variant="circle" width={90} height={90} />
+            ) : (
+              <LazyLoadImage
+                width={90}
+                imageStyle={{ borderRadius: '50%' }}
+                height={90}
+                variant="circle"
+                src={user?.avatar_url ?? ''}
+                backup={<img src={PeopleSvg as any} />}
+              />
+            )}
+            <CameraSvg className="cam" />
           </div>
         </div>
         <Row
           label={t('profile.username')}
           placeholder={t('profile.input')}
+          value={user?.nickname}
           onClick={() => {
-            setIsEditingUsername(true)
+            history.push(ProfilePath.Username)
           }}
         />
         <Row
           label={t('profile.gender')}
           placeholder={t('profile.select')}
+          value={user?.gender ? t(`profile.${user?.gender}`) : undefined}
           onClick={() => setShowGenderAction(true)}
         />
         <Row
           label={t('profile.birthday')}
           placeholder={t('profile.select')}
-          onClick={() => setIsEditingBirthday(true)}
+          value={user?.birthday}
+          onClick={() => history.push(ProfilePath.Birthday)}
         />
         <Row
           label={t('profile.region')}
           placeholder={t('profile.select')}
-          onClick={() => ({})}
+          value={getRegionFromCode(user?.region, i18n.language)}
+          onClick={() => history.push(ProfilePath.Regions)}
         />
         <Row
           label={t('profile.description')}
           placeholder={t('profile.input')}
-          onClick={() => setIsEditingDesc(true)}
+          value={user?.description}
+          onClick={() => history.push(ProfilePath.Description)}
         />
       </section>
       <SetUsername
-        open={isEditingUsername}
-        close={() => setIsEditingUsername(false)}
+        username={user?.nickname}
+        open={!!matchUsername?.isExact}
+        close={() => history.goBack()}
       />
-      <SetDesc open={isEditingDesc} close={() => setIsEditingDesc(false)} />
+      <SetDesc
+        desc={user?.description}
+        open={!!matchDesc?.isExact}
+        close={() => history.goBack()}
+      />
       <SetBirthday
-        open={isEditingBirthDay}
-        close={() => setIsEditingBirthday(false)}
+        open={!!matchBirthday?.isExact}
+        close={() => history.goBack()}
+        birthday={user?.birthday}
+      />
+      <SetRegion
+        open={matchRegion != null}
+        region={user?.region}
+        close={() => {
+          history.goBack()
+        }}
       />
       <DrawerAcion
         isDrawerOpen={showGenderAction}
@@ -177,41 +269,11 @@ export const Profile: React.FC = () => {
           { content: t('profile.male'), value: 'male' },
           { content: t('profile.female'), value: 'female' },
         ]}
-        actionOnClick={(val) => console.log(val)}
+        actionOnClick={onSaveGender}
       />
-      <DrawerAcion
-        isDrawerOpen={showAvatarAction}
-        close={() => setShowAvatarAction(false)}
-        actions={[
-          { content: t('profile.avatar.camera'), value: 'camera' },
-          {
-            content: (
-              <label htmlFor="upload" className="label">
-                {t('profile.avatar.photo-lib')}
-                <input
-                  type="file"
-                  id="upload"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const [file] = e.target.files ?? []
-                    if (file) {
-                      history.push(RoutePath.ImagePreview, {
-                        datauri: URL.createObjectURL(file),
-                      })
-                    }
-                  }}
-                  style={{ display: 'none' }}
-                />
-              </label>
-            ),
-            value: 'lib',
-          },
-        ]}
-        actionOnClick={(val) => {
-          if (val === 'camera') {
-            history.push(RoutePath.TakePhoto)
-          }
-        }}
+      <DrawerImage
+        showAvatarAction={showAvatarAction}
+        setShowAvatarAction={setShowAvatarAction}
       />
     </Container>
   )

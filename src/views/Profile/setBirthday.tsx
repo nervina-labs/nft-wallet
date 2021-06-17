@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import dayjs from 'dayjs'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
+import { useHistory } from 'react-router-dom'
+import { usePrevious } from '../../hooks/usePrevious'
+import { useProfileModel } from '../../hooks/useProfile'
+import { useWalletModel } from '../../hooks/useWallet'
+import { Query } from '../../models'
+import { RoutePath } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Datepicker = require('react-mobile-datepicker')
@@ -10,7 +18,9 @@ export interface SetUsernameProps {
   birthday?: string
 }
 
-const defaultDate = new Date('2000-01-01')
+const defaultDate = new Date('1990-01-01')
+const minDate = new Date('1926-08-17')
+const maxDate = new Date()
 
 export const SetBirthday: React.FC<SetUsernameProps> = ({
   open,
@@ -21,6 +31,9 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
   const [value, setValue] = useState(
     birthday ? new Date(birthday) : defaultDate
   )
+
+  const prevValue = usePrevious(value)
+  const { confirm } = useWalletModel()
 
   const isChinese = i18n.language !== 'en'
 
@@ -68,16 +81,51 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
     },
   }
 
+  const [isSaving, setIsSaving] = useState(false)
+  const history = useHistory()
+  const { setRemoteProfile } = useProfileModel()
+  const qc = useQueryClient()
+  const onSave = useCallback(async () => {
+    if (isSaving) {
+      return
+    }
+    setIsSaving(true)
+    try {
+      await setRemoteProfile({
+        birthday: dayjs(value).format('YYYY-MM-DD'),
+      })
+      history.push(RoutePath.Profile)
+    } catch (error) {
+      //
+      console.log(error)
+    } finally {
+      await qc.refetchQueries(Query.Profile)
+      setIsSaving(false)
+    }
+  }, [value, setRemoteProfile, history, isSaving, qc])
+
+  const onClose = useCallback(() => {
+    if (prevValue !== value) {
+      confirm(t('profile.save-edit'), onSave, close)
+    } else {
+      close()
+    }
+  }, [onSave, close, t, prevValue, value, confirm])
+
   return (
     <DrawerConfig
       isDrawerOpen={open}
-      close={close}
+      close={onClose}
       title={t('profile.edit-birthday')}
       isValid
+      onSaving={onSave}
+      isSaving={isSaving}
     >
       <div className="birthday">
         <Datepicker
           isPopup={false}
+          min={minDate}
+          max={maxDate}
           showCaption
           dateConfig={dateConfig}
           confirmText=""

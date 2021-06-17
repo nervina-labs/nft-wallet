@@ -49,8 +49,9 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
     return this
   }
 
-  async signMsg(message: string): Promise<string> {
-    return await new Promise((resolve, reject) => {
+  // eslint-disable-next-line @typescript-eslint/promise-function-async
+  signMsg(message: string): Promise<string> {
+    return new Promise((resolve, reject) => {
       const from = this.address.addressString
 
       if (typeof window.ethereum !== 'undefined') {
@@ -58,6 +59,9 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
           .request({ method: 'personal_sign', params: [from, message] })
           .then((result: string) => {
             resolve(result)
+          })
+          .catch((err: any) => {
+            reject(err)
           })
       } else if (window.web3) {
         window.web3.currentProvider.sendAsync(
@@ -114,6 +118,9 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
           .request({ method: 'personal_sign', params: [from, message] })
           .then((result: string) => {
             resolve(handleResult(result))
+          })
+          .catch((err: any) => {
+            reject(err)
           })
       } else {
         reject(

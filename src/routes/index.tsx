@@ -20,6 +20,16 @@ import { Profile } from '../views/Profile'
 import { ImagePreview } from '../views/Profile/ImagePreview'
 import { TakePhoto } from '../views/Profile/TakePhoto'
 import { Explore } from '../views/Explore'
+import { ActionDialog } from '../components/ActionDialog'
+import { Comfirm } from '../components/Confirm'
+import { ReactComponent as FailSvg } from '../assets/svg/fail.svg'
+import Snackbar from '@material-ui/core/Snackbar'
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
+import { useProfileModel } from '../hooks/useProfile'
+
+const Alert: React.FC<AlertProps> = (props: AlertProps) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />
+}
 
 export enum RoutePath {
   Launch = '/',
@@ -61,7 +71,7 @@ const WalletChange: React.FC = ({ children }) => {
 const routes: Array<RouteProps & { key: string }> = [
   {
     component: NFTs,
-    exact: true,
+    exact: false,
     key: 'NFTs',
     path: RoutePath.NFTs,
   },
@@ -97,7 +107,7 @@ const routes: Array<RouteProps & { key: string }> = [
   },
   {
     component: Profile,
-    exact: true,
+    exact: false,
     key: 'Profile',
     path: RoutePath.Profile,
   },
@@ -121,8 +131,25 @@ const routes: Array<RouteProps & { key: string }> = [
   },
 ]
 
+export enum ProfilePath {
+  Regions = '/profile/regions',
+  Provinces = '/profile/regions/provinces',
+  Cities = '/profile/regions/cities',
+  Username = '/profile/username',
+  Description = '/profile/description',
+  Birthday = '/profile/birthday',
+}
+
 export const Routers: React.FC = () => {
-  const { isLogined, walletType, login } = useWalletModel()
+  const {
+    isLogined,
+    walletType,
+    login,
+    errorMsg,
+    isErrorDialogOpen,
+    setIsErrorDialogOpen,
+  } = useWalletModel()
+  const { showEditSuccess, closeSnackbar, snackbarMsg } = useProfileModel()
 
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
@@ -148,6 +175,34 @@ export const Routers: React.FC = () => {
             />
             <Route component={NotFound} path="*" />
           </Switch>
+          <ActionDialog
+            icon={<FailSvg />}
+            content={errorMsg}
+            open={isErrorDialogOpen}
+            onConfrim={() => setIsErrorDialogOpen(false)}
+            onBackdropClick={() => setIsErrorDialogOpen(false)}
+          />
+          <Snackbar
+            open={showEditSuccess}
+            autoHideDuration={1500}
+            onClose={closeSnackbar}
+            style={{
+              bottom: '88px',
+            }}
+          >
+            <Alert
+              style={{
+                borderRadius: '16px',
+                background: 'rgba(51, 51, 51, 0.592657)',
+                padding: '4px 30px',
+              }}
+              icon={false}
+              severity="success"
+            >
+              {snackbarMsg}
+            </Alert>
+          </Snackbar>
+          <Comfirm open disableBackdropClick />
         </WalletChange>
       </BrowserRouter>
     </I18nextProvider>
