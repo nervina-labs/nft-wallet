@@ -153,6 +153,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
           borderTopLeftRadius: '25px',
           borderTopRightRadius: '25px',
           height: `${height}px`,
+          overflow: 'hidden',
         },
       }}
       disableEnforceFocus
