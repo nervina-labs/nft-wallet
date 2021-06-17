@@ -129,7 +129,7 @@
       "input": "请填写",
       "select": "请选择",
       "user-name": {
-        "edit": "修改名称",
+        "edit": "修改昵称",
         "desc": "请输入 2-24 个字符",
         "placeholder": "请输入昵称",
         "empty": "点击设置昵称"
