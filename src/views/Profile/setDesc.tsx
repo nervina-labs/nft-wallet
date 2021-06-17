@@ -1,4 +1,4 @@
-import { InputAdornment, InputBase, makeStyles } from '@material-ui/core'
+import { InputAdornment, makeStyles } from '@material-ui/core'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -8,6 +8,8 @@ import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { DrawerConfig } from './DrawerConfig'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { InputBaseFix } = require('./InputMod')
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +43,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
   const [value, setValue] = useState(desc ?? '')
   const prevValue = usePrevious(value)
   const len = useMemo(() => {
+    if (value.length >= 100) return 100
     return value.length
   }, [value])
   const { confirm } = useWalletModel()
@@ -83,6 +86,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
       close()
     }
   }, [onSave, close, t, prevValue, value, confirm])
+
   return (
     <DrawerConfig
       isDrawerOpen={open}
@@ -93,14 +97,17 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
       onSaving={onSave}
     >
       <div className="username">
-        <InputBase
+        <InputBaseFix
           className={classes.input}
           placeholder={t('profile.desc.placeholder')}
           type="text"
           value={value}
           multiline
           rows={8}
-          onChange={(e) => setValue(e.target.value.slice(0, 100))}
+          formatter={(v: string) => v.slice(0, 100)}
+          onChange={(e: any) => {
+            setValue(e.target.value)
+          }}
           endAdornment={
             <InputAdornment position="end" style={{ alignItems: 'baseline' }}>
               <span className="adornment">{`${len}/100`}</span>

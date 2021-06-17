@@ -1,4 +1,4 @@
-import { InputAdornment, InputBase, makeStyles } from '@material-ui/core'
+import { InputAdornment, makeStyles } from '@material-ui/core'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -8,6 +8,8 @@ import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { DrawerConfig } from './DrawerConfig'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { InputBaseFix } = require('./InputMod')
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,12 +96,13 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
       onSaving={onSave}
     >
       <div className="username">
-        <InputBase
+        <InputBaseFix
           className={classes.input}
           placeholder={t('profile.user-name.placeholder')}
           type="text"
           value={value}
-          onChange={(e) => setValue(e.target.value.trim().slice(0, 24))}
+          formatter={(v: string) => v.trim().slice(0, 100)}
+          onChange={(e: any) => setValue(e.target.value)}
           endAdornment={
             <InputAdornment position="end">
               <span className="adornment">{`${len}/24`}</span>
