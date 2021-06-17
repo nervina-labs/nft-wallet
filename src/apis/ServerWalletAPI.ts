@@ -28,7 +28,7 @@ async function writeFormData(
   object: Record<string, string>,
   prefix: string,
   formData: FormData,
-  ext?: string
+  filetype?: string
 ): Promise<FormData> {
   const keys = Object.keys(object)
   for (const key of keys) {
@@ -41,6 +41,7 @@ async function writeFormData(
       }
     }
     if (key === 'avatar') {
+      const ext = filetype?.startsWith('svg') ? 'svg' : filetype
       formData.append(
         `[${prefix}]${key}`,
         data,
@@ -150,7 +151,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     ext?: string
   ): Promise<AxiosResponse<object>> {
     const fd = new FormData()
-    await writeFormData(user, 'user', fd)
+    await writeFormData(user, 'user', fd, ext)
     await writeFormData(auth as any, 'auth', fd)
     const { data } = await this.axios.put(`/users/${this.address}`, fd, {
       headers: { 'Content-Type': 'multipart/form-data' },
