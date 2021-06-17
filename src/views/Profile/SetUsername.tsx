@@ -101,7 +101,7 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
           placeholder={t('profile.user-name.placeholder')}
           type="text"
           value={value}
-          formatter={(v: string) => v.trim().slice(0, 100)}
+          formatter={(v: string) => v.trim().slice(0, 24)}
           onChange={(e: any) => setValue(e.target.value)}
           endAdornment={
             <InputAdornment position="end">
