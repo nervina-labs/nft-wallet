@@ -121,7 +121,7 @@
     },
     "profile": {
       "title": "编辑资料",
-      "username": "名称",
+      "username": "昵称",
       "gender": "性别",
       "birthday": "生日",
       "region": "地区",
@@ -129,20 +129,25 @@
       "input": "请填写",
       "select": "请选择",
       "user-name": {
-        "edit": "修改名称",
+        "edit": "修改昵称",
         "desc": "请输入 2-24 个字符",
-        "placeholder": "请输入名称"
+        "placeholder": "请输入昵称",
+        "empty": "点击设置昵称"
       },
       "desc": {
         "edit": "修改个人简介",
         "desc": "请输入 0-100 个字符",
-        "placeholder": "请输入简介"
+        "placeholder": "请输入简介",
+        "empty": "您还没有填写个人简介，请点击添加"
       },
       "edit-birthday": "请选择生日",
       "regions": {
         "edit": "请选择地区",
         "location": "定位到的位置",
-        "all": "全部"
+        "locating": "定位中...",
+        "all": "全部",
+        "error": "定位失败",
+        "selected": "已选地区"
       },
       "avatar": {
         "camera": "拍照",
@@ -153,7 +158,13 @@
       "male": "男",
       "female": "女",
       "comfirm": "确认",
-      "reshot": "重拍"
+      "reshot": "重拍",
+      "success": "设置成功",
+      "years": "{{year}} 岁",
+      "size-limit": "文件过大，请选择小于 5M 的图片",
+      "save-edit": "是否保存修改？",
+      "wrong-image-format": "当前仅支持上传 png, jpeg, jpg, gif, svg, webp 格式图片",
+      "image-network-error": "上传失败，请检查当前网络情况并重新上传"
     },
     "explore": {
       "all": "全部",

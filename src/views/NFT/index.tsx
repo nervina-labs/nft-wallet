@@ -280,6 +280,7 @@ export const NFT: React.FC = () => {
           src={detail?.bg_image_url}
           width={imageWidth}
           height={imageWidth}
+          enable={!isDialogOpen}
           onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
           onColorDetected={(color) => setImageColor(color)}
         />

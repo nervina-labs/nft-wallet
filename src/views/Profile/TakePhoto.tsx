@@ -28,7 +28,6 @@ const Container = styled(MainContainer)`
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin: 0 25px;
     color: white;
     font-size: 18px;
     .cancel {
@@ -73,6 +72,7 @@ export const TakePhoto: React.FC = () => {
     const datauri = camera.current?.getScreenshot()
     history.push(RoutePath.ImagePreview, {
       datauri,
+      fromCamera: true,
     })
   }, [history])
 
@@ -83,7 +83,7 @@ export const TakePhoto: React.FC = () => {
         audio={false}
         videoConstraints={{ facingMode }}
         style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-        screenshotFormat="image/webp"
+        screenshotFormat="image/jpeg"
         screenshotQuality={0.92}
         height={window.innerHeight}
         onUserMediaError={() => {

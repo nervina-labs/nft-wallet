@@ -11,6 +11,47 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { Transaction as PwTransaction, transformers } from '@lay2/pw-core'
 import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
+import { Auth, User, UserResponse } from '../models/user'
+
+function randomid(length = 10): string {
+  let result = ''
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+}
+
+async function writeFormData(
+  object: Record<string, string>,
+  prefix: string,
+  formData: FormData,
+  ext?: string
+): Promise<FormData> {
+  const keys = Object.keys(object)
+  for (const key of keys) {
+    let data: string | Blob = object[key]
+    if (key === 'avatar') {
+      try {
+        data = await fetch(data).then(async (d) => await d.blob())
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    if (key === 'avatar') {
+      formData.append(
+        `[${prefix}]${key}`,
+        data,
+        `${randomid()}.${ext ?? 'jpeg'}`
+      )
+    } else {
+      formData.append(`[${prefix}]${key}`, data)
+    }
+  }
+  return formData
+}
 
 export class ServerWalletAPI implements NFTWalletAPI {
   private readonly address: string
@@ -66,6 +107,18 @@ export class ServerWalletAPI implements NFTWalletAPI {
     return await this.axios.get('/tags')
   }
 
+  async getRegion(
+    latitude: string,
+    longitude: string
+  ): Promise<AxiosResponse<{ region: string }>> {
+    return await this.axios.get('/regions', {
+      params: {
+        latitude,
+        longitude,
+      },
+    })
+  }
+
   async getTokenClass(uuid: string): Promise<AxiosResponse<TokenClass>> {
     return await this.axios.get(`/token_classes/${uuid}`)
   }
@@ -88,6 +141,30 @@ export class ServerWalletAPI implements NFTWalletAPI {
     return {
       tx,
       uuid: data.token_ckb_transaction_uuid,
+    }
+  }
+
+  async setProfile(
+    user: Partial<User>,
+    auth: Auth,
+    ext?: string
+  ): Promise<AxiosResponse<object>> {
+    const fd = new FormData()
+    await writeFormData(user, 'user', fd)
+    await writeFormData(auth as any, 'auth', fd)
+    const { data } = await this.axios.put(`/users/${this.address}`, fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+
+    return data
+  }
+
+  async getProfile(): Promise<UserResponse> {
+    try {
+      const { data } = await this.axios.get(`/users/${this.address}`)
+      return data
+    } catch (error) {
+      return Object.create(null)
     }
   }
 

@@ -3,6 +3,9 @@ import React, { useMemo, useRef, useState } from 'react'
 import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
+import classNames from 'classnames'
+import styled from 'styled-components'
+import { IS_IPHONE } from '../../constants'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -10,7 +13,14 @@ export interface ParallaxTiltProps {
   height: number
   onColorDetected: (color: string) => void
   onFallBackImageLoaded: () => void
+  enable: boolean
 }
+
+const Container = styled(Tilt)`
+  &.disabled {
+    transform: none !important;
+  }
+`
 
 export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   src,
@@ -18,6 +28,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   width,
   height,
   onFallBackImageLoaded,
+  enable,
 }) => {
   const [isTiltEnable, setIsTileEnable] = useState(false)
   const isTouchDevice = useMemo(() => {
@@ -35,13 +46,14 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   const tilt = useRef<Tilt>(null)
   // const [boxShadow, setBoxShadow] = useState('rgb(240 46 170 / 40%) -10px 10px')
   return (
-    <Tilt
+    <Container
       ref={tilt}
       tiltReverse={shouldReverseTilt}
       reset={false}
-      tiltEnable={isTiltEnable}
+      tiltEnable={isTiltEnable && enable}
       tiltAngleYInitial={!isTouchDevice ? 15 : undefined}
       adjustGyroscope
+      className={classNames({ disabled: !enable && IS_IPHONE })}
       style={{ margin: 'auto' }}
       transitionSpeed={1000}
       gyroscope={enableGyroscope}
@@ -88,6 +100,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
           />
         }
       />
-    </Tilt>
+    </Container>
   )
 }

@@ -1,5 +1,5 @@
 import { createModel } from 'hox'
-import { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
 import { Address, DefaultSigner, Provider, Transaction } from '@lay2/pw-core'
@@ -12,6 +12,9 @@ import { usePrevious } from './usePrevious'
 
 import { Web3Provider } from '../pw/Web3Provider'
 import dayjs from 'dayjs'
+
+export type PromiseFunc = () => Promise<void> | void
+
 export interface UseWallet {
   api: NFTWalletAPI
   login: (walletType?: WalletType) => Promise<Provider>
@@ -23,6 +26,19 @@ export interface UseWallet {
   prevAddress: string | undefined
   walletType?: WalletType
   signMessage: (msg: string) => Promise<string>
+  setIsErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isErrorDialogOpen: boolean
+  errorMsg?: React.ReactNode
+  toast: (msg: React.ReactNode) => void
+  confirm: (
+    msg: React.ReactNode,
+    onConfirm: PromiseFunc,
+    onClose: PromiseFunc
+  ) => void
+  confirmContent: React.ReactNode
+  showConfirmDialog: boolean
+  onDialogConfirm: PromiseFunc
+  onDialogClose: PromiseFunc
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
@@ -40,13 +56,15 @@ export enum WalletType {
   WalletConnect = 'WalletConnect',
 }
 
-function toHex(str: string): string {
+export function toHex(str: string): string {
   let result = ''
   for (let i = 0; i < str.length; i++) {
     result += str.charCodeAt(i).toString(16)
   }
   return result
 }
+
+const noop: any = (): void => {}
 
 function useWallet(): UseWallet {
   const [provider, setProvider] = useState<Provider>()
@@ -55,6 +73,42 @@ function useWallet(): UseWallet {
     UNIPASS_ACCOUNT_KEY,
     null
   )
+
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<React.ReactNode>('')
+  const [confirmContent, setConfirmContent] = useState<React.ReactNode>('')
+  const [showConfirmDialog, setShowConfifrmDialog] = useState(false)
+  const [onDialogConfirm, setOnDialogConfirm] = useState<PromiseFunc>(noop)
+  const [onDialogClose, setOnDialogClose] = useState<PromiseFunc>(noop)
+
+  const confirm = useCallback(
+    (
+      content: React.ReactNode,
+      onConfirm: PromiseFunc,
+      onClose: PromiseFunc
+    ) => {
+      setConfirmContent(content)
+      setShowConfifrmDialog(true)
+      setOnDialogConfirm(() => {
+        return async () => {
+          await onConfirm()
+          setShowConfifrmDialog(false)
+        }
+      })
+      setOnDialogClose(() => {
+        return async () => {
+          await onClose()
+          setShowConfifrmDialog(false)
+        }
+      })
+    },
+    []
+  )
+
+  const toast = useCallback((errorMsg: React.ReactNode) => {
+    setIsErrorDialogOpen(true)
+    setErrorMsg(errorMsg)
+  }, [])
 
   const setUnipassAccount = useCallback(
     (account: UnipassAccount | null) => {
@@ -216,7 +270,7 @@ function useWallet(): UseWallet {
       if (unipassAccount?.walletType === WalletType.Unipass) {
         if (provider != null) {
           const sig = await provider.sign(toHex(msg))
-          return sig.slice(4)
+          return sig
         }
         const p = await new UnipassProvider(
           UNIPASS_URL,
@@ -224,15 +278,23 @@ function useWallet(): UseWallet {
         ).connect(unipassAccount)
         setProvider(p)
         const sig = await p.sign(toHex(msg))
-        return sig.slice(4)
+        return sig
       }
       if (provider != null) {
-        const sig = await (provider as Web3Provider).signMsg(msg)
-        return sig
+        try {
+          const sig = await (provider as Web3Provider).signMsg(msg)
+          return sig
+        } catch (error) {
+          return 'N/A'
+        }
       }
       const p = await loginMetamask()
       setProvider(p)
-      return await (p as Web3Provider).signMsg(msg)
+      try {
+        return await (p as Web3Provider).signMsg(msg)
+      } catch (error) {
+        return 'N/A'
+      }
     },
     [unipassAccount, provider, setUnipassAccount, loginMetamask]
   )
@@ -283,6 +345,15 @@ function useWallet(): UseWallet {
     prevAddress,
     walletType,
     signMessage,
+    setIsErrorDialogOpen,
+    isErrorDialogOpen,
+    errorMsg,
+    toast,
+    confirmContent,
+    showConfirmDialog,
+    onDialogClose,
+    onDialogConfirm,
+    confirm,
   }
 }
 

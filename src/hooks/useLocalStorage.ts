@@ -11,6 +11,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     try {
       // Get from local storage by key
       const item = storage.getItem(key)
+      // eslint-disable-next-line no-debugger
       // Parse stored json or if none return initialValue
       return item !== null ? JSON.parse(item) : initialValue
     } catch (error) {
@@ -28,6 +29,8 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
         value instanceof Function ? value(storedValue) : value
       // Save state
       setStoredValue(valueToStore)
+      // eslint-disable-next-line no-debugger
+      // debugger
       // Save to local storage
       storage.setItem(key, JSON.stringify(valueToStore))
     } catch (error) {
