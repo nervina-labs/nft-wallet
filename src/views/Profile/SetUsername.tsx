@@ -8,8 +8,7 @@ import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { DrawerConfig } from './DrawerConfig'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { InputBaseFix } = require('./InputMod')
+import { InputBaseFix } from './InputMod'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,6 +42,7 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
   const [t] = useTranslation('translations')
   const [value, setValue] = useState(username ?? '')
   const len = useMemo(() => {
+    if (value.length >= 24) return 24
     return value.length
   }, [value])
 

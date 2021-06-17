@@ -8,8 +8,7 @@ import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { DrawerConfig } from './DrawerConfig'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { InputBaseFix } = require('./InputMod')
+import { InputBaseFix } from './InputMod'
 
 const useStyles = makeStyles((theme) => ({
   root: {
