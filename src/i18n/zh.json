@@ -96,7 +96,7 @@
       "back": "返回我的秘宝"
     },
     "transactions": {
-      "no-data": "还没有记录...",
+      "no-data": "暂无更多纪录...",
       "pull-down-refresh": " 下拉刷新",
       "receive-from": "接收自",
       "send-to": "发送至",
