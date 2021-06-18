@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   BrowserRouter,
   Redirect,
@@ -6,6 +6,7 @@ import {
   RouteProps,
   Switch,
   useHistory,
+  useLocation,
 } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
 import { useWalletModel, WalletType } from '../hooks/useWallet'
@@ -46,6 +47,36 @@ export enum RoutePath {
   ImagePreview = '/avatar/preview',
   TakePhoto = '/avatar/camera',
   Explore = '/explore',
+}
+
+export const RouterContext = React.createContext({
+  to: '',
+  from: '',
+})
+
+export interface Routes {
+  from: string
+  to: string
+}
+
+export const useRoute = (): Routes => {
+  return useContext(RouterContext)
+}
+
+const RouterProvider: React.FC = ({ children }) => {
+  const location = useLocation()
+  const [route, setRoute] = useState<Routes>({
+    to: location.pathname,
+    from: location.pathname,
+  })
+
+  useEffect(() => {
+    setRoute((prev) => ({ to: location.pathname, from: prev.to }))
+  }, [location])
+
+  return (
+    <RouterContext.Provider value={route}>{children}</RouterContext.Provider>
+  )
 }
 
 const WalletChange: React.FC = ({ children }) => {
@@ -163,47 +194,49 @@ export const Routers: React.FC = () => {
   return (
     <I18nextProvider i18n={i18n}>
       <BrowserRouter>
-        <WalletChange>
-          <Switch>
-            {routes.map((route) => (
-              <Route {...route} key={route.key} path={route.path} />
-            ))}
-            <Redirect
-              exact
-              from={RoutePath.Launch}
-              to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
+        <RouterProvider>
+          <WalletChange>
+            <Switch>
+              {routes.map((route) => (
+                <Route {...route} key={route.key} path={route.path} />
+              ))}
+              <Redirect
+                exact
+                from={RoutePath.Launch}
+                to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
+              />
+              <Route component={NotFound} path="*" />
+            </Switch>
+            <ActionDialog
+              icon={<FailSvg />}
+              content={errorMsg}
+              open={isErrorDialogOpen}
+              onConfrim={() => setIsErrorDialogOpen(false)}
+              onBackdropClick={() => setIsErrorDialogOpen(false)}
             />
-            <Route component={NotFound} path="*" />
-          </Switch>
-          <ActionDialog
-            icon={<FailSvg />}
-            content={errorMsg}
-            open={isErrorDialogOpen}
-            onConfrim={() => setIsErrorDialogOpen(false)}
-            onBackdropClick={() => setIsErrorDialogOpen(false)}
-          />
-          <Snackbar
-            open={showEditSuccess}
-            autoHideDuration={1500}
-            onClose={closeSnackbar}
-            style={{
-              bottom: '88px',
-            }}
-          >
-            <Alert
+            <Snackbar
+              open={showEditSuccess}
+              autoHideDuration={1500}
+              onClose={closeSnackbar}
               style={{
-                borderRadius: '16px',
-                background: 'rgba(51, 51, 51, 0.592657)',
-                padding: '4px 30px',
+                bottom: '88px',
               }}
-              icon={false}
-              severity="success"
             >
-              {snackbarMsg}
-            </Alert>
-          </Snackbar>
-          <Comfirm open disableBackdropClick />
-        </WalletChange>
+              <Alert
+                style={{
+                  borderRadius: '16px',
+                  background: 'rgba(51, 51, 51, 0.592657)',
+                  padding: '4px 30px',
+                }}
+                icon={false}
+                severity="success"
+              >
+                {snackbarMsg}
+              </Alert>
+            </Snackbar>
+            <Comfirm open disableBackdropClick />
+          </WalletChange>
+        </RouterProvider>
       </BrowserRouter>
     </I18nextProvider>
   )

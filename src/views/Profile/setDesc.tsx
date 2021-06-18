@@ -7,6 +7,7 @@ import { usePrevious } from '../../hooks/usePrevious'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
+import { useRoute } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
 import { InputBaseFix } from './InputMod'
 
@@ -53,6 +54,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
   const history = useHistory()
   const { setRemoteProfile } = useProfileModel()
   const qc = useQueryClient()
+  const route = useRoute()
   const onSave = useCallback(async () => {
     if (isSaving) {
       return
@@ -62,7 +64,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
       await setRemoteProfile({
         description: value,
       })
-      history.goBack()
+      history.replace(route.from)
     } catch (error) {
       //
       console.log(error)
@@ -70,7 +72,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
       await qc.refetchQueries(Query.Profile)
       setIsSaving(false)
     }
-  }, [value, setRemoteProfile, history, isSaving, qc])
+  }, [value, setRemoteProfile, history, isSaving, qc, route])
 
   useEffect(() => {
     if (!open) {
