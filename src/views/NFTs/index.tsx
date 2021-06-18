@@ -28,7 +28,6 @@ import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { ReactComponent as SettingSvg } from '../../assets/svg/setting.svg'
 import { ReactComponent as MaleSvg } from '../../assets/svg/male.svg'
 import { ReactComponent as FemaleSvg } from '../../assets/svg/female.svg'
-import dayjs from 'dayjs'
 import { getRegionFromCode } from '../Profile/SetRegion'
 import { CircularProgress } from '@material-ui/core'
 import classNames from 'classnames'
@@ -149,9 +148,6 @@ const Container = styled(MainContainer)`
               display: -webkit-box;
               -webkit-line-clamp: 1;
               -webkit-box-orient: vertical;
-            }
-            &.year {
-              white-space: nowrap;
             }
           }
           .gender {
@@ -333,17 +329,14 @@ export const NFTs: React.FC = () => {
   const closeDialog = (): void => setIsDialogOpen(false)
 
   const isInfoEmpty = useMemo(() => {
-    return !user?.birthday && !user?.gender && !user?.region
+    return !user?.gender && !user?.region
   }, [user])
 
   const userInfo = useMemo(() => {
-    const y = dayjs().year() - dayjs(user?.birthday ?? Date.now()).year()
-    const years = user?.birthday ? t('profile.years', { year: y }) : null
     const region = getRegionFromCode(user?.region, i18n.language as 'zh')
     return (
       <>
         {user?.gender ? <Gender gender={user?.gender} /> : null}
-        {years ? <span className="year">{years}</span> : null}
         {region ? <span className="region">{region}</span> : null}
       </>
     )
