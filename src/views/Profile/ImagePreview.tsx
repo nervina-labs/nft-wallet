@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
-import { RoutePath } from '../../routes'
+import { RoutePath, useRoute } from '../../routes'
 import { MainContainer } from '../../styles'
 
 const Container = styled(MainContainer)`
@@ -99,6 +99,7 @@ export const ImagePreview: React.FC = () => {
   }, [])
 
   const qc = useQueryClient()
+  const route = useRoute()
   const onSave = useCallback(async () => {
     if (isSaving) {
       return
@@ -114,7 +115,7 @@ export const ImagePreview: React.FC = () => {
       if (fromCamera) {
         history.go(-2)
       } else {
-        history.goBack()
+        history.replace(route.from)
       }
     } catch (error) {
       // axios error
@@ -144,6 +145,7 @@ export const ImagePreview: React.FC = () => {
     fromCamera,
     toast,
     t,
+    route,
   ])
 
   const onClose = useCallback(() => {

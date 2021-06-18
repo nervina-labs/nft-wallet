@@ -7,6 +7,7 @@ import { usePrevious } from '../../hooks/usePrevious'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
+import { useRoute } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
 import { InputBaseFix } from './InputMod'
 
@@ -41,6 +42,7 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
 }) => {
   const [t] = useTranslation('translations')
   const [value, setValue] = useState(username ?? '')
+  const route = useRoute()
   const len = useMemo(() => {
     if (value.length >= 24) return 24
     return value.length
@@ -63,7 +65,7 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
       await setRemoteProfile({
         nickname: value,
       })
-      history.goBack()
+      history.replace(route.from)
     } catch (error) {
       //
       console.log(error)
@@ -71,7 +73,7 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
       await qc.refetchQueries(Query.Profile)
       setIsSaving(false)
     }
-  }, [value, setRemoteProfile, history, isSaving, qc])
+  }, [value, setRemoteProfile, history, isSaving, qc, route])
 
   useEffect(() => {
     if (!open) {
