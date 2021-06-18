@@ -17,6 +17,9 @@ import { Loading } from '../../components/Loading'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { HiddenBar } from '../../components/HiddenBar'
 import { useHistory } from 'react-router'
+import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { useRouteMatch } from 'react-router-dom'
+import { RoutePath } from '../../routes'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -170,7 +173,13 @@ const Card: React.FC<CardProps> = ({ token }) => {
 
 export const Explore: React.FC = () => {
   const [t, i18n] = useTranslation('translations')
-  const [currentTag, setCurrentTag] = useState('all')
+  const history = useHistory()
+  const currentTag = useRouteQuery('tag', 'all')
+  const matchExplore = useRouteMatch({
+    path: RoutePath.Explore,
+    exact: true,
+    strict: true,
+  })
   const { data: tagsResult } = useQuery(
     Query.Tags,
     async () => {
@@ -188,10 +197,17 @@ export const Explore: React.FC = () => {
         return {
           uuid: tag.uuid,
           name: tag.locales[i18n.language],
+          routeName: tag.locales.en.trim().toLowerCase(),
         }
       }) ?? []
-    return [{ name: t('explore.all'), uuid: 'all' }].concat(tags)
+    return [{ name: t('explore.all'), uuid: 'all', routeName: 'all' }].concat(
+      tags
+    )
   }, [tagsResult, i18n.language, t])
+
+  const currentTagId = useMemo(() => {
+    return allTags.find((t) => t.routeName === currentTag)?.uuid
+  }, [allTags, currentTag])
 
   const { api } = useWalletModel()
   const {
@@ -201,9 +217,10 @@ export const Explore: React.FC = () => {
     refetch,
     status,
   } = useInfiniteQuery(
-    [Query.Explore + currentTag, currentTag],
+    [Query.Explore + currentTag, currentTagId],
     async ({ pageParam = 1 }) => {
-      const { data } = await api.getClassListByTagId(currentTag, pageParam)
+      // eslint-disable-next-line
+      const { data } = await api.getClassListByTagId(currentTagId!, pageParam)
       return data
     },
     {
@@ -216,6 +233,8 @@ export const Explore: React.FC = () => {
         }
         return meta.current_page + 1
       },
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      enabled: matchExplore?.isExact || tagsResult != null,
     }
   )
 
@@ -245,8 +264,14 @@ export const Explore: React.FC = () => {
         {allTags.map((t) => (
           <div
             key={t.uuid}
-            className={`tag ${currentTag === t.uuid ? 'active' : ''}`}
-            onClick={() => setCurrentTag(t.uuid)}
+            className={`tag ${currentTagId === t.uuid ? 'active' : ''}`}
+            onClick={() =>
+              history.push(
+                t.uuid === 'all'
+                  ? RoutePath.Explore
+                  : `${RoutePath.Explore}?tag=${t.routeName}`
+              )
+            }
           >
             {t.name}
           </div>

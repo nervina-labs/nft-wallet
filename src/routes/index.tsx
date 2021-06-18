@@ -125,7 +125,7 @@ const routes: Array<RouteProps & { key: string }> = [
   },
   {
     component: Explore,
-    exact: true,
+    exact: false,
     key: 'Explore',
     path: RoutePath.Explore,
   },
