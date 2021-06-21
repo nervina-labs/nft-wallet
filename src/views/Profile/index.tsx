@@ -24,6 +24,8 @@ import { Query } from '../../models'
 import { Skeleton } from '@material-ui/lab'
 import { DrawerImage } from './DrawerImage'
 
+const emptyAvatar = PeopleSvg as any
+
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
@@ -201,7 +203,7 @@ export const Profile: React.FC = () => {
                 height={90}
                 variant="circle"
                 src={user?.avatar_url ?? ''}
-                backup={<img src={PeopleSvg as any} />}
+                backup={<img src={emptyAvatar} />}
               />
             )}
             <CameraSvg className="cam" />
