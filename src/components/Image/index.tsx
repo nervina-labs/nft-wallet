@@ -71,6 +71,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
             width: `${width}px`,
             height: setImageHeight ? `${height}px` : 'auto',
             maxWidth: '100%',
+            pointerEvents: disableContextMenu ? 'none' : 'auto',
           }}
         />
       )}
