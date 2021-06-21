@@ -297,7 +297,7 @@ export const Transactions: React.FC = () => {
           scrollThreshold="300px"
           loader={<Loading />}
           endMessage={
-            <h4>{dataLength <= 5 ? '' : t('common.actions.pull-to-down')}</h4>
+            <h4>{dataLength <= 5 ? '' : t('transactions.no-data')}</h4>
           }
         >
           {data?.pages?.map((group, i) => {
