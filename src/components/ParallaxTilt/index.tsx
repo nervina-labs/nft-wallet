@@ -81,6 +81,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
           borderRadius: '10px',
           // 44 = header, 300 = nft detail, 30 * 2 = margin
           maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
+          pointerEvents: 'none',
         }}
         setImageHeight={false}
         onLoaded={(img) => {
