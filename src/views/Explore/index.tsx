@@ -141,6 +141,7 @@ const Card: React.FC<CardProps> = ({ token }) => {
           height={width}
           skeletonStyle={{ borderRadius: '8px' }}
           cover={true}
+          disableContextMenu={true}
           backup={
             <LazyLoadImage
               skeletonStyle={{ borderRadius: '8px' }}

@@ -228,6 +228,7 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
           height={125}
           skeletonStyle={{ borderRadius: '10px' }}
           cover
+          disableContextMenu={true}
           backup={
             <LazyLoadImage
               skeletonStyle={{ borderRadius: '10px' }}
