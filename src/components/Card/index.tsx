@@ -99,7 +99,7 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
 const Container = styled.div`
   display: flex;
   cursor: pointer;
-  margin-bottom: 28px;
+  margin-bottom: 15px;
   margin-left: 16px;
   margin-right: 16px;
   background: #fff;
@@ -121,12 +121,8 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    position: relative;
-    top: -12px;
-    right: -12px;
     background-color: white;
     img {
-      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
       border-radius: 10px;
     }
     .fallback {

@@ -70,7 +70,7 @@ export interface CreatorProps {
   baned?: boolean
   isVip?: boolean
   vipTitle?: string
-  vipAlignRight?: string
+  vipAlignRight?: boolean
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -113,7 +113,7 @@ export const Creator: React.FC<CreatorProps> = ({
         {baned ? t('common.baned.issuer') : name}
       </span>
       {isVip ? (
-        <Tooltip title={vt} placement="top">
+        <Tooltip title={vt} placement={vipAlignRight ? 'top-end' : 'top'}>
           <WeiboSvg className="vip" />
         </Tooltip>
       ) : null}

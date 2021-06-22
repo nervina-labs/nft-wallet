@@ -25,16 +25,18 @@ import { useTranslation } from 'react-i18next'
 import { HiddenBar } from '../../components/HiddenBar'
 import { LazyLoadImage } from '../../components/Image'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
-import { ReactComponent as SettingSvg } from '../../assets/svg/setting.svg'
+import { ReactComponent as SettingSvg } from '../../assets/svg/right-arrow.svg'
 import { ReactComponent as MaleSvg } from '../../assets/svg/male.svg'
 import { ReactComponent as FemaleSvg } from '../../assets/svg/female.svg'
 import { getRegionFromCode } from '../Profile/SetRegion'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress, useScrollTrigger } from '@material-ui/core'
 import classNames from 'classnames'
 import { DrawerImage } from '../Profile/DrawerImage'
 import { useRouteMatch } from 'react-router-dom'
 import { SetUsername } from '../Profile/SetUsername'
 import { SetDesc } from '../Profile/setDesc'
+
+import { useRouteQuery } from '../../hooks/useRouteQuery'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -45,6 +47,53 @@ const Container = styled(MainContainer)`
   h4 {
     text-align: center;
     color: rgba(0, 0, 0, 0.6);
+  }
+  .filters {
+    margin-right: 15px;
+    font-size: 14px;
+    color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 100%;
+    max-width: 500px;
+    border-bottom: 1px solid #ececec;
+    background-color: white;
+    border-top-left-radius: 35px;
+    border-top-right-radius: 35px;
+    transition: all 0.3s;
+    &.fixed {
+      position: fixed;
+      top: 0;
+      justify-content: center;
+      z-index: 3;
+      border-radius: 0;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(10px);
+    }
+    .filter {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      justify-content: center;
+      align-items: center;
+      &:first-child {
+        margin-right: 48px;
+      }
+    }
+    .active-line {
+      background: #ff5c00;
+      border-radius: 10px;
+      position: absolute;
+      border-radius: 10px;
+      height: 3px;
+      width: 28px;
+      position: relative;
+      top: 1px;
+    }
   }
   .share {
     display: flex;
@@ -75,16 +124,20 @@ const Container = styled(MainContainer)`
   }
   .account {
     background: rgba(255, 246, 235, 0.553224);
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
-    left: 20px;
-    top: 20px;
+    left: 15px;
+    top: 15px;
     cursor: pointer;
+    svg {
+      width: 18px;
+      height: 18px;
+    }
   }
   .bg {
     position: fixed;
@@ -180,6 +233,11 @@ const Container = styled(MainContainer)`
           justify-content: center;
           position: relative;
           top: -5px;
+          svg {
+            path {
+              fill: #333;
+            }
+          }
         }
       }
     }
@@ -215,7 +273,6 @@ const Container = styled(MainContainer)`
     border-radius: 35px 35px 0px 0px;
     margin-top: 199px;
     z-index: 2;
-    padding-top: 10px;
     .infinite-scroll-component {
       > div {
         &:nth-child(2) {
@@ -340,7 +397,14 @@ export const NFTs: React.FC = () => {
         {region ? <span className="region">{region}</span> : null}
       </>
     )
-  }, [user, t, i18n.language])
+  }, [user, i18n.language])
+
+  const triggerHeader = useScrollTrigger({
+    threshold: 200,
+    disableHysteresis: true,
+  })
+
+  const liked = useRouteQuery('liked', '')
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
@@ -422,6 +486,16 @@ export const NFTs: React.FC = () => {
         className="list"
         style={IS_IPHONE ? { width: '100%', maxWidth: '100%' } : undefined}
       >
+        <div className={classNames('filters', { fixed: triggerHeader })}>
+          <div className={classNames('filter', { active: liked === '' })}>
+            {t('nfts.owned')}
+            {liked === '' ? <span className="active-line"></span> : null}
+          </div>
+          <div className={classNames('filter', { active: liked !== '' })}>
+            {t('nfts.liked')}
+            {liked !== '' ? <span className="active-line"></span> : null}
+          </div>
+        </div>
         {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
           <Loading />

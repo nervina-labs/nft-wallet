@@ -52,6 +52,8 @@
     },
     "nfts": {
       "title": "My NFT",
+      "owned": "Owned",
+      "liked": "Liked",
       "status": {
         "comfirming": "Confirming",
         "receiving": "Receiving",
@@ -171,7 +173,9 @@
     "explore": {
       "all": "All",
       "metaverse": "Explore",
-      "my": "My"
+      "my": "My",
+      "latest": "Latest",
+      "most-liked": "Most Liked"
     }
   }
 }

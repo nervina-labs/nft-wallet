@@ -28,6 +28,8 @@ export interface TokenClass extends VipInfo {
   is_issuer_banned: boolean
   is_class_banned: boolean
   uuid: string
+  class_likes: number
+  liked: string
   issuer_info: {
     name: string
     avatar_url: string

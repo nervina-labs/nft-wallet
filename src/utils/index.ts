@@ -64,3 +64,11 @@ export function copyFallback(data: string): void {
 }
 
 export const noop: () => void = () => {}
+
+export function getRandomNumber(min: number, max: number): number {
+  return parseInt((Math.random() * (max - min) + min).toString(), 10)
+}
+
+export function getRandomBool(): boolean {
+  return Math.random() > 0.5
+}

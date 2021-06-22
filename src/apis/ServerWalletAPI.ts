@@ -116,6 +116,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (sortByLikes) {
       params.sort = 'most_likes'
     }
+    if (this.address) {
+      params.address = this.address
+    }
     return await this.axios.get(`/tags/${uuid}/token_classes`, {
       params,
     })

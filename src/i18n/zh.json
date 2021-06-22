@@ -52,6 +52,8 @@
     },
     "nfts": {
       "title": "我的秘宝",
+      "owned": "持有",
+      "liked": "赞过",
       "status": {
         "comfirming": "确认中",
         "receiving": "接收中",
@@ -173,7 +175,9 @@
     "explore": {
       "all": "全部",
       "metaverse": "探索",
-      "my": "我的"
+      "my": "我的",
+      "latest": "最新创造",
+      "most-liked": "最多喜欢"
     }
   }
 }
