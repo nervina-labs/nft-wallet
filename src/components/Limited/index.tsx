@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-// import { ReactComponent as StarSvg } from '../../assets/svg/star.svg'
+// import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
 import goldBox from '../../assets/img/gold-box.png'
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   img {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
   }
   span {
     font-size: ${(props: { fontSize?: number }) => `${props.fontSize ?? 12}px`};

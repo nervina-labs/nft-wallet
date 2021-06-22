@@ -22,6 +22,10 @@
         "limit": "限量",
         "unlimit": "不限量"
       },
+      "vip": {
+        "weibo": "微博认证: {{title}}",
+        "weibo-no-desc": "微博认证"
+      },
       "baned": {
         "nft": "该秘宝暂不予显示",
         "issuer": "该创作者暂不予显示"

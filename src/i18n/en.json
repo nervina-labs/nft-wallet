@@ -22,6 +22,10 @@
         "limit": "Limited",
         "unlimit": "Unlimited"
       },
+      "vip": {
+        "weibo": "Weibo verified: {{title}}",
+        "weibo-no-desc": "微博认证"
+      },
       "baned": {
         "nft": "Invalid NFT",
         "issuer": "Invalid creator"
