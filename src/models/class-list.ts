@@ -8,7 +8,19 @@ export interface Tag {
   }
 }
 
-export interface TokenClass {
+export enum VipSource {
+  Weibo = 'weibo',
+  Twitter = 'twitter',
+  Nervina = 'nervina',
+}
+
+export interface VipInfo {
+  vip_source: VipSource
+  is_vip: boolean
+  vip_title: string
+}
+
+export interface TokenClass extends VipInfo {
   bg_image_url: string
   name: string
   description: string

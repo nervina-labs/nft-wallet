@@ -92,15 +92,42 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
+  async toggleLike(
+    uuid: string,
+    like: boolean,
+    auth: Auth
+  ): Promise<AxiosResponse<Transaction>> {
+    const url = `/token_classes/${uuid}/likes`
+    if (like) {
+      return await this.axios.post(url, { auth })
+    }
+    return await this.axios.delete(url, { data: { auth } })
+  }
+
   async getClassListByTagId(
     uuid: string,
-    page: number
+    page: number,
+    sortByLikes = false
   ): Promise<AxiosResponse<ClassList>> {
+    const params: Record<string, string | number> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    if (sortByLikes) {
+      params.sort = 'most_likes'
+    }
     return await this.axios.get(`/tags/${uuid}/token_classes`, {
-      params: {
-        page,
-        limit: PER_ITEM_LIMIT,
-      },
+      params,
+    })
+  }
+
+  async getUserLikesClassList(page: number): Promise<AxiosResponse<ClassList>> {
+    const params: Record<string, string | number> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    return await this.axios.get(`/user_likes/${this.address}`, {
+      params,
     })
   }
 

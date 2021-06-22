@@ -30,8 +30,17 @@ export interface NFTWalletAPI {
 
   getClassListByTagId: (
     uuid: string,
-    page: number
+    page: number,
+    sortByLikes?: boolean
   ) => Promise<AxiosResponse<ClassList>>
+
+  getUserLikesClassList: (page: number) => Promise<AxiosResponse<ClassList>>
+
+  toggleLike: (
+    uuid: string,
+    like: boolean,
+    auth: Auth
+  ) => Promise<AxiosResponse<object>>
 
   setProfile: (
     user: Partial<User>,
