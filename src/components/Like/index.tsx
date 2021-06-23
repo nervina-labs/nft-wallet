@@ -42,7 +42,7 @@ const formatCount = (count: number, lang: string): number | string => {
 }
 
 export const Like: React.FC<LikeProps> = ({
-  count,
+  count = 0,
   uuid,
   liked: isLikedFromList,
 }) => {

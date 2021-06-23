@@ -18,9 +18,11 @@ import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
 import { TokenClass } from '../../models/class-list'
+import { Like } from '../../components/Like'
+import Divider from '@material-ui/core/Divider'
 
 const Background = styled.div`
-  position: absolute;
+  position: fixed;
   top: 44px;
   width: 100%;
   max-width: 500px;
@@ -55,6 +57,9 @@ const Container = styled(MainContainer)`
     flex: 1;
     display: flex;
     justify-content: center;
+    position: fixed;
+    width: 100%;
+    max-width: 500px;
   }
   .loading {
     text-align: center;
@@ -63,19 +68,30 @@ const Container = styled(MainContainer)`
   .detail {
     padding: 0 25px;
     border-radius: 25px 25px 0px 0px;
-    height: 300px;
-    max-height: 300px;
     position: relative;
     background-color: #f7fafd;
     .title {
       font-weight: 500;
       font-size: 20px;
-      line-height: 41px;
+      line-height: 24px;
       color: #0e0e0e;
       margin-top: 45px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      display: -webkit-box;
+      display: -moz-box;
+      -webkit-box-orient: vertical;
       overflow: hidden;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      margin-bottom: 16px;
+    }
+    .vip {
+      margin-top: 5px;
+      color: #999;
+    }
+    .desc-title {
+      font-size: 18px;
+      line-height: 20px;
+      margin-bottom: 8px;
     }
     .desc {
       font-size: 14px;
@@ -85,11 +101,17 @@ const Container = styled(MainContainer)`
       white-space: pre-line;
       word-break: break-all;
       padding-bottom: 80px;
+      display: -webkit-box;
+      display: -moz-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 20;
+      line-clamp: 20;
     }
     .transfer {
       background-color: #fd5c31;
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       cursor: pointer;
       position: absolute;
       right: 25px;
@@ -143,23 +165,17 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ nft }) => {
+  const classUuid = isTokenClass(nft) ? nft.uuid : nft.class_uuid
   return (
     <FooterContaienr>
-      <Creator
-        title=""
-        url={nft.issuer_info.avatar_url}
-        name={nft.issuer_info.name}
-        uuid={nft.issuer_info.uuid}
-        color="#000"
-        fontSize={14}
-      />
       <Limited
         count={nft.total}
         bold={false}
         sn={isTokenClass(nft) ? undefined : nft.n_token_id}
         fontSize={14}
-        // color="rgba(63, 63, 63, 0.66) !important"
+        color="#999"
       />
+      <Like count={nft.class_likes} uuid={classUuid} liked={nft.liked} />
     </FooterContaienr>
   )
 }
@@ -240,6 +256,10 @@ export const NFT: React.FC = () => {
     )
   }, [address, detail])
 
+  const backgroundHeight = useMemo(() => {
+    return window.innerHeight - 44 - 280
+  }, [])
+
   if (!isLogined && matchTokenClass?.isExact !== true) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -264,13 +284,13 @@ export const NFT: React.FC = () => {
       {!isFallBackImgLoaded ? (
         <Background
           url={detail?.bg_image_url}
-          style={{ height: `${window.innerHeight - 44 - 280}px` }}
+          style={{ height: `${backgroundHeight}px` }}
         />
       ) : null}
       <div
         className="figure"
         style={{
-          height: `${window.innerHeight - 44 - 300}px`,
+          height: `${backgroundHeight - 20}px`,
           background: `${
             isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
           }`,
@@ -291,7 +311,12 @@ export const NFT: React.FC = () => {
         </section>
       ) : (
         <>
-          <section className="detail">
+          <section
+            className="detail"
+            style={{
+              top: `${backgroundHeight - 20}px`,
+            }}
+          >
             {isTokenClass(detail) ? null : (
               <div
                 className={`${!isTransferable ? 'disabled' : ''} transfer`}
@@ -302,6 +327,21 @@ export const NFT: React.FC = () => {
               </div>
             )}
             <div className="title">{detail?.name}</div>
+            <Creator
+              title=""
+              url={detail.issuer_info.avatar_url}
+              name={detail.issuer_info.name}
+              uuid={detail.issuer_info.uuid}
+              color="#000"
+              fontSize={14}
+              isVip={detail.is_vip}
+              vipTitle={detail.vip_title}
+            />
+            {detail.vip_title ? (
+              <div className="vip">{detail.vip_title}</div>
+            ) : null}
+            <Divider style={{ margin: '24px 0' }} />
+            <div className="desc-title">{t('nft.desc')}</div>
             <div className="desc">{detail?.description}</div>
           </section>
           <Footer nft={detail} />

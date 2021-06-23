@@ -1,3 +1,4 @@
+import { ClassLikes, VipInfo } from './class-list'
 import { TransactionStatus } from './transactions'
 
 export interface NFT {
@@ -29,7 +30,7 @@ export interface NFTToken {
   n_token_id: number
 }
 
-export interface NFTDetail {
+export interface NFTDetail extends ClassLikes, VipInfo {
   name: string
   description: string
   bg_image_url: string

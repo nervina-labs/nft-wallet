@@ -118,7 +118,8 @@
     },
     "nft": {
       "title": "秘宝细节",
-      "transfer": "转让"
+      "transfer": "转让",
+      "desc": "NFT 简介"
     },
     "account": {
       "title": "我的帐号",

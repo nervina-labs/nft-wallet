@@ -118,7 +118,8 @@
     },
     "nft": {
       "title": "NFT Details",
-      "transfer": "Transfer"
+      "transfer": "Transfer",
+      "desc": "NFT description"
     },
     "account": {
       "title": "My Account",

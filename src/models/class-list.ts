@@ -20,7 +20,12 @@ export interface VipInfo {
   vip_title: string
 }
 
-export interface TokenClass extends VipInfo {
+export interface ClassLikes {
+  class_likes: string
+  liked: boolean
+}
+
+export interface TokenClass extends VipInfo, ClassLikes {
   bg_image_url: string
   name: string
   description: string
@@ -28,8 +33,6 @@ export interface TokenClass extends VipInfo {
   is_issuer_banned: boolean
   is_class_banned: boolean
   uuid: string
-  class_likes: number
-  liked: string
   issuer_info: {
     name: string
     avatar_url: string

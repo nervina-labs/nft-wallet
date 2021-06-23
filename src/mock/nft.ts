@@ -37,7 +37,7 @@ export const nfts: NFTToken[] = [
   },
 ]
 
-export const nftDetail: NFTDetail = {
+export const nftDetail: NFTDetail = Object.create({
   name: 'FirstNFT',
   description: 'NFT NEWbee',
   total: '50',
@@ -56,4 +56,4 @@ export const nftDetail: NFTDetail = {
   is_issuer_banned: false,
   is_class_banned: false,
   n_token_id: 0,
-}
+})
