@@ -15,9 +15,10 @@ export enum VipSource {
 }
 
 export interface VipInfo {
-  vip_source: VipSource
-  is_vip: boolean
-  vip_title: string
+  weibo_auth_info?: {
+    is_verified: boolean
+    verified_title: string
+  }
 }
 
 export interface ClassLikes {

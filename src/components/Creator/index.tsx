@@ -71,6 +71,7 @@ export interface CreatorProps {
   isVip?: boolean
   vipTitle?: string
   vipAlignRight?: boolean
+  style?: React.CSSProperties
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -84,6 +85,7 @@ export const Creator: React.FC<CreatorProps> = ({
   isVip = false,
   vipTitle,
   vipAlignRight = false,
+  style,
 }) => {
   const { t } = useTranslation('translations')
   const vt = useMemo(() => {
@@ -120,7 +122,7 @@ export const Creator: React.FC<CreatorProps> = ({
     </>
   )
   return (
-    <Container fontSize={fontSize} color={color}>
+    <Container fontSize={fontSize} color={color} style={style}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
       {uuid != null ? (
         <a

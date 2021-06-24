@@ -238,6 +238,8 @@ const Card: React.FC<CardProps> = ({ token }) => {
           uuid={token.issuer_info.uuid}
           vipAlignRight
           color="#333"
+          isVip={token?.weibo_auth_info?.is_verified}
+          vipTitle={token?.weibo_auth_info?.verified_title}
         />
       </div>
       <div className="info">

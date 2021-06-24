@@ -12,7 +12,7 @@ export interface ListMeta {
   total_count: number
 }
 
-export interface NFTToken {
+export interface NFTToken extends VipInfo {
   class_name: string
   class_bg_image_url: string
   class_uuid: string

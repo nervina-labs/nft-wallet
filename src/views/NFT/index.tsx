@@ -86,8 +86,8 @@ const Container = styled(MainContainer)`
       margin-bottom: 16px;
     }
     .vip {
-      margin-top: 5px;
       color: #999;
+      font-size: 12px;
     }
     .desc-title {
       font-size: 18px;
@@ -332,11 +332,14 @@ export const NFT: React.FC = () => {
               uuid={detail.issuer_info.uuid}
               color="#000"
               fontSize={14}
-              isVip={detail.is_vip}
-              vipTitle={detail.vip_title}
+              isVip={detail?.weibo_auth_info?.is_verified}
+              vipTitle={detail?.weibo_auth_info?.verified_title}
+              style={{ marginBottom: '5px' }}
             />
-            {detail.vip_title ? (
-              <div className="vip">{detail.vip_title}</div>
+            {detail?.weibo_auth_info?.verified_title ? (
+              <div className="vip">
+                {detail?.weibo_auth_info?.verified_title}
+              </div>
             ) : null}
             <Divider style={{ margin: '24px 0' }} />
             <div className="desc-title">{t('nft.desc')}</div>
