@@ -13,7 +13,7 @@ const Container = styled.div`
   align-items: center;
   font-weight: 600;
   font-size: ${(props: { fontSize?: number }) => `${props.fontSize ?? 12}px`};
-  line-height: 17px;
+  /* line-height: 17px; */
   color: rgba(0, 0, 0, 0.6);
   .error {
     color: #d03a3a;

@@ -13,7 +13,6 @@ const Container = styled.div`
   }
   span {
     font-size: ${(props: { fontSize?: number }) => `${props.fontSize ?? 12}px`};
-    line-height: 17px;
     color: ${(props: { color?: string }) => `${props.color ?? 'black'}`};
     &.unlimit {
       color: rgba(0, 0, 0, 0.5);

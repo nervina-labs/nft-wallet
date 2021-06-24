@@ -69,6 +69,7 @@ const Container = styled(MainContainer)`
     padding: 0 25px;
     border-radius: 25px 25px 0px 0px;
     position: relative;
+    margin-bottom: 10px;
     background-color: #f7fafd;
     .title {
       font-weight: 500;
@@ -107,6 +108,7 @@ const Container = styled(MainContainer)`
       overflow: hidden;
       -webkit-line-clamp: 20;
       line-clamp: 20;
+      /* margin-bottom: 10px; */
     }
     .transfer {
       background-color: #fd5c31;
@@ -256,10 +258,6 @@ export const NFT: React.FC = () => {
     )
   }, [address, detail])
 
-  const backgroundHeight = useMemo(() => {
-    return window.innerHeight - 44 - 280
-  }, [])
-
   if (!isLogined && matchTokenClass?.isExact !== true) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -284,13 +282,13 @@ export const NFT: React.FC = () => {
       {!isFallBackImgLoaded ? (
         <Background
           url={detail?.bg_image_url}
-          style={{ height: `${backgroundHeight}px` }}
+          style={{ height: `${window.innerHeight - 44 - 280}px` }}
         />
       ) : null}
       <div
         className="figure"
         style={{
-          height: `${backgroundHeight - 20}px`,
+          height: `${window.innerHeight - 44 - 300}px`,
           background: `${
             isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
           }`,
@@ -314,7 +312,7 @@ export const NFT: React.FC = () => {
           <section
             className="detail"
             style={{
-              top: `${backgroundHeight - 20}px`,
+              top: `${window.innerHeight - 44 - 300}px`,
             }}
           >
             {isTokenClass(detail) ? null : (

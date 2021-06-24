@@ -23,8 +23,8 @@
         "unlimit": "Unlimited"
       },
       "vip": {
-        "weibo": "Weibo verified: {{title}}",
-        "weibo-no-desc": "微博认证"
+        "weibo": "Weibo verification: {{title}}",
+        "weibo-no-desc": "Weibo verification"
       },
       "baned": {
         "nft": "Invalid NFT",

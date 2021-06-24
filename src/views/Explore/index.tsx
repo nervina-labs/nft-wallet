@@ -54,6 +54,7 @@ const Container = styled(MainContainer)`
     &.fixed-header {
       position: fixed;
       top: 0;
+      z-index: 3;
       justify-content: center;
       background: rgba(255, 255, 255, 0.9);
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);

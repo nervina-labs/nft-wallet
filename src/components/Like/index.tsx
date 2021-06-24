@@ -14,6 +14,7 @@ const Container = styled.div`
   align-items: center;
   cursor: pointer;
   justify-content: center;
+  /* line-height: 17px; */
   > svg {
     margin-right: 6px;
   }
