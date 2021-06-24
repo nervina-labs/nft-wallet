@@ -25,6 +25,8 @@ import ReceivePng from '../../assets/img/receive.png'
 import NoTxPng from '../../assets/img/no-tx.png'
 import { useTranslation } from 'react-i18next'
 import { LazyLoadImage } from '../../components/Image'
+import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
+import Tooltip from '@material-ui/core/Tooltip'
 
 const Container = styled.div`
   display: flex;
@@ -98,6 +100,14 @@ const ListItemContainer = styled.div`
     .creator {
       font-weight: normal;
       font-size: 10px;
+      display: flex;
+      align-items: center;
+      .vip {
+        width: 13px;
+        height: 13px;
+        margin-left: 4px;
+        cursor: pointer;
+      }
     }
   }
   .status {
@@ -145,6 +155,13 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
       <img src={SendPng} />
     )
 
+  const vipTitle = tx?.weibo_auth_info?.verified_title
+  const vt = useMemo(() => {
+    if (vipTitle) {
+      return t('common.vip.weibo', { title: vipTitle })
+    }
+    return t('common.vip.weibo-no-desc')
+  }, [t, vipTitle])
   const creator = useMemo(() => {
     if (tx.is_issuer_banned) {
       return (
@@ -154,14 +171,23 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
         </>
       )
     }
-    return tx.tx_direction === TransactionDirection.Receive
-      ? `${t('transactions.receive-from')} ${
+    return tx.tx_direction === TransactionDirection.Receive ? (
+      <>
+        <span>{`${t('transactions.receive-from')} ${
           tx.issuer_uuid !== ''
             ? tx.from_address
             : truncateMiddle(tx.from_address, 5, 5)
-        }`
-      : `${t('transactions.send-to')} ${truncateMiddle(tx.to_address, 5, 5)}`
-  }, [tx, t])
+        }`}</span>
+        {tx?.weibo_auth_info?.is_verified ? (
+          <Tooltip title={vt} placement={'top'}>
+            <WeiboSvg className="vip" />
+          </Tooltip>
+        ) : null}
+      </>
+    ) : (
+      `${t('transactions.send-to')} ${truncateMiddle(tx.to_address, 5, 5)}`
+    )
+  }, [tx, t, vt])
 
   const Link = isBanned ? 'div' : 'a'
 
