@@ -201,9 +201,15 @@ export const Explore: React.FC = () => {
           routeName: tag.locales.en.trim().toLowerCase(),
         }
       }) ?? []
-    return [{ name: t('explore.all'), uuid: 'all', routeName: 'all' }].concat(
-      tags
-    )
+    return [{ name: t('explore.all'), uuid: 'all', routeName: 'all' }]
+      .concat(tags)
+      .concat([
+        {
+          uuid: 'others',
+          name: t('explore.others'),
+          routeName: 'others',
+        },
+      ])
   }, [tagsResult, i18n.language, t])
 
   const currentTagId = useMemo(() => {
