@@ -296,6 +296,9 @@ export const NFTs: React.FC = () => {
         }
         return meta.current_page + 1
       },
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
 

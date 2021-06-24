@@ -190,6 +190,7 @@ export const Explore: React.FC = () => {
     {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
   const allTags = useMemo(() => {
@@ -234,8 +235,12 @@ export const Explore: React.FC = () => {
         }
         return meta.current_page + 1
       },
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      enabled: matchExplore?.isExact || tagsResult != null,
+      enabled:
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        !!(matchExplore?.isExact || tagsResult != null) && currentTagId != null,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
 
