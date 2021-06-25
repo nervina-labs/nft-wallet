@@ -21,7 +21,6 @@ import { useRouteMatch } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { Limited } from '../../components/Limited'
 import { Like } from '../../components/Like'
-import { getRandomBool, getRandomNumber } from '../../utils'
 import { useScrollTrigger } from '@material-ui/core'
 import classNames from 'classnames'
 import qs from 'querystring'
@@ -244,11 +243,7 @@ const Card: React.FC<CardProps> = ({ token }) => {
       </div>
       <div className="info">
         <Limited count={token.total} bold={false} banned={false} color="#666" />
-        <Like
-          count={getRandomNumber(0, 2000).toString()}
-          liked={getRandomBool()}
-          uuid={token.uuid}
-        />
+        <Like count={token.class_likes} liked={token.liked} uuid={token.uuid} />
       </div>
     </CardContainer>
   )
