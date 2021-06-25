@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react'
-import VConsole from 'vconsole'
 
-const v = new VConsole()
-console.log(v)
 export const useDisableScrollBounce = (): void => {
   const startY = useRef(0)
   const currentY = useRef(0)
