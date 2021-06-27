@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import useScrollTrigger from '@material-ui/core/useScrollTrigger'
 import Slide from '@material-ui/core/Slide'
 import styled from 'styled-components'
 import { ReactComponent as MySvg } from '../../assets/svg/my.svg'
@@ -9,9 +8,10 @@ import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import classnames from 'classnames'
 import { useWalletModel } from '../../hooks/useWallet'
+import { useScrollTriggerWithThreshold } from '../../hooks/useScroll'
 
 export const HideOnScroll: React.FC = ({ children }) => {
-  const trigger = useScrollTrigger({ target: window })
+  const trigger = useScrollTriggerWithThreshold()
 
   return (
     <Slide appear={false} direction="up" in={!trigger}>
