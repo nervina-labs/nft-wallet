@@ -34,6 +34,7 @@ const Container = styled.div`
   }
   .vip {
     width: 15px;
+    min-width: 15px;
     height: 15px;
     margin-left: 6px;
   }
