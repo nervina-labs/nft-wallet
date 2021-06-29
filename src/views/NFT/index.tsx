@@ -336,6 +336,7 @@ export const NFT: React.FC = () => {
               isVip={detail?.weibo_auth_info?.is_verified}
               vipTitle={detail?.weibo_auth_info?.verified_title}
               style={{ marginBottom: '5px' }}
+              showTooltip={false}
             />
             {detail?.weibo_auth_info?.verified_title ? (
               <div className="vip">
