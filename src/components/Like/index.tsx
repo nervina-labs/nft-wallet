@@ -70,8 +70,8 @@ export const Like: React.FC<LikeProps> = ({
         history.push(RoutePath.Login)
         return
       }
-      await toggleLike(uuid, !isLiked)
-      setIsLiked(!isLiked)
+      const res = await toggleLike(uuid, !isLiked)
+      setIsLiked(res)
     } catch (error) {
       //
     } finally {

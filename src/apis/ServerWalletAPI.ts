@@ -99,7 +99,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     uuid: string,
     like: boolean,
     auth: Auth
-  ): Promise<AxiosResponse<Transaction>> {
+  ): Promise<AxiosResponse<{ liked: boolean }>> {
     const url = `/token_classes/${uuid}/toggle_likes/${this.address}`
     return await this.axios.put(url, { auth })
   }

@@ -40,7 +40,7 @@ export interface NFTWalletAPI {
     uuid: string,
     like: boolean,
     auth: Auth
-  ) => Promise<AxiosResponse<object>>
+  ) => Promise<AxiosResponse<{ liked: boolean }>>
 
   setProfile: (
     user: Partial<User>,
