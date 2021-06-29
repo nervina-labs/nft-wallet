@@ -42,7 +42,7 @@ function openIframe(
   uniFrame.src = url
   uniFrame.style.visibility = 'hidden'
   uniFrame.style.width = '100%'
-  uniFrame.style.height = '100%'
+  uniFrame.style.height = '100vh'
   uniFrame.style.zIndex = '2147483649'
   uniFrame.style.position = 'absolute'
   uniFrame.style.backgroundColor = 'rgba(0,0,0,.65)'

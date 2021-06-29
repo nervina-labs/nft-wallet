@@ -190,6 +190,7 @@ export const Explore: React.FC = () => {
     {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
   const allTags = useMemo(() => {
@@ -201,9 +202,15 @@ export const Explore: React.FC = () => {
           routeName: tag.locales.en.trim().toLowerCase(),
         }
       }) ?? []
-    return [{ name: t('explore.all'), uuid: 'all', routeName: 'all' }].concat(
-      tags
-    )
+    return [{ name: t('explore.all'), uuid: 'all', routeName: 'all' }]
+      .concat(tags)
+      .concat([
+        {
+          uuid: 'others',
+          name: t('explore.others'),
+          routeName: 'others',
+        },
+      ])
   }, [tagsResult, i18n.language, t])
 
   const currentTagId = useMemo(() => {
@@ -234,8 +241,12 @@ export const Explore: React.FC = () => {
         }
         return meta.current_page + 1
       },
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      enabled: matchExplore?.isExact || tagsResult != null,
+      enabled:
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        !!(matchExplore?.isExact || tagsResult != null) && currentTagId != null,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
 
