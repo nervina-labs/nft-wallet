@@ -72,3 +72,7 @@ export function getRandomNumber(min: number, max: number): number {
 export function getRandomBool(): boolean {
   return Math.random() > 0.5
 }
+
+export function removeTrailingZero(str: string): string {
+  return str.replace(/(\.[0-9]*[1-9])0+$|\.0*$/, '$1')
+}

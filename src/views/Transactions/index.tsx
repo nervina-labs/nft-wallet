@@ -104,6 +104,7 @@ const ListItemContainer = styled.div`
       align-items: center;
       .vip {
         width: 13px;
+        min-width: 13px;
         height: 13px;
         margin-left: 4px;
         cursor: pointer;
@@ -178,7 +179,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
             ? tx.from_address
             : truncateMiddle(tx.from_address, 5, 5)
         }`}</span>
-        {tx?.weibo_auth_info?.is_verified ? (
+        {tx?.weibo_auth_info?.is_verified && tx.issuer_uuid !== '' ? (
           <Tooltip title={vt} placement={'top'}>
             <WeiboSvg className="vip" />
           </Tooltip>

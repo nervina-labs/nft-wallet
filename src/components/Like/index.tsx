@@ -8,6 +8,7 @@ import { ReactComponent as UnHeart } from '../../assets/svg/unlike.svg'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
+import { removeTrailingZero } from '../../utils'
 
 const Container = styled.div`
   display: flex;
@@ -37,9 +38,13 @@ export interface LikeProps {
 
 const formatCount = (count: number, lang: string): number | string => {
   if (lang === 'zh') {
-    return count > 10000 ? `${count / 10000} 万` : count
+    return count > 10000
+      ? `${removeTrailingZero((count / 10000).toFixed(2))} 万`
+      : count
   }
-  return count > 1000 ? `${count / 1000}k` : count
+  return count > 1000
+    ? `${removeTrailingZero((count / 1000).toFixed(2))}k`
+    : count
 }
 
 export const Like: React.FC<LikeProps> = ({

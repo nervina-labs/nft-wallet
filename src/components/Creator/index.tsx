@@ -125,7 +125,11 @@ export const Creator: React.FC<CreatorProps> = ({
       </span>
       {isVip ? (
         showTooltip ? (
-          <Tooltip title={vt} placement={tooltipPlacement}>
+          <Tooltip
+            title={vt}
+            placement={tooltipPlacement}
+            PopperProps={{ style: { maxWidth: '185px' } }}
+          >
             <WeiboSvg className="vip" />
           </Tooltip>
         ) : (
