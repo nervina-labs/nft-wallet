@@ -167,7 +167,8 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ nft }) => {
-  const classUuid = isTokenClass(nft) ? nft.uuid : nft.class_uuid
+  const { id } = useParams<{ id: string }>()
+  const classUuid = isTokenClass(nft) ? id : nft.class_uuid
   return (
     <FooterContaienr>
       <Limited
@@ -177,7 +178,7 @@ const Footer: React.FC<FooterProps> = ({ nft }) => {
         fontSize={14}
         color="#999"
       />
-      <Like count={nft.class_likes} uuid={classUuid} liked={nft.liked} />
+      <Like count={nft.class_likes} uuid={classUuid} liked={nft.class_liked} />
     </FooterContaienr>
   )
 }

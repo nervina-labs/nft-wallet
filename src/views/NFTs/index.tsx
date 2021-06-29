@@ -11,7 +11,7 @@ import {
   PER_ITEM_LIMIT,
 } from '../../constants'
 import { useWalletModel } from '../../hooks/useWallet'
-import { Query } from '../../models'
+import { NFTToken, Query, TransactionStatus } from '../../models'
 import { Empty } from './empty'
 import { Loading } from '../../components/Loading'
 import { Redirect, useHistory } from 'react-router'
@@ -331,6 +331,42 @@ export const NFTs: React.FC = () => {
     }
   )
 
+  const liked = useRouteQuery('liked', '')
+
+  const getRemoteData = useCallback(
+    async ({ pageParam = 1 }) => {
+      if (liked) {
+        const { data } = await api.getUserLikesClassList(pageParam)
+        return {
+          meta: data.meta,
+          token_list: data.class_list.map((c) => {
+            const token: NFTToken = {
+              class_name: c.name,
+              class_bg_image_url: c.bg_image_url,
+              class_uuid: c.uuid,
+              class_description: c.description,
+              class_total: c.total,
+              token_uuid: '',
+              issuer_avatar_url: c.issuer_info.avatar_url,
+              issuer_name: c.issuer_info.name,
+              issuer_uuid: c.issuer_info.uuid,
+              tx_state: TransactionStatus.Committed,
+              is_class_banned: false,
+              is_issuer_banned: false,
+              n_token_id: 0,
+              weibo_auth_info: c.weibo_auth_info,
+            }
+            return token
+          }),
+        }
+      }
+      const { data } = await api.getNFTs(pageParam)
+      return data
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [liked]
+  )
+
   const {
     data,
     status,
@@ -338,11 +374,8 @@ export const NFTs: React.FC = () => {
     fetchNextPage,
     refetch,
   } = useInfiniteQuery(
-    [Query.NFTList, address],
-    async ({ pageParam = 1 }) => {
-      const { data } = await api.getNFTs(pageParam)
-      return data
-    },
+    [`${Query.NFTList}${liked.toString()}`, address, liked],
+    getRemoteData,
     {
       getNextPageParam: (lastPage) => {
         const { meta } = lastPage
@@ -403,8 +436,6 @@ export const NFTs: React.FC = () => {
     threshold: 200,
     disableHysteresis: true,
   })
-
-  const liked = useRouteQuery('liked', '')
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
@@ -487,13 +518,27 @@ export const NFTs: React.FC = () => {
         style={IS_IPHONE ? { width: '100%', maxWidth: '100%' } : undefined}
       >
         <div className={classNames('filters', { fixed: triggerHeader })}>
-          <div className={classNames('filter', { active: liked === '' })}>
+          <div
+            className={classNames('filter', { active: !liked })}
+            onClick={() => {
+              if (liked) {
+                history.push(RoutePath.NFTs)
+              }
+            }}
+          >
             {t('nfts.owned')}
-            {liked === '' ? <span className="active-line"></span> : null}
+            {!liked ? <span className="active-line"></span> : null}
           </div>
-          <div className={classNames('filter', { active: liked !== '' })}>
+          <div
+            className={classNames('filter', { active: liked })}
+            onClick={() => {
+              if (!liked) {
+                history.push(RoutePath.NFTs + '?liked=true')
+              }
+            }}
+          >
             {t('nfts.liked')}
-            {liked !== '' ? <span className="active-line"></span> : null}
+            {liked ? <span className="active-line"></span> : null}
           </div>
         </div>
         {isRefetching ? <Loading /> : null}
@@ -524,13 +569,14 @@ export const NFTs: React.FC = () => {
             {data?.pages?.map((group, i) => {
               return (
                 <React.Fragment key={i}>
-                  {group.token_list.map((token, j) => {
+                  {group.token_list.map((token, j: number) => {
                     return (
                       <Card
                         className={i === 0 && j === 0 ? 'first' : ''}
                         token={token}
-                        key={token.token_uuid ?? `${i}${j}`}
+                        key={token.token_uuid || `${i}.${j}`}
                         address={address}
+                        isClass={liked === 'true'}
                       />
                     )
                   })}

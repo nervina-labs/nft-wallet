@@ -243,7 +243,11 @@ const Card: React.FC<CardProps> = ({ token }) => {
       </div>
       <div className="info">
         <Limited count={token.total} bold={false} banned={false} color="#666" />
-        <Like count={token.class_likes} liked={token.liked} uuid={token.uuid} />
+        <Like
+          count={token.class_likes}
+          liked={token.class_liked}
+          uuid={token.uuid}
+        />
       </div>
     </CardContainer>
   )
