@@ -36,7 +36,7 @@ const Container = styled.div`
 export const Empty: React.FC = () => {
   const { t } = useTranslation('translations')
   const history = useHistory()
-  const isLiked = useRouteQuery('likes', '')
+  const isLiked = useRouteQuery('liked', '')
   return (
     <Container>
       <LazyLoadImage src={Emptypng} width={260} height={172} />
