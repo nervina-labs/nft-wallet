@@ -173,6 +173,7 @@
     },
     "explore": {
       "all": "All",
+      "others": "Others",
       "metaverse": "Explore",
       "my": "My",
       "latest": "Latest",
