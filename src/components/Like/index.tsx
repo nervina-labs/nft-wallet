@@ -38,11 +38,11 @@ export interface LikeProps {
 
 const formatCount = (count: number, lang: string): number | string => {
   if (lang === 'zh') {
-    return count > 10000
+    return count >= 10000
       ? `${removeTrailingZero((count / 10000).toFixed(1))} 万`
       : count
   }
-  return count > 1000
+  return count >= 1000
     ? `${removeTrailingZero((count / 1000).toFixed(1))}k`
     : count
 }
