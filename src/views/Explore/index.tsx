@@ -369,7 +369,7 @@ export const Explore: React.FC = () => {
 
   useEffect(() => {
     setAlwaysShowTabbar(!isVerticalScrollable())
-  }, [dataLength])
+  }, [data])
 
   return (
     <Container>

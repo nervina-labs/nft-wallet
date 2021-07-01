@@ -450,7 +450,7 @@ export const NFTs: React.FC = () => {
 
   useEffect(() => {
     setAlwaysShowTabbar(!isVerticalScrollable())
-  }, [dataLength])
+  }, [data])
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
