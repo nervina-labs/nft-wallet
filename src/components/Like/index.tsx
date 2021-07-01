@@ -9,7 +9,7 @@ import { useLikeStatusModel } from '../../hooks/useLikeStatus'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
-import { removeTrailingZero } from '../../utils'
+import { roundDown } from '../../utils'
 
 const Container = styled.div`
   display: flex;
@@ -39,13 +39,9 @@ export interface LikeProps {
 
 const formatCount = (count: number, lang: string): number | string => {
   if (lang === 'zh') {
-    return count >= 10000
-      ? `${removeTrailingZero((count / 10000).toFixed(1))} 万`
-      : count
+    return count >= 10000 ? `${roundDown(count / 10000)} 万` : count
   }
-  return count >= 1000
-    ? `${removeTrailingZero((count / 1000).toFixed(1))}k`
-    : count
+  return count >= 1000 ? `${roundDown(count / 1000)}k` : count
 }
 
 export const Like: React.FC<LikeProps> = ({

@@ -76,3 +76,7 @@ export function getRandomBool(): boolean {
 export function removeTrailingZero(str: string): string {
   return str.replace(/(\.[0-9]*[1-9])0+$|\.0*$/, '$1')
 }
+
+export function roundDown(n: number, decimals = 1): number {
+  return Math.floor(n * Math.pow(10, decimals)) / Math.pow(10, decimals)
+}
