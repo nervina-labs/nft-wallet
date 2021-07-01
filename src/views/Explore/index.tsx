@@ -112,6 +112,7 @@ const Container = styled(MainContainer)`
       padding: 7px 23px;
       border-radius: 8px;
       background-color: transparent;
+      white-space: nowrap;
       &.active {
         color: white;
         background-color: #2c454d;
