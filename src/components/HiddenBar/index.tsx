@@ -10,11 +10,14 @@ import classnames from 'classnames'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useScrollTriggerWithThreshold } from '../../hooks/useScroll'
 
-export const HideOnScroll: React.FC = ({ children }) => {
+export const HideOnScroll: React.FC<{ alwaysShow?: boolean }> = ({
+  children,
+  alwaysShow,
+}) => {
   const trigger = useScrollTriggerWithThreshold()
 
   return (
-    <Slide appear={false} direction="up" in={!trigger}>
+    <Slide appear={false} direction="up" in={!trigger || alwaysShow}>
       {children as any}
     </Slide>
   )
@@ -54,7 +57,9 @@ const Container = styled.div`
   }
 `
 
-export const HiddenBar: React.FC = () => {
+export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
+  alwaysShow,
+}) => {
   const [t] = useTranslation('translations')
   const matchExplore = useRouteMatch(RoutePath.Explore)
   const matchNFTs = useRouteMatch({
@@ -72,7 +77,7 @@ export const HiddenBar: React.FC = () => {
   }, [isLogined, matchNFTs, history])
 
   return (
-    <HideOnScroll>
+    <HideOnScroll alwaysShow={alwaysShow}>
       <Container>
         <div
           onClick={

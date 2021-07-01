@@ -90,3 +90,7 @@ export function removeTrailingZero(str: string): string {
 export function roundDown(n: number, decimals = 1): number {
   return Math.floor(n * Math.pow(10, decimals)) / Math.pow(10, decimals)
 }
+
+export function isVerticalScrollable(): boolean {
+  return document.body.scrollHeight > document.body.clientHeight
+}

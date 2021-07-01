@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 // import { RoutePath } from '../../routes'
@@ -25,6 +25,7 @@ import { useScrollTrigger } from '@material-ui/core'
 import classNames from 'classnames'
 import qs from 'querystring'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
+import { isVerticalScrollable } from '../../utils'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -364,9 +365,15 @@ export const Explore: React.FC = () => {
     return tokens?.length ?? 0
   }, [tokens])
 
+  const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
+
+  useEffect(() => {
+    setAlwaysShowTabbar(!isVerticalScrollable())
+  }, [dataLength])
+
   return (
     <Container>
-      <HiddenBar />
+      <HiddenBar alwaysShow={alwayShowTabbar} />
       <div className="tags">
         {allTags.map((t) => (
           <div
