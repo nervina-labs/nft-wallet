@@ -37,6 +37,7 @@ import { SetUsername } from '../Profile/SetUsername'
 import { SetDesc } from '../Profile/setDesc'
 
 import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -320,6 +321,7 @@ export const NFTs: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const history = useHistory()
   const [showAvatarAction, setShowAvatarAction] = useState(false)
+  useScrollRestoration()
   const { data: user, isLoading: isUserLoading } = useQuery(
     [Query.Profile, address],
     async () => {

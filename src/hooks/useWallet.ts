@@ -1,5 +1,5 @@
 import { createModel } from 'hox'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
 import { Address, DefaultSigner, Provider, Transaction } from '@lay2/pw-core'
@@ -14,6 +14,11 @@ import { Web3Provider } from '../pw/Web3Provider'
 import dayjs from 'dayjs'
 
 export type PromiseFunc = () => Promise<void> | void
+
+export interface ScrollPosition {
+  x: number
+  y: number
+}
 
 export interface UseWallet {
   api: NFTWalletAPI
@@ -39,6 +44,8 @@ export interface UseWallet {
   showConfirmDialog: boolean
   onDialogConfirm: PromiseFunc
   onDialogClose: PromiseFunc
+  setScrollScrollRestoration: (path: string, scroll: ScrollPosition) => void
+  getScrollScrollRestoration: (path: string) => ScrollPosition | undefined
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
@@ -68,6 +75,18 @@ const noop: any = (): void => {}
 
 function useWallet(): UseWallet {
   const [provider, setProvider] = useState<Provider>()
+  const scrollRestoration = useRef(new Map<string, ScrollPosition>())
+
+  const setScrollScrollRestoration = useCallback(
+    (path: string, scroll: ScrollPosition) => {
+      scrollRestoration.current.set(path, scroll)
+    },
+    []
+  )
+
+  const getScrollScrollRestoration = useCallback((path: string) => {
+    return scrollRestoration.current.get(path)
+  }, [])
 
   const [unipassAccount, setAccount] = useLocalStorage<UnipassAccount | null>(
     UNIPASS_ACCOUNT_KEY,
@@ -354,6 +373,8 @@ function useWallet(): UseWallet {
     onDialogClose,
     onDialogConfirm,
     confirm,
+    setScrollScrollRestoration,
+    getScrollScrollRestoration,
   }
 }
 

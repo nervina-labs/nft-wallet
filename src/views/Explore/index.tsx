@@ -24,6 +24,7 @@ import { Like } from '../../components/Like'
 import { useScrollTrigger } from '@material-ui/core'
 import classNames from 'classnames'
 import qs from 'querystring'
+import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -258,6 +259,7 @@ export const Explore: React.FC = () => {
   const history = useHistory()
   const currentTag = useRouteQuery('tag', 'all')
   const sortByLikes = useRouteQuery('sort', '')
+  useScrollRestoration()
   const matchExplore = useRouteMatch({
     path: RoutePath.Explore,
     exact: true,
