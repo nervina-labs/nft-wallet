@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import styled from 'styled-components'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -38,6 +38,7 @@ import { SetDesc } from '../Profile/setDesc'
 
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
+import { isVerticalScrollable } from '../../utils'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -445,6 +446,12 @@ export const NFTs: React.FC = () => {
     disableHysteresis: true,
   })
 
+  const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
+
+  useEffect(() => {
+    setAlwaysShowTabbar(!isVerticalScrollable())
+  }, [data])
+
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -615,7 +622,7 @@ export const NFTs: React.FC = () => {
         open={!!matchDesc?.isExact}
         close={() => history.goBack()}
       />
-      <HiddenBar />
+      <HiddenBar alwaysShow={alwayShowTabbar} />
     </Container>
   )
 }
