@@ -77,6 +77,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     const params: Record<string, unknown> = {
       include_submitting: true,
     }
+    if (this.address) {
+      params.address = this.address
+    }
     return await this.axios.get(`/tokens/${uuid}`, {
       params,
     })
@@ -92,15 +95,43 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
+  async toggleLike(
+    uuid: string,
+    like: boolean,
+    auth: Auth
+  ): Promise<AxiosResponse<{ liked: boolean }>> {
+    const url = `/token_classes/${uuid}/toggle_likes/${this.address}`
+    return await this.axios.put(url, { auth })
+  }
+
   async getClassListByTagId(
     uuid: string,
-    page: number
+    page: number,
+    sortByLikes = false
   ): Promise<AxiosResponse<ClassList>> {
+    const params: Record<string, string | number> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    if (sortByLikes) {
+      params.sort = 'likes'
+      params.order = 'desc'
+    }
+    if (this.address) {
+      params.address = this.address
+    }
     return await this.axios.get(`/tags/${uuid}/token_classes`, {
-      params: {
-        page,
-        limit: PER_ITEM_LIMIT,
-      },
+      params,
+    })
+  }
+
+  async getUserLikesClassList(page: number): Promise<AxiosResponse<ClassList>> {
+    const params: Record<string, string | number> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    return await this.axios.get(`/liked_token_classes/${this.address}`, {
+      params,
     })
   }
 
@@ -121,7 +152,13 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getTokenClass(uuid: string): Promise<AxiosResponse<TokenClass>> {
-    return await this.axios.get(`/token_classes/${uuid}`)
+    const params: Record<string, string | number> = {}
+    if (this.address) {
+      params.address = this.address
+    }
+    return await this.axios.get(`/token_classes/${uuid}`, {
+      params,
+    })
   }
 
   async getTransferNftTransaction(

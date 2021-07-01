@@ -25,11 +25,12 @@ import { Skeleton } from '@material-ui/lab'
 import { DrawerImage } from './DrawerImage'
 
 const emptyAvatar = PeopleSvg as any
+const profileBg = ProfileBg as any
 
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
-  background: white url(${ProfileBg as any}) no-repeat;
+  background: white url(${profileBg}) no-repeat;
   background-size: cover;
 
   .main {

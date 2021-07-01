@@ -1,3 +1,4 @@
+import { VipInfo } from './class-list'
 import { ListMeta } from './nft'
 
 export enum TransactionStatus {
@@ -11,7 +12,7 @@ export enum TransactionDirection {
   Receive = 'receive',
 }
 
-export interface Tx {
+export interface Tx extends VipInfo {
   from_address: string
   to_address: string
   class_name: string
