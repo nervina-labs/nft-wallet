@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef, useState, useEffect } from 'react'
 import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
@@ -44,10 +44,22 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [isTouchDevice, enableGyroscope])
   const timer = useRef<NodeJS.Timeout>()
   const tilt = useRef<Tilt>(null)
+  const onTouchMove = (e: TouchEvent): void => {
+    const target = e.target as any
+    if (target?.className?.includes?.('ParallaxTilt')) {
+      e.preventDefault()
+    }
+  }
+  useEffect(() => {
+    window.addEventListener('touchmove', onTouchMove, { passive: false })
+
+    return () => {
+      window.removeEventListener('touchmove', onTouchMove)
+    }
+  }, [])
   // const [boxShadow, setBoxShadow] = useState('rgb(240 46 170 / 40%) -10px 10px')
   return (
     <Container
-      ref={tilt}
       tiltReverse={shouldReverseTilt}
       reset={false}
       tiltEnable={isTiltEnable && enable}

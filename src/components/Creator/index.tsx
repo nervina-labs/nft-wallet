@@ -1,16 +1,19 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { LazyLoadImage } from '../Image'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
+import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
 import { NFT_EXPLORER_URL } from '../../constants'
 import { useTranslation } from 'react-i18next'
+import Tooltip from '@material-ui/core/Tooltip'
+import classNames from 'classnames'
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   font-weight: 600;
   font-size: ${(props: { fontSize?: number }) => `${props.fontSize ?? 12}px`};
-  line-height: 17px;
+  /* line-height: 17px; */
   color: rgba(0, 0, 0, 0.6);
   .error {
     color: #d03a3a;
@@ -29,6 +32,12 @@ const Container = styled.div`
       height: 24px;
     }
   }
+  .vip {
+    width: 15px;
+    min-width: 15px;
+    height: 15px;
+    margin-left: 6px;
+  }
   .issuer {
     white-space: nowrap;
     margin-right: 12px;
@@ -40,11 +49,15 @@ const Container = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    &.max {
+      flex: 1;
+    }
   }
   > a {
     display: flex;
     align-items: center;
     overflow: hidden;
+    width: 100%;
   }
 `
 
@@ -56,6 +69,11 @@ export interface CreatorProps {
   title?: React.ReactNode
   color?: string
   baned?: boolean
+  isVip?: boolean
+  vipTitle?: string
+  vipAlignRight?: boolean
+  style?: React.CSSProperties
+  showTooltip?: boolean
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -66,8 +84,25 @@ export const Creator: React.FC<CreatorProps> = ({
   title,
   color,
   baned = false,
+  isVip = false,
+  vipTitle,
+  vipAlignRight = false,
+  style,
+  showTooltip = true,
 }) => {
   const { t } = useTranslation('translations')
+  const vt = useMemo(() => {
+    if (vipTitle) {
+      return t('common.vip.weibo', { title: vipTitle })
+    }
+    return t('common.vip.weibo-no-desc')
+  }, [t, vipTitle])
+  const tooltipPlacement = useMemo(() => {
+    if (vipAlignRight) {
+      return 'top-end'
+    }
+    return name.length > 25 ? 'top-end' : 'top'
+  }, [vipAlignRight, name])
   const creator = (
     <>
       <span className="avatar">
@@ -83,13 +118,28 @@ export const Creator: React.FC<CreatorProps> = ({
           />
         )}
       </span>
-      <span className={`name ${baned ? 'error' : ''}`}>
+      <span
+        className={classNames(['name', { error: baned, max: vipAlignRight }])}
+      >
         {baned ? t('common.baned.issuer') : name}
       </span>
+      {isVip ? (
+        showTooltip ? (
+          <Tooltip
+            title={vt}
+            placement={tooltipPlacement}
+            PopperProps={{ style: { maxWidth: '185px' } }}
+          >
+            <WeiboSvg className="vip" />
+          </Tooltip>
+        ) : (
+          <WeiboSvg className="vip" />
+        )
+      ) : null}
     </>
   )
   return (
-    <Container fontSize={fontSize} color={color}>
+    <Container fontSize={fontSize} color={color} style={style}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
       {uuid != null ? (
         <a

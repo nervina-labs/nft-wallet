@@ -12,6 +12,7 @@ export interface CardProps {
   token: NFTToken
   address: string
   className?: string
+  isClass: boolean
 }
 
 interface LabelProps {
@@ -99,7 +100,7 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
 const Container = styled.div`
   display: flex;
   cursor: pointer;
-  margin-bottom: 28px;
+  margin-bottom: 15px;
   margin-left: 16px;
   margin-right: 16px;
   background: #fff;
@@ -121,12 +122,8 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    position: relative;
-    top: -12px;
-    right: -12px;
     background-color: white;
     img {
-      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
       border-radius: 10px;
     }
     .fallback {
@@ -202,7 +199,12 @@ const Container = styled.div`
   }
 `
 
-export const Card: React.FC<CardProps> = ({ token, address, className }) => {
+export const Card: React.FC<CardProps> = ({
+  token,
+  address,
+  className,
+  isClass,
+}) => {
   const history = useHistory()
   const isClassBanned = token.is_class_banned
   const isIssuerBaned = token.is_issuer_banned
@@ -214,7 +216,11 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
     <Container
       onClick={() => {
         if (isBanned) return
-        history.push(`/nft/${token.token_uuid}`)
+        if (isClass) {
+          history.push(`/class/${token.class_uuid}`)
+        } else {
+          history.push(`/nft/${token.token_uuid}`)
+        }
       }}
       className={className}
       style={{
@@ -254,7 +260,7 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
           banned={isBanned}
           count={token.class_total}
           bold={false}
-          sn={token.n_token_id}
+          sn={isClass ? undefined : token.n_token_id}
           color="rgba(63, 63, 63, 0.66) !important"
         />
         <Creator
@@ -263,6 +269,8 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
           url={token.issuer_avatar_url}
           name={token.issuer_name}
           uuid={token.issuer_uuid}
+          isVip={token?.weibo_auth_info?.is_verified}
+          vipTitle={token?.weibo_auth_info?.verified_title}
           color="rgba(63, 63, 63, 0.66)"
         />
       </div>

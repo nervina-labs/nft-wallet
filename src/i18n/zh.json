@@ -22,6 +22,10 @@
         "limit": "限量",
         "unlimit": "不限量"
       },
+      "vip": {
+        "weibo": "微博认证: {{title}}",
+        "weibo-no-desc": "微博认证"
+      },
       "baned": {
         "nft": "该秘宝暂不予显示",
         "issuer": "该创作者暂不予显示"
@@ -48,12 +52,15 @@
     },
     "nfts": {
       "title": "我的秘宝",
+      "owned": "持有",
+      "liked": "赞过",
       "status": {
         "comfirming": "确认中",
         "receiving": "接收中",
         "tranferring": "转让中"
       },
       "no-data": "啊喔...您尚未拥有任何秘宝",
+      "no-likes": "您尚未赞过任何秘宝",
       "link": "探索秘宝的广阔宇宙",
       "welcome": "欢迎来到秘宝宇宙",
       "hi": "Hi 秘宝收藏家",
@@ -112,7 +119,8 @@
     },
     "nft": {
       "title": "秘宝细节",
-      "transfer": "转让"
+      "transfer": "转让",
+      "desc": "NFT 简介"
     },
     "account": {
       "title": "我的帐号",
@@ -170,7 +178,9 @@
       "all": "全部",
       "others": "其他",
       "metaverse": "探索",
-      "my": "我的"
+      "my": "我的",
+      "latest": "最新创作",
+      "most-liked": "获赞最多"
     }
   }
 }

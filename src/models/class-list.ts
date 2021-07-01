@@ -8,7 +8,25 @@ export interface Tag {
   }
 }
 
-export interface TokenClass {
+export enum VipSource {
+  Weibo = 'weibo',
+  Twitter = 'twitter',
+  Nervina = 'nervina',
+}
+
+export interface VipInfo {
+  weibo_auth_info?: {
+    is_verified: boolean
+    verified_title: string
+  }
+}
+
+export interface ClassLikes {
+  class_likes: string
+  class_liked: boolean
+}
+
+export interface TokenClass extends VipInfo, ClassLikes {
   bg_image_url: string
   name: string
   description: string
