@@ -12,6 +12,7 @@ export interface CardProps {
   token: NFTToken
   address: string
   className?: string
+  isClass: boolean
 }
 
 interface LabelProps {
@@ -198,7 +199,12 @@ const Container = styled.div`
   }
 `
 
-export const Card: React.FC<CardProps> = ({ token, address, className }) => {
+export const Card: React.FC<CardProps> = ({
+  token,
+  address,
+  className,
+  isClass,
+}) => {
   const history = useHistory()
   const isClassBanned = token.is_class_banned
   const isIssuerBaned = token.is_issuer_banned
@@ -210,7 +216,11 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
     <Container
       onClick={() => {
         if (isBanned) return
-        history.push(`/nft/${token.token_uuid}`)
+        if (isClass) {
+          history.push(`/class/${token.class_uuid}`)
+        } else {
+          history.push(`/nft/${token.token_uuid}`)
+        }
       }}
       className={className}
       style={{
@@ -250,7 +260,7 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
           banned={isBanned}
           count={token.class_total}
           bold={false}
-          sn={token.n_token_id}
+          sn={isClass ? undefined : token.n_token_id}
           color="rgba(63, 63, 63, 0.66) !important"
         />
         <Creator

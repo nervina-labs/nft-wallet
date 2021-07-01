@@ -23,7 +23,7 @@ export interface VipInfo {
 
 export interface ClassLikes {
   class_likes: string
-  liked: boolean
+  class_liked: boolean
 }
 
 export interface TokenClass extends VipInfo, ClassLikes {

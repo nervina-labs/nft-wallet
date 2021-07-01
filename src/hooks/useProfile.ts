@@ -30,7 +30,7 @@ export interface UseProfile {
   snackbarMsg: React.ReactNode
   snackbar: (msg: React.ReactNode) => void
   closeSnackbar: () => void
-  toggleLike: (uuid: string, like: boolean) => Promise<void>
+  toggleLike: (uuid: string, like: boolean) => Promise<boolean>
 }
 
 export interface Auths {
@@ -109,7 +109,8 @@ function useProfile(): UseProfile {
   const toggleLike = useCallback(
     async (uuid: string, like: boolean) => {
       const auth = await getAuth()
-      await api.toggleLike(uuid, like, auth)
+      const { data } = await api.toggleLike(uuid, like, auth)
+      return data.liked
     },
     [getAuth, api]
   )

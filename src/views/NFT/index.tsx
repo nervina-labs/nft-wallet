@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
@@ -20,6 +20,7 @@ import { ParallaxTilt } from '../../components/ParallaxTilt'
 import { TokenClass } from '../../models/class-list'
 import { Like } from '../../components/Like'
 import Divider from '@material-ui/core/Divider'
+import { useLikeStatusModel } from '../../hooks/useLikeStatus'
 
 const Background = styled.div`
   position: fixed;
@@ -167,7 +168,8 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ nft }) => {
-  const classUuid = isTokenClass(nft) ? nft.uuid : nft.class_uuid
+  const { id } = useParams<{ id: string }>()
+  const classUuid = isTokenClass(nft) ? id : nft.class_uuid
   return (
     <FooterContaienr>
       <Limited
@@ -177,7 +179,7 @@ const Footer: React.FC<FooterProps> = ({ nft }) => {
         fontSize={14}
         color="#999"
       />
-      <Like count={nft.class_likes} uuid={classUuid} liked={nft.liked} />
+      <Like count={nft.class_likes} uuid={classUuid} liked={nft.class_liked} />
     </FooterContaienr>
   )
 }
@@ -258,6 +260,16 @@ export const NFT: React.FC = () => {
     )
   }, [address, detail])
 
+  const { setLikeStatus } = useLikeStatusModel()
+
+  useEffect(() => {
+    if (data == null) {
+      return
+    }
+    const classId = isTokenClass(data) ? id : data.class_uuid
+    setLikeStatus(classId, data.class_liked)
+  }, [data, id, setLikeStatus])
+
   if (!isLogined && matchTokenClass?.isExact !== true) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -335,6 +347,7 @@ export const NFT: React.FC = () => {
               isVip={detail?.weibo_auth_info?.is_verified}
               vipTitle={detail?.weibo_auth_info?.verified_title}
               style={{ marginBottom: '5px' }}
+              showTooltip={false}
             />
             {detail?.weibo_auth_info?.verified_title ? (
               <div className="vip">

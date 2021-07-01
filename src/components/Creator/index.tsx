@@ -73,6 +73,7 @@ export interface CreatorProps {
   vipTitle?: string
   vipAlignRight?: boolean
   style?: React.CSSProperties
+  showTooltip?: boolean
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -87,6 +88,7 @@ export const Creator: React.FC<CreatorProps> = ({
   vipTitle,
   vipAlignRight = false,
   style,
+  showTooltip = true,
 }) => {
   const { t } = useTranslation('translations')
   const vt = useMemo(() => {
@@ -95,6 +97,12 @@ export const Creator: React.FC<CreatorProps> = ({
     }
     return t('common.vip.weibo-no-desc')
   }, [t, vipTitle])
+  const tooltipPlacement = useMemo(() => {
+    if (vipAlignRight) {
+      return 'top-end'
+    }
+    return name.length > 25 ? 'top-end' : 'top'
+  }, [vipAlignRight, name])
   const creator = (
     <>
       <span className="avatar">
@@ -116,9 +124,17 @@ export const Creator: React.FC<CreatorProps> = ({
         {baned ? t('common.baned.issuer') : name}
       </span>
       {isVip ? (
-        <Tooltip title={vt} placement={vipAlignRight ? 'top-end' : 'top'}>
+        showTooltip ? (
+          <Tooltip
+            title={vt}
+            placement={tooltipPlacement}
+            PopperProps={{ style: { maxWidth: '185px' } }}
+          >
+            <WeiboSvg className="vip" />
+          </Tooltip>
+        ) : (
           <WeiboSvg className="vip" />
-        </Tooltip>
+        )
       ) : null}
     </>
   )
