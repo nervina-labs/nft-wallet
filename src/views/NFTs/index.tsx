@@ -380,6 +380,9 @@ export const NFTs: React.FC = () => {
     getRemoteData,
     {
       getNextPageParam: (lastPage) => {
+        if (lastPage?.meta == null) {
+          return undefined
+        }
         const { meta } = lastPage
         const current = meta.current_page
         const total = meta.total_count
