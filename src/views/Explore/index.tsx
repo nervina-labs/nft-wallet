@@ -348,11 +348,23 @@ export const Explore: React.FC = () => {
   )
 
   const tokens = useMemo(() => {
-    return data?.pages.reduce(
+    const list = data?.pages.reduce(
       (acc, p) => acc.concat(p.class_list),
       [] as TokenClass[]
     )
-  }, [data])
+    if (list == null || !sortByLikes || list?.length === 0) {
+      return list
+    }
+    const set = new Set()
+    for (let i = 0; i < list.length; i++) {
+      const token = list[i]
+      if (set.has(token.uuid)) {
+        list.splice(i, 1)
+      }
+      set.add(token.uuid)
+    }
+    return list
+  }, [data, sortByLikes])
 
   const [isRefetching, setIsRefetching] = useState(false)
 
