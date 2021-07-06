@@ -4,7 +4,7 @@ import styled from 'styled-components'
 // import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { TokenClass } from '../../models/class-list'
-import { Query } from '../../models'
+import { ClassSortType as SortType, Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
@@ -84,8 +84,9 @@ const Container = styled(MainContainer)`
         position: relative;
         justify-content: center;
         align-items: center;
-        &:first-child {
-          margin-right: 32px;
+        margin-right: 32px;
+        &:last-child {
+          margin-right: 0;
         }
       }
     }
@@ -260,7 +261,18 @@ export const Explore: React.FC = () => {
   const [t, i18n] = useTranslation('translations')
   const history = useHistory()
   const currentTag = useRouteQuery('tag', 'all')
-  const sortByLikes = useRouteQuery('sort', '')
+  const sortRoute = useRouteQuery('sort', '')
+  const sortType = useMemo(() => {
+    if (currentTag === 'all') {
+      if (sortRoute === 'likes') {
+        return SortType.Likes
+      } else if (sortRoute === '') {
+        return SortType.Recommend
+      }
+      return SortType.Latest
+    }
+    return sortRoute === 'likes' ? SortType.Likes : SortType.Latest
+  }, [sortRoute, currentTag])
   useScrollRestoration()
   const matchExplore = useRouteMatch({
     path: RoutePath.Explore,
@@ -319,10 +331,10 @@ export const Explore: React.FC = () => {
     refetch,
     status,
   } = useInfiniteQuery(
-    [Query.Explore + currentTag + sortByLikes, currentTagId, sortByLikes],
+    [Query.Explore + currentTag + sortType, currentTagId, sortType],
     async ({ pageParam = 1 }) => {
       // eslint-disable-next-line
-      const { data } = await api.getClassListByTagId(currentTagId!, pageParam, sortByLikes !== '')
+      const { data } = await api.getClassListByTagId(currentTagId!, pageParam, sortType)
       return data
     },
     {
@@ -352,7 +364,7 @@ export const Explore: React.FC = () => {
       (acc, p) => acc.concat(p.class_list),
       [] as TokenClass[]
     )
-    if (list == null || !sortByLikes || list?.length === 0) {
+    if (list == null || SortType.Likes !== sortType || list?.length === 0) {
       return list
     }
     const set = new Set()
@@ -364,7 +376,7 @@ export const Explore: React.FC = () => {
       set.add(token.uuid)
     }
     return list
-  }, [data, sortByLikes])
+  }, [data, sortType])
 
   const [isRefetching, setIsRefetching] = useState(false)
 
@@ -410,14 +422,38 @@ export const Explore: React.FC = () => {
       <div className={classNames('header', { 'fixed-header': triggerHeader })}>
         {triggerHeader ? null : <h3>{currentTagName}</h3>}
         <div className={classNames('filters', { fixed: triggerHeader })}>
+          {currentTagId === 'all' ? (
+            <div
+              className={classNames('filter', {
+                active: sortType === SortType.Recommend,
+              })}
+              onClick={() => {
+                if (sortRoute === '') {
+                  return
+                }
+                history.push(RoutePath.Explore)
+              }}
+            >
+              <span>{t('explore.recommended')}</span>
+              {sortType === SortType.Recommend ? (
+                <span className="active-line"></span>
+              ) : null}
+            </div>
+          ) : null}
           <div
-            className={classNames('filter', { active: sortByLikes === '' })}
+            className={classNames('filter', {
+              active: sortType === SortType.Latest,
+            })}
             onClick={() => {
-              if (sortByLikes === '') {
+              if (sortType === SortType.Latest) {
                 return
               }
               const o = qs.parse(location.search.slice(1))
-              delete o.sort
+              if (currentTag === 'all') {
+                o.sort = 'latest'
+              } else {
+                delete o.sort
+              }
               const s = qs.stringify(o)
               const target = `${RoutePath.Explore}${
                 s.length === 0 ? '' : '?' + s
@@ -426,12 +462,16 @@ export const Explore: React.FC = () => {
             }}
           >
             <span>{t('explore.latest')}</span>
-            {sortByLikes === '' ? <span className="active-line"></span> : null}
+            {sortType === SortType.Latest ? (
+              <span className="active-line"></span>
+            ) : null}
           </div>
           <div
-            className={classNames('filter', { active: sortByLikes !== '' })}
+            className={classNames('filter', {
+              active: sortType === SortType.Likes,
+            })}
             onClick={() => {
-              if (sortByLikes !== '') {
+              if (sortType === SortType.Likes) {
                 return
               }
               const o = qs.parse(location.search.slice(1))
@@ -441,7 +481,9 @@ export const Explore: React.FC = () => {
             }}
           >
             <span>{t('explore.most-liked')}</span>
-            {sortByLikes !== '' ? <span className="active-line"></span> : null}
+            {sortType === SortType.Likes ? (
+              <span className="active-line"></span>
+            ) : null}
           </div>
         </div>
       </div>
