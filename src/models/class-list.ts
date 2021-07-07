@@ -10,7 +10,7 @@ export interface Tag {
 
 export enum VipSource {
   Weibo = 'weibo',
-  Nervina = 'offical',
+  Nervina = 'official',
 }
 
 export interface VipInfo {
