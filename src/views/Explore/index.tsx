@@ -239,7 +239,7 @@ const Card: React.FC<CardProps> = ({ token }) => {
           name={token.issuer_info.name}
           uuid={token.issuer_info.uuid}
           vipAlignRight
-          color="#790101"
+          color="rgb(51, 51, 51)"
           isVip={token?.verified_info?.is_verified}
           vipTitle={token?.verified_info?.verified_title}
           vipSource={token?.verified_info?.verified_source}
