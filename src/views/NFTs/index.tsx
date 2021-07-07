@@ -357,7 +357,7 @@ export const NFTs: React.FC = () => {
               is_class_banned: false,
               is_issuer_banned: false,
               n_token_id: 0,
-              weibo_auth_info: c.weibo_auth_info,
+              verified_info: c.verified_info,
             }
             return token
           }),
