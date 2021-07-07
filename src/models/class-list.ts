@@ -10,14 +10,14 @@ export interface Tag {
 
 export enum VipSource {
   Weibo = 'weibo',
-  Twitter = 'twitter',
-  Nervina = 'nervina',
+  Nervina = 'offical',
 }
 
 export interface VipInfo {
-  weibo_auth_info?: {
+  verified_info?: {
     is_verified: boolean
     verified_title: string
+    verified_source: VipSource
   }
 }
 

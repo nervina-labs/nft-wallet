@@ -344,15 +344,14 @@ export const NFT: React.FC = () => {
               uuid={detail.issuer_info.uuid}
               color="#000"
               fontSize={14}
-              isVip={detail?.weibo_auth_info?.is_verified}
-              vipTitle={detail?.weibo_auth_info?.verified_title}
+              isVip={detail?.verified_info?.is_verified}
+              vipTitle={detail?.verified_info?.verified_title}
+              vipSource={detail?.verified_info?.verified_source}
               style={{ marginBottom: '5px' }}
               showTooltip={false}
             />
-            {detail?.weibo_auth_info?.verified_title ? (
-              <div className="vip">
-                {detail?.weibo_auth_info?.verified_title}
-              </div>
+            {detail?.verified_info?.verified_title ? (
+              <div className="vip">{detail?.verified_info?.verified_title}</div>
             ) : null}
             <Divider style={{ margin: '24px 0' }} />
             <div className="desc-title">{t('nft.desc')}</div>

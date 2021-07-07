@@ -269,8 +269,9 @@ export const Card: React.FC<CardProps> = ({
           url={token.issuer_avatar_url}
           name={token.issuer_name}
           uuid={token.issuer_uuid}
-          isVip={token?.weibo_auth_info?.is_verified}
-          vipTitle={token?.weibo_auth_info?.verified_title}
+          isVip={token?.verified_info?.is_verified}
+          vipTitle={token?.verified_info?.verified_title}
+          vipSource={token?.verified_info?.verified_source}
           color="rgba(63, 63, 63, 0.66)"
         />
       </div>

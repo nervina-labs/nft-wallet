@@ -7,6 +7,7 @@ import { NFT_EXPLORER_URL } from '../../constants'
 import { useTranslation } from 'react-i18next'
 import Tooltip from '@material-ui/core/Tooltip'
 import classNames from 'classnames'
+import { VipSource } from '../../models/class-list'
 
 const Container = styled.div`
   display: flex;
@@ -74,6 +75,7 @@ export interface CreatorProps {
   vipAlignRight?: boolean
   style?: React.CSSProperties
   showTooltip?: boolean
+  vipSource?: VipSource
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -89,14 +91,18 @@ export const Creator: React.FC<CreatorProps> = ({
   vipAlignRight = false,
   style,
   showTooltip = true,
+  vipSource,
 }) => {
   const { t } = useTranslation('translations')
   const vt = useMemo(() => {
+    if (vipSource === VipSource.Nervina) {
+      return vipTitle as string
+    }
     if (vipTitle) {
       return t('common.vip.weibo', { title: vipTitle })
     }
     return t('common.vip.weibo-no-desc')
-  }, [t, vipTitle])
+  }, [t, vipTitle, vipSource])
   const tooltipPlacement = useMemo(() => {
     if (vipAlignRight) {
       return 'top-end'
