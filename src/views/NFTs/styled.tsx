@@ -91,7 +91,10 @@ export const Container = styled(MainContainer)`
     left: 15px;
     top: 15px;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
     svg {
+      -webkit-touch-callout: none;
       width: 32px;
       height: 32px;
     }
@@ -105,7 +108,7 @@ export const Container = styled(MainContainer)`
     background: darkgray url(${Bg as any});
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: 0 -80px;
+    background-position: 0 -100px;
     display: flex;
     flex-direction: column;
     &.loading {
@@ -117,7 +120,7 @@ export const Container = styled(MainContainer)`
       margin-left: 25px;
       margin-right: 25px;
       margin-top: 16px;
-      color: white;
+      color: black;
       font-size: 14px;
       line-height: 16px;
       white-space: pre-line;

@@ -27,10 +27,9 @@ const DrawerContainer = styled.div`
   flex-direction: column;
   height: 100%;
   .user {
+    padding: 32px 20px;
     > div {
-      margin-left: 20px;
-      margin-top: 32px;
-      margin-bottom: 32px;
+      margin: 0;
     }
   }
 

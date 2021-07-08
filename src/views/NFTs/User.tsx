@@ -18,6 +18,8 @@ const UserContainer = styled.div`
   justify-content: center;
   .avatar {
     height: 56px;
+    width: 56px;
+    min-width: 56px;
     svg {
       width: 56px;
       height: 56px;
@@ -39,6 +41,7 @@ const UserContainer = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
+      word-break: break-all;
       color: black;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;

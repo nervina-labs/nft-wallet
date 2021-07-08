@@ -32,6 +32,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-top: 24px;
   h4 {
     text-align: center;
     font-size: 14px;
@@ -312,7 +313,6 @@ export const Transactions: React.FC = () => {
             (acc, tx) => tx.transaction_list.length + acc,
             0
           )}
-          height={window.innerHeight - 194}
           pullDownToRefresh={!IS_WEXIN}
           refreshFunction={refresh}
           next={fetchNextPage}

@@ -114,7 +114,7 @@
     },
     "info": {
       "title": "秘宝接收地址",
-      "copy": "复制到剪贴板",
+      "copy": "复制地址到剪贴板",
       "copied": "已复制成功"
     },
     "nft": {
@@ -125,7 +125,10 @@
     "account": {
       "title": "我的帐号",
       "info": "基本信息",
-      "transactions": "流转记录"
+      "transactions": "流转记录",
+      "warning": "该地址仅用于接收 CKB 链上的资产，切勿转入其他链上资产",
+      "qrcode": "扫描二维码，快速接收秘宝",
+      "address": "秘宝接收地址"
     },
     "profile": {
       "title": "编辑资料",
