@@ -146,11 +146,6 @@ export const NFTs: React.FC = () => {
 
   const closeDialog = (): void => setIsDialogOpen(false)
 
-  const triggerHeader = useScrollTrigger({
-    threshold: 200,
-    disableHysteresis: true,
-  })
-
   const bgRef = useRef<HTMLDivElement>(null)
   const [bgheight, setBgHeight] = useState(16)
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
@@ -162,9 +157,14 @@ export const NFTs: React.FC = () => {
   useEffect(() => {
     const height = bgRef.current?.clientHeight
     if (height) {
-      setBgHeight(height)
+      setBgHeight(height + 192)
     }
   }, [user, isUserLoading])
+
+  const triggerHeader = useScrollTrigger({
+    threshold: bgheight,
+    disableHysteresis: true,
+  })
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
@@ -214,9 +214,9 @@ export const NFTs: React.FC = () => {
             ? {
                 width: '100%',
                 maxWidth: '100%',
-                marginTop: `${bgheight + 192}px`,
+                marginTop: `${bgheight}px`,
               }
-            : { marginTop: `${bgheight + 192}px` }
+            : { marginTop: `${bgheight}px` }
         }
       >
         <div className={classNames('filters', { fixed: triggerHeader })}>
