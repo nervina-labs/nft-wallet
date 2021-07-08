@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useCallback, useMemo, useState, useEffect } from 'react'
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Card } from '../../components/Card'
@@ -32,6 +32,7 @@ import { isVerticalScrollable } from '../../utils'
 import { User, ProfilePath, GotoProfile } from './User'
 import { Container } from './styled'
 import { DrawerMenu } from './DrawerMenu'
+import { Addressbar } from '../../components/AddressBar'
 
 export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
@@ -150,11 +151,20 @@ export const NFTs: React.FC = () => {
     disableHysteresis: true,
   })
 
+  const bgRef = useRef<HTMLDivElement>(null)
+  const [bgheight, setBgHeight] = useState(16)
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
 
   useEffect(() => {
     setAlwaysShowTabbar(!isVerticalScrollable())
   }, [data])
+
+  useEffect(() => {
+    const height = bgRef.current?.clientHeight
+    if (height) {
+      setBgHeight(height)
+    }
+  }, [user, isUserLoading])
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
@@ -176,7 +186,7 @@ export const NFTs: React.FC = () => {
               setShowAvatarAction={setShowAvatarAction}
               closeMenu={closeMenu}
             />
-            <div className="desc">
+            <div className="desc" ref={bgRef}>
               {user?.description ? (
                 user?.description
               ) : (
@@ -188,6 +198,9 @@ export const NFTs: React.FC = () => {
                 </GotoProfile>
               )}
             </div>
+            <Addressbar address={address} />
+            <br />
+            <br />
           </>
         )}
         <div className="account" onClick={() => setShowMenu(true)}>
@@ -196,7 +209,15 @@ export const NFTs: React.FC = () => {
       </div>
       <section
         className="list"
-        style={IS_IPHONE ? { width: '100%', maxWidth: '100%' } : undefined}
+        style={
+          IS_IPHONE
+            ? {
+                width: '100%',
+                maxWidth: '100%',
+                marginTop: `${bgheight + 192}px`,
+              }
+            : { marginTop: `${bgheight + 192}px` }
+        }
       >
         <div className={classNames('filters', { fixed: triggerHeader })}>
           <div

@@ -11,7 +11,6 @@ import { ReactComponent as MaleSvg } from '../../assets/svg/male.svg'
 import { ReactComponent as FemaleSvg } from '../../assets/svg/female.svg'
 
 const UserContainer = styled.div`
-  margin-left: 25px;
   margin-top: 65px;
   display: flex;
   align-items: center;

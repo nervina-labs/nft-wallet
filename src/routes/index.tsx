@@ -219,14 +219,14 @@ export const Routers: React.FC = () => {
               autoHideDuration={1500}
               onClose={closeSnackbar}
               style={{
-                bottom: '88px',
+                bottom: `${window.innerHeight / 2 + 16}px`,
               }}
             >
               <Alert
                 style={{
                   borderRadius: '16px',
                   background: 'rgba(51, 51, 51, 0.592657)',
-                  padding: '4px 30px',
+                  padding: '0px 40px',
                 }}
                 icon={false}
                 severity="success"

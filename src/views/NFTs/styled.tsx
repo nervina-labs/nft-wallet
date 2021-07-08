@@ -103,32 +103,36 @@ export const Container = styled(MainContainer)`
     position: fixed;
     top: 0;
     width: 100%;
-    max-width: 500px;
-    height: 245px;
+    padding: 0 20px;
+    max-width: calc(100% - 40px);
+    height: 400px;
     background: darkgray url(${Bg as any});
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 -100px;
     display: flex;
     flex-direction: column;
+
+    @media (min-width: 500px) {
+      max-width: 460px;
+    }
     &.loading {
       align-items: center;
       justify-content: center;
     }
     /* padding-left: 16px; */
     .desc {
-      margin-left: 25px;
-      margin-right: 25px;
-      margin-top: 16px;
+      margin-top: 12px;
       color: black;
       font-size: 14px;
       line-height: 16px;
+      margin-bottom: 12px;
       white-space: pre-line;
       word-break: break-all;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 3; /* number of lines to show */
+      -webkit-line-clamp: 4; /* number of lines to show */
       -webkit-box-orient: vertical;
     }
   }
