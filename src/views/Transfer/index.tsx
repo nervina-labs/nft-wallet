@@ -16,7 +16,7 @@ import { Drawer, TextareaAutosize } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import {
   verifyEthContractAddress,
-  verifyCkbLongAddress,
+  verifyCkbAddress,
   verifyEthAddress,
 } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
@@ -90,7 +90,7 @@ export const Transfer: React.FC = () => {
 
   const inputOnChange = useCallback(
     (val: string) => {
-      let isValidAddress = verifyCkbLongAddress(val)
+      let isValidAddress = verifyCkbAddress(val)
       let isSameAddress = val !== '' && address === val
       const isEthAddress = verifyEthAddress(val)
       if (isEthAddress) {
@@ -267,7 +267,7 @@ export const Transfer: React.FC = () => {
     }
     if (
       (ckbAddress.startsWith('ckt') || ckbAddress.startsWith('ckb')) &&
-      !verifyCkbLongAddress(ckbAddress)
+      !verifyCkbAddress(ckbAddress)
     ) {
       return t('transfer.error.ckb')
     }
