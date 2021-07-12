@@ -38,7 +38,7 @@ export enum RoutePath {
   Account = '/account',
   NFT = '/nft/:id',
   TokenClass = '/class/:id',
-  NFTs = '/nfts',
+  NFTs = '/home',
   NotFound = '/404',
   Transfer = '/transfer/:id',
   Info = '/account/info',
@@ -203,6 +203,11 @@ export const Routers: React.FC = () => {
               <Redirect
                 exact
                 from={RoutePath.Launch}
+                to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
+              />
+              <Redirect
+                exact
+                from="/nfts"
                 to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
               />
               <Route component={NotFound} path="*" />
