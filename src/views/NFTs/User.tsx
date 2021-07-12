@@ -115,8 +115,8 @@ export const Gender: React.FC<{ gender: string }> = ({ gender }) => {
 }
 
 export enum ProfilePath {
-  Username = '/nfts/username',
-  Description = '/nfts/description',
+  Username = '/home/username',
+  Description = '/home/description',
 }
 
 export interface GotoProfileProps {
