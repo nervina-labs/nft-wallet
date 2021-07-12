@@ -31,3 +31,6 @@ export const IS_ANDROID = navigator.userAgent.toLowerCase().includes('android')
 export const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')
+
+export const OSS_IMG_PROCESS_QUERY = '?x-oss-process=image/resize,s_300'
+export const OSS_IMG_HOST = 'https://oss.jinse.cc'
