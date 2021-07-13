@@ -27,6 +27,7 @@ import { ReactComponent as FailSvg } from '../assets/svg/fail.svg'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useProfileModel } from '../hooks/useProfile'
+import { Help } from '../views/Help'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -47,6 +48,7 @@ export enum RoutePath {
   ImagePreview = '/avatar/preview',
   TakePhoto = '/avatar/camera',
   Explore = '/explore',
+  Help = '/help',
 }
 
 export const RouterContext = React.createContext({
@@ -159,6 +161,12 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: false,
     key: 'Explore',
     path: RoutePath.Explore,
+  },
+  {
+    component: Help,
+    exact: false,
+    key: 'Help',
+    path: RoutePath.Help,
   },
 ]
 
