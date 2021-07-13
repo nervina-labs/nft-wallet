@@ -12,11 +12,12 @@ import { LazyLoadImage } from '../../components/Image'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
+import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
-import { LocalCache } from '../../cache'
+import { HELP_CENTER } from '../../data/help'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -121,22 +122,16 @@ const Container = styled(MainContainer)`
     }
   }
 
-  .lang {
+  .question {
     display: flex;
     justify-content: center;
     align-items: center;
     color: #232222;
     font-size: 12px;
     margin-top: 30px;
-    .pointer {
-      cursor: pointer;
-    }
-    .divider {
-      margin: 0 15px;
-    }
-    .active {
-      font-weight: bold;
-      color: #2b454e;
+    cursor: pointer;
+    svg {
+      margin-right: 4px;
     }
   }
 
@@ -172,7 +167,7 @@ enum ErrorMsg {
 
 export const Login: React.FC = () => {
   const { login, isLogined } = useWalletModel()
-  const [t, i18n] = useTranslation('translations')
+  const [t] = useTranslation('translations')
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
@@ -237,13 +232,6 @@ export const Login: React.FC = () => {
     [login]
   )
 
-  const setLanguage = (lang: 'zh' | 'en') => async () => {
-    if (i18n.language === lang) return
-    await i18n.changeLanguage(lang)
-    LocalCache.setI18nLng(lang)
-    document.title = t('common.title')
-  }
-
   if (isLogined) {
     return <Redirect to={RoutePath.NFTs} />
   }
@@ -302,20 +290,16 @@ export const Login: React.FC = () => {
           <CircularProgress className="loading" size="1em" />
         ) : null}
       </Button>
-      <div className="lang">
-        <span
-          className={`${i18n.language === 'zh' ? 'active' : 'pointer'}`}
-          onClick={setLanguage('zh')}
-        >
-          中文
-        </span>
-        <span className="divider">|</span>
-        <span
-          onClick={setLanguage('en')}
-          className={`${i18n.language === 'en' ? 'active' : 'pointer'}`}
-        >
-          English
-        </span>
+      <div
+        className="question"
+        onClick={() => {
+          history.push(
+            `${RoutePath.Help}?url=${encodeURIComponent(HELP_CENTER)}`
+          )
+        }}
+      >
+        <QuestionSvg />
+        <span>{t('help.question')}</span>
       </div>
       <div className="beian">
         <a
