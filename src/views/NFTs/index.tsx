@@ -43,7 +43,7 @@ export const NFTs: React.FC = () => {
   const closeMenu = (): void => setShowMenu(false)
   useScrollRestoration()
   const { data: user, isLoading: isUserLoading } = useQuery(
-    [Query.Profile, address],
+    [Query.Profile, address, api],
     async () => {
       const profile = await api.getProfile()
       return profile
@@ -86,7 +86,7 @@ export const NFTs: React.FC = () => {
       return data
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [liked]
+    [liked, api, address]
   )
 
   const {
