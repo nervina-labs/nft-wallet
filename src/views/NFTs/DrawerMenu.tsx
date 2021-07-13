@@ -20,6 +20,7 @@ import { ReactComponent as HelpSvg } from '../../assets/svg/help.svg'
 import { useWalletModel } from '../../hooks/useWallet'
 import { DrawerAcion } from '../Profile/DrawerAction'
 import { LocalCache } from '../../cache'
+import { HELP_CENTER } from '../../data/help'
 
 const DrawerContainer = styled.div`
   background-color: white;
@@ -102,7 +103,10 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
       {
         text: t('menu.help'),
         icon: <HelpSvg />,
-        onClick: () => history.push(RoutePath.Profile),
+        onClick: () =>
+          history.push(
+            `${RoutePath.Help}?url=${encodeURIComponent(HELP_CENTER)}`
+          ),
       },
     ]
     // eslint-disable-next-line react-hooks/exhaustive-deps
