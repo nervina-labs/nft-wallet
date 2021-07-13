@@ -95,6 +95,9 @@ export function isVerticalScrollable(): boolean {
   return document.body.scrollHeight > document.body.clientHeight
 }
 
-export function getImagePreviewUrl(url: string): string {
+export function getImagePreviewUrl(url?: string): string | undefined {
+  if (url == null) {
+    return url
+  }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
 }
