@@ -195,7 +195,8 @@
       "en": "英文"
     },
     "help": {
-      "title": "帮助中心"
+      "title": "帮助中心",
+      "question": "对 Unipass/以太坊环境有问题？"
     }
   }
 }
