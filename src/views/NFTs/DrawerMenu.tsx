@@ -20,7 +20,7 @@ import { ReactComponent as HelpSvg } from '../../assets/svg/help.svg'
 import { useWalletModel } from '../../hooks/useWallet'
 import { DrawerAcion } from '../Profile/DrawerAction'
 import { LocalCache } from '../../cache'
-import { HELP_CENTER } from '../../data/help'
+import { getHelpCenterUrl } from '../../data/help'
 
 const DrawerContainer = styled.div`
   background-color: white;
@@ -105,7 +105,9 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
         icon: <HelpSvg />,
         onClick: () =>
           history.push(
-            `${RoutePath.Help}?url=${encodeURIComponent(HELP_CENTER)}`
+            `${RoutePath.Help}?url=${encodeURIComponent(
+              getHelpCenterUrl(i18n.language)
+            )}`
           ),
       },
     ]
