@@ -17,7 +17,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
-import { HELP_CENTER } from '../../data/help'
+import { HELP_UNIPASS } from '../../data/help'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -294,7 +294,7 @@ export const Login: React.FC = () => {
         className="question"
         onClick={() => {
           history.push(
-            `${RoutePath.Help}?url=${encodeURIComponent(HELP_CENTER)}`
+            `${RoutePath.Help}?url=${encodeURIComponent(HELP_UNIPASS)}`
           )
         }}
       >
