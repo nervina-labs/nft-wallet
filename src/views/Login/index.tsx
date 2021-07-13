@@ -17,7 +17,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
-import { HELP_UNIPASS } from '../../data/help'
+import { getHelpUnipassUrl } from '../../data/help'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -167,7 +167,7 @@ enum ErrorMsg {
 
 export const Login: React.FC = () => {
   const { login, isLogined } = useWalletModel()
-  const [t] = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
@@ -294,7 +294,9 @@ export const Login: React.FC = () => {
         className="question"
         onClick={() => {
           history.push(
-            `${RoutePath.Help}?url=${encodeURIComponent(HELP_UNIPASS)}`
+            `${RoutePath.Help}?url=${encodeURIComponent(
+              getHelpUnipassUrl(i18n.language)
+            )}`
           )
         }}
       >
