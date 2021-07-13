@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { IS_IPHONE } from '../../constants'
 import Viewer from 'viewerjs'
 import 'viewerjs/dist/viewer.css'
+import { getImagePreviewUrl } from '../../utils'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -108,7 +109,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       }}
     >
       <LazyLoadImage
-        src={src}
+        src={getImagePreviewUrl(src)}
         dataSrc={src}
         imgRef={imgRef}
         width={width}
