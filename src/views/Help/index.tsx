@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
@@ -38,6 +38,14 @@ export const Help: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false)
 
   const src = useMemo(() => decodeURIComponent(url), [url])
+  const frame = useRef<HTMLIFrameElement | null>(null)
+  useEffect(() => {
+    if (frame.current) {
+      frame.current.onload = () => {
+        setIsLoaded(true)
+      }
+    }
+  }, [])
 
   return (
     <Container>
@@ -51,6 +59,7 @@ export const Help: React.FC = () => {
         <iframe
           className={classNames({ hidden: !isLoaded })}
           src={src}
+          ref={frame}
           onLoad={() => setIsLoaded(true)}
         />
       </div>
