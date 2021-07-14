@@ -114,8 +114,8 @@
     },
     "info": {
       "title": "秘宝接收地址",
-      "copy": "复制到剪贴板",
-      "copied": "已复制成功"
+      "copy": "复制地址到剪贴板",
+      "copied": "复制成功"
     },
     "nft": {
       "title": "秘宝细节",
@@ -125,7 +125,10 @@
     "account": {
       "title": "我的帐号",
       "info": "基本信息",
-      "transactions": "流转记录"
+      "transactions": "流转记录",
+      "warning": "该地址仅用于接收 CKB 链上的资产，切勿转入其他链上资产",
+      "qrcode": "扫描二维码，快速接收秘宝",
+      "address": "秘宝接收地址"
     },
     "profile": {
       "title": "编辑资料",
@@ -180,8 +183,20 @@
       "metaverse": "探索",
       "my": "我的",
       "latest": "最新创作",
-      "most-liked": "获赞最多",
-      "recommended": "推荐"
+      "most-liked": "获赞最多"
+    },
+    "menu": {
+      "profile": "个人资料",
+      "txs": "流转记录",
+      "language": "语言设置",
+      "help": "帮助支持",
+      "logout": "退出登录",
+      "zh": "中文",
+      "en": "英文"
+    },
+    "help": {
+      "title": "帮助中心",
+      "question": "对 Unipass/以太坊环境有问题？"
     }
   }
 }

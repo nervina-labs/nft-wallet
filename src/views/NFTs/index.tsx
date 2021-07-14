@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useCallback, useMemo, useState, useEffect } from 'react'
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react'
 import { useInfiniteQuery, useQuery } from 'react-query'
-import styled from 'styled-components'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Card } from '../../components/Card'
 import {
@@ -16,315 +15,35 @@ import { Empty } from './empty'
 import { Loading } from '../../components/Loading'
 import { Redirect, useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
-import { MainContainer } from '../../styles'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share-new.svg'
-import { ReactComponent as AccountSvg } from '../../assets/svg/account-new.svg'
-import Bg from '../../assets/svg/home-bg.svg'
+import { ReactComponent as ProfileSvg } from '../../assets/svg/menu.svg'
 import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
 import { HiddenBar } from '../../components/HiddenBar'
-import { LazyLoadImage } from '../../components/Image'
-import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
-import { ReactComponent as SettingSvg } from '../../assets/svg/right-arrow.svg'
-import { ReactComponent as MaleSvg } from '../../assets/svg/male.svg'
-import { ReactComponent as FemaleSvg } from '../../assets/svg/female.svg'
-import { getRegionFromCode } from '../Profile/SetRegion'
 import { CircularProgress, useScrollTrigger } from '@material-ui/core'
 import classNames from 'classnames'
 import { DrawerImage } from '../Profile/DrawerImage'
 import { useRouteMatch } from 'react-router-dom'
 import { SetUsername } from '../Profile/SetUsername'
 import { SetDesc } from '../Profile/setDesc'
-
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
-
-const Container = styled(MainContainer)`
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  padding: 0;
-  position: relative;
-  h4 {
-    text-align: center;
-    color: rgba(0, 0, 0, 0.6);
-  }
-  .filters {
-    margin-right: 15px;
-    font-size: 14px;
-    color: #333333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    width: 100%;
-    max-width: 500px;
-    border-bottom: 1px solid #ececec;
-    background-color: white;
-    border-top-left-radius: 35px;
-    border-top-right-radius: 35px;
-    transition: all 0.3s;
-    &.fixed {
-      position: fixed;
-      top: 0;
-      justify-content: center;
-      z-index: 3;
-      border-radius: 0;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-      backdrop-filter: blur(10px);
-    }
-    .filter {
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      justify-content: center;
-      align-items: center;
-      &:first-child {
-        margin-right: 48px;
-      }
-    }
-    .active-line {
-      background: #ff5c00;
-      border-radius: 10px;
-      position: absolute;
-      border-radius: 10px;
-      height: 3px;
-      width: 28px;
-      position: relative;
-      top: 1px;
-    }
-  }
-  .share {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 10px 6px 15px;
-    background: rgba(255, 246, 235, 0.553224);
-    backdrop-filter: blur(13px);
-    position: fixed;
-    right: 0;
-    top: 15px;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    z-index: 10;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
-    font-size: 13px;
-    line-height: 18px;
-    color: #333;
-    svg {
-      margin-right: 6px;
-    }
-  }
-
-  @media (min-width: 500px) {
-    .share {
-      right: calc(50% - 250px);
-    }
-  }
-  .account {
-    background: rgba(255, 246, 235, 0.553224);
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    left: 15px;
-    top: 15px;
-    cursor: pointer;
-    svg {
-      width: 18px;
-      height: 18px;
-    }
-  }
-  .bg {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    max-width: 500px;
-    height: 245px;
-    background: darkgray url(${Bg as any});
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 0 -80px;
-    display: flex;
-    flex-direction: column;
-    &.loading {
-      align-items: center;
-      justify-content: center;
-    }
-    /* padding-left: 16px; */
-    .user {
-      margin-left: 25px;
-      margin-top: 65px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .avatar {
-        height: 56px;
-        svg {
-          width: 56px;
-          height: 56px;
-        }
-      }
-      .content {
-        margin-left: 16px;
-        flex: 1;
-        display: flex;
-        justify-content: space-between;
-        color: white;
-        flex-direction: column;
-        height: calc(100% - 8px);
-        &.empty {
-          justify-content: center;
-        }
-        .nickname {
-          color: white;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-        }
-        .info {
-          color: white;
-          font-size: 12px;
-          display: flex;
-          align-items: center;
-          span {
-            margin-right: 6px;
-            &.region {
-              overflow: hidden;
-              text-overflow: ellipsis;
-              display: -webkit-box;
-              -webkit-line-clamp: 1;
-              -webkit-box-orient: vertical;
-            }
-          }
-          .gender {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            width: 21px;
-            height: 21px;
-            min-width: 21px;
-            background: rgba(240, 240, 240, 0.5);
-          }
-        }
-      }
-      .action {
-        display: flex;
-        /* justify-content: flex-end; */
-        height: 100%;
-        flex-direction: column-reverse;
-        margin-right: 25px;
-
-        .icon {
-          cursor: pointer;
-          background: rgba(255, 246, 235, 0.553224);
-          width: 24px;
-          height: 24px;
-          border-radius: 4px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          top: -5px;
-          svg {
-            path {
-              fill: #333;
-            }
-          }
-        }
-      }
-    }
-    .desc {
-      margin-left: 25px;
-      margin-right: 25px;
-      margin-top: 16px;
-      color: white;
-      font-size: 14px;
-      line-height: 16px;
-      white-space: pre-line;
-      word-break: break-all;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 3; /* number of lines to show */
-      -webkit-box-orient: vertical;
-    }
-  }
-  .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    > span {
-      font-size: 16px;
-      margin-right: 8px;
-    }
-  }
-  .list {
-    flex: 1;
-    background-color: white;
-    background: #ecf2f5;
-    border-radius: 35px 35px 0px 0px;
-    margin-top: 199px;
-    z-index: 2;
-    .infinite-scroll-component {
-      > div {
-        &:nth-child(2) {
-          margin-top: 20px;
-        }
-      }
-    }
-  }
-`
-
-enum ProfilePath {
-  Username = '/nfts/username',
-  Description = '/nfts/description',
-}
-
-interface GotoProfileProps {
-  path: ProfilePath
-  children: React.ReactNode
-}
-
-const GotoProfile: React.FC<GotoProfileProps> = ({ children, path }) => {
-  const history = useHistory()
-  return (
-    <span
-      style={{ cursor: 'pointer' }}
-      onClick={() => {
-        history.push(path)
-      }}
-    >
-      {children}
-    </span>
-  )
-}
-
-const Gender: React.FC<{ gender: string }> = ({ gender }) => {
-  return (
-    <span className="gender">
-      {gender === 'male' ? <MaleSvg /> : <FemaleSvg />}
-    </span>
-  )
-}
+import { User, ProfilePath, GotoProfile } from './User'
+import { Container } from './styled'
+import { DrawerMenu } from './DrawerMenu'
+import { Addressbar } from '../../components/AddressBar'
 
 export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
-  const { t, i18n } = useTranslation('translations')
+  const { t } = useTranslation('translations')
   const history = useHistory()
   const [showAvatarAction, setShowAvatarAction] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
+  const closeMenu = (): void => setShowMenu(false)
   useScrollRestoration()
   const { data: user, isLoading: isUserLoading } = useQuery(
-    [Query.Profile, address],
+    [Query.Profile, address, api],
     async () => {
       const profile = await api.getProfile()
       return profile
@@ -367,7 +86,7 @@ export const NFTs: React.FC = () => {
       return data
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [liked]
+    [liked, api, address]
   )
 
   const {
@@ -427,37 +146,32 @@ export const NFTs: React.FC = () => {
 
   const closeDialog = (): void => setIsDialogOpen(false)
 
-  const isInfoEmpty = useMemo(() => {
-    return !user?.gender && !user?.region
-  }, [user])
-
-  const userInfo = useMemo(() => {
-    const region = getRegionFromCode(user?.region, i18n.language as 'zh')
-    return (
-      <>
-        {user?.gender ? <Gender gender={user?.gender} /> : null}
-        {region ? <span className="region">{region}</span> : null}
-      </>
-    )
-  }, [user, i18n.language])
-
-  const triggerHeader = useScrollTrigger({
-    threshold: 200,
-    disableHysteresis: true,
-  })
-
+  const bgRef = useRef<HTMLDivElement>(null)
+  const [bgheight, setBgHeight] = useState(16)
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
 
   useEffect(() => {
     setAlwaysShowTabbar(!isVerticalScrollable())
   }, [data])
 
+  useEffect(() => {
+    const height = bgRef.current?.clientHeight
+    if (height) {
+      setBgHeight(height + 192)
+    }
+  }, [user, isUserLoading])
+
+  const triggerHeader = useScrollTrigger({
+    threshold: bgheight,
+    disableHysteresis: true,
+  })
+
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
   }
 
   return (
-    <Container>
+    <Container id="main">
       <div className="share" onClick={openDialog}>
         <ShareSvg />
         {t('nfts.share')}
@@ -467,70 +181,43 @@ export const NFTs: React.FC = () => {
           <CircularProgress size="20px" style={{ color: 'white' }} />
         ) : (
           <>
-            <div className="user">
-              <div
-                className="avatar"
-                onClick={() => {
-                  if (!user?.avatar_url) {
-                    setShowAvatarAction(true)
-                  }
-                }}
-              >
-                {user?.avatar_url ? (
-                  <LazyLoadImage
-                    src={user?.avatar_url}
-                    width={56}
-                    height={56}
-                    imageStyle={{ borderRadius: '50%' }}
-                    variant="circle"
-                    backup={<PeopleSvg />}
-                  />
-                ) : (
-                  <PeopleSvg />
-                )}
-              </div>
-              <div className={classNames('content', { empty: isInfoEmpty })}>
-                <div className="nickname">
-                  {user?.nickname ? (
-                    user?.nickname
-                  ) : (
-                    <GotoProfile path={ProfilePath.Username}>
-                      {t('profile.user-name.empty')}
-                    </GotoProfile>
-                  )}
-                </div>
-                {!isInfoEmpty ? <div className="info">{userInfo}</div> : null}
-              </div>
-              <div className="action">
-                <div
-                  className="icon"
-                  onClick={() => history.push(RoutePath.Profile)}
-                >
-                  <SettingSvg />
-                </div>
-              </div>
-            </div>
-            <div className="desc">
+            <User
+              user={user}
+              setShowAvatarAction={setShowAvatarAction}
+              closeMenu={closeMenu}
+            />
+            <div className="desc" ref={bgRef}>
               {user?.description ? (
                 user?.description
               ) : (
-                <GotoProfile path={ProfilePath.Description}>
+                <GotoProfile
+                  path={ProfilePath.Description}
+                  closeMenu={closeMenu}
+                >
                   {t('profile.desc.empty')}
                 </GotoProfile>
               )}
             </div>
+            <Addressbar address={address} />
+            <br />
+            <br />
           </>
         )}
-        <div
-          className="account"
-          onClick={() => history.push(RoutePath.Account)}
-        >
-          <AccountSvg />
+        <div className="account" onClick={() => setShowMenu(true)}>
+          <ProfileSvg />
         </div>
       </div>
       <section
         className="list"
-        style={IS_IPHONE ? { width: '100%', maxWidth: '100%' } : undefined}
+        style={
+          IS_IPHONE
+            ? {
+                width: '100%',
+                maxWidth: '100%',
+                marginTop: `${bgheight}px`,
+              }
+            : { marginTop: `${bgheight}px` }
+        }
       >
         <div className={classNames('filters', { fixed: triggerHeader })}>
           <div
@@ -621,6 +308,12 @@ export const NFTs: React.FC = () => {
         desc={user?.description}
         open={!!matchDesc?.isExact}
         close={() => history.goBack()}
+      />
+      <DrawerMenu
+        close={closeMenu}
+        isDrawerOpen={showMenu}
+        user={user}
+        setShowAvatarAction={setShowAvatarAction}
       />
       <HiddenBar alwaysShow={alwayShowTabbar} />
     </Container>

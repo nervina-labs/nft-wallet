@@ -6,6 +6,9 @@ import FallbackImg from '../../assets/img/detail-fallback.png'
 import classNames from 'classnames'
 import styled from 'styled-components'
 import { IS_IPHONE } from '../../constants'
+import Viewer from 'viewerjs'
+import 'viewerjs/dist/viewer.css'
+import { getImagePreviewUrl } from '../../utils'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -57,12 +60,32 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       window.removeEventListener('touchmove', onTouchMove)
     }
   }, [])
+  const imgRef = useRef<HTMLImageElement | null>(null)
+
+  const imageOnClick = (e: React.SyntheticEvent<HTMLDivElement>): void => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsTileEnable(false)
+    const viewer = new Viewer(imgRef.current!, {
+      hidden: () => {
+        viewer.destroy()
+        setIsTileEnable(true)
+      },
+      url: 'data-src',
+      navbar: false,
+      title: false,
+      toolbar: false,
+    })
+    viewer.show()
+  }
   // const [boxShadow, setBoxShadow] = useState('rgb(240 46 170 / 40%) -10px 10px')
   return (
     <Container
       tiltReverse={shouldReverseTilt}
       reset={false}
       tiltEnable={isTiltEnable && enable}
+      disableTouch
+      onClick={imageOnClick}
       tiltAngleYInitial={!isTouchDevice ? 15 : undefined}
       adjustGyroscope
       className={classNames({ disabled: !enable && IS_IPHONE })}
@@ -86,7 +109,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       }}
     >
       <LazyLoadImage
-        src={src}
+        src={getImagePreviewUrl(src)}
+        dataSrc={src}
+        imgRef={imgRef}
         width={width}
         height={height}
         imageStyle={{
@@ -96,8 +121,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
           pointerEvents: 'none',
         }}
         setImageHeight={false}
-        onLoaded={(img) => {
-          if (img === null || !src) {
+        onLoaded={() => {
+          if (!src) {
             return
           }
           setIsTileEnable(true)

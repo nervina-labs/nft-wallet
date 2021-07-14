@@ -1,6 +1,6 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import Web3 from 'web3'
-import { INFURA_ID } from '../constants'
+import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
 
 export const sleep = async (ms: number): Promise<void> =>
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -92,4 +92,11 @@ export function roundDown(n: number, decimals = 1): number {
 
 export function isVerticalScrollable(): boolean {
   return document.body.scrollHeight > document.body.clientHeight
+}
+
+export function getImagePreviewUrl(url?: string): string | undefined {
+  if (url == null) {
+    return url
+  }
+  return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
 }

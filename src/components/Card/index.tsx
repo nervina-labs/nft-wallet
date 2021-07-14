@@ -7,6 +7,7 @@ import { Limited } from '../Limited'
 import { Creator } from '../Creator'
 import { useTranslation } from 'react-i18next'
 import FallbackImg from '../../assets/img/card-fallback.png'
+import { getImagePreviewUrl } from '../../utils'
 
 export interface CardProps {
   token: NFTToken
@@ -229,7 +230,11 @@ export const Card: React.FC<CardProps> = ({
     >
       <div className="media">
         <LazyLoadImage
-          src={isBanned ? FallbackImg : token.class_bg_image_url}
+          src={
+            isBanned
+              ? FallbackImg
+              : getImagePreviewUrl(token.class_bg_image_url)
+          }
           width={100}
           height={125}
           skeletonStyle={{ borderRadius: '10px' }}

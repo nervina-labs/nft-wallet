@@ -19,8 +19,8 @@ export const ButtonContainer = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 115px;
   height: 30px;
+  padding: 0 16px;
   color: white;
 
   .loading {

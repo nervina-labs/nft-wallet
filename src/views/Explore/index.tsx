@@ -25,7 +25,7 @@ import { useScrollTrigger } from '@material-ui/core'
 import classNames from 'classnames'
 import qs from 'querystring'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
-import { isVerticalScrollable } from '../../utils'
+import { getImagePreviewUrl, isVerticalScrollable } from '../../utils'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -214,7 +214,7 @@ const Card: React.FC<CardProps> = ({ token }) => {
     >
       <div className="media">
         <LazyLoadImage
-          src={token.bg_image_url}
+          src={getImagePreviewUrl(token.bg_image_url)}
           width={width}
           height={width}
           skeletonStyle={{ borderRadius: '8px' }}
