@@ -15,7 +15,7 @@ const GUIDE_STORAGE_KEY = 'GUIDE_STORAGE_KEY+'
 export const Intro: React.FC<IntroProps> = ({ show }) => {
   const { t, i18n } = useTranslation('translations')
   const [showArrow, setShowArrow] = useState(true)
-  const { address } = useWalletModel()
+  const { address, api } = useWalletModel()
   const history = useHistory()
   const steps: IStep[] = useMemo(() => {
     return [
@@ -60,6 +60,7 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
                   onClick={() => {
                     localStorage.setItem(GUIDE_STORAGE_KEY + address, 'true')
                     document.documentElement.style.overflow = ''
+                    api.setProfile({ guide_finished: 'true' }).catch(Boolean)
                     history.push(
                       `${RoutePath.Help}?url=${encodeURIComponent(
                         getHelpCenterUrl(i18n.language)
@@ -74,7 +75,7 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
         selector: '.filters',
       },
     ]
-  }, [t, i18n.language, history, address])
+  }, [t, i18n.language, history, address, api])
   return (
     <Guide
       steps={steps}
@@ -104,6 +105,7 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
               modal.style.borderStyle = 'none'
             }
           })
+          api.setProfile({ guide_finished: 'true' }).catch(Boolean)
         }
       }}
     />

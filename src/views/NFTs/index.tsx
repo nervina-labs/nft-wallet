@@ -167,13 +167,20 @@ export const NFTs: React.FC = () => {
     disableHysteresis: true,
   })
 
+  const showGuide = useMemo(() => {
+    if (isUserLoading) {
+      return false
+    }
+    return !user?.guide_finished
+  }, [user, isUserLoading])
+
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
   }
 
   return (
     <Container id="main">
-      <Intro show={!!user && !!data} />
+      <Intro show={showGuide} />
       <div className="share" onClick={openDialog}>
         <ShareSvg />
         {t('nfts.share')}

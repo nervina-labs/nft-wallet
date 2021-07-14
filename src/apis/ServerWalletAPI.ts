@@ -184,12 +184,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async setProfile(
     user: Partial<User>,
-    auth: Auth,
+    auth?: Auth,
     ext?: string
   ): Promise<AxiosResponse<object>> {
     const fd = new FormData()
     await writeFormData(user, 'user', fd, ext)
-    await writeFormData(auth as any, 'auth', fd)
+    if (auth) {
+      await writeFormData(auth as any, 'auth', fd)
+    }
     const { data } = await this.axios.put(`/users/${this.address}`, fd, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })

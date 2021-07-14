@@ -44,7 +44,7 @@ export interface NFTWalletAPI {
 
   setProfile: (
     user: Partial<User>,
-    auth: Auth,
+    auth?: Auth,
     ext?: string
   ) => Promise<AxiosResponse<object>>
 
