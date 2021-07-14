@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { throttle } from '../utils'
+import { debounce } from '../utils'
 import { useWalletModel } from './useWallet'
 
 export const useScrollRestoration = (): void => {
@@ -23,7 +23,7 @@ export const useScrollRestoration = (): void => {
       setScrollScrollRestoration(path, { x, y })
     }
 
-    const cb = throttle(handleScroll, 100)
+    const cb = debounce(handleScroll, 100)
 
     window.addEventListener('scroll', cb, false)
 
