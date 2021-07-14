@@ -332,6 +332,7 @@ export const Explore: React.FC = () => {
     refetch,
     status,
   } = useInfiniteQuery(
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     [Query.Explore + currentTag + sortType, currentTagId, sortType],
     async ({ pageParam = 1 }) => {
       // eslint-disable-next-line
