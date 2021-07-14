@@ -33,6 +33,7 @@ import { User, ProfilePath, GotoProfile } from './User'
 import { Container } from './styled'
 import { DrawerMenu } from './DrawerMenu'
 import { Addressbar } from '../../components/AddressBar'
+import { Intro } from '../../components/Intro'
 
 export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
@@ -172,6 +173,7 @@ export const NFTs: React.FC = () => {
 
   return (
     <Container id="main">
+      <Intro show={!!user && !!data} />
       <div className="share" onClick={openDialog}>
         <ShareSvg />
         {t('nfts.share')}
