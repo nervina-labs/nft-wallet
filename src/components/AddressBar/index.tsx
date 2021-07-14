@@ -49,7 +49,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({ address }) => {
   const { snackbar } = useProfileModel()
   const [t] = useTranslation('translations')
   return (
-    <Container>
+    <Container className="address-bar">
       <div
         className="address"
         onClick={() => {

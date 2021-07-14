@@ -33,6 +33,7 @@ import { User, ProfilePath, GotoProfile } from './User'
 import { Container } from './styled'
 import { DrawerMenu } from './DrawerMenu'
 import { Addressbar } from '../../components/AddressBar'
+import { Intro } from '../../components/Intro'
 
 export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
@@ -157,7 +158,7 @@ export const NFTs: React.FC = () => {
   useEffect(() => {
     const height = bgRef.current?.clientHeight
     if (height) {
-      setBgHeight(height + 192)
+      setBgHeight(height + 202)
     }
   }, [user, isUserLoading])
 
@@ -166,12 +167,20 @@ export const NFTs: React.FC = () => {
     disableHysteresis: true,
   })
 
+  const showGuide = useMemo(() => {
+    if (isUserLoading) {
+      return false
+    }
+    return !user?.guide_finished
+  }, [user, isUserLoading])
+
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
   }
 
   return (
     <Container id="main">
+      <Intro show={showGuide} />
       <div className="share" onClick={openDialog}>
         <ShareSvg />
         {t('nfts.share')}

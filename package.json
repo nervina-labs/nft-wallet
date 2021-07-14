@@ -22,6 +22,7 @@
     "@types/qrcode.react": "^1.0.1",
     "@zxing/library": "^0.18.5",
     "axios": "^0.21.1",
+    "byte-guide": "^1.0.5",
     "china-division": "^2.3.1",
     "classnames": "^2.3.1",
     "clipboard-polyfill": "^3.0.3",
