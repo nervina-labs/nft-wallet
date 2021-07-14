@@ -158,7 +158,7 @@ export const NFTs: React.FC = () => {
   useEffect(() => {
     const height = bgRef.current?.clientHeight
     if (height) {
-      setBgHeight(height + 192)
+      setBgHeight(height + 202)
     }
   }, [user, isUserLoading])
 
