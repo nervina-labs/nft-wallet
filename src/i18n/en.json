@@ -76,7 +76,7 @@
       },
       "error": {
         "eth": "Please enter the correct Ethereum address",
-        "ckb": "Please enter the correct CKB full address",
+        "ckb": "Please enter the correct CKB address",
         "self": "Unable to transfer NFT to yourself",
         "receive-eth": "This address is an Ethereum address, please remind the receiver to open NFT Account with Ethereum wallet to view the NFT received",
         "common": "Please enter the correct Ethereum address",
@@ -178,7 +178,8 @@
       "metaverse": "Explore",
       "my": "My",
       "latest": "Latest",
-      "most-liked": "Most Liked"
+      "most-liked": "Most Liked",
+      "recommended": "Recommended"
     }
   }
 }

@@ -89,7 +89,7 @@
       },
       "transfer": "转让",
       "address": "接收方地址",
-      "placeholder": "请输入 CKB 长地址或以太坊地址",
+      "placeholder": "请输入 CKB 地址或以太坊地址",
       "check": "请仔细检查输入的地址，",
       "once-transfer": "一旦转让，将无法撤回",
       "submitted": "已提交转让交易",
