@@ -76,6 +76,10 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
       },
     ]
   }, [t, i18n.language, history, address, api])
+
+  if (!show) {
+    return null
+  }
   return (
     <Guide
       steps={steps}
