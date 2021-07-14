@@ -3,7 +3,7 @@ export const HELP_UNIPASS_CN =
   'https://www.yuque.com/faqbangzhuzhichi/gsg82h/qa0dmm'
 export const HELP_CENTER_EN = 'https://www.yuque.com/faqbangzhuzhichi/zizddp?language=en-us'
 export const HELP_UNIPASS_EN =
-  'https://www.yuque.com/faqbangzhuzhichi/zizddp/stspbp'
+  'https://www.yuque.com/faqbangzhuzhichi/zizddp/stspbp?language=en-us'
 
 export const getHelpCenterUrl = (lang: string): string =>
   lang === 'en' ? HELP_CENTER_EN : HELP_CENTER_CN
