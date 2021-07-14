@@ -17,7 +17,7 @@ import { NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
-import { TokenClass } from '../../models/class-list'
+import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
 import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
@@ -270,6 +270,8 @@ export const NFT: React.FC = () => {
     setLikeStatus(classId, data.class_liked)
   }, [data, id, setLikeStatus])
 
+  const verifyTitle = detail?.verified_info?.verified_title
+
   if (!isLogined && matchTokenClass?.isExact !== true) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -345,13 +347,17 @@ export const NFT: React.FC = () => {
               color="#000"
               fontSize={14}
               isVip={detail?.verified_info?.is_verified}
-              vipTitle={detail?.verified_info?.verified_title}
+              vipTitle={verifyTitle}
               vipSource={detail?.verified_info?.verified_source}
               style={{ marginBottom: '5px' }}
               showTooltip={false}
             />
-            {detail?.verified_info?.verified_title ? (
-              <div className="vip">{detail?.verified_info?.verified_title}</div>
+            {verifyTitle ? (
+              <div className="vip">
+                {detail?.verified_info?.verified_source === VipSource.Weibo
+                  ? t('common.vip.weibo', { title: verifyTitle })
+                  : verifyTitle}
+              </div>
             ) : null}
             <Divider style={{ margin: '24px 0' }} />
             <div className="desc-title">{t('nft.desc')}</div>
