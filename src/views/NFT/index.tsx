@@ -341,9 +341,9 @@ export const NFT: React.FC = () => {
             <div className="title">{detail?.name}</div>
             <Creator
               title=""
-              url={detail.issuer_info.avatar_url}
-              name={detail.issuer_info.name}
-              uuid={detail.issuer_info.uuid}
+              url={detail.issuer_info?.avatar_url}
+              name={detail.issuer_info?.name}
+              uuid={detail.issuer_info?.uuid}
               color="#000"
               fontSize={14}
               isVip={detail?.verified_info?.is_verified}

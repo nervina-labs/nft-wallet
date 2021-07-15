@@ -64,8 +64,8 @@ const Container = styled.div`
 
 export interface CreatorProps {
   fontSize?: number
-  url: string
-  name: string
+  url?: string
+  name?: string
   uuid?: string
   title?: React.ReactNode
   color?: string
@@ -107,7 +107,7 @@ export const Creator: React.FC<CreatorProps> = ({
     if (vipAlignRight) {
       return 'top-end'
     }
-    return name.length > 25 ? 'top-end' : 'top'
+    return (name?.length ?? 0) > 25 ? 'top-end' : 'top'
   }, [vipAlignRight, name])
   const creator = (
     <>
