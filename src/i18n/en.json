@@ -126,9 +126,9 @@
       "title": "My Account",
       "info": "Address",
       "transactions": "Activity",
-      "warning": "该地址仅用于接收 CKB 链上的资产，切勿转入其他链上资产",
-      "qrcode": "扫描二维码，快速接收秘宝",
-      "address": "秘宝接收地址"
+      "warning": "This address only supports Nervos assets, please do not receive other chain assets",
+      "qrcode": "Use this QR code to receive NFT",
+      "address": "CKB address"
     },
     "profile": {
       "title": "Edit Profile",
@@ -185,37 +185,37 @@
       "recommended": "Recommended"
     },
     "menu": {
-      "profile": "个人资料",
-      "txs": "流转记录",
-      "language": "语言设置",
-      "help": "帮助支持",
-      "logout": "退出登录",
-      "zh": "中文",
-      "en": "英文"
+      "profile": "Profile",
+      "txs": "Activity",
+      "language": "Language",
+      "help": "Help",
+      "logout": "Log Out",
+      "zh": "Chinese",
+      "en": "English"
     },
     "help": {
-      "title": "帮助中心",
-      "question": "对 Unipass/以太坊环境有问题？"
+      "title": "Help center",
+      "question": "Have questions about the Unipass/Ethereum environment?"
     },
     "guide": {
       "one": {
-        "title": "1. 查看CKB地址",
-        "desc": "点击查看地址，发送方可通过您的 CKB 地址将秘宝发送给您"
+        "title": "1. View CKB address",
+        "desc": "Click to view the address. Use this address to receive NFT"
       },
       "two": {
-        "title": "2. 查看我的秘宝",
-        "desc": "在这里可以查看您本人持有的秘宝和您赞过的秘宝"
+        "title": "2. View my NFT",
+        "desc": "Here you can view the NFT(s) you own and liked"
       },
       "three": {
-        "title": "3. 其他功能",
-        "desc": "点击查看个人资料、流转记录，帮助设置等功能"
+        "title": "3. More functions",
+        "desc": "View profile, activity, help center and more functions"
       },
       "four": {
-        "title": "4.入门指南",
-        "desc": "推荐新用户前往 —— <b>帮助支持</b>浏览详细使用教程"
+        "title": "4. Getting started",
+        "desc": "Recommend new users to go to —— <b>Help Support</b> to get more tutorial"
       },
-      "next": "下一步",
-      "done": "开始使用"
+      "next": "Next",
+      "done": "Start"
     }
   }
 }
