@@ -12,7 +12,7 @@ if (SENTRY_DSN) {
   Sentry.init({
     dsn: SENTRY_DSN,
     integrations: [new Integrations.BrowserTracing()],
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0,
   })
 }
 
