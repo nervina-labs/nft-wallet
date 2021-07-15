@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 
 export interface LazyLoadImageProps {
@@ -10,10 +10,13 @@ export interface LazyLoadImageProps {
   variant?: 'circle' | 'rect' | 'text'
   cover?: boolean
   skeletonStyle?: React.CSSProperties
-  onLoaded?: (img: HTMLImageElement | null) => void
+  onLoaded?: () => void
   imageStyle?: React.CSSProperties
   setImageHeight?: boolean
   disableContextMenu?: boolean
+  imgRef?: React.MutableRefObject<HTMLImageElement | null>
+  onClick?: (e: React.SyntheticEvent<HTMLImageElement>) => void
+  dataSrc?: string
 }
 
 const disableConext: React.MouseEventHandler = (e): boolean => {
@@ -35,6 +38,9 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
   imageStyle,
   setImageHeight = true,
   disableContextMenu = true,
+  imgRef,
+  onClick,
+  dataSrc,
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
@@ -44,7 +50,6 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
       setLoaded(true)
     }
   }, [backup])
-  const imgRef = useRef(null)
 
   return (
     <>
@@ -55,9 +60,10 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
           src={src}
           ref={imgRef}
           onContextMenu={disableContextMenu ? disableConext : undefined}
+          data-src={dataSrc}
           onLoad={async () => {
             try {
-              await onLoaded?.(imgRef.current)
+              await onLoaded?.()
             } catch (error) {
               //
             }

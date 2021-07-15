@@ -7,6 +7,7 @@ export interface User {
   description: string
   region: string
   avatar: string
+  guide_finished: string
 }
 
 export interface Auth {
@@ -26,5 +27,6 @@ export interface UserResponse {
   gender: string
   birthday: string
   region: string
+  guide_finished: boolean
   description: string
 }

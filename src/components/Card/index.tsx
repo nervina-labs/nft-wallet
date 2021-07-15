@@ -7,6 +7,7 @@ import { Limited } from '../Limited'
 import { Creator } from '../Creator'
 import { useTranslation } from 'react-i18next'
 import FallbackImg from '../../assets/img/card-fallback.png'
+import { getImagePreviewUrl } from '../../utils'
 
 export interface CardProps {
   token: NFTToken
@@ -229,7 +230,11 @@ export const Card: React.FC<CardProps> = ({
     >
       <div className="media">
         <LazyLoadImage
-          src={isBanned ? FallbackImg : token.class_bg_image_url}
+          src={
+            isBanned
+              ? FallbackImg
+              : getImagePreviewUrl(token.class_bg_image_url)
+          }
           width={100}
           height={125}
           skeletonStyle={{ borderRadius: '10px' }}
@@ -269,8 +274,9 @@ export const Card: React.FC<CardProps> = ({
           url={token.issuer_avatar_url}
           name={token.issuer_name}
           uuid={token.issuer_uuid}
-          isVip={token?.weibo_auth_info?.is_verified}
-          vipTitle={token?.weibo_auth_info?.verified_title}
+          isVip={token?.verified_info?.is_verified}
+          vipTitle={token?.verified_info?.verified_title}
+          vipSource={token?.verified_info?.verified_source}
           color="rgba(63, 63, 63, 0.66)"
         />
       </div>

@@ -15,6 +15,12 @@ export interface NFTTransaction {
   uuid: string
 }
 
+export enum ClassSortType {
+  Recommend = 'recommended',
+  Latest = 'latest',
+  Likes = 'likes',
+}
+
 export interface NFTWalletAPI {
   getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
 
@@ -31,7 +37,7 @@ export interface NFTWalletAPI {
   getClassListByTagId: (
     uuid: string,
     page: number,
-    sortByLikes?: boolean
+    sortType: ClassSortType
   ) => Promise<AxiosResponse<ClassList>>
 
   getUserLikesClassList: (page: number) => Promise<AxiosResponse<ClassList>>
@@ -44,7 +50,7 @@ export interface NFTWalletAPI {
 
   setProfile: (
     user: Partial<User>,
-    auth: Auth,
+    auth?: Auth,
     ext?: string
   ) => Promise<AxiosResponse<object>>
 

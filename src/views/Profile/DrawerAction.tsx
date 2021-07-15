@@ -78,6 +78,7 @@ export const DrawerAcion: React.FC<DrawerConfigProps> = ({
           borderTopRightRadius: '25px',
         },
       }}
+      variant="temporary"
       disableEnforceFocus
       disableEscapeKeyDown
       disableScrollLock={window.innerWidth >= 500}

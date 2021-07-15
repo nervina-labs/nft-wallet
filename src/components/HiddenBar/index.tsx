@@ -51,7 +51,7 @@ const Container = styled.div`
       margin-right: 8px;
     }
     &.active {
-      background-color: #fd9700;
+      background-color: #ff5c00;
       border-radius: 16px;
     }
   }

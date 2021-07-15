@@ -17,7 +17,7 @@ import { NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
-import { TokenClass } from '../../models/class-list'
+import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
 import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
@@ -270,6 +270,8 @@ export const NFT: React.FC = () => {
     setLikeStatus(classId, data.class_liked)
   }, [data, id, setLikeStatus])
 
+  const verifyTitle = detail?.verified_info?.verified_title
+
   if (!isLogined && matchTokenClass?.isExact !== true) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -339,19 +341,22 @@ export const NFT: React.FC = () => {
             <div className="title">{detail?.name}</div>
             <Creator
               title=""
-              url={detail.issuer_info.avatar_url}
-              name={detail.issuer_info.name}
-              uuid={detail.issuer_info.uuid}
+              url={detail.issuer_info?.avatar_url}
+              name={detail.issuer_info?.name}
+              uuid={detail.issuer_info?.uuid}
               color="#000"
               fontSize={14}
-              isVip={detail?.weibo_auth_info?.is_verified}
-              vipTitle={detail?.weibo_auth_info?.verified_title}
+              isVip={detail?.verified_info?.is_verified}
+              vipTitle={verifyTitle}
+              vipSource={detail?.verified_info?.verified_source}
               style={{ marginBottom: '5px' }}
               showTooltip={false}
             />
-            {detail?.weibo_auth_info?.verified_title ? (
+            {verifyTitle ? (
               <div className="vip">
-                {detail?.weibo_auth_info?.verified_title}
+                {detail?.verified_info?.verified_source === VipSource.Weibo
+                  ? t('common.vip.weibo', { title: verifyTitle })
+                  : verifyTitle}
               </div>
             ) : null}
             <Divider style={{ margin: '24px 0' }} />

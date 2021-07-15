@@ -32,6 +32,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-top: 24px;
   h4 {
     text-align: center;
     font-size: 14px;
@@ -156,7 +157,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
       <img src={SendPng} />
     )
 
-  const vipTitle = tx?.weibo_auth_info?.verified_title
+  const vipTitle = tx?.verified_info?.verified_title
   const vt = useMemo(() => {
     if (vipTitle) {
       return t('common.vip.weibo', { title: vipTitle })
@@ -179,7 +180,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
             ? tx.from_address
             : truncateMiddle(tx.from_address, 5, 5)
         }`}</span>
-        {tx?.weibo_auth_info?.is_verified && tx.issuer_uuid !== '' ? (
+        {tx?.verified_info?.is_verified && tx.issuer_uuid !== '' ? (
           <Tooltip title={vt} placement={'top'}>
             <WeiboSvg className="vip" />
           </Tooltip>
@@ -312,7 +313,6 @@ export const Transactions: React.FC = () => {
             (acc, tx) => tx.transaction_list.length + acc,
             0
           )}
-          height={window.innerHeight - 194}
           pullDownToRefresh={!IS_WEXIN}
           refreshFunction={refresh}
           next={fetchNextPage}

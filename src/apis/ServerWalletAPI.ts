@@ -1,5 +1,6 @@
 import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
 import {
+  ClassSortType,
   NFT,
   NFTDetail,
   NFTTransaction,
@@ -107,14 +108,18 @@ export class ServerWalletAPI implements NFTWalletAPI {
   async getClassListByTagId(
     uuid: string,
     page: number,
-    sortByLikes = false
+    sortType: ClassSortType
   ): Promise<AxiosResponse<ClassList>> {
     const params: Record<string, string | number> = {
       page,
       limit: PER_ITEM_LIMIT,
     }
-    if (sortByLikes) {
+    if (sortType === ClassSortType.Likes) {
       params.sort = 'likes'
+      params.order = 'desc'
+    }
+    if (sortType === ClassSortType.Recommend) {
+      params.sort = 'recommended'
       params.order = 'desc'
     }
     if (this.address) {
@@ -184,12 +189,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async setProfile(
     user: Partial<User>,
-    auth: Auth,
+    auth?: Auth,
     ext?: string
   ): Promise<AxiosResponse<object>> {
     const fd = new FormData()
     await writeFormData(user, 'user', fd, ext)
-    await writeFormData(auth as any, 'auth', fd)
+    if (auth) {
+      await writeFormData(auth as any, 'auth', fd)
+    }
     const { data } = await this.axios.put(`/users/${this.address}`, fd, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })

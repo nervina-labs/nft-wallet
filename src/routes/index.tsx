@@ -27,6 +27,7 @@ import { ReactComponent as FailSvg } from '../assets/svg/fail.svg'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useProfileModel } from '../hooks/useProfile'
+import { Help } from '../views/Help'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -38,7 +39,7 @@ export enum RoutePath {
   Account = '/account',
   NFT = '/nft/:id',
   TokenClass = '/class/:id',
-  NFTs = '/nfts',
+  NFTs = '/home',
   NotFound = '/404',
   Transfer = '/transfer/:id',
   Info = '/account/info',
@@ -47,6 +48,7 @@ export enum RoutePath {
   ImagePreview = '/avatar/preview',
   TakePhoto = '/avatar/camera',
   Explore = '/explore',
+  Help = '/help',
 }
 
 export const RouterContext = React.createContext({
@@ -160,6 +162,12 @@ const routes: Array<RouteProps & { key: string }> = [
     key: 'Explore',
     path: RoutePath.Explore,
   },
+  {
+    component: Help,
+    exact: false,
+    key: 'Help',
+    path: RoutePath.Help,
+  },
 ]
 
 export enum ProfilePath {
@@ -205,6 +213,11 @@ export const Routers: React.FC = () => {
                 from={RoutePath.Launch}
                 to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
               />
+              <Redirect
+                exact
+                from="/nfts"
+                to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
+              />
               <Route component={NotFound} path="*" />
             </Switch>
             <ActionDialog
@@ -219,14 +232,14 @@ export const Routers: React.FC = () => {
               autoHideDuration={1500}
               onClose={closeSnackbar}
               style={{
-                bottom: '88px',
+                bottom: `${window.innerHeight / 2 + 16}px`,
               }}
             >
               <Alert
                 style={{
                   borderRadius: '16px',
                   background: 'rgba(51, 51, 51, 0.592657)',
-                  padding: '4px 30px',
+                  padding: '0px 40px',
                 }}
                 icon={false}
                 severity="success"

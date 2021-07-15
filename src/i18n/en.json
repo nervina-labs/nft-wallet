@@ -76,7 +76,7 @@
       },
       "error": {
         "eth": "Please enter the correct Ethereum address",
-        "ckb": "Please enter the correct CKB full address",
+        "ckb": "Please enter the correct CKB address",
         "self": "Unable to transfer NFT to yourself",
         "receive-eth": "This address is an Ethereum address, please remind the receiver to open NFT Account with Ethereum wallet to view the NFT received",
         "common": "Please enter the correct Ethereum address",
@@ -89,7 +89,7 @@
       },
       "transfer": "Transfer",
       "address": "Receiver address",
-      "placeholder": "Please enter CKB full address/Ethereum EOA address",
+      "placeholder": "Please enter CKB address/Ethereum EOA address",
       "check": "Please double check the address entered,",
       "once-transfer": "Once transferred, it cannot be withdrawn",
       "submitted": "Transfer transaction submitted",
@@ -125,7 +125,10 @@
     "account": {
       "title": "My Account",
       "info": "Address",
-      "transactions": "Activity"
+      "transactions": "Activity",
+      "warning": "This address only supports Nervos assets, please do not receive other chain assets",
+      "qrcode": "Use this QR code to receive NFT",
+      "address": "CKB address"
     },
     "profile": {
       "title": "Edit Profile",
@@ -178,7 +181,41 @@
       "metaverse": "Explore",
       "my": "My",
       "latest": "Latest",
-      "most-liked": "Most Liked"
+      "most-liked": "Most Liked",
+      "recommended": "Recommended"
+    },
+    "menu": {
+      "profile": "Profile",
+      "txs": "Activity",
+      "language": "Language",
+      "help": "Help",
+      "logout": "Log Out",
+      "zh": "Chinese",
+      "en": "English"
+    },
+    "help": {
+      "title": "Help center",
+      "question": "Have questions about the Unipass/Ethereum environment?"
+    },
+    "guide": {
+      "one": {
+        "title": "1. View CKB address",
+        "desc": "Click to view the address. Use this address to receive NFT"
+      },
+      "two": {
+        "title": "2. View my NFT",
+        "desc": "Here you can view the NFT(s) you own and liked"
+      },
+      "three": {
+        "title": "3. More functions",
+        "desc": "View profile, activity, help center and more functions"
+      },
+      "four": {
+        "title": "4. Getting started",
+        "desc": "Recommend new users to go to —— <b>Help Support</b> to get more tutorial"
+      },
+      "next": "Next",
+      "done": "Start"
     }
   }
 }
