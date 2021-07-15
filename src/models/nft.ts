@@ -19,9 +19,9 @@ export interface NFTToken extends VipInfo {
   class_description: string
   class_total: string
   token_uuid: string
-  issuer_avatar_url: string
-  issuer_name: string
-  issuer_uuid: string
+  issuer_avatar_url?: string
+  issuer_name?: string
+  issuer_uuid?: string
   tx_state: TransactionStatus
   from_address?: string
   to_address?: string

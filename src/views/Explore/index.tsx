@@ -236,9 +236,9 @@ const Card: React.FC<CardProps> = ({ token }) => {
         <Creator
           title=""
           baned={token.is_issuer_banned}
-          url={token.issuer_info.avatar_url}
-          name={token.issuer_info.name}
-          uuid={token.issuer_info.uuid}
+          url={token.issuer_info?.avatar_url}
+          name={token.issuer_info?.name}
+          uuid={token.issuer_info?.uuid}
           vipAlignRight
           color="rgb(51, 51, 51)"
           isVip={token?.verified_info?.is_verified}
