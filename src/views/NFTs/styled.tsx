@@ -126,7 +126,7 @@ export const Container = styled(MainContainer)`
       color: black;
       font-size: 14px;
       line-height: 16px;
-      margin-bottom: 12px;
+      margin-bottom: 24px;
       white-space: pre-line;
       word-break: break-all;
       overflow: hidden;
