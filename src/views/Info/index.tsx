@@ -19,9 +19,10 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 32px;
+    padding: 0 20px;
     span {
       font-size: 12px;
-      margin-left: 4px;
+      margin-left: 8px;
       color: #000000;
     }
   }
