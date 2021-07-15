@@ -378,7 +378,7 @@ export const Explore: React.FC = () => {
       set.add(token.uuid)
     }
     return list
-  }, [data, sortType])
+  }, [data, sortByLikes])
 
   const [isRefetching, setIsRefetching] = useState(false)
 
