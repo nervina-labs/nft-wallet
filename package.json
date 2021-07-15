@@ -19,6 +19,8 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@metamask/detect-provider": "^1.2.0",
     "@nervosnetwork/ckb-sdk-core": "^0.40.0",
+    "@sentry/react": "^6.9.0",
+    "@sentry/tracing": "^6.9.0",
     "@types/qrcode.react": "^1.0.1",
     "@zxing/library": "^0.18.5",
     "axios": "^0.21.1",
