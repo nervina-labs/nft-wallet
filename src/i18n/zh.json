@@ -3,187 +3,186 @@
     "common": {
       "beian": "浙ICP备2021006943号-3",
       "actions": {
-        "comfirm": "确认",
-        "loading": "加载中",
-        "pull-to-down": "暂无更多秘宝~",
-        "pull-down-refresh": " 下拉刷新",
-        "release-refresh": " 下拉刷新"
+        "comfirm": "Confirm",
+        "loading": "Loading",
+        "pull-to-down": "No More NFT~",
+        "pull-down-refresh": " Pull down to refresh",
+        "release-refresh": " Release to refresh"
       },
-      "creator": "创作者",
+      "creator": "Creator",
       "chain": {
-        "mainnet": "主网",
-        "testnet": "测试网"
+        "mainnet": "Mainnet",
+        "testnet": "Testnet"
       },
       "share": {
-        "copy": "点击复制链接并分享至社交媒体",
-        "close": "关闭"
+        "copy": "Click to copy the link and share to social media",
+        "close": "Close"
       },
       "limit": {
-        "limit": "限量",
-        "unlimit": "不限量"
+        "limit": "Limited",
+        "unlimit": "Unlimited"
       },
       "vip": {
-        "weibo": "微博认证: {{title}}",
-        "weibo-no-desc": "微博认证"
+        "weibo": "Weibo verification: {{title}}",
+        "weibo-no-desc": "Weibo verification"
       },
       "baned": {
-        "nft": "该秘宝暂不予显示",
-        "issuer": "该创作者暂不予显示"
+        "nft": "Invalid NFT",
+        "issuer": "Invalid creator"
       },
-      "colon": "：",
-      "title": "秘宝账户",
-      "description": "随时随地查看并管理你的秘宝",
-      "img-lost": "图片失联"
+      "colon": ":",
+      "title": "NFT Account",
+      "description": "View and manage your NFT anytime, anywhere",
+      "img-lost": "Image lost"
     },
     "login": {
-      "title": "秘宝账户",
+      "title": "NFT Account",
       "connect": {
-        "unipass": "连接 Unipass",
-        "metamask": "连接以太坊环境",
-        "wallet-connect": "连接 Wallet Connect",
-        "connect": "连接"
+        "unipass": "Connect to Unipass",
+        "metamask": "Connect to Ethereum Environment",
+        "wallet-connect": "Connect to Wallet Connect",
+        "connect": "Connect to"
       },
       "errors": {
-        "not-support": "当前环境不支持连接以太坊",
-        "refuse": "用户拒绝授权，请重新打开页面进行授权"
+        "not-support": "The current environment does not support connecting to Ethereum",
+        "refuse": "User rejects authorization, please reopen the page for authorization"
       },
-      "desc-1": "随时随地查看",
-      "desc-2": "并管理你持有的秘宝"
+      "desc-1": "View and manage",
+      "desc-2": "your NFT anytime, anywhere"
     },
     "nfts": {
-      "title": "我的秘宝",
-      "owned": "持有",
-      "liked": "赞过",
+      "title": "My NFT",
+      "owned": "Owned",
+      "liked": "Liked",
       "status": {
-        "comfirming": "确认中",
-        "receiving": "接收中",
-        "tranferring": "转让中"
+        "comfirming": "Confirming",
+        "receiving": "Receiving",
+        "tranferring": "Transferring"
       },
-      "no-data": "啊喔...您尚未拥有任何秘宝",
-      "no-likes": "您尚未赞过任何秘宝",
-      "link": "探索秘宝的广阔宇宙",
-      "welcome": "欢迎来到秘宝宇宙",
-      "hi": "Hi 秘宝收藏家",
-      "share": "分享"
+      "no-data": "Awwww... You do not yet own any NFT",
+      "no-likes": "You have not yet liked any NFT",
+      "link": "Explore NFT Meta-universe",
+      "welcome": "Welcome to NFT universe",
+      "hi": "Hi, NFT collector",
+      "share": "Share"
     },
     "transfer": {
       "scan": {
-        "qrcode": "二维码扫描",
-        "result": "扫描结果",
-        "detected": "已识别到的二维码内容",
-        "error": "请扫描正确的 CKB 或以太坊地址二维码",
-        "rescan": "重新扫描"
+        "qrcode": "Scan QR code",
+        "result": "Scan result",
+        "detected": "The content that was recognized",
+        "error": "Please scan the correct CKB or Ethereum address",
+        "rescan": "Rescan"
       },
       "error": {
-        "eth": "请输入正确的以太坊地址",
-        "ckb": "请输入正确的 CKB 地址",
-        "self": "无法转让秘宝给自己",
-        "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「秘宝账户」应用，方可查看收到的秘宝",
-        "common": "请输入正确的 CKB 地址或以太坊地址",
-        "sign-fail": "签名失败，请重新签名",
-        "tranfer-fail": "发送失败，请检查当前网络情况，重新发送",
-        "no-camera": "没有找到摄像头",
-        "contract-address": "无法转让到以太坊合约地址",
-        "camera-auth": "没有摄像头权限，请刷新页面重新授权",
-        "ios-webkit": "请升级操作系统至 iOS 14.3+，或使用 Safari 浏览器进行扫码"
+        "eth": "Please enter the correct Ethereum address",
+        "ckb": "Please enter the correct CKB address",
+        "self": "Unable to transfer NFT to yourself",
+        "receive-eth": "This address is an Ethereum address, please remind the receiver to open NFT Account with Ethereum wallet to view the NFT received",
+        "common": "Please enter the correct Ethereum address",
+        "sign-fail": "Transaction rejected",
+        "tranfer-fail": "Fail to send transaction, please check network conditions and resend",
+        "no-camera": "No camera found",
+        "contract-address": "Unable to transfer NFT to an Ethereum contract address",
+        "camera-auth": "No camera permission, please refresh the page to re-authorize",
+        "ios-webkit": "Please upgrade your operating system to iOS 14.3+, or use Safari to scan QR code"
       },
-      "transfer": "转让",
-      "address": "接收方地址",
-      "placeholder": "请输入 CKB 地址或以太坊地址",
-      "check": "请仔细检查输入的地址，",
-      "once-transfer": "一旦转让，将无法撤回",
-      "submitted": "已提交转让交易",
-      "tips": "提示: 链上确认可能需要半分钟时间",
-      "comfirm": "确认",
-      "signing": "签名中"
+      "transfer": "Transfer",
+      "address": "Receiver address",
+      "placeholder": "Please enter CKB address/Ethereum EOA address",
+      "check": "Please double check the address entered,",
+      "once-transfer": "Once transferred, it cannot be withdrawn",
+      "submitted": "Transfer transaction submitted",
+      "tips": "On-chain confirmation may take 1-2 minutes",
+      "comfirm": "Confirm",
+      "signing": "Signing"
     },
     "404": {
-      "title": "页面丢失",
-      "not-found": "您所寻找的页面不存在",
-      "back": "返回我的秘宝"
+      "title": "Page is missing",
+      "not-found": "The page you are looking for does not exist",
+      "back": "Back to my NFT"
     },
     "transactions": {
-      "no-data": "暂无更多记录...",
-      "pull-down-refresh": " 下拉刷新",
-      "receive-from": "接收自",
-      "send-to": "发送至",
+      "no-data": "No record...",
+      "pull-down-refresh": "Refresh",
+      "receive-from": "Receive from",
+      "send-to": "Send to",
       "status": {
-        "waiting": "等待中",
-        "comfirming": "确认中"
+        "waiting": "Waiting",
+        "comfirming": "Confirming"
       }
     },
     "info": {
-      "title": "秘宝接收地址",
-      "copy": "复制地址到剪贴板",
-      "copied": "复制成功"
+      "title": "Use this address to receive NFT",
+      "copy": "Copy",
+      "copied": "Copied"
     },
     "nft": {
-      "title": "秘宝细节",
-      "transfer": "转让",
-      "desc": "NFT 简介"
+      "title": "NFT Details",
+      "transfer": "Transfer",
+      "desc": "NFT description"
     },
     "account": {
-      "title": "我的帐号",
-      "info": "基本信息",
-      "transactions": "流转记录",
+      "title": "My Account",
+      "info": "Address",
+      "transactions": "Activity",
       "warning": "该地址仅用于接收 CKB 链上的资产，切勿转入其他链上资产",
       "qrcode": "扫描二维码，快速接收秘宝",
       "address": "秘宝接收地址"
     },
     "profile": {
-      "title": "编辑资料",
-      "username": "昵称",
-      "gender": "性别",
-      "birthday": "生日",
-      "region": "地区",
-      "description": "简介",
-      "input": "请填写",
-      "select": "请选择",
+      "title": "Edit Profile",
+      "username": "Name",
+      "gender": "Gender",
+      "birthday": "Birthday",
+      "region": "Region",
+      "description": "Description",
+      "input": "Please enter",
+      "select": "Please select ",
       "user-name": {
-        "edit": "修改昵称",
-        "desc": "请输入 2-24 个字符",
-        "placeholder": "请输入昵称",
-        "empty": "点击设置昵称"
+        "edit": "Edit Name",
+        "desc": "2-24 characters",
+        "placeholder": "Please enter the name",
+        "empty": "Click to set nickname"
       },
       "desc": {
-        "edit": "修改个人简介",
-        "desc": "请输入 0-100 个字符",
-        "placeholder": "请输入简介",
-        "empty": "您还没有填写个人简介，请点击添加"
+        "edit": "Edit description",
+        "desc": "0-100 characters",
+        "placeholder": "Please enter the description",
+        "empty": "Click to set personal profile"
       },
-      "edit-birthday": "请选择生日",
+      "edit-birthday": "Select the birthday",
       "regions": {
-        "edit": "请选择地区",
-        "location": "定位到的位置",
-        "locating": "定位中...",
-        "all": "全部",
-        "error": "定位失败",
-        "selected": "已选地区"
+        "edit": "Select the region",
+        "location": "Location",
+        "all": "All",
+        "selected": "Selected"
       },
       "avatar": {
-        "camera": "拍照",
-        "photo-lib": "图片库"
+        "camera": "Take a Photo",
+        "photo-lib": "Pick from Library"
       },
-      "save": "保存",
-      "cancel": "取消",
-      "male": "男",
-      "female": "女",
-      "comfirm": "确认",
-      "reshot": "重拍",
-      "success": "设置成功",
-      "years": "{{year}} 岁",
-      "size-limit": "文件过大，请选择小于 5M 的图片",
-      "save-edit": "是否保存修改？",
-      "wrong-image-format": "当前仅支持上传 png, jpeg, jpg, gif, svg, webp 格式图片",
-      "image-network-error": "上传失败，请检查当前网络情况并重新上传"
+      "save": "Save",
+      "cancel": "Cancel",
+      "male": "Male",
+      "female": "Female",
+      "comfirm": "Confirm",
+      "reshot": "Retake",
+      "success": "Profile updated",
+      "years": "{{year}} years old",
+      "size-limit": "Please select image that less than 5M",
+      "save-edit": "Do you want to save the changes?",
+      "wrong-image-format": "Only supports upload png, jpeg, jpg, gif, svg, webp format images for now",
+      "image-network-error": "Fail to upload, please check network conditions and re-upload"
     },
     "explore": {
-      "all": "全部",
-      "others": "其他",
-      "metaverse": "探索",
-      "my": "我的",
-      "latest": "最新创作",
-      "most-liked": "获赞最多"
+      "all": "All",
+      "others": "Others",
+      "metaverse": "Explore",
+      "my": "My",
+      "latest": "Latest",
+      "most-liked": "Most Liked",
+      "recommended": "Recommended"
     },
     "menu": {
       "profile": "个人资料",
@@ -208,8 +207,8 @@
         "desc": "在这里可以查看您本人持有的秘宝和您赞过的秘宝"
       },
       "three": {
-        "title": "3. 其他功能",
-        "desc": "点击查看个人资料、流转记录，帮助设置等功能"
+        "title": "3. 更多功能",
+        "desc": "点击查看个人资料、流转记录，帮助支持等功能"
       },
       "four": {
         "title": "4.入门指南",
