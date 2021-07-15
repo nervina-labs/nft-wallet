@@ -7,8 +7,10 @@ import { LazyLoadImage } from '../../components/Image'
 import { UserResponse } from '../../models/user'
 import { getRegionFromCode } from '../Profile/SetRegion'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
+import PeopleSrc from '../../assets/img/people.png'
 import { ReactComponent as MaleSvg } from '../../assets/svg/male.svg'
 import { ReactComponent as FemaleSvg } from '../../assets/svg/female.svg'
+import { IS_IPHONE } from '../../constants'
 
 const UserContainer = styled.div`
   margin-top: 65px;
@@ -19,6 +21,7 @@ const UserContainer = styled.div`
     height: 56px;
     width: 56px;
     min-width: 56px;
+    img,
     svg {
       width: 56px;
       height: 56px;
@@ -184,6 +187,8 @@ export const User: React.FC<UserConfig> = ({
             variant="circle"
             backup={<PeopleSvg />}
           />
+        ) : IS_IPHONE ? (
+          <img src={PeopleSrc} />
         ) : (
           <PeopleSvg />
         )}
