@@ -263,7 +263,7 @@ export const Login: React.FC = () => {
         disabled={
           isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
         }
-        onClick={loginBtnOnClick}
+        onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
       >
         {t('login.connect.unipass')}&nbsp;
         {isUnipassLogining ? (

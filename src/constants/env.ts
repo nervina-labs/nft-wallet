@@ -7,8 +7,6 @@ export const NODE_URL =
   process.env.REACT_APP_NODE_URL ?? 'https://testnet.ckb.dev'
 export const INDEXER_URL =
   process.env.REACT_APP_INDEXER_URL ?? 'https://testnet.ckb.dev/indexer'
-export const UNIPASS_URL =
-  process.env.REACT_APP_UNIPASS_URL ?? 'https://t.unipass.me'
 export const NFT_EXPLORER_URL =
   process.env.REACT_APP_NFT_EXPLORER_URL ??
   'https://ckb-nft-explorer.staging.nervina.cn'
@@ -34,3 +32,7 @@ export const IS_IPHONE =
 
 export const OSS_IMG_PROCESS_QUERY = '?x-oss-process=image/resize,s_300'
 export const OSS_IMG_HOST = 'https://oss.jinse.cc'
+
+export const UNIPASS_URL = IS_MAINNET
+  ? 'https://rc.unipass.me'
+  : 'https://t.rc.unipass.me'

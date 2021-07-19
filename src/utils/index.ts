@@ -1,6 +1,12 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import Web3 from 'web3'
-import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
+import {
+  INFURA_ID,
+  OSS_IMG_HOST,
+  OSS_IMG_PROCESS_QUERY,
+  UNIPASS_URL,
+} from '../constants'
+import { UnipassAction } from '../models/unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -8,7 +14,7 @@ export const sleep = async (ms: number): Promise<void> =>
 export const verifyCkbAddress = (address: string): boolean => {
   try {
     parseAddress(address)
-  } catch {
+  } catch (error) {
     return false
   }
   return (
@@ -112,4 +118,55 @@ export function getImagePreviewUrl(url?: string): string | undefined {
     return url
   }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
+}
+
+export function generateUnipassUrl(
+  action: UnipassAction,
+  successURL: string,
+  failURL: string,
+  pubkey?: string,
+  message?: string
+): string {
+  const url = new URL(`${UNIPASS_URL}/#${action}`)
+  const surl = new URL(successURL)
+  surl.searchParams.set(
+    'action',
+    action === UnipassAction.Login ? UnipassAction.Login : UnipassAction.Sign
+  )
+  const params: Record<string, string> = {
+    success_url: surl.href,
+    fail_url: failURL,
+  }
+  if (pubkey) {
+    params.pubkey = pubkey
+  }
+  if (message) {
+    params.message = message
+  }
+  for (const key of Object.keys(params)) {
+    url.searchParams.set(key, params[key])
+  }
+  return url.href
+}
+
+export function generateUnipassLoginUrl(
+  successURL: string,
+  failURL: string
+): string {
+  return generateUnipassUrl(UnipassAction.Login, successURL, failURL)
+}
+
+export function generateUnipassSignUrl(
+  successURL: string,
+  failURL: string,
+  pubkey?: string,
+  message?: string
+): string {
+  return generateUnipassUrl(
+    UnipassAction.Sign,
+    successURL,
+    failURL,
+    pubkey,
+    message
+  )
 }

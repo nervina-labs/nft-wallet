@@ -262,7 +262,7 @@ export const Explore: React.FC = () => {
   const [t, i18n] = useTranslation('translations')
   const history = useHistory()
   const currentTag = useRouteQuery('tag', 'all')
-  const sortRoute = useRouteQuery('sort', '')
+  const sortRoute = useRouteQuery<string>('sort', '')
   const sortType = useMemo(() => {
     if (currentTag === 'all') {
       if (sortRoute === 'likes') {

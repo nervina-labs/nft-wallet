@@ -28,6 +28,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useProfileModel } from '../hooks/useProfile'
 import { Help } from '../views/Help'
+import { Unipass } from '../views/Unipass'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -49,6 +50,7 @@ export enum RoutePath {
   TakePhoto = '/avatar/camera',
   Explore = '/explore',
   Help = '/help',
+  Unipass = '/unipass',
 }
 
 export const RouterContext = React.createContext({
@@ -82,9 +84,9 @@ const RouterProvider: React.FC = ({ children }) => {
 }
 
 const WalletChange: React.FC = ({ children }) => {
-  const { address, prevAddress, walletType } = useWalletModel()
+  const { address, prevAddress, walletType, signMessage } = useWalletModel()
   const history = useHistory()
-
+  const location = useLocation()
   useEffect(() => {
     if (
       prevAddress &&
@@ -97,6 +99,18 @@ const WalletChange: React.FC = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prevAddress, address, walletType])
+  const { isAuthenticated } = useProfileModel()
+
+  useEffect(() => {
+    if (
+      WalletType.Unipass === walletType &&
+      !isAuthenticated &&
+      location.pathname !== RoutePath.Unipass &&
+      location.pathname !== RoutePath.Explore
+    ) {
+      signMessage(address).catch(Boolean)
+    }
+  }, [isAuthenticated, walletType, address, signMessage, location.pathname])
 
   return <>{children}</>
 }
@@ -167,6 +181,12 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: false,
     key: 'Help',
     path: RoutePath.Help,
+  },
+  {
+    component: Unipass,
+    exact: false,
+    key: 'Unipass',
+    path: RoutePath.Unipass,
   },
 ]
 
