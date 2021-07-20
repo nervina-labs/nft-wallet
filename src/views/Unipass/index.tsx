@@ -19,7 +19,8 @@ export const Unipass: React.FC = () => {
   const history = useHistory()
   const { setUnipassAccount } = useWalletModel()
   const { setProfile, profile } = useProfileModel()
-  const prevState = JSON.parse(useRouteQuery('prev_state', ''))
+  const ps = useRouteQuery('prev_state', '{}')
+  const prevState = JSON.parse(ps)
   useEffect(() => {
     const { code } = unipassInfo
     switch (action) {
