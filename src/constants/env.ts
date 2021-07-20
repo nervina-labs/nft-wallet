@@ -36,3 +36,10 @@ export const OSS_IMG_HOST = 'https://oss.jinse.cc'
 export const UNIPASS_URL = IS_MAINNET
   ? 'https://rc.unipass.me'
   : 'https://t.rc.unipass.me'
+
+export const RED_ENVELOP_APP_URL = IS_MAINNET
+  ? 'https://gift.unipass.xyz'
+  : 'https://t.gift.unipass.me'
+export const TICKET_APP_URL = IS_MAINNET
+  ? 'https://ticket.unipass.xyz'
+  : 'https://t.ticket.unipass.xyz'

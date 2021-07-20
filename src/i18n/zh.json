@@ -218,6 +218,33 @@
       },
       "next": "下一步",
       "done": "开始使用"
+    },
+    "apps": {
+      "welcome": "欢迎开发者入驻，共建秘宝生态",
+      "red-envelope": {
+        "title": "发红包",
+        "desc": "为朋友发送随机 NFT 红包，没有秘宝账户也能收"
+      },
+      "ticket": {
+        "title": "门票",
+        "desc": "出示NFT门票，彰显VIP身份"
+      },
+      "dao": {
+        "title": "秘·DAO",
+        "desc": "使用 NFT 实现去中心化组织具体决策"
+      },
+      "exchange": {
+        "title": "兑换",
+        "desc": "收集 NFT 兑换其他商品或者限量版 NFT"
+      },
+      "exhibition": {
+        "title": "虚拟展厅",
+        "desc": "自定义 3D 展厅，分享朋友圈邀请朋友参观"
+      },
+      "vip": {
+        "title": "VIP 社区",
+        "desc": "持有特殊 NFT 才能访问的高质量社区"
+      }
     }
   }
 }

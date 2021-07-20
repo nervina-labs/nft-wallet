@@ -29,6 +29,7 @@ import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useProfileModel } from '../hooks/useProfile'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
+import { Apps } from '../views/Apps'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -51,6 +52,7 @@ export enum RoutePath {
   Explore = '/explore',
   Help = '/help',
   Unipass = '/unipass',
+  Apps = '/apps',
 }
 
 export const RouterContext = React.createContext({
@@ -187,6 +189,12 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: false,
     key: 'Unipass',
     path: RoutePath.Unipass,
+  },
+  {
+    component: Apps,
+    exact: true,
+    key: 'Apps',
+    path: RoutePath.Apps,
   },
 ]
 

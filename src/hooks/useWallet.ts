@@ -28,6 +28,7 @@ export interface UseWallet {
   provider: Provider | undefined
   address: string
   pubkey?: string
+  email?: string
   signTransaction: (tx: Transaction) => Promise<Transaction | undefined>
   isLogined: boolean
   logout: (h: History<unknown>) => void
@@ -155,6 +156,10 @@ function useWallet(): UseWallet {
   const pubkey = useMemo(() => {
     return unipassAccount?.pubkey
   }, [unipassAccount?.pubkey])
+
+  const email = useMemo(() => {
+    return unipassAccount?.email
+  }, [unipassAccount?.email])
 
   const walletType = useMemo(() => {
     return unipassAccount?.walletType
@@ -386,6 +391,7 @@ function useWallet(): UseWallet {
     getScrollScrollRestoration,
     setUnipassAccount,
     pubkey,
+    email,
   }
 }
 
