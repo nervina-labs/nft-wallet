@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react'
-import { BrowserQRCodeReader, Result } from '@zxing/library'
+import { BrowserQRCodeReader, Result } from '@zxing/library/esm'
 import { TFunction } from 'react-i18next'
 import styled from 'styled-components'
 import { Drawer } from '@material-ui/core'
