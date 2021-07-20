@@ -68,6 +68,7 @@ export interface NFTWalletAPI {
   transfer: (
     uuid: string,
     tx: PwTransaction,
-    toAddress: string
+    toAddress: string,
+    sig?: string
   ) => Promise<AxiosResponse<{ message: number }>>
 }

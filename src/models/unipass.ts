@@ -22,3 +22,8 @@ export interface UnipassResponse {
   info: string
   data: UnipassLoginData | UnipassSignData
 }
+
+export interface UnipassTransferNftState {
+  ckbAddress: string
+  uuid: string
+}

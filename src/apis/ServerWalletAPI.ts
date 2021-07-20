@@ -9,7 +9,14 @@ import {
   UnsignedTransaction,
 } from '../models'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { Transaction as PwTransaction, transformers } from '@lay2/pw-core'
+import {
+  Transaction as PwTransaction,
+  transformers,
+  Reader,
+  SerializeWitnessArgs,
+  WitnessArgs,
+  normalizers,
+} from '@lay2/pw-core'
 import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
@@ -216,16 +223,27 @@ export class ServerWalletAPI implements NFTWalletAPI {
   async transfer(
     uuid: string,
     tx: PwTransaction,
-    toAddress: string
+    toAddress: string,
+    sig?: string
   ): Promise<AxiosResponse<{ message: number }>> {
-    const rawTx = transformers.TransformTransaction(tx)
+    const rawTx = transformers.TransformTransaction(tx) as any
+    if (sig) {
+      const witnessArgs: WitnessArgs = {
+        lock: sig,
+        input_type: '',
+        output_type: '',
+      }
+      const witness = new Reader(
+        SerializeWitnessArgs(normalizers.NormalizeWitnessArgs(witnessArgs))
+      ).serializeJson()
+      rawTx.witnesses[0] = witness
+    }
     const data = {
       signed_tx: JSON.stringify(rawTx),
       token_uuid: uuid,
       from_address: this.address,
       to_address: toAddress,
     }
-    console.log(data)
     return await this.axios.post('/token_ckb_transactions', data)
   }
 }

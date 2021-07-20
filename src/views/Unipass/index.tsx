@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
@@ -19,17 +19,7 @@ export const Unipass: React.FC = () => {
   const history = useHistory()
   const { setUnipassAccount } = useWalletModel()
   const { setProfile, profile } = useProfileModel()
-
-  const hasAuth = useCallback(
-    (addr: string) => {
-      if (profile == null) {
-        return false
-      }
-      return !!profile[addr]
-    },
-    [profile]
-  )
-
+  const prevState = JSON.parse(useRouteQuery('prev_state', ''))
   useEffect(() => {
     const { code } = unipassInfo
     switch (action) {
@@ -69,9 +59,17 @@ export const Unipass: React.FC = () => {
         break
       }
       case UnipassAction.SignTx: {
+        const id = prevState.uuid as string
+        if (code !== 200) {
+          history.replace(`/transfer/${id}`, {
+            prevState,
+          })
+          break
+        }
         const data = unipassInfo?.data as UnipassSignData
-        history.replace(RoutePath.Transfer, {
+        history.replace(`/transfer/${id}`, {
           signature: `0x01${data.sig.replace('0x', '')}`,
+          prevState,
         })
         break
       }
@@ -85,7 +83,7 @@ export const Unipass: React.FC = () => {
     setProfile,
     setUnipassAccount,
     profile,
-    hasAuth,
+    prevState,
   ])
   return null
 }

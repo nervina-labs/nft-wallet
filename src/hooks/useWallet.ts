@@ -27,6 +27,7 @@ export interface UseWallet {
   login: (walletType?: WalletType) => Promise<Provider>
   provider: Provider | undefined
   address: string
+  pubkey?: string
   signTransaction: (tx: Transaction) => Promise<Transaction | undefined>
   isLogined: boolean
   logout: (h: History<unknown>) => void
@@ -151,6 +152,10 @@ function useWallet(): UseWallet {
     return unipassAccount?.address ?? ''
   }, [unipassAccount?.address])
 
+  const pubkey = useMemo(() => {
+    return unipassAccount?.pubkey
+  }, [unipassAccount?.pubkey])
+
   const walletType = useMemo(() => {
     return unipassAccount?.walletType
   }, [unipassAccount?.walletType])
@@ -262,21 +267,16 @@ function useWallet(): UseWallet {
 
   const signUnipass = useCallback(
     async (tx: Transaction) => {
-      if (provider != null) {
-        const signer = new UnipassSigner(provider)
-        const signedTx = await signer.sign(tx)
-        return signedTx
-      }
       const p = await new UnipassProvider(
         UNIPASS_URL,
         setUnipassAccount
       ).connect(unipassAccount)
       const signer = new UnipassSigner(p)
-      const signedTx = await signer.sign(tx)
+      const [signedTx] = signer.toMessages(tx)
       setProvider(p)
-      return signedTx
+      return signedTx.message as any
     },
-    [provider, unipassAccount, setUnipassAccount]
+    [unipassAccount, setUnipassAccount]
   )
 
   const signMetamask = useCallback(
@@ -385,6 +385,7 @@ function useWallet(): UseWallet {
     setScrollScrollRestoration,
     getScrollScrollRestoration,
     setUnipassAccount,
+    pubkey,
   }
 }
 
