@@ -253,10 +253,7 @@ function useWallet(): UseWallet {
         case WalletType.Unipass:
           return await new Promise<Provider>((resolve) => {
             const url = `${location.origin}${RoutePath.Unipass}`
-            location.href = generateUnipassLoginUrl(
-              url,
-              `${location.origin}${RoutePath.Login}`
-            )
+            location.href = generateUnipassLoginUrl(url, url)
             resolve(provider as Provider)
           })
         case WalletType.Metamask:
