@@ -57,7 +57,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
         backup
       ) : (
         <img
-          src={src == null ? '' : src}
+          src={src === null ? '' : src}
           ref={imgRef}
           onContextMenu={disableContextMenu ? disableConext : undefined}
           data-src={dataSrc}

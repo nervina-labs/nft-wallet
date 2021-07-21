@@ -5,6 +5,7 @@ import { HiddenBar } from '../../components/HiddenBar'
 import { MainContainer } from '../../styles'
 import Exhibition from '../../assets/img/exhibition.png'
 import PlzWait from '../../assets/img/plz-wait.png'
+import PlzWaitEN from '../../assets/img/plz-wait-en.png'
 import Red from '../../assets/svg/red-bucket.svg'
 import Ticket from '../../assets/svg/ticket.svg'
 import DAO from '../../assets/svg/dao.svg'
@@ -79,6 +80,7 @@ export interface ItemProps {
   bg: string
   onClick?: () => void
   available: boolean
+  lang?: string
 }
 
 export const Item: React.FC<ItemProps> = ({
@@ -87,6 +89,7 @@ export const Item: React.FC<ItemProps> = ({
   bg,
   available,
   onClick,
+  lang,
 }) => {
   return (
     <ItemContainer
@@ -98,7 +101,7 @@ export const Item: React.FC<ItemProps> = ({
       <div className="desc">{desc}</div>
       {available ? null : (
         <div className="wait">
-          <img src={PlzWait} />
+          <img src={lang === 'en' ? PlzWaitEN : PlzWait} />
         </div>
       )}
     </ItemContainer>
@@ -181,6 +184,7 @@ export const Apps: React.FC = () => {
               bg={bg}
               onClick={onClick}
               available={available}
+              lang={i18n.language}
             />
           )
         })}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import {
   BrowserRouter,
   Redirect,
@@ -85,8 +85,21 @@ const RouterProvider: React.FC = ({ children }) => {
   )
 }
 
+const allowWithoutLoginList = new Set([
+  RoutePath.Unipass,
+  RoutePath.Explore,
+  RoutePath.Apps,
+  '/',
+])
+
 const WalletChange: React.FC = ({ children }) => {
-  const { address, prevAddress, walletType, signMessage } = useWalletModel()
+  const {
+    address,
+    prevAddress,
+    walletType,
+    signMessage,
+    isLogined,
+  } = useWalletModel()
   const history = useHistory()
   const location = useLocation()
   useEffect(() => {
@@ -102,18 +115,26 @@ const WalletChange: React.FC = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prevAddress, address, walletType])
   const { isAuthenticated } = useProfileModel()
-
+  const isSigning = useRef(false)
   useEffect(() => {
     if (
       WalletType.Unipass === walletType &&
+      isLogined &&
       !isAuthenticated &&
-      location.pathname !== RoutePath.Unipass &&
-      location.pathname !== RoutePath.Explore &&
-      location.pathname !== RoutePath.Apps
+      !allowWithoutLoginList.has(location.pathname) &&
+      !isSigning.current
     ) {
+      isSigning.current = true
       signMessage(address).catch(Boolean)
     }
-  }, [isAuthenticated, walletType, address, signMessage, location.pathname])
+  }, [
+    isAuthenticated,
+    walletType,
+    address,
+    signMessage,
+    location.pathname,
+    isLogined,
+  ])
 
   return <>{children}</>
 }
