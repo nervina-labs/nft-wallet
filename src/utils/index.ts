@@ -129,7 +129,7 @@ export function generateUnipassUrl(
   state?: Record<string, string>
 ): string {
   const url = new URL(
-    `${UNIPASS_URL}/#${
+    `${UNIPASS_URL}/${
       action === UnipassAction.Login ? UnipassAction.Login : UnipassAction.Sign
     }`
   )
