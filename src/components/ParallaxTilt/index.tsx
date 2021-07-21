@@ -12,6 +12,8 @@ import 'viewerjs/dist/viewer.css'
 import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
+import { useProfileModel } from '../../hooks/useProfile'
+import { useTranslation } from 'react-i18next'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -57,6 +59,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [])
   const [enableGyroscope, setEnableGyroscope] = useState(isTouchDevice)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
+  const { snackbar } = useProfileModel()
+  const [t] = useTranslation('translations')
   const shouldReverseTilt = useMemo(() => {
     if (!isTouchDevice) {
       return true
@@ -106,6 +110,10 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         audio.autoplay = true
         audio.setAttribute('controls', 'true')
         audio.src = renderer!
+        audio.onerror = () => {
+          audio.remove()
+          snackbar(t('resource.fail'))
+        }
         const footer = document.querySelector('.viewer-footer')
         if (footer) {
           footer.appendChild(audio)
