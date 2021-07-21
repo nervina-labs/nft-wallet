@@ -12,6 +12,12 @@ export interface ListMeta {
   total_count: number
 }
 
+export enum NftType {
+  Audio = 'audio',
+  Video = 'video',
+  Picture = 'picture',
+}
+
 export interface NFTToken extends VipInfo {
   class_name: string
   class_bg_image_url: string
