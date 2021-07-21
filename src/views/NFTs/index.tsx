@@ -78,6 +78,7 @@ export const NFTs: React.FC = () => {
               is_issuer_banned: false,
               n_token_id: 0,
               verified_info: c.verified_info,
+              type: c.type,
             }
             return token
           }),
