@@ -2,9 +2,10 @@ import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 // import { RoutePath } from '../../routes'
+import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { MainContainer } from '../../styles'
 import { TokenClass } from '../../models/class-list'
-import { ClassSortType as SortType, Query } from '../../models'
+import { ClassSortType as SortType, NftType, Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
@@ -156,8 +157,23 @@ const CardContainer = styled.div`
   cursor: pointer;
 
   .media {
+    position: relative;
     img {
       border-radius: 8px;
+    }
+    .player {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
   }
 
@@ -230,6 +246,11 @@ const Card: React.FC<CardProps> = ({ token }) => {
             />
           }
         />
+        {token.type === NftType.Audio || token.type === NftType.Video ? (
+          <span className="player">
+            <PlayerSvg />
+          </span>
+        ) : null}
       </div>
       <div className="title">{token.name}</div>
       <div className="issuer">

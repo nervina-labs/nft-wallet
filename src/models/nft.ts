@@ -19,6 +19,7 @@ export enum NftType {
 }
 
 export interface NFTToken extends VipInfo {
+  type: NftType
   class_name: string
   class_bg_image_url: string
   class_uuid: string
