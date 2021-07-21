@@ -1,7 +1,9 @@
 import { Dialog } from '@material-ui/core'
 import classNames from 'classnames'
 import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+import { useProfileModel } from '../../hooks/useProfile'
 import { NftType } from '../../models'
 
 export interface PlayerProps {
@@ -41,11 +43,17 @@ export const Player: React.FC<PlayerProps> = ({
 }) => {
   const isVideo = type === NftType.Video
   const isAudio = type === NftType.Audio
+  const { snackbar } = useProfileModel()
+  const [t] = useTranslation('translations')
   const videoPlayer = useMemo(() => {
     if (isVideo && open) {
       return (
         <video
           src={renderer}
+          onError={() => {
+            snackbar(t('resource.fail'))
+            close()
+          }}
           poster={poster}
           disablePictureInPicture
           style={{
