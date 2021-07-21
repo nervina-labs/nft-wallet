@@ -108,7 +108,8 @@ const WalletChange: React.FC = ({ children }) => {
       WalletType.Unipass === walletType &&
       !isAuthenticated &&
       location.pathname !== RoutePath.Unipass &&
-      location.pathname !== RoutePath.Explore
+      location.pathname !== RoutePath.Explore &&
+      location.pathname !== RoutePath.Apps
     ) {
       signMessage(address).catch(Boolean)
     }
