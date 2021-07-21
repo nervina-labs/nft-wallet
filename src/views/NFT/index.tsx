@@ -315,6 +315,8 @@ export const NFT: React.FC = () => {
           enable={!isDialogOpen}
           onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
           onColorDetected={(color) => setImageColor(color)}
+          type={detail?.type}
+          renderer={detail?.renderer}
         />
       </div>
       {detail == null ? (

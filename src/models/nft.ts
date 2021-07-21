@@ -55,4 +55,6 @@ export interface NFTDetail extends ClassLikes, VipInfo {
   is_issuer_banned: boolean
   is_class_banned: boolean
   n_token_id: number
+  type: NftType
+  renderer: string
 }
