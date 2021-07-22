@@ -99,6 +99,7 @@ const WalletChange: React.FC = ({ children }) => {
     walletType,
     signMessage,
     isLogined,
+    pubkey,
   } = useWalletModel()
   const history = useHistory()
   const location = useLocation()
@@ -122,7 +123,8 @@ const WalletChange: React.FC = ({ children }) => {
       isLogined &&
       !isAuthenticated &&
       !allowWithoutLoginList.has(location.pathname) &&
-      !isSigning.current
+      !isSigning.current &&
+      pubkey
     ) {
       isSigning.current = true
       signMessage(address).catch(Boolean)
@@ -134,6 +136,7 @@ const WalletChange: React.FC = ({ children }) => {
     signMessage,
     location.pathname,
     isLogined,
+    pubkey,
   ])
 
   return <>{children}</>

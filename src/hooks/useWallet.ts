@@ -359,8 +359,11 @@ function useWallet(): UseWallet {
     if (isExpired) {
       return false
     }
+    if (walletType === WalletType.Unipass && !pubkey) {
+      return false
+    }
     return address !== ''
-  }, [address, expireTime])
+  }, [address, expireTime, pubkey, walletType])
 
   const prevAddress = usePrevious(address)
 
