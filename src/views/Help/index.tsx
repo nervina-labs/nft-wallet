@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { CircularProgress } from '@material-ui/core'
 import classNames from 'classnames'
+import { useRouteMatch } from 'react-router-dom'
+import { RoutePath } from '../../routes'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -36,6 +38,7 @@ export const Help: React.FC = () => {
   const { t } = useTranslation('translations')
   const url = useRouteQuery('url', '')
   const [isLoaded, setIsLoaded] = useState(false)
+  const matchHelpCenter = useRouteMatch(RoutePath.Help)
 
   const src = useMemo(() => decodeURIComponent(url), [url])
   const frame = useRef<HTMLIFrameElement | null>(null)
@@ -50,7 +53,7 @@ export const Help: React.FC = () => {
   return (
     <Container>
       <Appbar
-        title={t('help.title')}
+        title={matchHelpCenter?.isExact ? t('help.title') : t('license.title')}
         left={<BackSvg onClick={() => history.goBack()} />}
         right={<div />}
       />

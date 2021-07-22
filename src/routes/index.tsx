@@ -53,6 +53,7 @@ export enum RoutePath {
   Help = '/help',
   Unipass = '/unipass',
   Apps = '/apps',
+  License = '/license',
 }
 
 export const RouterContext = React.createContext({
@@ -210,6 +211,12 @@ const routes: Array<RouteProps & { key: string }> = [
     path: RoutePath.Help,
   },
   {
+    component: Help,
+    exact: false,
+    key: 'License',
+    path: RoutePath.License,
+  },
+  {
     component: Unipass,
     exact: false,
     key: 'Unipass',
@@ -291,7 +298,7 @@ export const Routers: React.FC = () => {
               <Alert
                 style={{
                   borderRadius: '16px',
-                  background: 'rgba(51, 51, 51, 0.592657)',
+                  background: 'rgba(51, 51, 51, 0.692657)',
                   padding: '0px 40px',
                 }}
                 icon={false}
