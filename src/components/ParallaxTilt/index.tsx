@@ -14,6 +14,7 @@ import { Player } from '../Player'
 import { NftType } from '../../models'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useTranslation } from 'react-i18next'
+import { emptyImageBase64 } from '../../data/empty'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -93,7 +94,15 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       setIsPlayerOpen(true)
       return
     }
-    const viewer = new Viewer(imgRef.current!, {
+    if (type !== NftType.Audio && imgRef.current === null) {
+      return
+    }
+    const img = document.createElement('img')
+    if (imgRef.current === null) {
+      img.src = emptyImageBase64
+    }
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const viewer = new Viewer(imgRef.current || img, {
       hidden: () => {
         viewer.destroy()
         setIsTileEnable(true)
