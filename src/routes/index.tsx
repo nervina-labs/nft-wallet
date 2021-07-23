@@ -8,7 +8,7 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom'
-import { I18nextProvider } from 'react-i18next'
+import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useWalletModel, WalletType } from '../hooks/useWallet'
 import { Account } from '../views/Account'
 import { Login } from '../views/Login'
@@ -30,6 +30,7 @@ import { useProfileModel } from '../hooks/useProfile'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
 import { Apps } from '../views/Apps'
+import { useToast } from '../hooks/useToast'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -117,6 +118,8 @@ const WalletChange: React.FC = ({ children }) => {
   }, [prevAddress, address, walletType])
   const { isAuthenticated } = useProfileModel()
   const isSigning = useRef(false)
+  const { toast } = useToast()
+  const [t] = useTranslation('translations')
   useEffect(() => {
     if (
       WalletType.Unipass === walletType &&
@@ -127,7 +130,16 @@ const WalletChange: React.FC = ({ children }) => {
       pubkey
     ) {
       isSigning.current = true
-      signMessage(address).catch(Boolean)
+      toast({
+        title: t('auth.title'),
+        content: t('auth.content'),
+        okText: t('auth.ok'),
+        showCloseIcon: false,
+        show: true,
+        onConfirm: () => {
+          signMessage(address).catch(Boolean)
+        },
+      })
     }
   }, [
     isAuthenticated,
@@ -137,6 +149,8 @@ const WalletChange: React.FC = ({ children }) => {
     location.pathname,
     isLogined,
     pubkey,
+    t,
+    toast,
   ])
 
   return <>{children}</>
@@ -242,7 +256,7 @@ export const Routers: React.FC = () => {
     setIsErrorDialogOpen,
   } = useWalletModel()
   const { showEditSuccess, closeSnackbar, snackbarMsg } = useProfileModel()
-
+  const { toastConfig, closeToast } = useToast()
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
       login(walletType).catch((e) => {
@@ -279,6 +293,19 @@ export const Routers: React.FC = () => {
               open={isErrorDialogOpen}
               onConfrim={() => setIsErrorDialogOpen(false)}
               onBackdropClick={() => setIsErrorDialogOpen(false)}
+            />
+            <ActionDialog
+              icon={null}
+              dialogTitle={toastConfig.title}
+              content={toastConfig.content}
+              open={toastConfig.show}
+              okText={toastConfig.okText}
+              showCloseIcon={toastConfig.showCloseIcon}
+              onConfrim={() => {
+                closeToast()
+                toastConfig?.onConfirm?.()
+              }}
+              onBackdropClick={toastConfig.onBackdropClick}
             />
             <Snackbar
               open={showEditSuccess}
