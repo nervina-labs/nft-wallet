@@ -256,7 +256,7 @@ export const Routers: React.FC = () => {
     setIsErrorDialogOpen,
   } = useWalletModel()
   const { showEditSuccess, closeSnackbar, snackbarMsg } = useProfileModel()
-  const { toastConfig, closeToast } = useToast()
+  const { toastConfig } = useToast()
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
       login(walletType).catch((e) => {
@@ -301,10 +301,7 @@ export const Routers: React.FC = () => {
               open={toastConfig.show}
               okText={toastConfig.okText}
               showCloseIcon={toastConfig.showCloseIcon}
-              onConfrim={() => {
-                closeToast()
-                toastConfig?.onConfirm?.()
-              }}
+              onConfrim={toastConfig.onConfirm}
               onBackdropClick={toastConfig.onBackdropClick}
             />
             <Snackbar
