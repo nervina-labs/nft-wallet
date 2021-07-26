@@ -15,7 +15,7 @@ export interface ListMeta {
 export enum NftType {
   Audio = 'audio',
   Video = 'video',
-  Picture = 'picture',
+  Picture = 'image',
 }
 
 export interface NFTToken extends VipInfo {
