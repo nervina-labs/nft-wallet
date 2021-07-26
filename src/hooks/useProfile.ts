@@ -66,7 +66,8 @@ function useProfile(): UseProfile {
 
     if (!signature) {
       signature = await signMessage(address)
-      if (signature.includes('N/A')) {
+      // we don't need set unipass profile auth in here
+      if (signature.includes('N/A') || walletType === WalletType.Unipass) {
         throw new Error('signing: user denied')
       } else {
         setProfile({

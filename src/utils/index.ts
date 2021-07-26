@@ -6,6 +6,7 @@ import {
   OSS_IMG_PROCESS_QUERY,
   UNIPASS_URL,
 } from '../constants'
+import i18n from '../i18n'
 import { UnipassAction } from '../models/unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
@@ -162,6 +163,10 @@ export function generateUnipassUrl(
   }
   if (message) {
     params.message = message
+  }
+  const lang = i18n.language
+  if (lang) {
+    params.lang = lang
   }
   for (const key of Object.keys(params)) {
     url.searchParams.set(key, params[key])
