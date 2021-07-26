@@ -30,6 +30,7 @@ import { useProfileModel } from '../hooks/useProfile'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
 import { Apps } from '../views/Apps'
+import { Addresses } from '../views/Addresses'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -53,6 +54,7 @@ export enum RoutePath {
   Help = '/help',
   Unipass = '/unipass',
   Apps = '/apps',
+  Addresses = '/addresses',
 }
 
 export const RouterContext = React.createContext({
@@ -142,7 +144,13 @@ const WalletChange: React.FC = ({ children }) => {
   return <>{children}</>
 }
 
-const routes: Array<RouteProps & { key: string }> = [
+interface MibaoRouterProps extends RouteProps {
+  key: string
+  params?: string
+  path: string
+}
+
+const routes: MibaoRouterProps[] = [
   {
     component: NFTs,
     exact: false,
@@ -196,6 +204,13 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: true,
     key: 'TakePhoto',
     path: RoutePath.TakePhoto,
+  },
+  {
+    component: Addresses,
+    exact: true,
+    key: 'Addresses',
+    path: RoutePath.Addresses,
+    params: '/:id',
   },
   {
     component: Explore,
@@ -259,7 +274,11 @@ export const Routers: React.FC = () => {
           <WalletChange>
             <Switch>
               {routes.map((route) => (
-                <Route {...route} key={route.key} path={route.path} />
+                <Route
+                  {...route}
+                  key={route.key}
+                  path={`${route.path}${route.params ?? ''}`}
+                />
               ))}
               <Redirect
                 exact
