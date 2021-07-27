@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
 import {
   ClassSortType,
@@ -227,5 +228,13 @@ export class ServerWalletAPI implements NFTWalletAPI {
     }
     console.log(data)
     return await this.axios.post('/token_ckb_transactions', data)
+  }
+
+  async getSpecialAssets() {
+    return await this.axios.get('/special_category_classes')
+  }
+
+  async getRecommendIssuers() {
+    return await this.axios.get('/recommended_issuers')
   }
 }

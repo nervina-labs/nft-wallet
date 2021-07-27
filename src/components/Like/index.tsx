@@ -35,6 +35,7 @@ export interface LikeProps {
   count: string
   liked: boolean
   uuid: string
+  likeble?: boolean
 }
 
 const formatCount = (count: number, lang: string): number | string => {
@@ -48,6 +49,7 @@ export const Like: React.FC<LikeProps> = ({
   count = 0,
   uuid,
   liked: isLikedFromList,
+  likeble = true,
 }) => {
   const { i18n } = useTranslation('translations')
   const { likeStatus, setLikeStatus } = useLikeStatusModel()
@@ -86,10 +88,17 @@ export const Like: React.FC<LikeProps> = ({
 
   return (
     <Container
-      onClick={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        toggle().catch(Boolean)
+      onClick={
+        likeble
+          ? (e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              toggle().catch(Boolean)
+            }
+          : undefined
+      }
+      style={{
+        cursor: likeble ? 'pointer' : 'default',
       }}
     >
       {isLoading ? (
