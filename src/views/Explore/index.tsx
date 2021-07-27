@@ -222,6 +222,9 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ token }) => {
   const width = ((window.innerWidth > 500 ? 500 : window.innerWidth) - 48) / 2
   const history = useHistory()
+  const isPlayable =
+    token.renderer_type === NftType.Audio ||
+    token.renderer_type === NftType.Video
   return (
     <CardContainer
       onClick={() => {
@@ -246,7 +249,7 @@ const Card: React.FC<CardProps> = ({ token }) => {
             />
           }
         />
-        {token.type === NftType.Audio || token.type === NftType.Video ? (
+        {isPlayable ? (
           <span className="player">
             <PlayerSvg />
           </span>

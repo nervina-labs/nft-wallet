@@ -41,7 +41,7 @@ export interface TokenClass extends VipInfo, ClassLikes {
   }
   total: string
   tags: Tag[]
-  type: NftType
+  renderer_type: NftType
   renderer: string
 }
 

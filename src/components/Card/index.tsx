@@ -228,6 +228,9 @@ export const Card: React.FC<CardProps> = ({
   const isBanned = isClassBanned || isIssuerBaned
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(isBanned)
   const [t] = useTranslation('translations')
+  const isPlayable =
+    token.renderer_type === NftType.Audio ||
+    token.renderer_type === NftType.Video
 
   return (
     <Container
@@ -269,7 +272,7 @@ export const Card: React.FC<CardProps> = ({
         {isFallBackImgLoaded ? (
           <span className="fallback">{t('common.img-lost')}</span>
         ) : null}
-        {token.type === NftType.Audio || token.type === NftType.Video ? (
+        {isPlayable ? (
           <span className="player">
             <PlayerSvg />
           </span>
