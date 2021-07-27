@@ -121,7 +121,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       `${SERVER_URL}${url}`.replace('/explorer/', '/saas/'),
       {
         auth,
-        addres: this.address,
+        address: this.address,
       }
     )
   }

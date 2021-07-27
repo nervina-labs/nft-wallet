@@ -63,7 +63,6 @@ function useProfile(): UseProfile {
 
   const getAuth: () => Promise<Auth> = useCallback(async () => {
     let signature = profile?.[address]?.auth
-
     if (!signature) {
       signature = await signMessage(address)
       // we don't need set unipass profile auth in here

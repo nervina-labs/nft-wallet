@@ -259,7 +259,7 @@
       "errors": {
         "not-support": "当前环境不支持连接以太坊",
         "refuse": "用户拒绝授权，请重新打开页面进行授权",
-        "submit-fail": "上传失败"
+        "submit-fail": "提交失败"
       }
     },
     "auth": {

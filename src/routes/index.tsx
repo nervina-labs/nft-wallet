@@ -30,7 +30,7 @@ import { useProfileModel } from '../hooks/useProfile'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
 import { Apps } from '../views/Apps'
-import { Addresses } from '../views/Addresses'
+import { AddressCollector } from '../views/AddressCollector'
 import { useToast } from '../hooks/useToast'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
@@ -55,7 +55,7 @@ export enum RoutePath {
   Help = '/help',
   Unipass = '/unipass',
   Apps = '/apps',
-  Addresses = '/addresses',
+  AddressCollector = '/addresses',
 }
 
 export const RouterContext = React.createContext({
@@ -92,6 +92,7 @@ const allowWithoutLoginList = new Set([
   RoutePath.Unipass,
   RoutePath.Explore,
   RoutePath.Apps,
+  RoutePath.AddressCollector,
   '/',
 ])
 
@@ -220,10 +221,10 @@ const routes: MibaoRouterProps[] = [
     path: RoutePath.TakePhoto,
   },
   {
-    component: Addresses,
+    component: AddressCollector,
     exact: true,
     key: 'Addresses',
-    path: RoutePath.Addresses,
+    path: RoutePath.AddressCollector,
     params: '/:id',
   },
   {

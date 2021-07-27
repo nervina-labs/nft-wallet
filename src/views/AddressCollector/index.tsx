@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { ActionDialog } from '../../components/ActionDialog'
@@ -18,6 +18,7 @@ import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { getHelpUnipassUrl } from '../../data/help'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
+import { UnipassConfig } from '../../utils'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -128,7 +129,7 @@ enum ErrorMsg {
   SubmitFail = 'submit-fail',
 }
 
-export const Addresses: React.FC = () => {
+export const AddressCollector: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(SubmitStatus.None)
@@ -138,8 +139,15 @@ export const Addresses: React.FC = () => {
   const errorMsg = useMemo(() => {
     return t(`addresses.errors.${errorStatus}`)
   }, [errorStatus, t])
-  const { login, api, walletType, isLogined } = useWalletModel()
-  const { getAuth } = useProfileModel()
+  const {
+    login,
+    api,
+    walletType,
+    // isLogined,
+    // address,
+    // provider,
+  } = useWalletModel()
+  const { getAuth, isAuthenticated } = useProfileModel()
   const { id } = useParams<{ id: string }>()
   const history = useHistory()
 
@@ -157,29 +165,48 @@ export const Addresses: React.FC = () => {
     }
   }
 
-  const submit = async (walletType: WalletType): Promise<void> => {
-    setLoading(true, walletType)
-    let auth
-    try {
-      auth = await getAuth()
-    } catch (error) {
-      setErrorMsg(ErrorMsg.Imtoken)
-      setIsErrorDialogOpen(true)
-    }
-    try {
-      await api.submitAddress(id, auth as any)
-      setSubmitStatus(SubmitStatus.Success)
-    } catch (error) {
-      const data = error?.response?.data
-      if (data?.code === 1091) {
-        setSubmitStatus(SubmitStatus.Duplicate)
-      } else {
-        setErrorMsg(ErrorMsg.SubmitFail)
+  const submit = useCallback(
+    async (walletType: WalletType): Promise<void> => {
+      setLoading(true, walletType)
+      // eslint-disable-next-line no-debugger
+      debugger
+      let auth
+      try {
+        if (WalletType.Unipass === walletType && !isAuthenticated) {
+          UnipassConfig.setRedirectUri(`${RoutePath.AddressCollector}/${id}`)
+        }
+        auth = await getAuth()
+        if (!auth.address) {
+          setLoading(false, walletType)
+          return
+        }
+      } catch (error) {
+        setErrorMsg(ErrorMsg.Imtoken)
         setIsErrorDialogOpen(true)
       }
-    }
-    setLoading(false, walletType)
-  }
+      if (WalletType.Unipass === walletType && !isAuthenticated) {
+        setLoading(false, walletType)
+        return
+      }
+      if (auth == null) {
+        return
+      }
+      try {
+        await api.submitAddress(id, auth)
+        setSubmitStatus(SubmitStatus.Success)
+      } catch (error) {
+        const data = error?.response?.data
+        if (data?.code === 1091) {
+          setSubmitStatus(SubmitStatus.Duplicate)
+        } else {
+          setErrorMsg(ErrorMsg.SubmitFail)
+          setIsErrorDialogOpen(true)
+        }
+      }
+      setLoading(false, walletType)
+    },
+    [api, id, getAuth, isAuthenticated]
+  )
 
   const loginBtnOnClick = useCallback(
     async (targetType = WalletType.Unipass) => {
@@ -187,6 +214,9 @@ export const Addresses: React.FC = () => {
       if (walletType === targetType) {
         await submit(targetType)
         return
+      }
+      if (WalletType.Unipass === targetType) {
+        UnipassConfig.setRedirectUri(`${RoutePath.AddressCollector}/${id}`)
       }
       try {
         if (targetType === WalletType.Metamask) {
@@ -201,6 +231,7 @@ export const Addresses: React.FC = () => {
         await login(targetType)
         setLoading(false, targetType)
       } catch (error) {
+        console.log(error)
         setLoading(false, targetType)
         if (IS_IMTOKEN && targetType === WalletType.Metamask) {
           setErrorMsg(ErrorMsg.Imtoken)
@@ -210,15 +241,22 @@ export const Addresses: React.FC = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [login, walletType]
+    [login, walletType, id]
   )
 
-  useEffect(() => {
-    if (isLogined && walletType) {
-      submit(walletType).catch(Boolean)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletType, isLogined])
+  // useLayoutEffect(() => {
+  //   if (isLogined && walletType && address) {
+  //     if (
+  //       walletType === WalletType.Metamask &&
+  //       provider?.address?.addressString
+  //     ) {
+  //       submit(walletType).catch(Boolean)
+  //     }
+  //     if (walletType === WalletType.Unipass) {
+  //       submit(walletType).catch(Boolean)
+  //     }
+  //   }
+  // }, [walletType, isLogined, address, provider?.address?.addressString])
 
   const imgs = {
     [SubmitStatus.None]: <AddressesSvg />,
