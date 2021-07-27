@@ -19,6 +19,7 @@ import { useTranslation, Trans } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
 import { useProfileModel } from '../../hooks/useProfile'
+import { getLicenseUrl } from '../../data/license'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -339,7 +340,7 @@ export const Login: React.FC = () => {
                     onClick={() => {
                       history.push(
                         `${RoutePath.License}?url=${encodeURIComponent(
-                          getHelpUnipassUrl(i18n.language)
+                          getLicenseUrl(i18n.language)
                         )}`
                       )
                     }}
