@@ -7,6 +7,7 @@ import { LazyLoadImage } from '../../components/Image'
 import { SpecialAssets, SpecialAssetsToken } from '../../models/special-assets'
 import FallbackImg from '../../assets/img/card-fallback.png'
 import { getImagePreviewUrl } from '../../utils'
+import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 
 interface CollectionProps {
   collection: SpecialAssets
@@ -74,6 +75,10 @@ const Container = styled.div`
         position: absolute;
         top: 15px;
         left: 15px;
+        svg {
+          width: 20px;
+          height: 20px;
+        }
       }
     }
 
@@ -129,7 +134,11 @@ const Item: React.FC<ItemProps> = ({ item }) => {
             />
           }
         />
-        {isPlayable ? <div className="play"></div> : null}
+        {isPlayable ? (
+          <div className="player">
+            <PlayerSvg />
+          </div>
+        ) : null}
       </div>
       <div className="body">
         <div className="name">{item.name}</div>

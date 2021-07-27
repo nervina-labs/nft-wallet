@@ -28,7 +28,7 @@ export const Home: React.FC = () => {
   const [t] = useTranslation('translations')
   const { api } = useWalletModel()
   const { data: hotest } = useQuery(
-    [Query.NFTDetail, api],
+    [Query.Hotest, api],
     async () => {
       const { data } = await api.getClassListByTagId(
         'all',
