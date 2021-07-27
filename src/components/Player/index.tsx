@@ -56,11 +56,6 @@ export const Player: React.FC<PlayerProps> = ({
           }}
           poster={poster}
           disablePictureInPicture
-          style={{
-            height: `${
-              ((window.innerWidth > 500 ? 500 : window.innerWidth) * 9) / 16
-            }px`,
-          }}
           controls
           autoPlay
           controlsList="nodownload"
@@ -68,7 +63,7 @@ export const Player: React.FC<PlayerProps> = ({
       )
     }
     return null
-  }, [isVideo, renderer, poster, open])
+  }, [isVideo, renderer, poster, open, close, snackbar, t])
 
   return (
     <Container
