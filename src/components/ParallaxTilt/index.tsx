@@ -85,7 +85,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     }
   }, [])
   const imgRef = useRef<HTMLImageElement | null>(null)
-
+  const viewerRef = useRef<Viewer | null>(null)
   const imageOnClick = (e: React.SyntheticEvent<HTMLDivElement>): void => {
     e.preventDefault()
     e.stopPropagation()
@@ -102,9 +102,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       img.src = emptyImageBase64
     }
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    const viewer = new Viewer(imgRef.current || img, {
+    viewerRef.current = new Viewer(imgRef.current || img, {
       hidden: () => {
-        viewer.destroy()
+        viewerRef.current?.destroy()
         setIsTileEnable(true)
       },
       shown: () => {
@@ -133,8 +133,14 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       title: false,
       toolbar: false,
     })
-    viewer.show()
+    viewerRef.current.show()
   }
+
+  useEffect(() => {
+    return () => {
+      viewerRef?.current?.destroy()
+    }
+  }, [])
   // const [boxShadow, setBoxShadow] = useState('rgb(240 46 170 / 40%) -10px 10px')
   return (
     <>
@@ -177,6 +183,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
             // 44 = header, 300 = nft detail, 30 * 2 = margin
             maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
             pointerEvents: 'none',
+            width: '100%',
+            maxWidth: width,
           }}
           setImageHeight={false}
           onLoaded={() => {

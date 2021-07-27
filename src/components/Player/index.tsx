@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+import { IS_IPHONE } from '../../constants'
 import { useProfileModel } from '../../hooks/useProfile'
 import { NftType } from '../../models'
 
@@ -27,10 +28,12 @@ const Container = styled(Dialog)`
     display: flex;
     align-items: center;
     justify-content: center;
-
     video {
       width: 100%;
     }
+  }
+  .viewer-button {
+    position: fixed;
   }
 `
 
@@ -57,8 +60,13 @@ export const Player: React.FC<PlayerProps> = ({
           poster={poster}
           disablePictureInPicture
           controls
+          webkit-playsinline
+          playsInline
           autoPlay
           controlsList="nodownload"
+          style={{
+            maxHeight: IS_IPHONE ? '300px' : 'auto',
+          }}
         />
       )
     }
@@ -73,8 +81,15 @@ export const Player: React.FC<PlayerProps> = ({
       })}
       open={open}
       onBackdropClick={close}
+      disableEscapeKeyDown={false}
     >
       {videoPlayer}
+      <div
+        className="viewer-button viewer-close"
+        data-viewer-action="mix"
+        role="button"
+        onClick={close}
+      ></div>
     </Container>
   )
 }
