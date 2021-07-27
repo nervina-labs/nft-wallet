@@ -7,6 +7,7 @@ import {
   Switch,
   useHistory,
   useLocation,
+  useRouteMatch,
 } from 'react-router-dom'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useWalletModel, WalletType } from '../hooks/useWallet'
@@ -123,12 +124,16 @@ const WalletChange: React.FC = ({ children }) => {
   const isSigning = useRef(false)
   const { toast } = useToast()
   const [t] = useTranslation('translations')
+  const matchAddressCollector = useRouteMatch(
+    `${RoutePath.AddressCollector}/:id`
+  )
   useEffect(() => {
     if (
       WalletType.Unipass === walletType &&
       isLogined &&
       !isAuthenticated &&
       !allowWithoutLoginList.has(location.pathname) &&
+      !matchAddressCollector?.isExact &&
       !isSigning.current &&
       pubkey
     ) {

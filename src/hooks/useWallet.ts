@@ -249,6 +249,7 @@ function useWallet(): UseWallet {
 
   const login = useCallback(
     async (walletType: WalletType = WalletType.Unipass) => {
+      provider?.close()
       switch (walletType) {
         case WalletType.Unipass:
           return await new Promise<Provider>((resolve) => {

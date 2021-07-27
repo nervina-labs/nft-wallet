@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { ActionDialog } from '../../components/ActionDialog'
@@ -143,9 +143,9 @@ export const AddressCollector: React.FC = () => {
     login,
     api,
     walletType,
-    // isLogined,
-    // address,
-    // provider,
+    isLogined,
+    address,
+    provider,
   } = useWalletModel()
   const { getAuth, isAuthenticated } = useProfileModel()
   const { id } = useParams<{ id: string }>()
@@ -168,8 +168,6 @@ export const AddressCollector: React.FC = () => {
   const submit = useCallback(
     async (walletType: WalletType): Promise<void> => {
       setLoading(true, walletType)
-      // eslint-disable-next-line no-debugger
-      debugger
       let auth
       try {
         if (WalletType.Unipass === walletType && !isAuthenticated) {
@@ -244,19 +242,19 @@ export const AddressCollector: React.FC = () => {
     [login, walletType, id]
   )
 
-  // useLayoutEffect(() => {
-  //   if (isLogined && walletType && address) {
-  //     if (
-  //       walletType === WalletType.Metamask &&
-  //       provider?.address?.addressString
-  //     ) {
-  //       submit(walletType).catch(Boolean)
-  //     }
-  //     if (walletType === WalletType.Unipass) {
-  //       submit(walletType).catch(Boolean)
-  //     }
-  //   }
-  // }, [walletType, isLogined, address, provider?.address?.addressString])
+  useLayoutEffect(() => {
+    if (isLogined && walletType && address) {
+      if (
+        walletType === WalletType.Metamask &&
+        provider?.address?.addressString
+      ) {
+        submit(walletType).catch(Boolean)
+      }
+      if (walletType === WalletType.Unipass) {
+        submit(walletType).catch(Boolean)
+      }
+    }
+  }, [walletType, isLogined, address, provider?.address?.addressString])
 
   const imgs = {
     [SubmitStatus.None]: <AddressesSvg />,
