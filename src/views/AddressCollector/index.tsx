@@ -10,7 +10,7 @@ import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN } from '../../constants'
 import { useProfileModel } from '../../hooks/useProfile'
-import { useHistory, useParams } from 'react-router-dom'
+import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { CircularProgress } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
@@ -34,12 +34,6 @@ const Container = styled(MainContainer)`
     position: relative;
     display: flex;
     justify-content: center;
-    .desc {
-      position: absolute;
-      font-size: 18px;
-      line-height: 25px;
-      color: #fe7a0c;
-    }
   }
 
   .question {
@@ -65,6 +59,12 @@ const Container = styled(MainContainer)`
     border-top-left-radius: 35px;
     border-top-right-radius: 35px;
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+    min-height: 300px;
+    .desc {
+      font-size: 18px;
+      line-height: 25px;
+      color: #fe7a0c;
+    }
     p {
       font-size: 14px;
       color: #000000;
@@ -165,6 +165,8 @@ export const AddressCollector: React.FC = () => {
     }
   }
 
+  const [isNotFound, setIsNotFound] = useState(false)
+
   const submit = useCallback(
     async (walletType: WalletType): Promise<void> => {
       setLoading(true, walletType)
@@ -179,8 +181,10 @@ export const AddressCollector: React.FC = () => {
           return
         }
       } catch (error) {
-        setErrorMsg(ErrorMsg.Imtoken)
-        setIsErrorDialogOpen(true)
+        if (walletType === WalletType.Metamask) {
+          setErrorMsg(ErrorMsg.Imtoken)
+          setIsErrorDialogOpen(true)
+        }
       }
       if (WalletType.Unipass === walletType && !isAuthenticated) {
         setLoading(false, walletType)
@@ -194,6 +198,10 @@ export const AddressCollector: React.FC = () => {
         setSubmitStatus(SubmitStatus.Success)
       } catch (error) {
         const data = error?.response?.data
+        if (data?.status === 404) {
+          setIsNotFound(true)
+          return
+        }
         if (data?.code === 1091) {
           setSubmitStatus(SubmitStatus.Duplicate)
         } else {
@@ -262,16 +270,19 @@ export const AddressCollector: React.FC = () => {
     [SubmitStatus.Duplicate]: <AddrDup />,
   }
 
-  const desc = {
-    [SubmitStatus.None]: t('addresses.submit'),
-    [SubmitStatus.Success]: t('addresses.submited'),
-    [SubmitStatus.Duplicate]: t('addresses.duplicate'),
-  }
+  const desc = useMemo(() => {
+    return {
+      [SubmitStatus.None]: t('addresses.submit'),
+      [SubmitStatus.Success]: t('addresses.submited'),
+      [SubmitStatus.Duplicate]: t('addresses.duplicate'),
+    }
+  }, [t])
 
   const actions = useMemo(() => {
     if (SubmitStatus.None === submitStatus) {
       return (
         <>
+          <p className="desc">{desc[submitStatus]}</p>
           <p>{t('addresses.select')}</p>
           <Button
             className="connect recommend"
@@ -319,6 +330,7 @@ export const AddressCollector: React.FC = () => {
     }
     return (
       <>
+        <p className="desc">{desc[submitStatus]}</p>
         <p>{t('addresses.continue')}</p>
         <Button
           className="connect recommend"
@@ -338,7 +350,12 @@ export const AddressCollector: React.FC = () => {
     isMetamaskLoging,
     loginBtnOnClick,
     i18n,
+    desc,
   ])
+
+  if (isNotFound) {
+    return <Redirect to={RoutePath.NotFound} />
+  }
 
   return (
     <Container>
@@ -349,10 +366,7 @@ export const AddressCollector: React.FC = () => {
         onConfrim={() => setIsErrorDialogOpen(false)}
         onBackdropClick={() => setIsErrorDialogOpen(false)}
       />
-      <div className="bg">
-        <p className="desc">{desc[submitStatus]}</p>
-        {imgs[submitStatus]}
-      </div>
+      <div className="bg">{imgs[submitStatus]}</div>
       <div className="action">{actions}</div>
     </Container>
   )
