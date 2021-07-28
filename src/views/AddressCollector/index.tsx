@@ -376,7 +376,7 @@ export const AddressCollector: React.FC = () => {
     desc,
   ])
 
-  if (isNotFound && isAddressPackageExist === false) {
+  if (isNotFound || isAddressPackageExist === false) {
     return <Redirect to={RoutePath.NotFound} />
   }
 
