@@ -1,6 +1,6 @@
 import { Dialog } from '@material-ui/core'
 import classNames from 'classnames'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { IS_IPHONE } from '../../constants'
@@ -16,18 +16,43 @@ export interface PlayerProps {
 }
 
 const Container = styled(Dialog)`
-  .MuiDialog-paper {
+  /* .MuiDialog-paper {
     margin: 0;
   }
   .MuiDialog-paperScrollPaper {
     background: transparent;
     box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
-  background: transparent;
-  .video {
+  .MuiDialog-container {
+    height: 100%;
+    outline: 0;
+  }
+  .MuiDialog-scrollPaper {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  background: transparent; */
+
+  .MuiDialog-paper {
+    margin: 0 !important;
+  }
+
+  .MuiDialog-paperScrollPaper {
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
+
+  .MuiDialog-paperWidthSm {
+    max-width: 100% !important;
+  }
+
+  .video {
     video {
       width: 100%;
     }
@@ -59,12 +84,10 @@ export const Player: React.FC<PlayerProps> = ({
           }}
           disablePictureInPicture
           controls
-          webkit-playsinline
           playsInline
           autoPlay
           controlsList="nodownload"
           style={{
-            objectFit: 'cover',
             maxHeight: IS_IPHONE ? '300px' : 'auto',
           }}
         />
@@ -72,6 +95,20 @@ export const Player: React.FC<PlayerProps> = ({
     }
     return null
   }, [isVideo, renderer, open, close, snackbar, t])
+
+  const handleKeydown = (e: KeyboardEvent): void => {
+    if (e.key === 'Escape') {
+      close()
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeydown, true)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeydown)
+    }
+  }, [])
 
   return (
     <Container
@@ -81,6 +118,7 @@ export const Player: React.FC<PlayerProps> = ({
       })}
       open={open}
       onBackdropClick={close}
+      disableAutoFocus={true}
     >
       {videoPlayer}
       <div
