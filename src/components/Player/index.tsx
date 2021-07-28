@@ -57,7 +57,6 @@ export const Player: React.FC<PlayerProps> = ({
             snackbar(t('resource.fail'))
             close()
           }}
-          poster={poster}
           disablePictureInPicture
           controls
           webkit-playsinline
@@ -65,13 +64,14 @@ export const Player: React.FC<PlayerProps> = ({
           autoPlay
           controlsList="nodownload"
           style={{
+            objectFit: 'cover',
             maxHeight: IS_IPHONE ? '300px' : 'auto',
           }}
         />
       )
     }
     return null
-  }, [isVideo, renderer, poster, open, close, snackbar, t])
+  }, [isVideo, renderer, open, close, snackbar, t])
 
   return (
     <Container
@@ -81,7 +81,6 @@ export const Player: React.FC<PlayerProps> = ({
       })}
       open={open}
       onBackdropClick={close}
-      disableEscapeKeyDown={false}
     >
       {videoPlayer}
       <div

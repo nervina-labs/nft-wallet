@@ -6,7 +6,7 @@ import FallbackImg from '../../assets/img/detail-fallback.png'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
-import { IS_IPHONE } from '../../constants'
+import { IS_IPHONE, IS_MAC_SAFARI } from '../../constants'
 import Viewer from 'viewerjs'
 import 'viewerjs/dist/viewer.css'
 import { getImagePreviewUrl } from '../../utils'
@@ -147,12 +147,14 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       <Container
         tiltReverse={shouldReverseTilt}
         reset={false}
-        tiltEnable={isTiltEnable && enable && !isPlayerOpen}
+        tiltEnable={isTiltEnable && enable}
         disableTouch
         onClick={imageOnClick}
         tiltAngleYInitial={!isTouchDevice ? 15 : undefined}
         adjustGyroscope
-        className={classNames({ disabled: !enable && IS_IPHONE })}
+        className={classNames({
+          disabled: (!enable && IS_IPHONE) || (isPlayerOpen && IS_MAC_SAFARI),
+        })}
         style={{ margin: 'auto' }}
         transitionSpeed={1000}
         gyroscope={enableGyroscope}
@@ -215,7 +217,10 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         poster={src}
         type={NftType.Video}
         renderer={renderer}
-        close={() => setIsPlayerOpen(false)}
+        close={() => {
+          setIsPlayerOpen(false)
+          setIsTileEnable(true)
+        }}
       />
     </>
   )
