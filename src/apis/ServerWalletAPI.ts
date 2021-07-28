@@ -126,6 +126,13 @@ export class ServerWalletAPI implements NFTWalletAPI {
     )
   }
 
+  async detectAddress(uuid: string): Promise<AxiosResponse<Boolean>> {
+    const url = `/address_packages/${uuid}`
+    return await axios.get(
+      `${SERVER_URL}${url}`.replace('/explorer/', '/saas/')
+    )
+  }
+
   async getClassListByTagId(
     uuid: string,
     page: number,

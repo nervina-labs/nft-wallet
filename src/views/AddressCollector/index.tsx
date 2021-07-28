@@ -19,6 +19,8 @@ import { MainContainer } from '../../styles'
 import { getHelpUnipassUrl } from '../../data/help'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import { UnipassConfig } from '../../utils'
+import { Query } from '../../models'
+import { useQuery } from 'react-query'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -250,8 +252,22 @@ export const AddressCollector: React.FC = () => {
     [login, walletType, id]
   )
 
+  const { data: isAddressPackageExist } = useQuery(
+    [Query.DetectAddress, id, api],
+    async () => {
+      const { data } = await api.detectAddress(id)
+      return data
+    },
+    {
+      enabled: id != null,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    }
+  )
+
   useLayoutEffect(() => {
-    if (isLogined && walletType && address) {
+    if (isLogined && walletType && address && isAddressPackageExist) {
       if (
         walletType === WalletType.Metamask &&
         provider?.address?.addressString
@@ -262,7 +278,14 @@ export const AddressCollector: React.FC = () => {
         submit(walletType).catch(Boolean)
       }
     }
-  }, [walletType, isLogined, address, provider?.address?.addressString])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    walletType,
+    isLogined,
+    address,
+    provider?.address?.addressString,
+    isAddressPackageExist,
+  ])
 
   const imgs = {
     [SubmitStatus.None]: <AddressesSvg />,
@@ -353,7 +376,7 @@ export const AddressCollector: React.FC = () => {
     desc,
   ])
 
-  if (isNotFound) {
+  if (isNotFound && isAddressPackageExist === false) {
     return <Redirect to={RoutePath.NotFound} />
   }
 

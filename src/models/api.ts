@@ -33,6 +33,8 @@ export interface NFTWalletAPI {
     auth: Auth
   ) => Promise<AxiosResponse<{ code: number }>>
 
+  detectAddress: (uuid: string) => Promise<AxiosResponse<Boolean>>
+
   getTransferNftTransaction: (
     uuid: string,
     toAddress: string,
