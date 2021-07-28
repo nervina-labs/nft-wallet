@@ -30,6 +30,13 @@ export const IS_IPHONE =
   navigator.userAgent.toLowerCase().includes('iphone') &&
   !navigator.vendor.includes('Google')
 
+export const IS_SAFARI =
+  navigator.vendor?.includes('Apple') &&
+  !navigator.userAgent.includes('CriOS') &&
+  !navigator.userAgent.includes('FxiOS')
+
+export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE
+
 export const OSS_IMG_PROCESS_QUERY = '?x-oss-process=image/resize,s_300'
 export const OSS_IMG_HOST = 'https://oss.jinse.cc'
 
