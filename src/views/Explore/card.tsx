@@ -44,6 +44,10 @@ const CardContainer = styled.div`
     overflow: hidden;
     -webkit-line-clamp: 2;
     line-clamp: 2;
+    &.oneline {
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+    }
   }
 
   .issuer {
@@ -71,9 +75,14 @@ const CardContainer = styled.div`
 interface CardProps {
   token: TokenClass
   isHorizontal?: boolean
+  oneLineName?: boolean
 }
 
-export const Card: React.FC<CardProps> = ({ token, isHorizontal = false }) => {
+export const Card: React.FC<CardProps> = ({
+  token,
+  isHorizontal = false,
+  oneLineName = false,
+}) => {
   const width = isHorizontal
     ? 186
     : ((window.innerWidth > 500 ? 500 : window.innerWidth) - 48) / 2
@@ -104,7 +113,9 @@ export const Card: React.FC<CardProps> = ({ token, isHorizontal = false }) => {
           }
         />
       </div>
-      <div className="title">{token.name}</div>
+      <div className={classNames('title', { oneline: oneLineName })}>
+        {token.name}
+      </div>
       <div className="issuer">
         <Creator
           title=""
