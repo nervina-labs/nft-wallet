@@ -33,6 +33,7 @@ const Container = styled.div`
         width: 100%;
         height: 100%;
         display: block;
+        border-radius: 4px;
       }
     }
   }
@@ -53,13 +54,14 @@ const Container = styled.div`
       a {
         color: #ff8201;
         font-size: 12px;
+        margin-right: 8px;
       }
     }
   }
 `
 
-const ScrollText: React.FC<{ announcement: Announcement }> = ({
-  announcement,
+const ScrollText: React.FC<Pick<BannerProps, 'announcements'>> = ({
+  announcements,
 }) => {
   return (
     <div className="announcement">
@@ -73,17 +75,20 @@ const ScrollText: React.FC<{ announcement: Announcement }> = ({
         gradient={false}
         speed={50}
       >
-        <a
-          target="_blank"
-          style={{
-            textDecoration: 'none',
-          }}
-          rel="noopener noreferrer"
-          href={announcement.link}
-        >
-          {announcement.content}
-        </a>
-        <span style={{ width: '20px' }}></span>
+        {announcements?.map((a) => {
+          return (
+            <a
+              target="_blank"
+              style={{
+                textDecoration: 'none',
+              }}
+              rel="noopener noreferrer"
+              href={a.link}
+            >
+              {a.content}
+            </a>
+          )
+        })}
       </Marquee>
     </div>
   )
@@ -134,9 +139,9 @@ export const Notifications: React.FC<BannerProps> = ({
       ) : (
         <Skeleton variant="rect" width="100%" height={sliderHeight} />
       )}
-      {announcements?.map((a) => {
-        return <ScrollText announcement={a} key={a.id} />
-      })}
+      {Array.isArray(announcements) ? (
+        <ScrollText announcements={announcements} />
+      ) : null}
     </Container>
   )
 }
