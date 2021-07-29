@@ -56,6 +56,7 @@ export enum RoutePath {
   Help = '/help',
   Unipass = '/unipass',
   Apps = '/apps',
+  License = '/license',
   AddressCollector = '/addresses',
 }
 
@@ -159,6 +160,7 @@ const WalletChange: React.FC = ({ children }) => {
     pubkey,
     t,
     toast,
+    matchAddressCollector?.isExact,
   ])
 
   return <>{children}</>
@@ -243,6 +245,12 @@ const routes: MibaoRouterProps[] = [
     exact: false,
     key: 'Help',
     path: RoutePath.Help,
+  },
+  {
+    component: Help,
+    exact: false,
+    key: 'License',
+    path: RoutePath.License,
   },
   {
     component: Unipass,
@@ -340,7 +348,7 @@ export const Routers: React.FC = () => {
               <Alert
                 style={{
                   borderRadius: '16px',
-                  background: 'rgba(51, 51, 51, 0.592657)',
+                  background: 'rgba(51, 51, 51, 0.692657)',
                   padding: '0px 40px',
                 }}
                 icon={false}
