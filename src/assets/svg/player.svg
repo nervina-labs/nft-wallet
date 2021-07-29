@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>详情</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="详情">
+            <g id="编组">
+                <circle id="椭圆形" fill-opacity="0.7" fill="#4D4D4D" fill-rule="nonzero" cx="15" cy="15" r="15"></circle>
+                <circle id="椭圆形" stroke-opacity="0.5" stroke="#818181" stroke-width="0.5" cx="15" cy="15" r="14.75"></circle>
+            </g>
+            <path d="M21.7854,14.2928 C22.4234,14.6827 22.4234,15.6094 21.7854,15.9993 L11.5537,22.252 C10.8874,22.6592 10.0323,22.1797 10.0323,21.3987 L10.0323,8.89341 C10.0323,8.11248 10.8874,7.63291 11.5537,8.04013 L21.7854,14.2928 Z" id="路径" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

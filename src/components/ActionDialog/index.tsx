@@ -29,6 +29,10 @@ const DialogContainer = styled(Dialog)`
       width: 100px;
     }
   }
+  .title {
+    text-align: center;
+    margin-top: 24px;
+  }
   .content {
     text-align: center;
     margin-left: 15px;
@@ -65,11 +69,15 @@ export interface ActionDialogProps {
   content: React.ReactNode
   detail?: React.ReactNode
   extra?: React.ReactNode
+  dialogTitle?: React.ReactNode
+  showCloseIcon?: boolean
+  okText?: React.ReactNode
 }
 
 export const ActionDialog: React.FC<DialogProps & ActionDialogProps> = (
   props
 ) => {
+  const { t } = useTranslation('translations')
   const {
     onConfrim,
     icon,
@@ -77,16 +85,22 @@ export const ActionDialog: React.FC<DialogProps & ActionDialogProps> = (
     detail,
     onClose,
     extra,
+    okText = t('common.actions.comfirm'),
+    showCloseIcon = true,
     ...dialogProps
   } = props
   const style = useStyles()
-  const { t } = useTranslation('translations')
   return (
     <DialogContainer {...dialogProps} classes={{ paper: style.paper }}>
-      <div className="close">
-        <span></span>
-        <CloseSvg onClick={onClose ?? onConfrim} />
-      </div>
+      {showCloseIcon ? (
+        <div className="close">
+          <span></span>
+          <CloseSvg onClick={onClose ?? onConfrim} />
+        </div>
+      ) : null}
+      {props.dialogTitle ? (
+        <div className="title">{props.dialogTitle}</div>
+      ) : null}
       <div className="svg">{icon}</div>
       <div className="content">
         {extra != null ? extra : null}
@@ -95,7 +109,7 @@ export const ActionDialog: React.FC<DialogProps & ActionDialogProps> = (
       </div>
       <div className="comfirm">
         <Button onClick={onConfrim} type="primary">
-          {t('common.actions.comfirm')}
+          {okText}
         </Button>
       </div>
     </DialogContainer>
