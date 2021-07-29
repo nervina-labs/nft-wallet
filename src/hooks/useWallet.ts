@@ -12,6 +12,8 @@ import { usePrevious } from './usePrevious'
 
 import { Web3Provider } from '../pw/Web3Provider'
 import dayjs from 'dayjs'
+import { generateUnipassLoginUrl, generateUnipassSignUrl } from '../utils'
+import { RoutePath } from '../routes'
 
 export type PromiseFunc = () => Promise<void> | void
 
@@ -25,6 +27,8 @@ export interface UseWallet {
   login: (walletType?: WalletType) => Promise<Provider>
   provider: Provider | undefined
   address: string
+  pubkey?: string
+  email?: string
   signTransaction: (tx: Transaction) => Promise<Transaction | undefined>
   isLogined: boolean
   logout: (h: History<unknown>) => void
@@ -46,6 +50,7 @@ export interface UseWallet {
   onDialogClose: PromiseFunc
   setScrollScrollRestoration: (path: string, scroll: ScrollPosition) => void
   getScrollScrollRestoration: (path: string) => ScrollPosition | undefined
+  setUnipassAccount: (account: UnipassAccount | null) => void
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
@@ -53,6 +58,7 @@ export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
 export interface UnipassAccount {
   address: string
   email?: string
+  pubkey?: string
   walletType: WalletType
   expireTime?: string
 }
@@ -147,6 +153,14 @@ function useWallet(): UseWallet {
     return unipassAccount?.address ?? ''
   }, [unipassAccount?.address])
 
+  const pubkey = useMemo(() => {
+    return unipassAccount?.pubkey
+  }, [unipassAccount?.pubkey])
+
+  const email = useMemo(() => {
+    return unipassAccount?.email
+  }, [unipassAccount?.email])
+
   const walletType = useMemo(() => {
     return unipassAccount?.walletType
   }, [unipassAccount?.walletType])
@@ -155,7 +169,7 @@ function useWallet(): UseWallet {
     (h?: History<unknown>) => {
       setProvider(undefined)
       setUnipassAccount(null)
-      localStorage.clear()
+      // localStorage.clear()
       provider?.close()
     },
     [provider, setUnipassAccount]
@@ -235,9 +249,14 @@ function useWallet(): UseWallet {
 
   const login = useCallback(
     async (walletType: WalletType = WalletType.Unipass) => {
+      provider?.close()
       switch (walletType) {
         case WalletType.Unipass:
-          return await loginUnipass()
+          return await new Promise<Provider>((resolve) => {
+            const url = `${location.origin}${RoutePath.Unipass}`
+            location.href = generateUnipassLoginUrl(url, url)
+            resolve(provider as Provider)
+          })
         case WalletType.Metamask:
           return await loginMetamask()
         case WalletType.WalletConnect:
@@ -246,26 +265,21 @@ function useWallet(): UseWallet {
           return await loginUnipass()
       }
     },
-    [loginMetamask, loginUnipass, loginWalletConnect]
+    [loginMetamask, loginUnipass, loginWalletConnect, provider]
   )
 
   const signUnipass = useCallback(
     async (tx: Transaction) => {
-      if (provider != null) {
-        const signer = new UnipassSigner(provider)
-        const signedTx = await signer.sign(tx)
-        return signedTx
-      }
       const p = await new UnipassProvider(
         UNIPASS_URL,
         setUnipassAccount
       ).connect(unipassAccount)
       const signer = new UnipassSigner(p)
-      const signedTx = await signer.sign(tx)
+      const [signedTx] = signer.toMessages(tx)
       setProvider(p)
-      return signedTx
+      return signedTx.message as any
     },
-    [provider, unipassAccount, setUnipassAccount]
+    [unipassAccount, setUnipassAccount]
   )
 
   const signMetamask = useCallback(
@@ -287,17 +301,15 @@ function useWallet(): UseWallet {
   const signMessage = useCallback(
     async (msg: string) => {
       if (unipassAccount?.walletType === WalletType.Unipass) {
-        if (provider != null) {
-          const sig = await provider.sign(toHex(msg))
-          return sig
-        }
-        const p = await new UnipassProvider(
-          UNIPASS_URL,
-          setUnipassAccount
-        ).connect(unipassAccount)
-        setProvider(p)
-        const sig = await p.sign(toHex(msg))
-        return sig
+        const url = `${location.origin}${RoutePath.Unipass}`
+        const message = toHex(msg)
+        location.href = generateUnipassSignUrl(
+          url,
+          `${location.origin}${RoutePath.NFTs}`,
+          unipassAccount?.pubkey,
+          message
+        )
+        return message
       }
       if (provider != null) {
         try {
@@ -315,7 +327,7 @@ function useWallet(): UseWallet {
         return 'N/A'
       }
     },
-    [unipassAccount, provider, setUnipassAccount, loginMetamask]
+    [unipassAccount, provider, loginMetamask]
   )
 
   const signTransaction = useCallback(
@@ -348,8 +360,11 @@ function useWallet(): UseWallet {
     if (isExpired) {
       return false
     }
+    if (walletType === WalletType.Unipass && !pubkey) {
+      return false
+    }
     return address !== ''
-  }, [address, expireTime])
+  }, [address, expireTime, pubkey, walletType])
 
   const prevAddress = usePrevious(address)
 
@@ -375,6 +390,9 @@ function useWallet(): UseWallet {
     confirm,
     setScrollScrollRestoration,
     getScrollScrollRestoration,
+    setUnipassAccount,
+    pubkey,
+    email,
   }
 }
 

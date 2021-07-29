@@ -1,0 +1,94 @@
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useProfileModel } from '../../hooks/useProfile'
+import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { useWalletModel, WalletType } from '../../hooks/useWallet'
+import {
+  UnipassAction,
+  UnipassResponse,
+  UnipassLoginData,
+  UnipassSignData,
+} from '../../models/unipass'
+import { pubkeyToAddress } from '../../pw/UnipassProvider'
+import { RoutePath } from '../../routes'
+import { UnipassConfig } from '../../utils'
+
+export const Unipass: React.FC = () => {
+  const action = useRouteQuery<UnipassAction>('action', UnipassAction.Login)
+  const ret = useRouteQuery('unipass_ret', '')
+  const unipassInfo: UnipassResponse = JSON.parse(ret)
+  const history = useHistory()
+  const { setUnipassAccount } = useWalletModel()
+  const { setProfile, profile } = useProfileModel()
+  const ps = useRouteQuery('prev_state', '{}')
+  const prevState = JSON.parse(ps)
+  const redirectUri = useRouteQuery('redirect', '')
+  useEffect(() => {
+    const { code } = unipassInfo
+    switch (action) {
+      case UnipassAction.Login: {
+        UnipassConfig.clear()
+        if (code !== 200) {
+          history.replace(redirectUri || RoutePath.Login)
+          break
+        }
+        const data = unipassInfo?.data as UnipassLoginData
+        const addr = pubkeyToAddress(data.pubkey)
+        const pubkey = data.pubkey
+        setUnipassAccount({
+          email: data.email,
+          pubkey,
+          address: addr,
+          walletType: WalletType.Unipass,
+        })
+        history.replace(redirectUri || RoutePath.NFTs)
+        break
+      }
+      case UnipassAction.Sign: {
+        UnipassConfig.clear()
+        if (code !== 200) {
+          history.replace(redirectUri || RoutePath.NFTs)
+          break
+        }
+        const data = unipassInfo?.data as UnipassSignData
+        const addr = pubkeyToAddress(data.pubkey)
+        setUnipassAccount({
+          pubkey: data.pubkey,
+          address: addr,
+          walletType: WalletType.Unipass,
+        })
+        setProfile({
+          auth: `0x01${data.sig.replace('0x', '')}`,
+        })
+        history.replace(redirectUri ?? RoutePath.NFTs)
+        break
+      }
+      case UnipassAction.SignTx: {
+        const id = prevState.uuid as string
+        if (code !== 200) {
+          history.replace(`/transfer/${id}`, {
+            prevState,
+          })
+          break
+        }
+        const data = unipassInfo?.data as UnipassSignData
+        history.replace(`/transfer/${id}`, {
+          signature: `0x01${data.sig.replace('0x', '')}`,
+          prevState,
+        })
+        break
+      }
+      default:
+        break
+    }
+  }, [
+    unipassInfo,
+    action,
+    history,
+    setProfile,
+    setUnipassAccount,
+    profile,
+    prevState,
+  ])
+  return null
+}

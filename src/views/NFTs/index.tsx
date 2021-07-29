@@ -54,7 +54,7 @@ export const NFTs: React.FC = () => {
     }
   )
 
-  const liked = useRouteQuery('liked', '')
+  const liked = useRouteQuery<string>('liked', '')
 
   const getRemoteData = useCallback(
     async ({ pageParam = 1 }) => {
@@ -78,6 +78,7 @@ export const NFTs: React.FC = () => {
               is_issuer_banned: false,
               n_token_id: 0,
               verified_info: c.verified_info,
+              renderer_type: c.renderer_type,
             }
             return token
           }),
