@@ -6,7 +6,6 @@ import { useWalletModel } from '../../hooks/useWallet'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../../components/Button'
 import { ReactComponent as CheckSvg } from '../../assets/svg/check-circle.svg'
-import { ReactComponent as WarningSvg } from '../../assets/svg/warning.svg'
 import * as clipboard from 'clipboard-polyfill/text'
 
 const Container = styled.div`
@@ -131,10 +130,6 @@ export const Info: React.FC = () => {
   )
   return (
     <Container>
-      <div className="warning">
-        <WarningSvg />
-        <span>{t('account.warning')}</span>
-      </div>
       <div className="content">
         <h4 style={{ marginTop: '60px' }}>{t('account.qrcode')}</h4>
         {qrCodeContent}

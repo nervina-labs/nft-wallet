@@ -9,7 +9,7 @@ export const sleep = async (ms: number): Promise<void> =>
 export const verifyCkbAddress = (address: string): boolean => {
   try {
     parseAddress(address)
-  } catch (error) {
+  } catch (err) {
     return false
   }
   return (
