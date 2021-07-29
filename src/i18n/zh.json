@@ -184,7 +184,11 @@
       "my": "我的",
       "latest": "最新创作",
       "most-liked": "获赞最多",
-      "recommended": "推荐"
+      "recommended": "推荐",
+      "hotest": "最热秘宝",
+      "collections": "秘宝精选",
+      "issuers": "最受欢迎创作者",
+      "home": "首页"
     },
     "menu": {
       "profile": "个人资料",

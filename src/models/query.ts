@@ -7,4 +7,8 @@ export enum Query {
   Explore = 'explore',
   Tags = 'tags',
   Profile = 'profile',
+  Hotest = 'hotest',
+  Collections = 'collections',
+  Issuers = 'Issuers',
+  Notifications = 'Notifications',
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
 import {
   ClassSortType,
@@ -266,5 +267,25 @@ export class ServerWalletAPI implements NFTWalletAPI {
       to_address: toAddress,
     }
     return await this.axios.post('/token_ckb_transactions', data)
+  }
+
+  async getSpecialAssets() {
+    return await this.axios.get('/special_category_classes')
+  }
+
+  async getRecommendIssuers() {
+    return await this.axios.get('/recommended_issuers')
+  }
+
+  async getRecommendClasses() {
+    return await this.axios.get('/recommended_classes', {
+      params: {
+        address: this.address,
+      },
+    })
+  }
+
+  async getNotifications() {
+    return await this.axios.get('/notifications')
   }
 }

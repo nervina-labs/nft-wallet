@@ -38,6 +38,7 @@ const Container = styled.div`
     min-width: 15px;
     height: 15px;
     margin-left: 6px;
+    cursor: pointer;
   }
   .issuer {
     white-space: nowrap;
@@ -76,6 +77,7 @@ export interface CreatorProps {
   style?: React.CSSProperties
   showTooltip?: boolean
   vipSource?: VipSource
+  showAvatar?: boolean
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -92,6 +94,7 @@ export const Creator: React.FC<CreatorProps> = ({
   style,
   showTooltip = true,
   vipSource,
+  showAvatar = true,
 }) => {
   const { t } = useTranslation('translations')
   const vt = useMemo(() => {
@@ -111,19 +114,21 @@ export const Creator: React.FC<CreatorProps> = ({
   }, [vipAlignRight, name])
   const creator = (
     <>
-      <span className="avatar">
-        {baned ? (
-          <PeopleSvg />
-        ) : (
-          <LazyLoadImage
-            src={url}
-            width={24}
-            height={24}
-            variant="circle"
-            backup={<PeopleSvg />}
-          />
-        )}
-      </span>
+      {showAvatar ? (
+        <span className="avatar">
+          {baned ? (
+            <PeopleSvg />
+          ) : (
+            <LazyLoadImage
+              src={url}
+              width={24}
+              height={24}
+              variant="circle"
+              backup={<PeopleSvg />}
+            />
+          )}
+        </span>
+      ) : null}
       <span
         className={classNames(['name', { error: baned, max: vipAlignRight }])}
       >

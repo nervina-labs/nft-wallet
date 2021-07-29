@@ -15,7 +15,6 @@ export const HideOnScroll: React.FC<{ alwaysShow?: boolean }> = ({
   alwaysShow,
 }) => {
   const trigger = useScrollTriggerWithThreshold()
-
   return (
     <Slide appear={false} direction="up" in={!trigger || alwaysShow}>
       {children as any}

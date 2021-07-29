@@ -4,6 +4,9 @@ import { ClassList, Tag, TokenClass } from './class-list'
 import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
+import { SpecialAssets } from './special-assets'
+import { Issuer } from './issuer'
+import { Notifications } from './banner'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -19,6 +22,10 @@ export enum ClassSortType {
   Recommend = 'recommended',
   Latest = 'latest',
   Likes = 'likes',
+}
+
+interface SpecialCategories {
+  special_categories: SpecialAssets[]
 }
 
 export interface NFTWalletAPI {
@@ -78,4 +85,12 @@ export interface NFTWalletAPI {
     toAddress: string,
     sig?: string
   ) => Promise<AxiosResponse<{ message: number }>>
+
+  getSpecialAssets: () => Promise<AxiosResponse<SpecialCategories>>
+
+  getRecommendIssuers: () => Promise<AxiosResponse<Issuer[]>>
+
+  getRecommendClasses: () => Promise<AxiosResponse<TokenClass[]>>
+
+  getNotifications: () => Promise<AxiosResponse<Notifications>>
 }
