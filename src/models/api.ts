@@ -80,4 +80,6 @@ export interface NFTWalletAPI {
   getSpecialAssets: () => Promise<AxiosResponse<SpecialCategories>>
 
   getRecommendIssuers: () => Promise<AxiosResponse<Issuer[]>>
+
+  getRecommendClasses: () => Promise<AxiosResponse<TokenClass[]>>
 }

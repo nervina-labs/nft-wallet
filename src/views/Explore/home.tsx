@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 import styled from 'styled-components'
 import { Card } from './card'
 import { useWalletModel } from '../../hooks/useWallet'
-import { ClassSortType, Query } from '../../models'
+import { Query } from '../../models'
 import { Collection } from './Collection'
 import { RecommendIssuser } from './Issuer'
 import { Skeleton } from '@material-ui/lab'
@@ -36,11 +36,7 @@ export const Home: React.FC = () => {
   const { data: hotest, isLoading: isHotestLoading } = useQuery(
     [Query.Hotest, api],
     async () => {
-      const { data } = await api.getClassListByTagId(
-        'all',
-        1,
-        ClassSortType.Likes
-      )
+      const { data } = await api.getRecommendClasses()
       return data
     },
     {
@@ -104,7 +100,7 @@ export const Home: React.FC = () => {
             />
           </>
         ) : (
-          hotest?.class_list?.slice(0, 8).map((token) => {
+          hotest?.slice(0, 8).map((token) => {
             return (
               <Card token={token} key={token.uuid} isHorizontal oneLineName />
             )

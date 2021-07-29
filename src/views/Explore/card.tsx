@@ -120,7 +120,7 @@ export const Card: React.FC<CardProps> = ({
         <Creator
           title=""
           baned={token.is_issuer_banned}
-          url={token.issuer_info?.avatar_url}
+          url={token.issuer_info?.avatar_url ?? ''}
           name={token.issuer_info?.name}
           uuid={token.issuer_info?.uuid}
           vipAlignRight
