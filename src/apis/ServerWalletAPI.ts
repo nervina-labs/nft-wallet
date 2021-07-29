@@ -284,4 +284,8 @@ export class ServerWalletAPI implements NFTWalletAPI {
       },
     })
   }
+
+  async getNotifications() {
+    return await this.axios.get('/notifications')
+  }
 }

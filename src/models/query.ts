@@ -10,4 +10,5 @@ export enum Query {
   Hotest = 'hotest',
   Collections = 'collections',
   Issuers = 'Issuers',
+  Notifications = 'Notifications',
 }

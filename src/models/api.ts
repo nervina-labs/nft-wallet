@@ -6,6 +6,7 @@ import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
 import { Issuer } from './issuer'
+import { Notifications } from './banner'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -90,4 +91,6 @@ export interface NFTWalletAPI {
   getRecommendIssuers: () => Promise<AxiosResponse<Issuer[]>>
 
   getRecommendClasses: () => Promise<AxiosResponse<TokenClass[]>>
+
+  getNotifications: () => Promise<AxiosResponse<Notifications>>
 }

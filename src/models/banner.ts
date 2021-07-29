@@ -1,4 +1,4 @@
-export interface Ad {
+export interface Notifications {
   banner: Banner[]
   announcement: Announcement[]
 }

@@ -8,6 +8,7 @@ import { Query } from '../../models'
 import { Collection } from './Collection'
 import { RecommendIssuser } from './Issuer'
 import { Skeleton } from '@material-ui/lab'
+import { Notifications } from './Notifications'
 
 const Container = styled.section`
   .header {
@@ -72,8 +73,26 @@ export const Home: React.FC = () => {
     }
   )
 
+  const { data: notifications, isLoading: isNotificationsLoading } = useQuery(
+    [Query.Notifications, api],
+    async () => {
+      const { data } = await api.getNotifications()
+      return data
+    },
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    }
+  )
+
   return (
     <Container className="content">
+      <Notifications
+        banners={notifications?.banner}
+        announcements={notifications?.announcement}
+        isLoading={isNotificationsLoading}
+      />
       <div className="header">
         <h3 className="h3">{t('explore.hotest')}</h3>
       </div>
