@@ -7,6 +7,7 @@ import {
   Switch,
   useHistory,
   useLocation,
+  useRouteMatch,
 } from 'react-router-dom'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useWalletModel, WalletType } from '../hooks/useWallet'
@@ -30,6 +31,7 @@ import { useProfileModel } from '../hooks/useProfile'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
 import { Apps } from '../views/Apps'
+import { AddressCollector } from '../views/AddressCollector'
 import { useToast } from '../hooks/useToast'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
@@ -54,6 +56,7 @@ export enum RoutePath {
   Help = '/help',
   Unipass = '/unipass',
   Apps = '/apps',
+  AddressCollector = '/addresses',
 }
 
 export const RouterContext = React.createContext({
@@ -90,6 +93,7 @@ const allowWithoutLoginList = new Set([
   RoutePath.Unipass,
   RoutePath.Explore,
   RoutePath.Apps,
+  RoutePath.AddressCollector,
   '/',
 ])
 
@@ -120,12 +124,16 @@ const WalletChange: React.FC = ({ children }) => {
   const isSigning = useRef(false)
   const { toast } = useToast()
   const [t] = useTranslation('translations')
+  const matchAddressCollector = useRouteMatch(
+    `${RoutePath.AddressCollector}/:id`
+  )
   useEffect(() => {
     if (
       WalletType.Unipass === walletType &&
       isLogined &&
       !isAuthenticated &&
       !allowWithoutLoginList.has(location.pathname) &&
+      !matchAddressCollector?.isExact &&
       !isSigning.current &&
       pubkey
     ) {
@@ -156,7 +164,13 @@ const WalletChange: React.FC = ({ children }) => {
   return <>{children}</>
 }
 
-const routes: Array<RouteProps & { key: string }> = [
+interface MibaoRouterProps extends RouteProps {
+  key: string
+  params?: string
+  path: string
+}
+
+const routes: MibaoRouterProps[] = [
   {
     component: NFTs,
     exact: false,
@@ -210,6 +224,13 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: true,
     key: 'TakePhoto',
     path: RoutePath.TakePhoto,
+  },
+  {
+    component: AddressCollector,
+    exact: true,
+    key: 'Addresses',
+    path: RoutePath.AddressCollector,
+    params: '/:id',
   },
   {
     component: Explore,
@@ -273,7 +294,11 @@ export const Routers: React.FC = () => {
           <WalletChange>
             <Switch>
               {routes.map((route) => (
-                <Route {...route} key={route.key} path={route.path} />
+                <Route
+                  {...route}
+                  key={route.key}
+                  path={`${route.path}${route.params ?? ''}`}
+                />
               ))}
               <Redirect
                 exact

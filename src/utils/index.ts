@@ -1,13 +1,7 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import Web3 from 'web3'
-import {
-  INFURA_ID,
-  OSS_IMG_HOST,
-  OSS_IMG_PROCESS_QUERY,
-  UNIPASS_URL,
-} from '../constants'
-import i18n from '../i18n'
-import { UnipassAction } from '../models/unipass'
+import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
+export * from './unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -119,96 +113,4 @@ export function getImagePreviewUrl(url?: string): string | undefined {
     return url
   }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
-}
-
-export function generateUnipassUrl(
-  action: UnipassAction,
-  successURL: string,
-  failURL: string,
-  pubkey?: string,
-  message?: string,
-  state?: Record<string, string>
-): string {
-  const url = new URL(
-    `${UNIPASS_URL}/${
-      action === UnipassAction.Login ? UnipassAction.Login : UnipassAction.Sign
-    }`
-  )
-  const surl = new URL(successURL)
-  surl.searchParams.set('action', action)
-  if (action === UnipassAction.SignTx) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    surl.searchParams.set(
-      'prev_state',
-      JSON.stringify({
-        ...state,
-      })
-    )
-    const furl = new URL(failURL)
-    furl.searchParams.set(
-      'prev_state',
-      JSON.stringify({
-        ...state,
-      })
-    )
-    furl.searchParams.set('action', action)
-    failURL = furl.href
-  }
-  const params: Record<string, string> = {
-    success_url: surl.href,
-    fail_url: failURL,
-  }
-  if (pubkey) {
-    params.pubkey = pubkey
-  }
-  if (message) {
-    params.message = message
-  }
-  const lang = i18n.language
-  if (lang) {
-    params.lang = lang
-  }
-  for (const key of Object.keys(params)) {
-    url.searchParams.set(key, params[key])
-  }
-  return url.href
-}
-
-export function generateUnipassLoginUrl(
-  successURL: string,
-  failURL: string
-): string {
-  return generateUnipassUrl(UnipassAction.Login, successURL, failURL)
-}
-
-export function generateUnipassSignUrl(
-  successURL: string,
-  failURL: string,
-  pubkey?: string,
-  message?: string
-): string {
-  return generateUnipassUrl(
-    UnipassAction.Sign,
-    successURL,
-    failURL,
-    pubkey,
-    message
-  )
-}
-
-export function generateUnipassSignTxUrl(
-  successURL: string,
-  failURL: string,
-  pubkey?: string,
-  message?: string,
-  state?: Record<string, string>
-): string {
-  return generateUnipassUrl(
-    UnipassAction.SignTx,
-    successURL,
-    failURL,
-    pubkey,
-    message,
-    state
-  )
 }

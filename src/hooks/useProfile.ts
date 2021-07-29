@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createModel } from 'hox'
 import React, { useCallback, useMemo, useState } from 'react'
+import { createContainer } from 'unstated-next'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
 import { useLocalStorage } from './useLocalStorage'
@@ -63,7 +63,6 @@ function useProfile(): UseProfile {
 
   const getAuth: () => Promise<Auth> = useCallback(async () => {
     let signature = profile?.[address]?.auth
-
     if (!signature) {
       signature = await signMessage(address)
       // we don't need set unipass profile auth in here
@@ -141,4 +140,8 @@ function useProfile(): UseProfile {
   }
 }
 
-export const useProfileModel = createModel(useProfile)
+export const ProfileContainer = createContainer(useProfile)
+
+export const ProfileProvider = ProfileContainer.Provider
+
+export const useProfileModel = ProfileContainer.useContainer

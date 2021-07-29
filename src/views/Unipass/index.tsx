@@ -11,6 +11,7 @@ import {
 } from '../../models/unipass'
 import { pubkeyToAddress } from '../../pw/UnipassProvider'
 import { RoutePath } from '../../routes'
+import { UnipassConfig } from '../../utils'
 
 export const Unipass: React.FC = () => {
   const action = useRouteQuery<UnipassAction>('action', UnipassAction.Login)
@@ -21,12 +22,14 @@ export const Unipass: React.FC = () => {
   const { setProfile, profile } = useProfileModel()
   const ps = useRouteQuery('prev_state', '{}')
   const prevState = JSON.parse(ps)
+  const redirectUri = useRouteQuery('redirect', '')
   useEffect(() => {
     const { code } = unipassInfo
     switch (action) {
       case UnipassAction.Login: {
+        UnipassConfig.clear()
         if (code !== 200) {
-          history.replace(RoutePath.Login)
+          history.replace(redirectUri || RoutePath.Login)
           break
         }
         const data = unipassInfo?.data as UnipassLoginData
@@ -38,12 +41,13 @@ export const Unipass: React.FC = () => {
           address: addr,
           walletType: WalletType.Unipass,
         })
-        history.replace(RoutePath.NFTs)
+        history.replace(redirectUri || RoutePath.NFTs)
         break
       }
       case UnipassAction.Sign: {
+        UnipassConfig.clear()
         if (code !== 200) {
-          history.replace(RoutePath.NFTs)
+          history.replace(redirectUri || RoutePath.NFTs)
           break
         }
         const data = unipassInfo?.data as UnipassSignData
@@ -56,7 +60,7 @@ export const Unipass: React.FC = () => {
         setProfile({
           auth: `0x01${data.sig.replace('0x', '')}`,
         })
-        history.replace(RoutePath.NFTs)
+        history.replace(redirectUri ?? RoutePath.NFTs)
         break
       }
       case UnipassAction.SignTx: {
