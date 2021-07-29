@@ -25,6 +25,9 @@ const Container = styled.div`
     .swiper-pagination-bullet-active {
       background: rgba(69, 69, 69, 0.5);
     }
+    .swiper-pagination-bullet {
+      background: rgba(211, 211, 211, 0.5);
+    }
     .slide {
       a {
         background-size: auto 100%;
