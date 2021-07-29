@@ -1,4 +1,4 @@
-import { ListMeta } from './nft'
+import { ListMeta, NftType } from './nft'
 
 export interface Tag {
   uuid: string
@@ -41,6 +41,8 @@ export interface TokenClass extends VipInfo, ClassLikes {
   }
   total: string
   tags: Tag[]
+  renderer_type: NftType
+  renderer: string
 }
 
 export interface ClassList {

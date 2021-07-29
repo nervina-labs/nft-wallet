@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import {
   BrowserRouter,
   Redirect,
@@ -7,8 +7,9 @@ import {
   Switch,
   useHistory,
   useLocation,
+  useRouteMatch,
 } from 'react-router-dom'
-import { I18nextProvider } from 'react-i18next'
+import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useWalletModel, WalletType } from '../hooks/useWallet'
 import { Account } from '../views/Account'
 import { Login } from '../views/Login'
@@ -28,6 +29,10 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useProfileModel } from '../hooks/useProfile'
 import { Help } from '../views/Help'
+import { Unipass } from '../views/Unipass'
+import { Apps } from '../views/Apps'
+import { AddressCollector } from '../views/AddressCollector'
+import { useToast } from '../hooks/useToast'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -49,6 +54,10 @@ export enum RoutePath {
   TakePhoto = '/avatar/camera',
   Explore = '/explore',
   Help = '/help',
+  Unipass = '/unipass',
+  Apps = '/apps',
+  License = '/license',
+  AddressCollector = '/addresses',
 }
 
 export const RouterContext = React.createContext({
@@ -81,10 +90,25 @@ const RouterProvider: React.FC = ({ children }) => {
   )
 }
 
-const WalletChange: React.FC = ({ children }) => {
-  const { address, prevAddress, walletType } = useWalletModel()
-  const history = useHistory()
+const allowWithoutLoginList = new Set([
+  RoutePath.Unipass,
+  RoutePath.Explore,
+  RoutePath.Apps,
+  RoutePath.AddressCollector,
+  '/',
+])
 
+const WalletChange: React.FC = ({ children }) => {
+  const {
+    address,
+    prevAddress,
+    walletType,
+    signMessage,
+    isLogined,
+    pubkey,
+  } = useWalletModel()
+  const history = useHistory()
+  const location = useLocation()
   useEffect(() => {
     if (
       prevAddress &&
@@ -97,11 +121,58 @@ const WalletChange: React.FC = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prevAddress, address, walletType])
+  const { isAuthenticated } = useProfileModel()
+  const isSigning = useRef(false)
+  const { toast } = useToast()
+  const [t] = useTranslation('translations')
+  const matchAddressCollector = useRouteMatch(
+    `${RoutePath.AddressCollector}/:id`
+  )
+  useEffect(() => {
+    if (
+      WalletType.Unipass === walletType &&
+      isLogined &&
+      !isAuthenticated &&
+      !allowWithoutLoginList.has(location.pathname) &&
+      !matchAddressCollector?.isExact &&
+      !isSigning.current &&
+      pubkey
+    ) {
+      isSigning.current = true
+      toast({
+        title: t('auth.title'),
+        content: t('auth.content'),
+        okText: t('auth.ok'),
+        showCloseIcon: false,
+        show: true,
+        onConfirm: () => {
+          signMessage(address).catch(Boolean)
+        },
+      })
+    }
+  }, [
+    isAuthenticated,
+    walletType,
+    address,
+    signMessage,
+    location.pathname,
+    isLogined,
+    pubkey,
+    t,
+    toast,
+    matchAddressCollector?.isExact,
+  ])
 
   return <>{children}</>
 }
 
-const routes: Array<RouteProps & { key: string }> = [
+interface MibaoRouterProps extends RouteProps {
+  key: string
+  params?: string
+  path: string
+}
+
+const routes: MibaoRouterProps[] = [
   {
     component: NFTs,
     exact: false,
@@ -157,6 +228,13 @@ const routes: Array<RouteProps & { key: string }> = [
     path: RoutePath.TakePhoto,
   },
   {
+    component: AddressCollector,
+    exact: true,
+    key: 'Addresses',
+    path: RoutePath.AddressCollector,
+    params: '/:id',
+  },
+  {
     component: Explore,
     exact: false,
     key: 'Explore',
@@ -167,6 +245,24 @@ const routes: Array<RouteProps & { key: string }> = [
     exact: false,
     key: 'Help',
     path: RoutePath.Help,
+  },
+  {
+    component: Help,
+    exact: false,
+    key: 'License',
+    path: RoutePath.License,
+  },
+  {
+    component: Unipass,
+    exact: false,
+    key: 'Unipass',
+    path: RoutePath.Unipass,
+  },
+  {
+    component: Apps,
+    exact: true,
+    key: 'Apps',
+    path: RoutePath.Apps,
   },
 ]
 
@@ -189,7 +285,7 @@ export const Routers: React.FC = () => {
     setIsErrorDialogOpen,
   } = useWalletModel()
   const { showEditSuccess, closeSnackbar, snackbarMsg } = useProfileModel()
-
+  const { toastConfig } = useToast()
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
       login(walletType).catch((e) => {
@@ -206,7 +302,11 @@ export const Routers: React.FC = () => {
           <WalletChange>
             <Switch>
               {routes.map((route) => (
-                <Route {...route} key={route.key} path={route.path} />
+                <Route
+                  {...route}
+                  key={route.key}
+                  path={`${route.path}${route.params ?? ''}`}
+                />
               ))}
               <Redirect
                 exact
@@ -227,6 +327,16 @@ export const Routers: React.FC = () => {
               onConfrim={() => setIsErrorDialogOpen(false)}
               onBackdropClick={() => setIsErrorDialogOpen(false)}
             />
+            <ActionDialog
+              icon={null}
+              dialogTitle={toastConfig.title}
+              content={toastConfig.content}
+              open={toastConfig.show}
+              okText={toastConfig.okText}
+              showCloseIcon={toastConfig.showCloseIcon}
+              onConfrim={toastConfig.onConfirm}
+              onBackdropClick={toastConfig.onBackdropClick}
+            />
             <Snackbar
               open={showEditSuccess}
               autoHideDuration={1500}
@@ -238,7 +348,7 @@ export const Routers: React.FC = () => {
               <Alert
                 style={{
                   borderRadius: '16px',
-                  background: 'rgba(51, 51, 51, 0.592657)',
+                  background: 'rgba(51, 51, 51, 0.692657)',
                   padding: '0px 40px',
                 }}
                 icon={false}

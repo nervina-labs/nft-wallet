@@ -7,7 +7,7 @@ import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { IS_IMTOKEN } from '../../constants'
 import Button from '@material-ui/core/Button'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress, FormControlLabel, Checkbox } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
@@ -15,9 +15,11 @@ import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory } from 'react-router'
-import { useTranslation } from 'react-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
+import { useProfileModel } from '../../hooks/useProfile'
+import { getLicenseUrl } from '../../data/license'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -135,10 +137,16 @@ const Container = styled(MainContainer)`
     }
   }
 
+  .license {
+    .MuiFormControlLabel-label {
+      font-size: 12px;
+    }
+  }
+
   .beian {
     display: flex;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 12px;
     color: #000000;
     opacity: 0.4;
     a {
@@ -172,7 +180,9 @@ export const Login: React.FC = () => {
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const [isLicenseChecked, setIsLicenseChecked] = useState(false)
   const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
+  const { snackbar } = useProfileModel()
   const history = useHistory()
   const errorMsg = useMemo(() => {
     return t(`login.errors.${errorStatus}`)
@@ -207,6 +217,10 @@ export const Login: React.FC = () => {
   }
   const loginBtnOnClick = useCallback(
     async (walletType = WalletType.Unipass) => {
+      if (!isLicenseChecked) {
+        snackbar(t('license.warn'))
+        return
+      }
       setLoading(true, walletType)
       try {
         if (walletType === WalletType.Metamask) {
@@ -229,7 +243,7 @@ export const Login: React.FC = () => {
         }
       }
     },
-    [login]
+    [login, isLicenseChecked, snackbar, t]
   )
 
   if (isLogined) {
@@ -238,7 +252,7 @@ export const Login: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
-      <div className="close" onClick={() => history.goBack()}>
+      <div className="close" onClick={() => history.replace(RoutePath.Explore)}>
         <CloseSvg />
       </div>
       <div className="header">
@@ -263,7 +277,7 @@ export const Login: React.FC = () => {
         disabled={
           isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
         }
-        onClick={loginBtnOnClick}
+        onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
       >
         {t('login.connect.unipass')}&nbsp;
         {isUnipassLogining ? (
@@ -302,6 +316,40 @@ export const Login: React.FC = () => {
       >
         <QuestionSvg />
         <span>{t('help.question')}</span>
+      </div>
+      <div className="license">
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isLicenseChecked}
+              onChange={() => setIsLicenseChecked(!isLicenseChecked)}
+              color="default"
+              name="license"
+              size="small"
+            />
+          }
+          label={
+            <Trans
+              ns="translations"
+              i18nKey="license.agree"
+              t={t}
+              components={{
+                a: (
+                  <span
+                    style={{ color: '#D8B340' }}
+                    onClick={() => {
+                      history.push(
+                        `${RoutePath.License}?url=${encodeURIComponent(
+                          getLicenseUrl(i18n.language)
+                        )}`
+                      )
+                    }}
+                  />
+                ),
+              }}
+            />
+          }
+        />
       </div>
       <div className="beian">
         <a

@@ -12,7 +12,14 @@ export interface ListMeta {
   total_count: number
 }
 
+export enum NftType {
+  Audio = 'audio',
+  Video = 'video',
+  Picture = 'image',
+}
+
 export interface NFTToken extends VipInfo {
+  renderer_type: NftType
   class_name: string
   class_bg_image_url: string
   class_uuid: string
@@ -48,4 +55,6 @@ export interface NFTDetail extends ClassLikes, VipInfo {
   is_issuer_banned: boolean
   is_class_banned: boolean
   n_token_id: number
+  renderer_type: NftType
+  renderer: string
 }

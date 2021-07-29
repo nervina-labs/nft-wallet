@@ -1,6 +1,7 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import Web3 from 'web3'
 import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
+export * from './unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -109,6 +110,9 @@ export function isVerticalScrollable(): boolean {
 
 export function getImagePreviewUrl(url?: string): string | undefined {
   if (url == null) {
+    return url
+  }
+  if (url.endsWith('.svg')) {
     return url
   }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
