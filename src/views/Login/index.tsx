@@ -141,6 +141,9 @@ const Container = styled(MainContainer)`
     .MuiFormControlLabel-label {
       font-size: 12px;
     }
+    .MuiFormControlLabel-root {
+      margin: 0;
+    }
   }
 
   .beian {
