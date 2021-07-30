@@ -120,7 +120,7 @@
     "nft": {
       "title": "秘宝细节",
       "transfer": "转让",
-      "desc": "NFT 简介"
+      "desc": "秘宝简介"
     },
     "account": {
       "title": "我的帐号",
@@ -227,19 +227,19 @@
       "welcome": "欢迎开发者入驻，共建秘宝生态",
       "red-envelope": {
         "title": "发红包",
-        "desc": "为朋友发送随机 NFT 红包，没有秘宝账户也能收"
+        "desc": "为朋友发送随机秘宝红包，没有秘宝账户也能收"
       },
       "ticket": {
         "title": "门票",
-        "desc": "出示 NFT 门票，彰显 VIP 身份"
+        "desc": "出示秘宝门票，彰显 VIP 身份"
       },
       "dao": {
         "title": "秘·DAO",
-        "desc": "使用 NFT 实现去中心化组织集体决策"
+        "desc": "使用秘宝实现去中心化组织集体决策"
       },
       "exchange": {
         "title": "兑换",
-        "desc": "收集 NFT 兑换其他商品或者限量版 NFT"
+        "desc": "收集秘宝兑换其他商品或者限量版秘宝"
       },
       "exhibition": {
         "title": "虚拟展厅",
@@ -247,7 +247,7 @@
       },
       "vip": {
         "title": "VIP 社区",
-        "desc": "持有特殊 NFT 才能访问的高质量社区"
+        "desc": "持有特殊秘宝才能访问的高质量社区"
       }
     },
     "resource": {
