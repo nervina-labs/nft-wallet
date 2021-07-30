@@ -168,7 +168,10 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
     if (tx.is_issuer_banned) {
       return (
         <>
-          {t('transactions.receive-from')}&nbsp;
+          {tx.tx_direction === TransactionDirection.Receive
+            ? t('transactions.receive-from')
+            : t('transactions.send-to')}
+          &nbsp;
           <span className="error">{t('common.baned.issuer')}</span>
         </>
       )
