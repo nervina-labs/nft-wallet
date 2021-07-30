@@ -266,7 +266,7 @@
       "errors": {
         "not-support": "The current environment does not support connecting to Ethereum",
         "refuse": "Refused to authorize. Please reopen the page to authorize",
-        "submit-fail": "提交失败"
+        "submit-fail": "Submission Failed"
       }
     },
     "auth": {
