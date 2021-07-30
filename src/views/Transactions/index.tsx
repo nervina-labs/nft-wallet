@@ -172,7 +172,11 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
             ? t('transactions.receive-from')
             : t('transactions.send-to')}
           &nbsp;
-          <span className="error">{t('common.baned.issuer')}</span>
+          {!tx.from_address && !tx.to_address ? (
+            <span className="error">{t('common.baned.issuer')}</span>
+          ) : null}
+          {tx.from_address ? truncateMiddle(tx.from_address, 5, 5) : null}
+          {tx.to_address ? truncateMiddle(tx.to_address, 5, 5) : null}
         </>
       )
     }
