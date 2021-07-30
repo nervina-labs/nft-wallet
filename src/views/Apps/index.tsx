@@ -40,6 +40,7 @@ export const ItemContainer = styled.div`
   display: inline-block;
   cursor: not-allowed;
   text-align: left;
+  position: relative;
   &.available {
     cursor: pointer;
   }
@@ -56,8 +57,8 @@ export const ItemContainer = styled.div`
     text-align: left;
   }
   .desc {
+    position: absolute;
     text-align: left;
-    margin: 0 12px;
     font-size: 12px;
     line-height: 17px;
     color: white;
@@ -66,8 +67,9 @@ export const ItemContainer = styled.div`
   }
   .wait {
     img {
-      margin-top: 36px;
-      margin-left: 12px;
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
       width: 38px;
       height: 35px;
     }
