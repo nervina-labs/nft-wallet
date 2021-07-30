@@ -89,8 +89,8 @@ export const Home: React.FC = () => {
   return (
     <Container className="content">
       <Notifications
-        banners={notifications?.banner}
-        announcements={notifications?.announcement}
+        banners={notifications?.['Notification::Banner']}
+        announcements={notifications?.['Notification::Announcement']}
         isLoading={isNotificationsLoading}
       />
       <div className="header">

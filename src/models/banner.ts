@@ -1,6 +1,6 @@
 export interface Notifications {
-  banner: Banner[]
-  announcement: Announcement[]
+  ['Notification::Announcement']: Banner[]
+  ['Notification::Banner']: Announcement[]
 }
 
 export interface Banner {
