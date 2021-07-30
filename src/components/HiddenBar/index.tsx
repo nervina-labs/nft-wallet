@@ -92,18 +92,18 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
           <ExploreSvg />
         </div>
         <div
+          onClick={myOnClick}
+          className={classnames('item', { active: matchNFTs?.isExact })}
+        >
+          <MySvg />
+        </div>
+        <div
           onClick={
             matchApps?.isExact ? undefined : () => history.push(RoutePath.Apps)
           }
           className={classnames('item', { active: matchApps?.isExact })}
         >
           <AppsSvg />
-        </div>
-        <div
-          onClick={myOnClick}
-          className={classnames('item', { active: matchNFTs?.isExact })}
-        >
-          <MySvg />
         </div>
       </Container>
     </HideOnScroll>
