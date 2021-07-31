@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { HiddenBar } from '../../components/HiddenBar'
@@ -113,22 +113,25 @@ export const Item: React.FC<ItemProps> = ({
 export const Apps: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const { pubkey, email } = useWalletModel()
-  const getAppUrl = (baseUrl: string): string => {
-    const url = `${baseUrl}`
-    if (pubkey && email) {
-      return `${url}/?unipass_ret=${encodeURIComponent(
-        JSON.stringify({
-          code: 200,
-          info: 'login success',
-          data: {
-            pubkey,
-            email,
-          },
-        })
-      )}`
-    }
-    return url
-  }
+  const getAppUrl = useCallback(
+    (baseUrl: string): string => {
+      const url = `${baseUrl}`
+      if (pubkey && email) {
+        return `${url}/?unipass_ret=${encodeURIComponent(
+          JSON.stringify({
+            code: 200,
+            info: 'login success',
+            data: {
+              pubkey,
+              email,
+            },
+          })
+        )}`
+      }
+      return url
+    },
+    [pubkey, email]
+  )
   const data: ItemProps[] = [
     {
       title: t('apps.red-envelope.title'),
