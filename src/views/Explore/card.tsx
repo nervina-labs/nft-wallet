@@ -9,6 +9,8 @@ import { Limited } from '../../components/Limited'
 import { Like } from '../../components/Like'
 import { TokenClass } from '../../models/class-list'
 import classNames from 'classnames'
+import { NftType } from '../../models'
+import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 
 const CardContainer = styled.div`
   display: flex;
@@ -28,6 +30,22 @@ const CardContainer = styled.div`
   .media {
     img {
       border-radius: 8px;
+    }
+    position: relative;
+
+    .player {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
   }
 
@@ -87,6 +105,9 @@ export const Card: React.FC<CardProps> = ({
     ? 186
     : ((window.innerWidth > 500 ? 500 : window.innerWidth) - 48) / 2
   const history = useHistory()
+  const isPlayable =
+    token.renderer_type === NftType.Audio ||
+    token.renderer_type === NftType.Video
   return (
     <CardContainer
       onClick={() => {
@@ -112,6 +133,11 @@ export const Card: React.FC<CardProps> = ({
             />
           }
         />
+        {isPlayable ? (
+          <span className="player">
+            <PlayerSvg />
+          </span>
+        ) : null}
       </div>
       <div className={classNames('title', { oneline: oneLineName })}>
         {token.name}

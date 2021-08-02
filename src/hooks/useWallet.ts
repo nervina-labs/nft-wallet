@@ -137,14 +137,15 @@ function useWallet(): UseWallet {
 
   const setUnipassAccount = useCallback(
     (account: UnipassAccount | null) => {
-      setAccount(
-        account === null
+      setAccount((prevAccount) => {
+        return account === null
           ? null
           : {
+              ...prevAccount,
               ...account,
               expireTime: dayjs().add(1, 'day').toISOString(),
             }
-      )
+      })
     },
     [setAccount]
   )
