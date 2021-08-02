@@ -354,15 +354,17 @@ export const Login: React.FC = () => {
           }
         />
       </div>
-      <div className="beian">
-        <a
-          href="https://beian.miit.gov.cn/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {t('common.beian')}
-        </a>
-      </div>
+      {i18n.language !== 'en' ? (
+        <div className="beian">
+          <a
+            href="https://beian.miit.gov.cn/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('common.beian')}
+          </a>
+        </div>
+      ) : null}
       {/* <Button
           disabled={
             isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
