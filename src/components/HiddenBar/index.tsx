@@ -87,7 +87,7 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
               ? undefined
               : () => history.push(RoutePath.Explore)
           }
-          className={classnames('item', { active: matchExplore?.isExact })}
+          className={classnames('item', { active: matchExplore != null })}
         >
           <ExploreSvg />
         </div>

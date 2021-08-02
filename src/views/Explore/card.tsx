@@ -111,7 +111,7 @@ export const Card: React.FC<CardProps> = ({
   return (
     <CardContainer
       onClick={() => {
-        history.push(`class/${token.uuid}`)
+        history.push(`/class/${token.uuid}`)
       }}
       className={classNames({ horizontal: isHorizontal })}
     >

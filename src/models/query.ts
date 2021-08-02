@@ -9,6 +9,8 @@ export enum Query {
   Profile = 'profile',
   Hotest = 'hotest',
   Collections = 'collections',
+  Collection = 'collection',
+  CollectionDetail = 'collection-detail',
   Issuers = 'Issuers',
   Notifications = 'Notifications',
 }

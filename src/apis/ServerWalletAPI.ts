@@ -270,7 +270,11 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getSpecialAssets() {
-    return await this.axios.get('/special_category_classes')
+    return await this.axios.get('/special_categories')
+  }
+
+  async getCollectionDetail(uuid: string) {
+    return await this.axios.get(`/special_categories/${uuid}`)
   }
 
   async getRecommendIssuers() {
@@ -279,6 +283,21 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async getRecommendClasses() {
     return await this.axios.get('/recommended_classes', {
+      params: {
+        address: this.address,
+      },
+    })
+  }
+
+  async getCollection(uuid: string, page: number) {
+    const params: Record<string, string | number> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    if (this.address) {
+      params.address = this.address
+    }
+    return await this.axios.get(`/special_categories/${uuid}/token_classes`, {
       params: {
         address: this.address,
       },

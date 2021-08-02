@@ -92,5 +92,12 @@ export interface NFTWalletAPI {
 
   getRecommendClasses: () => Promise<AxiosResponse<TokenClass[]>>
 
+  getCollection: (
+    uuid: string,
+    page: number
+  ) => Promise<AxiosResponse<ClassList>>
+
+  getCollectionDetail: (uuid: string) => Promise<AxiosResponse<SpecialAssets>>
+
   getNotifications: () => Promise<AxiosResponse<Notifications>>
 }

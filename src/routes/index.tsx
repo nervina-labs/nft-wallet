@@ -33,6 +33,7 @@ import { Unipass } from '../views/Unipass'
 import { Apps } from '../views/Apps'
 import { AddressCollector } from '../views/AddressCollector'
 import { useToast } from '../hooks/useToast'
+import { Collection } from '../views/Collection'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -58,6 +59,7 @@ export enum RoutePath {
   Apps = '/apps',
   License = '/license',
   AddressCollector = '/addresses',
+  Collection = '/explore/collection',
 }
 
 export const RouterContext = React.createContext({
@@ -236,7 +238,7 @@ const routes: MibaoRouterProps[] = [
   },
   {
     component: Explore,
-    exact: false,
+    exact: true,
     key: 'Explore',
     path: RoutePath.Explore,
   },
@@ -263,6 +265,13 @@ const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Apps',
     path: RoutePath.Apps,
+  },
+  {
+    component: Collection,
+    exact: true,
+    key: 'Collection',
+    path: RoutePath.Collection,
+    params: '/:id',
   },
 ]
 
