@@ -142,6 +142,10 @@ export const Collection: React.FC = () => {
     }
     return []
   }, [tokens])
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   return (
     <Container>
       <HiddenBar alwaysShow={alwayShowTabbar} />
@@ -160,7 +164,7 @@ export const Collection: React.FC = () => {
           secondWidth={96}
           secondMarginBottom={22}
           secondHiddenWidth={17.5}
-          containerWidth={containerWidth ? containerWidth - 16 : undefined}
+          containerWidth={containerWidth ? containerWidth - 32 : undefined}
           height={102}
         />
       </div>
