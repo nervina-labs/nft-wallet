@@ -75,6 +75,7 @@ export const Gallery: React.FC<GalleryProps> = ({
           backup={
             <LazyLoadImage
               imageStyle={{ borderRadius: '4px' }}
+              cover
               skeletonStyle={{ borderRadius: '4px' }}
               width={primaryWidth}
               height={primaryWidth}
@@ -97,6 +98,7 @@ export const Gallery: React.FC<GalleryProps> = ({
           disableContextMenu={true}
           backup={
             <LazyLoadImage
+              cover
               imageStyle={{ borderRadius: '4px' }}
               skeletonStyle={{ borderRadius: '4px' }}
               width={secondWidth}
@@ -120,6 +122,7 @@ export const Gallery: React.FC<GalleryProps> = ({
           disableContextMenu={true}
           backup={
             <LazyLoadImage
+              cover
               imageStyle={{ borderRadius: '4px' }}
               skeletonStyle={{ borderRadius: '4px' }}
               width={secondWidth}
