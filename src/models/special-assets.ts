@@ -14,6 +14,7 @@ export interface SpecialAssets {
   locales: {
     [key: string]: string
   }
+  uuid: string
   bg_color: string
   token_classes: SpecialAssetsToken[]
 }
