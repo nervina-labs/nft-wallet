@@ -61,7 +61,7 @@ function openIframe(
   return { uniFrame }
 }
 
-function pubkeyToAddress(pubkey: string): string {
+export function pubkeyToAddress(pubkey: string): string {
   const pubKeyBuffer = Buffer.from(pubkey.replace('0x', ''), 'hex')
   const hashHex = new Blake2bHasher()
     .update(pubKeyBuffer.buffer)

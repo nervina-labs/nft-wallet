@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
 import {
   ClassSortType,
@@ -9,7 +10,14 @@ import {
   UnsignedTransaction,
 } from '../models'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { Transaction as PwTransaction, transformers } from '@lay2/pw-core'
+import {
+  Transaction as PwTransaction,
+  transformers,
+  Reader,
+  SerializeWitnessArgs,
+  WitnessArgs,
+  normalizers,
+} from '@lay2/pw-core'
 import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
@@ -103,6 +111,27 @@ export class ServerWalletAPI implements NFTWalletAPI {
   ): Promise<AxiosResponse<{ liked: boolean }>> {
     const url = `/token_classes/${uuid}/toggle_likes/${this.address}`
     return await this.axios.put(url, { auth })
+  }
+
+  async submitAddress(
+    uuid: string,
+    auth: Auth
+  ): Promise<AxiosResponse<{ code: number }>> {
+    const url = `/address_packages/${uuid}/items`
+    return await axios.post(
+      `${SERVER_URL}${url}`.replace('/explorer/', '/saas/'),
+      {
+        auth,
+        address: this.address,
+      }
+    )
+  }
+
+  async detectAddress(uuid: string): Promise<AxiosResponse<Boolean>> {
+    const url = `/address_packages/${uuid}`
+    return await axios.get(
+      `${SERVER_URL}${url}`.replace('/explorer/', '/saas/')
+    )
   }
 
   async getClassListByTagId(
@@ -216,16 +245,66 @@ export class ServerWalletAPI implements NFTWalletAPI {
   async transfer(
     uuid: string,
     tx: PwTransaction,
-    toAddress: string
+    toAddress: string,
+    sig?: string
   ): Promise<AxiosResponse<{ message: number }>> {
-    const rawTx = transformers.TransformTransaction(tx)
+    const rawTx = transformers.TransformTransaction(tx) as any
+    if (sig) {
+      const witnessArgs: WitnessArgs = {
+        lock: sig,
+        input_type: '',
+        output_type: '',
+      }
+      const witness = new Reader(
+        SerializeWitnessArgs(normalizers.NormalizeWitnessArgs(witnessArgs))
+      ).serializeJson()
+      rawTx.witnesses[0] = witness
+    }
     const data = {
       signed_tx: JSON.stringify(rawTx),
       token_uuid: uuid,
       from_address: this.address,
       to_address: toAddress,
     }
-    console.log(data)
     return await this.axios.post('/token_ckb_transactions', data)
+  }
+
+  async getSpecialAssets() {
+    return await this.axios.get('/special_categories')
+  }
+
+  async getCollectionDetail(uuid: string) {
+    return await this.axios.get(`/special_categories/${uuid}`)
+  }
+
+  async getRecommendIssuers() {
+    return await this.axios.get('/recommended_issuers')
+  }
+
+  async getRecommendClasses() {
+    return await this.axios.get('/recommended_classes', {
+      params: {
+        address: this.address,
+      },
+    })
+  }
+
+  async getCollection(uuid: string, page: number) {
+    const params: Record<string, string | number> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    if (this.address) {
+      params.address = this.address
+    }
+    return await this.axios.get(`/special_categories/${uuid}/token_classes`, {
+      params: {
+        address: this.address,
+      },
+    })
+  }
+
+  async getNotifications() {
+    return await this.axios.get('/notifications')
   }
 }

@@ -4,6 +4,9 @@ import { ClassList, Tag, TokenClass } from './class-list'
 import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
+import { SpecialAssets } from './special-assets'
+import { Issuer } from './issuer'
+import { Notifications } from './banner'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -21,12 +24,23 @@ export enum ClassSortType {
   Likes = 'likes',
 }
 
+interface SpecialCategories {
+  special_categories: SpecialAssets[]
+}
+
 export interface NFTWalletAPI {
   getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
 
   getNFTDetail: (uuid: string) => Promise<AxiosResponse<NFTDetail>>
 
   getTransactions: (page: number) => Promise<AxiosResponse<Transaction>>
+
+  submitAddress: (
+    uuid: string,
+    auth: Auth
+  ) => Promise<AxiosResponse<{ code: number }>>
+
+  detectAddress: (uuid: string) => Promise<AxiosResponse<Boolean>>
 
   getTransferNftTransaction: (
     uuid: string,
@@ -68,6 +82,22 @@ export interface NFTWalletAPI {
   transfer: (
     uuid: string,
     tx: PwTransaction,
-    toAddress: string
+    toAddress: string,
+    sig?: string
   ) => Promise<AxiosResponse<{ message: number }>>
+
+  getSpecialAssets: () => Promise<AxiosResponse<SpecialCategories>>
+
+  getRecommendIssuers: () => Promise<AxiosResponse<Issuer[]>>
+
+  getRecommendClasses: () => Promise<AxiosResponse<TokenClass[]>>
+
+  getCollection: (
+    uuid: string,
+    page: number
+  ) => Promise<AxiosResponse<ClassList>>
+
+  getCollectionDetail: (uuid: string) => Promise<AxiosResponse<SpecialAssets>>
+
+  getNotifications: () => Promise<AxiosResponse<Notifications>>
 }

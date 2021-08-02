@@ -120,7 +120,7 @@
     "nft": {
       "title": "秘宝细节",
       "transfer": "转让",
-      "desc": "NFT 简介"
+      "desc": "秘宝简介"
     },
     "account": {
       "title": "我的帐号",
@@ -184,7 +184,11 @@
       "my": "我的",
       "latest": "最新创作",
       "most-liked": "获赞最多",
-      "recommended": "推荐"
+      "recommended": "推荐",
+      "hotest": "最热秘宝",
+      "collections": "秘宝精选",
+      "issuers": "最受欢迎创作者",
+      "home": "首页"
     },
     "menu": {
       "profile": "个人资料",
@@ -218,6 +222,59 @@
       },
       "next": "下一步",
       "done": "开始使用"
+    },
+    "apps": {
+      "welcome": "欢迎开发者入驻，共建秘宝生态",
+      "red-envelope": {
+        "title": "发红包",
+        "desc": "为朋友发送随机秘宝红包，没有秘宝账户也能收"
+      },
+      "ticket": {
+        "title": "门票",
+        "desc": "出示秘宝门票，彰显 VIP 身份"
+      },
+      "dao": {
+        "title": "秘·DAO",
+        "desc": "使用秘宝实现去中心化组织集体决策"
+      },
+      "exchange": {
+        "title": "兑换",
+        "desc": "收集秘宝兑换其他商品或者限量版秘宝"
+      },
+      "exhibition": {
+        "title": "虚拟展厅",
+        "desc": "自定义 3D 展厅，分享朋友圈邀请朋友参观"
+      },
+      "vip": {
+        "title": "VIP 社区",
+        "desc": "持有特殊秘宝才能访问的高质量社区"
+      }
+    },
+    "resource": {
+      "fail": "加载资源失败"
+    },
+    "license": {
+      "agree": "同意相关<a>《用户使用条款及隐私条款》<a/>",
+      "warn": "请先同意相关协议",
+      "title": "服务条款"
+    },
+    "addresses": {
+      "submit": "提交地址参与活动",
+      "submited": "地址已提交成功，感谢您的参与！",
+      "duplicate": "地址已经提交，请勿重复提交",
+      "continue": "您还可以继续操作",
+      "explore": "探索秘宝",
+      "select": "请选择一种提交方式（连接成功即自动提交)",
+      "errors": {
+        "not-support": "当前环境不支持连接以太坊",
+        "refuse": "用户拒绝授权，请重新打开页面进行授权",
+        "submit-fail": "提交失败"
+      }
+    },
+    "auth": {
+      "title": "授权确认",
+      "content": "我们将请求一个针对秘宝地址的数字签名，从而保护您的隐私数据不会被泄露和篡改，如个人信息，点赞数据等。",
+      "ok": "继续"
     }
   }
 }

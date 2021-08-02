@@ -57,7 +57,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
         backup
       ) : (
         <img
-          src={src}
+          src={src === null ? '' : src}
           ref={imgRef}
           onContextMenu={disableContextMenu ? disableConext : undefined}
           data-src={dataSrc}
@@ -73,13 +73,13 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
           onError={onError}
           alt={alt}
           style={{
-            ...imageStyle,
             objectFit: variant === 'circle' || cover ? 'cover' : 'contain',
             display: loaded ? 'block' : 'none',
             width: `${width}px`,
             height: setImageHeight ? `${height}px` : 'auto',
             maxWidth: '100%',
             pointerEvents: disableContextMenu ? 'none' : 'auto',
+            ...imageStyle,
           }}
         />
       )}

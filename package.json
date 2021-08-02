@@ -35,6 +35,7 @@
     "react": "^17.0.0",
     "react-better-tilt": "1.5.14",
     "react-dom": "^17.0.0",
+    "react-fast-marquee": "^1.2.1",
     "react-i18next": "^11.8.15",
     "react-infinite-scroll-component": "^6.0.0",
     "react-mobile-datepicker": "^4.0.2",
@@ -43,6 +44,8 @@
     "react-webcam": "^5.2.4",
     "serve": "^11.3.2",
     "styled-components": "^5.2.3",
+    "swiper": "^6.8.0",
+    "unstated-next": "^1.1.0",
     "viewerjs": "^1.10.0",
     "web3": "^1.3.5",
     "web3modal": "^1.9.3"

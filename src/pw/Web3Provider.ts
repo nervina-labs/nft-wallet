@@ -55,7 +55,7 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
       const from = this.address.addressString
 
       if (typeof window.ethereum !== 'undefined') {
-        window.ethereum
+        ;(window.ethereum as any)
           .request({ method: 'personal_sign', params: [from, message] })
           .then((result: string) => {
             resolve(result)
@@ -114,7 +114,7 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
           }
         )
       } else if (typeof window.ethereum !== 'undefined') {
-        window.ethereum
+        ;(window.ethereum as any)
           .request({ method: 'personal_sign', params: [from, message] })
           .then((result: string) => {
             resolve(handleResult(result))

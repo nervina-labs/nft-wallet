@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { NFTToken, TransactionStatus } from '../../models'
+import { NFTToken, NftType, TransactionStatus } from '../../models'
 import { LazyLoadImage } from '../Image'
 import { Limited } from '../Limited'
 import { Creator } from '../Creator'
 import { useTranslation } from 'react-i18next'
 import FallbackImg from '../../assets/img/card-fallback.png'
 import { getImagePreviewUrl } from '../../utils'
+import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 
 export interface CardProps {
   token: NFTToken
@@ -124,6 +125,7 @@ const Container = styled.div`
     justify-content: center;
     border-radius: 10px;
     background-color: white;
+    position: relative;
     img {
       border-radius: 10px;
     }
@@ -133,6 +135,20 @@ const Container = styled.div`
       font-size: 10px;
       color: #2b2b2b;
       opacity: 0.6;
+    }
+    .player {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
   }
   .content {
@@ -212,6 +228,9 @@ export const Card: React.FC<CardProps> = ({
   const isBanned = isClassBanned || isIssuerBaned
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(isBanned)
   const [t] = useTranslation('translations')
+  const isPlayable =
+    token.renderer_type === NftType.Audio ||
+    token.renderer_type === NftType.Video
 
   return (
     <Container
@@ -252,6 +271,11 @@ export const Card: React.FC<CardProps> = ({
         />
         {isFallBackImgLoaded ? (
           <span className="fallback">{t('common.img-lost')}</span>
+        ) : null}
+        {isPlayable ? (
+          <span className="player">
+            <PlayerSvg />
+          </span>
         ) : null}
       </div>
       <div className="content">

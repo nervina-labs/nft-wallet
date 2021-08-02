@@ -8,9 +8,6 @@ import { ClassSortType as SortType, Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
-import { LazyLoadImage } from '../../components/Image'
-import FallbackImg from '../../assets/img/card-fallback.png'
-import { Creator } from '../../components/Creator'
 import { Masonry } from '../../components/Masonry'
 import { Loading } from '../../components/Loading'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -19,13 +16,13 @@ import { useHistory } from 'react-router'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useRouteMatch } from 'react-router-dom'
 import { RoutePath } from '../../routes'
-import { Limited } from '../../components/Limited'
-import { Like } from '../../components/Like'
 import { useScrollTrigger } from '@material-ui/core'
 import classNames from 'classnames'
 import qs from 'querystring'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
-import { getImagePreviewUrl, isVerticalScrollable } from '../../utils'
+import { isVerticalScrollable } from '../../utils'
+import { Home } from './home'
+import { Card } from './card'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -146,123 +143,11 @@ const Container = styled(MainContainer)`
   }
 `
 
-const CardContainer = styled.div`
-  display: flex;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-  flex-direction: column;
-  overflow: hidden;
-  cursor: pointer;
-
-  .media {
-    img {
-      border-radius: 8px;
-    }
-  }
-
-  .title {
-    font-size: 14px;
-    line-height: 16px;
-    color: #000000;
-    margin: 10px 8px;
-    margin-bottom: 16px;
-    display: -webkit-box;
-    display: -moz-box;
-    flex: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-  }
-
-  .issuer {
-    margin: 10px;
-    margin-top: 0;
-    .name {
-      display: -webkit-box;
-      display: -moz-box;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      -webkit-line-clamp: 1;
-      white-space: inherit;
-      word-break: break-all;
-    }
-  }
-
-  .info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 10px;
-    margin-bottom: 16px;
-  }
-`
-
-interface CardProps {
-  token: TokenClass
-}
-
-const Card: React.FC<CardProps> = ({ token }) => {
-  const width = ((window.innerWidth > 500 ? 500 : window.innerWidth) - 48) / 2
-  const history = useHistory()
-  return (
-    <CardContainer
-      onClick={() => {
-        history.push(`class/${token.uuid}`)
-      }}
-    >
-      <div className="media">
-        <LazyLoadImage
-          src={getImagePreviewUrl(token.bg_image_url)}
-          width={width}
-          height={width}
-          skeletonStyle={{ borderRadius: '8px' }}
-          cover={true}
-          disableContextMenu={true}
-          backup={
-            <LazyLoadImage
-              skeletonStyle={{ borderRadius: '8px' }}
-              width={width}
-              cover
-              height={width}
-              src={FallbackImg}
-            />
-          }
-        />
-      </div>
-      <div className="title">{token.name}</div>
-      <div className="issuer">
-        <Creator
-          title=""
-          baned={token.is_issuer_banned}
-          url={token.issuer_info?.avatar_url}
-          name={token.issuer_info?.name}
-          uuid={token.issuer_info?.uuid}
-          vipAlignRight
-          color="rgb(51, 51, 51)"
-          isVip={token?.verified_info?.is_verified}
-          vipTitle={token?.verified_info?.verified_title}
-          vipSource={token?.verified_info?.verified_source}
-        />
-      </div>
-      <div className="info">
-        <Limited count={token.total} bold={false} banned={false} color="#666" />
-        <Like
-          count={token.class_likes}
-          liked={token.class_liked}
-          uuid={token.uuid}
-        />
-      </div>
-    </CardContainer>
-  )
-}
-
 export const Explore: React.FC = () => {
   const [t, i18n] = useTranslation('translations')
   const history = useHistory()
-  const currentTag = useRouteQuery('tag', 'all')
-  const sortRoute = useRouteQuery('sort', '')
+  const currentTag = useRouteQuery<string>('tag', '')
+  const sortRoute = useRouteQuery<string>('sort', '')
   const sortType = useMemo(() => {
     if (currentTag === 'all') {
       if (sortRoute === 'likes') {
@@ -305,7 +190,10 @@ export const Explore: React.FC = () => {
           routeName: tag.locales.en.trim().toLowerCase(),
         }
       }) ?? []
-    return [{ name: t('explore.all'), uuid: 'all', routeName: 'all' }]
+    return [
+      { name: t('explore.home'), uuid: null, routeName: null },
+      { name: t('explore.all'), uuid: 'all', routeName: 'all' },
+    ]
       .concat(tags)
       .concat([
         {
@@ -400,9 +288,20 @@ export const Explore: React.FC = () => {
 
   return (
     <Container>
-      <HiddenBar alwaysShow={alwayShowTabbar} />
+      <HiddenBar alwaysShow={currentTag === '' ? false : alwayShowTabbar} />
       <div className="tags">
-        {allTags.map((t) => (
+        <div
+          className={classNames({ tag: true, active: currentTag === '' })}
+          onClick={() => {
+            if (currentTag === '') {
+              return
+            }
+            history.push(RoutePath.Explore)
+          }}
+        >
+          {allTags[0]?.name}
+        </div>
+        {allTags.slice(1).map((t) => (
           <div
             key={t.uuid}
             className={`tag ${currentTagId === t.uuid ? 'active' : ''}`}
@@ -411,7 +310,7 @@ export const Explore: React.FC = () => {
                 return
               }
               history.push(
-                t.uuid === 'all'
+                t.routeName === null
                   ? RoutePath.Explore
                   : `${RoutePath.Explore}?tag=${t.routeName}`
               )
@@ -421,108 +320,116 @@ export const Explore: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className={classNames('header', { 'fixed-header': triggerHeader })}>
-        {triggerHeader ? null : <h3>{currentTagName}</h3>}
-        <div className={classNames('filters', { fixed: triggerHeader })}>
-          {currentTagId === 'all' ? (
-            <div
-              className={classNames('filter', {
-                active: sortType === SortType.Recommend,
-              })}
-              onClick={() => {
-                if (sortRoute === '') {
-                  return
-                }
-                history.push(RoutePath.Explore)
-              }}
-            >
-              <span>{t('explore.recommended')}</span>
-              {sortType === SortType.Recommend ? (
-                <span className="active-line"></span>
+      {currentTag === '' ? (
+        <Home />
+      ) : (
+        <>
+          <div
+            className={classNames('header', { 'fixed-header': triggerHeader })}
+          >
+            {triggerHeader ? null : <h3>{currentTagName}</h3>}
+            <div className={classNames('filters', { fixed: triggerHeader })}>
+              {currentTagId === 'all' ? (
+                <div
+                  className={classNames('filter', {
+                    active: sortType === SortType.Recommend,
+                  })}
+                  onClick={() => {
+                    if (sortType === SortType.Recommend) {
+                      return
+                    }
+                    history.push(RoutePath.Explore + '?tag=all')
+                  }}
+                >
+                  <span>{t('explore.recommended')}</span>
+                  {sortType === SortType.Recommend ? (
+                    <span className="active-line"></span>
+                  ) : null}
+                </div>
               ) : null}
+              <div
+                className={classNames('filter', {
+                  active: sortType === SortType.Latest,
+                })}
+                onClick={() => {
+                  if (sortType === SortType.Latest) {
+                    return
+                  }
+                  const o = qs.parse(location.search.slice(1))
+                  if (currentTag === 'all') {
+                    o.sort = 'latest'
+                  } else {
+                    delete o.sort
+                  }
+                  const s = qs.stringify(o)
+                  const target = `${RoutePath.Explore}${
+                    s.length === 0 ? '' : '?' + s
+                  }`
+                  history.push(target)
+                }}
+              >
+                <span>{t('explore.latest')}</span>
+                {sortType === SortType.Latest ? (
+                  <span className="active-line"></span>
+                ) : null}
+              </div>
+              <div
+                className={classNames('filter', {
+                  active: sortType === SortType.Likes,
+                })}
+                onClick={() => {
+                  if (sortType === SortType.Likes) {
+                    return
+                  }
+                  const o = qs.parse(location.search.slice(1))
+                  o.sort = 'likes'
+                  const target = `${RoutePath.Explore}?${qs.stringify(o)}`
+                  history.push(target)
+                }}
+              >
+                <span>{t('explore.most-liked')}</span>
+                {sortType === SortType.Likes ? (
+                  <span className="active-line"></span>
+                ) : null}
+              </div>
             </div>
-          ) : null}
-          <div
-            className={classNames('filter', {
-              active: sortType === SortType.Latest,
-            })}
-            onClick={() => {
-              if (sortType === SortType.Latest) {
-                return
-              }
-              const o = qs.parse(location.search.slice(1))
-              if (currentTag === 'all') {
-                o.sort = 'latest'
-              } else {
-                delete o.sort
-              }
-              const s = qs.stringify(o)
-              const target = `${RoutePath.Explore}${
-                s.length === 0 ? '' : '?' + s
-              }`
-              history.push(target)
-            }}
-          >
-            <span>{t('explore.latest')}</span>
-            {sortType === SortType.Latest ? (
-              <span className="active-line"></span>
-            ) : null}
           </div>
-          <div
-            className={classNames('filter', {
-              active: sortType === SortType.Likes,
-            })}
-            onClick={() => {
-              if (sortType === SortType.Likes) {
-                return
-              }
-              const o = qs.parse(location.search.slice(1))
-              o.sort = 'likes'
-              const target = `${RoutePath.Explore}?${qs.stringify(o)}`
-              history.push(target)
-            }}
-          >
-            <span>{t('explore.most-liked')}</span>
-            {sortType === SortType.Likes ? (
-              <span className="active-line"></span>
-            ) : null}
-          </div>
-        </div>
-      </div>
-      <section className="content">
-        {isRefetching ? <Loading /> : null}
-        {data === undefined && status === 'loading' ? (
-          <Loading />
-        ) : (
-          <InfiniteScroll
-            refreshFunction={refresh}
-            pullDownToRefresh={!IS_WEXIN}
-            pullDownToRefreshContent={
-              <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
-            }
-            pullDownToRefreshThreshold={80}
-            releaseToRefreshContent={
-              <h4>&#8593; {t('common.actions.release-refresh')}</h4>
-            }
-            dataLength={dataLength}
-            next={fetchNextPage}
-            hasMore={hasNextPage === true}
-            scrollThreshold="300px"
-            loader={<Loading />}
-            endMessage={
-              <h4 className="end">
-                {dataLength <= 5 ? ' ' : t('common.actions.pull-to-down')}
-              </h4>
-            }
-          >
-            <Masonry columns={2}>
-              {tokens?.map((token, i) => {
-                return <Card token={token} key={`${i}`} />
-              })}
-            </Masonry>
-          </InfiniteScroll>
-        )}
-      </section>
+          <section className="content">
+            {isRefetching ? <Loading /> : null}
+            {data === undefined && status === 'loading' ? (
+              <Loading />
+            ) : (
+              <InfiniteScroll
+                refreshFunction={refresh}
+                pullDownToRefresh={!IS_WEXIN}
+                pullDownToRefreshContent={
+                  <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
+                }
+                pullDownToRefreshThreshold={80}
+                releaseToRefreshContent={
+                  <h4>&#8593; {t('common.actions.release-refresh')}</h4>
+                }
+                dataLength={dataLength}
+                next={fetchNextPage}
+                hasMore={hasNextPage === true}
+                scrollThreshold="300px"
+                loader={<Loading />}
+                endMessage={
+                  <h4 className="end">
+                    {dataLength <= 5 ? ' ' : t('common.actions.pull-to-down')}
+                  </h4>
+                }
+              >
+                <Masonry columns={2}>
+                  {tokens?.map((token, i) => {
+                    return <Card token={token} key={`${i}`} />
+                  })}
+                </Masonry>
+              </InfiniteScroll>
+            )}
+          </section>
+        </>
+      )}
     </Container>
   )
 }

@@ -168,15 +168,26 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
     if (tx.is_issuer_banned) {
       return (
         <>
-          {t('transactions.receive-from')}&nbsp;
-          <span className="error">{t('common.baned.issuer')}</span>
+          {tx.tx_direction === TransactionDirection.Receive
+            ? t('transactions.receive-from')
+            : t('transactions.send-to')}
+          &nbsp;
+          {!tx.from_address && !tx.to_address ? (
+            <span className="error">{t('common.baned.issuer')}</span>
+          ) : null}
+          {tx.from_address && tx.tx_direction === TransactionDirection.Receive
+            ? truncateMiddle(tx.from_address, 5, 5)
+            : null}
+          {tx.to_address && tx.tx_direction === TransactionDirection.Send
+            ? truncateMiddle(tx.to_address, 5, 5)
+            : null}
         </>
       )
     }
     return tx.tx_direction === TransactionDirection.Receive ? (
       <>
         <span>{`${t('transactions.receive-from')} ${
-          tx.issuer_uuid !== ''
+          tx.issuer_uuid
             ? tx.from_address
             : truncateMiddle(tx.from_address, 5, 5)
         }`}</span>

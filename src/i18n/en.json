@@ -182,7 +182,11 @@
       "my": "My",
       "latest": "Latest",
       "most-liked": "Most Liked",
-      "recommended": "Recommended"
+      "recommended": "Recommended",
+      "hotest": "Hot NFTs",
+      "collections": "Featured by Mibao",
+      "issuers": "Hot Creators",
+      "home": "Home"
     },
     "menu": {
       "profile": "Profile",
@@ -216,6 +220,59 @@
       },
       "next": "Next",
       "done": "Start"
+    },
+    "apps": {
+      "welcome": "Welcome to settle in and build the ecosystem together",
+      "red-envelope": {
+        "title": "Red Pocket",
+        "desc": "Send NFT red pockets to friends"
+      },
+      "ticket": {
+        "title": "Ticket",
+        "desc": "Show your NFT ticket"
+      },
+      "dao": {
+        "title": "Mi·DAO",
+        "desc": "Make collective decision in a decentralized way"
+      },
+      "exchange": {
+        "title": "Prize Redeem",
+        "desc": "Collect NFT(s) to redeem prizes"
+      },
+      "exhibition": {
+        "title": "Exhibition hall",
+        "desc": "Customize your personal 3D exhibition hall"
+      },
+      "vip": {
+        "title": "VIP Community",
+        "desc": "High-quality community that can only be accessed by holding a special NFT"
+      }
+    },
+    "resource": {
+      "fail": "Failed to load"
+    },
+    "license": {
+      "agree": "Agree to<a> User Terms of Use and Privacy Policy<a/>",
+      "warn": "Please agree to the relevant agreement first",
+      "title": "Terms of Use"
+    },
+    "addresses": {
+      "submit": "Submit your address to participate in the activity",
+      "submited": "The address has been submitted successfully！",
+      "duplicate": "The address has already been submitted",
+      "continue": "You can",
+      "explore": "Explore More NFT",
+      "select": "Please select one method (automatically submit after successful connection)",
+      "errors": {
+        "not-support": "The current environment does not support connecting to Ethereum",
+        "refuse": "Refused to authorize. Please reopen the page to authorize",
+        "submit-fail": "Submission Failed"
+      }
+    },
+    "auth": {
+      "title": "Authorization",
+      "content": "We will request a digital signature for your address, so as to protect your private data from being leaked and tampered with, such as personal information, liked data, etc.",
+      "ok": "OK"
     }
   }
 }

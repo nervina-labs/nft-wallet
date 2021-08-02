@@ -13,7 +13,7 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
-import { NFT_EXPLORER_URL } from '../../constants'
+import { IS_MAC_SAFARI, NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
@@ -272,6 +272,12 @@ export const NFT: React.FC = () => {
 
   const verifyTitle = detail?.verified_info?.verified_title
 
+  const cachedInnerHeight = useMemo(() => {
+    return window.innerHeight
+  }, [])
+
+  const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
+
   if (!isLogined && matchTokenClass?.isExact !== true) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -296,13 +302,13 @@ export const NFT: React.FC = () => {
       {!isFallBackImgLoaded ? (
         <Background
           url={detail?.bg_image_url}
-          style={{ height: `${window.innerHeight - 44 - 280}px` }}
+          style={{ height: `${innerHeight - 44 - 280}px` }}
         />
       ) : null}
       <div
         className="figure"
         style={{
-          height: `${window.innerHeight - 44 - 300}px`,
+          height: `${innerHeight - 44 - 300}px`,
           background: `${
             isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
           }`,
@@ -315,6 +321,8 @@ export const NFT: React.FC = () => {
           enable={!isDialogOpen}
           onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
           onColorDetected={(color) => setImageColor(color)}
+          type={detail?.renderer_type}
+          renderer={detail?.renderer}
         />
       </div>
       {detail == null ? (
@@ -326,7 +334,7 @@ export const NFT: React.FC = () => {
           <section
             className="detail"
             style={{
-              top: `${window.innerHeight - 44 - 300}px`,
+              top: `${innerHeight - 44 - 300}px`,
             }}
           >
             {isTokenClass(detail) ? null : (

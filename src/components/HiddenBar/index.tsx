@@ -2,8 +2,8 @@ import React, { useCallback } from 'react'
 import Slide from '@material-ui/core/Slide'
 import styled from 'styled-components'
 import { ReactComponent as MySvg } from '../../assets/svg/my.svg'
-import { ReactComponent as MetaverseSvg } from '../../assets/svg/metaverse.svg'
-import { useTranslation } from 'react-i18next'
+import { ReactComponent as ExploreSvg } from '../../assets/svg/explore.svg'
+import { ReactComponent as AppsSvg } from '../../assets/svg/apps.svg'
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import classnames from 'classnames'
@@ -15,7 +15,6 @@ export const HideOnScroll: React.FC<{ alwaysShow?: boolean }> = ({
   alwaysShow,
 }) => {
   const trigger = useScrollTriggerWithThreshold()
-
   return (
     <Slide appear={false} direction="up" in={!trigger || alwaysShow}>
       {children as any}
@@ -27,32 +26,35 @@ const Container = styled.div`
   position: fixed;
   bottom: 20px;
   border-radius: 20px;
-  background: #2c454c;
+  background: #2a2a2a;
   display: flex;
   font-size: 16px;
-  width: calc(100% - 40px);
-  margin-left: 20px;
-  height: 60px;
+  width: 255px;
+  height: 55px;
+  margin-left: calc((100% - 255px) / 2);
   z-index: 10;
+  border-radius: 44px;
 
   @media (min-width: 500px) {
-    width: 460px;
+    margin-left: 122.5px;
   }
 
   .item {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    margin: 4px;
-    cursor: pointer;
     flex: 1;
     svg {
-      margin-right: 8px;
+      height: 24px;
+      width: 24px;
+      cursor: pointer;
     }
     &.active {
-      background-color: #ff5c00;
-      border-radius: 16px;
+      svg {
+        path {
+          fill: #ff5c00;
+        }
+      }
     }
   }
 `
@@ -60,12 +62,12 @@ const Container = styled.div`
 export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
   alwaysShow,
 }) => {
-  const [t] = useTranslation('translations')
   const matchExplore = useRouteMatch(RoutePath.Explore)
   const matchNFTs = useRouteMatch({
     path: RoutePath.NFTs,
     exact: true,
   })
+  const matchApps = useRouteMatch(RoutePath.Apps)
   const history = useHistory()
   const { isLogined } = useWalletModel()
 
@@ -85,17 +87,23 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
               ? undefined
               : () => history.push(RoutePath.Explore)
           }
-          className={classnames('item', { active: matchExplore?.isExact })}
+          className={classnames('item', { active: matchExplore != null })}
         >
-          <MetaverseSvg />
-          <span>{t('explore.metaverse')}</span>
+          <ExploreSvg />
         </div>
         <div
           onClick={myOnClick}
           className={classnames('item', { active: matchNFTs?.isExact })}
         >
           <MySvg />
-          <span>{t('explore.my')}</span>
+        </div>
+        <div
+          onClick={
+            matchApps?.isExact ? undefined : () => history.push(RoutePath.Apps)
+          }
+          className={classnames('item', { active: matchApps?.isExact })}
+        >
+          <AppsSvg />
         </div>
       </Container>
     </HideOnScroll>

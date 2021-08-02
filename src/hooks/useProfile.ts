@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createModel } from 'hox'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
+import { createContainer } from 'unstated-next'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
 import { useLocalStorage } from './useLocalStorage'
@@ -19,7 +19,7 @@ export interface Profile {
 }
 
 export interface UseProfile {
-  profile: Profile | null
+  profile: Auths | null
   setProfile: (profile: Partial<Profile>) => void
   setPreviewImageData: React.Dispatch<React.SetStateAction<string>>
   showEditSuccess: boolean
@@ -31,6 +31,7 @@ export interface UseProfile {
   snackbar: (msg: React.ReactNode) => void
   closeSnackbar: () => void
   toggleLike: (uuid: string, like: boolean) => Promise<boolean>
+  isAuthenticated: boolean
 }
 
 export interface Auths {
@@ -62,10 +63,10 @@ function useProfile(): UseProfile {
 
   const getAuth: () => Promise<Auth> = useCallback(async () => {
     let signature = profile?.[address]?.auth
-
     if (!signature) {
       signature = await signMessage(address)
-      if (signature.includes('N/A')) {
+      // we don't need set unipass profile auth in here
+      if (signature.includes('N/A') || walletType === WalletType.Unipass) {
         throw new Error('signing: user denied')
       } else {
         setProfile({
@@ -115,6 +116,13 @@ function useProfile(): UseProfile {
     [getAuth, api]
   )
 
+  const isAuthenticated = useMemo(() => {
+    if (profile == null) {
+      return false
+    }
+    return !!profile[address]
+  }, [address, profile])
+
   return {
     profile,
     setProfile,
@@ -128,7 +136,12 @@ function useProfile(): UseProfile {
     snackbar,
     closeSnackbar,
     toggleLike,
+    isAuthenticated,
   }
 }
 
-export const useProfileModel = createModel(useProfile)
+export const ProfileContainer = createContainer(useProfile)
+
+export const ProfileProvider = ProfileContainer.Provider
+
+export const useProfileModel = ProfileContainer.useContainer
