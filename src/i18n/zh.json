@@ -226,12 +226,12 @@
     "apps": {
       "welcome": "欢迎开发者入驻，共建秘宝生态",
       "red-envelope": {
-        "title": "发红包",
-        "desc": "为朋友发送随机秘宝红包，没有秘宝账户也能收"
+        "title": "UniPass 红包",
+        "desc": "为朋友发送随机秘宝红包，没有账户也能收"
       },
       "ticket": {
-        "title": "门票",
-        "desc": "出示秘宝门票，彰显 VIP 身份"
+        "title": "UniPass 门票",
+        "desc": "出示秘宝门票，彰显 VIP 身份，还能获得后续权益"
       },
       "dao": {
         "title": "秘·DAO",

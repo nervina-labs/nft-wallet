@@ -224,12 +224,12 @@
     "apps": {
       "welcome": "Welcome to settle in and build the ecosystem together",
       "red-envelope": {
-        "title": "Red Pocket",
+        "title": "Unipass Red Pocket",
         "desc": "Send NFT red pockets to friends"
       },
       "ticket": {
-        "title": "Ticket",
-        "desc": "Show your NFT ticket"
+        "title": "Unipass Ticket",
+        "desc": "Show your NFT ticket, get the follow-up utility"
       },
       "dao": {
         "title": "Mi·DAO",
