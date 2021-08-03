@@ -38,7 +38,7 @@
     "login": {
       "title": "NFT Account",
       "connect": {
-        "unipass": "Connect to Unipass",
+        "unipass": "Connect to UniPass",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
         "connect": "Connect to"
@@ -199,7 +199,7 @@
     },
     "help": {
       "title": "Help center",
-      "question": "Have questions about the Unipass/Ethereum environment?"
+      "question": "Have questions about the UniPass/Ethereum environment?"
     },
     "guide": {
       "one": {
@@ -224,12 +224,12 @@
     "apps": {
       "welcome": "Welcome to settle in and build the ecosystem together",
       "red-envelope": {
-        "title": "Red Pocket",
+        "title": "UniPass Red Pocket",
         "desc": "Send NFT red pockets to friends"
       },
       "ticket": {
-        "title": "Ticket",
-        "desc": "Show your NFT ticket"
+        "title": "UniPass Ticket",
+        "desc": "Show your NFT ticket, get the follow-up utility"
       },
       "dao": {
         "title": "Mi·DAO",
