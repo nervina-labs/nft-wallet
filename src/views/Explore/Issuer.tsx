@@ -4,6 +4,7 @@ import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { Creator } from '../../components/Creator'
 import { LazyLoadImage } from '../../components/Image'
 import { Like } from '../../components/Like'
+import { NFT_EXPLORER_URL } from '../../constants'
 import { Issuer } from '../../models/issuer'
 
 const Container = styled.div`
@@ -67,37 +68,45 @@ export interface IssuerProps {
 
 export const RecommendIssuser: React.FC<IssuerProps> = ({ issuer }) => {
   return (
-    <Container>
-      <span className="avatar">
-        <LazyLoadImage
-          src={issuer?.avatar_url}
-          width={38}
-          height={38}
-          variant="circle"
-          backup={<PeopleSvg />}
-        />
-      </span>
-      <div className="issuer">
-        <Creator
-          title=""
-          baned={false}
-          name={issuer?.name}
-          isVip={issuer?.verified_info?.is_verified}
-          vipTitle={issuer?.verified_info?.verified_title}
-          vipSource={issuer?.verified_info?.verified_source}
-          color="#333"
-          showAvatar={false}
-        />
-      </div>
-      <div className="desc">{issuer.description}</div>
-      <div className="like">
-        <Like
-          likeble={false}
-          liked={false}
-          count={issuer.issuer_likes}
-          uuid={issuer.uuid}
-        />
-      </div>
-    </Container>
+    <a
+      onClick={(e) => e.stopPropagation()}
+      target="_blank"
+      style={{ textDecoration: 'none' }}
+      rel="noopener noreferrer"
+      href={`${NFT_EXPLORER_URL}/issuer/tokens/${issuer.uuid}`}
+    >
+      <Container>
+        <span className="avatar">
+          <LazyLoadImage
+            src={issuer?.avatar_url}
+            width={38}
+            height={38}
+            variant="circle"
+            backup={<PeopleSvg />}
+          />
+        </span>
+        <div className="issuer">
+          <Creator
+            title=""
+            baned={false}
+            name={issuer?.name}
+            isVip={issuer?.verified_info?.is_verified}
+            vipTitle={issuer?.verified_info?.verified_title}
+            vipSource={issuer?.verified_info?.verified_source}
+            color="#333"
+            showAvatar={false}
+          />
+        </div>
+        <div className="desc">{issuer.description}</div>
+        <div className="like">
+          <Like
+            likeble={false}
+            liked={false}
+            count={issuer.issuer_likes}
+            uuid={issuer.uuid}
+          />
+        </div>
+      </Container>
+    </a>
   )
 }
