@@ -38,7 +38,7 @@
     "login": {
       "title": "秘宝账户",
       "connect": {
-        "unipass": "连接 Unipass",
+        "unipass": "连接 UniPass",
         "metamask": "连接以太坊环境",
         "wallet-connect": "连接 Wallet Connect",
         "connect": "连接"
@@ -201,7 +201,7 @@
     },
     "help": {
       "title": "帮助中心",
-      "question": "对 Unipass/以太坊环境有问题？"
+      "question": "对 UniPass/以太坊环境有问题？"
     },
     "guide": {
       "one": {

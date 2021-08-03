@@ -38,7 +38,7 @@
     "login": {
       "title": "NFT Account",
       "connect": {
-        "unipass": "Connect to Unipass",
+        "unipass": "Connect to UniPass",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
         "connect": "Connect to"
@@ -199,7 +199,7 @@
     },
     "help": {
       "title": "Help center",
-      "question": "Have questions about the Unipass/Ethereum environment?"
+      "question": "Have questions about the UniPass/Ethereum environment?"
     },
     "guide": {
       "one": {
