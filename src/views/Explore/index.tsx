@@ -16,7 +16,6 @@ import { useHistory } from 'react-router'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useRouteMatch } from 'react-router-dom'
 import { RoutePath } from '../../routes'
-import { useScrollTrigger } from '@material-ui/core'
 import classNames from 'classnames'
 import qs from 'querystring'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
@@ -58,11 +57,13 @@ const Container = styled(MainContainer)`
       background: rgba(255, 255, 255, 0.9);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       backdrop-filter: blur(10px);
+      transition: 0.2s;
     }
 
     &.fixed-header.hide {
       pointer-events: none;
       opacity: 0;
+      transform: translateY(-100%);
     }
 
     h3 {
@@ -233,14 +234,18 @@ const Header: React.FC<{
   }
 
   const FixedHeader: React.FC = () => {
-    const triggerHeader = useScrollTrigger({
-      threshold: 72,
-      disableHysteresis: true,
+    const [scrollY, setScrollY] = useState(window.scrollY)
+    useEffect(() => {
+      const fn = (): void => {
+        setScrollY(window.scrollY)
+      }
+      window.addEventListener('scroll', fn)
+      return () => window.removeEventListener('scroll', fn)
     })
     return (
       <div
         className={classNames('header', 'fixed-header', {
-          hide: !triggerHeader,
+          hide: scrollY <= 72,
         })}
       >
         <Filters />
