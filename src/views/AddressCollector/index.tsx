@@ -219,7 +219,7 @@ export const AddressCollector: React.FC = () => {
   const loginBtnOnClick = useCallback(
     async (targetType = WalletType.Unipass) => {
       setLoading(true, targetType)
-      if (walletType === targetType) {
+      if (walletType === targetType && isLogined) {
         await submit(targetType)
         return
       }
@@ -249,7 +249,7 @@ export const AddressCollector: React.FC = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [login, walletType, id]
+    [login, walletType, id, isLogined]
   )
 
   const { data: isAddressPackageExist } = useQuery(
