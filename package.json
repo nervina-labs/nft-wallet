@@ -4,7 +4,7 @@
   "license": "MIT",
   "engines": {
     "node": "14",
-    "yarn": "1.22.10"
+    "yarn": "1.22"
   },
   "scripts": {
     "dev": "craco start",

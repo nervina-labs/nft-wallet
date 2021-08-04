@@ -16,7 +16,6 @@ import { useHistory } from 'react-router'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useRouteMatch } from 'react-router-dom'
 import { RoutePath } from '../../routes'
-import { useScrollTrigger } from '@material-ui/core'
 import classNames from 'classnames'
 import qs from 'querystring'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
@@ -31,6 +30,7 @@ const Container = styled(MainContainer)`
   display: flex;
   background: white;
   flex-direction: column;
+
   .header {
     display: flex;
     align-items: center;
@@ -39,31 +39,39 @@ const Container = styled(MainContainer)`
     width: 100%;
     max-width: 500px;
     height: 40px;
+
     .active-line {
       background: #ff5c00;
       border-radius: 10px;
       position: absolute;
-      border-radius: 10px;
       height: 3px;
       width: 28px;
-      position: absolute;
       top: 22px;
     }
+
     &.fixed-header {
       position: fixed;
       top: 0;
       z-index: 3;
       justify-content: center;
       background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       backdrop-filter: blur(10px);
+      transition: 0.2s;
     }
+
+    &.fixed-header.hide {
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+
     h3 {
       font-size: 24px;
-      margin: 0;
-      margin-left: 15px;
+      margin: 0 0 0 15px;
       color: #333333;
     }
+
     .filters {
       margin-right: 15px;
       font-size: 14px;
@@ -71,9 +79,11 @@ const Container = styled(MainContainer)`
       display: flex;
       align-items: center;
       justify-content: center;
+
       &.fixed {
         flex: 1;
       }
+
       .filter {
         cursor: pointer;
         display: flex;
@@ -82,15 +92,16 @@ const Container = styled(MainContainer)`
         justify-content: center;
         align-items: center;
         margin-right: 32px;
+
         &:last-child {
           margin-right: 0;
         }
       }
     }
   }
+
   .tags {
-    margin: 18px 0;
-    margin-left: 6px;
+    margin: 18px 0 18px 6px;
     display: flex;
     align-items: center;
     overflow-x: auto;
@@ -112,10 +123,12 @@ const Container = styled(MainContainer)`
       border-radius: 8px;
       background-color: transparent;
       white-space: nowrap;
+
       &.active {
         color: white;
         background-color: #2c454d;
       }
+
       &:last-child {
         margin-right: 15px;
       }
@@ -125,10 +138,12 @@ const Container = styled(MainContainer)`
   .content {
     flex: 1;
     padding: 0 16px;
+
     h4 {
       text-align: center;
       color: rgba(0, 0, 0, 0.6);
     }
+
     ul {
       list-style: none;
       padding: 0;
@@ -142,6 +157,112 @@ const Container = styled(MainContainer)`
     /* justify-content: space-around; */
   }
 `
+
+const Header: React.FC<{
+  currentTagId?: string
+  currentTagName?: string
+  sortType: SortType
+  currentTag: string
+}> = ({ currentTagId, sortType, currentTagName, currentTag }) => {
+  const history = useHistory()
+  const [t] = useTranslation('translations')
+
+  const Filters: React.FC = () => {
+    const items = [
+      {
+        hide: currentTagId !== 'all',
+        value: SortType.Recommend,
+        label: 'explore.recommended',
+        fn() {
+          if (sortType === SortType.Recommend) {
+            return
+          }
+          history.push(RoutePath.Explore + '?tag=all')
+        },
+      },
+      {
+        hide: false,
+        value: SortType.Latest,
+        label: 'explore.latest',
+        fn() {
+          if (sortType === SortType.Latest) {
+            return
+          }
+          const o = qs.parse(location.search.slice(1))
+          if (currentTag === 'all') {
+            o.sort = 'latest'
+          } else {
+            delete o.sort
+          }
+          const s = qs.stringify(o)
+          const target = `${RoutePath.Explore}${s.length === 0 ? '' : '?' + s}`
+          history.push(target)
+        },
+      },
+      {
+        hide: false,
+        value: SortType.Likes,
+        label: 'explore.most-liked',
+        fn() {
+          if (sortType === SortType.Likes) {
+            return
+          }
+          const o = qs.parse(location.search.slice(1))
+          o.sort = 'likes'
+          const target = `${RoutePath.Explore}?${qs.stringify(o)}`
+          history.push(target)
+        },
+      },
+    ] as const
+
+    return (
+      <div className="filters">
+        {items.map((item, i) => (
+          <div
+            key={i}
+            className={classNames('filter', {
+              active: sortType === item.value,
+            })}
+            onClick={item.fn}
+          >
+            <span>{t(item.label)}</span>
+            {sortType === item.value && <span className="active-line" />}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  const FixedHeader: React.FC = () => {
+    const [scrollY, setScrollY] = useState(window.scrollY)
+    useEffect(() => {
+      const fn = (): void => {
+        setScrollY(window.scrollY)
+      }
+      window.addEventListener('scroll', fn)
+      return () => window.removeEventListener('scroll', fn)
+    })
+    return (
+      <div
+        className={classNames('header', 'fixed-header', {
+          hide: scrollY <= 72,
+        })}
+      >
+        <Filters />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="header">
+        <h3>{currentTagName}</h3>
+        <Filters />
+      </div>
+      <FixedHeader />
+    </>
+  )
+}
 
 export const Explore: React.FC = () => {
   const [t, i18n] = useTranslation('translations')
@@ -164,10 +285,6 @@ export const Explore: React.FC = () => {
     path: RoutePath.Explore,
     exact: true,
     strict: true,
-  })
-  const triggerHeader = useScrollTrigger({
-    threshold: 72,
-    disableHysteresis: true,
   })
   const { data: tagsResult } = useQuery(
     Query.Tags,
@@ -224,7 +341,7 @@ export const Explore: React.FC = () => {
     [Query.Explore + currentTag + sortType, currentTagId, sortType],
     async ({ pageParam = 1 }) => {
       // eslint-disable-next-line
-      const { data } = await api.getClassListByTagId(currentTagId!, pageParam, sortType)
+      const {data} = await api.getClassListByTagId(currentTagId!, pageParam, sortType)
       return data
     },
     {
@@ -324,76 +441,12 @@ export const Explore: React.FC = () => {
         <Home />
       ) : (
         <>
-          <div
-            className={classNames('header', { 'fixed-header': triggerHeader })}
-          >
-            {triggerHeader ? null : <h3>{currentTagName}</h3>}
-            <div className={classNames('filters', { fixed: triggerHeader })}>
-              {currentTagId === 'all' ? (
-                <div
-                  className={classNames('filter', {
-                    active: sortType === SortType.Recommend,
-                  })}
-                  onClick={() => {
-                    if (sortType === SortType.Recommend) {
-                      return
-                    }
-                    history.push(RoutePath.Explore + '?tag=all')
-                  }}
-                >
-                  <span>{t('explore.recommended')}</span>
-                  {sortType === SortType.Recommend ? (
-                    <span className="active-line"></span>
-                  ) : null}
-                </div>
-              ) : null}
-              <div
-                className={classNames('filter', {
-                  active: sortType === SortType.Latest,
-                })}
-                onClick={() => {
-                  if (sortType === SortType.Latest) {
-                    return
-                  }
-                  const o = qs.parse(location.search.slice(1))
-                  if (currentTag === 'all') {
-                    o.sort = 'latest'
-                  } else {
-                    delete o.sort
-                  }
-                  const s = qs.stringify(o)
-                  const target = `${RoutePath.Explore}${
-                    s.length === 0 ? '' : '?' + s
-                  }`
-                  history.push(target)
-                }}
-              >
-                <span>{t('explore.latest')}</span>
-                {sortType === SortType.Latest ? (
-                  <span className="active-line"></span>
-                ) : null}
-              </div>
-              <div
-                className={classNames('filter', {
-                  active: sortType === SortType.Likes,
-                })}
-                onClick={() => {
-                  if (sortType === SortType.Likes) {
-                    return
-                  }
-                  const o = qs.parse(location.search.slice(1))
-                  o.sort = 'likes'
-                  const target = `${RoutePath.Explore}?${qs.stringify(o)}`
-                  history.push(target)
-                }}
-              >
-                <span>{t('explore.most-liked')}</span>
-                {sortType === SortType.Likes ? (
-                  <span className="active-line"></span>
-                ) : null}
-              </div>
-            </div>
-          </div>
+          <Header
+            currentTag={currentTag}
+            currentTagId={currentTagId ?? ''}
+            sortType={sortType}
+            currentTagName={currentTagName}
+          />
           <section className="content">
             {isRefetching ? <Loading /> : null}
             {data === undefined && status === 'loading' ? (
