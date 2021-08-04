@@ -70,7 +70,7 @@ const Container = styled(MainContainer)`
     p {
       font-size: 14px;
       color: #000000;
-      margin: 0;
+      margin: 0 20px;
       margin-bottom: 14px;
     }
 
