@@ -50,7 +50,7 @@ export const ItemContainer = styled.div`
   border-radius: 25px;
   margin-bottom: 12px;
   .title {
-    font-size: 16px;
+    font-size: 15px;
     color: white;
     margin: 12px;
     margin-top: 24px;
