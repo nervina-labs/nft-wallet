@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Card } from '../../components/Card'
@@ -20,7 +20,7 @@ import { ReactComponent as ProfileSvg } from '../../assets/svg/menu.svg'
 import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
 import { HiddenBar } from '../../components/HiddenBar'
-import { CircularProgress, useScrollTrigger } from '@material-ui/core'
+import { CircularProgress } from '@material-ui/core'
 import classNames from 'classnames'
 import { DrawerImage } from '../Profile/DrawerImage'
 import { useRouteMatch } from 'react-router-dom'
@@ -29,11 +29,12 @@ import { SetDesc } from '../Profile/setDesc'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
-import { User, ProfilePath, GotoProfile } from './User'
+import { GotoProfile, ProfilePath, User } from './User'
 import { Container } from './styled'
 import { DrawerMenu } from './DrawerMenu'
 import { Addressbar } from '../../components/AddressBar'
 import { Intro } from '../../components/Intro'
+import Bg from '../../assets/svg/home-bg.svg'
 
 export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
@@ -45,10 +46,7 @@ export const NFTs: React.FC = () => {
   useScrollRestoration()
   const { data: user, isLoading: isUserLoading } = useQuery(
     [Query.Profile, address, api],
-    async () => {
-      const profile = await api.getProfile()
-      return profile
-    },
+    async () => await api.getProfile(),
     {
       enabled: !!address,
     }
@@ -163,9 +161,22 @@ export const NFTs: React.FC = () => {
     }
   }, [user, isUserLoading])
 
-  const triggerHeader = useScrollTrigger({
-    threshold: bgheight,
-    disableHysteresis: true,
+  const [scrollY, setScrollY] = useState(window.scrollY)
+
+  const getBgBlur = (): number => {
+    const s = scrollY - 20
+    if (s <= 0) {
+      return 0
+    }
+    return Math.min(s / 10, 30)
+  }
+
+  useEffect(() => {
+    const fn = (): void => {
+      setScrollY(window.scrollY)
+    }
+    window.addEventListener('scroll', fn)
+    return () => window.removeEventListener('scroll', fn)
   })
 
   const showGuide = useMemo(() => {
@@ -179,6 +190,29 @@ export const NFTs: React.FC = () => {
     return <Redirect to={RoutePath.Explore} />
   }
 
+  const filters = [
+    {
+      value: 'nfts.owned',
+      fn() {
+        console.log(liked)
+        if (liked) {
+          history.push(RoutePath.NFTs)
+        }
+      },
+      isActive: () => !liked,
+    },
+    {
+      value: 'nfts.liked',
+      fn() {
+        console.log(liked)
+        if (!liked) {
+          history.push(RoutePath.NFTs + '?liked=true')
+        }
+      },
+      isActive: () => liked,
+    },
+  ]
+
   return (
     <Container id="main">
       <Intro show={showGuide} />
@@ -186,7 +220,12 @@ export const NFTs: React.FC = () => {
         <ShareSvg />
         {t('nfts.share')}
       </div>
-      <div className={classNames('bg', { loading: isUserLoading })}>
+      <div
+        className={classNames('bg', { loading: isUserLoading })}
+        style={{
+          filter: `blur(${getBgBlur()}px)`,
+        }}
+      >
         {isUserLoading ? (
           <CircularProgress size="20px" style={{ color: 'white' }} />
         ) : (
@@ -216,6 +255,7 @@ export const NFTs: React.FC = () => {
         <div className="account" onClick={() => setShowMenu(true)}>
           <ProfileSvg />
         </div>
+        <img className="bg-image" src={(Bg as unknown) as string} alt="Bg" />
       </div>
       <section
         className="list"
@@ -229,29 +269,17 @@ export const NFTs: React.FC = () => {
             : { marginTop: `${bgheight}px` }
         }
       >
-        <div className={classNames('filters', { fixed: triggerHeader })}>
-          <div
-            className={classNames('filter', { active: !liked })}
-            onClick={() => {
-              if (liked) {
-                history.push(RoutePath.NFTs)
-              }
-            }}
-          >
-            {t('nfts.owned')}
-            {!liked ? <span className="active-line"></span> : null}
-          </div>
-          <div
-            className={classNames('filter', { active: liked })}
-            onClick={() => {
-              if (!liked) {
-                history.push(RoutePath.NFTs + '?liked=true')
-              }
-            }}
-          >
-            {t('nfts.liked')}
-            {liked ? <span className="active-line"></span> : null}
-          </div>
+        <div className="filters">
+          {filters.map((filter, i) => (
+            <div
+              className={classNames('filter', { active: filter.isActive() })}
+              key={i}
+              onClick={filter.fn}
+            >
+              {t(filter.value)}
+              {filter.isActive() ? <span className="active-line" /> : null}
+            </div>
+          ))}
         </div>
         {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
