@@ -1,20 +1,25 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../../assets/img/logo.png'
+import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { IS_IMTOKEN } from '../../constants'
 import Button from '@material-ui/core/Button'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress, FormControlLabel, Checkbox } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
+import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
+import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { Redirect } from 'react-router'
-import { useTranslation } from 'react-i18next'
+import { Redirect, useHistory } from 'react-router'
+import { useTranslation, Trans } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
-import { LocalCache } from '../../cache'
+import { getHelpUnipassUrl } from '../../data/help'
+import { useProfileModel } from '../../hooks/useProfile'
+import { getLicenseUrl } from '../../data/license'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -23,6 +28,24 @@ const Container = styled(MainContainer)`
   flex-direction: column;
   background: white;
   padding: 20px 0;
+
+  .close {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    cursor: pointer;
+  }
+
+  @media (min-width: 500px) {
+    .close {
+      left: calc(50% - 250px);
+    }
+  }
 
   .center {
     display: flex;
@@ -66,9 +89,26 @@ const Container = styled(MainContainer)`
     margin-left: 50px;
     margin-right: 50px;
     margin-top: 12px;
+
+    .imtoken {
+      margin: 0 4px;
+    }
+
+    svg {
+      g {
+        fill: white;
+      }
+    }
+
     &:disabled {
       color: rgb(214, 214, 214) !important;
       background-color: white !important;
+
+      svg {
+        g {
+          fill: rgb(214, 214, 214);
+        }
+      }
     }
     &.MuiButton-text {
       padding-top: 12px;
@@ -84,29 +124,32 @@ const Container = styled(MainContainer)`
     }
   }
 
-  .lang {
+  .question {
     display: flex;
     justify-content: center;
     align-items: center;
     color: #232222;
     font-size: 12px;
     margin-top: 30px;
-    .pointer {
-      cursor: pointer;
+    cursor: pointer;
+    svg {
+      margin-right: 4px;
     }
-    .divider {
-      margin: 0 15px;
+  }
+
+  .license {
+    .MuiFormControlLabel-label {
+      font-size: 12px;
     }
-    .active {
-      font-weight: bold;
-      color: #2b454e;
+    .MuiFormControlLabel-root {
+      margin: 0;
     }
   }
 
   .beian {
     display: flex;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 12px;
     color: #000000;
     opacity: 0.4;
     a {
@@ -135,13 +178,15 @@ enum ErrorMsg {
 
 export const Login: React.FC = () => {
   const { login, isLogined } = useWalletModel()
-  const [t, i18n] = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const [isLicenseChecked, setIsLicenseChecked] = useState(false)
   const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
-
+  const { snackbar } = useProfileModel()
+  const history = useHistory()
   const errorMsg = useMemo(() => {
     return t(`login.errors.${errorStatus}`)
   }, [errorStatus, t])
@@ -175,6 +220,10 @@ export const Login: React.FC = () => {
   }
   const loginBtnOnClick = useCallback(
     async (walletType = WalletType.Unipass) => {
+      if (!isLicenseChecked) {
+        snackbar(t('license.warn'))
+        return
+      }
       setLoading(true, walletType)
       try {
         if (walletType === WalletType.Metamask) {
@@ -197,15 +246,8 @@ export const Login: React.FC = () => {
         }
       }
     },
-    [login]
+    [login, isLicenseChecked, snackbar, t]
   )
-
-  const setLanguage = (lang: 'zh' | 'en') => async () => {
-    if (i18n.language === lang) return
-    await i18n.changeLanguage(lang)
-    LocalCache.setI18nLng(lang)
-    document.title = t('common.title')
-  }
 
   if (isLogined) {
     return <Redirect to={RoutePath.NFTs} />
@@ -213,6 +255,9 @@ export const Login: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
+      <div className="close" onClick={() => history.replace(RoutePath.Explore)}>
+        <CloseSvg />
+      </div>
       <div className="header">
         <Title style={{ marginRight: '8px' }}>{t('login.title')}</Title>
       </div>
@@ -231,53 +276,95 @@ export const Login: React.FC = () => {
         <p className="desc">{t('login.desc-2')}</p>
       </div>
       <Button
-        className="recommend connect"
+        className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
         disabled={
           isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
         }
-        onClick={loginBtnOnClick}
+        onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
       >
-        {t('login.connect.unipass')}
+        {t('login.connect.unipass')}&nbsp;
         {isUnipassLogining ? (
           <CircularProgress className="loading" size="1em" />
         ) : null}
       </Button>
       <Button
-        className="connect"
+        className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}
         disabled={
           isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
         }
         onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
       >
-        {t('login.connect.metamask')}&nbsp;
+        {IS_IMTOKEN ? (
+          <>
+            {t('login.connect.connect')}
+            <ImtokenSvg className="imtoken" />
+          </>
+        ) : (
+          t('login.connect.metamask')
+        )}
+        &nbsp;
         {isMetamaskLoging ? (
           <CircularProgress className="loading" size="1em" />
         ) : null}
       </Button>
-      <div className="lang">
-        <span
-          className={`${i18n.language === 'zh' ? 'active' : 'pointer'}`}
-          onClick={setLanguage('zh')}
-        >
-          中文
-        </span>
-        <span className="divider">|</span>
-        <span
-          onClick={setLanguage('en')}
-          className={`${i18n.language === 'en' ? 'active' : 'pointer'}`}
-        >
-          English
-        </span>
+      <div
+        className="question"
+        onClick={() => {
+          history.push(
+            `${RoutePath.Help}?url=${encodeURIComponent(
+              getHelpUnipassUrl(i18n.language)
+            )}`
+          )
+        }}
+      >
+        <QuestionSvg />
+        <span>{t('help.question')}</span>
       </div>
-      <div className="beian">
-        <a
-          href="https://beian.miit.gov.cn/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {t('common.beian')}
-        </a>
+      <div className="license">
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isLicenseChecked}
+              onChange={() => setIsLicenseChecked(!isLicenseChecked)}
+              color="default"
+              name="license"
+              size="small"
+            />
+          }
+          label={
+            <Trans
+              ns="translations"
+              i18nKey="license.agree"
+              t={t}
+              components={{
+                a: (
+                  <span
+                    style={{ color: '#D8B340' }}
+                    onClick={() => {
+                      history.push(
+                        `${RoutePath.License}?url=${encodeURIComponent(
+                          getLicenseUrl(i18n.language)
+                        )}`
+                      )
+                    }}
+                  />
+                ),
+              }}
+            />
+          }
+        />
       </div>
+      {i18n.language !== 'en' ? (
+        <div className="beian">
+          <a
+            href="https://beian.miit.gov.cn/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('common.beian')}
+          </a>
+        </div>
+      ) : null}
       {/* <Button
           disabled={
             isUnipassLogining || isMetamaskLoging || isWalletConnectLoging

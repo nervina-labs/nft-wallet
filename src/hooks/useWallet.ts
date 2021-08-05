@@ -1,5 +1,5 @@
 import { createModel } from 'hox'
-import { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
 import { Address, DefaultSigner, Provider, Transaction } from '@lay2/pw-core'
@@ -12,16 +12,45 @@ import { usePrevious } from './usePrevious'
 
 import { Web3Provider } from '../pw/Web3Provider'
 import dayjs from 'dayjs'
+import { generateUnipassLoginUrl, generateUnipassSignUrl } from '../utils'
+import { RoutePath } from '../routes'
+
+export type PromiseFunc = () => Promise<void> | void
+
+export interface ScrollPosition {
+  x: number
+  y: number
+}
+
 export interface UseWallet {
   api: NFTWalletAPI
   login: (walletType?: WalletType) => Promise<Provider>
   provider: Provider | undefined
   address: string
+  pubkey?: string
+  email?: string
   signTransaction: (tx: Transaction) => Promise<Transaction | undefined>
   isLogined: boolean
   logout: (h: History<unknown>) => void
   prevAddress: string | undefined
   walletType?: WalletType
+  signMessage: (msg: string) => Promise<string>
+  setIsErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isErrorDialogOpen: boolean
+  errorMsg?: React.ReactNode
+  toast: (msg: React.ReactNode) => void
+  confirm: (
+    msg: React.ReactNode,
+    onConfirm: PromiseFunc,
+    onClose: PromiseFunc
+  ) => void
+  confirmContent: React.ReactNode
+  showConfirmDialog: boolean
+  onDialogConfirm: PromiseFunc
+  onDialogClose: PromiseFunc
+  setScrollScrollRestoration: (path: string, scroll: ScrollPosition) => void
+  getScrollScrollRestoration: (path: string) => ScrollPosition | undefined
+  setUnipassAccount: (account: UnipassAccount | null) => void
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
@@ -29,6 +58,7 @@ export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
 export interface UnipassAccount {
   address: string
   email?: string
+  pubkey?: string
   walletType: WalletType
   expireTime?: string
 }
@@ -39,24 +69,83 @@ export enum WalletType {
   WalletConnect = 'WalletConnect',
 }
 
+export function toHex(str: string): string {
+  let result = ''
+  for (let i = 0; i < str.length; i++) {
+    result += str.charCodeAt(i).toString(16)
+  }
+  return result
+}
+
+const noop: any = (): void => {}
+
 function useWallet(): UseWallet {
   const [provider, setProvider] = useState<Provider>()
+  const scrollRestoration = useRef(new Map<string, ScrollPosition>())
+
+  const setScrollScrollRestoration = useCallback(
+    (path: string, scroll: ScrollPosition) => {
+      scrollRestoration.current.set(path, scroll)
+    },
+    []
+  )
+
+  const getScrollScrollRestoration = useCallback((path: string) => {
+    return scrollRestoration.current.get(path)
+  }, [])
 
   const [unipassAccount, setAccount] = useLocalStorage<UnipassAccount | null>(
     UNIPASS_ACCOUNT_KEY,
     null
   )
 
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<React.ReactNode>('')
+  const [confirmContent, setConfirmContent] = useState<React.ReactNode>('')
+  const [showConfirmDialog, setShowConfifrmDialog] = useState(false)
+  const [onDialogConfirm, setOnDialogConfirm] = useState<PromiseFunc>(noop)
+  const [onDialogClose, setOnDialogClose] = useState<PromiseFunc>(noop)
+
+  const confirm = useCallback(
+    (
+      content: React.ReactNode,
+      onConfirm: PromiseFunc,
+      onClose: PromiseFunc
+    ) => {
+      setConfirmContent(content)
+      setShowConfifrmDialog(true)
+      setOnDialogConfirm(() => {
+        return async () => {
+          await onConfirm()
+          setShowConfifrmDialog(false)
+        }
+      })
+      setOnDialogClose(() => {
+        return async () => {
+          await onClose()
+          setShowConfifrmDialog(false)
+        }
+      })
+    },
+    []
+  )
+
+  const toast = useCallback((errorMsg: React.ReactNode) => {
+    setIsErrorDialogOpen(true)
+    setErrorMsg(errorMsg)
+  }, [])
+
   const setUnipassAccount = useCallback(
     (account: UnipassAccount | null) => {
-      setAccount(
-        account === null
+      setAccount((prevAccount) => {
+        return account === null
           ? null
           : {
+              ...prevAccount,
               ...account,
               expireTime: dayjs().add(1, 'day').toISOString(),
             }
-      )
+      })
     },
     [setAccount]
   )
@@ -64,6 +153,14 @@ function useWallet(): UseWallet {
   const address = useMemo(() => {
     return unipassAccount?.address ?? ''
   }, [unipassAccount?.address])
+
+  const pubkey = useMemo(() => {
+    return unipassAccount?.pubkey
+  }, [unipassAccount?.pubkey])
+
+  const email = useMemo(() => {
+    return unipassAccount?.email
+  }, [unipassAccount?.email])
 
   const walletType = useMemo(() => {
     return unipassAccount?.walletType
@@ -73,7 +170,7 @@ function useWallet(): UseWallet {
     (h?: History<unknown>) => {
       setProvider(undefined)
       setUnipassAccount(null)
-      localStorage.clear()
+      // localStorage.clear()
       provider?.close()
     },
     [provider, setUnipassAccount]
@@ -153,9 +250,14 @@ function useWallet(): UseWallet {
 
   const login = useCallback(
     async (walletType: WalletType = WalletType.Unipass) => {
+      provider?.close()
       switch (walletType) {
         case WalletType.Unipass:
-          return await loginUnipass()
+          return await new Promise<Provider>((resolve) => {
+            const url = `${location.origin}${RoutePath.Unipass}`
+            location.href = generateUnipassLoginUrl(url, url)
+            resolve(provider as Provider)
+          })
         case WalletType.Metamask:
           return await loginMetamask()
         case WalletType.WalletConnect:
@@ -164,26 +266,21 @@ function useWallet(): UseWallet {
           return await loginUnipass()
       }
     },
-    [loginMetamask, loginUnipass, loginWalletConnect]
+    [loginMetamask, loginUnipass, loginWalletConnect, provider]
   )
 
   const signUnipass = useCallback(
     async (tx: Transaction) => {
-      if (provider != null) {
-        const signer = new UnipassSigner(provider)
-        const signedTx = await signer.sign(tx)
-        return signedTx
-      }
       const p = await new UnipassProvider(
         UNIPASS_URL,
         setUnipassAccount
       ).connect(unipassAccount)
       const signer = new UnipassSigner(p)
-      const signedTx = await signer.sign(tx)
+      const [signedTx] = signer.toMessages(tx)
       setProvider(p)
-      return signedTx
+      return signedTx.message as any
     },
-    [provider, unipassAccount, setUnipassAccount]
+    [unipassAccount, setUnipassAccount]
   )
 
   const signMetamask = useCallback(
@@ -200,6 +297,38 @@ function useWallet(): UseWallet {
       return signedTx
     },
     [provider, loginMetamask]
+  )
+
+  const signMessage = useCallback(
+    async (msg: string) => {
+      if (unipassAccount?.walletType === WalletType.Unipass) {
+        const url = `${location.origin}${RoutePath.Unipass}`
+        const message = toHex(msg)
+        location.href = generateUnipassSignUrl(
+          url,
+          `${location.origin}${RoutePath.NFTs}`,
+          unipassAccount?.pubkey,
+          message
+        )
+        return message
+      }
+      if (provider != null) {
+        try {
+          const sig = await (provider as Web3Provider).signMsg(msg)
+          return sig
+        } catch (error) {
+          return 'N/A'
+        }
+      }
+      const p = await loginMetamask()
+      setProvider(p)
+      try {
+        return await (p as Web3Provider).signMsg(msg)
+      } catch (error) {
+        return 'N/A'
+      }
+    },
+    [unipassAccount, provider, loginMetamask]
   )
 
   const signTransaction = useCallback(
@@ -232,8 +361,11 @@ function useWallet(): UseWallet {
     if (isExpired) {
       return false
     }
+    if (walletType === WalletType.Unipass && !pubkey) {
+      return false
+    }
     return address !== ''
-  }, [address, expireTime])
+  }, [address, expireTime, pubkey, walletType])
 
   const prevAddress = usePrevious(address)
 
@@ -247,6 +379,21 @@ function useWallet(): UseWallet {
     logout,
     prevAddress,
     walletType,
+    signMessage,
+    setIsErrorDialogOpen,
+    isErrorDialogOpen,
+    errorMsg,
+    toast,
+    confirmContent,
+    showConfirmDialog,
+    onDialogClose,
+    onDialogConfirm,
+    confirm,
+    setScrollScrollRestoration,
+    getScrollScrollRestoration,
+    setUnipassAccount,
+    pubkey,
+    email,
   }
 }
 

@@ -25,11 +25,14 @@ import ReceivePng from '../../assets/img/receive.png'
 import NoTxPng from '../../assets/img/no-tx.png'
 import { useTranslation } from 'react-i18next'
 import { LazyLoadImage } from '../../components/Image'
+import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
+import Tooltip from '@material-ui/core/Tooltip'
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-top: 24px;
   h4 {
     text-align: center;
     font-size: 14px;
@@ -98,6 +101,15 @@ const ListItemContainer = styled.div`
     .creator {
       font-weight: normal;
       font-size: 10px;
+      display: flex;
+      align-items: center;
+      .vip {
+        width: 13px;
+        min-width: 13px;
+        height: 13px;
+        margin-left: 4px;
+        cursor: pointer;
+      }
     }
   }
   .status {
@@ -145,23 +157,50 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
       <img src={SendPng} />
     )
 
+  const vipTitle = tx?.verified_info?.verified_title
+  const vt = useMemo(() => {
+    if (vipTitle) {
+      return t('common.vip.weibo', { title: vipTitle })
+    }
+    return t('common.vip.weibo-no-desc')
+  }, [t, vipTitle])
   const creator = useMemo(() => {
     if (tx.is_issuer_banned) {
       return (
         <>
-          {t('transactions.receive-from')}&nbsp;
-          <span className="error">{t('common.baned.issuer')}</span>
+          {tx.tx_direction === TransactionDirection.Receive
+            ? t('transactions.receive-from')
+            : t('transactions.send-to')}
+          &nbsp;
+          {!tx.from_address && !tx.to_address ? (
+            <span className="error">{t('common.baned.issuer')}</span>
+          ) : null}
+          {tx.from_address && tx.tx_direction === TransactionDirection.Receive
+            ? truncateMiddle(tx.from_address, 5, 5)
+            : null}
+          {tx.to_address && tx.tx_direction === TransactionDirection.Send
+            ? truncateMiddle(tx.to_address, 5, 5)
+            : null}
         </>
       )
     }
-    return tx.tx_direction === TransactionDirection.Receive
-      ? `${t('transactions.receive-from')} ${
-          tx.issuer_uuid !== ''
+    return tx.tx_direction === TransactionDirection.Receive ? (
+      <>
+        <span>{`${t('transactions.receive-from')} ${
+          tx.issuer_uuid
             ? tx.from_address
             : truncateMiddle(tx.from_address, 5, 5)
-        }`
-      : `${t('transactions.send-to')} ${truncateMiddle(tx.to_address, 5, 5)}`
-  }, [tx, t])
+        }`}</span>
+        {tx?.verified_info?.is_verified && tx.issuer_uuid !== '' ? (
+          <Tooltip title={vt} placement={'top'}>
+            <WeiboSvg className="vip" />
+          </Tooltip>
+        ) : null}
+      </>
+    ) : (
+      `${t('transactions.send-to')} ${truncateMiddle(tx.to_address, 5, 5)}`
+    )
+  }, [tx, t, vt])
 
   const Link = isBanned ? 'div' : 'a'
 
@@ -240,6 +279,9 @@ export const Transactions: React.FC = () => {
     },
     {
       getNextPageParam: (lastPage) => {
+        if (lastPage?.meta == null) {
+          return undefined
+        }
         const { meta } = lastPage
         const current = meta.current_page
         const total = meta.total_count
@@ -282,7 +324,6 @@ export const Transactions: React.FC = () => {
             (acc, tx) => tx.transaction_list.length + acc,
             0
           )}
-          height={window.innerHeight - 194}
           pullDownToRefresh={!IS_WEXIN}
           refreshFunction={refresh}
           next={fetchNextPage}
@@ -297,7 +338,7 @@ export const Transactions: React.FC = () => {
           scrollThreshold="300px"
           loader={<Loading />}
           endMessage={
-            <h4>{dataLength <= 5 ? '' : t('common.actions.pull-to-down')}</h4>
+            <h4>{dataLength <= 5 ? '' : t('transactions.no-data')}</h4>
           }
         >
           {data?.pages?.map((group, i) => {

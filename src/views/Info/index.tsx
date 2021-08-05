@@ -1,10 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import QRCode from 'qrcode.react'
-import { truncateMiddle, copyFallback, sleep } from '../../utils'
+import { copyFallback, sleep } from '../../utils'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useTranslation } from 'react-i18next'
-import Bg from '../../assets/img/qrcode-bg.png'
 import { Button } from '../../components/Button'
 import { ReactComponent as CheckSvg } from '../../assets/svg/check-circle.svg'
 import * as clipboard from 'clipboard-polyfill/text'
@@ -13,9 +12,42 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 80px;
   flex-direction: column;
-
+  .warning {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 32px;
+    padding: 0 20px;
+    span {
+      font-size: 12px;
+      margin-left: 8px;
+      color: #000000;
+    }
+  }
+  .address {
+    background: #e5eced;
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 8px;
+    margin-left: 16px;
+    margin-right: 16px;
+    p {
+      font-size: 14px;
+      line-height: 20px;
+      text-align: justify;
+      text-align-last: center;
+      word-break: break-all;
+      color: #666666;
+      margin: 0;
+    }
+  }
+  h4 {
+    margin: 0;
+    font-size: 12px;
+    line-height: 17px;
+    color: #d0a741;
+  }
   .title {
     font-weight: bold;
     font-size: 16px;
@@ -24,24 +56,35 @@ const Container = styled.div`
     margin-top: 0;
     margin-bottom: 0;
   }
+  .content {
+    background: #dde6e7;
+    box-shadow: 0px 4px 10px rgba(190, 190, 190, 0.2);
+    border-radius: 16px;
+    margin: 14px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
   .qrcode-bg {
-    margin-top: 30px;
-    background: white url(${Bg});
-    background-repeat: no-repeat;
-    background-size: cover;
+    margin-top: 13px;
+    background: #e5eced;
+    border-radius: 8px;
     width: 188px;
     height: 188px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 80px;
   }
   .qr-code {
-    width: 150px;
-    height: 150px;
+    width: 156px;
+    height: 156px;
   }
 
   button {
-    margin-top: 30px;
+    margin-top: 24px;
+    margin-bottom: 24px;
     .copied {
       display: flex;
       align-items: center;
@@ -76,7 +119,7 @@ export const Info: React.FC = () => {
       <>
         <div className="qrcode-bg">
           <QRCode
-            style={{ width: '150px', height: '150px' }}
+            style={{ width: '156px', height: '156px' }}
             className="qr-code"
             value={address}
           />
@@ -87,21 +130,24 @@ export const Info: React.FC = () => {
   )
   return (
     <Container>
-      <h3 className="title">{t('info.title')}</h3>
-      {qrCodeContent}
-      <h3 className="title" style={{ marginTop: '30px' }}>
-        {truncateMiddle(address, 10, 6)}
-      </h3>
-      <Button type="primary" onClick={onCopy} disbaled={isCopying}>
-        {isCopying ? (
-          <span className="copied">
-            {t('info.copied')}
-            <CheckSvg />
-          </span>
-        ) : (
-          t('info.copy')
-        )}
-      </Button>
+      <div className="content">
+        <h4 style={{ marginTop: '60px' }}>{t('account.qrcode')}</h4>
+        {qrCodeContent}
+        <h4>{t('account.address')}</h4>
+        <div className="address">
+          <p>{address}</p>
+        </div>
+        <Button type="primary" onClick={onCopy} disbaled={isCopying}>
+          {isCopying ? (
+            <span className="copied">
+              {t('info.copied')}
+              <CheckSvg />
+            </span>
+          ) : (
+            t('info.copy')
+          )}
+        </Button>
+      </div>
     </Container>
   )
 }

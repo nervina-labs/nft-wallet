@@ -49,6 +49,43 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
     return this
   }
 
+  // eslint-disable-next-line @typescript-eslint/promise-function-async
+  signMsg(message: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const from = this.address.addressString
+
+      if (typeof window.ethereum !== 'undefined') {
+        ;(window.ethereum as any)
+          .request({ method: 'personal_sign', params: [from, message] })
+          .then((result: string) => {
+            resolve(result)
+          })
+          .catch((err: any) => {
+            reject(err)
+          })
+      } else if (window.web3) {
+        window.web3.currentProvider.sendAsync(
+          { method: 'personal_sign', params: [message, from], from },
+          (err: any, result: any) => {
+            if (err) {
+              reject(err)
+            }
+            if (result.error) {
+              reject(result.error)
+            }
+            resolve(result.result)
+          }
+        )
+      } else {
+        reject(
+          new Error(
+            'window.ethereum/window.web3 is undefined, Ethereum environment is required.'
+          )
+        )
+      }
+    })
+  }
+
   async sign(message: string): Promise<string> {
     if (!IS_MAINNET) {
       return await super.sign(message)
@@ -63,13 +100,7 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
         return result
       }
 
-      if (typeof window.ethereum !== 'undefined') {
-        window.ethereum
-          .request({ method: 'personal_sign', params: [from, message] })
-          .then((result: string) => {
-            resolve(handleResult(result))
-          })
-      } else if (window.web3) {
+      if (window.web3) {
         window.web3.currentProvider.sendAsync(
           { method: 'personal_sign', params: [message, from], from },
           (err: any, result: any) => {
@@ -82,6 +113,15 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
             resolve(handleResult(result.result))
           }
         )
+      } else if (typeof window.ethereum !== 'undefined') {
+        ;(window.ethereum as any)
+          .request({ method: 'personal_sign', params: [from, message] })
+          .then((result: string) => {
+            resolve(handleResult(result))
+          })
+          .catch((err: any) => {
+            reject(err)
+          })
       } else {
         reject(
           new Error(

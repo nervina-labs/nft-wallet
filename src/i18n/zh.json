@@ -22,6 +22,10 @@
         "limit": "限量",
         "unlimit": "不限量"
       },
+      "vip": {
+        "weibo": "微博认证: {{title}}",
+        "weibo-no-desc": "微博认证"
+      },
       "baned": {
         "nft": "该秘宝暂不予显示",
         "issuer": "该创作者暂不予显示"
@@ -34,9 +38,10 @@
     "login": {
       "title": "秘宝账户",
       "connect": {
-        "unipass": "连接 Unipass（推荐）",
+        "unipass": "连接 UniPass",
         "metamask": "连接以太坊环境",
-        "wallet-connect": "连接 Wallet Connect"
+        "wallet-connect": "连接 Wallet Connect",
+        "connect": "连接"
       },
       "errors": {
         "not-support": "当前环境不支持连接以太坊",
@@ -47,15 +52,19 @@
     },
     "nfts": {
       "title": "我的秘宝",
+      "owned": "持有",
+      "liked": "赞过",
       "status": {
         "comfirming": "确认中",
         "receiving": "接收中",
         "tranferring": "转让中"
       },
       "no-data": "啊喔...您尚未拥有任何秘宝",
+      "no-likes": "您尚未赞过任何秘宝",
       "link": "探索秘宝的广阔宇宙",
       "welcome": "欢迎来到秘宝宇宙",
-      "hi": "Hi 秘宝收藏家"
+      "hi": "Hi 秘宝收藏家",
+      "share": "分享"
     },
     "transfer": {
       "scan": {
@@ -80,7 +89,7 @@
       },
       "transfer": "转让",
       "address": "接收方地址",
-      "placeholder": "请输入 CKB 长地址或以太坊地址",
+      "placeholder": "请输入 CKB 地址或以太坊地址",
       "check": "请仔细检查输入的地址，",
       "once-transfer": "一旦转让，将无法撤回",
       "submitted": "已提交转让交易",
@@ -94,7 +103,7 @@
       "back": "返回我的秘宝"
     },
     "transactions": {
-      "no-data": "还没有记录...",
+      "no-data": "暂无更多记录...",
       "pull-down-refresh": " 下拉刷新",
       "receive-from": "接收自",
       "send-to": "发送至",
@@ -105,17 +114,167 @@
     },
     "info": {
       "title": "秘宝接收地址",
-      "copy": "复制到剪贴板",
-      "copied": "已复制成功"
+      "copy": "复制地址到剪贴板",
+      "copied": "复制成功"
     },
     "nft": {
       "title": "秘宝细节",
-      "transfer": "转让"
+      "transfer": "转让",
+      "desc": "秘宝简介"
     },
     "account": {
       "title": "我的帐号",
       "info": "基本信息",
-      "transactions": "流转记录"
+      "transactions": "流转记录",
+      "warning": "该地址仅用于接收 CKB 链上资产，切勿转入其他链上资产",
+      "qrcode": "扫描二维码，快速接收秘宝",
+      "address": "秘宝接收地址"
+    },
+    "profile": {
+      "title": "编辑资料",
+      "username": "昵称",
+      "gender": "性别",
+      "birthday": "生日",
+      "region": "地区",
+      "description": "简介",
+      "input": "请填写",
+      "select": "请选择",
+      "user-name": {
+        "edit": "修改昵称",
+        "desc": "请输入 2-24 个字符",
+        "placeholder": "请输入昵称",
+        "empty": "点击设置昵称"
+      },
+      "desc": {
+        "edit": "修改个人简介",
+        "desc": "请输入 0-100 个字符",
+        "placeholder": "请输入简介",
+        "empty": "您还没有填写个人简介，请点击添加"
+      },
+      "edit-birthday": "请选择生日",
+      "regions": {
+        "edit": "请选择地区",
+        "location": "定位到的位置",
+        "locating": "定位中...",
+        "all": "全部",
+        "error": "定位失败",
+        "selected": "已选地区"
+      },
+      "avatar": {
+        "camera": "拍照",
+        "photo-lib": "图片库"
+      },
+      "save": "保存",
+      "cancel": "取消",
+      "male": "男",
+      "female": "女",
+      "comfirm": "确认",
+      "reshot": "重拍",
+      "success": "设置成功",
+      "years": "{{year}} 岁",
+      "size-limit": "文件过大，请选择小于 5M 的图片",
+      "save-edit": "是否保存修改？",
+      "wrong-image-format": "当前仅支持上传 png, jpeg, jpg, gif, svg, webp 格式图片",
+      "image-network-error": "上传失败，请检查当前网络情况并重新上传"
+    },
+    "explore": {
+      "all": "全部",
+      "others": "其他",
+      "metaverse": "探索",
+      "my": "我的",
+      "latest": "最新创作",
+      "most-liked": "获赞最多",
+      "recommended": "推荐",
+      "hotest": "最热秘宝",
+      "collections": "秘宝精选",
+      "issuers": "最受欢迎创作者",
+      "home": "首页"
+    },
+    "menu": {
+      "profile": "个人资料",
+      "txs": "流转记录",
+      "language": "语言设置",
+      "help": "帮助支持",
+      "logout": "退出登录",
+      "zh": "中文",
+      "en": "英文"
+    },
+    "help": {
+      "title": "帮助中心",
+      "question": "对 UniPass/以太坊环境有问题？"
+    },
+    "guide": {
+      "one": {
+        "title": "1. 查看CKB地址",
+        "desc": "点击查看地址，发送方可通过您的 CKB 地址将秘宝发送给您"
+      },
+      "two": {
+        "title": "2. 查看我的秘宝",
+        "desc": "在这里可以查看您本人持有的秘宝和您赞过的秘宝"
+      },
+      "three": {
+        "title": "3. 查看更多信息和功能",
+        "desc": "点击查看个人资料、流转记录、帮助支持等"
+      },
+      "four": {
+        "title": "4.入门指南",
+        "desc": "推荐新用户前往 —— <b>帮助支持</b>浏览详细使用教程"
+      },
+      "next": "下一步",
+      "done": "开始使用"
+    },
+    "apps": {
+      "welcome": "欢迎开发者入驻，共建秘宝生态",
+      "red-envelope": {
+        "title": "UniPass 红包",
+        "desc": "为朋友发送随机秘宝红包，没有账户也能收"
+      },
+      "ticket": {
+        "title": "UniPass 门票",
+        "desc": "出示秘宝门票，彰显 VIP 身份，还能获得后续权益"
+      },
+      "dao": {
+        "title": "秘·DAO",
+        "desc": "使用秘宝实现去中心化组织集体决策"
+      },
+      "exchange": {
+        "title": "兑换",
+        "desc": "收集秘宝兑换其他商品或者限量版秘宝"
+      },
+      "exhibition": {
+        "title": "虚拟展厅",
+        "desc": "自定义 3D 展厅，分享朋友圈邀请朋友参观"
+      },
+      "vip": {
+        "title": "VIP 社区",
+        "desc": "持有特殊秘宝才能访问的高质量社区"
+      }
+    },
+    "resource": {
+      "fail": "加载资源失败"
+    },
+    "license": {
+      "agree": "同意相关<a>《用户使用条款及隐私条款》<a/>",
+      "warn": "请先同意相关协议",
+      "title": "服务条款"
+    },
+    "addresses": {
+      "submit": "提交地址参与活动",
+      "submited": "地址已提交成功，感谢您的参与！",
+      "duplicate": "地址已经提交，请勿重复提交",
+      "continue": "您还可以继续操作",
+      "explore": "探索秘宝",
+      "select": "请选择一种提交方式（连接成功即自动提交)",
+      "errors": {
+        "not-support": "当前环境不支持连接以太坊",
+        "refuse": "用户拒绝授权，请重新打开页面进行授权",
+        "submit-fail": "提交失败"
+      }
+    },
+    "auth": {
+      "title": "授权确认",
+      "content": "我们将请求一个针对秘宝地址的数字签名，从而保护您的隐私数据不会被泄露和篡改，如个人信息，点赞数据等。",
+      "ok": "继续"
     }
   }
 }

@@ -42,7 +42,7 @@ function openIframe(
   uniFrame.src = url
   uniFrame.style.visibility = 'hidden'
   uniFrame.style.width = '100%'
-  uniFrame.style.height = '100%'
+  uniFrame.style.height = '100vh'
   uniFrame.style.zIndex = '2147483649'
   uniFrame.style.position = 'absolute'
   uniFrame.style.backgroundColor = 'rgba(0,0,0,.65)'
@@ -61,7 +61,7 @@ function openIframe(
   return { uniFrame }
 }
 
-function pubkeyToAddress(pubkey: string): string {
+export function pubkeyToAddress(pubkey: string): string {
   const pubKeyBuffer = Buffer.from(pubkey.replace('0x', ''), 'hex')
   const hashHex = new Blake2bHasher()
     .update(pubKeyBuffer.buffer)

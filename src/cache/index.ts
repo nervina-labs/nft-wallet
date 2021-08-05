@@ -27,6 +27,6 @@ export const LocalCache = {
     localStorage.setItem(I18N_LANG, lang)
   },
   getI18nLng() {
-    return localStorage.getItem(I18N_LANG) ?? 'zh'
+    return localStorage.getItem(I18N_LANG)
   },
 }

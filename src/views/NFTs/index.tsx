@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useCallback, useMemo, useState } from 'react'
-import { useInfiniteQuery } from 'react-query'
-import styled from 'styled-components'
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Appbar } from '../../components/Appbar'
 import { Card } from '../../components/Card'
 import {
   IS_IPHONE,
@@ -12,85 +10,87 @@ import {
   PER_ITEM_LIMIT,
 } from '../../constants'
 import { useWalletModel } from '../../hooks/useWallet'
-import { Query } from '../../models'
+import { NFTToken, Query, TransactionStatus } from '../../models'
 import { Empty } from './empty'
 import { Loading } from '../../components/Loading'
 import { Redirect, useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
-import { MainContainer } from '../../styles'
-import AccountPng from '../../assets/img/account.png'
-import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import Bg from '../../assets/img/nft-bg.png'
+import { ReactComponent as ShareSvg } from '../../assets/svg/share-new.svg'
+import { ReactComponent as ProfileSvg } from '../../assets/svg/menu.svg'
 import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
-
-const Container = styled(MainContainer)`
-  display: flex;
-  flex-direction: column;
-  h4 {
-    text-align: center;
-    color: rgba(0, 0, 0, 0.6);
-  }
-  .bg {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    max-width: 500px;
-    height: 215px;
-    background: darkgray url(${Bg});
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: bottom;
-    display: flex;
-    flex-direction: column-reverse;
-    /* padding-left: 16px; */
-    h3 {
-      font-size: 16px;
-      margin: 0;
-      margin-left: 16px;
-      color: whitesmoke;
-      font-weight: normal;
-    }
-
-    p {
-      font-size: 12px;
-      margin-left: 16px;
-      color: whitesmoke;
-      margin-top: 6px;
-      margin-bottom: 45px;
-    }
-  }
-  .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    > span {
-      font-size: 16px;
-      margin-right: 8px;
-    }
-  }
-  .list {
-    flex: 1;
-    background-color: white;
-    background: #ecf2f5;
-    border-radius: 35px 35px 0px 0px;
-    margin-top: 140px;
-    z-index: 2;
-    padding-top: 10px;
-    .infinite-scroll-component {
-      > div {
-        &:nth-child(2) {
-          margin-top: 20px;
-        }
-      }
-    }
-  }
-`
+import { HiddenBar } from '../../components/HiddenBar'
+import { CircularProgress, useScrollTrigger } from '@material-ui/core'
+import classNames from 'classnames'
+import { DrawerImage } from '../Profile/DrawerImage'
+import { useRouteMatch } from 'react-router-dom'
+import { SetUsername } from '../Profile/SetUsername'
+import { SetDesc } from '../Profile/setDesc'
+import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { useScrollRestoration } from '../../hooks/useScrollRestoration'
+import { isVerticalScrollable } from '../../utils'
+import { User, ProfilePath, GotoProfile } from './User'
+import { Container } from './styled'
+import { DrawerMenu } from './DrawerMenu'
+import { Addressbar } from '../../components/AddressBar'
+import { Intro } from '../../components/Intro'
 
 export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
   const { t } = useTranslation('translations')
   const history = useHistory()
+  const [showAvatarAction, setShowAvatarAction] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
+  const closeMenu = (): void => setShowMenu(false)
+  useScrollRestoration()
+  const { data: user, isLoading: isUserLoading } = useQuery(
+    [Query.Profile, address, api],
+    async () => {
+      const profile = await api.getProfile()
+      return profile
+    },
+    {
+      enabled: !!address,
+    }
+  )
+
+  const liked = useRouteQuery<string>('liked', '')
+
+  const getRemoteData = useCallback(
+    async ({ pageParam = 1 }) => {
+      if (liked) {
+        const { data } = await api.getUserLikesClassList(pageParam)
+        return {
+          meta: data.meta,
+          token_list: data.class_list.map((c) => {
+            const token: NFTToken = {
+              class_name: c.name,
+              class_bg_image_url: c.bg_image_url,
+              class_uuid: c.uuid,
+              class_description: c.description,
+              class_total: c.total,
+              token_uuid: '',
+              issuer_avatar_url: c.issuer_info?.avatar_url,
+              issuer_name: c.issuer_info?.name,
+              issuer_uuid: c.issuer_info?.uuid,
+              tx_state: TransactionStatus.Committed,
+              is_class_banned: false,
+              is_issuer_banned: false,
+              n_token_id: 0,
+              verified_info: c.verified_info,
+              renderer_type: c.renderer_type,
+            }
+            return token
+          }),
+        }
+      }
+      const { data } = await api.getNFTs(pageParam)
+      return data
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [liked, api, address]
+  )
+
   const {
     data,
     status,
@@ -98,13 +98,13 @@ export const NFTs: React.FC = () => {
     fetchNextPage,
     refetch,
   } = useInfiniteQuery(
-    [Query.NFTList, address],
-    async ({ pageParam = 1 }) => {
-      const { data } = await api.getNFTs(pageParam)
-      return data
-    },
+    [`${Query.NFTList}${liked.toString()}`, address, liked],
+    getRemoteData,
     {
       getNextPageParam: (lastPage) => {
+        if (lastPage?.meta == null) {
+          return undefined
+        }
         const { meta } = lastPage
         const current = meta.current_page
         const total = meta.total_count
@@ -113,6 +113,9 @@ export const NFTs: React.FC = () => {
         }
         return meta.current_page + 1
       },
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   )
 
@@ -152,43 +155,116 @@ export const NFTs: React.FC = () => {
     }
   }, [explorerURL, t])
 
+  const matchDesc = useRouteMatch(ProfilePath.Description)
+  const matchUsername = useRouteMatch(ProfilePath.Username)
+
   const closeDialog = (): void => setIsDialogOpen(false)
 
+  const bgRef = useRef<HTMLDivElement>(null)
+  const [bgheight, setBgHeight] = useState(16)
+  const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
+
+  useEffect(() => {
+    setAlwaysShowTabbar(!isVerticalScrollable())
+  }, [data])
+
+  useEffect(() => {
+    const height = bgRef.current?.clientHeight
+    if (height) {
+      setBgHeight(height + 206)
+    }
+  }, [user, isUserLoading])
+
+  const triggerHeader = useScrollTrigger({
+    threshold: bgheight,
+    disableHysteresis: true,
+  })
+
+  const showGuide = useMemo(() => {
+    if (isUserLoading) {
+      return false
+    }
+    return !user?.guide_finished
+  }, [user, isUserLoading])
+
   if (!isLogined) {
-    return <Redirect to={RoutePath.Login} />
+    return <Redirect to={RoutePath.Explore} />
   }
 
   return (
-    <Container>
-      <Appbar
-        transparent
-        title={
-          <div className="center">
-            <span>{t('nfts.title')}</span>
-          </div>
-        }
-        left={
-          <img
-            src={AccountPng}
-            onClick={() => {
-              history.push(RoutePath.Info)
-            }}
-          />
-        }
-        right={<ShareSvg onClick={openDialog} />}
-      />
-      <div className="bg">
-        <p>{t('nfts.hi')}</p>
-        <h3>{t('nfts.welcome')}</h3>
+    <Container id="main">
+      <Intro show={showGuide} />
+      <div className="share" onClick={openDialog}>
+        <ShareSvg />
+        {t('nfts.share')}
+      </div>
+      <div className={classNames('bg', { loading: isUserLoading })}>
+        {isUserLoading ? (
+          <CircularProgress size="20px" style={{ color: 'white' }} />
+        ) : (
+          <>
+            <User
+              user={user}
+              setShowAvatarAction={setShowAvatarAction}
+              closeMenu={closeMenu}
+            />
+            <div className="desc" ref={bgRef}>
+              {user?.description ? (
+                user?.description
+              ) : (
+                <GotoProfile
+                  path={ProfilePath.Description}
+                  closeMenu={closeMenu}
+                >
+                  {t('profile.desc.empty')}
+                </GotoProfile>
+              )}
+            </div>
+            <Addressbar address={address} />
+            <br />
+            <br />
+          </>
+        )}
+        <div className="account" onClick={() => setShowMenu(true)}>
+          <ProfileSvg />
+        </div>
       </div>
       <section
         className="list"
         style={
           IS_IPHONE
-            ? { position: 'fixed', width: '100%', maxWidth: '100%' }
-            : undefined
+            ? {
+                width: '100%',
+                maxWidth: '100%',
+                marginTop: `${bgheight}px`,
+              }
+            : { marginTop: `${bgheight}px` }
         }
       >
+        <div className={classNames('filters', { fixed: triggerHeader })}>
+          <div
+            className={classNames('filter', { active: !liked })}
+            onClick={() => {
+              if (liked) {
+                history.push(RoutePath.NFTs)
+              }
+            }}
+          >
+            {t('nfts.owned')}
+            {!liked ? <span className="active-line"></span> : null}
+          </div>
+          <div
+            className={classNames('filter', { active: liked })}
+            onClick={() => {
+              if (!liked) {
+                history.push(RoutePath.NFTs + '?liked=true')
+              }
+            }}
+          >
+            {t('nfts.liked')}
+            {liked ? <span className="active-line"></span> : null}
+          </div>
+        </div>
         {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
           <Loading />
@@ -196,7 +272,6 @@ export const NFTs: React.FC = () => {
           <InfiniteScroll
             pullDownToRefresh={!IS_WEXIN}
             refreshFunction={refresh}
-            height={window.innerHeight - 194}
             pullDownToRefreshContent={
               <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
             }
@@ -218,13 +293,14 @@ export const NFTs: React.FC = () => {
             {data?.pages?.map((group, i) => {
               return (
                 <React.Fragment key={i}>
-                  {group.token_list.map((token, j) => {
+                  {group.token_list.map((token, j: number) => {
                     return (
                       <Card
                         className={i === 0 && j === 0 ? 'first' : ''}
                         token={token}
-                        key={token.token_uuid ?? `${i}${j}`}
+                        key={token.token_uuid || `${i}.${j}`}
                         address={address}
+                        isClass={liked === 'true'}
                       />
                     )
                   })}
@@ -241,6 +317,27 @@ export const NFTs: React.FC = () => {
         closeDialog={closeDialog}
         isDialogOpen={isDialogOpen}
       />
+      <DrawerImage
+        showAvatarAction={showAvatarAction}
+        setShowAvatarAction={setShowAvatarAction}
+      />
+      <SetUsername
+        username={user?.nickname}
+        open={!!matchUsername?.isExact}
+        close={() => history.goBack()}
+      />
+      <SetDesc
+        desc={user?.description}
+        open={!!matchDesc?.isExact}
+        close={() => history.goBack()}
+      />
+      <DrawerMenu
+        close={closeMenu}
+        isDrawerOpen={showMenu}
+        user={user}
+        setShowAvatarAction={setShowAvatarAction}
+      />
+      <HiddenBar alwaysShow={alwayShowTabbar} />
     </Container>
   )
 }

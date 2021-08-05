@@ -66,10 +66,7 @@ const Container = styled(MainContainer)`
   .detail {
     flex: 1;
     background-color: white;
-    border-radius: 35px 35px 0px 0px;
-    margin-top: 140px;
     z-index: 2;
-    padding-top: 10px;
   }
 `
 
@@ -78,15 +75,13 @@ export const Account: React.FC = () => {
   const { t } = useTranslation('translations')
   const { logout } = useWalletModel()
   const matchInfo = useRouteMatch(RoutePath.Info)
-  const matchTx = useRouteMatch(RoutePath.Transactions)
   const matchAccount = useRouteMatch(RoutePath.Account)
   const isInfo = matchInfo?.isExact != null
-  const isTx = matchTx?.isExact != null
   const isAccount = matchAccount?.isExact === true
 
   const { isLogined } = useWalletModel()
   if (!isLogined) {
-    return <Redirect to={RoutePath.Login} />
+    return <Redirect to={RoutePath.Explore} />
   }
   if (isAccount) {
     return <Redirect from={RoutePath.Account} exact to={RoutePath.Info} />
@@ -94,27 +89,10 @@ export const Account: React.FC = () => {
   return (
     <Container>
       <Appbar
-        transparent
-        title={t('account.title')}
+        title={isInfo ? t('account.title') : t('account.transactions')}
         left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
         right={<img src={LogoutPng} onClick={logout.bind(null, history)} />}
       />
-      <div className="bg">
-        <div className="tabs">
-          <span
-            className={`tab ${isInfo ? 'active' : ''}`}
-            onClick={() => !isInfo && history.replace(RoutePath.Info)}
-          >
-            {t('account.info')}
-          </span>
-          <span
-            className={`tab ${isTx ? 'active' : ''}`}
-            onClick={() => !isTx && history.replace(RoutePath.Transactions)}
-          >
-            {t('account.transactions')}
-          </span>
-        </div>
-      </div>
       <section className="detail">
         <Switch>
           <Route component={Info} path={RoutePath.Info} exact />

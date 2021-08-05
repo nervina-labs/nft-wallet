@@ -22,6 +22,10 @@
         "limit": "Limited",
         "unlimit": "Unlimited"
       },
+      "vip": {
+        "weibo": "Weibo verification: {{title}}",
+        "weibo-no-desc": "Weibo verification"
+      },
       "baned": {
         "nft": "Invalid NFT",
         "issuer": "Invalid creator"
@@ -34,9 +38,10 @@
     "login": {
       "title": "NFT Account",
       "connect": {
-        "unipass": "Connect to Unipass (Recommend)",
+        "unipass": "Connect to UniPass",
         "metamask": "Connect to Ethereum Environment",
-        "wallet-connect": "Connect to Wallet Connect"
+        "wallet-connect": "Connect to Wallet Connect",
+        "connect": "Connect to"
       },
       "errors": {
         "not-support": "The current environment does not support connecting to Ethereum",
@@ -47,15 +52,19 @@
     },
     "nfts": {
       "title": "My NFT",
+      "owned": "Owned",
+      "liked": "Liked",
       "status": {
         "comfirming": "Confirming",
         "receiving": "Receiving",
         "tranferring": "Transferring"
       },
       "no-data": "Awwww... You do not yet own any NFT",
+      "no-likes": "You have not yet liked any NFT",
       "link": "Explore NFT Meta-universe",
       "welcome": "Welcome to NFT universe",
-      "hi": "Hi, NFT collector"
+      "hi": "Hi, NFT collector",
+      "share": "Share"
     },
     "transfer": {
       "scan": {
@@ -67,7 +76,7 @@
       },
       "error": {
         "eth": "Please enter the correct Ethereum address",
-        "ckb": "Please enter the correct CKB full address",
+        "ckb": "Please enter the correct CKB address",
         "self": "Unable to transfer NFT to yourself",
         "receive-eth": "This address is an Ethereum address, please remind the receiver to open NFT Account with Ethereum wallet to view the NFT received",
         "common": "Please enter the correct Ethereum address",
@@ -80,7 +89,7 @@
       },
       "transfer": "Transfer",
       "address": "Receiver address",
-      "placeholder": "Please enter CKB full address/Ethereum EOA address",
+      "placeholder": "Please enter CKB address/Ethereum EOA address",
       "check": "Please double check the address entered,",
       "once-transfer": "Once transferred, it cannot be withdrawn",
       "submitted": "Transfer transaction submitted",
@@ -110,12 +119,160 @@
     },
     "nft": {
       "title": "NFT Details",
-      "transfer": "Transfer"
+      "transfer": "Transfer",
+      "desc": "NFT description"
     },
     "account": {
       "title": "My Account",
       "info": "Address",
-      "transactions": "Activity"
+      "transactions": "Activity",
+      "warning": "This address only supports Nervos assets, please do not receive other chain assets",
+      "qrcode": "Use this QR code to receive NFT",
+      "address": "CKB address"
+    },
+    "profile": {
+      "title": "Edit Profile",
+      "username": "Name",
+      "gender": "Gender",
+      "birthday": "Birthday",
+      "region": "Region",
+      "description": "Description",
+      "input": "Please enter",
+      "select": "Please select ",
+      "user-name": {
+        "edit": "Edit Name",
+        "desc": "2-24 characters",
+        "placeholder": "Please enter the name",
+        "empty": "Click to set nickname"
+      },
+      "desc": {
+        "edit": "Edit description",
+        "desc": "0-100 characters",
+        "placeholder": "Please enter the description",
+        "empty": "Click to set personal profile"
+      },
+      "edit-birthday": "Select the birthday",
+      "regions": {
+        "edit": "Select the region",
+        "location": "Location",
+        "all": "All",
+        "selected": "Selected"
+      },
+      "avatar": {
+        "camera": "Take a Photo",
+        "photo-lib": "Pick from Library"
+      },
+      "save": "Save",
+      "cancel": "Cancel",
+      "male": "Male",
+      "female": "Female",
+      "comfirm": "Confirm",
+      "reshot": "Retake",
+      "success": "Profile updated",
+      "years": "{{year}} years old",
+      "size-limit": "Please select image that less than 5M",
+      "save-edit": "Do you want to save the changes?",
+      "wrong-image-format": "Only supports upload png, jpeg, jpg, gif, svg, webp format images for now",
+      "image-network-error": "Fail to upload, please check network conditions and re-upload"
+    },
+    "explore": {
+      "all": "All",
+      "others": "Others",
+      "metaverse": "Explore",
+      "my": "My",
+      "latest": "Latest",
+      "most-liked": "Most Liked",
+      "recommended": "Recommended",
+      "hotest": "Hot NFTs",
+      "collections": "Featured by Mibao",
+      "issuers": "Hot Creators",
+      "home": "Home"
+    },
+    "menu": {
+      "profile": "Profile",
+      "txs": "Activity",
+      "language": "Language",
+      "help": "Help",
+      "logout": "Log Out",
+      "zh": "Chinese",
+      "en": "English"
+    },
+    "help": {
+      "title": "Help center",
+      "question": "Have questions about the UniPass/Ethereum environment?"
+    },
+    "guide": {
+      "one": {
+        "title": "1. View CKB address",
+        "desc": "Click to view the address. Use this address to receive NFT"
+      },
+      "two": {
+        "title": "2. View my NFT",
+        "desc": "Here you can view the NFT(s) you own and liked"
+      },
+      "three": {
+        "title": "3. More functions",
+        "desc": "View profile, activity, help center and more functions"
+      },
+      "four": {
+        "title": "4. Getting started",
+        "desc": "Recommend new users to go to —— <b>Help Support</b> to get more tutorial"
+      },
+      "next": "Next",
+      "done": "Start"
+    },
+    "apps": {
+      "welcome": "Welcome to settle in and build the ecosystem together",
+      "red-envelope": {
+        "title": "UniPass Red Pocket",
+        "desc": "Send NFT red pockets to friends"
+      },
+      "ticket": {
+        "title": "UniPass Ticket",
+        "desc": "Show your NFT ticket, get the follow-up utility"
+      },
+      "dao": {
+        "title": "Mi·DAO",
+        "desc": "Make collective decision in a decentralized way"
+      },
+      "exchange": {
+        "title": "Prize Redeem",
+        "desc": "Collect NFT(s) to redeem prizes"
+      },
+      "exhibition": {
+        "title": "Exhibition hall",
+        "desc": "Customize your personal 3D exhibition hall"
+      },
+      "vip": {
+        "title": "VIP Community",
+        "desc": "High-quality community that can only be accessed by holding a special NFT"
+      }
+    },
+    "resource": {
+      "fail": "Failed to load"
+    },
+    "license": {
+      "agree": "Agree to<a> User Terms of Use and Privacy Policy<a/>",
+      "warn": "Please agree to the relevant agreement first",
+      "title": "Terms of Use"
+    },
+    "addresses": {
+      "submit": "Submit your address to participate in the activity",
+      "submited": "The address has been submitted successfully！",
+      "duplicate": "The address has already been submitted",
+      "continue": "You can",
+      "explore": "Explore More NFT",
+      "select": "Please select one method (automatically submit after successful connection)",
+      "errors": {
+        "not-support": "The current environment does not support connecting to Ethereum",
+        "refuse": "Refused to authorize. Please reopen the page to authorize",
+        "submit-fail": "Submission Failed"
+      }
+    },
+    "auth": {
+      "title": "Authorization",
+      "content": "We will request a digital signature for your address, so as to protect your private data from being leaked and tampered with, such as personal information, liked data, etc.",
+      "ok": "OK"
     }
   }
 }

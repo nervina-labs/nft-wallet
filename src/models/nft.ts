@@ -1,3 +1,4 @@
+import { ClassLikes, VipInfo } from './class-list'
 import { TransactionStatus } from './transactions'
 
 export interface NFT {
@@ -11,16 +12,23 @@ export interface ListMeta {
   total_count: number
 }
 
-export interface NFTToken {
+export enum NftType {
+  Audio = 'audio',
+  Video = 'video',
+  Picture = 'image',
+}
+
+export interface NFTToken extends VipInfo {
+  renderer_type: NftType
   class_name: string
   class_bg_image_url: string
   class_uuid: string
   class_description: string
   class_total: string
   token_uuid: string
-  issuer_avatar_url: string
-  issuer_name: string
-  issuer_uuid: string
+  issuer_avatar_url?: string
+  issuer_name?: string
+  issuer_uuid?: string
   tx_state: TransactionStatus
   from_address?: string
   to_address?: string
@@ -29,7 +37,7 @@ export interface NFTToken {
   n_token_id: number
 }
 
-export interface NFTDetail {
+export interface NFTDetail extends ClassLikes, VipInfo {
   name: string
   description: string
   bg_image_url: string
@@ -47,4 +55,6 @@ export interface NFTDetail {
   is_issuer_banned: boolean
   is_class_banned: boolean
   n_token_id: number
+  renderer_type: NftType
+  renderer: string
 }

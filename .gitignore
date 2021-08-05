@@ -5,3 +5,6 @@ dist-ssr
 *.local
 build
 .env
+.env.prod
+.env.zmc
+yarn-error.log

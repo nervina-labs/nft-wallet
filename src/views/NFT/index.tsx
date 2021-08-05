@@ -1,9 +1,9 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import { Redirect, useHistory, useParams } from 'react-router'
+import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { NFTDetail, Query } from '../../models'
@@ -13,13 +13,17 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
-import { NFT_EXPLORER_URL } from '../../constants'
+import { IS_MAC_SAFARI, NFT_EXPLORER_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
+import { TokenClass, VipSource } from '../../models/class-list'
+import { Like } from '../../components/Like'
+import Divider from '@material-ui/core/Divider'
+import { useLikeStatusModel } from '../../hooks/useLikeStatus'
 
 const Background = styled.div`
-  position: absolute;
+  position: fixed;
   top: 44px;
   width: 100%;
   max-width: 500px;
@@ -54,6 +58,9 @@ const Container = styled(MainContainer)`
     flex: 1;
     display: flex;
     justify-content: center;
+    position: fixed;
+    width: 100%;
+    max-width: 500px;
   }
   .loading {
     text-align: center;
@@ -62,19 +69,31 @@ const Container = styled(MainContainer)`
   .detail {
     padding: 0 25px;
     border-radius: 25px 25px 0px 0px;
-    height: 300px;
-    max-height: 300px;
     position: relative;
+    margin-bottom: 10px;
     background-color: #f7fafd;
     .title {
       font-weight: 500;
       font-size: 20px;
-      line-height: 41px;
+      line-height: 24px;
       color: #0e0e0e;
       margin-top: 45px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      display: -webkit-box;
+      display: -moz-box;
+      -webkit-box-orient: vertical;
       overflow: hidden;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      margin-bottom: 16px;
+    }
+    .vip {
+      color: #999;
+      font-size: 12px;
+    }
+    .desc-title {
+      font-size: 18px;
+      line-height: 20px;
+      margin-bottom: 8px;
     }
     .desc {
       font-size: 14px;
@@ -84,11 +103,18 @@ const Container = styled(MainContainer)`
       white-space: pre-line;
       word-break: break-all;
       padding-bottom: 80px;
+      display: -webkit-box;
+      display: -moz-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 20;
+      line-clamp: 20;
+      /* margin-bottom: 10px; */
     }
     .transfer {
       background-color: #fd5c31;
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       cursor: pointer;
       position: absolute;
       right: 25px;
@@ -138,29 +164,28 @@ const FooterContaienr = styled.footer`
 `
 
 interface FooterProps {
-  nft: NFTDetail
+  nft: NFTDetail | TokenClass
 }
 
 const Footer: React.FC<FooterProps> = ({ nft }) => {
+  const { id } = useParams<{ id: string }>()
+  const classUuid = isTokenClass(nft) ? id : nft.class_uuid
   return (
     <FooterContaienr>
-      <Creator
-        title=""
-        url={nft.issuer_info.avatar_url}
-        name={nft.issuer_info.name}
-        uuid={nft.issuer_info.uuid}
-        color="#000"
-        fontSize={14}
-      />
       <Limited
         count={nft.total}
         bold={false}
-        sn={nft.n_token_id}
+        sn={isTokenClass(nft) ? undefined : nft.n_token_id}
         fontSize={14}
-        // color="rgba(63, 63, 63, 0.66) !important"
+        color="#999"
       />
+      <Like count={nft.class_likes} uuid={classUuid} liked={nft.class_liked} />
     </FooterContaienr>
   )
+}
+
+function isTokenClass(data?: TokenClass | NFTDetail): data is TokenClass {
+  return !!data && !('tx_state' in data)
 }
 
 export const NFT: React.FC = () => {
@@ -170,7 +195,7 @@ export const NFT: React.FC = () => {
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(false)
   const [imageColor, setImageColor] = useState<string>()
   const closeDialog = (): void => setIsDialogOpen(false)
-
+  const matchTokenClass = useRouteMatch(RoutePath.TokenClass)
   const appRef = useRef(null)
   const width = useWidth(appRef)
   const imageWidth = useMemo(() => {
@@ -184,6 +209,10 @@ export const NFT: React.FC = () => {
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api],
     async () => {
+      if (matchTokenClass?.isExact) {
+        const { data } = await api.getTokenClass(id)
+        return data
+      }
       const { data } = await api.getNFTDetail(id)
       return data
     },
@@ -198,8 +227,11 @@ export const NFT: React.FC = () => {
   }, [history, id, detail])
 
   const explorerURL = useMemo(() => {
+    if (isTokenClass(data)) {
+      return `${NFT_EXPLORER_URL}/nft/${id ?? ''}`
+    }
     return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
-  }, [data])
+  }, [data, id])
 
   const openDialog = useCallback(() => {
     if (data !== undefined) {
@@ -230,6 +262,9 @@ export const NFT: React.FC = () => {
     if (detail === undefined) {
       return false
     }
+    if (isTokenClass(detail)) {
+      return false
+    }
     return (
       address !== '' &&
       detail.tx_state !== 'pending' &&
@@ -237,8 +272,26 @@ export const NFT: React.FC = () => {
     )
   }, [address, detail])
 
-  if (!isLogined) {
-    return <Redirect to={RoutePath.Login} />
+  const { setLikeStatus } = useLikeStatusModel()
+
+  useEffect(() => {
+    if (data == null) {
+      return
+    }
+    const classId = isTokenClass(data) ? id : data.class_uuid
+    setLikeStatus(classId, data.class_liked)
+  }, [data, id, setLikeStatus])
+
+  const verifyTitle = detail?.verified_info?.verified_title
+
+  const cachedInnerHeight = useMemo(() => {
+    return window.innerHeight
+  }, [])
+
+  const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
+
+  if (!isLogined && matchTokenClass?.isExact !== true) {
+    return <Redirect to={RoutePath.Explore} />
   }
 
   if (
@@ -261,13 +314,13 @@ export const NFT: React.FC = () => {
       {!isFallBackImgLoaded ? (
         <Background
           url={detail?.bg_image_url}
-          style={{ height: `${window.innerHeight - 44 - 280}px` }}
+          style={{ height: `${innerHeight - 44 - 280}px` }}
         />
       ) : null}
       <div
         className="figure"
         style={{
-          height: `${window.innerHeight - 44 - 300}px`,
+          height: `${innerHeight - 44 - 300}px`,
           background: `${
             isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
           }`,
@@ -277,8 +330,11 @@ export const NFT: React.FC = () => {
           src={detail?.bg_image_url}
           width={imageWidth}
           height={imageWidth}
+          enable={!isDialogOpen}
           onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
           onColorDetected={(color) => setImageColor(color)}
+          type={detail?.renderer_type}
+          renderer={detail?.renderer}
         />
       </div>
       {detail == null ? (
@@ -287,15 +343,44 @@ export const NFT: React.FC = () => {
         </section>
       ) : (
         <>
-          <section className="detail">
-            <div
-              className={`${!isTransferable ? 'disabled' : ''} transfer`}
-              onClick={isTransferable ? tranfer : undefined}
-            >
-              <span className="arrow">&#8594;</span>
-              <span>{t('nft.transfer')}</span>
-            </div>
+          <section
+            className="detail"
+            style={{
+              top: `${innerHeight - 44 - 300}px`,
+            }}
+          >
+            {isTokenClass(detail) ? null : (
+              <div
+                className={`${!isTransferable ? 'disabled' : ''} transfer`}
+                onClick={isTransferable ? tranfer : undefined}
+              >
+                <span className="arrow">&#8594;</span>
+                <span>{t('nft.transfer')}</span>
+              </div>
+            )}
             <div className="title">{detail?.name}</div>
+            <Creator
+              title=""
+              url={detail.issuer_info?.avatar_url}
+              name={detail.issuer_info?.name}
+              uuid={detail.issuer_info?.uuid}
+              color="#000"
+              fontSize={14}
+              isVip={detail?.verified_info?.is_verified}
+              vipTitle={verifyTitle}
+              vipSource={detail?.verified_info?.verified_source}
+              style={{ marginBottom: '5px' }}
+              showTooltip={false}
+            />
+            {verifyTitle ? (
+              <div className="vip">
+                {detail?.verified_info?.verified_source === VipSource.Weibo
+                  ? t('common.vip.weibo', { title: verifyTitle })
+                  : verifyTitle}
+              </div>
+            ) : null}
+            <Divider style={{ margin: '24px 0' }} />
+            <div className="desc-title">{t('nft.desc')}</div>
             <div className="desc">{detail?.description}</div>
           </section>
           <Footer nft={detail} />

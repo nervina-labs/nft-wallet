@@ -16,8 +16,9 @@ import { Drawer, TextareaAutosize } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import {
   verifyEthContractAddress,
-  verifyCkbLongAddress,
+  verifyCkbAddress,
   verifyEthAddress,
+  generateUnipassSignTxUrl,
 } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
@@ -29,6 +30,7 @@ import UnipassProvider from '../../pw/UnipassProvider'
 import { Address, AddressType } from '@lay2/pw-core'
 import { useTranslation } from 'react-i18next'
 import { Box, Container, DrawerContainer } from './styled'
+import { UnipassTransferNftState } from '../../models/unipass'
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -38,8 +40,14 @@ export enum FailedMessage {
   IOSWebkit = 'ios-webkit',
 }
 
+export interface TransferState {
+  nftDetail?: NFTDetail
+  signature?: string
+  prevState?: UnipassTransferNftState
+}
+
 export const Transfer: React.FC = () => {
-  const location = useLocation<{ nftDetail?: NFTDetail }>()
+  const routerLocation = useLocation<TransferState>()
   const history = useHistory()
   const {
     signTransaction,
@@ -49,12 +57,17 @@ export const Transfer: React.FC = () => {
     prevAddress,
     provider,
     walletType,
+    pubkey,
   } = useWalletModel()
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [ckbAddress, setCkbAddress] = useState('')
+  const prevState = routerLocation.state?.prevState
+  const hasSignature = !!routerLocation.state?.signature
+  const [isDrawerOpen, setIsDrawerOpen] = useState(hasSignature ?? false)
+  const [ckbAddress, setCkbAddress] = useState(prevState?.ckbAddress ?? '')
   const [failedStatus, setFailedMessage] = useState(FailedMessage.TranferFail)
   const [isSendingNFT, setIsSendingNFT] = useState(false)
-  const [isAddressValid, setIsAddressValid] = useState(false)
+  const [isAddressValid, setIsAddressValid] = useState(
+    !!routerLocation.state?.prevState ?? false
+  )
   const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isScaning, setIsScaning] = useState(false)
@@ -90,7 +103,7 @@ export const Transfer: React.FC = () => {
 
   const inputOnChange = useCallback(
     (val: string) => {
-      let isValidAddress = verifyCkbLongAddress(val)
+      let isValidAddress = verifyCkbAddress(val)
       let isSameAddress = val !== '' && address === val
       const isEthAddress = verifyEthAddress(val)
       if (isEthAddress) {
@@ -170,19 +183,51 @@ export const Transfer: React.FC = () => {
         throw new Error(err)
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await api.transfer(id, signTx!, sentAddress).catch((err) => {
-        setFailedMessage(FailedMessage.TranferFail)
-        stopTranfer(false)
-        console.log(err)
-        throw err
-      })
+      if (walletType === WalletType.Unipass) {
+        const { signature } = routerLocation.state ?? {}
+        if (signature) {
+          await api.transfer(id, tx, sentAddress, signature).catch((err) => {
+            setFailedMessage(FailedMessage.TranferFail)
+            stopTranfer(false)
+            console.log(err)
+            throw err
+          })
+        } else {
+          const url = `${location.origin}${RoutePath.Unipass}`
+          location.href = generateUnipassSignTxUrl(
+            url,
+            url,
+            pubkey,
+            signTx as any,
+            { uuid: id, ckbAddress: sentAddress }
+          )
+          return
+        }
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await api.transfer(id, signTx!, sentAddress).catch((err) => {
+          setFailedMessage(FailedMessage.TranferFail)
+          stopTranfer(false)
+          console.log(err)
+          throw err
+        })
+      }
     } catch (error) {
       console.log(error)
       return
     }
     stopTranfer(true)
-  }, [signTransaction, id, ckbAddress, api, walletType, isEthAddress])
+  }, [
+    signTransaction,
+    id,
+    ckbAddress,
+    api,
+    walletType,
+    isEthAddress,
+    routerLocation.state,
+    pubkey,
+  ])
+
   const closeDrawer = (): void => setIsDrawerOpen(false)
   const stopScan = (): void => {
     setIsScaning(false)
@@ -225,12 +270,27 @@ export const Transfer: React.FC = () => {
       const { data } = await api.getNFTDetail(id)
       return data
     },
-    { enabled: id != null && location.state?.nftDetail == null }
+    { enabled: id != null && routerLocation.state?.nftDetail == null }
   )
 
   const nftDetail = useMemo(() => {
-    return location.state?.nftDetail ?? remoteNftDetail
-  }, [location.state, remoteNftDetail])
+    return routerLocation.state?.nftDetail ?? remoteNftDetail
+  }, [routerLocation.state, remoteNftDetail])
+
+  const initSending = useRef(false)
+  useEffect(() => {
+    const { prevState, signature } = routerLocation.state ?? {}
+    if (
+      prevState &&
+      signature &&
+      nftDetail &&
+      isDrawerOpen &&
+      !initSending.current
+    ) {
+      initSending.current = true
+      sendNFT().catch(Boolean)
+    }
+  }, [routerLocation.state, isDrawerOpen, nftDetail, sendNFT])
 
   const appRef = useRef(null)
   const containerRef = useRef(null)
@@ -267,7 +327,7 @@ export const Transfer: React.FC = () => {
     }
     if (
       (ckbAddress.startsWith('ckt') || ckbAddress.startsWith('ckb')) &&
-      !verifyCkbLongAddress(ckbAddress)
+      !verifyCkbAddress(ckbAddress)
     ) {
       return t('transfer.error.ckb')
     }
@@ -401,7 +461,7 @@ export const Transfer: React.FC = () => {
       />
       <Drawer
         anchor="bottom"
-        open={isDrawerOpen}
+        open={isDrawerOpen && !!nftDetail}
         PaperProps={{
           style: {
             position: 'absolute',
@@ -454,6 +514,6 @@ export const Transfer: React.FC = () => {
       </Drawer>
     </Container>
   ) : (
-    <Redirect to={RoutePath.Login} />
+    <Redirect to={RoutePath.Explore} />
   )
 }

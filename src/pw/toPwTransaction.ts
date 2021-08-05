@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
@@ -36,7 +37,8 @@ export async function rawTransactionToPWTransaction(
   rawTx: RPC.RawTransaction,
   isUnipass = true
 ): Promise<Transaction> {
-  const inputs = await Promise.all(
+  const [input]: any[] = rawTx.inputs
+  const inputs = input.lock == null && input.type == null ? await Promise.all(
     rawTx.inputs.map(
       async (i) =>
         await Cell.loadFromBlockchain(
@@ -44,6 +46,16 @@ export async function rawTransactionToPWTransaction(
           new OutPoint(i.previous_output?.tx_hash!, i.previous_output?.index!)
         )
     )
+  ) : rawTx.inputs.map(
+    (o: any) =>
+      new Cell(
+        new Amount(o.capacity, AmountUnit.shannon),
+        new Script(o.lock.code_hash, o.lock.args, o.lock.hash_type),
+        o.type != null
+          ? new Script(o.type.code_hash, o.type.args, o.type.hash_type)
+          : undefined,
+        new OutPoint(o.previous_output.tx_hash, o.previous_output.index)
+      )
   )
 
   const outputs = rawTx.outputs.map(

@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { NFTToken, TransactionStatus } from '../../models'
+import { NFTToken, NftType, TransactionStatus } from '../../models'
 import { LazyLoadImage } from '../Image'
 import { Limited } from '../Limited'
 import { Creator } from '../Creator'
 import { useTranslation } from 'react-i18next'
 import FallbackImg from '../../assets/img/card-fallback.png'
+import { getImagePreviewUrl } from '../../utils'
+import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 
 export interface CardProps {
   token: NFTToken
   address: string
   className?: string
+  isClass: boolean
 }
 
 interface LabelProps {
@@ -99,7 +102,7 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
 const Container = styled.div`
   display: flex;
   cursor: pointer;
-  margin-bottom: 28px;
+  margin-bottom: 15px;
   margin-left: 16px;
   margin-right: 16px;
   background: #fff;
@@ -121,12 +124,9 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    position: relative;
-    top: -12px;
-    right: -12px;
     background-color: white;
+    position: relative;
     img {
-      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
       border-radius: 10px;
     }
     .fallback {
@@ -135,6 +135,20 @@ const Container = styled.div`
       font-size: 10px;
       color: #2b2b2b;
       opacity: 0.6;
+    }
+    .player {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
   }
   .content {
@@ -202,19 +216,31 @@ const Container = styled.div`
   }
 `
 
-export const Card: React.FC<CardProps> = ({ token, address, className }) => {
+export const Card: React.FC<CardProps> = ({
+  token,
+  address,
+  className,
+  isClass,
+}) => {
   const history = useHistory()
   const isClassBanned = token.is_class_banned
   const isIssuerBaned = token.is_issuer_banned
   const isBanned = isClassBanned || isIssuerBaned
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(isBanned)
   const [t] = useTranslation('translations')
+  const isPlayable =
+    token.renderer_type === NftType.Audio ||
+    token.renderer_type === NftType.Video
 
   return (
     <Container
       onClick={() => {
         if (isBanned) return
-        history.push(`/nft/${token.token_uuid}`)
+        if (isClass) {
+          history.push(`/class/${token.class_uuid}`)
+        } else {
+          history.push(`/nft/${token.token_uuid}`)
+        }
       }}
       className={className}
       style={{
@@ -223,11 +249,16 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
     >
       <div className="media">
         <LazyLoadImage
-          src={isBanned ? FallbackImg : token.class_bg_image_url}
+          src={
+            isBanned
+              ? FallbackImg
+              : getImagePreviewUrl(token.class_bg_image_url)
+          }
           width={100}
           height={125}
           skeletonStyle={{ borderRadius: '10px' }}
           cover
+          disableContextMenu={true}
           backup={
             <LazyLoadImage
               skeletonStyle={{ borderRadius: '10px' }}
@@ -241,6 +272,11 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
         {isFallBackImgLoaded ? (
           <span className="fallback">{t('common.img-lost')}</span>
         ) : null}
+        {isPlayable ? (
+          <span className="player">
+            <PlayerSvg />
+          </span>
+        ) : null}
       </div>
       <div className="content">
         <div className="title">
@@ -253,7 +289,7 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
           banned={isBanned}
           count={token.class_total}
           bold={false}
-          sn={token.n_token_id}
+          sn={isClass ? undefined : token.n_token_id}
           color="rgba(63, 63, 63, 0.66) !important"
         />
         <Creator
@@ -262,6 +298,9 @@ export const Card: React.FC<CardProps> = ({ token, address, className }) => {
           url={token.issuer_avatar_url}
           name={token.issuer_name}
           uuid={token.issuer_uuid}
+          isVip={token?.verified_info?.is_verified}
+          vipTitle={token?.verified_info?.verified_title}
+          vipSource={token?.verified_info?.verified_source}
           color="rgba(63, 63, 63, 0.66)"
         />
       </div>

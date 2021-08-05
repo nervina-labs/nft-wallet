@@ -4,6 +4,9 @@ import styled from 'styled-components'
 import Emptypng from '../../assets/img/empty.png'
 import { NFT_EXPLORER_URL } from '../../constants'
 import { LazyLoadImage } from '../../components/Image'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../../routes'
+import { useRouteQuery } from '../../hooks/useRouteQuery'
 
 const Container = styled.div`
   margin-top: 80px;
@@ -32,15 +35,23 @@ const Container = styled.div`
 
 export const Empty: React.FC = () => {
   const { t } = useTranslation('translations')
+  const history = useHistory()
+  const isLiked = useRouteQuery('liked', '')
   return (
     <Container>
       <LazyLoadImage src={Emptypng} width={260} height={172} />
-      <div className="desc">{t('nfts.no-data')}</div>
+      <div className="desc">
+        {isLiked ? t('nfts.no-likes') : t('nfts.no-data')}
+      </div>
       <a
         className="link"
         target="_blank"
         rel="noopener noreferrer"
         href={NFT_EXPLORER_URL}
+        onClick={(e) => {
+          e.preventDefault()
+          history.push(RoutePath.Explore)
+        }}
       >
         {t('nfts.link')}
       </a>

@@ -1,18 +1,18 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import Web3 from 'web3'
-import { INFURA_ID } from '../constants'
+import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
+export * from './unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
   await new Promise((resolve) => setTimeout(resolve, ms))
 
-export const verifyCkbLongAddress = (address: string): boolean => {
+export const verifyCkbAddress = (address: string): boolean => {
   try {
     parseAddress(address)
-  } catch {
+  } catch (err) {
     return false
   }
   return (
-    address.length === 95 &&
     (address.startsWith('ckb') || address.startsWith('ckt')) &&
     /^[A-Za-z0-9]+$/.test(address)
   )
@@ -64,3 +64,56 @@ export function copyFallback(data: string): void {
 }
 
 export const noop: () => void = () => {}
+
+export function getRandomNumber(min: number, max: number): number {
+  return parseInt((Math.random() * (max - min) + min).toString(), 10)
+}
+
+export function getRandomBool(): boolean {
+  return Math.random() > 0.5
+}
+
+export function throttle(fn: () => void, wait: number): () => void {
+  let time = Date.now()
+  return function () {
+    if (time + wait - Date.now() < 0) {
+      fn()
+      time = Date.now()
+    }
+  }
+}
+
+export function debounce<Params extends any[]>(
+  func: (...args: Params) => any,
+  timeout: number
+): (...args: Params) => void {
+  let timer: NodeJS.Timeout
+  return (...args: Params) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      func(...args)
+    }, timeout)
+  }
+}
+
+export function removeTrailingZero(str: string): string {
+  return str.replace(/(\.[0-9]*[1-9])0+$|\.0*$/, '$1')
+}
+
+export function roundDown(n: number, decimals = 1): number {
+  return Math.floor(n * Math.pow(10, decimals)) / Math.pow(10, decimals)
+}
+
+export function isVerticalScrollable(): boolean {
+  return document.body.scrollHeight > document.body.clientHeight
+}
+
+export function getImagePreviewUrl(url?: string): string | undefined {
+  if (url == null) {
+    return url
+  }
+  if (url.endsWith('.svg')) {
+    return url
+  }
+  return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
+}
