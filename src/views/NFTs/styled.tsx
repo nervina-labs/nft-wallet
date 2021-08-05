@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { MainContainer } from '../../styles'
-import Bg from '../../assets/svg/home-bg.svg'
 
 export const Container = styled(MainContainer)`
   display: flex;
@@ -24,17 +23,18 @@ export const Container = styled(MainContainer)`
     max-width: 500px;
     border-bottom: 1px solid #ececec;
     background-color: white;
-    border-top-left-radius: 35px;
-    border-top-right-radius: 35px;
     transition: all 0.3s;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
     &.fixed {
       position: fixed;
       top: 0;
       justify-content: center;
-      z-index: 3;
       border-radius: 0;
       background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       backdrop-filter: blur(10px);
     }
     .filter {
@@ -50,8 +50,6 @@ export const Container = styled(MainContainer)`
     }
     .active-line {
       background: #ff5c00;
-      border-radius: 10px;
-      position: absolute;
       border-radius: 10px;
       height: 3px;
       width: 28px;
@@ -72,7 +70,7 @@ export const Container = styled(MainContainer)`
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     z-index: 10;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     font-size: 13px;
     line-height: 18px;
     color: #333;
@@ -106,12 +104,18 @@ export const Container = styled(MainContainer)`
     padding: 0 20px;
     max-width: calc(100% - 40px);
     height: 400px;
-    background: darkgray url(${Bg as any});
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 0 -100px;
     display: flex;
     flex-direction: column;
+    transition: 100ms;
+
+    .bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      z-index: -1;
+    }
 
     @media (min-width: 500px) {
       max-width: 460px;
@@ -147,9 +151,8 @@ export const Container = styled(MainContainer)`
   }
   .list {
     flex: 1;
-    background-color: white;
     background: #ecf2f5;
-    border-radius: 35px 35px 0px 0px;
+    border-radius: 35px 35px 0 0;
     margin-top: 199px;
     z-index: 2;
     .infinite-scroll-component {
