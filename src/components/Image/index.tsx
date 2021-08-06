@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
+import { PhotoProvider, PhotoConsumer } from 'react-photo-view'
 
 export interface LazyLoadImageProps {
   src: string | undefined
@@ -17,9 +18,10 @@ export interface LazyLoadImageProps {
   imgRef?: React.MutableRefObject<HTMLImageElement | null>
   onClick?: (e: React.SyntheticEvent<HTMLImageElement>) => void
   dataSrc?: string
+  usePreview?: boolean
 }
 
-const disableConext: React.MouseEventHandler = (e): boolean => {
+const disableContext: React.MouseEventHandler = (e): boolean => {
   e.preventDefault()
   e.stopPropagation()
   return false
@@ -41,6 +43,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
   imgRef,
   onClick,
   dataSrc,
+  usePreview,
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
@@ -51,37 +54,44 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     }
   }, [backup])
 
+  const ImgElement = (
+    <img
+      src={src === null ? '' : src}
+      ref={imgRef}
+      onContextMenu={disableContextMenu ? disableContext : undefined}
+      data-src={dataSrc}
+      onLoad={async () => {
+        try {
+          await onLoaded?.()
+        } catch (error) {
+          //
+        }
+        setLoaded(true)
+        setShouldUseBackup(false)
+      }}
+      onClick={onClick}
+      onError={onError}
+      alt={alt}
+      style={{
+        objectFit: variant === 'circle' || cover ? 'cover' : 'contain',
+        display: loaded ? 'block' : 'none',
+        width: `${width}px`,
+        height: setImageHeight ? `${height}px` : 'auto',
+        maxWidth: '100%',
+        cursor: usePreview ? 'zoom-in' : undefined,
+        ...imageStyle,
+      }}
+    />
+  )
+
   return (
-    <>
+    <PhotoProvider>
       {shouldUseBackup ? (
         backup
+      ) : usePreview ? (
+        <PhotoConsumer src={dataSrc as string}>{ImgElement}</PhotoConsumer>
       ) : (
-        <img
-          src={src === null ? '' : src}
-          ref={imgRef}
-          onContextMenu={disableContextMenu ? disableConext : undefined}
-          data-src={dataSrc}
-          onLoad={async () => {
-            try {
-              await onLoaded?.()
-            } catch (error) {
-              //
-            }
-            setLoaded(true)
-            setShouldUseBackup(false)
-          }}
-          onError={onError}
-          alt={alt}
-          style={{
-            objectFit: variant === 'circle' || cover ? 'cover' : 'contain',
-            display: loaded ? 'block' : 'none',
-            width: `${width}px`,
-            height: setImageHeight ? `${height}px` : 'auto',
-            maxWidth: '100%',
-            pointerEvents: disableContextMenu ? 'none' : 'auto',
-            ...imageStyle,
-          }}
-        />
+        ImgElement
       )}
       {!loaded ? (
         <Skeleton
@@ -91,6 +101,6 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
           style={skeletonStyle}
         />
       ) : null}
-    </>
+    </PhotoProvider>
   )
 }

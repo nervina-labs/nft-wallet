@@ -4,6 +4,7 @@ import App from './App'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 
+import 'react-photo-view/dist/index.css'
 import './index.css'
 
 const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN

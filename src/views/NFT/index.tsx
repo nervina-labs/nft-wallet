@@ -68,7 +68,7 @@ const Container = styled(MainContainer)`
   }
   .detail {
     padding: 0 25px;
-    border-radius: 25px 25px 0px 0px;
+    border-radius: 25px 25px 0 0;
     position: relative;
     margin-bottom: 10px;
     background-color: #f7fafd;

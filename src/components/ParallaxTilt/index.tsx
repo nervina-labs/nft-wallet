@@ -7,14 +7,10 @@ import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
 import { IS_IPHONE, IS_MAC_SAFARI } from '../../constants'
-import Viewer from 'viewerjs'
 import 'viewerjs/dist/viewer.css'
 import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
-import { useProfileModel } from '../../hooks/useProfile'
-import { useTranslation } from 'react-i18next'
-import { emptyImageBase64 } from '../../data/empty'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -60,8 +56,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [])
   const [enableGyroscope, setEnableGyroscope] = useState(isTouchDevice)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
-  const { snackbar } = useProfileModel()
-  const [t] = useTranslation('translations')
   const shouldReverseTilt = useMemo(() => {
     if (!isTouchDevice) {
       return true
@@ -84,64 +78,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       window.removeEventListener('touchmove', onTouchMove)
     }
   }, [])
-  const imgRef = useRef<HTMLImageElement | null>(null)
-  const viewerRef = useRef<Viewer | null>(null)
-  const imageOnClick = (e: React.SyntheticEvent<HTMLDivElement>): void => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsTileEnable(false)
-    if (type === NftType.Video) {
-      setIsPlayerOpen(true)
-      return
-    }
-    if (type !== NftType.Audio && imgRef.current === null) {
-      return
-    }
-    const img = document.createElement('img')
-    if (imgRef.current === null) {
-      img.src = emptyImageBase64
-    }
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    viewerRef.current = new Viewer(imgRef.current || img, {
-      hidden: () => {
-        viewerRef.current?.destroy()
-        setIsTileEnable(true)
-      },
-      shown: () => {
-        if (type !== NftType.Audio) {
-          return
-        }
-        const audio = document.createElement('audio')
-        const width =
-          window.innerWidth > 500 ? '500px' : `${window.innerWidth}px`
-        audio.style.width = width
-        audio.setAttribute('controlsList', 'nodownload')
-        audio.autoplay = true
-        audio.setAttribute('controls', 'true')
-        audio.src = renderer!
-        audio.onerror = () => {
-          audio.remove()
-          snackbar(t('resource.fail'))
-        }
-        const footer = document.querySelector('.viewer-footer')
-        if (footer) {
-          footer.appendChild(audio)
-        }
-      },
-      url: 'data-src',
-      navbar: false,
-      title: false,
-      toolbar: false,
-    })
-    viewerRef.current.show()
-  }
 
-  useEffect(() => {
-    return () => {
-      viewerRef?.current?.destroy()
-    }
-  }, [])
-  // const [boxShadow, setBoxShadow] = useState('rgb(240 46 170 / 40%) -10px 10px')
   return (
     <>
       <Container
@@ -149,7 +86,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         reset={false}
         tiltEnable={isTiltEnable && enable}
         disableTouch
-        onClick={imageOnClick}
         tiltAngleYInitial={!isTouchDevice ? 15 : undefined}
         adjustGyroscope
         className={classNames({
@@ -177,14 +113,12 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         <LazyLoadImage
           src={getImagePreviewUrl(src)}
           dataSrc={src}
-          imgRef={imgRef}
           width={width}
           height={height}
           imageStyle={{
             borderRadius: '10px',
             // 44 = header, 300 = nft detail, 30 * 2 = margin
             maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
-            pointerEvents: 'none',
             width: '100%',
             maxWidth: width,
           }}
@@ -205,6 +139,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
               }}
             />
           }
+          usePreview={true}
         />
         {type === NftType.Audio || type === NftType.Video ? (
           <span className="player">
