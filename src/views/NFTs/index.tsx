@@ -194,7 +194,6 @@ export const NFTs: React.FC = () => {
     {
       value: 'nfts.owned',
       fn() {
-        console.log(liked)
         if (liked) {
           history.push(RoutePath.NFTs)
         }
@@ -204,7 +203,6 @@ export const NFTs: React.FC = () => {
     {
       value: 'nfts.liked',
       fn() {
-        console.log(liked)
         if (!liked) {
           history.push(RoutePath.NFTs + '?liked=true')
         }
