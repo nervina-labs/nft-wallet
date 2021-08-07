@@ -112,7 +112,7 @@ export function getImagePreviewUrl(url?: string): string | undefined {
   if (url == null) {
     return url
   }
-  if (url.endsWith('.svg')) {
+  if (/\.svg$/i.test(url)) {
     return url
   }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
