@@ -67,7 +67,7 @@ const Container = styled(MainContainer)`
     color: rgba(0, 0, 0, 0.6);
   }
   .detail {
-    padding: 0 25px;
+    padding: 0 25px 40px;
     border-radius: 25px 25px 0 0;
     position: relative;
     margin-bottom: 10px;
@@ -368,7 +368,9 @@ export const NFT: React.FC = () => {
               </div>
             ) : null}
             <Divider style={{ margin: '24px 0' }} />
-            <div className="desc-title">{t('nft.desc')}</div>
+            <div className="desc-title">
+              {detail?.description ? t('nft.desc') : ''}
+            </div>
             <div className="desc">{detail?.description}</div>
           </section>
           <Footer nft={detail} />
