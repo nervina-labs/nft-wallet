@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useMemo, useRef, useState, useEffect } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
@@ -11,6 +11,8 @@ import 'viewerjs/dist/viewer.css'
 import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
+import VideoPreview from '../VideoPreview'
+import AudioPreview from '../AudioPreview'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -25,6 +27,7 @@ export interface ParallaxTiltProps {
 
 const Container = styled(Tilt)`
   position: relative;
+  margin: auto;
   &.disabled {
     transform: none !important;
   }
@@ -63,8 +66,10 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
 
     return !enableGyroscope
   }, [isTouchDevice, enableGyroscope])
+  const [openVideoOrAudioPreview, setOpenVideoOrAudioPreview] = useState(false)
   const timer = useRef<NodeJS.Timeout>()
   const tilt = useRef<Tilt>(null)
+  const useImagePreview = type === NftType.Picture
   const onTouchMove = (e: TouchEvent): void => {
     const target = e.target as any
     if (target?.className?.includes?.('ParallaxTilt')) {
@@ -79,6 +84,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     }
   }, [])
 
+  const imagePreviewUrl = useMemo(() => getImagePreviewUrl(src), [src])
+
   return (
     <>
       <Container
@@ -91,7 +98,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         className={classNames({
           disabled: (!enable && IS_IPHONE) || (isPlayerOpen && IS_MAC_SAFARI),
         })}
-        style={{ margin: 'auto' }}
         transitionSpeed={1000}
         gyroscope={enableGyroscope}
         onEnter={() => {
@@ -111,7 +117,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         }}
       >
         <LazyLoadImage
-          src={getImagePreviewUrl(src)}
+          src={imagePreviewUrl}
           dataSrc={src}
           width={width}
           height={height}
@@ -139,13 +145,38 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
               }}
             />
           }
-          usePreview={true}
+          usePreview={useImagePreview}
+          onClick={() => {
+            if (!useImagePreview) {
+              setOpenVideoOrAudioPreview(true)
+            }
+          }}
         />
-        {type === NftType.Audio || type === NftType.Video ? (
+        {(type === NftType.Audio || type === NftType.Video) && (
           <span className="player">
             <PlayerSvg />
           </span>
-        ) : null}
+        )}
+        {type === NftType.Video && (
+          <VideoPreview
+            poster={imagePreviewUrl}
+            src={renderer}
+            open={openVideoOrAudioPreview}
+            onClose={() => {
+              setOpenVideoOrAudioPreview(false)
+            }}
+          />
+        )}
+        {type === NftType.Audio && (
+          <AudioPreview
+            src={renderer}
+            img={src}
+            open={openVideoOrAudioPreview}
+            onClose={() => {
+              setOpenVideoOrAudioPreview(false)
+            }}
+          />
+        )}
       </Container>
       <Player
         open={isPlayerOpen}
