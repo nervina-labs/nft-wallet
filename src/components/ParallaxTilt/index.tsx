@@ -84,6 +84,22 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [])
 
   const imagePreviewUrl = useMemo(() => getImagePreviewUrl(src), [src])
+  const openPreview = (): void => {
+    if (!useImagePreview) {
+      setOpenVideoOrAudioPreview(true)
+    }
+  }
+  const onContainerLeave = (): void => {
+    setEnableGyroscope(true)
+    timer.current && clearTimeout(timer.current)
+    if (!isTouchDevice) {
+      timer.current = setTimeout(() => {
+        const autoResetEvent = new CustomEvent('autoreset')
+        // @ts-expect-error
+        tilt.current?.onMove(autoResetEvent)
+      }, 1500)
+    }
+  }
 
   return (
     <>
@@ -103,54 +119,41 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
           setEnableGyroscope(false)
           timer.current && clearInterval()
         }}
-        onLeave={() => {
-          setEnableGyroscope(true)
-          timer.current && clearTimeout(timer.current)
-          if (!isTouchDevice) {
-            timer.current = setTimeout(() => {
-              const autoResetEvent = new CustomEvent('autoreset')
-              // @ts-expect-error
-              tilt.current?.onMove(autoResetEvent)
-            }, 1500)
-          }
-        }}
+        onLeave={onContainerLeave}
       >
-        <LazyLoadImage
-          src={imagePreviewUrl}
-          dataSrc={src}
-          width={width}
-          height={height}
-          imageStyle={{
-            borderRadius: '10px',
-            // 44 = header, 300 = nft detail, 30 * 2 = margin
-            maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
-            width: '100%',
-            maxWidth: width,
-          }}
-          setImageHeight={false}
-          onLoaded={() => {
-            if (!src) {
-              return
+        <div onClick={openPreview}>
+          <LazyLoadImage
+            src={imagePreviewUrl}
+            dataSrc={src}
+            width={width}
+            height={height}
+            imageStyle={{
+              borderRadius: '10px',
+              // 44 = header, 300 = nft detail, 30 * 2 = margin
+              maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
+              width: '100%',
+              maxWidth: width,
+            }}
+            setImageHeight={false}
+            onLoaded={() => {
+              if (!src) {
+                return
+              }
+              setIsTileEnable(true)
+            }}
+            backup={
+              <LazyLoadImage
+                width={width}
+                height={width}
+                src={FallbackImg}
+                onLoaded={() => {
+                  onFallBackImageLoaded()
+                }}
+              />
             }
-            setIsTileEnable(true)
-          }}
-          backup={
-            <LazyLoadImage
-              width={width}
-              height={width}
-              src={FallbackImg}
-              onLoaded={() => {
-                onFallBackImageLoaded()
-              }}
-            />
-          }
-          usePreview={useImagePreview}
-          onClick={() => {
-            if (!useImagePreview) {
-              setOpenVideoOrAudioPreview(true)
-            }
-          }}
-        />
+            usePreview={useImagePreview}
+          />
+        </div>
         {(type === NftType.Audio || type === NftType.Video) && (
           <span className="player">
             <PlayerSvg />
