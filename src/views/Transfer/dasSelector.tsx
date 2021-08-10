@@ -101,12 +101,31 @@ const DasSelectorPopout: React.FC<DasSelectorPopoutProps> = ({
     onVisibleChange(false)
   }, [onVisibleChange])
 
+  const handleSelect = useCallback(
+    (record) => {
+      onSelect(record)
+    },
+    [onSelect]
+  )
+
   useEffect(() => {
     if (!visible) return
     if (!root) return
     const [, rootTop] = getElementPagePosition(root)
     setTop(rootTop + 35)
   }, [visible, root])
+
+  useEffect(() => {
+    if (data?.length === 1) {
+      const handle = setTimeout(() => {
+        handleSelect(data[0])
+      }, 3000)
+
+      return () => {
+        clearTimeout(handle)
+      }
+    }
+  }, [data])
 
   const dom = (
     <DasSelectorPopoutContainer
@@ -129,7 +148,7 @@ const DasSelectorPopout: React.FC<DasSelectorPopoutProps> = ({
               <div
                 className="record"
                 key={record.key}
-                onClick={() => onSelect(record)}
+                onClick={() => handleSelect(record)}
               >
                 {record === selectedAccount && (
                   <div className="check">
