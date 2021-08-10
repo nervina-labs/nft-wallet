@@ -39,6 +39,11 @@ export const verifyEthContractAddress = async (
   }
 }
 
+const DASReg: RegExp = /^((\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|[0-9a-zA-Z])+\.bit$/
+export const verifyDasAddress = (addr: string): boolean => {
+  return DASReg.test(addr)
+}
+
 export function truncateMiddle(
   str: string,
   takeLength = 6,

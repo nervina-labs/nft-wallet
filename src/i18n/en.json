@@ -78,6 +78,7 @@
         "eth": "Please enter the correct Ethereum address",
         "ckb": "Please enter the correct CKB address",
         "self": "Unable to transfer NFT to yourself",
+        "das": "Please enter DAS and select a result",
         "receive-eth": "This address is an Ethereum address, please remind the receiver to open NFT Account with Ethereum wallet to view the NFT received",
         "common": "Please enter the correct Ethereum address",
         "sign-fail": "Transaction rejected",
@@ -87,9 +88,15 @@
         "camera-auth": "No camera permission, please refresh the page to re-authorize",
         "ios-webkit": "Please upgrade your operating system to iOS 14.3+, or use Safari to scan QR code"
       },
+      "das": {
+        "not-register": "This DAS is not registered",
+        "empty": "No record",
+        "single-result": "Result",
+        "multi-result": "There are multiple resolution results, please select"
+      },
       "transfer": "Transfer",
       "address": "Receiver address",
-      "placeholder": "Please enter CKB address/Ethereum EOA address",
+      "placeholder": "CKB address/ETH address/DAS Account",
       "check": "Please double check the address entered,",
       "once-transfer": "Once transferred, it cannot be withdrawn",
       "submitted": "Transfer transaction submitted",
