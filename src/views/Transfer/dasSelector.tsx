@@ -51,7 +51,11 @@ function fetch(
       .records(url)
       .then((resp) => {
         if (currentValue === url) {
-          callback(resp.filter((record) => filterKeys.includes(record.key)))
+          callback(
+            resp.filter(
+              (record) => filterKeys.includes(record.key) && record.label
+            )
+          )
         }
       })
       .catch((e) => {
