@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
-import { PhotoProvider, PhotoConsumer } from 'react-photo-view'
+import { PhotoConsumer } from 'react-photo-view'
 
 export interface LazyLoadImageProps {
   src: string | undefined
@@ -85,7 +85,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
   )
 
   return (
-    <PhotoProvider>
+    <>
       {shouldUseBackup ? (
         backup
       ) : usePreview ? (
@@ -101,6 +101,6 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
           style={skeletonStyle}
         />
       ) : null}
-    </PhotoProvider>
+    </>
   )
 }

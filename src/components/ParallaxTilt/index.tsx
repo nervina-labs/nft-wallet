@@ -10,8 +10,7 @@ import { IS_IPHONE, IS_MAC_SAFARI } from '../../constants'
 import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
-import VideoPreview from '../VideoPreview'
-import AudioPreview from '../AudioPreview'
+import { PhotoProvider } from 'react-photo-view'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -27,9 +26,11 @@ export interface ParallaxTiltProps {
 const Container = styled(Tilt)`
   position: relative;
   margin: auto;
+
   &.disabled {
     transform: none !important;
   }
+
   .player {
     position: absolute;
     right: 10px;
@@ -65,7 +66,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
 
     return !enableGyroscope
   }, [isTouchDevice, enableGyroscope])
-  const [openVideoOrAudioPreview, setOpenVideoOrAudioPreview] = useState(false)
   const timer = useRef<NodeJS.Timeout>()
   const tilt = useRef<Tilt>(null)
   const useImagePreview = type === NftType.Picture
@@ -77,7 +77,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }
   useEffect(() => {
     window.addEventListener('touchmove', onTouchMove, { passive: false })
-
     return () => {
       window.removeEventListener('touchmove', onTouchMove)
     }
@@ -86,7 +85,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   const imagePreviewUrl = useMemo(() => getImagePreviewUrl(src), [src])
   const openPreview = (): void => {
     if (!useImagePreview) {
-      setOpenVideoOrAudioPreview(true)
+      setIsPlayerOpen(true)
     }
   }
   const onContainerLeave = (): void => {
@@ -122,74 +121,55 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         onLeave={onContainerLeave}
       >
         <div onClick={openPreview}>
-          <LazyLoadImage
-            src={imagePreviewUrl}
-            dataSrc={src}
-            width={width}
-            height={height}
-            imageStyle={{
-              borderRadius: '10px',
-              // 44 = header, 300 = nft detail, 30 * 2 = margin
-              maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
-              width: '100%',
-              maxWidth: width,
-            }}
-            setImageHeight={false}
-            onLoaded={() => {
-              if (!src) {
-                return
+          <PhotoProvider>
+            <LazyLoadImage
+              src={imagePreviewUrl}
+              dataSrc={src}
+              width={width}
+              height={height}
+              imageStyle={{
+                borderRadius: '10px',
+                // 44 = header, 300 = nft detail, 30 * 2 = margin
+                maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
+                width: '100%',
+                maxWidth: width,
+              }}
+              setImageHeight={false}
+              onLoaded={() => {
+                if (!src) {
+                  return
+                }
+                setIsTileEnable(true)
+              }}
+              backup={
+                <LazyLoadImage
+                  width={width}
+                  height={width}
+                  src={FallbackImg}
+                  onLoaded={() => {
+                    onFallBackImageLoaded()
+                  }}
+                />
               }
-              setIsTileEnable(true)
-            }}
-            backup={
-              <LazyLoadImage
-                width={width}
-                height={width}
-                src={FallbackImg}
-                onLoaded={() => {
-                  onFallBackImageLoaded()
-                }}
-              />
-            }
-            usePreview={useImagePreview}
-          />
+              usePreview={useImagePreview}
+            />
+          </PhotoProvider>
         </div>
         {(type === NftType.Audio || type === NftType.Video) && (
-          <span className="player">
-            <PlayerSvg />
-          </span>
-        )}
-        {type === NftType.Video && (
-          <VideoPreview
-            poster={imagePreviewUrl}
-            src={renderer}
-            open={openVideoOrAudioPreview}
-            onClose={() => {
-              setOpenVideoOrAudioPreview(false)
-            }}
-          />
-        )}
-        {type === NftType.Audio && (
-          <AudioPreview
-            src={renderer}
-            img={src}
-            open={openVideoOrAudioPreview}
-            onClose={() => {
-              setOpenVideoOrAudioPreview(false)
-            }}
-          />
+          <>
+            <span className="player">
+              <PlayerSvg />
+            </span>
+            <Player
+              poster={imagePreviewUrl}
+              type={type}
+              renderer={renderer}
+              open={isPlayerOpen}
+              close={() => setIsPlayerOpen(false)}
+            />
+          </>
         )}
       </Container>
-      <Player
-        open={isPlayerOpen}
-        poster={src}
-        type={NftType.Video}
-        renderer={renderer}
-        close={() => {
-          setIsPlayerOpen(false)
-          setIsTileEnable(true)
-        }}
-      />
     </>
   )
 }

@@ -21,6 +21,7 @@ import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
 import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
+import 'react-photo-view/dist/index.css'
 
 const Background = styled.div`
   position: fixed;
