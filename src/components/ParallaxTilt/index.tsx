@@ -68,7 +68,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [isTouchDevice, enableGyroscope])
   const timer = useRef<NodeJS.Timeout>()
   const tilt = useRef<Tilt>(null)
-  const useImagePreview = type === NftType.Picture
+  const enableImagePreview = type === NftType.Picture
   const onTouchMove = (e: TouchEvent): void => {
     const target = e.target as any
     if (target?.className?.includes?.('ParallaxTilt')) {
@@ -84,7 +84,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
 
   const imagePreviewUrl = useMemo(() => getImagePreviewUrl(src), [src])
   const openPreview = (): void => {
-    if (!useImagePreview) {
+    if (!enableImagePreview) {
       setIsPlayerOpen(true)
     }
   }
@@ -151,7 +151,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
                   }}
                 />
               }
-              usePreview={useImagePreview}
+              enablePreview={enableImagePreview}
             />
           </PhotoProvider>
         </div>

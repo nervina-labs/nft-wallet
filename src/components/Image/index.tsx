@@ -18,7 +18,7 @@ export interface LazyLoadImageProps {
   imgRef?: React.MutableRefObject<HTMLImageElement | null>
   onClick?: (e: React.SyntheticEvent<HTMLImageElement>) => void
   dataSrc?: string
-  usePreview?: boolean
+  enablePreview?: boolean
 }
 
 const disableContext: React.MouseEventHandler = (e): boolean => {
@@ -43,7 +43,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
   imgRef,
   onClick,
   dataSrc,
-  usePreview,
+  enablePreview,
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
@@ -78,7 +78,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
         width: `${width}px`,
         height: setImageHeight ? `${height}px` : 'auto',
         maxWidth: '100%',
-        cursor: usePreview ? 'zoom-in' : undefined,
+        cursor: enablePreview ? 'zoom-in' : undefined,
         ...imageStyle,
       }}
     />
@@ -88,7 +88,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     <>
       {shouldUseBackup ? (
         backup
-      ) : usePreview ? (
+      ) : enablePreview ? (
         <PhotoConsumer src={dataSrc as string}>{ImgElement}</PhotoConsumer>
       ) : (
         ImgElement
