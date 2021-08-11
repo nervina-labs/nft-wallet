@@ -99,6 +99,7 @@ const DasSelectorPopout: React.FC<DasSelectorPopoutProps> = ({
   selectedAccount,
 }) => {
   const [top, setTop] = useState(0)
+  const [left, setLeft] = useState(0)
   const { t } = useTranslation('translations')
 
   const handleMaskClick = useCallback(() => {
@@ -115,7 +116,8 @@ const DasSelectorPopout: React.FC<DasSelectorPopoutProps> = ({
   useEffect(() => {
     if (!visible) return
     if (!root) return
-    const [, rootTop] = getElementPagePosition(root)
+    const [rootLeft, rootTop] = getElementPagePosition(root)
+    setLeft(rootLeft + 11 - 15)
     setTop(rootTop + 35)
   }, [visible, root])
 
@@ -168,6 +170,7 @@ const DasSelectorPopout: React.FC<DasSelectorPopoutProps> = ({
               </div>
             ))}
           </div>
+          <div className="triangle" style={{ left }} />
         </div>
       )}
     </DasSelectorPopoutContainer>

@@ -270,26 +270,31 @@ export const DasSelectorPopoutContainer = styled.div`
   font-size: 14px;
   z-index: 11;
 
-  &::before,
-  &::after {
-    content: '';
-    display: block;
-    box-sizing: border-box;
+  .triangle {
     position: absolute;
-    right: 52px;
-    background: #fff;
-    width: 10px;
-    height: 10px;
-    transform: rotate(45deg);
-  }
+    top: 0;
+    left: 0;
 
-  &::before {
-    top: -5px;
-    border: #dbdeeb solid 1px;
-  }
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      box-sizing: border-box;
+      position: absolute;
+      background: #fff;
+      width: 10px;
+      height: 10px;
+      transform: rotate(45deg);
+    }
 
-  &::after {
-    top: -4px;
+    &::before {
+      top: -5px;
+      border: #dbdeeb solid 1px;
+    }
+
+    &::after {
+      top: -4px;
+    }
   }
 
   &.visible {
