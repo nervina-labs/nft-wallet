@@ -11,6 +11,8 @@ import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
 import { PhotoProvider } from 'react-photo-view'
+import { useTranslation } from 'react-i18next'
+import { useProfileModel } from '../../hooks/useProfile'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -59,16 +61,18 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [])
   const [enableGyroscope, setEnableGyroscope] = useState(isTouchDevice)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
+  const { snackbar } = useProfileModel()
+  const [t] = useTranslation('translations')
   const shouldReverseTilt = useMemo(() => {
     if (!isTouchDevice) {
       return true
     }
-
     return !enableGyroscope
   }, [isTouchDevice, enableGyroscope])
   const timer = useRef<NodeJS.Timeout>()
   const tilt = useRef<Tilt>(null)
-  const enableImagePreview = type === NftType.Picture
+  const enableImagePreview =
+    type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
   const onTouchMove = (e: TouchEvent): void => {
     const target = e.target as any
     if (target?.className?.includes?.('ParallaxTilt')) {
@@ -99,6 +103,10 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       }, 1500)
     }
   }
+  const onError = (): void => {
+    snackbar(t('resource.fail'))
+    setIsPlayerOpen(false)
+  }
 
   return (
     <>
@@ -121,7 +129,20 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         onLeave={onContainerLeave}
       >
         <div onClick={openPreview}>
-          <PhotoProvider>
+          <PhotoProvider
+            toolbarRender={() =>
+              type === NftType.Audio ? (
+                <audio
+                  src={renderer}
+                  controls
+                  autoPlay
+                  controlsList="nodownload"
+                  onError={onError}
+                  style={{ height: '44px' }}
+                />
+              ) : null
+            }
+          >
             <LazyLoadImage
               src={imagePreviewUrl}
               dataSrc={src}
@@ -166,6 +187,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
               renderer={renderer}
               open={isPlayerOpen}
               close={() => setIsPlayerOpen(false)}
+              onError={onError}
             />
           </>
         )}

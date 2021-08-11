@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useProfileModel } from '../../hooks/useProfile'
 import { NftType } from '../../models'
 import styled from 'styled-components'
 import { Dialog } from '@material-ui/core'
@@ -11,6 +9,7 @@ export interface PlayerProps {
   poster?: string
   open: boolean
   close: () => void
+  onError?: () => void
 }
 
 const PreviewContainer = styled.div`
@@ -21,6 +20,8 @@ const PreviewContainer = styled.div`
   max-width: 500px;
   position: relative;
   overflow: hidden;
+  min-width: 300px;
+  min-height: 52px;
 
   .img {
     width: 100%;
@@ -32,6 +33,7 @@ const PreviewContainer = styled.div`
     position: absolute;
     bottom: 10px;
     left: 10px;
+    height: 32px;
   }
 
   .video {
@@ -47,16 +49,11 @@ export const Player: React.FC<PlayerProps> = ({
   poster,
   open,
   close,
+  onError,
 }) => {
   const isVideo = type === NftType.Video
   const isAudio = type === NftType.Audio
-  const { snackbar } = useProfileModel()
   const [noPoster, setNoPoster] = useState(false)
-  const [t] = useTranslation('translations')
-  const onError = (): void => {
-    snackbar(t('resource.fail'))
-    close()
-  }
 
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent): void => {
@@ -84,7 +81,6 @@ export const Player: React.FC<PlayerProps> = ({
               controls
               controlsList="nodownload"
               playsInline
-              poster={poster}
             />
           )}
           {isAudio && (
