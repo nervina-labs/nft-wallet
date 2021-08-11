@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useProfileModel } from '../../hooks/useProfile'
+import React, { useEffect, useRef, useState } from 'react'
 import { NftType } from '../../models'
 import styled from 'styled-components'
-import { Dialog } from '@material-ui/core'
+import { Dialog, Icon } from '@material-ui/core'
+import { Close } from '@material-ui/icons'
 
 export interface PlayerProps {
   type: NftType
   renderer?: string
   poster?: string
   open: boolean
-  close: () => void
+  onClose: () => void
+  onError?: () => void
 }
 
 const PreviewContainer = styled.div`
@@ -21,6 +21,8 @@ const PreviewContainer = styled.div`
   max-width: 500px;
   position: relative;
   overflow: hidden;
+  min-width: 300px;
+  min-height: 52px;
 
   .img {
     width: 100%;
@@ -32,12 +34,25 @@ const PreviewContainer = styled.div`
     position: absolute;
     bottom: 10px;
     left: 10px;
+    height: 32px;
   }
 
   .video {
     width: 100%;
     background-color: #000;
     margin: auto;
+  }
+
+  .close {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #fff;
+    opacity: 0.75;
+    &:hover {
+      opacity: 1;
+    }
   }
 `
 
@@ -46,37 +61,44 @@ export const Player: React.FC<PlayerProps> = ({
   renderer,
   poster,
   open,
-  close,
+  onClose,
+  onError,
 }) => {
   const isVideo = type === NftType.Video
   const isAudio = type === NftType.Audio
-  const { snackbar } = useProfileModel()
   const [noPoster, setNoPoster] = useState(false)
-  const [t] = useTranslation('translations')
-  const onError = (): void => {
-    snackbar(t('resource.fail'))
-    close()
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  const catchRefHandleError = (): void => {
+    if (onError) {
+      onError()
+    }
+  }
+
+  const close = (): void => {
+    audioRef?.current?.pause()
+    videoRef?.current?.pause()
+    onClose()
   }
 
   useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent): void => {
-      if (e.key === 'Escape') {
-        close()
-      }
+    if (open) {
+      audioRef?.current?.play().catch(catchRefHandleError)
+      videoRef?.current?.play().catch(catchRefHandleError)
     }
-    document.addEventListener('keydown', handleKeydown, true)
-
-    return () => {
-      document.removeEventListener('keydown', handleKeydown)
-    }
-  })
+  }, [open])
 
   return (
     <>
-      <Dialog open={open} onClose={close}>
+      <Dialog open={open} onClose={close} onEscapeKeyDown={close} keepMounted>
         <PreviewContainer>
+          <Icon className="close" onClick={close}>
+            <Close />
+          </Icon>
           {isVideo && (
             <video
+              ref={videoRef}
               src={renderer}
               className="video"
               onError={onError}
@@ -84,7 +106,6 @@ export const Player: React.FC<PlayerProps> = ({
               controls
               controlsList="nodownload"
               playsInline
-              poster={poster}
             />
           )}
           {isAudio && (
@@ -98,6 +119,7 @@ export const Player: React.FC<PlayerProps> = ({
                 />
               )}
               <audio
+                ref={audioRef}
                 src={renderer}
                 onError={onError}
                 className="audio"
