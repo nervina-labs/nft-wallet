@@ -42,6 +42,21 @@ const Container = styled(Tilt)`
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
+  }
+`
+
+const AudioContainer = styled.div`
+  position: fixed;
+  bottom: 10px;
+  width: calc(100% - 20px);
+  max-width: 500px;
+  transform: translateX(-50%);
+  left: 50%;
+
+  audio {
+    width: 100%;
+    height: 36px;
   }
 `
 
@@ -73,8 +88,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   const tilt = useRef<Tilt>(null)
   const enableImagePreview =
     type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
-  const enablePlayer =
-    !enableImagePreview && (type === NftType.Audio || type === NftType.Video)
+  const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
+  const enablePlayer = !enableImagePreview && isAudioOrVideo
   const onTouchMove = (e: TouchEvent): void => {
     const target = e.target as any
     if (target?.className?.includes?.('ParallaxTilt')) {
@@ -106,7 +121,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     }
   }
   const onError = (): void => {
-    snackbar(t('resource.fail'))
+    if (isPlayerOpen) {
+      snackbar(t('resource.fail'))
+    }
     setIsPlayerOpen(false)
   }
 
@@ -134,14 +151,15 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
           <PhotoProvider
             toolbarRender={() =>
               type === NftType.Audio ? (
-                <audio
-                  src={renderer}
-                  controls
-                  autoPlay
-                  controlsList="nodownload"
-                  onError={onError}
-                  style={{ height: '44px' }}
-                />
+                <AudioContainer>
+                  <audio
+                    src={renderer}
+                    controls
+                    autoPlay
+                    controlsList="nodownload"
+                    onError={onError}
+                  />
+                </AudioContainer>
               ) : null
             }
           >
@@ -178,20 +196,20 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
             />
           </PhotoProvider>
         </div>
+        {isAudioOrVideo && (
+          <span className="player">
+            <PlayerSvg />
+          </span>
+        )}
         {enablePlayer && (
-          <>
-            <span className="player">
-              <PlayerSvg />
-            </span>
-            <Player
-              poster={imagePreviewUrl}
-              type={type as NftType}
-              renderer={renderer}
-              open={isPlayerOpen}
-              onClose={() => setIsPlayerOpen(false)}
-              onError={onError}
-            />
-          </>
+          <Player
+            poster={imagePreviewUrl}
+            type={type as NftType}
+            renderer={renderer}
+            open={isPlayerOpen}
+            onClose={() => setIsPlayerOpen(false)}
+            onError={onError}
+          />
         )}
       </Container>
     </>
