@@ -22,3 +22,9 @@ code {
 .preview-mask {
   background-color: rgba(0, 0, 0, 0.5)!important;
 }
+.PhotoView-PhotoSlider__BannerWrap {
+  background-color: rgba(0, 0, 0, 0);
+}
+.PhotoView-PhotoSlider__Counter {
+  opacity: 0;
+}
