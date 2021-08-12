@@ -149,6 +149,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       >
         <div onClick={openPreview}>
           <PhotoProvider
+            maskClassName="preview-mask"
             toolbarRender={() =>
               type === NftType.Audio ? (
                 <AudioContainer>
