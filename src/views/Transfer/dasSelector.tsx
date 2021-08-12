@@ -2,6 +2,11 @@
 /* eslint-disable node/no-callback-literal */
 import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import ReactDOM from 'react-dom'
+import Das, { AccountRecord } from 'das-sdk'
+import { CircularProgress } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
+import classNames from 'classnames'
+import { useQuery } from 'react-query'
 import {
   DasSelectorContainer,
   DasSelectorPopoutContainer,
@@ -10,10 +15,6 @@ import {
 import { verifyDasAddress, debounce } from '../../utils'
 import { useDas } from '../../hooks/usdDas'
 import { ReactComponent as CheckoutSvg } from '../../assets/svg/das-checkout.svg'
-import Das, { AccountRecord } from 'das-sdk'
-import { CircularProgress } from '@material-ui/core'
-import { useTranslation } from 'react-i18next'
-import classNames from 'classnames'
 
 export interface DasSelectorProps {
   visible: boolean
@@ -24,7 +25,7 @@ export interface DasSelectorProps {
 
 export interface DasSelectorPopoutProps {
   visible: boolean
-  data: AccountRecord[] | null
+  data?: AccountRecord[]
   root: HTMLElement | null
   onSelect: (selectedAccount: AccountRecord | null) => void
   selectedAccount: AccountRecord | null
@@ -35,33 +36,34 @@ const filterKeys = ['address.eth', 'address.ckb']
 let timeout: NodeJS.Timeout | null
 let currentValue: string
 
-function fetch(
+async function fetch(
   url: string,
-  callback: (data: AccountRecord[] | null) => void,
   das: Das
-): void {
+): Promise<AccountRecord[] | undefined> {
   if (timeout) {
     clearTimeout(timeout)
     timeout = null
   }
   currentValue = url
 
-  timeout = debounce(() => {
-    void das
-      .records(url)
-      .then((resp) => {
-        if (currentValue === url) {
-          callback(
-            resp.filter(
-              (record) => filterKeys.includes(record.key) && record.label
+  return await new Promise<AccountRecord[] | undefined>((resolve) => {
+    timeout = debounce(() => {
+      void das
+        .records(url)
+        .then((resp) => {
+          if (currentValue === url) {
+            resolve(
+              resp.filter(
+                (record) => filterKeys.includes(record.key) && record.label
+              )
             )
-          )
-        }
-      })
-      .catch(() => {
-        callback(null)
-      })
-  }, 500)()
+          }
+        })
+        .catch(() => {
+          resolve(undefined)
+        })
+    }, 500)()
+  })
 }
 
 function getElementPagePosition(elem: HTMLElement): [number, number] {
@@ -193,8 +195,6 @@ export const DasSelector: React.FC<DasSelectorProps> = ({
   onSelect,
   selectedAccount,
 }) => {
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState<AccountRecord[] | null>(null)
   const [popoutVisible, showPopout] = useState(false)
   const btnRef = useRef(null)
   const das = useDas()
@@ -207,28 +207,18 @@ export const DasSelector: React.FC<DasSelectorProps> = ({
     [onSelect, showPopout]
   )
 
-  useEffect(() => {
-    if (!visible) return
-    onSelect(null)
-    setData([])
-    showPopout(false)
-    if (!url) {
-      setLoading(false)
-      return
+  const { data, isLoading: loading } = useQuery(
+    [das, url, visible, onSelect],
+    async () => {
+      if (!visible) return
+      if (!url) return
+      onSelect(null)
+      showPopout(false)
+      const resp = await fetch(url, das)
+      showPopout(true)
+      return resp
     }
-    setLoading(true)
-    if (url) {
-      fetch(
-        url,
-        (resp) => {
-          setData(resp)
-          setLoading(false)
-          showPopout(true)
-        },
-        das
-      )
-    }
-  }, [das, url, visible, onSelect])
+  )
 
   const needToShow = useMemo(() => visible && verifyDasAddress(url), [
     visible,
