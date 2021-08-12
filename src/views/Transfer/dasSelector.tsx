@@ -7,7 +7,7 @@ import {
   DasSelectorPopoutContainer,
   DasSelectorPopoutMask,
 } from './styled'
-import { verifyDasAddress } from '../../utils'
+import { verifyDasAddress, debounce } from '../../utils'
 import { useDas } from '../../hooks/usdDas'
 import { ReactComponent as CheckoutSvg } from '../../assets/svg/das-checkout.svg'
 import Das, { AccountRecord } from 'das-sdk'
@@ -46,7 +46,7 @@ function fetch(
   }
   currentValue = url
 
-  const fake: () => void = () => {
+  timeout = debounce(() => {
     void das
       .records(url)
       .then((resp) => {
@@ -58,12 +58,10 @@ function fetch(
           )
         }
       })
-      .catch((e) => {
+      .catch(() => {
         callback(null)
       })
-  }
-
-  timeout = setTimeout(fake, 500)
+  }, 500)()
 }
 
 function getElementPagePosition(elem: HTMLElement): [number, number] {
