@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useMemo, useRef, useState, useEffect } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
@@ -7,14 +7,12 @@ import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
 import { IS_IPHONE, IS_MAC_SAFARI } from '../../constants'
-import Viewer from 'viewerjs'
-import 'viewerjs/dist/viewer.css'
 import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
-import { useProfileModel } from '../../hooks/useProfile'
+import { PhotoProvider } from 'react-photo-view'
 import { useTranslation } from 'react-i18next'
-import { emptyImageBase64 } from '../../data/empty'
+import { useProfileModel } from '../../hooks/useProfile'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -29,9 +27,12 @@ export interface ParallaxTiltProps {
 
 const Container = styled(Tilt)`
   position: relative;
+  margin: auto;
+
   &.disabled {
     transform: none !important;
   }
+
   .player {
     position: absolute;
     right: 10px;
@@ -41,6 +42,21 @@ const Container = styled(Tilt)`
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
+  }
+`
+
+const AudioContainer = styled.div`
+  position: fixed;
+  bottom: 10px;
+  width: calc(100% - 20px);
+  max-width: 500px;
+  transform: translateX(-50%);
+  left: 50%;
+
+  audio {
+    width: 100%;
+    height: 36px;
   }
 `
 
@@ -66,11 +82,14 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     if (!isTouchDevice) {
       return true
     }
-
     return !enableGyroscope
   }, [isTouchDevice, enableGyroscope])
   const timer = useRef<NodeJS.Timeout>()
   const tilt = useRef<Tilt>(null)
+  const enableImagePreview =
+    type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
+  const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
+  const enablePlayer = !enableImagePreview && isAudioOrVideo
   const onTouchMove = (e: TouchEvent): void => {
     const target = e.target as any
     if (target?.className?.includes?.('ParallaxTilt')) {
@@ -79,69 +98,35 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }
   useEffect(() => {
     window.addEventListener('touchmove', onTouchMove, { passive: false })
-
     return () => {
       window.removeEventListener('touchmove', onTouchMove)
     }
   }, [])
-  const imgRef = useRef<HTMLImageElement | null>(null)
-  const viewerRef = useRef<Viewer | null>(null)
-  const imageOnClick = (e: React.SyntheticEvent<HTMLDivElement>): void => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsTileEnable(false)
-    if (type === NftType.Video) {
+
+  const imagePreviewUrl = useMemo(() => getImagePreviewUrl(src), [src])
+  const openPreview = (): void => {
+    if (!enableImagePreview) {
       setIsPlayerOpen(true)
-      return
     }
-    if (type !== NftType.Audio && imgRef.current === null) {
-      return
+  }
+  const onContainerLeave = (): void => {
+    setEnableGyroscope(true)
+    timer.current && clearTimeout(timer.current)
+    if (!isTouchDevice) {
+      timer.current = setTimeout(() => {
+        const autoResetEvent = new CustomEvent('autoreset')
+        // @ts-expect-error
+        tilt.current?.onMove(autoResetEvent)
+      }, 1500)
     }
-    const img = document.createElement('img')
-    if (imgRef.current === null) {
-      img.src = emptyImageBase64
+  }
+  const onError = (): void => {
+    if (isPlayerOpen) {
+      snackbar(t('resource.fail'))
     }
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    viewerRef.current = new Viewer(imgRef.current || img, {
-      hidden: () => {
-        viewerRef.current?.destroy()
-        setIsTileEnable(true)
-      },
-      shown: () => {
-        if (type !== NftType.Audio) {
-          return
-        }
-        const audio = document.createElement('audio')
-        const width =
-          window.innerWidth > 500 ? '500px' : `${window.innerWidth}px`
-        audio.style.width = width
-        audio.setAttribute('controlsList', 'nodownload')
-        audio.autoplay = true
-        audio.setAttribute('controls', 'true')
-        audio.src = renderer!
-        audio.onerror = () => {
-          audio.remove()
-          snackbar(t('resource.fail'))
-        }
-        const footer = document.querySelector('.viewer-footer')
-        if (footer) {
-          footer.appendChild(audio)
-        }
-      },
-      url: 'data-src',
-      navbar: false,
-      title: false,
-      toolbar: false,
-    })
-    viewerRef.current.show()
+    setIsPlayerOpen(false)
   }
 
-  useEffect(() => {
-    return () => {
-      viewerRef?.current?.destroy()
-    }
-  }, [])
-  // const [boxShadow, setBoxShadow] = useState('rgb(240 46 170 / 40%) -10px 10px')
   return (
     <>
       <Container
@@ -149,79 +134,85 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         reset={false}
         tiltEnable={isTiltEnable && enable}
         disableTouch
-        onClick={imageOnClick}
         tiltAngleYInitial={!isTouchDevice ? 15 : undefined}
         adjustGyroscope
         className={classNames({
           disabled: (!enable && IS_IPHONE) || (isPlayerOpen && IS_MAC_SAFARI),
         })}
-        style={{ margin: 'auto' }}
         transitionSpeed={1000}
         gyroscope={enableGyroscope}
         onEnter={() => {
           setEnableGyroscope(false)
           timer.current && clearInterval()
         }}
-        onLeave={() => {
-          setEnableGyroscope(true)
-          timer.current && clearTimeout(timer.current)
-          if (!isTouchDevice) {
-            timer.current = setTimeout(() => {
-              const autoResetEvent = new CustomEvent('autoreset')
-              // @ts-expect-error
-              tilt.current?.onMove(autoResetEvent)
-            }, 1500)
-          }
-        }}
+        onLeave={onContainerLeave}
       >
-        <LazyLoadImage
-          src={getImagePreviewUrl(src)}
-          dataSrc={src}
-          imgRef={imgRef}
-          width={width}
-          height={height}
-          imageStyle={{
-            borderRadius: '10px',
-            // 44 = header, 300 = nft detail, 30 * 2 = margin
-            maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
-            pointerEvents: 'none',
-            width: '100%',
-            maxWidth: width,
-          }}
-          setImageHeight={false}
-          onLoaded={() => {
-            if (!src) {
-              return
+        <div onClick={openPreview}>
+          <PhotoProvider
+            maskClassName="preview-mask"
+            toolbarRender={() =>
+              type === NftType.Audio ? (
+                <AudioContainer>
+                  <audio
+                    src={renderer}
+                    controls
+                    autoPlay
+                    controlsList="nodownload"
+                    onError={onError}
+                  />
+                </AudioContainer>
+              ) : null
             }
-            setIsTileEnable(true)
-          }}
-          backup={
+          >
             <LazyLoadImage
+              src={imagePreviewUrl}
+              dataSrc={src}
               width={width}
-              height={width}
-              src={FallbackImg}
-              onLoaded={() => {
-                onFallBackImageLoaded()
+              height={height}
+              imageStyle={{
+                borderRadius: '10px',
+                // 44 = header, 300 = nft detail, 30 * 2 = margin
+                maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
+                width: '100%',
+                maxWidth: width,
               }}
+              setImageHeight={false}
+              onLoaded={() => {
+                if (!src) {
+                  return
+                }
+                setIsTileEnable(true)
+              }}
+              backup={
+                <LazyLoadImage
+                  width={width}
+                  height={width}
+                  src={FallbackImg}
+                  onLoaded={() => {
+                    onFallBackImageLoaded()
+                  }}
+                />
+              }
+              enablePreview={enableImagePreview}
             />
-          }
-        />
-        {type === NftType.Audio || type === NftType.Video ? (
-          <span className="player">
-            <PlayerSvg />
-          </span>
-        ) : null}
+          </PhotoProvider>
+          {isAudioOrVideo && (
+            <span className="player">
+              <PlayerSvg />
+            </span>
+          )}
+        </div>
+        {enablePlayer && (
+          <Player
+            poster={imagePreviewUrl}
+            type={type as NftType}
+            renderer={renderer}
+            open={isPlayerOpen}
+            onClose={() => setIsPlayerOpen(false)}
+            onError={onError}
+          />
+        )}
       </Container>
-      <Player
-        open={isPlayerOpen}
-        poster={src}
-        type={NftType.Video}
-        renderer={renderer}
-        close={() => {
-          setIsPlayerOpen(false)
-          setIsTileEnable(true)
-        }}
-      />
     </>
   )
 }

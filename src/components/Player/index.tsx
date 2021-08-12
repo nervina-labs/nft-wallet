@@ -1,64 +1,58 @@
-import { Dialog } from '@material-ui/core'
-import classNames from 'classnames'
-import React, { useEffect, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
-import { IS_IPHONE } from '../../constants'
-import { useProfileModel } from '../../hooks/useProfile'
+import React, { useEffect, useRef, useState } from 'react'
 import { NftType } from '../../models'
+import styled from 'styled-components'
+import { Dialog, Icon } from '@material-ui/core'
+import { Close } from '@material-ui/icons'
 
 export interface PlayerProps {
   type: NftType
   renderer?: string
   poster?: string
   open: boolean
-  close: () => void
+  onClose: () => void
+  onError?: () => void
 }
 
-const Container = styled(Dialog)`
-  /* .MuiDialog-paper {
-    margin: 0;
-  }
-  .MuiDialog-paperScrollPaper {
-    background: transparent;
-    box-shadow: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  .MuiDialog-container {
-    height: 100%;
-    outline: 0;
-  }
-  .MuiDialog-scrollPaper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  background: transparent; */
+const PreviewContainer = styled.div`
+  display: flex;
+  background-color: rgba(0, 0, 0, 0);
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  overflow: hidden;
+  min-width: 300px;
+  min-height: 52px;
 
-  .MuiDialog-paper {
-    margin: 0 !important;
+  .img {
+    width: 100%;
+    max-height: calc(100vh - 200px);
   }
 
-  .MuiDialog-paperScrollPaper {
-    background: transparent !important;
-    box-shadow: none !important;
-    overflow: hidden !important;
-  }
-
-  .MuiDialog-paperWidthSm {
-    max-width: 100% !important;
+  .audio {
+    width: calc(100% - 20px);
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    height: 32px;
   }
 
   .video {
-    video {
-      width: 100%;
-    }
+    width: 100%;
+    background-color: #000;
+    margin: auto;
   }
-  .viewer-button {
+
+  .close {
     position: fixed;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #fff;
+    opacity: 0.75;
+    &:hover {
+      opacity: 1;
+    }
   }
 `
 
@@ -67,66 +61,75 @@ export const Player: React.FC<PlayerProps> = ({
   renderer,
   poster,
   open,
-  close,
+  onClose,
+  onError,
 }) => {
   const isVideo = type === NftType.Video
   const isAudio = type === NftType.Audio
-  const { snackbar } = useProfileModel()
-  const [t] = useTranslation('translations')
-  const videoPlayer = useMemo(() => {
-    if (isVideo && open) {
-      return (
-        <video
-          src={renderer}
-          onError={() => {
-            snackbar(t('resource.fail'))
-            close()
-          }}
-          disablePictureInPicture
-          controls
-          playsInline
-          autoPlay
-          controlsList="nodownload"
-          style={{
-            maxHeight: IS_IPHONE ? '300px' : 'auto',
-          }}
-        />
-      )
-    }
-    return null
-  }, [isVideo, renderer, open, close, snackbar, t])
+  const [noPoster, setNoPoster] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
-  const handleKeydown = (e: KeyboardEvent): void => {
-    if (e.key === 'Escape') {
-      close()
+  const catchRefHandleError = (): void => {
+    if (onError) {
+      onError()
     }
   }
 
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeydown, true)
+  const close = (): void => {
+    audioRef?.current?.pause()
+    videoRef?.current?.pause()
+    onClose()
+  }
 
-    return () => {
-      document.removeEventListener('keydown', handleKeydown)
+  useEffect(() => {
+    if (open) {
+      audioRef?.current?.play().catch(catchRefHandleError)
+      videoRef?.current?.play().catch(catchRefHandleError)
     }
-  }, [])
+  }, [open])
 
   return (
-    <Container
-      className={classNames({
-        video: isVideo,
-        audio: isAudio,
-      })}
-      open={open}
-      onBackdropClick={close}
-      disableAutoFocus={true}
-    >
-      {videoPlayer}
-      <div
-        className="viewer-button viewer-close"
-        data-viewer-action="mix"
-        role="button"
-        onClick={close}
-      ></div>
-    </Container>
+    <>
+      <Dialog open={open} onClose={close} onEscapeKeyDown={close} keepMounted>
+        <PreviewContainer>
+          <Icon className="close" onClick={close}>
+            <Close />
+          </Icon>
+          {isVideo && (
+            <video
+              ref={videoRef}
+              src={renderer}
+              className="video"
+              onError={onError}
+              controls
+              controlsList="nodownload"
+              playsInline
+            />
+          )}
+          {isAudio && (
+            <>
+              {poster && !noPoster && (
+                <img
+                  className="img"
+                  src={poster}
+                  alt="nft"
+                  onError={() => setNoPoster(true)}
+                />
+              )}
+              <audio
+                ref={audioRef}
+                src={renderer}
+                onError={onError}
+                className="audio"
+                autoPlay
+                controls
+                controlsList="nodownload"
+              />
+            </>
+          )}
+        </PreviewContainer>
+      </Dialog>
+    </>
   )
 }
