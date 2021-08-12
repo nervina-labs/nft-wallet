@@ -102,7 +102,6 @@ export const Player: React.FC<PlayerProps> = ({
               src={renderer}
               className="video"
               onError={onError}
-              autoPlay
               controls
               controlsList="nodownload"
               playsInline

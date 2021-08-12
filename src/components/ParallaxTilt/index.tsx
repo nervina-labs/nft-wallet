@@ -195,12 +195,12 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
               enablePreview={enableImagePreview}
             />
           </PhotoProvider>
+          {isAudioOrVideo && (
+            <span className="player">
+              <PlayerSvg />
+            </span>
+          )}
         </div>
-        {isAudioOrVideo && (
-          <span className="player">
-            <PlayerSvg />
-          </span>
-        )}
         {enablePlayer && (
           <Player
             poster={imagePreviewUrl}
