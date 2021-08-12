@@ -21,6 +21,7 @@ import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
 import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
+import 'react-photo-view/dist/index.css'
 
 const Background = styled.div`
   position: fixed;
@@ -67,8 +68,8 @@ const Container = styled(MainContainer)`
     color: rgba(0, 0, 0, 0.6);
   }
   .detail {
-    padding: 0 25px;
-    border-radius: 25px 25px 0px 0px;
+    padding: 0 25px 40px;
+    border-radius: 25px 25px 0 0;
     position: relative;
     margin-bottom: 10px;
     background-color: #f7fafd;
@@ -368,7 +369,9 @@ export const NFT: React.FC = () => {
               </div>
             ) : null}
             <Divider style={{ margin: '24px 0' }} />
-            <div className="desc-title">{t('nft.desc')}</div>
+            <div className="desc-title">
+              {detail?.description ? t('nft.desc') : ''}
+            </div>
             <div className="desc">{detail?.description}</div>
           </section>
           <Footer nft={detail} />
