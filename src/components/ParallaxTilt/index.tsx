@@ -90,6 +90,11 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
   const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
   const enablePlayer = !enableImagePreview && isAudioOrVideo
+  const [
+    photoPreviewToolbarAudioVisible,
+    setPhotoPreviewToolbarAudioVisible,
+  ] = useState(false)
+  const photoPreviewToolbarAudioRef = useRef<HTMLAudioElement>(null)
   const onTouchMove = (e: TouchEvent): void => {
     const target = e.target as any
     if (target?.className?.includes?.('ParallaxTilt')) {
@@ -150,13 +155,21 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         <div onClick={openPreview}>
           <PhotoProvider
             maskClassName="preview-mask"
+            onVisibleChange={(visible) => {
+              setPhotoPreviewToolbarAudioVisible(visible)
+              if (visible) {
+                setTimeout(() => {
+                  photoPreviewToolbarAudioRef?.current?.play()
+                })
+              }
+            }}
             toolbarRender={() =>
-              type === NftType.Audio ? (
+              type === NftType.Audio && photoPreviewToolbarAudioVisible ? (
                 <AudioContainer>
                   <audio
+                    ref={photoPreviewToolbarAudioRef}
                     src={renderer}
                     controls
-                    autoPlay
                     controlsList="nodownload"
                     onError={onError}
                   />
