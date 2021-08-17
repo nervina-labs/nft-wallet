@@ -52,4 +52,4 @@ export const TICKET_APP_URL = IS_MAINNET
   : 'https://t.ticket.unipass.xyz'
 
 export const DAS_INDEXER_URL =
-  process.env.REACT_APP_DAS_INDEXER_URL ?? 'http://121.41.90.77:8223'
+  process.env.REACT_APP_DAS_INDEXER_URL ?? 'https://das.nervina.cn'
