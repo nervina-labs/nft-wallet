@@ -18,7 +18,12 @@ export enum NftType {
   Picture = 'image',
 }
 
-export interface NFTToken extends VipInfo {
+export interface CardBack {
+  card_back_content_exist: boolean
+  card_back_content: string
+}
+
+export interface NFTToken extends VipInfo, CardBack {
   renderer_type: NftType
   class_name: string
   class_bg_image_url: string
@@ -37,7 +42,7 @@ export interface NFTToken extends VipInfo {
   n_token_id: number
 }
 
-export interface NFTDetail extends ClassLikes, VipInfo {
+export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
   name: string
   description: string
   bg_image_url: string

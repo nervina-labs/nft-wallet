@@ -1,4 +1,4 @@
-import { ListMeta, NftType } from './nft'
+import { CardBack, ListMeta, NftType } from './nft'
 
 export interface Tag {
   uuid: string
@@ -26,7 +26,7 @@ export interface ClassLikes {
   class_liked: boolean
 }
 
-export interface TokenClass extends VipInfo, ClassLikes {
+export interface TokenClass extends VipInfo, ClassLikes, CardBack {
   bg_image_url: string
   name: string
   description: string

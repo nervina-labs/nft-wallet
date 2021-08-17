@@ -21,7 +21,35 @@ import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
 import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
+import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
+
+import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
+
+const CardBackIconContainer = styled.div`
+  border-bottom-left-radius: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  background: rgba(0, 0, 0, 0.33);
+  backdrop-filter: blur(4px);
+`
+
+const CardBackIcon: React.FC<{
+  onClick: (e: React.SyntheticEvent) => void
+}> = ({ onClick }) => {
+  return (
+    <CardBackIconContainer onClick={onClick}>
+      <CardBackSvg />
+    </CardBackIconContainer>
+  )
+}
 
 const Background = styled.div`
   position: fixed;
@@ -278,6 +306,26 @@ export const NFT: React.FC = () => {
   }, [])
 
   const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
+  const [showCardBack, setShowCardBack] = useState(false)
+  const hasCardBack = useMemo(() => {
+    return !!data?.card_back_content_exist
+  }, [data])
+  const [disbaleTilt] = useState(false)
+  const tiltRef = useRef<Tilt>(null)
+  const cardBackOnClick = useCallback(
+    (e: React.SyntheticEvent) => {
+      const autoResetEvent = new CustomEvent('autoreset')
+      // @ts-expect-error
+      tiltRef.current?.onMove(autoResetEvent)
+      tiltRef?.current?.reset()
+      if (hasCardBack) {
+        // disable Gyroscope
+      }
+      setShowCardBack((show) => !show)
+      // setDisableTile(false)
+    },
+    [hasCardBack]
+  )
 
   if (!isLogined && matchTokenClass?.isExact !== true) {
     return <Redirect to={RoutePath.Explore} />
@@ -319,12 +367,15 @@ export const NFT: React.FC = () => {
           src={detail?.bg_image_url}
           width={imageWidth}
           height={imageWidth}
-          enable={!isDialogOpen}
+          enable={!isDialogOpen && !disbaleTilt}
           onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
           onColorDetected={(color) => setImageColor(color)}
           type={detail?.renderer_type}
           renderer={detail?.renderer}
+          tiltRef={tiltRef}
+          flipped={showCardBack}
         />
+        <CardBackIcon onClick={cardBackOnClick} />
       </div>
       {detail == null ? (
         <section className="detail">

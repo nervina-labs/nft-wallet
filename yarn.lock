@@ -10984,10 +10984,10 @@ react-app-polyfill@^2.0.0:
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
 
-react-better-tilt@1.5.14:
-  version "1.5.14"
-  resolved "https://registry.yarnpkg.com/react-better-tilt/-/react-better-tilt-1.5.14.tgz#02f50f2b756736feca4ad72ff2096d216ec27def"
-  integrity sha512-7ZsQTXJ2AwC3nlahS9YOh4mcJhkSzyvMu8t3DIGRV99sQ30343XwGrSk2YmEdHUMJvE591q0sKspuzX4/W1o5Q==
+react-better-tilt@1.5.15:
+  version "1.5.15"
+  resolved "https://registry.yarnpkg.com/react-better-tilt/-/react-better-tilt-1.5.15.tgz#d33c33bf90712d5dc1ab3c7e51a17025d210c4ae"
+  integrity sha512-UFMBm2L/L55eXlMi/8LQm9kXDGRiNS/fb+YKOxzrUbFEz/ODR3nXwxWrkPA/Brdy4X5Hq/2p+toXEvqgTYAcLg==
 
 react-dev-utils@^11.0.2:
   version "11.0.4"
@@ -13440,11 +13440,6 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
-
-viewerjs@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/viewerjs/-/viewerjs-1.10.0.tgz#6dcd693b548dd6d7c8371b193136d1eae180621f"
-  integrity sha512-013z8sU9tnAFDfJo4p8z38sqnj1GwRXzlawwbY4oXQMr6lCRMG9TXJ7fyXgVL1jFXyCwkb6xGVJRj6+gfQ2o8A==
 
 vm-browserify@^1.0.1:
   version "1.1.2"

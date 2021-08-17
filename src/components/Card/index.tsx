@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import FallbackImg from '../../assets/img/card-fallback.png'
 import { getImagePreviewUrl } from '../../utils'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
+import { CardBack } from '../Cardback'
 
 export interface CardProps {
   token: NFTToken
@@ -101,6 +102,7 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
 
 const Container = styled.div`
   display: flex;
+  overflow: hidden;
   cursor: pointer;
   margin-bottom: 15px;
   margin-left: 16px;
@@ -159,6 +161,7 @@ const Container = styled.div`
     flex-direction: column;
     overflow: hidden;
     width: 100%;
+    position: relative;
     .title {
       font-size: 14px;
       line-height: 26px;
@@ -231,6 +234,7 @@ export const Card: React.FC<CardProps> = ({
   const isPlayable =
     token.renderer_type === NftType.Audio ||
     token.renderer_type === NftType.Video
+  const hasCardBack = !token.card_back_content_exist
 
   return (
     <Container
@@ -304,6 +308,7 @@ export const Card: React.FC<CardProps> = ({
           color="rgba(63, 63, 63, 0.66)"
         />
       </div>
+      {hasCardBack ? <CardBack /> : null}
     </Container>
   )
 }

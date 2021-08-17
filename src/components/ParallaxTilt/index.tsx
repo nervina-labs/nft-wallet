@@ -23,11 +23,16 @@ export interface ParallaxTiltProps {
   enable: boolean
   renderer?: string
   type?: NftType
+  tiltRef?: React.RefObject<Tilt>
+  flipped?: boolean
 }
 
 const Container = styled(Tilt)`
   position: relative;
-  margin: auto;
+  /* margin: auto; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &.disabled {
     transform: none !important;
@@ -43,6 +48,56 @@ const Container = styled(Tilt)`
     align-items: center;
     justify-content: center;
     pointer-events: none;
+  }
+
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transform-origin: center right;
+    transition: transform 0.5s;
+  }
+
+  .flipped {
+    transform: translateX(-100%) rotateY(-180deg);
+  }
+
+  .flip-card-front {
+    > div {
+      position: relative;
+    }
+    &.hide {
+      opacity: 0;
+    }
+  }
+
+  .flip-card-front,
+  .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flip-card-back {
+    transform: rotateY(180deg);
+    .card-back {
+      border-radius: 10px;
+      background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.8) 0%,
+          rgba(77, 77, 77, 0.8) 100%
+        ),
+        rgba(0, 0, 0, 0.9);
+      /* box-shadow: inset 0px 0px 8px rgba(122, 122, 122, 0.95); */
+      /* backdrop-filter: blur(40px); */
+    }
   }
 `
 
@@ -69,6 +124,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   enable,
   type,
   renderer,
+  tiltRef,
+  flipped,
 }) => {
   const [isTiltEnable, setIsTileEnable] = useState(false)
   const isTouchDevice = useMemo(() => {
@@ -85,7 +142,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     return !enableGyroscope
   }, [isTouchDevice, enableGyroscope])
   const timer = useRef<NodeJS.Timeout>()
-  const tilt = useRef<Tilt>(null)
   const enableImagePreview =
     type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
   const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
@@ -115,8 +171,12 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     if (!isTouchDevice) {
       timer.current = setTimeout(() => {
         const autoResetEvent = new CustomEvent('autoreset')
-        // @ts-expect-error
-        tilt.current?.onMove(autoResetEvent)
+        try {
+          // @ts-expect-error
+          tiltRef.current?.onMove(autoResetEvent)
+        } catch (error) {
+          //
+        }
       }, 1500)
     }
   }
@@ -127,6 +187,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     setIsPlayerOpen(false)
   }
 
+  // 44 = header, 300 = nft detail, 30 * 2 = margin
+  const imageMaxHeight = `${window.innerHeight - 44 - 300 - 30 * 2}px`
+  const imageRef = useRef<HTMLImageElement>(null)
   return (
     <>
       <Container
@@ -134,8 +197,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         reset={false}
         tiltEnable={isTiltEnable && enable}
         disableTouch
-        tiltAngleYInitial={!isTouchDevice ? 15 : undefined}
+        tiltAngleYInitial={undefined}
         adjustGyroscope
+        ref={tiltRef}
         className={classNames({
           disabled: (!enable && IS_IPHONE) || (isPlayerOpen && IS_MAC_SAFARI),
         })}
@@ -147,72 +211,94 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         }}
         onLeave={onContainerLeave}
       >
-        <div onClick={openPreview}>
-          <PhotoProvider
-            maskClassName="preview-mask"
-            toolbarRender={() =>
-              type === NftType.Audio ? (
-                <AudioContainer>
-                  <audio
-                    src={renderer}
-                    controls
-                    autoPlay
-                    controlsList="nodownload"
-                    onError={onError}
-                  />
-                </AudioContainer>
-              ) : null
-            }
-          >
-            <LazyLoadImage
-              src={imagePreviewUrl}
-              dataSrc={src}
-              width={width}
-              height={height}
-              imageStyle={{
-                borderRadius: '10px',
-                // 44 = header, 300 = nft detail, 30 * 2 = margin
-                maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
-                width: '100%',
-                maxWidth: width,
-              }}
-              setImageHeight={false}
-              onLoaded={() => {
-                if (!src) {
-                  return
+        <div
+          className={classNames('flip-card-inner', { flipped })}
+          style={{ maxHeight: imageMaxHeight, width, maxWidth: width }}
+        >
+          <div onClick={openPreview} className={classNames('flip-card-front')}>
+            <div ref={imageRef}>
+              <PhotoProvider
+                maskClassName="preview-mask"
+                toolbarRender={() =>
+                  type === NftType.Audio ? (
+                    <AudioContainer>
+                      <audio
+                        src={renderer}
+                        controls
+                        autoPlay
+                        controlsList="nodownload"
+                        onError={onError}
+                      />
+                    </AudioContainer>
+                  ) : null
                 }
-                setIsTileEnable(true)
-              }}
-              backup={
+              >
                 <LazyLoadImage
+                  src={imagePreviewUrl}
+                  dataSrc={src}
                   width={width}
-                  height={width}
-                  src={FallbackImg}
-                  onLoaded={() => {
-                    onFallBackImageLoaded()
+                  height={height}
+                  imageStyle={{
+                    borderRadius: '10px',
+                    maxHeight: imageMaxHeight,
+                    width: '100%',
+                    maxWidth: width,
                   }}
+                  setImageHeight={false}
+                  onLoaded={() => {
+                    if (!src) {
+                      return
+                    }
+                    setIsTileEnable(true)
+                  }}
+                  backup={
+                    <LazyLoadImage
+                      width={width}
+                      height={width}
+                      src={FallbackImg}
+                      onLoaded={() => {
+                        onFallBackImageLoaded()
+                      }}
+                    />
+                  }
+                  enablePreview={enableImagePreview}
                 />
-              }
-              enablePreview={enableImagePreview}
-            />
-          </PhotoProvider>
-          {isAudioOrVideo && (
-            <span className="player">
-              <PlayerSvg />
-            </span>
-          )}
+              </PhotoProvider>
+              {isAudioOrVideo && (
+                <span className="player">
+                  <PlayerSvg />
+                </span>
+              )}
+            </div>
+          </div>
+          <div
+            className="flip-card-back"
+            style={{
+              width,
+            }}
+          >
+            <div
+              className="card-back"
+              style={{
+                width: `${imageRef.current?.offsetWidth ?? 0}px`,
+                height: `${imageRef.current?.offsetHeight ?? 0}px`,
+              }}
+            >
+              <h1>John Doe</h1>
+            </div>
+          </div>
         </div>
-        {enablePlayer && (
-          <Player
-            poster={imagePreviewUrl}
-            type={type as NftType}
-            renderer={renderer}
-            open={isPlayerOpen}
-            onClose={() => setIsPlayerOpen(false)}
-            onError={onError}
-          />
-        )}
       </Container>
+      {enablePlayer && (
+        <Player
+          poster={imagePreviewUrl}
+          type={type as NftType}
+          renderer={renderer}
+          open={isPlayerOpen}
+          onClose={() => setIsPlayerOpen(false)}
+          onError={onError}
+        />
+      )}
     </>
   )
 }

@@ -11,6 +11,7 @@ import { TokenClass } from '../../models/class-list'
 import classNames from 'classnames'
 import { NftType } from '../../models'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
+import { CardBack } from '../../components/Cardback'
 
 const CardContainer = styled.div`
   display: flex;
@@ -108,6 +109,7 @@ export const Card: React.FC<CardProps> = ({
   const isPlayable =
     token.renderer_type === NftType.Audio ||
     token.renderer_type === NftType.Video
+  const hasCardBack = !token.card_back_content_exist
   return (
     <CardContainer
       onClick={() => {
@@ -138,6 +140,7 @@ export const Card: React.FC<CardProps> = ({
             <PlayerSvg />
           </span>
         ) : null}
+        {hasCardBack ? <CardBack /> : null}
       </div>
       <div className={classNames('title', { oneline: oneLineName })}>
         {token.name}
