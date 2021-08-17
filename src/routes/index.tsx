@@ -7,7 +7,6 @@ import {
   Switch,
   useHistory,
   useLocation,
-  useRouteMatch,
 } from 'react-router-dom'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useWalletModel, WalletType } from '../hooks/useWallet'
@@ -34,6 +33,7 @@ import { Apps } from '../views/Apps'
 import { AddressCollector } from '../views/AddressCollector'
 import { useToast } from '../hooks/useToast'
 import { Collection } from '../views/Collection'
+import { Claim } from '../views/Claim'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -59,6 +59,7 @@ export enum RoutePath {
   Apps = '/apps',
   License = '/license',
   AddressCollector = '/addresses',
+  Claim = '/claim',
   Collection = '/explore/collection',
 }
 
@@ -92,12 +93,13 @@ const RouterProvider: React.FC = ({ children }) => {
   )
 }
 
-const allowWithoutLoginList = new Set([
+const allowWithoutAuthList = new Set([
   RoutePath.Unipass,
   RoutePath.Explore,
   RoutePath.Apps,
   RoutePath.AddressCollector,
-  '/',
+  RoutePath.Claim,
+  RoutePath.NotFound,
 ])
 
 const WalletChange: React.FC = ({ children }) => {
@@ -127,16 +129,13 @@ const WalletChange: React.FC = ({ children }) => {
   const isSigning = useRef(false)
   const { toast } = useToast()
   const [t] = useTranslation('translations')
-  const matchAddressCollector = useRouteMatch(
-    `${RoutePath.AddressCollector}/:id`
-  )
+
   useEffect(() => {
     if (
       WalletType.Unipass === walletType &&
       isLogined &&
       !isAuthenticated &&
-      !allowWithoutLoginList.has(location.pathname) &&
-      !matchAddressCollector?.isExact &&
+      ![...allowWithoutAuthList].some((p) => location.pathname.startsWith(p)) &&
       !isSigning.current &&
       pubkey
     ) {
@@ -162,7 +161,6 @@ const WalletChange: React.FC = ({ children }) => {
     pubkey,
     t,
     toast,
-    matchAddressCollector?.isExact,
   ])
 
   return <>{children}</>
@@ -265,6 +263,19 @@ const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Apps',
     path: RoutePath.Apps,
+  },
+  {
+    component: Claim,
+    exact: true,
+    key: 'claim',
+    path: RoutePath.Claim,
+  },
+  {
+    component: Claim,
+    exact: true,
+    key: 'claim-with-id',
+    path: RoutePath.Claim,
+    params: '/:id',
   },
   {
     component: Collection,

@@ -307,4 +307,15 @@ export class ServerWalletAPI implements NFTWalletAPI {
   async getNotifications() {
     return await this.axios.get('/notifications')
   }
+
+  async getClaimStatus(uuid: string) {
+    return await this.axios.get(`/token_claim_codes/${uuid}`)
+  }
+
+  async claim(uuid: string) {
+    return await this.axios.post('/token_claim_codes', {
+      to_address: this.address,
+      code: uuid,
+    })
+  }
 }

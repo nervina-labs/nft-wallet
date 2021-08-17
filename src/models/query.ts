@@ -13,4 +13,6 @@ export enum Query {
   CollectionDetail = 'collection-detail',
   Issuers = 'Issuers',
   Notifications = 'Notifications',
+  DetectClaim = 'DetectClaim',
+  Claim = 'Claim',
 }
