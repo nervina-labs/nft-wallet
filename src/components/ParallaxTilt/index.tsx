@@ -4,6 +4,7 @@ import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
+import { ReactComponent as DotSvg } from '../../assets/svg/dot.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
 import { IS_IPHONE, IS_MAC_SAFARI } from '../../constants'
@@ -71,6 +72,8 @@ const Container = styled(Tilt)`
     &.hide {
       opacity: 0;
     }
+
+    transition: opacity 0.5s;
   }
 
   .flip-card-front,
@@ -89,12 +92,40 @@ const Container = styled(Tilt)`
     transform: rotateY(180deg);
     .card-back {
       border-radius: 10px;
+      position: relative;
+      .bottom-right,
+      .bottom-left,
+      .top-right,
+      .top-left {
+        position: absolute;
+      }
+      .top-left {
+        top: 6px;
+        left: 6px;
+      }
+      .top-right {
+        top: 6px;
+        right: 6px;
+      }
+      .bottom-left {
+        bottom: 6px;
+        left: 6px;
+      }
+      .bottom-right {
+        bottom: 6px;
+        right: 6px;
+      }
+      .card-back-container {
+        margin: 16px;
+      }
+      /* backdrop-filter: blur(40px); */
+      /* border: 5px solid rgb(165, 165, 165); */
       background: linear-gradient(
           180deg,
-          rgba(255, 255, 255, 0.8) 0%,
-          rgba(77, 77, 77, 0.8) 100%
+          rgba(255, 255, 255, 0.2) 0%,
+          rgba(0, 0, 0, 0.2) 100%
         ),
-        rgba(0, 0, 0, 0.9);
+        rgba(143, 137, 137, 0.65);
       /* box-shadow: inset 0px 0px 8px rgba(122, 122, 122, 0.95); */
       /* backdrop-filter: blur(40px); */
     }
@@ -215,7 +246,10 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
           className={classNames('flip-card-inner', { flipped })}
           style={{ maxHeight: imageMaxHeight, width, maxWidth: width }}
         >
-          <div onClick={openPreview} className={classNames('flip-card-front')}>
+          <div
+            onClick={openPreview}
+            className={classNames('flip-card-front', { hide: flipped })}
+          >
             <div ref={imageRef}>
               <PhotoProvider
                 maskClassName="preview-mask"
@@ -284,7 +318,13 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
                 height: `${imageRef.current?.offsetHeight ?? 0}px`,
               }}
             >
-              <h1>John Doe</h1>
+              <DotSvg className="top-left" />
+              <DotSvg className="top-right" />
+              <DotSvg className="bottom-left" />
+              <DotSvg className="bottom-right" />
+              <div className="card-back-container">
+                <h1>John Doe</h1>
+              </div>
             </div>
           </div>
         </div>
