@@ -26,6 +26,7 @@ export interface ParallaxTiltProps {
   type?: NftType
   tiltRef?: React.RefObject<Tilt>
   flipped?: boolean
+  cardBackContent?: string
 }
 
 const Container = styled(Tilt)`
@@ -157,6 +158,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   renderer,
   tiltRef,
   flipped,
+  cardBackContent,
 }) => {
   const [isTiltEnable, setIsTileEnable] = useState(false)
   const isTouchDevice = useMemo(() => {
@@ -221,6 +223,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   // 44 = header, 300 = nft detail, 30 * 2 = margin
   const imageMaxHeight = `${window.innerHeight - 44 - 300 - 30 * 2}px`
   const imageRef = useRef<HTMLImageElement>(null)
+  const hasCardCackContent = !!cardBackContent
   return (
     <>
       <Container
@@ -228,7 +231,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         reset={false}
         tiltEnable={isTiltEnable && enable}
         disableTouch
-        tiltAngleYInitial={undefined}
+        tiltAngleYInitial={
+          !isTouchDevice && !hasCardCackContent ? 15 : undefined
+        }
         adjustGyroscope
         ref={tiltRef}
         className={classNames({
