@@ -93,6 +93,10 @@ const Container = styled(MainContainer)`
         align-items: center;
         margin-right: 32px;
 
+        &.hide {
+          display: none;
+        }
+
         &:last-child {
           margin-right: 0;
         }
@@ -222,6 +226,7 @@ const Header: React.FC<{
             key={i}
             className={classNames('filter', {
               active: sortType === item.value,
+              hide: item.hide,
             })}
             onClick={item.fn}
           >
