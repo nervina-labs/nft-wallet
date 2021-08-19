@@ -288,6 +288,13 @@
       "go-home": "进入秘宝查看",
       "go-explore": "发现更多秘宝",
       "placeholder": "请输入领取密码"
+    },
+    "issuer": {
+      "created": "已创作",
+      "selling": "在售",
+      "issuer_home": "创作者个人主页",
+      "follower": "粉丝",
+      "like": "获赞"
     }
   }
 }

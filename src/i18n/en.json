@@ -273,6 +273,13 @@
       "title": "Authorization",
       "content": "We will request a digital signature for your address, so as to protect your private data from being leaked and tampered with, such as personal information, liked data, etc.",
       "ok": "OK"
+    },
+    "issuer": {
+      "created": "Created",
+      "selling": "Selling",
+      "issuer_home": "Issuer",
+      "follower": "Follower",
+      "like": "Like"
     }
   }
 }

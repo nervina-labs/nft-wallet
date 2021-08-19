@@ -5,7 +5,7 @@ import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
-import { Issuer } from './issuer'
+import { Issuer, IssuerInfo, IssuerTokenClassResult } from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
 
@@ -105,4 +105,11 @@ export interface NFTWalletAPI {
   getClaimStatus: (uuid: string) => Promise<AxiosResponse<ClaimResult>>
 
   claim: (uuid: string) => Promise<AxiosResponse<void>>
+
+  getIssuerInfo: (uuid: string) => Promise<AxiosResponse<IssuerInfo>>
+
+  getIssuerTokenClass: (
+    uuid: string,
+    productState?: 'on_sale' | 'product_state'
+  ) => Promise<AxiosResponse<IssuerTokenClassResult>>
 }

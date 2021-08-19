@@ -21,6 +21,7 @@ import {
 import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
+import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
 
 function randomid(length = 10): string {
   let result = ''
@@ -317,5 +318,28 @@ export class ServerWalletAPI implements NFTWalletAPI {
       to_address: this.address,
       code: uuid,
     })
+  }
+
+  async getIssuerInfo(uuid: string) {
+    return await this.axios.get<IssuerInfo>(`/api/wallet/v1/issuers/${uuid}`, {
+      params: {
+        address: this.address,
+      },
+    })
+  }
+
+  async getIssuerTokenClass(
+    uuid: string,
+    productState: 'on_sale' | 'product_state' = 'product_state'
+  ) {
+    return await this.axios.get<IssuerTokenClassResult>(
+      `/api/wallet/v1/issuers/${uuid}/token_classes`,
+      {
+        params: {
+          address: this.address,
+          product_state: productState,
+        },
+      }
+    )
   }
 }

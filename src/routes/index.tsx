@@ -34,6 +34,7 @@ import { AddressCollector } from '../views/AddressCollector'
 import { useToast } from '../hooks/useToast'
 import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
+import { Issuer } from '../views/Issuer'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -61,6 +62,7 @@ export enum RoutePath {
   AddressCollector = '/addresses',
   Claim = '/claim',
   Collection = '/explore/collection',
+  Issuer = '/issuer',
 }
 
 export const RouterContext = React.createContext({
@@ -282,6 +284,13 @@ const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Collection',
     path: RoutePath.Collection,
+    params: '/:id',
+  },
+  {
+    component: Issuer,
+    exact: true,
+    key: 'Issuer',
+    path: RoutePath.Issuer,
     params: '/:id',
   },
 ]
