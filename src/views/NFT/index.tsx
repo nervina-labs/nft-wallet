@@ -25,6 +25,7 @@ import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
 
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
+import { getImagePreviewUrl } from '../../utils'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -350,7 +351,7 @@ export const NFT: React.FC = () => {
       />
       {!isFallBackImgLoaded ? (
         <Background
-          url={detail?.bg_image_url}
+          url={getImagePreviewUrl(detail?.bg_image_url)}
           style={{ height: `${innerHeight - 44 - 280}px` }}
         />
       ) : null}
@@ -375,7 +376,7 @@ export const NFT: React.FC = () => {
           tiltRef={tiltRef}
           flipped={showCardBack}
         />
-        <CardBackIcon onClick={cardBackOnClick} />
+        {hasCardBack ? <CardBackIcon onClick={cardBackOnClick} /> : null}
       </div>
       {detail == null ? (
         <section className="detail">

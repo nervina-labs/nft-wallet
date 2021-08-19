@@ -109,7 +109,7 @@ export const Card: React.FC<CardProps> = ({
   const isPlayable =
     token.renderer_type === NftType.Audio ||
     token.renderer_type === NftType.Video
-  const hasCardBack = !token.card_back_content_exist
+  const hasCardBack = token.card_back_content_exist
   return (
     <CardContainer
       onClick={() => {

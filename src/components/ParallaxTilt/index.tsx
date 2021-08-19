@@ -5,6 +5,8 @@ import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { ReactComponent as DotSvg } from '../../assets/svg/dot.svg'
+import { ReactComponent as LockSvg } from '../../assets/svg/lock.svg'
+import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
 import { IS_IPHONE, IS_MAC_SAFARI } from '../../constants'
@@ -14,6 +16,7 @@ import { NftType } from '../../models'
 import { PhotoProvider } from 'react-photo-view'
 import { useTranslation } from 'react-i18next'
 import { useProfileModel } from '../../hooks/useProfile'
+import { Dialog } from '@material-ui/core'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -117,6 +120,7 @@ const Container = styled(Tilt)`
         right: 6px;
       }
       .card-back-container {
+        overflow: auto;
         margin: 16px;
       }
       /* backdrop-filter: blur(40px); */
@@ -146,6 +150,144 @@ const AudioContainer = styled.div`
     height: 36px;
   }
 `
+
+interface CardbackProps {
+  width: number | undefined
+  height: number | undefined
+  content?: string
+  openPreview: () => void
+}
+
+const CardbackContainer = styled.div`
+  border-radius: 10px;
+  position: relative;
+  overflow: auto;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  .bottom-right,
+  .bottom-left,
+  .top-right,
+  .top-left {
+    position: absolute;
+  }
+  .top-left {
+    top: 6px;
+    left: 6px;
+  }
+  .top-right {
+    top: 6px;
+    right: 6px;
+  }
+  .bottom-left {
+    bottom: 6px;
+    left: 6px;
+  }
+  .bottom-right {
+    bottom: 6px;
+    right: 6px;
+  }
+  .card-back-container {
+    margin: 16px;
+    width: calc(100% - 32px);
+    overflow-y: auto;
+    &.center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+  }
+  .lock {
+    width: calc(50% + 16px);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg {
+      width: 50%;
+      height: 50%;
+    }
+  }
+  .desc {
+    /* text-shadow: 0px 4px 4px rgba(254, 160, 5, 0.04); */
+    font-size: 16px;
+    margin-top: 20px;
+    color: #4f4f4f;
+    font-weight: 600;
+    text-align: center;
+  }
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    ),
+    rgba(143, 137, 137, 0.65);
+`
+
+const CardbackPreviewContainer = styled(CardbackContainer)`
+  max-width: 500px;
+  width: 100%;
+  height: 100%;
+  .close {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+  }
+  .card-back {
+    margin: 20px;
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+    overflow: auto;
+  }
+`
+
+const Cardback: React.FC<CardbackProps> = ({
+  width,
+  height,
+  content,
+  openPreview,
+}) => {
+  const [t] = useTranslation('translations')
+  const hasContent = !!content
+  return (
+    <CardbackContainer
+      style={{
+        width: `${width ?? 0}px`,
+      }}
+      onClick={openPreview}
+    >
+      <DotSvg className="top-left" />
+      <DotSvg className="top-right" />
+      <DotSvg className="bottom-left" />
+      <DotSvg className="bottom-right" />
+      <div
+        className={classNames('card-back-container', { center: !hasContent })}
+        style={{
+          height: `${(height ?? 36) - 36}px`,
+        }}
+      >
+        {content ? (
+          <div
+            className="content"
+            dangerouslySetInnerHTML={{ __html: content }}
+          ></div>
+        ) : (
+          <>
+            <div className="lock" style={{ height: `${(width ?? 0) / 2}px` }}>
+              <LockSvg />
+            </div>
+            {(width ?? 0) > 200 ? (
+              <span className="desc">{t('nft.lock')}</span>
+            ) : null}
+          </>
+        )}
+        <br />
+      </div>
+    </CardbackContainer>
+  )
+}
 
 export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   src,
@@ -224,6 +366,24 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   const imageMaxHeight = `${window.innerHeight - 44 - 300 - 30 * 2}px`
   const imageRef = useRef<HTMLImageElement>(null)
   const hasCardCackContent = !!cardBackContent
+  const [isPreviewCardback, setIsPreviewCardback] = useState(false)
+  const closePreviewCardback = (): void => {
+    setIsPreviewCardback(false)
+    const root = document.getElementById('root')
+    if (root) {
+      root.style.filter = ''
+    }
+  }
+  const openPreviewCardback = (): void => {
+    if (!hasCardCackContent) {
+      return
+    }
+    setIsPreviewCardback(true)
+    const root = document.getElementById('root')
+    if (root) {
+      root.style.filter = 'blur(10px)'
+    }
+  }
   return (
     <>
       <Container
@@ -316,21 +476,12 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
               width,
             }}
           >
-            <div
-              className="card-back"
-              style={{
-                width: `${imageRef.current?.offsetWidth ?? 0}px`,
-                height: `${imageRef.current?.offsetHeight ?? 0}px`,
-              }}
-            >
-              <DotSvg className="top-left" />
-              <DotSvg className="top-right" />
-              <DotSvg className="bottom-left" />
-              <DotSvg className="bottom-right" />
-              <div className="card-back-container">
-                <h1>John Doe</h1>
-              </div>
-            </div>
+            <Cardback
+              width={imageRef.current?.offsetWidth}
+              height={imageRef.current?.offsetHeight}
+              content={cardBackContent}
+              openPreview={openPreviewCardback}
+            />
           </div>
         </div>
       </Container>
@@ -344,6 +495,35 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
           onError={onError}
         />
       )}
+      <Dialog
+        open={isPreviewCardback}
+        onClose={closePreviewCardback}
+        onEscapeKeyDown={closePreviewCardback}
+        onBackdropClick={closePreviewCardback}
+        PaperProps={{
+          style: {
+            width: '100%',
+            height: '100%',
+            maxWidth: '500px',
+            background: 'transparent',
+            boxShadow: 'none',
+          },
+        }}
+      >
+        <CardbackPreviewContainer>
+          <DotSvg className="top-left" />
+          <DotSvg className="top-right" />
+          <DotSvg className="bottom-left" />
+          <DotSvg className="bottom-right" />
+          <CloseSvg className="close" onClick={closePreviewCardback} />
+          {cardBackContent ? (
+            <div
+              className="card-back"
+              dangerouslySetInnerHTML={{ __html: cardBackContent }}
+            ></div>
+          ) : null}
+        </CardbackPreviewContainer>
+      </Dialog>
     </>
   )
 }
