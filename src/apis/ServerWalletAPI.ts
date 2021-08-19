@@ -318,4 +318,29 @@ export class ServerWalletAPI implements NFTWalletAPI {
       code: uuid,
     })
   }
+
+  async toggleFollow(uuid: string, auth: Auth) {
+    return await this.axios.put(
+      `/issuers/${uuid}/toggle_follows/${this.address}`,
+      {
+        auth,
+      }
+    )
+  }
+
+  async getFollowIssuers(auth: Auth) {
+    return await this.axios.post(`/followed_issuers/${this.address}`, {
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+    })
+  }
+
+  async getFollowTokenClasses(auth: Auth) {
+    return await this.axios.get(`/followed_token_classes/${this.address}`, {
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+    })
+  }
 }
