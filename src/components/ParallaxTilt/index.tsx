@@ -283,7 +283,6 @@ const Cardback: React.FC<CardbackProps> = ({
             ) : null}
           </>
         )}
-        <br />
       </div>
     </CardbackContainer>
   )
