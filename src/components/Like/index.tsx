@@ -9,7 +9,7 @@ import { useLikeStatusModel } from '../../hooks/useLikeStatus'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
-import { roundDown } from '../../utils'
+import { formatCount } from '../../utils'
 
 const Container = styled.div`
   display: flex;
@@ -36,13 +36,6 @@ export interface LikeProps {
   liked: boolean
   uuid: string
   likeble?: boolean
-}
-
-const formatCount = (count: number, lang: string): number | string => {
-  if (lang === 'zh') {
-    return count >= 10000 ? `${roundDown(count / 10000)} 万` : count
-  }
-  return count >= 1000 ? `${roundDown(count / 1000)}k` : count
 }
 
 export const Like: React.FC<LikeProps> = ({

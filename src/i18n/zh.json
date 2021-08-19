@@ -288,6 +288,13 @@
       "go-home": "进入秘宝查看",
       "go-explore": "发现更多秘宝",
       "placeholder": "请输入领取密码"
+    },
+    "follow": {
+      "follow": "关注",
+      "followed": "已关注",
+      "confirm": "确认不再关注？",
+      "follower": "粉丝：",
+      "likes": "获赞："
     }
   }
 }

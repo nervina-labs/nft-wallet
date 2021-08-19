@@ -43,7 +43,7 @@ export interface UseWallet {
     msg: React.ReactNode,
     onConfirm: PromiseFunc,
     onClose: PromiseFunc
-  ) => void
+  ) => Promise<void>
   confirmContent: React.ReactNode
   showConfirmDialog: boolean
   onDialogConfirm: PromiseFunc
@@ -107,24 +107,28 @@ function useWallet(): UseWallet {
   const [onDialogClose, setOnDialogClose] = useState<PromiseFunc>(noop)
 
   const confirm = useCallback(
-    (
+    async (
       content: React.ReactNode,
       onConfirm: PromiseFunc,
       onClose: PromiseFunc
-    ) => {
+    ): Promise<void> => {
       setConfirmContent(content)
       setShowConfifrmDialog(true)
-      setOnDialogConfirm(() => {
-        return async () => {
-          await onConfirm()
-          setShowConfifrmDialog(false)
-        }
-      })
-      setOnDialogClose(() => {
-        return async () => {
-          await onClose()
-          setShowConfifrmDialog(false)
-        }
+      return await new Promise<void>((resolve) => {
+        setOnDialogConfirm(() => {
+          return async () => {
+            setShowConfifrmDialog(false)
+            await onConfirm()
+            resolve()
+          }
+        })
+        setOnDialogClose(() => {
+          return async () => {
+            await onClose()
+            setShowConfifrmDialog(false)
+            resolve()
+          }
+        })
       })
     },
     []

@@ -278,7 +278,11 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getRecommendIssuers() {
-    return await this.axios.get('/recommended_issuers')
+    return await this.axios.get('/recommended_issuers', {
+      params: {
+        address: this.address,
+      },
+    })
   }
 
   async getRecommendClasses() {
