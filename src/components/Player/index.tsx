@@ -70,12 +70,6 @@ export const Player: React.FC<PlayerProps> = ({
   const audioRef = useRef<HTMLAudioElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
 
-  const catchRefHandleError = (): void => {
-    if (onError) {
-      onError()
-    }
-  }
-
   const close = (): void => {
     audioRef?.current?.pause()
     videoRef?.current?.pause()
@@ -83,11 +77,17 @@ export const Player: React.FC<PlayerProps> = ({
   }
 
   useEffect(() => {
+    const catchRefHandleError = (): void => {
+      if (onError) {
+        onError()
+      }
+    }
+
     if (open) {
       audioRef?.current?.play().catch(catchRefHandleError)
       videoRef?.current?.play().catch(catchRefHandleError)
     }
-  }, [open])
+  }, [open, audioRef, videoRef])
 
   return (
     <>
@@ -96,7 +96,7 @@ export const Player: React.FC<PlayerProps> = ({
           <Icon className="close" onClick={close}>
             <Close />
           </Icon>
-          {isVideo && (
+          {isVideo && open && (
             <video
               ref={videoRef}
               src={renderer}
@@ -107,7 +107,7 @@ export const Player: React.FC<PlayerProps> = ({
               playsInline
             />
           )}
-          {isAudio && (
+          {isAudio && open && (
             <>
               {poster && !noPoster && (
                 <img
@@ -122,7 +122,6 @@ export const Player: React.FC<PlayerProps> = ({
                 src={renderer}
                 onError={onError}
                 className="audio"
-                autoPlay
                 controls
                 controlsList="nodownload"
               />

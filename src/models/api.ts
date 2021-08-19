@@ -7,6 +7,7 @@ import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
 import { Issuer } from './issuer'
 import { Notifications } from './banner'
+import { ClaimResult } from './claim'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -100,4 +101,8 @@ export interface NFTWalletAPI {
   getCollectionDetail: (uuid: string) => Promise<AxiosResponse<SpecialAssets>>
 
   getNotifications: () => Promise<AxiosResponse<Notifications>>
+
+  getClaimStatus: (uuid: string) => Promise<AxiosResponse<ClaimResult>>
+
+  claim: (uuid: string) => Promise<AxiosResponse<void>>
 }
