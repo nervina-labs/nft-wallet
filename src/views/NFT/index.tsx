@@ -23,6 +23,7 @@ import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
 import 'react-photo-view/dist/index.css'
 import { Follow } from '../../components/Follow'
+import { useProfileModel } from '../../hooks/useProfile'
 
 const Background = styled.div`
   position: fixed;
@@ -215,6 +216,7 @@ export const NFT: React.FC = () => {
 
   const { id } = useParams<{ id: string }>()
   const { api, address, isLogined } = useWalletModel()
+  const { getAuth } = useProfileModel()
 
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api],
@@ -223,7 +225,8 @@ export const NFT: React.FC = () => {
         const { data } = await api.getTokenClass(id)
         return data
       }
-      const { data } = await api.getNFTDetail(id)
+      const auth = await getAuth()
+      const { data } = await api.getNFTDetail(id, auth)
       return data
     },
     { enabled: id != null }

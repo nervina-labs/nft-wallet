@@ -32,7 +32,7 @@ interface SpecialCategories {
 export interface NFTWalletAPI {
   getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
 
-  getNFTDetail: (uuid: string) => Promise<AxiosResponse<NFTDetail>>
+  getNFTDetail: (uuid: string, auth: Auth) => Promise<AxiosResponse<NFTDetail>>
 
   getTransactions: (page: number) => Promise<AxiosResponse<Transaction>>
 

@@ -82,7 +82,10 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getNFTDetail(uuid: string): Promise<AxiosResponse<NFTDetail>> {
+  async getNFTDetail(
+    uuid: string,
+    auth: Auth
+  ): Promise<AxiosResponse<NFTDetail>> {
     const params: Record<string, unknown> = {
       include_submitting: true,
     }
@@ -91,6 +94,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     }
     return await this.axios.get(`/tokens/${uuid}`, {
       params,
+      headers: {
+        auth: JSON.stringify(auth),
+      },
     })
   }
 
@@ -110,7 +116,15 @@ export class ServerWalletAPI implements NFTWalletAPI {
     auth: Auth
   ): Promise<AxiosResponse<{ liked: boolean }>> {
     const url = `/token_classes/${uuid}/toggle_likes/${this.address}`
-    return await this.axios.put(url, { auth })
+    return await this.axios.put(
+      url,
+      {
+        auth,
+      },
+      {
+        headers: { auth: JSON.stringify(auth) },
+      }
+    )
   }
 
   async submitAddress(
@@ -123,6 +137,11 @@ export class ServerWalletAPI implements NFTWalletAPI {
       {
         auth,
         address: this.address,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
       }
     )
   }
@@ -226,8 +245,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (auth) {
       await writeFormData(auth as any, 'auth', fd)
     }
+    const headers: Record<string, any> = {
+      'Content-Type': 'multipart/form-data',
+    }
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
     const { data } = await this.axios.put(`/users/${this.address}`, fd, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers,
     })
 
     return data
@@ -328,6 +353,11 @@ export class ServerWalletAPI implements NFTWalletAPI {
       `/issuers/${uuid}/toggle_follows/${this.address}`,
       {
         auth,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
       }
     )
   }
