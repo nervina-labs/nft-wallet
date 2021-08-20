@@ -277,9 +277,10 @@
     "issuer": {
       "created": "Created",
       "selling": "Selling",
-      "issuer_home": "Issuer",
+      "title": "Issuer",
       "follower": "Follower",
-      "like": "Like"
+      "like": "Like",
+      "more": "More"
     }
   }
 }

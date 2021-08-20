@@ -36,4 +36,5 @@ export interface IssuerTokenClass {
   name: string
   renderer_type: NftType
   total: string
+  card_back_content_exist: boolean
 }

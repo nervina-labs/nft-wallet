@@ -1,15 +1,21 @@
 import styled from 'styled-components'
-import { NAVIGATION_BAR_HEIGHT } from '../../components/NavigationBar'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { useParams } from 'react-router'
 import { useWalletModel } from '../../hooks/useWallet'
-import { useQuery } from 'react-query'
-import { Query } from '../../models'
+import { useInfiniteQuery } from 'react-query'
+import { PRODUCT_STATUE_SET, ProductState, Query } from '../../models'
 import { NftCard } from './nftCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Masonry } from '../../components/Masonry'
 import { useTranslation } from 'react-i18next'
+import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { useHistory } from 'react-router-dom'
+import { Loading } from '../../components/Loading'
+import { HEADER_HEIGHT } from '../../components/Appbar'
+import { IssuerTokenClass } from '../../models/issuer'
+
+const ITEM_LIMIT = 20
 
 const NftCardsContainer = styled.div`
   --header-border-color: #ececec;
@@ -20,8 +26,8 @@ const NftCardsContainer = styled.div`
   --filter-font-color: #000;
   --header-height: 40px;
   position: sticky;
-  top: ${NAVIGATION_BAR_HEIGHT}px;
-  min-height: 100vh;
+  top: ${HEADER_HEIGHT}px;
+  min-height: calc(100vh - 200px);
   z-index: 10;
   background-color: var(--bg-color);
 
@@ -38,7 +44,7 @@ const NftCardsContainer = styled.div`
     &.fixed {
       width: 100%;
       position: fixed;
-      top: ${NAVIGATION_BAR_HEIGHT}px;
+      top: ${HEADER_HEIGHT}px;
     }
 
     &.hide {
@@ -88,91 +94,207 @@ const NftCardsContainer = styled.div`
 
   .card-group {
     --padding-bottom: calc(15px + env(safe-area-inset-bottom));
-    padding: 15px 15px var(--padding-bottom);
+    padding: 15px 0 var(--padding-bottom);
     transition: 0.2s;
+    max-width: 500px;
+    margin: auto;
 
     ul {
-      padding: 0;
       margin: 0;
       grid-gap: 5px;
+      padding: 0 15px;
     }
+
+    li {
+      grid-gap: 10px;
+    }
+  }
+
+  .no-data {
+    width: 100%;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 10px 0;
+    font-weight: 500;
   }
 `
 
-export const NftCards: React.FC = () => {
+const Header: React.FC = () => {
   const [headerFixed, setHeaderFixed] = useState(false)
   const headerRef = useRef<HTMLDivElement>(null)
+  const { push, location } = useHistory()
   const [t] = useTranslation('translations')
-
-  const filters = useMemo(() => {
-    return (
-      <nav className="filters">
-        <div className="filter active">{t('issuer.created')}</div>
-        <div className="filter">{t('issuer.selling')}</div>
-        <div className="active-bar" />
-      </nav>
-    )
-  }, [t])
+  const productState = useRouteQuery<ProductState>(
+    'productState',
+    'product_state'
+  )
+  const [index, setIndex] = useState(
+    PRODUCT_STATUE_SET.findIndex((item) => item === productState) || 0
+  )
 
   const setHeaderFixedByHeaderRef = useCallback(() => {
-    const top =
-      (headerRef?.current?.getClientRects()[0].top ?? 0) - NAVIGATION_BAR_HEIGHT
-    setHeaderFixed(top <= 0)
-  }, [headerRef])
+    const isFixed =
+      (headerRef?.current?.getClientRects()[0].top ?? 0) - HEADER_HEIGHT <= 0
+    if (isFixed !== headerFixed) {
+      setHeaderFixed(isFixed)
+    }
+  }, [headerRef, headerFixed])
 
   useEffect(() => {
     window.addEventListener('scroll', setHeaderFixedByHeaderRef)
     return () => window.removeEventListener('scroll', setHeaderFixedByHeaderRef)
   })
 
+  const filterEl = useMemo(() => {
+    const activeBarTranslateX = `${index * 100}%`
+    const filterList = [
+      {
+        active: productState === 'product_state',
+        path: location.pathname + '?productState=product_state',
+        label: t('issuer.created'),
+      },
+      {
+        active: productState === 'on_sale',
+        path: location.pathname + '?productState=on_sale',
+        label: t('issuer.selling'),
+      },
+    ]
+
+    return (
+      <nav className="filters">
+        {filterList.map((item, i) => (
+          <div
+            className={classNames('filter', {
+              active: item.active,
+            })}
+            onClick={() => {
+              push(item.path)
+              setIndex(i)
+            }}
+          >
+            {item.label}
+          </div>
+        ))}
+        <div
+          className="active-bar"
+          style={{
+            transform: `translateX(${activeBarTranslateX})`,
+          }}
+        />
+      </nav>
+    )
+  }, [index, location.pathname, productState, push, t])
+
+  return (
+    <>
+      <header className="header" ref={headerRef}>
+        {filterEl}
+      </header>
+      <header className={classNames('header', 'fixed', { hide: !headerFixed })}>
+        {filterEl}
+      </header>
+    </>
+  )
+}
+
+const CardGroup: React.FC = () => {
+  const [width, setWidth] = useState(
+    (Math.min(window.innerWidth, 530) - 35) / 2
+  )
+  const [t] = useTranslation('translations')
+  const resizeWidth = useCallback(() => {
+    setWidth((Math.min(window.innerWidth, 530) - 35) / 2)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('resize', resizeWidth)
+    return () => {
+      window.removeEventListener('resize', resizeWidth)
+    }
+  })
+
   const { id } = useParams<{ id: string }>()
+  const productState = useRouteQuery<ProductState>(
+    'productState',
+    'product_state'
+  )
   const { api } = useWalletModel()
 
-  const { data, isLoading } = useQuery(
-    [Query.Issuers, api, id],
-    async () => {
-      const { data } = await api.getIssuerTokenClass(id)
+  const {
+    data,
+    isLoading,
+    refetch,
+    fetchNextPage,
+    isFetching,
+  } = useInfiniteQuery(
+    [Query.Issuers, api, id, productState],
+    async ({ pageParam = 0 }) => {
+      const productStateParam = PRODUCT_STATUE_SET.find(
+        (e) => e === productState
+      )
+        ? productState
+        : undefined
+
+      const { data } = await api.getIssuerTokenClass(id, productStateParam, {
+        page: pageParam,
+      })
       return data
     },
     {
+      getNextPageParam(lastPage) {
+        return ITEM_LIMIT * lastPage.meta.current_page >=
+          lastPage.meta.total_count
+          ? undefined
+          : lastPage.meta.current_page + 1
+      },
+      enabled: true,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
     }
   )
 
+  const refresh = useCallback(async () => {
+    await refetch()
+  }, [refetch])
+
+  const tokenClasses =
+    data?.pages.reduce(
+      (acc, page) => acc.concat(page.token_classes),
+      [] as IssuerTokenClass[]
+    ) ?? []
+  const tokenClassLength = tokenClasses.length
+
+  return (
+    <div className="card-group">
+      <InfiniteScroll
+        dataLength={tokenClassLength}
+        hasMore
+        loader={null}
+        refreshFunction={refresh}
+        next={fetchNextPage}
+      >
+        {tokenClassLength > 0 && (
+          <Masonry columns={2}>
+            {tokenClasses.map((token, i) => (
+              <NftCard token={token} key={i} uuid={id} imgSize={width} />
+            ))}
+          </Masonry>
+        )}
+        {(isLoading || isFetching) && <Loading />}
+      </InfiniteScroll>
+      {tokenClassLength === 0 && !isLoading && !isFetching && (
+        <div className="no-data">{t('issuer.no-data')}</div>
+      )}
+    </div>
+  )
+}
+
+export const NftCards: React.FC = () => {
   return (
     <NftCardsContainer>
-      <header
-        className={classNames('header', { hide: headerFixed })}
-        ref={headerRef}
-      >
-        {filters}
-      </header>
-      <header className={classNames('header', 'fixed', { hide: !headerFixed })}>
-        {filters}
-      </header>
-
-      <div className="card-group">
-        {isLoading && <div className="loading">Loading</div>}
-
-        {!isLoading && (
-          <InfiniteScroll
-            dataLength={data?.token_classes.length ?? 0}
-            hasMore
-            loader={null}
-            next={() => {
-              console.log('next')
-            }}
-          >
-            <Masonry columns={2}>
-              {(data?.token_classes ?? []).map((item, i) => (
-                <NftCard token={item} key={i} uuid={id} />
-              ))}
-            </Masonry>
-          </InfiniteScroll>
-        )}
-      </div>
+      <Header />
+      <CardGroup />
     </NftCardsContainer>
   )
 }

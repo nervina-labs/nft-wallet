@@ -1,6 +1,5 @@
 import styled from 'styled-components'
-import { NAVIGATION_BAR_HEIGHT } from '../../components/NavigationBar'
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useQuery } from 'react-query'
@@ -8,10 +7,13 @@ import { Query } from '../../models'
 import { LazyLoadImage } from '../../components/Image'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { ReactComponent as CopySvg } from '../../assets/svg/copy.svg'
+import { ReactComponent as SuccessSvg } from '../../assets/svg/success.svg'
 import BgSvg from '../../assets/svg/home-bg.svg'
 import VerifySvg from '../../assets/svg/weibo.svg'
 import { Skeleton } from '@material-ui/lab'
 import { useTranslation } from 'react-i18next'
+import classNames from 'classnames'
+import { HEADER_HEIGHT } from '../../components/Appbar'
 
 const BgSvgPath = (BgSvg as unknown) as string
 const VerifySvgPath = (VerifySvg as unknown) as string
@@ -20,8 +22,11 @@ const IssuerInfoContainer = styled.div`
   --follow-field-font-color: #8e8e93;
   --username-font-color: #000;
   --avatar-border-color: #fff;
+  --desc-font-color: #999999;
+  --desc-more-font-color: #666666;
+  --verify-title-font-color: #000;
   position: sticky;
-  top: ${NAVIGATION_BAR_HEIGHT}px;
+  top: ${HEADER_HEIGHT}px;
   padding: 24px 15px;
   z-index: 1;
 
@@ -41,12 +46,15 @@ const IssuerInfoContainer = styled.div`
     .field {
       color: var(--follow-field-font-color);
       font-size: 12px;
+      height: 17px;
       line-height: 17px;
+      user-select: none;
     }
 
     .value {
       font-weight: 600;
       font-size: 15px;
+      height: 22px;
       line-height: 22px;
       white-space: nowrap;
     }
@@ -68,6 +76,7 @@ const IssuerInfoContainer = styled.div`
     overflow: hidden;
     margin-right: 20px;
     pointer-events: none;
+    user-select: none;
 
     img,
     svg {
@@ -99,6 +108,7 @@ const IssuerInfoContainer = styled.div`
       height: 10px;
       margin: auto 0 auto 5px;
       transform: scale(1.5);
+      user-select: none;
     }
   }
 
@@ -109,6 +119,7 @@ const IssuerInfoContainer = styled.div`
     line-height: var(--height);
     margin-top: 5px;
     display: flex;
+    cursor: pointer;
 
     .id {
       user-select: none;
@@ -118,13 +129,35 @@ const IssuerInfoContainer = styled.div`
       width: 10px;
       height: 10px;
       transform: scale(1.2);
-      cursor: pointer;
       margin: auto 0 auto 10px;
+      transition: 0.2s;
+    }
+    .copy-icon.copied {
+      transform: scale(1.6);
     }
   }
   .description {
+    display: flex;
     font-size: 13px;
     margin-top: 15px;
+    color: var(--desc-font-color);
+
+    .content.fold {
+      white-space: nowrap;
+      width: calc(100% - 50px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .more {
+      color: var(--desc-more-font-color);
+      cursor: pointer;
+      user-select: none;
+    }
+  }
+  .verified-title {
+    font-size: 13px;
+    margin-top: 15px;
+    color: var(--verify-title-font-color);
   }
 
   .bg {
@@ -145,14 +178,23 @@ const Follow: React.FC<{
   isLoading?: boolean
   field?: string
   value?: number
-}> = ({ isLoading, field, value }) => {
+}> = ({ isLoading, field, value = 0 }) => {
+  const showValue = useMemo(() => {
+    if (value >= 1000) {
+      const k = Math.round(value / 100) / 10
+      const h = Math.round((value - k * 1000) / 100)
+      return `${k}.${h}k`
+    }
+    return value
+  }, [value])
+
   return (
     <div className="follow">
       <div className="value">
         {isLoading ? (
           <Skeleton variant="rect" width="50px" height="18px" />
         ) : (
-          value
+          showValue
         )}
       </div>
       <div className="field">
@@ -173,7 +215,6 @@ const Username: React.FC<{
   isLoading?: boolean
   username?: string
 }> = ({ isLoading, username }) => {
-  // TODO: 粉丝数折叠成 12.1k 1.2m 的形式
   return (
     <div className="username">
       {isLoading ? (
@@ -192,10 +233,21 @@ const IssuerId: React.FC<{
   isLoading?: boolean
   id?: string
 }> = ({ isLoading, id }) => {
+  const [copied, setCopied] = useState(false)
+  const copy = (): void => {
+    if (isLoading ?? copied) {
+      return
+    }
+    setCopied(true)
+    setTimeout(() => {
+      setCopied(false)
+    }, 2000)
+  }
+
   return (
-    <div className="issuer-id">
+    <div className="issuer-id" onClick={copy}>
       {isLoading ? (
-        <Skeleton variant="rect" width="200px" height="16px" />
+        <Skeleton variant="rect" width="350px" height="16px" />
       ) : (
         <>
           <div className="id">ID: </div>
@@ -206,7 +258,11 @@ const IssuerId: React.FC<{
               id
             )}
           </div>
-          <CopySvg className="copy-icon" />
+          {copied ? (
+            <SuccessSvg className="copy-icon copied" />
+          ) : (
+            <CopySvg className="copy-icon" />
+          )}
         </>
       )}
     </div>
@@ -217,17 +273,40 @@ const Description: React.FC<{
   isLoading?: boolean
   description?: string | null
 }> = ({ isLoading, description }) => {
+  const [fold, setFold] = useState(true)
+  const [t] = useTranslation('translations')
+
+  if (isLoading) {
+    return (
+      <div className="description">
+        <div style={{ height: '10px' }} />
+        <Skeleton variant="rect" width="100%" height="18px" />
+        <div style={{ height: '5px' }} />
+        <Skeleton variant="rect" width="100%" height="18px" />
+      </div>
+    )
+  }
+
   return (
-    <div className="description">
+    <div className="description" onClick={() => setFold(false)}>
+      <div className={classNames('content', { fold })}>{description}</div>
+      {fold && <div className="more">{t('issuer.more')}</div>}
+    </div>
+  )
+}
+
+const VerifiedTitle: React.FC<{
+  isLoading?: boolean
+  content?: string | null
+}> = ({ isLoading, content }) => {
+  return (
+    <div className="verified-title">
       {isLoading ? (
         <>
-          <div style={{ height: '10px' }} />
-          <Skeleton variant="rect" width="100%" height="20px" />
-          <div style={{ height: '5px' }} />
-          <Skeleton variant="rect" width="100%" height="20px" />
+          <Skeleton variant="rect" width="100px" height="18px" />
         </>
       ) : (
-        description
+        content
       )}
     </div>
   )
@@ -277,6 +356,10 @@ export const IssuerInfo: React.FC = () => {
       </div>
       <Username isLoading={isLoading} username={data?.name} />
       <IssuerId isLoading={isLoading} id={data?.issuer_id} />
+      <VerifiedTitle
+        isLoading={isLoading}
+        content={data?.verified_info?.verified_title}
+      />
       <Description isLoading={isLoading} description={data?.description} />
 
       <div className="bg">

@@ -29,6 +29,9 @@ interface SpecialCategories {
   special_categories: SpecialAssets[]
 }
 
+export const PRODUCT_STATUE_SET = ['product_state', 'on_sale'] as const
+export type ProductState = typeof PRODUCT_STATUE_SET[number]
+
 export interface NFTWalletAPI {
   getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
 
@@ -110,6 +113,10 @@ export interface NFTWalletAPI {
 
   getIssuerTokenClass: (
     uuid: string,
-    productState?: 'on_sale' | 'product_state'
+    productState?: ProductState,
+    options?: {
+      limit?: number
+      page?: number
+    }
   ) => Promise<AxiosResponse<IssuerTokenClassResult>>
 }

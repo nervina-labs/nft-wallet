@@ -292,9 +292,11 @@
     "issuer": {
       "created": "已创作",
       "selling": "在售",
-      "issuer_home": "创作者个人主页",
+      "title": "创作者个人主页",
       "follower": "粉丝",
-      "like": "获赞"
+      "like": "获赞",
+      "no-data": "暂无更多记录...",
+      "more": "更多"
     }
   }
 }
