@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import { LazyLoadImage } from '../Image'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
-import { NFT_EXPLORER_URL } from '../../constants'
 import { useTranslation } from 'react-i18next'
 import Tooltip from '@material-ui/core/Tooltip'
 import classNames from 'classnames'
 import { VipSource } from '../../models/class-list'
+import { Link } from 'react-router-dom'
+import { useIssuerPath } from '../../views/Issuer'
 
 const Container = styled.div`
   display: flex;
@@ -97,6 +98,7 @@ export const Creator: React.FC<CreatorProps> = ({
   showAvatar = true,
 }) => {
   const { t } = useTranslation('translations')
+  const issuerPath = useIssuerPath(uuid as string)
   const vt = useMemo(() => {
     if (vipSource === VipSource.Nervina) {
       return vipTitle as string
@@ -153,15 +155,9 @@ export const Creator: React.FC<CreatorProps> = ({
     <Container fontSize={fontSize} color={color} style={style}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
       {uuid != null ? (
-        <a
-          onClick={(e) => e.stopPropagation()}
-          target="_blank"
-          style={{ textDecoration: 'none' }}
-          rel="noopener noreferrer"
-          href={`${NFT_EXPLORER_URL}/issuer/tokens/${uuid}`}
-        >
+        <Link style={{ textDecoration: 'none' }} to={issuerPath}>
           {creator}
-        </a>
+        </Link>
       ) : (
         creator
       )}

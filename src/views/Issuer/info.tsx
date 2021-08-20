@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useQuery } from 'react-query'
@@ -275,6 +275,12 @@ const Description: React.FC<{
 }> = ({ isLoading, description }) => {
   const [fold, setFold] = useState(true)
   const [t] = useTranslation('translations')
+
+  useEffect(() => {
+    if ((description?.length ?? 0) <= 30) {
+      setFold(false)
+    }
+  }, [description])
 
   if (isLoading) {
     return (

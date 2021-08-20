@@ -1,11 +1,12 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { Creator } from '../../components/Creator'
 import { LazyLoadImage } from '../../components/Image'
 import { Like } from '../../components/Like'
-import { NFT_EXPLORER_URL } from '../../constants'
 import { Issuer } from '../../models/issuer'
+import { useIssuerPath } from '../Issuer'
 
 const Container = styled.div`
   display: flex;
@@ -68,13 +69,7 @@ export interface IssuerProps {
 
 export const RecommendIssuser: React.FC<IssuerProps> = ({ issuer }) => {
   return (
-    <a
-      onClick={(e) => e.stopPropagation()}
-      target="_blank"
-      style={{ textDecoration: 'none' }}
-      rel="noopener noreferrer"
-      href={`${NFT_EXPLORER_URL}/issuer/tokens/${issuer.uuid}`}
-    >
+    <Link style={{ textDecoration: 'none' }} to={useIssuerPath(issuer.uuid)}>
       <Container>
         <span className="avatar">
           <LazyLoadImage
@@ -107,6 +102,6 @@ export const RecommendIssuser: React.FC<IssuerProps> = ({ issuer }) => {
           />
         </div>
       </Container>
-    </a>
+    </Link>
   )
 }

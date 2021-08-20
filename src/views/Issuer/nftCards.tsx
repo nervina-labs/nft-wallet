@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom'
 import { Loading } from '../../components/Loading'
 import { HEADER_HEIGHT } from '../../components/Appbar'
 import { IssuerTokenClass } from '../../models/issuer'
+import { QUERY_PRE_URL } from '../../constants'
 
 const ITEM_LIMIT = 20
 
@@ -40,6 +41,7 @@ const NftCardsContainer = styled.div`
     border-bottom: 1px solid var(--header-border-color);
     z-index: 11;
     user-select: none;
+    max-width: var(--max-width);
 
     &.fixed {
       width: 100%;
@@ -128,6 +130,7 @@ const Header: React.FC = () => {
     'productState',
     'product_state'
   )
+  const preUrl = useRouteQuery<string>(QUERY_PRE_URL, '')
   const [index, setIndex] = useState(
     PRODUCT_STATUE_SET.findIndex((item) => item === productState) || 0
   )
@@ -168,7 +171,7 @@ const Header: React.FC = () => {
               active: item.active,
             })}
             onClick={() => {
-              push(item.path)
+              push(item.path + `&${QUERY_PRE_URL}=${preUrl}`)
               setIndex(i)
               setHeaderFixedByHeaderRef()
             }}
@@ -184,7 +187,15 @@ const Header: React.FC = () => {
         />
       </nav>
     )
-  }, [index, location.pathname, productState, push, t])
+  }, [
+    index,
+    location.pathname,
+    productState,
+    push,
+    setHeaderFixedByHeaderRef,
+    preUrl,
+    t,
+  ])
 
   return (
     <>
