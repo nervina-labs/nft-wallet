@@ -170,6 +170,7 @@ const Header: React.FC = () => {
             onClick={() => {
               push(item.path)
               setIndex(i)
+              setHeaderFixedByHeaderRef()
             }}
           >
             {item.label}

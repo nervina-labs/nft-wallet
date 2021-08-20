@@ -5,6 +5,7 @@ import { LazyLoadImage } from '../../components/Image'
 import { Limited } from '../../components/Limited'
 import { Like } from '../../components/Like'
 import FallbackImg from '../../assets/img/card-fallback.png'
+import { ReactComponent as CardBackIcon } from '../../assets/svg/card-back.svg'
 
 const NftCardContainer = styled.div`
   --bg-color: #fff;
@@ -37,6 +38,17 @@ const NftCardContainer = styled.div`
     justify-content: space-between;
     user-select: none;
   }
+
+  .card-back {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 25px;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 0 0 0 8px;
+  }
 `
 
 export const NftCard: React.FC<{
@@ -63,6 +75,7 @@ export const NftCard: React.FC<{
           }
         />
       </div>
+      {token.card_back_content_exist && <CardBackIcon className="card-back" />}
       <div className="issuer">
         <div className="nft-name">{token.name}</div>
         <div className="nft-info">
