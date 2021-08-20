@@ -50,3 +50,8 @@ export interface ClassList {
   class_list: TokenClass[]
   meta: ListMeta
 }
+
+export interface FollowClassList {
+  token_classes: TokenClass[]
+  meta: ListMeta
+}

@@ -18,6 +18,7 @@ const Container = styled.button`
   align-items: center;
   color: white;
   width: 66px;
+  min-width: 66px;
   height: 22px;
   font-size: 12px;
   transition: all 0.5s;

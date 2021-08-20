@@ -370,10 +370,25 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getFollowTokenClasses(auth: Auth) {
+  async getFollowTokenClasses(
+    auth: Auth,
+    page: number,
+    sortType: ClassSortType
+  ) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    if (sortType === ClassSortType.Likes) {
+      params.sort = 'likes'
+    }
     return await this.axios.get(`/followed_token_classes/${this.address}`, {
       headers: {
         auth: JSON.stringify(auth),
+      },
+      params: {
+        page,
+        limit: PER_ITEM_LIMIT,
       },
     })
   }

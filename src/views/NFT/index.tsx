@@ -8,7 +8,6 @@ import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { NFTDetail, Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
-import { Loading } from '../../components/Loading'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
@@ -93,8 +92,10 @@ const Container = styled(MainContainer)`
       display: flex;
       /* justify-content: center; */
       align-items: center;
+      margin-bottom: 8px;
       > div {
         flex: 1;
+        margin-right: 8px;
       }
     }
     .vip {
@@ -338,11 +339,7 @@ export const NFT: React.FC = () => {
           renderer={detail?.renderer}
         />
       </div>
-      {detail == null ? (
-        <section className="detail">
-          <Loading />
-        </section>
-      ) : (
+      {detail == null ? null : (
         <>
           <section
             className="detail"
@@ -371,7 +368,6 @@ export const NFT: React.FC = () => {
                 isVip={detail?.verified_info?.is_verified}
                 vipTitle={verifyTitle}
                 vipSource={detail?.verified_info?.verified_source}
-                style={{ marginBottom: '5px' }}
                 showTooltip={false}
               />
               <Follow

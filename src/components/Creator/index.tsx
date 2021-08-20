@@ -49,8 +49,11 @@ const Container = styled.div`
       `${props.color ?? 'rgba(5, 1, 1, 0.8)'}`};
     font-weight: normal;
     text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
     &.max {
       flex: 1;
     }
