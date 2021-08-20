@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { IssuerInfo } from './info'
 import { NftCards } from './nftCards'
@@ -7,8 +7,6 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { useHistory } from 'react-router-dom'
-import { useRouteQuery } from '../../hooks/useRouteQuery'
-import { QUERY_PRE_URL } from '../../constants'
 
 const IssuerContainer = styled.main`
   --max-width: 500px;
@@ -22,28 +20,19 @@ const IssuerContainer = styled.main`
 `
 
 export const useIssuerPath = (uuid: string): string => {
-  const { location } = useHistory()
-  return `/issuer/${uuid}?${QUERY_PRE_URL}=${location.pathname}`
+  return `/issuer/${uuid}`
 }
 
 export const Issuer: React.FC = () => {
   const [t] = useTranslation('translations')
   const history = useHistory()
-  const preUrl = useRouteQuery<string>(QUERY_PRE_URL, '')
-  const onBack = useCallback(() => {
-    if (preUrl) {
-      history.push(preUrl)
-      return
-    }
-    history.goBack()
-  }, [preUrl, history])
 
   return (
     <IssuerContainer>
       <Appbar
         className="appbar"
         title={t('issuer.title')}
-        left={<BackSvg onClick={onBack} />}
+        left={<BackSvg onClick={() => history.goBack()} />}
         right={<ShareSvg />}
       />
       <div style={{ height: `${HEADER_HEIGHT}px` }} />

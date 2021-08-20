@@ -324,7 +324,7 @@ export const IssuerInfo: React.FC = () => {
   const [t] = useTranslation('translations')
 
   const { data, isLoading } = useQuery(
-    [Query.Issuers, api],
+    [Query.Issuers, api, id],
     async () => {
       const { data } = await api.getIssuerInfo(id)
       return data
@@ -335,6 +335,10 @@ export const IssuerInfo: React.FC = () => {
       refetchOnMount: false,
     }
   )
+
+  useEffect(() => {
+    window.scroll({ top: 0 })
+  })
 
   return (
     <IssuerInfoContainer>
