@@ -71,7 +71,7 @@
         "qrcode": "Scan QR code",
         "result": "Scan result",
         "detected": "The content that was recognized",
-        "error": "Please scan the correct CKB or Ethereum address",
+        "error": "Please scan the correct CKB address/ETH address/DAS Account",
         "rescan": "Rescan"
       },
       "error": {
@@ -80,7 +80,7 @@
         "self": "Unable to transfer NFT to yourself",
         "das": "Please enter DAS and select a result",
         "receive-eth": "This address is an Ethereum address, please remind the receiver to open NFT Account with Ethereum wallet to view the NFT received",
-        "common": "Please enter the correct Ethereum address",
+        "common": "Please enter the correct CKB address/ETH address/DAS Account",
         "sign-fail": "Transaction rejected",
         "tranfer-fail": "Fail to send transaction, please check network conditions and resend",
         "no-camera": "No camera found",

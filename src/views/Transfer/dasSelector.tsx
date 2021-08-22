@@ -1,6 +1,13 @@
 /* eslint-disable no-void */
 /* eslint-disable node/no-callback-literal */
-import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react'
+import React, {
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  MutableRefObject,
+} from 'react'
 import ReactDOM from 'react-dom'
 import Das, { AccountRecord } from 'das-sdk'
 import { CircularProgress } from '@material-ui/core'
@@ -12,15 +19,19 @@ import {
   DasSelectorPopoutContainer,
   DasSelectorPopoutMask,
 } from './styled'
-import { verifyDasAddress, debounce } from '../../utils'
+import { verifyDasAddress, debounce, verifyCkbAddress } from '../../utils'
 import { useDas } from '../../hooks/usdDas'
 import { ReactComponent as CheckoutSvg } from '../../assets/svg/das-checkout.svg'
+import { ReactComponent as DefaultSvg } from '../../assets/svg/default-das.svg'
+import { IS_MAINNET } from '../../constants'
 
 export interface DasSelectorProps {
   visible: boolean
   url: string
   onSelect: (selectedAccount: AccountRecord | null) => void
   selectedAccount: AccountRecord | null
+  // eslint-disable-next-line prettier/prettier
+  dasPopoutVisibleTriggerRef: MutableRefObject<((popoutVisible: boolean) => void) | undefined>
 }
 
 export interface DasSelectorPopoutProps {
@@ -32,6 +43,20 @@ export interface DasSelectorPopoutProps {
   onVisibleChange: (visible: boolean) => void
 }
 
+function filterCKBAddress(address: string): boolean {
+  if (verifyCkbAddress(address)) {
+    if (IS_MAINNET && address.startsWith('ckt')) {
+      return false
+    }
+    if (!IS_MAINNET && address.startsWith('ckb')) {
+      return false
+    }
+    return true
+  }
+  return true
+}
+
+const filterChains = ['ETH', 'CKB']
 const filterKeys = ['address.eth', 'address.ckb']
 let timeout: NodeJS.Timeout | null
 let currentValue: string
@@ -49,14 +74,46 @@ async function fetch(
   return await new Promise<AccountRecord[] | undefined>((resolve) => {
     timeout = debounce(() => {
       void das
-        .records(url)
+        .account(url)
         .then((resp) => {
           if (currentValue === url) {
-            resolve(
-              resp.filter(
-                (record) => filterKeys.includes(record.key) && record.label
-              )
+            let records: AccountRecord[] = []
+            if (
+              resp.owner_address &&
+              filterChains.includes(resp.owner_address_chain)
+            ) {
+              records.push({
+                ttl: 0,
+                type: 'address',
+                strippedKey: '',
+                avatar: '',
+                key: 'owner',
+                label: 'Owner',
+                value: resp.owner_address,
+              })
+            }
+            if (
+              resp.manager_address &&
+              filterChains.includes(resp.manager_address_chain)
+            ) {
+              records.push({
+                ttl: 0,
+                type: 'address',
+                strippedKey: '',
+                avatar: '',
+                key: 'manager',
+                label: 'Manager',
+                value: resp.manager_address,
+              })
+            }
+
+            records = records.concat(
+              resp.records.filter((record) => filterKeys.includes(record.key))
             )
+
+            records = records.filter((record) => filterCKBAddress(record.value))
+
+            resolve(records)
           }
         })
         .catch(() => {
@@ -194,6 +251,7 @@ export const DasSelector: React.FC<DasSelectorProps> = ({
   url,
   onSelect,
   selectedAccount,
+  dasPopoutVisibleTriggerRef,
 }) => {
   const [popoutVisible, showPopout] = useState(false)
   const btnRef = useRef(null)
@@ -225,12 +283,19 @@ export const DasSelector: React.FC<DasSelectorProps> = ({
     url,
   ])
 
+  useEffect(() => {
+    const trigger = (popVisible: boolean): void => {
+      showPopout(popVisible)
+    }
+    dasPopoutVisibleTriggerRef.current = trigger
+  }, [showPopout, data])
+
   const avatar = loading ? (
     <CircularProgress size={16} className="loading" />
-  ) : selectedAccount ? (
+  ) : selectedAccount?.avatar ? (
     <img src={selectedAccount.avatar} alt="" />
   ) : (
-    <span>?</span>
+    <DefaultSvg />
   )
 
   return (
@@ -239,7 +304,7 @@ export const DasSelector: React.FC<DasSelectorProps> = ({
         className="das-selector-container"
         visible={needToShow}
       >
-        <div className="info" onClick={() => data && showPopout(true)}>
+        <div className="info" onClick={() => showPopout(true)}>
           {selectedAccount && (
             <div className="account">
               {getShortString(selectedAccount.value)}

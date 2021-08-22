@@ -120,6 +120,8 @@ export const Transfer: React.FC = () => {
   const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isScaning, setIsScaning] = useState(false)
+  // eslint-disable-next-line prettier/prettier
+  const dasPopoutVisibleTrigger = useRef<(popoutVisible: boolean) => void>()
   const [
     selectedDasAccount,
     setSelectedDasAccount,
@@ -180,6 +182,12 @@ export const Transfer: React.FC = () => {
     },
     [setCkbAddress]
   )
+
+  const handleTextareaFocus = useCallback(() => {
+    if (isDasAddress && dasPopoutVisibleTrigger.current) {
+      dasPopoutVisibleTrigger.current(true)
+    }
+  }, [isDasAddress, dasPopoutVisibleTrigger.current])
 
   const stopTranfer = (isSuccess: boolean): void => {
     setIsSendingNFT(false)
@@ -399,7 +407,7 @@ export const Transfer: React.FC = () => {
     let alertMsg = ''
     if (showAlert) {
       if (isDasAddress && !selectedDasAccount) {
-        ;[level, alertMsg] = [AlertLevel.error, t('transfer.error.das')]
+        ;[level, alertMsg] = [AlertLevel.info, t('transfer.error.das')]
       } else {
         ;[level, alertMsg] = getAlertMsg(finalUsedAddress, finalUsedAddressType)
       }
@@ -465,6 +473,7 @@ export const Transfer: React.FC = () => {
                 value={ckbAddress}
                 onChange={textareaOnChange}
                 rowsMax={4}
+                onFocus={handleTextareaFocus}
               />
               <div
                 className={classnames('form-extra', {
@@ -477,6 +486,7 @@ export const Transfer: React.FC = () => {
                   url={ckbAddress}
                   onSelect={setSelectedDasAccount}
                   selectedAccount={selectedDasAccount}
+                  dasPopoutVisibleTriggerRef={dasPopoutVisibleTrigger}
                 />
               </div>
             </div>
