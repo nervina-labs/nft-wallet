@@ -44,8 +44,9 @@ export const Container = styled(MainContainer)`
       position: relative;
       justify-content: center;
       align-items: center;
-      &:first-child {
-        margin-right: 48px;
+      margin-right: 48px;
+      &:last-child {
+        margin-right: 0;
       }
     }
     .active-line {
@@ -151,7 +152,7 @@ export const Container = styled(MainContainer)`
   }
   .list {
     flex: 1;
-    background: #ecf2f5;
+    background: #f8fafd;
     border-radius: 35px 35px 0 0;
     margin-top: 199px;
     z-index: 2;

@@ -62,6 +62,7 @@ export enum RoutePath {
   AddressCollector = '/addresses',
   Claim = '/claim',
   Collection = '/explore/collection',
+  Issuer = '/issuer',
 }
 
 export const RouterContext = React.createContext({

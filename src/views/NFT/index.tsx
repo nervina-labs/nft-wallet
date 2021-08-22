@@ -369,6 +369,7 @@ export const NFT: React.FC = () => {
                 vipTitle={verifyTitle}
                 vipSource={detail?.verified_info?.verified_source}
                 showTooltip={false}
+                replace={true}
               />
               <Follow
                 followed={detail?.issuer_info?.issuer_followed as boolean}

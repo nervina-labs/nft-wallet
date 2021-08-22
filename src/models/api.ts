@@ -111,7 +111,10 @@ export interface NFTWalletAPI {
     auth: Auth
   ) => Promise<AxiosResponse<FollowerResponse>>
 
-  getFollowIssuers: (auth: Auth) => Promise<AxiosResponse<IssuersResponse>>
+  getFollowIssuers: (
+    auth: Auth,
+    page: number
+  ) => Promise<AxiosResponse<IssuersResponse>>
 
   getFollowTokenClasses: (
     auth: Auth,

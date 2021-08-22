@@ -40,7 +40,8 @@ export const Empty: React.FC<{ showExplore?: boolean }> = ({
   const history = useHistory()
   const isLiked = useRouteQuery('liked', '')
   const tag = useRouteQuery<string>('tag', '')
-  const isFollow = tag === 'follow'
+  const follow = useRouteQuery<string>('follow', '')
+  const isFollow = tag === 'follow' || follow
   const desc = useMemo(() => {
     if (isLiked) {
       return t('nfts.no-likes')

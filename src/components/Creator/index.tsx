@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import { LazyLoadImage } from '../Image'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
-import { NFT_EXPLORER_URL } from '../../constants'
 import { useTranslation } from 'react-i18next'
 import Tooltip from '@material-ui/core/Tooltip'
 import classNames from 'classnames'
 import { VipSource } from '../../models/class-list'
+import { Link } from 'react-router-dom'
+import { RoutePath } from '../../routes'
 
 const Container = styled.div`
   display: flex;
@@ -81,6 +82,7 @@ export interface CreatorProps {
   showTooltip?: boolean
   vipSource?: VipSource
   showAvatar?: boolean
+  replace?: boolean
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -98,6 +100,7 @@ export const Creator: React.FC<CreatorProps> = ({
   showTooltip = true,
   vipSource,
   showAvatar = true,
+  replace = false,
 }) => {
   const { t } = useTranslation('translations')
   const vt = useMemo(() => {
@@ -156,15 +159,14 @@ export const Creator: React.FC<CreatorProps> = ({
     <Container fontSize={fontSize} color={color} style={style}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
       {uuid != null ? (
-        <a
+        <Link
           onClick={(e) => e.stopPropagation()}
-          target="_blank"
           style={{ textDecoration: 'none' }}
-          rel="noopener noreferrer"
-          href={`${NFT_EXPLORER_URL}/issuer/tokens/${uuid}`}
+          to={`${RoutePath.Issuer}/${uuid}`}
+          replace={replace}
         >
           {creator}
-        </a>
+        </Link>
       ) : (
         creator
       )}
