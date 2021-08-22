@@ -1,5 +1,5 @@
 import { VipInfo } from './class-list'
-import { ListMeta } from './nft';
+import { ListMeta } from './nft'
 
 export interface Follower {
   issuer_follows: number
