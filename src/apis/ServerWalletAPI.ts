@@ -204,13 +204,21 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getTokenClass(uuid: string): Promise<AxiosResponse<TokenClass>> {
+  async getTokenClass(
+    uuid: string,
+    auth?: Auth
+  ): Promise<AxiosResponse<TokenClass>> {
     const params: Record<string, string | number> = {}
     if (this.address) {
       params.address = this.address
     }
+    const headers: Record<string, any> = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
     return await this.axios.get(`/token_classes/${uuid}`, {
       params,
+      headers,
     })
   }
 

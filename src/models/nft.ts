@@ -22,6 +22,8 @@ export enum NftType {
 export interface CardBack {
   card_back_content_exist: boolean
   card_back_content: string
+  class_card_back_content?: string
+  class_card_back_content_exist?: boolean
 }
 
 export interface NFTToken extends VipInfo, CardBack {

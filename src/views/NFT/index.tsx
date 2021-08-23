@@ -27,6 +27,7 @@ import { useProfileModel } from '../../hooks/useProfile'
 
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
 import { getImagePreviewUrl } from '../../utils'
+import { Auth } from '../../models/user'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -249,10 +250,14 @@ export const NFT: React.FC = () => {
   const { getAuth } = useProfileModel()
 
   const { data, failureCount } = useQuery(
-    [Query.NFTDetail, id, api],
+    [Query.NFTDetail, id, api, isLogined],
     async () => {
       if (matchTokenClass?.isExact) {
-        const { data } = await api.getTokenClass(id)
+        let auth: undefined | Auth
+        if (isLogined) {
+          auth = await getAuth()
+        }
+        const { data } = await api.getTokenClass(id, auth)
         return data
       }
       const auth = await getAuth()
@@ -322,7 +327,9 @@ export const NFT: React.FC = () => {
   const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
   const [showCardBack, setShowCardBack] = useState(false)
   const hasCardBack = useMemo(() => {
-    return !!data?.card_back_content_exist
+    return (
+      !!data?.card_back_content_exist || !!data?.class_card_back_content_exist
+    )
   }, [data])
   const [disbaleTilt] = useState(false)
   const tiltRef = useRef<Tilt>(null)
@@ -386,6 +393,9 @@ export const NFT: React.FC = () => {
           onColorDetected={(color) => setImageColor(color)}
           type={detail?.renderer_type}
           renderer={detail?.renderer}
+          cardBackContent={
+            detail?.card_back_content ?? detail?.class_card_back_content
+          }
           tiltRef={tiltRef}
           flipped={showCardBack}
         />
