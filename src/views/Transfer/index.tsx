@@ -31,6 +31,7 @@ import { Address, AddressType } from '@lay2/pw-core'
 import { useTranslation } from 'react-i18next'
 import { Box, Container, DrawerContainer } from './styled'
 import { UnipassTransferNftState } from '../../models/unipass'
+import { useProfileModel } from '../../hooks/useProfile'
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -264,10 +265,12 @@ export const Transfer: React.FC = () => {
     }
   }, [])
 
+  const { getAuth } = useProfileModel()
   const { data: remoteNftDetail, failureCount } = useQuery(
-    [Query.NFTDetail, id, api],
+    [Query.NFTDetail, id, api, getAuth],
     async () => {
-      const { data } = await api.getNFTDetail(id)
+      const auth = await getAuth()
+      const { data } = await api.getNFTDetail(id, auth)
       return data
     },
     { enabled: id != null && routerLocation.state?.nftDetail == null }

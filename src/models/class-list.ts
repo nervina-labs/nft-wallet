@@ -1,3 +1,4 @@
+import { Follower } from './issuer'
 import { ListMeta, NftType } from './nft'
 
 export interface Tag {
@@ -38,7 +39,7 @@ export interface TokenClass extends VipInfo, ClassLikes {
     name: string
     avatar_url: string
     uuid: string
-  }
+  } & Follower
   total: string
   tags: Tag[]
   renderer_type: NftType
@@ -47,5 +48,10 @@ export interface TokenClass extends VipInfo, ClassLikes {
 
 export interface ClassList {
   class_list: TokenClass[]
+  meta: ListMeta
+}
+
+export interface FollowClassList {
+  token_classes: TokenClass[]
   meta: ListMeta
 }

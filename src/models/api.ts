@@ -1,11 +1,11 @@
 import { AxiosResponse } from 'axios'
 import { NFT, NFTDetail } from './nft'
-import { ClassList, Tag, TokenClass } from './class-list'
+import { ClassList, FollowClassList, Tag, TokenClass } from './class-list'
 import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
-import { Issuer, IssuerInfo, IssuerTokenClassResult } from './issuer'
+import { Issuer, IssuerInfo, IssuerTokenClassResult, FollowerResponse, IssuersResponse } from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
 
@@ -35,7 +35,7 @@ export type ProductState = typeof PRODUCT_STATUE_SET[number]
 export interface NFTWalletAPI {
   getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
 
-  getNFTDetail: (uuid: string) => Promise<AxiosResponse<NFTDetail>>
+  getNFTDetail: (uuid: string, auth: Auth) => Promise<AxiosResponse<NFTDetail>>
 
   getTransactions: (page: number) => Promise<AxiosResponse<Transaction>>
 
@@ -119,4 +119,20 @@ export interface NFTWalletAPI {
       page?: number
     }
   ) => Promise<AxiosResponse<IssuerTokenClassResult>>
+
+  toggleFollow: (
+    uuid: string,
+    auth: Auth
+  ) => Promise<AxiosResponse<FollowerResponse>>
+
+  getFollowIssuers: (
+    auth: Auth,
+    page: number
+  ) => Promise<AxiosResponse<IssuersResponse>>
+
+  getFollowTokenClasses: (
+    auth: Auth,
+    page: number,
+    sortType: ClassSortType
+  ) => Promise<AxiosResponse<FollowClassList>>
 }

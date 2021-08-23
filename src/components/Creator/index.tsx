@@ -8,7 +8,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import classNames from 'classnames'
 import { VipSource } from '../../models/class-list'
 import { Link } from 'react-router-dom'
-import { useIssuerPath } from '../../views/Issuer'
+import { RoutePath } from '../../routes'
 
 const Container = styled.div`
   display: flex;
@@ -50,8 +50,11 @@ const Container = styled.div`
       `${props.color ?? 'rgba(5, 1, 1, 0.8)'}`};
     font-weight: normal;
     text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
     &.max {
       flex: 1;
     }
@@ -79,6 +82,7 @@ export interface CreatorProps {
   showTooltip?: boolean
   vipSource?: VipSource
   showAvatar?: boolean
+  replace?: boolean
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -96,9 +100,9 @@ export const Creator: React.FC<CreatorProps> = ({
   showTooltip = true,
   vipSource,
   showAvatar = true,
+  replace = false,
 }) => {
   const { t } = useTranslation('translations')
-  const issuerPath = useIssuerPath(uuid as string)
   const vt = useMemo(() => {
     if (vipSource === VipSource.Nervina) {
       return vipTitle as string
@@ -155,7 +159,12 @@ export const Creator: React.FC<CreatorProps> = ({
     <Container fontSize={fontSize} color={color} style={style}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
       {uuid != null ? (
-        <Link style={{ textDecoration: 'none' }} to={issuerPath}>
+        <Link
+          onClick={(e) => e.stopPropagation()}
+          style={{ textDecoration: 'none' }}
+          to={`${RoutePath.Issuer}/${uuid}`}
+          replace={replace}
+        >
           {creator}
         </Link>
       ) : (

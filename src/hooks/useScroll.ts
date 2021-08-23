@@ -87,6 +87,7 @@ export const useScrollPosition = (
     const handleScroll = (): void => {
       if (wait) {
         if (throttleTimeout === null) {
+          // eslint-disable-next-line react-hooks/exhaustive-deps
           throttleTimeout = window.setTimeout(callBack, wait)
         }
       } else {
@@ -116,6 +117,7 @@ export const useScrollPosition = (
 
     return () => {
       if (boundingElement) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         boundingElement.current?.removeEventListener('scroll', handleScroll)
       } else {
         window.removeEventListener('scroll', handleScroll)

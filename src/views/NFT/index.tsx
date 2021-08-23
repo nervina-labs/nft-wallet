@@ -8,7 +8,6 @@ import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { NFTDetail, Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
-import { Loading } from '../../components/Loading'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
@@ -22,6 +21,8 @@ import { Like } from '../../components/Like'
 import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
 import 'react-photo-view/dist/index.css'
+import { Follow } from '../../components/Follow'
+import { useProfileModel } from '../../hooks/useProfile'
 
 const Background = styled.div`
   position: fixed;
@@ -86,6 +87,16 @@ const Container = styled(MainContainer)`
       -webkit-line-clamp: 2;
       line-clamp: 2;
       margin-bottom: 16px;
+    }
+    .issuer {
+      display: flex;
+      /* justify-content: center; */
+      align-items: center;
+      margin-bottom: 8px;
+      > div {
+        flex: 1;
+        margin-right: 8px;
+      }
     }
     .vip {
       color: #999;
@@ -206,6 +217,7 @@ export const NFT: React.FC = () => {
 
   const { id } = useParams<{ id: string }>()
   const { api, address, isLogined } = useWalletModel()
+  const { getAuth } = useProfileModel()
 
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api],
@@ -214,7 +226,8 @@ export const NFT: React.FC = () => {
         const { data } = await api.getTokenClass(id)
         return data
       }
-      const { data } = await api.getNFTDetail(id)
+      const auth = await getAuth()
+      const { data } = await api.getNFTDetail(id, auth)
       return data
     },
     { enabled: id != null }
@@ -326,11 +339,7 @@ export const NFT: React.FC = () => {
           renderer={detail?.renderer}
         />
       </div>
-      {detail == null ? (
-        <section className="detail">
-          <Loading />
-        </section>
-      ) : (
+      {detail == null ? null : (
         <>
           <section
             className="detail"
@@ -348,19 +357,25 @@ export const NFT: React.FC = () => {
               </div>
             )}
             <div className="title">{detail?.name}</div>
-            <Creator
-              title=""
-              url={detail.issuer_info?.avatar_url}
-              name={detail.issuer_info?.name}
-              uuid={detail.issuer_info?.uuid}
-              color="#000"
-              fontSize={14}
-              isVip={detail?.verified_info?.is_verified}
-              vipTitle={verifyTitle}
-              vipSource={detail?.verified_info?.verified_source}
-              style={{ marginBottom: '5px' }}
-              showTooltip={false}
-            />
+            <div className="issuer">
+              <Creator
+                title=""
+                url={detail.issuer_info?.avatar_url}
+                name={detail.issuer_info?.name}
+                uuid={detail.issuer_info?.uuid}
+                color="#000"
+                fontSize={14}
+                isVip={detail?.verified_info?.is_verified}
+                vipTitle={verifyTitle}
+                vipSource={detail?.verified_info?.verified_source}
+                showTooltip={false}
+                replace={true}
+              />
+              <Follow
+                followed={detail?.issuer_info?.issuer_followed as boolean}
+                uuid={detail?.issuer_info?.uuid as string}
+              />
+            </div>
             {verifyTitle ? (
               <div className="vip">
                 {detail?.verified_info?.verified_source === VipSource.Weibo

@@ -23,7 +23,7 @@ import { HiddenBar } from '../../components/HiddenBar'
 import { CircularProgress } from '@material-ui/core'
 import classNames from 'classnames'
 import { DrawerImage } from '../Profile/DrawerImage'
-import { useRouteMatch } from 'react-router-dom'
+import { useLocation, useRouteMatch } from 'react-router-dom'
 import { SetUsername } from '../Profile/SetUsername'
 import { SetDesc } from '../Profile/setDesc'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
@@ -35,6 +35,7 @@ import { DrawerMenu } from './DrawerMenu'
 import { Addressbar } from '../../components/AddressBar'
 import { Intro } from '../../components/Intro'
 import Bg from '../../assets/svg/home-bg.svg'
+import { IssuerList } from './IssuerList'
 
 export const NFTs: React.FC = () => {
   const { api, isLogined, address } = useWalletModel()
@@ -52,11 +53,14 @@ export const NFTs: React.FC = () => {
     }
   )
 
-  const liked = useRouteQuery<string>('liked', '')
+  const location = useLocation()
+  const isLiked = !!useRouteQuery<string>('liked', '')
+  const isFollow = !!useRouteQuery<string>('follow', '')
+  const isOwned = location.search === ''
 
   const getRemoteData = useCallback(
     async ({ pageParam = 1 }) => {
-      if (liked) {
+      if (isLiked) {
         const { data } = await api.getUserLikesClassList(pageParam)
         return {
           meta: data.meta,
@@ -86,7 +90,7 @@ export const NFTs: React.FC = () => {
       return data
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [liked, api, address]
+    [isLiked, api, address]
   )
 
   const {
@@ -96,7 +100,7 @@ export const NFTs: React.FC = () => {
     fetchNextPage,
     refetch,
   } = useInfiniteQuery(
-    [`${Query.NFTList}${liked.toString()}`, address, liked],
+    [`${Query.NFTList}${isLiked.toString()}`, address, isLiked],
     getRemoteData,
     {
       getNextPageParam: (lastPage) => {
@@ -114,6 +118,7 @@ export const NFTs: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
+      enabled: !isFollow,
     }
   )
 
@@ -194,20 +199,29 @@ export const NFTs: React.FC = () => {
     {
       value: 'nfts.owned',
       fn() {
-        if (liked) {
+        if (!isOwned) {
           history.push(RoutePath.NFTs)
         }
       },
-      isActive: () => !liked,
+      isActive: () => isOwned,
     },
     {
       value: 'nfts.liked',
       fn() {
-        if (!liked) {
+        if (!isLiked) {
           history.push(RoutePath.NFTs + '?liked=true')
         }
       },
-      isActive: () => liked,
+      isActive: () => isLiked,
+    },
+    {
+      value: 'follow.follow',
+      fn() {
+        if (!isFollow) {
+          history.push(RoutePath.NFTs + '?follow=true')
+        }
+      },
+      isActive: () => isFollow,
     },
   ]
 
@@ -279,50 +293,55 @@ export const NFTs: React.FC = () => {
             </div>
           ))}
         </div>
-        {isRefetching ? <Loading /> : null}
-        {data === undefined && status === 'loading' ? (
-          <Loading />
-        ) : (
-          <InfiniteScroll
-            pullDownToRefresh={!IS_WEXIN}
-            refreshFunction={refresh}
-            pullDownToRefreshContent={
-              <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
-            }
-            pullDownToRefreshThreshold={80}
-            releaseToRefreshContent={
-              <h4>&#8593; {t('common.actions.release-refresh')}</h4>
-            }
-            dataLength={dataLength}
-            next={fetchNextPage}
-            hasMore={hasNextPage === true}
-            scrollThreshold="250px"
-            loader={<Loading />}
-            endMessage={
-              <h4 className="end">
-                {dataLength <= 5 ? ' ' : t('common.actions.pull-to-down')}
-              </h4>
-            }
-          >
-            {data?.pages?.map((group, i) => {
-              return (
-                <React.Fragment key={i}>
-                  {group.token_list.map((token, j: number) => {
-                    return (
-                      <Card
-                        className={i === 0 && j === 0 ? 'first' : ''}
-                        token={token}
-                        key={token.token_uuid || `${i}.${j}`}
-                        address={address}
-                        isClass={liked === 'true'}
-                      />
-                    )
-                  })}
-                </React.Fragment>
-              )
-            })}
-            {status === 'success' && dataLength === 0 ? <Empty /> : null}
-          </InfiniteScroll>
+        <IssuerList isFollow={isFollow} />
+        {isFollow ? null : (
+          <>
+            {isRefetching ? <Loading /> : null}
+            {data === undefined && status === 'loading' ? (
+              <Loading />
+            ) : (
+              <InfiniteScroll
+                pullDownToRefresh={!IS_WEXIN}
+                refreshFunction={refresh}
+                pullDownToRefreshContent={
+                  <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
+                }
+                pullDownToRefreshThreshold={80}
+                releaseToRefreshContent={
+                  <h4>&#8593; {t('common.actions.release-refresh')}</h4>
+                }
+                dataLength={dataLength}
+                next={fetchNextPage}
+                hasMore={hasNextPage === true}
+                scrollThreshold="250px"
+                loader={<Loading />}
+                endMessage={
+                  <h4 className="end">
+                    {dataLength <= 5 ? ' ' : t('common.actions.pull-to-down')}
+                  </h4>
+                }
+              >
+                {data?.pages?.map((group, i) => {
+                  return (
+                    <React.Fragment key={i}>
+                      {group.token_list.map((token, j: number) => {
+                        return (
+                          <Card
+                            className={i === 0 && j === 0 ? 'first' : ''}
+                            token={token}
+                            key={token.token_uuid || `${i}.${j}`}
+                            address={address}
+                            isClass={isLiked}
+                          />
+                        )
+                      })}
+                    </React.Fragment>
+                  )
+                })}
+                {status === 'success' && dataLength === 0 ? <Empty /> : null}
+              </InfiniteScroll>
+            )}
+          </>
         )}
       </section>
       <Share

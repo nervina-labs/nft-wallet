@@ -75,41 +75,41 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getNFTs(page: number): Promise<AxiosResponse<NFT>> {
-    return await this.axios.get(
-      `/api/explorer/v1/holder_tokens/${this.address}`,
-      {
-        params: {
-          page,
-          limit: PER_ITEM_LIMIT,
-          include_submitting: true,
-        },
-      }
-    )
+    return await this.axios.get(`/holder_tokens/${this.address}`, {
+      params: {
+        page,
+        limit: PER_ITEM_LIMIT,
+        include_submitting: true,
+      },
+    })
   }
 
-  async getNFTDetail(uuid: string): Promise<AxiosResponse<NFTDetail>> {
+  async getNFTDetail(
+    uuid: string,
+    auth: Auth
+  ): Promise<AxiosResponse<NFTDetail>> {
     const params: Record<string, unknown> = {
       include_submitting: true,
     }
     if (this.address) {
       params.address = this.address
     }
-    return await this.axios.get(`/api/explorer/v1/tokens/${uuid}`, {
+    return await this.axios.get(`/tokens/${uuid}`, {
       params,
+      headers: {
+        auth: JSON.stringify(auth),
+      },
     })
   }
 
   async getTransactions(page: number): Promise<AxiosResponse<Transaction>> {
-    return await this.axios.get(
-      `/api/explorer/v1/holder_transactions/${this.address}`,
-      {
-        params: {
-          page,
-          source: 'wallet',
-          limit: PER_ITEM_LIMIT,
-        },
-      }
-    )
+    return await this.axios.get(`/holder_transactions/${this.address}`, {
+      params: {
+        page,
+        source: 'wallet',
+        limit: PER_ITEM_LIMIT,
+      },
+    })
   }
 
   async toggleLike(
@@ -117,26 +117,39 @@ export class ServerWalletAPI implements NFTWalletAPI {
     like: boolean,
     auth: Auth
   ): Promise<AxiosResponse<{ liked: boolean }>> {
-    const url = `/api/explorer/v1/token_classes/${uuid}/toggle_likes/${this.address}`
-    return await this.axios.put(url, { auth })
+    const url = `/token_classes/${uuid}/toggle_likes/${this.address}`
+    return await this.axios.put(
+      url,
+      {
+        auth,
+      },
+      {
+        headers: { auth: JSON.stringify(auth) },
+      }
+    )
   }
 
   async submitAddress(
     uuid: string,
     auth: Auth
   ): Promise<AxiosResponse<{ code: number }>> {
-    const url = `/api/explorer/v1/address_packages/${uuid}/items`
+    const url = `/address_packages/${uuid}/items`
     return await axios.post(
       `${SERVER_URL}${url}`.replace('/explorer/', '/saas/'),
       {
         auth,
         address: this.address,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
       }
     )
   }
 
   async detectAddress(uuid: string): Promise<AxiosResponse<Boolean>> {
-    const url = `/api/explorer/v1/address_packages/${uuid}`
+    const url = `/address_packages/${uuid}`
     return await axios.get(
       `${SERVER_URL}${url}`.replace('/explorer/', '/saas/')
     )
@@ -162,7 +175,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (this.address) {
       params.address = this.address
     }
-    return await this.axios.get(`/api/explorer/v1/tags/${uuid}/token_classes`, {
+    return await this.axios.get(`/tags/${uuid}/token_classes`, {
       params,
     })
   }
@@ -172,23 +185,20 @@ export class ServerWalletAPI implements NFTWalletAPI {
       page,
       limit: PER_ITEM_LIMIT,
     }
-    return await this.axios.get(
-      `/api/explorer/v1/liked_token_classes/${this.address}`,
-      {
-        params,
-      }
-    )
+    return await this.axios.get(`/liked_token_classes/${this.address}`, {
+      params,
+    })
   }
 
   async getTags(): Promise<AxiosResponse<{ tags: Tag[] }>> {
-    return await this.axios.get('/api/explorer/v1/tags')
+    return await this.axios.get('/tags')
   }
 
   async getRegion(
     latitude: string,
     longitude: string
   ): Promise<AxiosResponse<{ region: string }>> {
-    return await this.axios.get('/api/explorer/v1/regions', {
+    return await this.axios.get('/regions', {
       params: {
         latitude,
         longitude,
@@ -201,7 +211,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (this.address) {
       params.address = this.address
     }
-    return await this.axios.get(`/api/explorer/v1/token_classes/${uuid}`, {
+    return await this.axios.get(`/token_classes/${uuid}`, {
       params,
     })
   }
@@ -212,7 +222,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     isUnipass = true
   ): Promise<NFTTransaction> {
     // eslint-disable-next-line prettier/prettier
-    const { data } = await this.axios.get<any, AxiosResponse<UnsignedTransaction>>('/api/explorer/v1/token_ckb_transactions/new', {
+    const { data } = await this.axios.get<any, AxiosResponse<UnsignedTransaction>>('/token_ckb_transactions/new', {
       params: {
         token_uuid: uuid,
         from_address: this.address,
@@ -237,22 +247,22 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (auth) {
       await writeFormData(auth as any, 'auth', fd)
     }
-    const { data } = await this.axios.put(
-      `/api/explorer/v1/users/${this.address}`,
-      fd,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }
-    )
+    const headers: Record<string, any> = {
+      'Content-Type': 'multipart/form-data',
+    }
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    const { data } = await this.axios.put(`/users/${this.address}`, fd, {
+      headers,
+    })
 
     return data
   }
 
   async getProfile(): Promise<UserResponse> {
     try {
-      const { data } = await this.axios.get(
-        `/api/explorer/v1/users/${this.address}`
-      )
+      const { data } = await this.axios.get(`/users/${this.address}`)
       return data
     } catch (error) {
       return Object.create(null)
@@ -283,26 +293,27 @@ export class ServerWalletAPI implements NFTWalletAPI {
       from_address: this.address,
       to_address: toAddress,
     }
-    return await this.axios.post(
-      '/api/explorer/v1/token_ckb_transactions',
-      data
-    )
+    return await this.axios.post('/token_ckb_transactions', data)
   }
 
   async getSpecialAssets() {
-    return await this.axios.get('/api/explorer/v1/special_categories')
+    return await this.axios.get('/special_categories')
   }
 
   async getCollectionDetail(uuid: string) {
-    return await this.axios.get(`/api/explorer/v1/special_categories/${uuid}`)
+    return await this.axios.get(`/special_categories/${uuid}`)
   }
 
   async getRecommendIssuers() {
-    return await this.axios.get('/api/explorer/v1/recommended_issuers')
+    return await this.axios.get('/recommended_issuers', {
+      params: {
+        address: this.address,
+      },
+    })
   }
 
   async getRecommendClasses() {
-    return await this.axios.get('/api/explorer/v1/recommended_classes', {
+    return await this.axios.get('/recommended_classes', {
       params: {
         address: this.address,
       },
@@ -317,33 +328,80 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (this.address) {
       params.address = this.address
     }
-    return await this.axios.get(
-      `/api/explorer/v1/special_categories/${uuid}/token_classes`,
-      {
-        params: {
-          address: this.address,
-        },
-      }
-    )
+    return await this.axios.get(`/special_categories/${uuid}/token_classes`, {
+      params: {
+        address: this.address,
+      },
+    })
   }
 
   async getNotifications() {
-    return await this.axios.get('/api/explorer/v1/notifications')
+    return await this.axios.get('/notifications')
   }
 
   async getClaimStatus(uuid: string) {
-    return await this.axios.get(`/api/explorer/v1/token_claim_codes/${uuid}`)
+    return await this.axios.get(`/token_claim_codes/${uuid}`)
   }
 
   async claim(uuid: string) {
-    return await this.axios.post('/api/explorer/v1/token_claim_codes', {
+    return await this.axios.post('/token_claim_codes', {
       to_address: this.address,
       code: uuid,
     })
   }
 
+  async toggleFollow(uuid: string, auth: Auth) {
+    return await this.axios.put(
+      `/issuers/${uuid}/toggle_follows/${this.address}`,
+      {
+        auth,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+      }
+    )
+  }
+
+  async getFollowIssuers(auth: Auth, page: number) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    return await this.axios.get(`/followed_issuers/${this.address}`, {
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+      params,
+    })
+  }
+
+  async getFollowTokenClasses(
+    auth: Auth,
+    page: number,
+    sortType: ClassSortType
+  ) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    if (sortType === ClassSortType.Likes) {
+      params.sort = 'likes'
+    }
+    return await this.axios.get(`/followed_token_classes/${this.address}`, {
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+      params: {
+        page,
+        limit: PER_ITEM_LIMIT,
+      },
+    })
+  }
+
   async getIssuerInfo(uuid: string) {
-    return await this.axios.get<IssuerInfo>(`/api/wallet/v1/issuers/${uuid}`, {
+    return await this.axios.get<IssuerInfo>(`/issuers/${uuid}`, {
       params: {
         address: this.address,
       },
@@ -361,7 +419,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     const limit = options?.limit ?? 20
     const page = options?.page ?? 0
     return await this.axios.get<IssuerTokenClassResult>(
-      `/api/wallet/v1/issuers/${uuid}/token_classes`,
+      `/issuers/${uuid}/token_classes`,
       {
         params: {
           address: this.address,
