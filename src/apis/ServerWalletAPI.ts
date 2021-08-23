@@ -391,10 +391,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       headers: {
         auth: JSON.stringify(auth),
       },
-      params: {
-        page,
-        limit: PER_ITEM_LIMIT,
-      },
+      params,
     })
   }
 }
