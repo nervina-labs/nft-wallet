@@ -173,6 +173,7 @@ const Header: React.FC = () => {
               setIndex(i)
               setHeaderFixedByHeaderRef()
             }}
+            key={`${i}`}
           >
             {item.label}
           </div>
@@ -235,6 +236,7 @@ const CardGroup: React.FC = () => {
     refetch,
     fetchNextPage,
     isFetching,
+    hasNextPage,
   } = useInfiniteQuery(
     [Query.Issuers, api, id, productState],
     async ({ pageParam = 0 }) => {
@@ -278,8 +280,8 @@ const CardGroup: React.FC = () => {
     <div className="card-group">
       <InfiniteScroll
         dataLength={tokenClassLength}
-        hasMore
-        loader={null}
+        hasMore={hasNextPage === true}
+        loader={<Loading />}
         refreshFunction={refresh}
         next={fetchNextPage}
       >
@@ -290,7 +292,7 @@ const CardGroup: React.FC = () => {
             ))}
           </Masonry>
         )}
-        {(isLoading || isFetching) && <Loading />}
+        {isLoading && <Loading />}
       </InfiniteScroll>
       {tokenClassLength === 0 && !isLoading && !isFetching && (
         <div className="no-data">{t('issuer.no-data')}</div>

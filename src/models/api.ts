@@ -5,7 +5,13 @@ import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
-import { Issuer, IssuerInfo, IssuerTokenClassResult, FollowerResponse, IssuersResponse } from './issuer'
+import {
+  Issuer,
+  IssuerInfo,
+  IssuerTokenClassResult,
+  FollowerResponse,
+  IssuersResponse,
+} from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
 

@@ -19,10 +19,6 @@ const IssuerContainer = styled.main`
   }
 `
 
-export const useIssuerPath = (uuid: string): string => {
-  return `/issuer/${uuid}`
-}
-
 export const Issuer: React.FC = () => {
   const [t] = useTranslation('translations')
   const history = useHistory()

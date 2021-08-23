@@ -8,7 +8,7 @@ import { Follow } from '../../components/Follow'
 import { LazyLoadImage } from '../../components/Image'
 import { Issuer } from '../../models/issuer'
 import { formatCount } from '../../utils'
-import {RoutePath} from "../../routes";
+import { RoutePath } from '../../routes'
 
 const Container = styled.div`
   display: flex;
@@ -86,7 +86,11 @@ export const RecommendIssuser: React.FC<IssuerProps> = ({
 }) => {
   const { t, i18n } = useTranslation('translations')
   return (
-    <Link style={{ textDecoration: 'none' }} to={`${RoutePath.Issuer}/${issuer.uuid}`}>
+    <Link
+      style={{ textDecoration: 'none' }}
+      to={`${RoutePath.Issuer}/${issuer.uuid}`}
+      replace={true}
+    >
       <Container>
         <span className="avatar">
           <LazyLoadImage

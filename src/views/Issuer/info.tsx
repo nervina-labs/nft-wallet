@@ -5,6 +5,7 @@ import { useWalletModel } from '../../hooks/useWallet'
 import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { LazyLoadImage } from '../../components/Image'
+import { Follow as FollowButton } from '../../components/Follow'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { ReactComponent as CopySvg } from '../../assets/svg/copy.svg'
 import { ReactComponent as SuccessSvg } from '../../assets/svg/success.svg'
@@ -323,16 +324,11 @@ export const IssuerInfo: React.FC = () => {
   const { api } = useWalletModel()
   const [t] = useTranslation('translations')
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     [Query.Issuers, api, id],
     async () => {
       const { data } = await api.getIssuerInfo(id)
       return data
-    },
-    {
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
     }
   )
 
@@ -362,7 +358,15 @@ export const IssuerInfo: React.FC = () => {
           isLoading={isLoading}
           field={t('issuer.like')}
         />
-        <div className="follow-button-container" />
+        <div className="follow-button-container">
+          {data && (
+            <FollowButton
+              followed={data.issuer_followed}
+              uuid={id}
+              afterToggle={refetch}
+            />
+          )}
+        </div>
       </div>
       <Username isLoading={isLoading} username={data?.name} />
       <IssuerId isLoading={isLoading} id={data?.issuer_id} />
