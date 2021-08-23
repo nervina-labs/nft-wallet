@@ -260,9 +260,11 @@ export const DasSelectorPopoutContainer = styled.div`
   box-sizing: border-box;
   position: absolute;
   padding: 0 12px;
-  left: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
   display: none;
   width: calc(100vw - 20px);
+  max-width: 480px;
   border: #dbdeeb solid 1px;
   border-radius: 6px;
   background-color: #fff;
@@ -273,7 +275,7 @@ export const DasSelectorPopoutContainer = styled.div`
   .triangle {
     position: absolute;
     top: 0;
-    left: 0;
+    right: 61px;
 
     &::before,
     &::after {
