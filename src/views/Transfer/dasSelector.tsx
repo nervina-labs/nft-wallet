@@ -207,10 +207,10 @@ const DasSelectorPopout: React.FC<DasSelectorPopoutProps> = ({
               : t('transfer.das.multi-result')}
           </div>
           <div className="list">
-            {data.map((record) => (
+            {data.map((record, i) => (
               <div
                 className="record"
-                key={record.key}
+                key={`${i}.${record.key}`}
                 onClick={() => handleSelect(record)}
               >
                 {record === selectedAccount && (
@@ -275,6 +275,9 @@ export const DasSelector: React.FC<DasSelectorProps> = ({
       const resp = await fetch(url, das)
       showPopout(true)
       return resp
+    },
+    {
+      cacheTime: 0,
     }
   )
 
