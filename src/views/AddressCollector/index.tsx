@@ -252,7 +252,7 @@ export const AddressCollector: React.FC = () => {
     [login, walletType, id, isLogined]
   )
 
-  const { data: isAddressPackageExist } = useQuery(
+  const { data: isAddressPackageExist, isError } = useQuery(
     [Query.DetectAddress, id, api],
     async () => {
       const { data } = await api.detectAddress(id)
@@ -376,7 +376,7 @@ export const AddressCollector: React.FC = () => {
     desc,
   ])
 
-  if (isNotFound || isAddressPackageExist === false) {
+  if (isNotFound || isAddressPackageExist === false || isError) {
     return <Redirect to={RoutePath.NotFound} />
   }
 
