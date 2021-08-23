@@ -138,7 +138,7 @@ export const Apps: React.FC = () => {
       desc: t('apps.red-envelope.desc'),
       bg: Red as any,
       available: true,
-      onClick: () => {
+      onClick: async () => {
         location.href = getAppUrl(RED_ENVELOP_APP_URL)
       },
     },

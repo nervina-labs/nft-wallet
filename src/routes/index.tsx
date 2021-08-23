@@ -34,6 +34,7 @@ import { AddressCollector } from '../views/AddressCollector'
 import { useToast } from '../hooks/useToast'
 import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
+import { UnipassConfig } from '../utils'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -61,6 +62,7 @@ export enum RoutePath {
   AddressCollector = '/addresses',
   Claim = '/claim',
   Collection = '/explore/collection',
+  Issuer = '/issuer',
 }
 
 export const RouterContext = React.createContext({
@@ -102,6 +104,8 @@ const allowWithoutAuthList = new Set([
   RoutePath.NotFound,
 ])
 
+const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
+
 const WalletChange: React.FC = ({ children }) => {
   const {
     address,
@@ -131,11 +135,17 @@ const WalletChange: React.FC = ({ children }) => {
   const [t] = useTranslation('translations')
 
   useEffect(() => {
+    const pathInForceAuthList = forceAuthList.has(
+      location.pathname + location.search
+    )
+    const pathInAllowList = [...allowWithoutAuthList].some((p) =>
+      location.pathname.startsWith(p)
+    )
     if (
       WalletType.Unipass === walletType &&
       isLogined &&
       !isAuthenticated &&
-      ![...allowWithoutAuthList].some((p) => location.pathname.startsWith(p)) &&
+      (!pathInAllowList || pathInForceAuthList) &&
       !isSigning.current &&
       pubkey
     ) {
@@ -147,6 +157,9 @@ const WalletChange: React.FC = ({ children }) => {
         showCloseIcon: false,
         show: true,
         onConfirm: () => {
+          if (pathInForceAuthList) {
+            UnipassConfig.setRedirectUri(location.pathname + location.search)
+          }
           signMessage(address).catch(Boolean)
         },
       })
@@ -157,6 +170,7 @@ const WalletChange: React.FC = ({ children }) => {
     address,
     signMessage,
     location.pathname,
+    location.search,
     isLogined,
     pubkey,
     t,
