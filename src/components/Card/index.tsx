@@ -140,7 +140,7 @@ const Container = styled.div`
     }
     .player {
       position: absolute;
-      top: 6px;
+      bottom: 6px;
       right: 6px;
       width: 20px;
       height: 20px;
@@ -281,6 +281,7 @@ export const Card: React.FC<CardProps> = ({
             <PlayerSvg />
           </span>
         ) : null}
+        {hasCardBack ? <CardBack /> : null}
       </div>
       <div className="content">
         <div className="title">
@@ -308,7 +309,6 @@ export const Card: React.FC<CardProps> = ({
           color="rgba(63, 63, 63, 0.66)"
         />
       </div>
-      {hasCardBack ? <CardBack /> : null}
     </Container>
   )
 }
