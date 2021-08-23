@@ -281,7 +281,14 @@ export const Card: React.FC<CardProps> = ({
             <PlayerSvg />
           </span>
         ) : null}
-        {hasCardBack ? <CardBack /> : null}
+        {hasCardBack ? (
+          <CardBack
+            style={{
+              borderTopRightRadius: '10px',
+            }}
+            tooltipPlacement="top-start"
+          />
+        ) : null}
       </div>
       <div className="content">
         <div className="title">

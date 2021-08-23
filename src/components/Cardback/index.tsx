@@ -18,12 +18,34 @@ const CardBackContainer = styled.div`
   backdrop-filter: blur(4px);
 `
 
-export const CardBack: React.FC = () => {
+export type Placement =
+  | 'bottom-end'
+  | 'bottom-start'
+  | 'bottom'
+  | 'left-end'
+  | 'left-start'
+  | 'left'
+  | 'right-end'
+  | 'right-start'
+  | 'right'
+  | 'top-end'
+  | 'top-start'
+  | 'top'
+
+export interface CardBackProps {
+  style?: React.CSSProperties
+  tooltipPlacement?: Placement
+}
+
+export const CardBack: React.FC<CardBackProps> = ({
+  style,
+  tooltipPlacement,
+}) => {
   const [t] = useTranslation('translations')
   const title = t('common.card-back')
   return (
-    <Tooltip placement="top-end" title={title}>
-      <CardBackContainer>
+    <Tooltip placement={tooltipPlacement ?? 'top-end'} title={title}>
+      <CardBackContainer style={style}>
         <CardBackSvg />
       </CardBackContainer>
     </Tooltip>
