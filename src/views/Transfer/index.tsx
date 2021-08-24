@@ -214,9 +214,11 @@ export const Transfer: React.FC = () => {
   const sendNFT = useCallback(async () => {
     setIsSendingNFT(true)
     try {
+      const isFinalUsedAddressTypeEth =
+        finalUsedAddressType === AddressVerifiedType.eth
       const sentAddress = new Address(
-        ckbAddress,
-        isEthAddress ? AddressType.eth : AddressType.ckb
+        finalUsedAddress,
+        isFinalUsedAddressTypeEth ? AddressType.eth : AddressType.ckb
       ).toCKBAddress()
       const { tx } = await api
         .getTransferNftTransaction(
@@ -273,10 +275,10 @@ export const Transfer: React.FC = () => {
   }, [
     signTransaction,
     id,
-    ckbAddress,
+    finalUsedAddress,
+    finalUsedAddressType,
     api,
     walletType,
-    isEthAddress,
     routerLocation.state,
     pubkey,
   ])
