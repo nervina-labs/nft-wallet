@@ -76,6 +76,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [])
   const [enableGyroscope, setEnableGyroscope] = useState(isTouchDevice)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
+  const [isLoadImageFailed, setIsLoadImageFailed] = useState(false)
   const { snackbar } = useProfileModel()
   const [t] = useTranslation('translations')
   const shouldReverseTilt = useMemo(() => {
@@ -86,10 +87,20 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [isTouchDevice, enableGyroscope])
   const timer = useRef<NodeJS.Timeout>()
   const tilt = useRef<Tilt>(null)
-  const enableImagePreview =
-    type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
-  const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
-  const enablePlayer = !enableImagePreview && isAudioOrVideo
+  const enableImagePreview = useMemo(
+    () =>
+      type === NftType.Picture ||
+      (!isLoadImageFailed && type === NftType.Audio),
+    [type, isLoadImageFailed]
+  )
+  const isAudioOrVideo = useMemo(
+    () => type === NftType.Audio || type === NftType.Video,
+    [type]
+  )
+  const enablePlayer = useMemo(() => isAudioOrVideo && !enableImagePreview, [
+    isAudioOrVideo,
+    enableImagePreview,
+  ])
   const [
     photoPreviewToolbarAudioVisible,
     setPhotoPreviewToolbarAudioVisible,
@@ -110,7 +121,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
 
   const imagePreviewUrl = useMemo(() => getImagePreviewUrl(src), [src])
   const openPreview = (): void => {
-    if (!enableImagePreview) {
+    if (!enableImagePreview || isLoadImageFailed) {
       setIsPlayerOpen(true)
     }
   }
@@ -203,6 +214,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
                   src={FallbackImg}
                   onLoaded={() => {
                     onFallBackImageLoaded()
+                    setIsLoadImageFailed(true)
                   }}
                 />
               }

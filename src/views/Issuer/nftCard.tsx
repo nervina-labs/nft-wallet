@@ -7,6 +7,9 @@ import { Like } from '../../components/Like'
 import FallbackImg from '../../assets/img/card-fallback.png'
 import { ReactComponent as CardBackIcon } from '../../assets/svg/card-back.svg'
 import { useHistory } from 'react-router-dom'
+import { getImagePreviewUrl } from '../../utils'
+import { NftType } from '../../models'
+import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 
 const NftCardContainer = styled.div`
   --bg-color: #fff;
@@ -15,6 +18,7 @@ const NftCardContainer = styled.div`
   border-radius: 8px;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
 
   a {
     color: #000;
@@ -24,14 +28,21 @@ const NftCardContainer = styled.div`
   .img {
     pointer-events: none;
     user-select: none;
+    position: relative;
     img {
       width: 100%;
+    }
+    .player {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
     }
   }
 
   .issuer {
     padding: 10px;
     overflow: hidden;
+    cursor: pointer;
   }
 
   .nft-name {
@@ -72,7 +83,8 @@ export const NftCard: React.FC<{
       <div className="img">
         <LazyLoadImage
           cover
-          src={token.bg_image_url}
+          src={getImagePreviewUrl(token.bg_image_url)}
+          dataSrc={token.bg_image_url}
           width={imgSize}
           height={imgSize}
           backup={
@@ -85,6 +97,12 @@ export const NftCard: React.FC<{
             />
           }
         />
+        {(token.renderer_type === NftType.Video ||
+          token.renderer_type === NftType.Audio) && (
+          <span className="player">
+            <PlayerSvg />
+          </span>
+        )}
       </div>
       {token.card_back_content_exist && <CardBackIcon className="card-back" />}
       <div className="issuer">
@@ -99,7 +117,7 @@ export const NftCard: React.FC<{
           <Like
             count={String(token.class_likes)}
             liked={token.class_liked}
-            uuid={uuid}
+            uuid={token.uuid}
           />
         </div>
       </div>

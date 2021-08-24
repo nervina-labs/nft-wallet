@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { IssuerInfo } from './info'
 import { NftCards } from './nftCards'
@@ -7,6 +7,7 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { useHistory } from 'react-router-dom'
+import { Share } from '../../components/Share'
 
 const IssuerContainer = styled.main`
   --max-width: 500px;
@@ -22,6 +23,7 @@ const IssuerContainer = styled.main`
 export const Issuer: React.FC = () => {
   const [t] = useTranslation('translations')
   const history = useHistory()
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
 
   return (
     <IssuerContainer>
@@ -29,11 +31,17 @@ export const Issuer: React.FC = () => {
         className="appbar"
         title={t('issuer.title')}
         left={<BackSvg onClick={() => history.goBack()} />}
-        right={<ShareSvg />}
+        right={<ShareSvg onClick={() => setIsShareDialogOpen(true)} />}
       />
       <div style={{ height: `${HEADER_HEIGHT}px` }} />
       <IssuerInfo />
       <NftCards />
+      <Share
+        isDialogOpen={isShareDialogOpen}
+        closeDialog={() => setIsShareDialogOpen(false)}
+        displayText={location.href}
+        copyText={location.href}
+      />
     </IssuerContainer>
   )
 }

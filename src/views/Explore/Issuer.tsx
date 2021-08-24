@@ -89,7 +89,6 @@ export const RecommendIssuser: React.FC<IssuerProps> = ({
     <Link
       style={{ textDecoration: 'none' }}
       to={`${RoutePath.Issuer}/${issuer.uuid}`}
-      replace={true}
     >
       <Container>
         <span className="avatar">

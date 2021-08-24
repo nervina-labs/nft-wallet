@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useQuery } from 'react-query'
@@ -9,14 +9,13 @@ import { Follow as FollowButton } from '../../components/Follow'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { ReactComponent as CopySvg } from '../../assets/svg/copy.svg'
 import { ReactComponent as SuccessSvg } from '../../assets/svg/success.svg'
-import BgSvg from '../../assets/svg/home-bg.svg'
 import VerifySvg from '../../assets/svg/weibo.svg'
 import { Skeleton } from '@material-ui/lab'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import { HEADER_HEIGHT } from '../../components/Appbar'
+import { copyFallback, ellipsisIssuerID } from '../../utils'
 
-const BgSvgPath = (BgSvg as unknown) as string
 const VerifySvgPath = (VerifySvg as unknown) as string
 
 const IssuerInfoContainer = styled.div`
@@ -163,15 +162,13 @@ const IssuerInfoContainer = styled.div`
 
   .bg {
     position: absolute;
-    bottom: -10px;
+    bottom: -100%;
     left: 0;
     z-index: -1;
     width: 100%;
+    height: 300%;
     pointer-events: none;
-    img {
-      width: 100%;
-      height: 100%;
-    }
+    background-image: linear-gradient(30deg, #b7adff, #ebfdff, #ebfdff);
   }
 `
 
@@ -215,7 +212,8 @@ const Follow: React.FC<{
 const Username: React.FC<{
   isLoading?: boolean
   username?: string
-}> = ({ isLoading, username }) => {
+  isVerified?: boolean
+}> = ({ isLoading, username, isVerified }) => {
   return (
     <div className="username">
       {isLoading ? (
@@ -223,7 +221,9 @@ const Username: React.FC<{
       ) : (
         <>
           <div className="text ellipsis-text">{username}</div>
-          <img className="verify" src={VerifySvgPath} alt="verify" />
+          {isVerified && (
+            <img className="verify" src={VerifySvgPath} alt="verify" />
+          )}
         </>
       )}
     </div>
@@ -235,15 +235,36 @@ const IssuerId: React.FC<{
   id?: string
 }> = ({ isLoading, id }) => {
   const [copied, setCopied] = useState(false)
+  const [showingIssuerId, setShowingIssuerId] = useState(id)
   const copy = (): void => {
     if (isLoading ?? copied) {
       return
     }
     setCopied(true)
+    if (id) {
+      copyFallback(id)
+    }
     setTimeout(() => {
       setCopied(false)
     }, 2000)
   }
+
+  const updateShowingIssuerId = useCallback(() => {
+    if (id && window.innerWidth < 380) {
+      setShowingIssuerId(ellipsisIssuerID(id))
+    } else {
+      setShowingIssuerId(id)
+    }
+  }, [id])
+
+  useEffect(() => {
+    updateShowingIssuerId()
+  }, [id, updateShowingIssuerId])
+
+  useEffect(() => {
+    window.addEventListener('resize', updateShowingIssuerId)
+    return () => window.removeEventListener('resize', updateShowingIssuerId)
+  })
 
   return (
     <div className="issuer-id" onClick={copy}>
@@ -256,7 +277,7 @@ const IssuerId: React.FC<{
             {isLoading ? (
               <Skeleton variant="rect" width="100%" height="100%" />
             ) : (
-              id
+              showingIssuerId
             )}
           </div>
           {copied ? (
@@ -368,7 +389,11 @@ export const IssuerInfo: React.FC = () => {
           )}
         </div>
       </div>
-      <Username isLoading={isLoading} username={data?.name} />
+      <Username
+        isLoading={isLoading}
+        username={data?.name}
+        isVerified={data?.verified_info?.is_verified}
+      />
       <IssuerId isLoading={isLoading} id={data?.issuer_id} />
       <VerifiedTitle
         isLoading={isLoading}
@@ -376,9 +401,7 @@ export const IssuerInfo: React.FC = () => {
       />
       <Description isLoading={isLoading} description={data?.description} />
 
-      <div className="bg">
-        <img src={BgSvgPath} alt="bg" />
-      </div>
+      <div className="bg" />
     </IssuerInfoContainer>
   )
 }

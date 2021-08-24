@@ -280,7 +280,8 @@
       "title": "Issuer",
       "follower": "Follower",
       "like": "Like",
-      "more": "More"
+      "more": "More",
+      "no-on-sale": "No nft on sale"
     }
   }
 }
