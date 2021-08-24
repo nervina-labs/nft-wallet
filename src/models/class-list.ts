@@ -1,5 +1,5 @@
-import { ListMeta, NftType } from './nft'
-
+import { Follower } from './issuer'
+import { ListMeta, NftType, CardBack } from './nft'
 export interface Tag {
   uuid: string
   name: string
@@ -26,7 +26,7 @@ export interface ClassLikes {
   class_liked: boolean
 }
 
-export interface TokenClass extends VipInfo, ClassLikes {
+export interface TokenClass extends VipInfo, ClassLikes, CardBack {
   bg_image_url: string
   name: string
   description: string
@@ -38,7 +38,7 @@ export interface TokenClass extends VipInfo, ClassLikes {
     name: string
     avatar_url: string
     uuid: string
-  }
+  } & Follower
   total: string
   tags: Tag[]
   renderer_type: NftType
@@ -47,5 +47,10 @@ export interface TokenClass extends VipInfo, ClassLikes {
 
 export interface ClassList {
   class_list: TokenClass[]
+  meta: ListMeta
+}
+
+export interface FollowClassList {
+  token_classes: TokenClass[]
   meta: ListMeta
 }

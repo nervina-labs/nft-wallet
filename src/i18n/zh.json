@@ -33,7 +33,8 @@
       "colon": "：",
       "title": "秘宝账户",
       "description": "随时随地查看并管理你的秘宝",
-      "img-lost": "图片失联"
+      "img-lost": "图片失联",
+      "card-back": "该秘宝卡背设置有信息，仅持有人可见"
     },
     "login": {
       "title": "秘宝账户",
@@ -120,7 +121,8 @@
     "nft": {
       "title": "秘宝细节",
       "transfer": "转让",
-      "desc": "秘宝简介"
+      "desc": "秘宝简介",
+      "lock": "只有该秘宝的持有者才能解锁该内容"
     },
     "account": {
       "title": "我的帐号",
@@ -288,6 +290,21 @@
       "go-home": "进入秘宝查看",
       "go-explore": "发现更多秘宝",
       "placeholder": "请输入领取密码"
+    },
+    "follow": {
+      "follow": "关注",
+      "followed": "已关注",
+      "confirm": "确认不再关注？",
+      "follower": "粉丝：",
+      "likes": "获赞：",
+      "count": "已关注 {{count}} 人",
+      "end": "已经拉到底啦~",
+      "login": {
+        "desc-1": "啊哦～您还未登录",
+        "desc-2": "请登录秘宝，查看您关注的精彩内容",
+        "login": "登录"
+      },
+      "no-data": "您还未关注任何创作者"
     }
   }
 }

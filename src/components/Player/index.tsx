@@ -87,7 +87,7 @@ export const Player: React.FC<PlayerProps> = ({
       audioRef?.current?.play().catch(catchRefHandleError)
       videoRef?.current?.play().catch(catchRefHandleError)
     }
-  }, [open, audioRef, videoRef])
+  }, [open, audioRef, onError])
 
   return (
     <>

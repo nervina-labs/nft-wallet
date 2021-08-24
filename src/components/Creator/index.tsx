@@ -3,11 +3,13 @@ import styled from 'styled-components'
 import { LazyLoadImage } from '../Image'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
-import { NFT_EXPLORER_URL } from '../../constants'
 import { useTranslation } from 'react-i18next'
 import Tooltip from '@material-ui/core/Tooltip'
 import classNames from 'classnames'
 import { VipSource } from '../../models/class-list'
+import { Link } from 'react-router-dom'
+import { RoutePath } from '../../routes'
+import PeopleSrc from '../../assets/img/people.png'
 
 const Container = styled.div`
   display: flex;
@@ -49,8 +51,11 @@ const Container = styled.div`
       `${props.color ?? 'rgba(5, 1, 1, 0.8)'}`};
     font-weight: normal;
     text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
     &.max {
       flex: 1;
     }
@@ -78,6 +83,8 @@ export interface CreatorProps {
   showTooltip?: boolean
   vipSource?: VipSource
   showAvatar?: boolean
+  replace?: boolean
+  useImageFallBack?: boolean
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -95,6 +102,8 @@ export const Creator: React.FC<CreatorProps> = ({
   showTooltip = true,
   vipSource,
   showAvatar = true,
+  replace = false,
+  useImageFallBack,
 }) => {
   const { t } = useTranslation('translations')
   const vt = useMemo(() => {
@@ -124,7 +133,9 @@ export const Creator: React.FC<CreatorProps> = ({
               width={24}
               height={24}
               variant="circle"
-              backup={<PeopleSvg />}
+              backup={
+                useImageFallBack ? <img src={PeopleSrc} /> : <PeopleSvg />
+              }
             />
           )}
         </span>
@@ -153,15 +164,14 @@ export const Creator: React.FC<CreatorProps> = ({
     <Container fontSize={fontSize} color={color} style={style}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
       {uuid != null ? (
-        <a
+        <Link
           onClick={(e) => e.stopPropagation()}
-          target="_blank"
           style={{ textDecoration: 'none' }}
-          rel="noopener noreferrer"
-          href={`${NFT_EXPLORER_URL}/issuer/tokens/${uuid}`}
+          to={`${RoutePath.Issuer}/${uuid}`}
+          replace={replace}
         >
           {creator}
-        </a>
+        </Link>
       ) : (
         creator
       )}

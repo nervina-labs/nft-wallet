@@ -15,7 +15,7 @@ import { UnipassConfig } from '../../utils'
 
 export const Unipass: React.FC = () => {
   const action = useRouteQuery<UnipassAction>('action', UnipassAction.Login)
-  const ret = useRouteQuery('unipass_ret', '')
+  const ret = useRouteQuery('unipass_ret', '{}')
   const unipassInfo: UnipassResponse = JSON.parse(ret)
   const history = useHistory()
   const { setUnipassAccount } = useWalletModel()
@@ -89,6 +89,7 @@ export const Unipass: React.FC = () => {
     setUnipassAccount,
     profile,
     prevState,
+    redirectUri,
   ])
   return null
 }
