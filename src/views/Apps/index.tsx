@@ -10,17 +10,53 @@ import Red from '../../assets/svg/red-bucket.svg'
 import Ticket from '../../assets/svg/ticket.svg'
 import DAO from '../../assets/svg/dao.svg'
 import Exchange from '../../assets/svg/exchange.svg'
+import { ReactComponent as ShopSvg } from '../../assets/svg/shop.svg'
 import Vip from '../../assets/svg/vip.svg'
 import classNames from 'classnames'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RED_ENVELOP_APP_URL, TICKET_APP_URL, WEAPP_ID } from '../../constants'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
+import { RoutePath } from '../../routes'
+import { useHistory } from 'react-router-dom'
 
 const Container = styled(MainContainer)`
   padding-top: 20px;
   max-width: 500px;
   min-height: calc(100% - 20px);
   background: #fafafa;
+  .shop {
+    width: 343px;
+    height: 96px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    background: #ffffff;
+    box-shadow: 0px 10px 20px rgba(227, 227, 227, 0.25);
+    border-radius: 25px;
+    .content {
+      cursor: pointer;
+      width: 231px;
+      margin-left: 10px;
+      margin-right: 10px;
+      padding: 10px;
+      background: #f8f7fb;
+      box-shadow: 0px 10px 20px rgba(227, 227, 227, 0.25);
+      border-radius: 15px;
+      .title {
+        font-size: 16px;
+        color: black;
+        font-weight: bold;
+      }
+      .desc {
+        margin: 6px 0;
+        text-align: left;
+        font-size: 12px;
+        color: black;
+        word-break: break-all;
+      }
+    }
+  }
   .main {
     text-align: center;
     margin-top: 20px;
@@ -125,6 +161,7 @@ export const Item: React.FC<ItemProps> = ({
 export const Apps: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const { pubkey, email } = useWalletModel()
+  const history = useHistory()
   const { initWechat, isWechatInited } = useWechatLaunchWeapp()
   useEffect(() => {
     initWechat().catch((error) => {
@@ -202,23 +239,29 @@ export const Apps: React.FC = () => {
       available: false,
     },
   ]
+  const html = `
+    <wx-open-launch-weapp
+    id="launch-btn"
+    username="${WEAPP_ID}"
+    path="pages/index/index.html"
+  >
+    <script type="text/wxtag-template">
+      <style>.btn { padding: 12px }</style>
+      <button class="btn">打开小程序</button>
+    </script>
+  </wx-open-launch-weapp>
+  `
   return (
     <Container>
       <HiddenBar alwaysShow />
-      <wx-open-launch-weapp
-        id="launch-btn"
-        username={WEAPP_ID}
-        path="pages/index/index.html"
-      >
-        <script
-          type="text/wxtag-template"
-          dangerouslySetInnerHTML={{
-            __html: `<button style="width: 200px; height: 45px; text-align: center; font-size: 17px; display: block; margin: 0 auto; padding: 8px 24px; border: none; border-radius: 4px; background-color: #07c160; color:#fff; as any">
-            打开小程序
-          </button>`,
-          }}
-        />
-      </wx-open-launch-weapp>
+      <div className="shop">
+        <ShopSvg />
+        <div className="content" onClick={() => history.push(RoutePath.Shop)}>
+          <div className="title">{t('apps.shop.title')}</div>
+          <div className="desc">{t('apps.shop.desc')}</div>
+        </div>
+      </div>
+      <div dangerouslySetInnerHTML={{ __html: html }}></div>
       <div className="main">
         {data.map(({ title, desc, bg, onClick, available, color }) => {
           return (

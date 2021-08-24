@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import { ReactComponent as BuySvg } from '../../assets/svg/buy.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
 import { useWidth } from '../../hooks/useWidth'
@@ -127,6 +128,9 @@ const Container = styled(MainContainer)`
       font-size: 10px;
       border-radius: 50%;
       color: white;
+      svg {
+        margin-bottom: 4px;
+      }
       &.disabled {
         background-color: #ddd;
         color: #898989;
@@ -277,6 +281,25 @@ export const NFT: React.FC = () => {
     return window.innerHeight
   }, [])
 
+  const qrcode = useMemo(() => {
+    return data?.product_qr_code
+  }, [data])
+
+  const buyButton = useMemo(() => {
+    if (!qrcode) {
+      return null
+    }
+    return (
+      <div
+        className="transfer"
+        onClick={() => history.push(`${RoutePath.Shop}?qrcode=${qrcode}`)}
+      >
+        <BuySvg />
+        <span>{t('shop.buy')}</span>
+      </div>
+    )
+  }, [qrcode, history, t])
+
   const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
 
   if (!isLogined && matchTokenClass?.isExact !== true) {
@@ -338,7 +361,9 @@ export const NFT: React.FC = () => {
               top: `${innerHeight - 44 - 300}px`,
             }}
           >
-            {isTokenClass(detail) ? null : (
+            {isTokenClass(detail) ? (
+              buyButton
+            ) : (
               <div
                 className={`${!isTransferable ? 'disabled' : ''} transfer`}
                 onClick={isTransferable ? tranfer : undefined}
