@@ -1,9 +1,10 @@
 import { CircularProgress } from '@material-ui/core'
 import classNames from 'classnames'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { useFollowStatusModel } from '../../hooks/useFollowStatus'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
@@ -47,20 +48,23 @@ export const Follow: React.FC<FollowProps> = ({
 }) => {
   const [t] = useTranslation('translations')
   const { api, confirm, isLogined } = useWalletModel()
+  const { followStatus, setFollowStatus } = useFollowStatusModel()
   const { getAuth } = useProfileModel()
-  const [isFollow, setIsFollow] = useState(followed)
+  const isFollow = useMemo(() => {
+    return followStatus[uuid] ?? followed
+  }, [followStatus, uuid, followed])
   const [isLoading, setIsLoading] = useState(false)
   const toggle = useCallback(async () => {
     const auth = await getAuth()
     const { data } = await api.toggleFollow(uuid, auth)
-    setIsFollow(data.followed)
+    setFollowStatus(uuid, data.followed)
     try {
       await afterToggle?.()
     } catch (error) {
       //
     }
     // afterToggle?.(data.followed)
-  }, [getAuth, api, uuid, afterToggle])
+  }, [getAuth, api, uuid, afterToggle, setFollowStatus])
   const history = useHistory()
 
   const toggleFollow = useCallback(

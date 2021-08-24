@@ -432,6 +432,7 @@ export const NFT: React.FC = () => {
                 vipSource={detail?.verified_info?.verified_source}
                 showTooltip={false}
                 replace={true}
+                useImageFallBack={true}
               />
               <Follow
                 followed={detail?.issuer_info?.issuer_followed as boolean}

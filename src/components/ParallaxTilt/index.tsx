@@ -9,7 +9,7 @@ import { ReactComponent as LockSvg } from '../../assets/svg/lock.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
-import { IS_IPHONE, IS_MAC_SAFARI } from '../../constants'
+import { IS_IPHONE, IS_MAC_SAFARI, IS_SAFARI } from '../../constants'
 import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
@@ -196,6 +196,9 @@ const CardbackContainer = styled.div`
       align-items: center;
       justify-content: center;
       flex-direction: column;
+    }
+    audio {
+      max-width: 100%;
     }
   }
   .lock {
@@ -388,12 +391,19 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       root.style.filter = 'blur(10px)'
     }
   }
+
+  const shouldEnableTile = useMemo(() => {
+    if (flipped && !isTouchDevice) {
+      return false
+    }
+    return isTiltEnable && enable
+  }, [isTiltEnable, enable, flipped, isTouchDevice])
   return (
     <>
       <Container
         tiltReverse={shouldReverseTilt}
         reset={false}
-        tiltEnable={isTiltEnable && enable}
+        tiltEnable={shouldEnableTile}
         disableTouch
         tiltAngleYInitial={
           !isTouchDevice && !hasCardCackContent ? 15 : undefined
@@ -452,7 +462,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
                   imageStyle={{
                     borderRadius: '10px',
                     maxHeight: imageMaxHeight,
-                    width: '100%',
+                    width: IS_SAFARI ? '' : '100%',
                     maxWidth: width,
                   }}
                   setImageHeight={false}

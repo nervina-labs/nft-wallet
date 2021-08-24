@@ -9,6 +9,7 @@ import classNames from 'classnames'
 import { VipSource } from '../../models/class-list'
 import { Link } from 'react-router-dom'
 import { RoutePath } from '../../routes'
+import PeopleSrc from '../../assets/img/people.png'
 
 const Container = styled.div`
   display: flex;
@@ -83,6 +84,7 @@ export interface CreatorProps {
   vipSource?: VipSource
   showAvatar?: boolean
   replace?: boolean
+  useImageFallBack?: boolean
 }
 
 export const Creator: React.FC<CreatorProps> = ({
@@ -101,6 +103,7 @@ export const Creator: React.FC<CreatorProps> = ({
   vipSource,
   showAvatar = true,
   replace = false,
+  useImageFallBack,
 }) => {
   const { t } = useTranslation('translations')
   const vt = useMemo(() => {
@@ -130,7 +133,9 @@ export const Creator: React.FC<CreatorProps> = ({
               width={24}
               height={24}
               variant="circle"
-              backup={<PeopleSvg />}
+              backup={
+                useImageFallBack ? <img src={PeopleSrc} /> : <PeopleSvg />
+              }
             />
           )}
         </span>
