@@ -6,7 +6,7 @@ import { Limited } from '../../components/Limited'
 import { Like } from '../../components/Like'
 import FallbackImg from '../../assets/img/card-fallback.png'
 import { ReactComponent as CardBackIcon } from '../../assets/svg/card-back.svg'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 const NftCardContainer = styled.div`
   --bg-color: #fff;
@@ -62,46 +62,47 @@ export const NftCard: React.FC<{
   uuid: string
   imgSize: number
 }> = ({ token, uuid, imgSize }) => {
+  const history = useHistory()
   return (
-    <NftCardContainer>
-      <Link to={`/nft/${uuid}`}>
-        <div className="img">
-          <LazyLoadImage
-            cover
-            src={token.bg_image_url}
-            width={imgSize}
-            height={imgSize}
-            backup={
-              <LazyLoadImage
-                skeletonStyle={{ borderRadius: '8px' }}
-                width={imgSize}
-                height={imgSize}
-                cover
-                src={FallbackImg}
-              />
-            }
+    <NftCardContainer
+      onClick={() => {
+        history.push(`/class/${token.uuid}`)
+      }}
+    >
+      <div className="img">
+        <LazyLoadImage
+          cover
+          src={token.bg_image_url}
+          width={imgSize}
+          height={imgSize}
+          backup={
+            <LazyLoadImage
+              skeletonStyle={{ borderRadius: '8px' }}
+              width={imgSize}
+              height={imgSize}
+              cover
+              src={FallbackImg}
+            />
+          }
+        />
+      </div>
+      {token.card_back_content_exist && <CardBackIcon className="card-back" />}
+      <div className="issuer">
+        <div className="nft-name">{token.name}</div>
+        <div className="nft-info">
+          <Limited
+            count={token.total}
+            bold={false}
+            banned={false}
+            color="#666"
+          />
+          <Like
+            count={String(token.class_likes)}
+            liked={token.class_liked}
+            uuid={uuid}
           />
         </div>
-        {token.card_back_content_exist && (
-          <CardBackIcon className="card-back" />
-        )}
-        <div className="issuer">
-          <div className="nft-name">{token.name}</div>
-          <div className="nft-info">
-            <Limited
-              count={token.total}
-              bold={false}
-              banned={false}
-              color="#666"
-            />
-            <Like
-              count={String(token.class_likes)}
-              liked={token.class_liked}
-              uuid={uuid}
-            />
-          </div>
-        </div>
-      </Link>
+      </div>
     </NftCardContainer>
   )
 }
