@@ -70,7 +70,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   constructor(address: string) {
     this.address = address
-    this.axios = axios.create({ baseURL: SERVER_URL })
+    this.axios = axios.create({
+      baseURL: SERVER_URL.replace('/explore', '/wallet'),
+    })
   }
 
   async getNFTs(page: number): Promise<AxiosResponse<NFT>> {
