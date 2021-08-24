@@ -130,3 +130,21 @@ export const formatCount = (count: number, lang: string): number | string => {
   }
   return count >= 1000 ? `${roundDown(count / 1000)}k` : count
 }
+
+export async function downloadImage(imageSrc: string): Promise<void> {
+  const headers = new Headers()
+  headers.append('Access-Control-Allow-Origin', location.href)
+  headers.append('Access-Control-Allow-Credentials', 'true')
+  const image = await fetch(imageSrc, {
+    headers,
+  })
+  const imageBlog = await image.blob()
+  const imageURL = URL.createObjectURL(imageBlog)
+
+  const link = document.createElement('a')
+  link.href = imageURL
+  link.download = 'qrcode.jpg'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
