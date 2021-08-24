@@ -224,7 +224,7 @@
     "apps": {
       "welcome": "Welcome to settle in and build the ecosystem together",
       "red-envelope": {
-        "title": "UniPass Red Pocket",
+        "title": "Red Pocket",
         "desc": "Send NFT red pockets to friends"
       },
       "ticket": {
@@ -245,7 +245,7 @@
       },
       "vip": {
         "title": "VIP Community",
-        "desc": "High-quality community that can only be accessed by holding a special NFT"
+        "desc": "Only be accessed by holding a special NFT"
       }
     },
     "resource": {

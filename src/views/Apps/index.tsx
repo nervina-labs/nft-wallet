@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { HiddenBar } from '../../components/HiddenBar'
@@ -13,13 +13,14 @@ import Exchange from '../../assets/svg/exchange.svg'
 import Vip from '../../assets/svg/vip.svg'
 import classNames from 'classnames'
 import { useWalletModel } from '../../hooks/useWallet'
-import { RED_ENVELOP_APP_URL, TICKET_APP_URL } from '../../constants'
+import { RED_ENVELOP_APP_URL, TICKET_APP_URL, WEAPP_ID } from '../../constants'
+import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 
 const Container = styled(MainContainer)`
   padding-top: 20px;
   max-width: 500px;
   min-height: calc(100% - 20px);
-  background: white;
+  background: #fafafa;
   .main {
     text-align: center;
     margin-top: 20px;
@@ -32,8 +33,7 @@ const Container = styled(MainContainer)`
 
 export const ItemContainer = styled.div`
   color: white;
-  height: 184px;
-  background: url(${(props: { bg: string }) => props.bg});
+  height: 194px;
   background-size: cover;
   background-color: white;
   width: 168px;
@@ -41,6 +41,12 @@ export const ItemContainer = styled.div`
   cursor: not-allowed;
   text-align: left;
   position: relative;
+  .icon {
+    margin-top: 18px;
+    margin-left: 10px;
+    max-width: 63px;
+    height: 53px;
+  }
   &.available {
     cursor: pointer;
   }
@@ -50,28 +56,33 @@ export const ItemContainer = styled.div`
   border-radius: 25px;
   margin-bottom: 12px;
   .title {
-    font-size: 15px;
-    color: white;
-    margin: 12px;
-    margin-top: 24px;
-    text-align: left;
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
   }
   .desc {
-    position: absolute;
+    margin: 6px 0;
     text-align: left;
     font-size: 12px;
-    line-height: 17px;
-    color: white;
-    margin: 0 12px;
+    color: black;
     word-break: break-all;
+  }
+  .content {
+    margin-top: 10px;
+    margin-left: 10px;
+    text-align: left;
+    border-radius: 15px;
+    width: 136px;
+    height: 71px;
+    padding: 10px 6px;
   }
   .wait {
     img {
       position: absolute;
-      bottom: 12px;
-      left: 12px;
-      width: 38px;
-      height: 35px;
+      top: 25px;
+      right: 10px;
+      width: 43px;
+      height: 39px;
     }
   }
 `
@@ -83,6 +94,7 @@ export interface ItemProps {
   onClick?: () => void
   available: boolean
   lang?: string
+  color?: string
 }
 
 export const Item: React.FC<ItemProps> = ({
@@ -92,20 +104,20 @@ export const Item: React.FC<ItemProps> = ({
   available,
   onClick,
   lang,
+  color,
 }) => {
   return (
-    <ItemContainer
-      bg={bg}
-      className={classNames({ available })}
-      onClick={onClick}
-    >
-      <div className="title">{title}</div>
-      <div className="desc">{desc}</div>
+    <ItemContainer className={classNames({ available })} onClick={onClick}>
+      <img src={bg} className="icon" />
       {available ? null : (
         <div className="wait">
           <img src={lang === 'en' ? PlzWaitEN : PlzWait} />
         </div>
       )}
+      <div className="content" style={{ backgroundColor: color }}>
+        <div className="title">{title}</div>
+        <div className="desc">{desc}</div>
+      </div>
     </ItemContainer>
   )
 }
@@ -113,6 +125,14 @@ export const Item: React.FC<ItemProps> = ({
 export const Apps: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const { pubkey, email } = useWalletModel()
+  const { initWechat, isWechatInited } = useWechatLaunchWeapp()
+  useEffect(() => {
+    initWechat().catch((error) => {
+      console.log(error)
+      console.log('no')
+    })
+  }, [])
+  console.log(isWechatInited)
   const getAppUrl = useCallback(
     (baseUrl: string): string => {
       const url = `${baseUrl}`
@@ -137,6 +157,7 @@ export const Apps: React.FC = () => {
       title: t('apps.red-envelope.title'),
       desc: t('apps.red-envelope.desc'),
       bg: Red as any,
+      color: '#FFF6F1',
       available: true,
       onClick: () => {
         location.href = getAppUrl(RED_ENVELOP_APP_URL)
@@ -147,12 +168,14 @@ export const Apps: React.FC = () => {
       desc: t('apps.ticket.desc'),
       bg: Ticket as any,
       available: true,
+      color: '#F7FFF0',
       onClick: () => {
         location.href = getAppUrl(TICKET_APP_URL)
       },
     },
     {
       title: t('apps.dao.title'),
+      color: '#F1FBFF',
       desc: t('apps.dao.desc'),
       bg: DAO as any,
       available: false,
@@ -160,6 +183,7 @@ export const Apps: React.FC = () => {
     {
       title: t('apps.exchange.title'),
       desc: t('apps.exchange.desc'),
+      color: '#F7F3FF',
       bg: Exchange as any,
       available: false,
     },
@@ -167,11 +191,13 @@ export const Apps: React.FC = () => {
       title: t('apps.exhibition.title'),
       desc: t('apps.exhibition.desc'),
       bg: Exhibition,
+      color: '#E5FFF6',
       available: false,
     },
     {
       title: t('apps.vip.title'),
       desc: t('apps.vip.desc'),
+      color: '#FFF9E8',
       bg: Vip as any,
       available: false,
     },
@@ -179,8 +205,22 @@ export const Apps: React.FC = () => {
   return (
     <Container>
       <HiddenBar alwaysShow />
+      <wx-open-launch-weapp
+        id="launch-btn"
+        username={WEAPP_ID}
+        path="pages/index/index.html"
+      >
+        <script
+          type="text/wxtag-template"
+          dangerouslySetInnerHTML={{
+            __html: `<button style="width: 200px; height: 45px; text-align: center; font-size: 17px; display: block; margin: 0 auto; padding: 8px 24px; border: none; border-radius: 4px; background-color: #07c160; color:#fff; as any">
+            打开小程序
+          </button>`,
+          }}
+        />
+      </wx-open-launch-weapp>
       <div className="main">
-        {data.map(({ title, desc, bg, onClick, available }) => {
+        {data.map(({ title, desc, bg, onClick, available, color }) => {
           return (
             <Item
               title={title}
@@ -190,6 +230,7 @@ export const Apps: React.FC = () => {
               onClick={onClick}
               available={available}
               lang={i18n.language}
+              color={color}
             />
           )
         })}
