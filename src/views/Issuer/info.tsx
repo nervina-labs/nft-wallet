@@ -162,11 +162,11 @@ const IssuerInfoContainer = styled.div`
 
   .bg {
     position: absolute;
-    bottom: -100%;
+    bottom: -200%;
     left: 0;
     z-index: -1;
     width: 100%;
-    height: 300%;
+    height: 500%;
     pointer-events: none;
     background-image: linear-gradient(30deg, #b7adff, #ebfdff, #ebfdff);
   }
