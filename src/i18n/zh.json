@@ -16,7 +16,11 @@
       },
       "share": {
         "copy": "点击复制链接并分享至社交媒体",
-        "close": "关闭"
+        "close": "关闭",
+        "cancel": "取消",
+        "download": "下载",
+        "more": "更多",
+        "title": "分享"
       },
       "limit": {
         "limit": "限量",

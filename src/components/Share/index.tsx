@@ -1,43 +1,129 @@
-import React, { useRef } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import Dialog from '@material-ui/core/Dialog'
-import { Button } from '../../components/Button'
-import { makeStyles } from '@material-ui/core'
-import { Copyzone } from '../../components/Copyzone'
+import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-download.svg'
+import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { useTranslation } from 'react-i18next'
-import SharePng from '../../assets/img/share.png'
+import classNames from 'classnames'
 
-const DialogContainer = styled(Dialog)`
-  img {
-    width: 60px;
+const DialogContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  .mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 0;
+    transition: 0.2s;
   }
-  .content {
-    margin: 0;
-    margin-top: 12px;
-    font-size: 14px;
-    line-height: 16px;
-    color: #333;
-    font-weight: bold;
-    word-break: break-all;
-    cursor: pointer;
+  z-index: 101;
+
+  &.hide {
+    pointer-events: none;
   }
-  .action {
-    margin-top: 30px;
-    margin-bottom: 20px;
+
+  &.hide .mask {
+    opacity: 0;
   }
 `
 
-const useStyles = makeStyles(() => ({
-  paper: {
-    minWidth: '280px',
-    maxWidth: '280px',
-    borderRadius: '20px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '12px 28px',
-  },
-}))
+const ShareContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  max-width: 500px;
+  left: 50%;
+  bottom: 0;
+  border-radius: 10px 10px 0 0;
+  --padding-bottom: calc(70px - env(safe-area-inset-bottom));
+  transform: translateX(-50%) translateY(var(--padding-bottom));
+  padding: 10px 15px 80px;
+  box-sizing: border-box;
+  user-select: none;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  z-index: 1;
+  transition: 0.2s;
+
+  &.hide {
+    transform: translateX(-50%) translateY(100%);
+  }
+`
+
+const HandleBar = styled.div`
+  :before {
+    content: ' ';
+    display: block;
+    width: 30px;
+    height: 5px;
+    background: #c4c4c4;
+    border-radius: 20px;
+    margin: 0 auto 6px;
+  }
+  width: 100%;
+  height: 36px;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  text-align: center;
+  color: #666666;
+  margin-bottom: 25px;
+`
+
+const IconGroupContainer = styled.div`
+  display: flex;
+`
+
+const IconContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  &:not(:last-child) {
+    margin-right: 15px;
+  }
+  width: 56px;
+  font-size: 13px;
+  line-height: 30px;
+  text-align: center;
+  color: #666666;
+  cursor: pointer;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+
+const Icon = styled.div`
+  width: 56px;
+  height: 56px;
+  background-color: #fff;
+  border-radius: 6px;
+  display: flex;
+
+  svg,
+  img {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    margin: auto;
+  }
+`
+
+const Button = styled.button`
+  width: 100%;
+  height: 56px;
+  line-height: 56px;
+  border: none;
+  background-color: #ffffff;
+  color: #333;
+  border-radius: 40px;
+  font-size: 18px;
+  margin-top: 25px;
+`
 
 export interface ShareProps {
   isDialogOpen: boolean
@@ -52,31 +138,49 @@ export const Share: React.FC<ShareProps> = ({
   displayText,
   copyText,
 }) => {
-  const style = useStyles()
   const { t } = useTranslation('translations')
-  const copyzoneRef = useRef<Copyzone>(null)
+
+  useEffect(() => {
+    if (isDialogOpen) {
+      document.body.classList.add('fixed')
+    } else {
+      document.body.classList.remove('fixed')
+    }
+    return () => {
+      document.body.classList.remove('fixed')
+    }
+  }, [isDialogOpen])
 
   return (
     <DialogContainer
-      open={isDialogOpen}
-      classes={{ paper: style.paper }}
-      onBackdropClick={closeDialog}
-      disableScrollLock={window.innerWidth >= 500}
+      className={classNames({
+        hide: !isDialogOpen,
+      })}
     >
-      <img src={SharePng} alt={t('common.share.copy')} />
-      <div className="content" onClick={() => copyzoneRef?.current?.onCopy?.()}>
-        {copyText}
-      </div>
-      <Copyzone
-        ref={copyzoneRef}
-        text={copyText}
-        displayText={t('common.share.copy')}
-      />
-      <div className="action">
-        <Button type="primary" onClick={closeDialog}>
-          {t('common.share.close')}
-        </Button>
-      </div>
+      <div className="mask" onClick={closeDialog} />
+      <ShareContainer
+        className={classNames({
+          hide: !isDialogOpen,
+        })}
+      >
+        <HandleBar>{t('common.share.title')}</HandleBar>
+        <IconGroupContainer>
+          <IconContainer>
+            <Icon>
+              <ShareDownloadIcon />
+            </Icon>
+            {t('common.share.download')}
+          </IconContainer>
+
+          <IconContainer>
+            <Icon>
+              <ShareMoreIcon />
+            </Icon>
+            {t('common.share.more')}
+          </IconContainer>
+        </IconGroupContainer>
+        <Button onClick={closeDialog}>{t('common.share.cancel')}</Button>
+      </ShareContainer>
     </DialogContainer>
   )
 }

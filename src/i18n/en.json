@@ -16,7 +16,11 @@
       },
       "share": {
         "copy": "Click to copy the link and share to social media",
-        "close": "Close"
+        "close": "Close",
+        "cancel": "Cancel",
+        "download": "Download",
+        "more": "More",
+        "title": "Share"
       },
       "limit": {
         "limit": "Limited",
