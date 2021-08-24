@@ -23,6 +23,7 @@ import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
 import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
+import { WxSignConfig } from '../models/wx'
 
 function randomid(length = 10): string {
   let result = ''
@@ -429,5 +430,11 @@ export class ServerWalletAPI implements NFTWalletAPI {
         },
       }
     )
+  }
+
+  async getWechatSignature(config: WxSignConfig) {
+    return await this.axios.get('/mini_program_signers', {
+      params: config,
+    })
   }
 }

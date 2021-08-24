@@ -124,3 +124,14 @@ export const formatCount = (count: number, lang: string): number | string => {
   }
   return count >= 1000 ? `${roundDown(count / 1000)}k` : count
 }
+
+export function randomString(length: number): string {
+  let result = ''
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+}
