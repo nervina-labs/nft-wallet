@@ -411,7 +411,10 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         adjustGyroscope
         ref={tiltRef}
         className={classNames({
-          disabled: (!enable && IS_IPHONE) || (isPlayerOpen && IS_MAC_SAFARI),
+          disabled:
+            (!enable && IS_IPHONE) ||
+            (isPlayerOpen && IS_MAC_SAFARI) ||
+            (flipped && !isTouchDevice),
         })}
         transitionSpeed={1000}
         gyroscope={enableGyroscope}
