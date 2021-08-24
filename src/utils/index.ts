@@ -117,32 +117,3 @@ export function getImagePreviewUrl(url?: string): string | undefined {
   }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
 }
-
-export function randomString(length: number): string {
-  let result = ''
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  const charactersLength = characters.length
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  return result
-}
-
-export async function downloadImage(imageSrc: string): Promise<void> {
-  const headers = new Headers()
-  headers.append('Access-Control-Allow-Origin', location.href)
-  headers.append('Access-Control-Allow-Credentials', 'true')
-  const image = await fetch(imageSrc, {
-    headers,
-  })
-  const imageBlog = await image.blob()
-  const imageURL = URL.createObjectURL(imageBlog)
-
-  const link = document.createElement('a')
-  link.href = imageURL
-  link.download = 'qrcode.jpg'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-}

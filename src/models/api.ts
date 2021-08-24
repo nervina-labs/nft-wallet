@@ -8,7 +8,6 @@ import { SpecialAssets } from './special-assets'
 import { Issuer } from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
-import { WxSignConfig } from './wx'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -106,8 +105,4 @@ export interface NFTWalletAPI {
   getClaimStatus: (uuid: string) => Promise<AxiosResponse<ClaimResult>>
 
   claim: (uuid: string) => Promise<AxiosResponse<void>>
-
-  getWechatSignature: (
-    config: WxSignConfig
-  ) => Promise<AxiosResponse<{ signature: string }>>
 }

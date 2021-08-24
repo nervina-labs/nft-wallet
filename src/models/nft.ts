@@ -42,7 +42,6 @@ export interface NFTDetail extends ClassLikes, VipInfo {
   description: string
   bg_image_url: string
   class_uuid: string
-  product_qr_code?: string
   issuer_info: {
     name: string
     uuid: string

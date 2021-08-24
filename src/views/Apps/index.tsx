@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { HiddenBar } from '../../components/HiddenBar'
@@ -10,53 +10,16 @@ import Red from '../../assets/svg/red-bucket.svg'
 import Ticket from '../../assets/svg/ticket.svg'
 import DAO from '../../assets/svg/dao.svg'
 import Exchange from '../../assets/svg/exchange.svg'
-import { ReactComponent as ShopSvg } from '../../assets/svg/shop.svg'
 import Vip from '../../assets/svg/vip.svg'
 import classNames from 'classnames'
 import { useWalletModel } from '../../hooks/useWallet'
-import { RED_ENVELOP_APP_URL, TICKET_APP_URL, WEAPP_ID } from '../../constants'
-import { useWechatLaunchWeapp } from '../../hooks/useWechat'
-import { RoutePath } from '../../routes'
-import { useHistory } from 'react-router-dom'
+import { RED_ENVELOP_APP_URL, TICKET_APP_URL } from '../../constants'
 
 const Container = styled(MainContainer)`
   padding-top: 20px;
   max-width: 500px;
   min-height: calc(100% - 20px);
-  background: #fafafa;
-  .shop {
-    width: 343px;
-    height: 96px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    background: #ffffff;
-    box-shadow: 0px 10px 20px rgba(227, 227, 227, 0.25);
-    border-radius: 25px;
-    .content {
-      cursor: pointer;
-      width: 231px;
-      margin-left: 10px;
-      margin-right: 10px;
-      padding: 10px;
-      background: #f8f7fb;
-      box-shadow: 0px 10px 20px rgba(227, 227, 227, 0.25);
-      border-radius: 15px;
-      .title {
-        font-size: 16px;
-        color: black;
-        font-weight: bold;
-      }
-      .desc {
-        margin: 6px 0;
-        text-align: left;
-        font-size: 12px;
-        color: black;
-        word-break: break-all;
-      }
-    }
-  }
+  background: white;
   .main {
     text-align: center;
     margin-top: 20px;
@@ -69,7 +32,8 @@ const Container = styled(MainContainer)`
 
 export const ItemContainer = styled.div`
   color: white;
-  height: 194px;
+  height: 184px;
+  background: url(${(props: { bg: string }) => props.bg});
   background-size: cover;
   background-color: white;
   width: 168px;
@@ -77,12 +41,6 @@ export const ItemContainer = styled.div`
   cursor: not-allowed;
   text-align: left;
   position: relative;
-  .icon {
-    margin-top: 18px;
-    margin-left: 10px;
-    max-width: 63px;
-    height: 53px;
-  }
   &.available {
     cursor: pointer;
   }
@@ -92,33 +50,28 @@ export const ItemContainer = styled.div`
   border-radius: 25px;
   margin-bottom: 12px;
   .title {
-    font-size: 16px;
-    color: black;
-    font-weight: bold;
+    font-size: 15px;
+    color: white;
+    margin: 12px;
+    margin-top: 24px;
+    text-align: left;
   }
   .desc {
-    margin: 6px 0;
+    position: absolute;
     text-align: left;
     font-size: 12px;
-    color: black;
+    line-height: 17px;
+    color: white;
+    margin: 0 12px;
     word-break: break-all;
-  }
-  .content {
-    margin-top: 10px;
-    margin-left: 10px;
-    text-align: left;
-    border-radius: 15px;
-    width: 136px;
-    height: 71px;
-    padding: 10px 6px;
   }
   .wait {
     img {
       position: absolute;
-      top: 25px;
-      right: 10px;
-      width: 43px;
-      height: 39px;
+      bottom: 12px;
+      left: 12px;
+      width: 38px;
+      height: 35px;
     }
   }
 `
@@ -130,7 +83,6 @@ export interface ItemProps {
   onClick?: () => void
   available: boolean
   lang?: string
-  color?: string
 }
 
 export const Item: React.FC<ItemProps> = ({
@@ -140,20 +92,20 @@ export const Item: React.FC<ItemProps> = ({
   available,
   onClick,
   lang,
-  color,
 }) => {
   return (
-    <ItemContainer className={classNames({ available })} onClick={onClick}>
-      <img src={bg} className="icon" />
+    <ItemContainer
+      bg={bg}
+      className={classNames({ available })}
+      onClick={onClick}
+    >
+      <div className="title">{title}</div>
+      <div className="desc">{desc}</div>
       {available ? null : (
         <div className="wait">
           <img src={lang === 'en' ? PlzWaitEN : PlzWait} />
         </div>
       )}
-      <div className="content" style={{ backgroundColor: color }}>
-        <div className="title">{title}</div>
-        <div className="desc">{desc}</div>
-      </div>
     </ItemContainer>
   )
 }
@@ -161,15 +113,6 @@ export const Item: React.FC<ItemProps> = ({
 export const Apps: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const { pubkey, email } = useWalletModel()
-  const history = useHistory()
-  const { initWechat, isWechatInited } = useWechatLaunchWeapp()
-  useEffect(() => {
-    initWechat().catch((error) => {
-      console.log(error)
-      console.log('no')
-    })
-  }, [])
-  console.log(isWechatInited)
   const getAppUrl = useCallback(
     (baseUrl: string): string => {
       const url = `${baseUrl}`
@@ -194,7 +137,6 @@ export const Apps: React.FC = () => {
       title: t('apps.red-envelope.title'),
       desc: t('apps.red-envelope.desc'),
       bg: Red as any,
-      color: '#FFF6F1',
       available: true,
       onClick: () => {
         location.href = getAppUrl(RED_ENVELOP_APP_URL)
@@ -205,14 +147,12 @@ export const Apps: React.FC = () => {
       desc: t('apps.ticket.desc'),
       bg: Ticket as any,
       available: true,
-      color: '#F7FFF0',
       onClick: () => {
         location.href = getAppUrl(TICKET_APP_URL)
       },
     },
     {
       title: t('apps.dao.title'),
-      color: '#F1FBFF',
       desc: t('apps.dao.desc'),
       bg: DAO as any,
       available: false,
@@ -220,7 +160,6 @@ export const Apps: React.FC = () => {
     {
       title: t('apps.exchange.title'),
       desc: t('apps.exchange.desc'),
-      color: '#F7F3FF',
       bg: Exchange as any,
       available: false,
     },
@@ -228,42 +167,20 @@ export const Apps: React.FC = () => {
       title: t('apps.exhibition.title'),
       desc: t('apps.exhibition.desc'),
       bg: Exhibition,
-      color: '#E5FFF6',
       available: false,
     },
     {
       title: t('apps.vip.title'),
       desc: t('apps.vip.desc'),
-      color: '#FFF9E8',
       bg: Vip as any,
       available: false,
     },
   ]
-  const html = `
-    <wx-open-launch-weapp
-    id="launch-btn"
-    username="${WEAPP_ID}"
-    path="pages/index/index.html"
-  >
-    <script type="text/wxtag-template">
-      <style>.btn { padding: 12px }</style>
-      <button class="btn">打开小程序</button>
-    </script>
-  </wx-open-launch-weapp>
-  `
   return (
     <Container>
       <HiddenBar alwaysShow />
-      <div className="shop">
-        <ShopSvg />
-        <div className="content" onClick={() => history.push(RoutePath.Shop)}>
-          <div className="title">{t('apps.shop.title')}</div>
-          <div className="desc">{t('apps.shop.desc')}</div>
-        </div>
-      </div>
-      <div dangerouslySetInnerHTML={{ __html: html }}></div>
       <div className="main">
-        {data.map(({ title, desc, bg, onClick, available, color }) => {
+        {data.map(({ title, desc, bg, onClick, available }) => {
           return (
             <Item
               title={title}
@@ -273,7 +190,6 @@ export const Apps: React.FC = () => {
               onClick={onClick}
               available={available}
               lang={i18n.language}
-              color={color}
             />
           )
         })}
