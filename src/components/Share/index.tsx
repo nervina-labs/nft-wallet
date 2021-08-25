@@ -172,12 +172,22 @@ export const Share: React.FC<ShareProps> = ({
             {t('common.share.download')}
           </IconContainer>
 
-          <IconContainer>
-            <Icon>
-              <ShareMoreIcon />
-            </Icon>
-            {t('common.share.more')}
-          </IconContainer>
+          {navigator?.share !== undefined ? (
+            <IconContainer
+              onClick={async () => {
+                await navigator.share({
+                  title: document.title,
+                  text: 'Hello World',
+                  url: 'https://developer.mozilla.org',
+                })
+              }}
+            >
+              <Icon>
+                <ShareMoreIcon />
+              </Icon>
+              {t('common.share.more')}
+            </IconContainer>
+          ) : null}
         </IconGroupContainer>
         <Button onClick={closeDialog}>{t('common.share.cancel')}</Button>
       </ShareContainer>
