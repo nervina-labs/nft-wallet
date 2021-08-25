@@ -39,6 +39,11 @@ export const verifyEthContractAddress = async (
   }
 }
 
+const DASReg: RegExp = /^((\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|[0-9a-zA-Z])+\.bit$/
+export const verifyDasAddress = (addr: string): boolean => {
+  return DASReg.test(addr)
+}
+
 export function truncateMiddle(
   str: string,
   takeLength = 6,
@@ -86,13 +91,14 @@ export function throttle(fn: () => void, wait: number): () => void {
 export function debounce<Params extends any[]>(
   func: (...args: Params) => any,
   timeout: number
-): (...args: Params) => void {
+): (...args: Params) => NodeJS.Timeout {
   let timer: NodeJS.Timeout
   return (...args: Params) => {
     clearTimeout(timer)
     timer = setTimeout(() => {
       func(...args)
     }, timeout)
+    return timer
   }
 }
 

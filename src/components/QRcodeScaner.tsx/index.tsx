@@ -6,7 +6,11 @@ import { TFunction } from 'react-i18next'
 import styled from 'styled-components'
 import { Drawer } from '@material-ui/core'
 import { History } from 'history'
-import { verifyCkbAddress, verifyEthAddress } from '../../utils'
+import {
+  verifyCkbAddress,
+  verifyEthAddress,
+  verifyDasAddress,
+} from '../../utils'
 import Backpng from '../../assets/img/back-circle.png'
 import ScanError from '../../assets/img/scan-error.png'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
@@ -155,7 +159,11 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
       const text = result.getText().replace(/^ethereum:/, '')
       onDecode?.(text)
       this.setState({ isScaning: false })
-      if (verifyCkbAddress(text) || verifyEthAddress(text)) {
+      if (
+        verifyCkbAddress(text) ||
+        verifyEthAddress(text) ||
+        verifyDasAddress(text)
+      ) {
         this.setState({ nonAddressResult: '' })
         onScanCkbAddress(text)
       } else {
