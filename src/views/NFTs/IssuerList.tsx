@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import React, { useCallback, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components'

@@ -390,6 +390,12 @@ export const Transfer: React.FC = () => {
       ) {
         return [AlertLevel.error, t('transfer.error.ckb')]
       }
+      if (
+        (addr.startsWith('ckt') || addr.startsWith('ckb')) &&
+        addr.length !== 95
+      ) {
+        return [AlertLevel.info, t('transfer.error.short-address')]
+      }
       if (type === AddressVerifiedType.eth) {
         return [AlertLevel.info, t('transfer.error.receive-eth')]
       }
@@ -407,7 +413,8 @@ export const Transfer: React.FC = () => {
       finalUsedAddressType === AddressVerifiedType.ckb
     const showAlert =
       (!valid && finalUsedAddress !== '') ||
-      (finalUsedAddressType === AddressVerifiedType.eth && valid)
+      (finalUsedAddressType === AddressVerifiedType.eth && valid) ||
+      (valid && finalUsedAddress.length !== 95)
     let level = ''
     let alertMsg = ''
     if (showAlert) {
