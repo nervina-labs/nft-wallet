@@ -82,7 +82,10 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getNFTDetail(uuid: string): Promise<AxiosResponse<NFTDetail>> {
+  async getNFTDetail(
+    uuid: string,
+    auth: Auth
+  ): Promise<AxiosResponse<NFTDetail>> {
     const params: Record<string, unknown> = {
       include_submitting: true,
     }
@@ -91,6 +94,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     }
     return await this.axios.get(`/tokens/${uuid}`, {
       params,
+      headers: {
+        auth: JSON.stringify(auth),
+      },
     })
   }
 
@@ -110,7 +116,15 @@ export class ServerWalletAPI implements NFTWalletAPI {
     auth: Auth
   ): Promise<AxiosResponse<{ liked: boolean }>> {
     const url = `/token_classes/${uuid}/toggle_likes/${this.address}`
-    return await this.axios.put(url, { auth })
+    return await this.axios.put(
+      url,
+      {
+        auth,
+      },
+      {
+        headers: { auth: JSON.stringify(auth) },
+      }
+    )
   }
 
   async submitAddress(
@@ -123,6 +137,11 @@ export class ServerWalletAPI implements NFTWalletAPI {
       {
         auth,
         address: this.address,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
       }
     )
   }
@@ -185,13 +204,21 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getTokenClass(uuid: string): Promise<AxiosResponse<TokenClass>> {
+  async getTokenClass(
+    uuid: string,
+    auth?: Auth
+  ): Promise<AxiosResponse<TokenClass>> {
     const params: Record<string, string | number> = {}
     if (this.address) {
       params.address = this.address
     }
+    const headers: Record<string, any> = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
     return await this.axios.get(`/token_classes/${uuid}`, {
       params,
+      headers,
     })
   }
 
@@ -226,8 +253,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (auth) {
       await writeFormData(auth as any, 'auth', fd)
     }
+    const headers: Record<string, any> = {
+      'Content-Type': 'multipart/form-data',
+    }
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
     const { data } = await this.axios.put(`/users/${this.address}`, fd, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers,
     })
 
     return data
@@ -278,7 +311,11 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getRecommendIssuers() {
-    return await this.axios.get('/recommended_issuers')
+    return await this.axios.get('/recommended_issuers', {
+      params: {
+        address: this.address,
+      },
+    })
   }
 
   async getRecommendClasses() {
@@ -306,5 +343,63 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async getNotifications() {
     return await this.axios.get('/notifications')
+  }
+
+  async getClaimStatus(uuid: string) {
+    return await this.axios.get(`/token_claim_codes/${uuid}`)
+  }
+
+  async claim(uuid: string) {
+    return await this.axios.post('/token_claim_codes', {
+      to_address: this.address,
+      code: uuid,
+    })
+  }
+
+  async toggleFollow(uuid: string, auth: Auth) {
+    return await this.axios.put(
+      `/issuers/${uuid}/toggle_follows/${this.address}`,
+      {
+        auth,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+      }
+    )
+  }
+
+  async getFollowIssuers(auth: Auth, page: number) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    return await this.axios.get(`/followed_issuers/${this.address}`, {
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+      params,
+    })
+  }
+
+  async getFollowTokenClasses(
+    auth: Auth,
+    page: number,
+    sortType: ClassSortType
+  ) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+    }
+    if (sortType === ClassSortType.Likes) {
+      params.sort = 'likes'
+    }
+    return await this.axios.get(`/followed_token_classes/${this.address}`, {
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+      params,
+    })
   }
 }

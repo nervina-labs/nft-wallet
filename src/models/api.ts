@@ -1,12 +1,13 @@
 import { AxiosResponse } from 'axios'
 import { NFT, NFTDetail } from './nft'
-import { ClassList, Tag, TokenClass } from './class-list'
+import { ClassList, FollowClassList, Tag, TokenClass } from './class-list'
 import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
-import { Issuer } from './issuer'
+import { FollowerResponse, Issuer, IssuersResponse } from './issuer'
 import { Notifications } from './banner'
+import { ClaimResult } from './claim'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -31,7 +32,7 @@ interface SpecialCategories {
 export interface NFTWalletAPI {
   getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
 
-  getNFTDetail: (uuid: string) => Promise<AxiosResponse<NFTDetail>>
+  getNFTDetail: (uuid: string, auth: Auth) => Promise<AxiosResponse<NFTDetail>>
 
   getTransactions: (page: number) => Promise<AxiosResponse<Transaction>>
 
@@ -70,7 +71,10 @@ export interface NFTWalletAPI {
 
   getProfile: () => Promise<UserResponse>
 
-  getTokenClass: (uuid: string) => Promise<AxiosResponse<TokenClass>>
+  getTokenClass: (
+    uuid: string,
+    auth?: Auth
+  ) => Promise<AxiosResponse<TokenClass>>
 
   getTags: () => Promise<AxiosResponse<{ tags: Tag[] }>>
 
@@ -100,4 +104,24 @@ export interface NFTWalletAPI {
   getCollectionDetail: (uuid: string) => Promise<AxiosResponse<SpecialAssets>>
 
   getNotifications: () => Promise<AxiosResponse<Notifications>>
+
+  getClaimStatus: (uuid: string) => Promise<AxiosResponse<ClaimResult>>
+
+  claim: (uuid: string) => Promise<AxiosResponse<void>>
+
+  toggleFollow: (
+    uuid: string,
+    auth: Auth
+  ) => Promise<AxiosResponse<FollowerResponse>>
+
+  getFollowIssuers: (
+    auth: Auth,
+    page: number
+  ) => Promise<AxiosResponse<IssuersResponse>>
+
+  getFollowTokenClasses: (
+    auth: Auth,
+    page: number,
+    sortType: ClassSortType
+  ) => Promise<AxiosResponse<FollowClassList>>
 }

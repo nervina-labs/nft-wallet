@@ -123,3 +123,10 @@ export function getImagePreviewUrl(url?: string): string | undefined {
   }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
 }
+
+export const formatCount = (count: number, lang: string): number | string => {
+  if (lang === 'zh') {
+    return count >= 10000 ? `${roundDown(count / 10000)} 万` : count
+  }
+  return count >= 1000 ? `${roundDown(count / 1000)}k` : count
+}

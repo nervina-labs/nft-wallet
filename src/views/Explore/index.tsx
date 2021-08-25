@@ -22,6 +22,8 @@ import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
 import { Home } from './home'
 import { Card } from './card'
+import { useProfileModel } from '../../hooks/useProfile'
+import { Empty } from '../NFTs/empty'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -92,6 +94,10 @@ const Container = styled(MainContainer)`
         justify-content: center;
         align-items: center;
         margin-right: 32px;
+
+        &.hide {
+          display: none;
+        }
 
         &:last-child {
           margin-right: 0;
@@ -222,6 +228,7 @@ const Header: React.FC<{
             key={i}
             className={classNames('filter', {
               active: sortType === item.value,
+              hide: item.hide,
             })}
             onClick={item.fn}
           >
@@ -261,6 +268,49 @@ const Header: React.FC<{
       </div>
       <FixedHeader />
     </>
+  )
+}
+
+const LoginContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 150px;
+  .desc {
+    font-size: 14px;
+    line-height: 20px;
+    color: #a7a7a7;
+    margin-bottom: 16px;
+  }
+
+  button {
+    margin-top: 34px;
+    border: 1px solid #000000;
+    border-radius: 44px;
+    width: 200px;
+    background-color: transparent;
+    height: 46px;
+    font-size: 18px;
+    line-height: 25px;
+    color: #a7a7a7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`
+
+const Login: React.FC = () => {
+  const history = useHistory()
+  const [t] = useTranslation('translations')
+  return (
+    <LoginContainer>
+      <span className="desc">{t('follow.login.desc-1')}</span>
+      <span className="desc">{t('follow.login.desc-2')}</span>
+      <button onClick={() => history.push(RoutePath.Login)}>
+        {t('follow.login.login')}
+      </button>
+    </LoginContainer>
   )
 }
 
@@ -309,6 +359,7 @@ export const Explore: React.FC = () => {
       }) ?? []
     return [
       { name: t('explore.home'), uuid: null, routeName: null },
+      { name: t('follow.follow'), uuid: 'follow', routeName: 'follow' },
       { name: t('explore.all'), uuid: 'all', routeName: 'all' },
     ]
       .concat(tags)
@@ -330,6 +381,7 @@ export const Explore: React.FC = () => {
   }, [allTags, currentTag])
 
   const { api } = useWalletModel()
+  const { getAuth, isAuthenticated } = useProfileModel()
   const {
     data,
     hasNextPage,
@@ -338,10 +390,27 @@ export const Explore: React.FC = () => {
     status,
   } = useInfiniteQuery(
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    [Query.Explore + currentTag + sortType, currentTagId, sortType],
+    [
+      Query.Explore + currentTag + sortType,
+      currentTagId,
+      sortType,
+      isAuthenticated,
+    ],
     async ({ pageParam = 1 }) => {
+      if (currentTag === 'follow') {
+        const auth = await getAuth()
+        const { data } = await api.getFollowTokenClasses(
+          auth,
+          pageParam,
+          sortType
+        )
+        return {
+          class_list: data.token_classes,
+          meta: data.meta,
+        }
+      }
       // eslint-disable-next-line
-      const {data} = await api.getClassListByTagId(currentTagId!, pageParam, sortType)
+      const { data } = await api.getClassListByTagId(currentTagId!, pageParam, sortType)
       return data
     },
     {
@@ -359,7 +428,10 @@ export const Explore: React.FC = () => {
       },
       enabled:
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        !!(matchExplore?.isExact || tagsResult != null) && currentTagId != null,
+        !!(matchExplore?.isExact || tagsResult != null) &&
+        currentTagId != null &&
+        ((currentTag === 'follow' && isAuthenticated) ||
+          currentTag !== 'follow'),
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
@@ -449,7 +521,9 @@ export const Explore: React.FC = () => {
           />
           <section className="content">
             {isRefetching ? <Loading /> : null}
-            {data === undefined && status === 'loading' ? (
+            {currentTag === 'follow' && !isAuthenticated ? (
+              <Login />
+            ) : data === undefined && status === 'loading' ? (
               <Loading />
             ) : (
               <InfiniteScroll
@@ -478,6 +552,9 @@ export const Explore: React.FC = () => {
                     return <Card token={token} key={`${i}`} />
                   })}
                 </Masonry>
+                {status === 'success' && dataLength === 0 ? (
+                  <Empty showExplore={false} />
+                ) : null}
               </InfiniteScroll>
             )}
           </section>

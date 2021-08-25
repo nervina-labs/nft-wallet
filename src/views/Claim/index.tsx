@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useLayoutEffect } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { ActionDialog } from '../../components/ActionDialog'
@@ -6,10 +6,10 @@ import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
 import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
+import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-success.svg'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN } from '../../constants'
-import { useProfileModel } from '../../hooks/useProfile'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { CircularProgress } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
@@ -21,6 +21,7 @@ import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import { UnipassConfig } from '../../utils'
 import { Query } from '../../models'
 import { useQuery } from 'react-query'
+import classNames from 'classnames'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -62,10 +63,29 @@ const Container = styled(MainContainer)`
     border-top-right-radius: 35px;
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
     min-height: 300px;
+    .input {
+      background: #f6f6f6;
+      border: 1px solid #d1d1d1;
+      box-sizing: border-box;
+      border-radius: 20px;
+      margin: 12px 0;
+      height: 46px;
+      text-align: center;
+      min-width: 295px;
+      .error {
+        border: 1px solid #ff0000;
+      }
+      &:focus {
+        outline: none;
+      }
+    }
     .desc {
       font-size: 18px;
       line-height: 25px;
       color: #fe7a0c;
+      &.error {
+        color: #ff0000;
+      }
     }
     p {
       font-size: 14px;
@@ -120,9 +140,10 @@ const Container = styled(MainContainer)`
 `
 
 enum SubmitStatus {
-  None = 'None',
+  Unlogin = 'Unlogin',
   Success = 'Success',
-  Duplicate = 'Duplicate',
+  Claiming = 'Claiming',
+  Claimed = 'Claimed',
 }
 
 enum ErrorMsg {
@@ -131,27 +152,21 @@ enum ErrorMsg {
   SubmitFail = 'submit-fail',
 }
 
-export const AddressCollector: React.FC = () => {
+export const Claim: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState(SubmitStatus.None)
   const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const { t, i18n } = useTranslation('translations')
   const errorMsg = useMemo(() => {
     return t(`addresses.errors.${errorStatus}`)
   }, [errorStatus, t])
-  const {
-    login,
-    api,
-    walletType,
-    isLogined,
-    address,
-    provider,
-  } = useWalletModel()
-  const { getAuth, isAuthenticated } = useProfileModel()
+  const { login, api, walletType, isLogined } = useWalletModel()
   const { id } = useParams<{ id: string }>()
   const history = useHistory()
+  const [submitStatus, setSubmitStatus] = useState(
+    !isLogined ? SubmitStatus.Unlogin : SubmitStatus.Claiming
+  )
 
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
@@ -167,64 +182,13 @@ export const AddressCollector: React.FC = () => {
     }
   }
 
-  const [isNotFound, setIsNotFound] = useState(false)
-
-  const submit = useCallback(
-    async (walletType: WalletType): Promise<void> => {
-      setLoading(true, walletType)
-      let auth
-      try {
-        if (WalletType.Unipass === walletType && !isAuthenticated) {
-          UnipassConfig.setRedirectUri(`${RoutePath.AddressCollector}/${id}`)
-        }
-        auth = await getAuth()
-        if (!auth.address) {
-          setLoading(false, walletType)
-          return
-        }
-      } catch (error) {
-        if (walletType === WalletType.Metamask) {
-          setErrorMsg(ErrorMsg.Imtoken)
-          setIsErrorDialogOpen(true)
-        }
-      }
-      if (WalletType.Unipass === walletType && !isAuthenticated) {
-        setLoading(false, walletType)
-        return
-      }
-      if (auth == null) {
-        return
-      }
-      try {
-        await api.submitAddress(id, auth)
-        setSubmitStatus(SubmitStatus.Success)
-      } catch (error) {
-        const data = error?.response?.data
-        if (data?.status === 404) {
-          setIsNotFound(true)
-          return
-        }
-        if (data?.code === 1091) {
-          setSubmitStatus(SubmitStatus.Duplicate)
-        } else {
-          setErrorMsg(ErrorMsg.SubmitFail)
-          setIsErrorDialogOpen(true)
-        }
-      }
-      setLoading(false, walletType)
-    },
-    [api, id, getAuth, isAuthenticated]
-  )
-
   const loginBtnOnClick = useCallback(
     async (targetType = WalletType.Unipass) => {
       setLoading(true, targetType)
-      if (walletType === targetType && isLogined) {
-        await submit(targetType)
-        return
-      }
       if (WalletType.Unipass === targetType) {
-        UnipassConfig.setRedirectUri(`${RoutePath.AddressCollector}/${id}`)
+        UnipassConfig.setRedirectUri(
+          id ? `${RoutePath.Claim}/${id}` : RoutePath.Claim
+        )
       }
       try {
         if (targetType === WalletType.Metamask) {
@@ -237,6 +201,9 @@ export const AddressCollector: React.FC = () => {
           }
         }
         await login(targetType)
+        if (targetType === WalletType.Metamask) {
+          setSubmitStatus(SubmitStatus.Claiming)
+        }
         setLoading(false, targetType)
       } catch (error) {
         console.log(error)
@@ -252,10 +219,10 @@ export const AddressCollector: React.FC = () => {
     [login, walletType, id, isLogined]
   )
 
-  const { data: isAddressPackageExist, isError } = useQuery(
-    [Query.DetectAddress, id, api],
+  const { error: claimCodeError } = useQuery(
+    [Query.DetectClaim, id, api],
     async () => {
-      const { data } = await api.detectAddress(id)
+      const { data } = await api.getClaimStatus(id)
       return data
     },
     {
@@ -263,50 +230,60 @@ export const AddressCollector: React.FC = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
+      retry: false,
     }
   )
 
-  useLayoutEffect(() => {
-    if (isLogined && walletType && address && isAddressPackageExist) {
-      if (
-        walletType === WalletType.Metamask &&
-        provider?.address?.addressString
-      ) {
-        submit(walletType).catch(Boolean)
+  const [isClaimError, setIsClaimError] = useState(false)
+  const [isClaiming, setIsClaiming] = useState(false)
+  const claim = useCallback(
+    async (code: string) => {
+      setIsClaiming(true)
+      try {
+        await api.claim(code)
+        setSubmitStatus(SubmitStatus.Success)
+      } catch (error) {
+        const errorCode = error?.response?.data.code
+        if (errorCode === 1022) {
+          setSubmitStatus(SubmitStatus.Claimed)
+        } else {
+          setIsClaimError(true)
+        }
+      } finally {
+        setIsClaiming(false)
       }
-      if (walletType === WalletType.Unipass) {
-        submit(walletType).catch(Boolean)
-      }
+    },
+    [api]
+  )
+
+  useQuery(
+    [Query.Claim, claim, id, claimCodeError],
+    async () => {
+      await claim(id)
+    },
+    {
+      enabled: id != null && claimCodeError === null && isLogined,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    walletType,
-    isLogined,
-    address,
-    provider?.address?.addressString,
-    isAddressPackageExist,
-  ])
+  )
 
   const imgs = {
-    [SubmitStatus.None]: <AddressesSvg />,
-    [SubmitStatus.Success]: <AddrSuccess />,
-    [SubmitStatus.Duplicate]: <AddrDup />,
+    [SubmitStatus.Unlogin]: <AddressesSvg />,
+    [SubmitStatus.Claiming]: <AddrSuccess />,
+    [SubmitStatus.Claimed]: <AddrDup />,
+    [SubmitStatus.Success]: <ClaimSuccessSvg />,
   }
 
-  const desc = useMemo(() => {
-    return {
-      [SubmitStatus.None]: t('addresses.submit'),
-      [SubmitStatus.Success]: t('addresses.submited'),
-      [SubmitStatus.Duplicate]: t('addresses.duplicate'),
-    }
-  }, [t])
+  const [code, setCode] = useState(id ?? '')
 
   const actions = useMemo(() => {
-    if (SubmitStatus.None === submitStatus) {
+    if (SubmitStatus.Unlogin === submitStatus) {
       return (
         <>
-          <p className="desc">{desc[submitStatus]}</p>
-          <p>{t('addresses.select')}</p>
+          <p className="desc">{t('claim.tips')}</p>
+          <p>{t('claim.login')}</p>
           <Button
             className="connect recommend"
             disabled={isUnipassLogining || isMetamaskLoging}
@@ -351,17 +328,59 @@ export const AddressCollector: React.FC = () => {
         </>
       )
     }
+    if (submitStatus === SubmitStatus.Claiming) {
+      return (
+        <>
+          <p className={classNames('desc', { error: isClaimError })}>
+            {isClaimError ? t('claim.error') : t('claim.last-step')}
+          </p>
+          <input
+            className={classNames('input', { error: isClaimError })}
+            placeholder={t('claim.placeholder')}
+            onChange={(e) => {
+              setCode(e.target.value)
+              setIsClaimError(false)
+            }}
+            value={code}
+          />
+          <Button
+            className="connect recommend"
+            onClick={async () => await claim(code)}
+            disabled={isClaiming || isClaimError}
+          >
+            {t('claim.confirm')}&nbsp;
+            {isClaiming ? (
+              <CircularProgress className="loading" size="1em" />
+            ) : null}
+          </Button>
+        </>
+      )
+    }
     return (
       <>
-        <p className="desc">{desc[submitStatus]}</p>
-        <p>{t('addresses.continue')}</p>
+        <p className="desc">
+          {submitStatus === SubmitStatus.Success
+            ? t('claim.success')
+            : t('claim.claimed')}
+        </p>
+        {submitStatus === SubmitStatus.Success ? (
+          <p>{t('claim.continue')}</p>
+        ) : null}
         <Button
           className="connect recommend"
           onClick={() => {
-            history.push(RoutePath.Explore)
+            history.push(
+              submitStatus === SubmitStatus.Success
+                ? RoutePath.NFTs
+                : RoutePath.Explore
+            )
           }}
         >
-          {t('addresses.explore')}
+          {t(
+            `claim.${
+              submitStatus === SubmitStatus.Success ? 'go-home' : 'go-explore'
+            }`
+          )}
         </Button>
       </>
     )
@@ -373,10 +392,13 @@ export const AddressCollector: React.FC = () => {
     isMetamaskLoging,
     loginBtnOnClick,
     i18n,
-    desc,
+    claim,
+    code,
+    isClaiming,
+    isClaimError,
   ])
 
-  if (isNotFound || isAddressPackageExist === false || isError) {
+  if (claimCodeError) {
     return <Redirect to={RoutePath.NotFound} />
   }
 

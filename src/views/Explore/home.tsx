@@ -60,7 +60,7 @@ export const Home: React.FC = () => {
     }
   )
 
-  const { data: issuers, isLoading: isIssuerLoading } = useQuery(
+  const { data: issuers, isLoading: isIssuerLoading, refetch } = useQuery(
     [Query.Issuers, api],
     async () => {
       const { data } = await api.getRecommendIssuers()
@@ -172,7 +172,9 @@ export const Home: React.FC = () => {
           </>
         ) : (
           issuers?.map((c) => {
-            return <RecommendIssuser issuer={c} key={c.uuid} />
+            return (
+              <RecommendIssuser issuer={c} key={c.uuid} afterToggle={refetch} />
+            )
           })
         )}
       </div>
