@@ -178,7 +178,10 @@ export const Transfer: React.FC = () => {
 
   const textareaOnChange = useCallback(
     async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const val = e.target.value
+      let val = e.target.value
+      if (verifyDasAddress(val)) {
+        val = val.toLowerCase()
+      }
       setCkbAddress(val)
     },
     [setCkbAddress]
