@@ -163,13 +163,23 @@ const IssuerInfoContainer = styled.div`
 
   .bg {
     position: absolute;
-    bottom: -200%;
+    bottom: 0;
     left: 0;
     z-index: -1;
     width: 100%;
-    height: 500%;
+    height: 200%;
     pointer-events: none;
-    background-image: linear-gradient(30deg, #b7adff, #ebfdff, #ebfdff);
+    overflow: hidden;
+
+    &:before {
+      content: ' ';
+      position: absolute;
+      bottom: -50%;
+      left: 0;
+      width: 100%;
+      height: 200%;
+      background-image: linear-gradient(30deg, #b7adff, #ebfdff, #ebfdff);
+    }
   }
 `
 
