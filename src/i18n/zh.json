@@ -72,15 +72,16 @@
         "qrcode": "二维码扫描",
         "result": "扫描结果",
         "detected": "已识别到的二维码内容",
-        "error": "请扫描正确的 CKB 或以太坊地址二维码",
+        "error": "请扫描正确的 CKB 地址/以太坊地址/DAS 账户",
         "rescan": "重新扫描"
       },
       "error": {
         "eth": "请输入正确的以太坊地址",
         "ckb": "请输入正确的 CKB 地址",
         "self": "无法转让秘宝给自己",
+        "das": "请输入 DAS 地址并选择一个解析结果",
         "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「秘宝账户」应用，方可查看收到的秘宝",
-        "common": "请输入正确的 CKB 地址或以太坊地址",
+        "common": "请输入正确的 CKB 地址/以太坊地址/DAS 账户",
         "sign-fail": "签名失败，请重新签名",
         "tranfer-fail": "发送失败，请检查当前网络情况，重新发送",
         "no-camera": "没有找到摄像头",
@@ -88,9 +89,15 @@
         "camera-auth": "没有摄像头权限，请刷新页面重新授权",
         "ios-webkit": "请升级操作系统至 iOS 14.3+，或使用 Safari 浏览器进行扫码"
       },
+      "das": {
+        "not-register": "当前 DAS 还未注册",
+        "empty": "当前 DAS 账户下未检测到可接收秘宝的地址",
+        "single-result": "解析结果",
+        "multi-result": "存在多个解析结果，请选择"
+      },
       "transfer": "转让",
       "address": "接收方地址",
-      "placeholder": "请输入 CKB 地址或以太坊地址",
+      "placeholder": "CKB 地址/以太坊地址/DAS 账户",
       "check": "请仔细检查输入的地址，",
       "once-transfer": "一旦转让，将无法撤回",
       "submitted": "已提交转让交易",
