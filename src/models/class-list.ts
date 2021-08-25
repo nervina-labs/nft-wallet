@@ -1,6 +1,5 @@
 import { Follower } from './issuer'
-import { ListMeta, NftType } from './nft'
-
+import { ListMeta, NftType, CardBack } from './nft'
 export interface Tag {
   uuid: string
   name: string
@@ -27,7 +26,7 @@ export interface ClassLikes {
   class_liked: boolean
 }
 
-export interface TokenClass extends VipInfo, ClassLikes {
+export interface TokenClass extends VipInfo, ClassLikes, CardBack {
   bg_image_url: string
   name: string
   description: string
@@ -35,7 +34,6 @@ export interface TokenClass extends VipInfo, ClassLikes {
   is_issuer_banned: boolean
   is_class_banned: boolean
   uuid: string
-  product_qr_code?: string
   issuer_info?: {
     name: string
     avatar_url: string

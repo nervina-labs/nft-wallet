@@ -81,6 +81,8 @@ export const NFTs: React.FC = () => {
               n_token_id: 0,
               verified_info: c.verified_info,
               renderer_type: c.renderer_type,
+              card_back_content_exist: c.card_back_content_exist,
+              card_back_content: c.card_back_content,
             }
             return token
           }),

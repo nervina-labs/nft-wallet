@@ -71,15 +71,16 @@
         "qrcode": "Scan QR code",
         "result": "Scan result",
         "detected": "The content that was recognized",
-        "error": "Please scan the correct CKB or Ethereum address",
+        "error": "Please scan the correct CKB address/ETH address/DAS Account",
         "rescan": "Rescan"
       },
       "error": {
         "eth": "Please enter the correct Ethereum address",
         "ckb": "Please enter the correct CKB address",
         "self": "Unable to transfer NFT to yourself",
+        "das": "Please enter DAS and select a result",
         "receive-eth": "This address is an Ethereum address, please remind the receiver to open NFT Account with Ethereum wallet to view the NFT received",
-        "common": "Please enter the correct Ethereum address",
+        "common": "Please enter the correct CKB address/ETH address/DAS Account",
         "sign-fail": "Transaction rejected",
         "tranfer-fail": "Fail to send transaction, please check network conditions and resend",
         "no-camera": "No camera found",
@@ -87,9 +88,15 @@
         "camera-auth": "No camera permission, please refresh the page to re-authorize",
         "ios-webkit": "Please upgrade your operating system to iOS 14.3+, or use Safari to scan QR code"
       },
+      "das": {
+        "not-register": "This DAS is not registered",
+        "empty": "No record",
+        "single-result": "Result",
+        "multi-result": "There are multiple resolution results, please select"
+      },
       "transfer": "Transfer",
       "address": "Receiver address",
-      "placeholder": "Please enter CKB address/Ethereum EOA address",
+      "placeholder": "CKB address/ETH address/DAS Account",
       "check": "Please double check the address entered,",
       "once-transfer": "Once transferred, it cannot be withdrawn",
       "submitted": "Transfer transaction submitted",
@@ -224,7 +231,7 @@
     "apps": {
       "welcome": "Welcome to settle in and build the ecosystem together",
       "red-envelope": {
-        "title": "Red Pocket",
+        "title": "UniPass Red Pocket",
         "desc": "Send NFT red pockets to friends"
       },
       "ticket": {
@@ -245,7 +252,7 @@
       },
       "vip": {
         "title": "VIP Community",
-        "desc": "Only be accessed by holding a special NFT"
+        "desc": "High-quality community that can only be accessed by holding a special NFT"
       }
     },
     "resource": {

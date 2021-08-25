@@ -14,7 +14,6 @@ import {
 } from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
-import { WxSignConfig } from './wx'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -81,7 +80,10 @@ export interface NFTWalletAPI {
 
   getProfile: () => Promise<UserResponse>
 
-  getTokenClass: (uuid: string) => Promise<AxiosResponse<TokenClass>>
+  getTokenClass: (
+    uuid: string,
+    auth?: Auth
+  ) => Promise<AxiosResponse<TokenClass>>
 
   getTags: () => Promise<AxiosResponse<{ tags: Tag[] }>>
 
@@ -142,8 +144,4 @@ export interface NFTWalletAPI {
     page: number,
     sortType: ClassSortType
   ) => Promise<AxiosResponse<FollowClassList>>
-
-  getWechatSignature: (
-    config: WxSignConfig
-  ) => Promise<AxiosResponse<{ signature: string }>>
 }

@@ -21,7 +21,6 @@
     "jsx": "react-jsx",
     "typeRoots": [
       "src/react-app-env.d.ts",
-      "src/types/wx.d.ts",
       "node_modules/@types"
     ],
     "noFallthroughCasesInSwitch": true

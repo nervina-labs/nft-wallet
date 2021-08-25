@@ -4,15 +4,19 @@ import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/img/detail-fallback.png'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
+import { ReactComponent as DotSvg } from '../../assets/svg/dot.svg'
+import { ReactComponent as LockSvg } from '../../assets/svg/lock.svg'
+import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
-import { IS_IPHONE, IS_MAC_SAFARI } from '../../constants'
+import { IS_IPHONE, IS_MAC_SAFARI, IS_SAFARI } from '../../constants'
 import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
 import { PhotoProvider } from 'react-photo-view'
 import { useTranslation } from 'react-i18next'
 import { useProfileModel } from '../../hooks/useProfile'
+import { Dialog } from '@material-ui/core'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -23,11 +27,17 @@ export interface ParallaxTiltProps {
   enable: boolean
   renderer?: string
   type?: NftType
+  tiltRef?: React.RefObject<Tilt>
+  flipped?: boolean
+  cardBackContent?: string
 }
 
 const Container = styled(Tilt)`
   position: relative;
-  margin: auto;
+  /* margin: auto; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &.disabled {
     transform: none !important;
@@ -43,6 +53,87 @@ const Container = styled(Tilt)`
     align-items: center;
     justify-content: center;
     pointer-events: none;
+  }
+
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transform-origin: center right;
+    transition: transform 0.5s;
+  }
+
+  .flipped {
+    transform: translateX(-100%) rotateY(-180deg);
+  }
+
+  .flip-card-front {
+    > div {
+      position: relative;
+    }
+    &.hide {
+      opacity: 0;
+    }
+
+    transition: opacity 0.5s;
+  }
+
+  .flip-card-front,
+  .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flip-card-back {
+    transform: rotateY(180deg);
+    .card-back {
+      border-radius: 10px;
+      position: relative;
+      .bottom-right,
+      .bottom-left,
+      .top-right,
+      .top-left {
+        position: absolute;
+      }
+      .top-left {
+        top: 6px;
+        left: 6px;
+      }
+      .top-right {
+        top: 6px;
+        right: 6px;
+      }
+      .bottom-left {
+        bottom: 6px;
+        left: 6px;
+      }
+      .bottom-right {
+        bottom: 6px;
+        right: 6px;
+      }
+      .card-back-container {
+        overflow: auto;
+        margin: 16px;
+      }
+      /* backdrop-filter: blur(40px); */
+      /* border: 5px solid rgb(165, 165, 165); */
+      background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.2) 0%,
+          rgba(0, 0, 0, 0.2) 100%
+        ),
+        rgba(143, 137, 137, 0.65);
+      /* box-shadow: inset 0px 0px 8px rgba(122, 122, 122, 0.95); */
+      /* backdrop-filter: blur(40px); */
+    }
   }
 `
 
@@ -60,6 +151,146 @@ const AudioContainer = styled.div`
   }
 `
 
+interface CardbackProps {
+  width: number | undefined
+  height: number | undefined
+  content?: string
+  openPreview: () => void
+}
+
+const CardbackContainer = styled.div`
+  border-radius: 10px;
+  position: relative;
+  overflow: auto;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  .bottom-right,
+  .bottom-left,
+  .top-right,
+  .top-left {
+    position: absolute;
+  }
+  .top-left {
+    top: 6px;
+    left: 6px;
+  }
+  .top-right {
+    top: 6px;
+    right: 6px;
+  }
+  .bottom-left {
+    bottom: 6px;
+    left: 6px;
+  }
+  .bottom-right {
+    bottom: 6px;
+    right: 6px;
+  }
+  .card-back-container {
+    margin: 16px;
+    width: calc(100% - 32px);
+    overflow-y: auto;
+    &.center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    audio {
+      max-width: 100%;
+    }
+  }
+  .lock {
+    width: calc(50% + 16px);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg {
+      width: 50%;
+      height: 50%;
+    }
+  }
+  .desc {
+    /* text-shadow: 0px 4px 4px rgba(254, 160, 5, 0.04); */
+    font-size: 16px;
+    margin-top: 20px;
+    color: #4f4f4f;
+    font-weight: 600;
+    text-align: center;
+  }
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    ),
+    rgba(143, 137, 137, 0.65);
+`
+
+const CardbackPreviewContainer = styled(CardbackContainer)`
+  max-width: 500px;
+  width: 100%;
+  height: 100%;
+  .close {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+  }
+  .card-back {
+    margin: 20px;
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+    overflow: auto;
+  }
+`
+
+const Cardback: React.FC<CardbackProps> = ({
+  width,
+  height,
+  content,
+  openPreview,
+}) => {
+  const [t] = useTranslation('translations')
+  const hasContent = !!content
+  return (
+    <CardbackContainer
+      style={{
+        width: `${width ?? 0}px`,
+      }}
+      onClick={openPreview}
+    >
+      <DotSvg className="top-left" />
+      <DotSvg className="top-right" />
+      <DotSvg className="bottom-left" />
+      <DotSvg className="bottom-right" />
+      <div
+        className={classNames('card-back-container', { center: !hasContent })}
+        style={{
+          height: `${(height ?? 36) - 36}px`,
+        }}
+      >
+        {content ? (
+          <div
+            className="content"
+            dangerouslySetInnerHTML={{ __html: content }}
+          ></div>
+        ) : (
+          <>
+            <div className="lock" style={{ height: `${(width ?? 0) / 2}px` }}>
+              <LockSvg />
+            </div>
+            {(width ?? 0) > 200 ? (
+              <span className="desc">{t('nft.lock')}</span>
+            ) : null}
+          </>
+        )}
+      </div>
+    </CardbackContainer>
+  )
+}
+
 export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   src,
   onColorDetected,
@@ -69,6 +300,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   enable,
   type,
   renderer,
+  tiltRef,
+  flipped,
+  cardBackContent,
 }) => {
   const [isTiltEnable, setIsTileEnable] = useState(false)
   const isTouchDevice = useMemo(() => {
@@ -76,7 +310,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [])
   const [enableGyroscope, setEnableGyroscope] = useState(isTouchDevice)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
-  const [isLoadImageFailed, setIsLoadImageFailed] = useState(false)
   const { snackbar } = useProfileModel()
   const [t] = useTranslation('translations')
   const shouldReverseTilt = useMemo(() => {
@@ -86,21 +319,10 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     return !enableGyroscope
   }, [isTouchDevice, enableGyroscope])
   const timer = useRef<NodeJS.Timeout>()
-  const tilt = useRef<Tilt>(null)
-  const enableImagePreview = useMemo(
-    () =>
-      type === NftType.Picture ||
-      (!isLoadImageFailed && type === NftType.Audio),
-    [type, isLoadImageFailed]
-  )
-  const isAudioOrVideo = useMemo(
-    () => type === NftType.Audio || type === NftType.Video,
-    [type]
-  )
-  const enablePlayer = useMemo(() => isAudioOrVideo && !enableImagePreview, [
-    isAudioOrVideo,
-    enableImagePreview,
-  ])
+  const enableImagePreview =
+    type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
+  const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
+  const enablePlayer = !enableImagePreview && isAudioOrVideo
   const [
     photoPreviewToolbarAudioVisible,
     setPhotoPreviewToolbarAudioVisible,
@@ -121,7 +343,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
 
   const imagePreviewUrl = useMemo(() => getImagePreviewUrl(src), [src])
   const openPreview = (): void => {
-    if (!enableImagePreview || isLoadImageFailed) {
+    if (!enableImagePreview) {
       setIsPlayerOpen(true)
     }
   }
@@ -131,8 +353,12 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     if (!isTouchDevice) {
       timer.current = setTimeout(() => {
         const autoResetEvent = new CustomEvent('autoreset')
-        // @ts-expect-error
-        tilt.current?.onMove(autoResetEvent)
+        try {
+          // @ts-expect-error
+          tiltRef.current?.onMove(autoResetEvent)
+        } catch (error) {
+          //
+        }
       }, 1500)
     }
   }
@@ -143,17 +369,52 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     setIsPlayerOpen(false)
   }
 
+  // 44 = header, 300 = nft detail, 30 * 2 = margin
+  const imageMaxHeight = `${window.innerHeight - 44 - 300 - 30 * 2}px`
+  const imageRef = useRef<HTMLImageElement>(null)
+  const hasCardCackContent = !!cardBackContent
+  const [isPreviewCardback, setIsPreviewCardback] = useState(false)
+  const closePreviewCardback = (): void => {
+    setIsPreviewCardback(false)
+    const root = document.getElementById('root')
+    if (root) {
+      root.style.filter = ''
+    }
+  }
+  const openPreviewCardback = (): void => {
+    if (!hasCardCackContent) {
+      return
+    }
+    setIsPreviewCardback(true)
+    const root = document.getElementById('root')
+    if (root) {
+      root.style.filter = 'blur(10px)'
+    }
+  }
+
+  const shouldEnableTile = useMemo(() => {
+    if (flipped && !isTouchDevice) {
+      return false
+    }
+    return isTiltEnable && enable
+  }, [isTiltEnable, enable, flipped, isTouchDevice])
   return (
     <>
       <Container
         tiltReverse={shouldReverseTilt}
         reset={false}
-        tiltEnable={isTiltEnable && enable}
+        tiltEnable={shouldEnableTile}
         disableTouch
-        tiltAngleYInitial={!isTouchDevice ? 15 : undefined}
+        tiltAngleYInitial={
+          !isTouchDevice && !hasCardCackContent ? 15 : undefined
+        }
         adjustGyroscope
+        ref={tiltRef}
         className={classNames({
-          disabled: (!enable && IS_IPHONE) || (isPlayerOpen && IS_MAC_SAFARI),
+          disabled:
+            (!enable && IS_IPHONE) ||
+            (isPlayerOpen && IS_MAC_SAFARI) ||
+            (flipped && !isTouchDevice),
         })}
         transitionSpeed={1000}
         gyroscope={enableGyroscope}
@@ -163,81 +424,131 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         }}
         onLeave={onContainerLeave}
       >
-        <div onClick={openPreview}>
-          <PhotoProvider
-            maskClassName="preview-mask"
-            onVisibleChange={(visible) => {
-              setPhotoPreviewToolbarAudioVisible(visible)
-              if (visible) {
-                setTimeout(() => {
-                  photoPreviewToolbarAudioRef?.current?.play()
-                })
-              }
-            }}
-            toolbarRender={() =>
-              type === NftType.Audio && photoPreviewToolbarAudioVisible ? (
-                <AudioContainer>
-                  <audio
-                    ref={photoPreviewToolbarAudioRef}
-                    src={renderer}
-                    controls
-                    controlsList="nodownload"
-                    onError={onError}
-                  />
-                </AudioContainer>
-              ) : null
-            }
+        <div
+          className={classNames('flip-card-inner', { flipped })}
+          style={{ maxHeight: imageMaxHeight, width, maxWidth: width }}
+        >
+          <div
+            onClick={openPreview}
+            className={classNames('flip-card-front', { hide: flipped })}
           >
-            <LazyLoadImage
-              src={imagePreviewUrl}
-              dataSrc={src}
-              width={width}
-              height={height}
-              imageStyle={{
-                borderRadius: '10px',
-                // 44 = header, 300 = nft detail, 30 * 2 = margin
-                maxHeight: `${window.innerHeight - 44 - 300 - 30 * 2}px`,
-                width: '100%',
-                maxWidth: width,
-              }}
-              setImageHeight={false}
-              onLoaded={() => {
-                if (!src) {
-                  return
+            <div ref={imageRef}>
+              <PhotoProvider
+                maskClassName="preview-mask"
+                onVisibleChange={(visible) => {
+                  setPhotoPreviewToolbarAudioVisible(visible)
+                  if (visible) {
+                    setTimeout(() => {
+                      photoPreviewToolbarAudioRef?.current?.play()
+                    })
+                  }
+                }}
+                toolbarRender={() =>
+                  type === NftType.Audio && photoPreviewToolbarAudioVisible ? (
+                    <AudioContainer>
+                      <audio
+                        ref={photoPreviewToolbarAudioRef}
+                        src={renderer}
+                        controls
+                        controlsList="nodownload"
+                        onError={onError}
+                      />
+                    </AudioContainer>
+                  ) : null
                 }
-                setIsTileEnable(true)
-              }}
-              backup={
+              >
                 <LazyLoadImage
+                  src={imagePreviewUrl}
+                  dataSrc={src}
                   width={width}
-                  height={width}
-                  src={FallbackImg}
-                  onLoaded={() => {
-                    onFallBackImageLoaded()
-                    setIsLoadImageFailed(true)
+                  height={height}
+                  imageStyle={{
+                    borderRadius: '10px',
+                    maxHeight: imageMaxHeight,
+                    width: IS_SAFARI ? '' : '100%',
+                    maxWidth: width,
                   }}
+                  setImageHeight={false}
+                  onLoaded={() => {
+                    if (!src) {
+                      return
+                    }
+                    setIsTileEnable(true)
+                  }}
+                  backup={
+                    <LazyLoadImage
+                      width={width}
+                      height={width}
+                      src={FallbackImg}
+                      onLoaded={() => {
+                        onFallBackImageLoaded()
+                      }}
+                    />
+                  }
+                  enablePreview={enableImagePreview}
                 />
-              }
-              enablePreview={enableImagePreview}
+              </PhotoProvider>
+              {isAudioOrVideo && (
+                <span className="player">
+                  <PlayerSvg />
+                </span>
+              )}
+            </div>
+          </div>
+          <div
+            className="flip-card-back"
+            style={{
+              width,
+            }}
+          >
+            <Cardback
+              width={imageRef.current?.offsetWidth}
+              height={imageRef.current?.offsetHeight}
+              content={cardBackContent}
+              openPreview={openPreviewCardback}
             />
-          </PhotoProvider>
-          {isAudioOrVideo && (
-            <span className="player">
-              <PlayerSvg />
-            </span>
-          )}
+          </div>
         </div>
-        {enablePlayer && (
-          <Player
-            poster={imagePreviewUrl}
-            type={type as NftType}
-            renderer={renderer}
-            open={isPlayerOpen}
-            onClose={() => setIsPlayerOpen(false)}
-            onError={onError}
-          />
-        )}
       </Container>
+      {enablePlayer && (
+        <Player
+          poster={imagePreviewUrl}
+          type={type as NftType}
+          renderer={renderer}
+          open={isPlayerOpen}
+          onClose={() => setIsPlayerOpen(false)}
+          onError={onError}
+        />
+      )}
+      <Dialog
+        open={isPreviewCardback}
+        onClose={closePreviewCardback}
+        onEscapeKeyDown={closePreviewCardback}
+        onBackdropClick={closePreviewCardback}
+        PaperProps={{
+          style: {
+            width: '100%',
+            height: '100%',
+            maxWidth: '500px',
+            background: 'transparent',
+            boxShadow: 'none',
+          },
+        }}
+      >
+        <CardbackPreviewContainer>
+          <DotSvg className="top-left" />
+          <DotSvg className="top-right" />
+          <DotSvg className="bottom-left" />
+          <DotSvg className="bottom-right" />
+          <CloseSvg className="close" onClick={closePreviewCardback} />
+          {cardBackContent ? (
+            <div
+              className="card-back"
+              dangerouslySetInnerHTML={{ __html: cardBackContent }}
+            ></div>
+          ) : null}
+        </CardbackPreviewContainer>
+      </Dialog>
     </>
   )
 }

@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
-import { ReactComponent as BuySvg } from '../../assets/svg/buy.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
 import { useWidth } from '../../hooks/useWidth'
@@ -21,9 +20,39 @@ import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
 import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
+import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
 import { Follow } from '../../components/Follow'
 import { useProfileModel } from '../../hooks/useProfile'
+
+import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
+import { getImagePreviewUrl } from '../../utils'
+import { Auth } from '../../models/user'
+
+const CardBackIconContainer = styled.div`
+  border-bottom-left-radius: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  background: rgba(0, 0, 0, 0.33);
+  backdrop-filter: blur(4px);
+`
+
+const CardBackIcon: React.FC<{
+  onClick: (e: React.SyntheticEvent) => void
+}> = ({ onClick }) => {
+  return (
+    <CardBackIconContainer onClick={onClick}>
+      <CardBackSvg />
+    </CardBackIconContainer>
+  )
+}
 
 const Background = styled.div`
   position: fixed;
@@ -139,9 +168,6 @@ const Container = styled(MainContainer)`
       font-size: 10px;
       border-radius: 50%;
       color: white;
-      svg {
-        margin-bottom: 4px;
-      }
       &.disabled {
         background-color: #ddd;
         color: #898989;
@@ -224,10 +250,14 @@ export const NFT: React.FC = () => {
   const { getAuth } = useProfileModel()
 
   const { data, failureCount } = useQuery(
-    [Query.NFTDetail, id, api],
+    [Query.NFTDetail, id, api, isLogined],
     async () => {
       if (matchTokenClass?.isExact) {
-        const { data } = await api.getTokenClass(id)
+        let auth: undefined | Auth
+        if (isLogined) {
+          auth = await getAuth()
+        }
+        const { data } = await api.getTokenClass(id, auth)
         return data
       }
       const auth = await getAuth()
@@ -294,26 +324,29 @@ export const NFT: React.FC = () => {
     return window.innerHeight
   }, [])
 
-  const qrcode = useMemo(() => {
-    return data?.product_qr_code
-  }, [data])
-
-  const buyButton = useMemo(() => {
-    if (!qrcode) {
-      return null
-    }
-    return (
-      <div
-        className="transfer"
-        onClick={() => history.push(`${RoutePath.Shop}?qrcode=${qrcode}`)}
-      >
-        <BuySvg />
-        <span>{t('shop.buy')}</span>
-      </div>
-    )
-  }, [qrcode, history, t])
-
   const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
+  const [showCardBack, setShowCardBack] = useState(false)
+  const hasCardBack = useMemo(() => {
+    return (
+      !!data?.card_back_content_exist || !!data?.class_card_back_content_exist
+    )
+  }, [data])
+  const [disbaleTilt] = useState(false)
+  const tiltRef = useRef<Tilt>(null)
+  const cardBackOnClick = useCallback(
+    (e: React.SyntheticEvent) => {
+      const autoResetEvent = new CustomEvent('autoreset')
+      // @ts-expect-error
+      tiltRef.current?.onMove(autoResetEvent)
+      tiltRef?.current?.reset()
+      if (hasCardBack) {
+        // disable Gyroscope
+      }
+      setShowCardBack((show) => !show)
+      // setDisableTile(false)
+    },
+    [hasCardBack]
+  )
 
   if (!isLogined && matchTokenClass?.isExact !== true) {
     return <Redirect to={RoutePath.Explore} />
@@ -338,7 +371,7 @@ export const NFT: React.FC = () => {
       />
       {!isFallBackImgLoaded ? (
         <Background
-          url={detail?.bg_image_url}
+          url={getImagePreviewUrl(detail?.bg_image_url)}
           style={{ height: `${innerHeight - 44 - 280}px` }}
         />
       ) : null}
@@ -355,12 +388,18 @@ export const NFT: React.FC = () => {
           src={detail?.bg_image_url}
           width={imageWidth}
           height={imageWidth}
-          enable={!isDialogOpen}
+          enable={!isDialogOpen && !disbaleTilt}
           onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
           onColorDetected={(color) => setImageColor(color)}
           type={detail?.renderer_type}
           renderer={detail?.renderer}
+          cardBackContent={
+            detail?.card_back_content ?? detail?.class_card_back_content
+          }
+          tiltRef={tiltRef}
+          flipped={showCardBack}
         />
+        {hasCardBack ? <CardBackIcon onClick={cardBackOnClick} /> : null}
       </div>
       {detail == null ? null : (
         <>
@@ -370,9 +409,7 @@ export const NFT: React.FC = () => {
               top: `${innerHeight - 44 - 300}px`,
             }}
           >
-            {isTokenClass(detail) ? (
-              buyButton
-            ) : (
+            {isTokenClass(detail) ? null : (
               <div
                 className={`${!isTransferable ? 'disabled' : ''} transfer`}
                 onClick={isTransferable ? tranfer : undefined}
@@ -395,6 +432,7 @@ export const NFT: React.FC = () => {
                 vipSource={detail?.verified_info?.verified_source}
                 showTooltip={false}
                 replace={true}
+                useImageFallBack={true}
               />
               <Follow
                 followed={detail?.issuer_info?.issuer_followed as boolean}
