@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import { HEADER_HEIGHT } from '../../components/Appbar'
 import { copyFallback, ellipsisIssuerID } from '../../utils'
+import { useHistory } from 'react-router-dom'
 
 const VerifySvgPath = (VerifySvg as unknown) as string
 
@@ -344,14 +345,19 @@ export const IssuerInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { api } = useWalletModel()
   const [t] = useTranslation('translations')
+  const history = useHistory()
 
-  const { data, isLoading, refetch } = useQuery(
+  const { data, isLoading, refetch, error } = useQuery(
     [Query.Issuers, api, id],
     async () => {
       const { data } = await api.getIssuerInfo(id)
       return data
     }
   )
+
+  if (error) {
+    history.replace('/404')
+  }
 
   useEffect(() => {
     window.scroll({ top: 0 })

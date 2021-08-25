@@ -265,10 +265,6 @@ const CardGroup: React.FC = () => {
     }
   )
 
-  const refresh = useCallback(async () => {
-    await refetch()
-  }, [refetch])
-
   const tokenClasses =
     data?.pages.reduce(
       (acc, page) => acc.concat(page.token_classes),
@@ -282,7 +278,7 @@ const CardGroup: React.FC = () => {
         dataLength={tokenClassLength}
         hasMore={hasNextPage === true}
         loader={<Loading />}
-        refreshFunction={refresh}
+        refreshFunction={refetch}
         next={fetchNextPage}
       >
         {tokenClassLength > 0 && (
