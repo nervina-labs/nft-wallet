@@ -275,6 +275,7 @@ export const DasSelector: React.FC<DasSelectorProps> = ({
       return resp
     },
     {
+      refetchOnWindowFocus: false,
       cacheTime: 0,
     }
   )
