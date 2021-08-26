@@ -300,6 +300,9 @@ export const Apps: React.FC = () => {
           )
         })}
       </div>
+      <br />
+      <br />
+      <br />
     </Container>
   )
 }
