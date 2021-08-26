@@ -1,22 +1,24 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { Creator } from '../../components/Creator'
+import { Follow } from '../../components/Follow'
 import { LazyLoadImage } from '../../components/Image'
-import { Like } from '../../components/Like'
-import { NFT_EXPLORER_URL } from '../../constants'
 import { Issuer } from '../../models/issuer'
+import { formatCount } from '../../utils'
+import { RoutePath } from '../../routes'
 
 const Container = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
   position: relative;
   min-width: 232px;
   max-width: 232px;
-  min-height: 128px;
-  max-height: 128px;
+  min-height: 190px;
+  max-height: 190px;
   margin-right: 8px;
   border-radius: 8px;
   border: 1px solid #f4f4f4;
@@ -24,6 +26,7 @@ const Container = styled.div`
   padding: 8px;
   margin-top: 20px;
   .issuer {
+    margin-top: 30px;
     max-width: 100%;
   }
   .avatar {
@@ -43,6 +46,15 @@ const Container = styled.div`
     }
   }
 
+  .info {
+    font-size: 12px;
+    color: #666;
+    margin-top: 16px;
+    .likes {
+      margin-left: 16px;
+    }
+  }
+
   .desc {
     margin-top: 13px;
     display: -webkit-box;
@@ -55,25 +67,28 @@ const Container = styled.div`
     color: #333;
   }
 
-  .like {
+  .follow {
     position: absolute;
-    right: 8px;
-    bottom: 8px;
+    bottom: 16px;
+    display: flex;
+    justify-content: center;
   }
 `
 
 export interface IssuerProps {
   issuer: Issuer
+  afterToggle?: (params?: any) => Promise<any>
 }
 
-export const RecommendIssuser: React.FC<IssuerProps> = ({ issuer }) => {
+export const RecommendIssuser: React.FC<IssuerProps> = ({
+  issuer,
+  afterToggle,
+}) => {
+  const { t, i18n } = useTranslation('translations')
   return (
-    <a
-      onClick={(e) => e.stopPropagation()}
-      target="_blank"
+    <Link
       style={{ textDecoration: 'none' }}
-      rel="noopener noreferrer"
-      href={`${NFT_EXPLORER_URL}/issuer/tokens/${issuer.uuid}`}
+      to={`${RoutePath.Issuer}/${issuer.uuid}`}
     >
       <Container>
         <span className="avatar">
@@ -97,16 +112,25 @@ export const RecommendIssuser: React.FC<IssuerProps> = ({ issuer }) => {
             showAvatar={false}
           />
         </div>
+        <div className="info">
+          <span className="fans">{`${t('follow.follower')}${formatCount(
+            +issuer.issuer_follows,
+            i18n.language
+          )}`}</span>
+          <span className="likes">{`${t('follow.likes')}${formatCount(
+            +issuer.issuer_likes,
+            i18n.language
+          )}`}</span>
+        </div>
         <div className="desc">{issuer.description}</div>
-        <div className="like">
-          <Like
-            likeble={false}
-            liked={false}
-            count={issuer.issuer_likes}
+        <div className="follow">
+          <Follow
+            followed={issuer.issuer_followed}
             uuid={issuer.uuid}
+            afterToggle={afterToggle}
           />
         </div>
       </Container>
-    </a>
+    </Link>
   )
 }

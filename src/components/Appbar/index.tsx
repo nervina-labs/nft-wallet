@@ -8,6 +8,8 @@ export interface HeaderProps {
   transparent?: boolean
 }
 
+export const HEADER_HEIGHT = 44
+
 const Header = styled.header<HeaderProps>`
   position: fixed;
   top: 0;
@@ -21,7 +23,7 @@ const Header = styled.header<HeaderProps>`
         : '#fff'
     }`};
   flex-direction: row;
-  height: 44px;
+  height: ${HEADER_HEIGHT}px;
   align-items: center;
   box-shadow: ${(props: HeaderProps) =>
     `${!props.transparent ? '0px 4px 12px rgba(0, 0, 0, 0.06)' : 'none'}`};

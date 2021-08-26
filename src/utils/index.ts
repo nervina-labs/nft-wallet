@@ -118,8 +118,58 @@ export function getImagePreviewUrl(url?: string): string | undefined {
   if (url == null) {
     return url
   }
-  if (/\.svg$/i.test(url)) {
+  if (/\.(svg|webp)$/i.test(url)) {
     return url
   }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
+}
+
+const MILLION = 1e6
+
+export const formatCount = (count: number, lang: string): number | string => {
+  if (lang === 'zh') {
+    if (count >= MILLION) {
+      return `${roundDown(count / MILLION)} 百万`
+    } else if (count >= 10000) {
+      return `${roundDown(count / 10000)} 万`
+    }
+    return count
+  }
+  if (count >= MILLION) {
+    return `${roundDown(count / MILLION)}m`
+  }
+  return count >= 1000 ? `${roundDown(count / 1000)}k` : count
+}
+
+export function randomString(length: number): string {
+  let result = ''
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+}
+
+export async function downloadImage(imageSrc: string): Promise<void> {
+  const headers = new Headers()
+  headers.append('Access-Control-Allow-Origin', location.href)
+  headers.append('Access-Control-Allow-Credentials', 'true')
+  const image = await fetch(imageSrc, {
+    headers,
+  })
+  const imageBlog = await image.blob()
+  const imageURL = URL.createObjectURL(imageBlog)
+
+  const link = document.createElement('a')
+  link.href = imageURL
+  link.download = 'qrcode.jpg'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
+export function ellipsisIssuerID(value: string): string {
+  return `${value.substr(0, 8)}...${value.substr(8, 6)}`
 }

@@ -82,7 +82,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
 
   const onClose = useCallback(() => {
     if (prevValue !== value) {
-      confirm(t('profile.save-edit'), onSave, close)
+      confirm(t('profile.save-edit'), onSave, close).catch(Boolean)
     } else {
       close()
     }
