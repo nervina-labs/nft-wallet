@@ -163,7 +163,7 @@ const WalletChange: React.FC = ({ children }) => {
           showCloseIcon: false,
           show: true,
           onConfirm: () => {
-            if (pathInForceAuthList) {
+            if (pathInForceAuthList && WalletType.Unipass === walletType) {
               UnipassConfig.setRedirectUri(location.pathname + location.search)
             }
             signMessage(address)
