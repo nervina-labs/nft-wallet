@@ -6,6 +6,7 @@ import {
   NFTDetail,
   NFTTransaction,
   NFTWalletAPI,
+  ProductState,
   Transaction,
   UnsignedTransaction,
 } from '../models'
@@ -21,6 +22,7 @@ import {
 import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
+import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
 
 function randomid(length = 10): string {
   let result = ''
@@ -204,21 +206,13 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getTokenClass(
-    uuid: string,
-    auth?: Auth
-  ): Promise<AxiosResponse<TokenClass>> {
+  async getTokenClass(uuid: string): Promise<AxiosResponse<TokenClass>> {
     const params: Record<string, string | number> = {}
     if (this.address) {
       params.address = this.address
     }
-    const headers: Record<string, any> = {}
-    if (auth) {
-      headers.auth = JSON.stringify(auth)
-    }
     return await this.axios.get(`/token_classes/${uuid}`, {
       params,
-      headers,
     })
   }
 
@@ -401,5 +395,36 @@ export class ServerWalletAPI implements NFTWalletAPI {
       },
       params,
     })
+  }
+
+  async getIssuerInfo(uuid: string) {
+    return await this.axios.get<IssuerInfo>(`/issuers/${uuid}`, {
+      params: {
+        address: this.address,
+      },
+    })
+  }
+
+  async getIssuerTokenClass(
+    uuid: string,
+    productState: ProductState = 'product_state',
+    options?: {
+      limit?: number
+      page?: number
+    }
+  ) {
+    const limit = options?.limit ?? 20
+    const page = options?.page ?? 0
+    return await this.axios.get<IssuerTokenClassResult>(
+      `/issuers/${uuid}/token_classes`,
+      {
+        params: {
+          address: this.address,
+          product_state: productState,
+          limit,
+          page,
+        },
+      }
+    )
   }
 }

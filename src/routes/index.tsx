@@ -34,6 +34,7 @@ import { AddressCollector } from '../views/AddressCollector'
 import { useToast } from '../hooks/useToast'
 import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
+import { Issuer } from '../views/Issuer'
 import { UnipassConfig } from '../utils'
 import { Shop } from '../views/Shop'
 
@@ -304,6 +305,13 @@ const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Collection',
     path: RoutePath.Collection,
+    params: '/:id',
+  },
+  {
+    component: Issuer,
+    exact: true,
+    key: 'Issuer',
+    path: RoutePath.Issuer,
     params: '/:id',
   },
 ]

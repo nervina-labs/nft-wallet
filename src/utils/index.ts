@@ -118,7 +118,7 @@ export function getImagePreviewUrl(url?: string): string | undefined {
   if (url == null) {
     return url
   }
-  if (/\.svg$/i.test(url)) {
+  if (/\.(svg|webp)$/i.test(url)) {
     return url
   }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
@@ -129,6 +129,17 @@ export const formatCount = (count: number, lang: string): number | string => {
     return count >= 10000 ? `${roundDown(count / 10000)} 万` : count
   }
   return count >= 1000 ? `${roundDown(count / 1000)}k` : count
+}
+
+export function randomString(length: number): string {
+  let result = ''
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
 }
 
 export async function downloadImage(imageSrc: string): Promise<void> {
@@ -147,4 +158,8 @@ export async function downloadImage(imageSrc: string): Promise<void> {
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
+}
+
+export function ellipsisIssuerID(value: string): string {
+  return `${value.substr(0, 8)}...${value.substr(8, 6)}`
 }

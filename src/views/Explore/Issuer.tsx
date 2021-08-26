@@ -1,13 +1,14 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { Creator } from '../../components/Creator'
 import { Follow } from '../../components/Follow'
 import { LazyLoadImage } from '../../components/Image'
-import { NFT_EXPLORER_URL } from '../../constants'
 import { Issuer } from '../../models/issuer'
 import { formatCount } from '../../utils'
+import { RoutePath } from '../../routes'
 
 const Container = styled.div`
   display: flex;
@@ -85,12 +86,9 @@ export const RecommendIssuser: React.FC<IssuerProps> = ({
 }) => {
   const { t, i18n } = useTranslation('translations')
   return (
-    <a
-      onClick={(e) => e.stopPropagation()}
-      target="_blank"
+    <Link
       style={{ textDecoration: 'none' }}
-      rel="noopener noreferrer"
-      href={`${NFT_EXPLORER_URL}/issuer/tokens/${issuer.uuid}`}
+      to={`${RoutePath.Issuer}/${issuer.uuid}`}
     >
       <Container>
         <span className="avatar">
@@ -133,6 +131,6 @@ export const RecommendIssuser: React.FC<IssuerProps> = ({
           />
         </div>
       </Container>
-    </a>
+    </Link>
   )
 }
