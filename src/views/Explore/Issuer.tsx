@@ -18,8 +18,8 @@ const Container = styled.div`
   position: relative;
   min-width: 232px;
   max-width: 232px;
-  min-height: 170px;
-  max-height: 170px;
+  min-height: 200px;
+  max-height: 200px;
   margin-right: 8px;
   border-radius: 8px;
   border: 1px solid #f4f4f4;
