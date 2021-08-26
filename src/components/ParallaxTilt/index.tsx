@@ -6,6 +6,7 @@ import FallbackImg from '../../assets/img/detail-fallback.png'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { ReactComponent as DotSvg } from '../../assets/svg/dot.svg'
 import { ReactComponent as LockSvg } from '../../assets/svg/lock.svg'
+import lockpng from '../../assets/img/lock.png'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
@@ -212,6 +213,10 @@ const CardbackContainer = styled.div`
       width: 50%;
       height: 50%;
     }
+    img {
+      width: 50%;
+      height: 50%;
+    }
   }
   .desc {
     /* text-shadow: 0px 4px 4px rgba(254, 160, 5, 0.04); */
@@ -254,6 +259,15 @@ const Cardback: React.FC<CardbackProps> = ({
 }) => {
   const [t] = useTranslation('translations')
   const hasContent = !!content
+  const lockHeight = useMemo(() => {
+    const w = width ?? 0
+    const h = height ?? 0
+    if (w < h) {
+      return `${w / 2}px`
+    }
+    return `${h / 2}px`
+  }, [width, height])
+
   return (
     <CardbackContainer
       style={{
@@ -278,8 +292,11 @@ const Cardback: React.FC<CardbackProps> = ({
           ></div>
         ) : (
           <>
-            <div className="lock" style={{ height: `${(width ?? 0) / 2}px` }}>
-              <LockSvg />
+            <div
+              className="lock"
+              style={{ height: lockHeight, width: lockHeight }}
+            >
+              {IS_SAFARI ? <img alt="lock" src={lockpng} /> : <LockSvg />}
             </div>
             {(width ?? 0) > 200 ? (
               <span className="desc">{t('nft.lock')}</span>

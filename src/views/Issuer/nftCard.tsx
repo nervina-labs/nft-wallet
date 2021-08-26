@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { IssuerTokenClass } from '../../models/issuer'
 import styled from 'styled-components'
