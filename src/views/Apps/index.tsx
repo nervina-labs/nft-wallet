@@ -72,7 +72,6 @@ const Container = styled(MainContainer)`
         text-align: left;
         font-size: 12px;
         color: black;
-        word-break: break-all;
       }
     }
   }
@@ -120,7 +119,6 @@ export const ItemContainer = styled.div`
     text-align: left;
     font-size: 12px;
     color: black;
-    word-break: break-all;
   }
   .content {
     margin-top: 10px;
