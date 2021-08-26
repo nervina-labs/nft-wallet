@@ -321,10 +321,12 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getRecommendClasses() {
+    const params: Record<string, string> = {}
+    if (this.address) {
+      params.address = this.address
+    }
     return await this.axios.get('/recommended_classes', {
-      params: {
-        address: this.address,
-      },
+      params,
     })
   }
 

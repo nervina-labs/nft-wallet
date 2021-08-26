@@ -124,9 +124,19 @@ export function getImagePreviewUrl(url?: string): string | undefined {
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
 }
 
+const MILLION = 1e6
+
 export const formatCount = (count: number, lang: string): number | string => {
   if (lang === 'zh') {
-    return count >= 10000 ? `${roundDown(count / 10000)} 万` : count
+    if (count >= MILLION) {
+      return `${roundDown(count / MILLION)} 百万`
+    } else if (count >= 10000) {
+      return `${roundDown(count / 10000)} 万`
+    }
+    return count
+  }
+  if (count >= MILLION) {
+    return `${roundDown(count / MILLION)}m`
   }
   return count >= 1000 ? `${roundDown(count / 1000)}k` : count
 }
