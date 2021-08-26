@@ -36,6 +36,7 @@ import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
 import { UnipassConfig } from '../utils'
+import { Shop } from '../views/Shop'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -60,6 +61,7 @@ export enum RoutePath {
   Unipass = '/unipass',
   Apps = '/apps',
   License = '/license',
+  Shop = '/shop',
   AddressCollector = '/addresses',
   Claim = '/claim',
   Collection = '/explore/collection',
@@ -254,6 +256,12 @@ const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Explore',
     path: RoutePath.Explore,
+  },
+  {
+    component: Shop,
+    exact: true,
+    key: 'Shop',
+    path: RoutePath.Shop,
   },
   {
     component: Help,

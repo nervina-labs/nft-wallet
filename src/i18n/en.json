@@ -231,8 +231,8 @@
     "apps": {
       "welcome": "Welcome to settle in and build the ecosystem together",
       "red-envelope": {
-        "title": "UniPass Red Pocket",
-        "desc": "Send NFT red pockets to friends"
+        "title": "Unipass Red Pocket",
+        "desc": "Send NFT red pockets"
       },
       "ticket": {
         "title": "UniPass Ticket",
