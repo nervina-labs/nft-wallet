@@ -33,7 +33,8 @@
       "colon": ":",
       "title": "NFT Account",
       "description": "View and manage your NFT anytime, anywhere",
-      "img-lost": "Image lost"
+      "img-lost": "Image lost",
+      "card-back": "该秘宝卡背设置有信息，仅持有人可见"
     },
     "login": {
       "title": "NFT Account",
@@ -81,6 +82,7 @@
         "das": "Please enter DAS and select a result",
         "receive-eth": "This address is an Ethereum address, please remind the receiver to open NFT Account with Ethereum wallet to view the NFT received",
         "common": "Please enter the correct CKB address/ETH address/DAS Account",
+        "short-address": "当前接收方地址不是在秘宝应用生成的地址，请提醒接收方，除秘宝应用外，目前仅 Neuron 钱包生成的地址支持接收秘宝。切勿使用交易所等其他应用生成的 CKB 地址",
         "sign-fail": "Transaction rejected",
         "tranfer-fail": "Fail to send transaction, please check network conditions and resend",
         "no-camera": "No camera found",
@@ -127,7 +129,8 @@
     "nft": {
       "title": "NFT Details",
       "transfer": "Transfer",
-      "desc": "NFT description"
+      "desc": "NFT description",
+      "lock": "只有该秘宝的持有者才能解锁该内容"
     },
     "account": {
       "title": "My Account",
@@ -230,6 +233,10 @@
     },
     "apps": {
       "welcome": "Welcome to settle in and build the ecosystem together",
+      "shop": {
+        "title": "秘宝店铺",
+        "desc": "购买数字收藏品就到秘宝店铺"
+      },
       "red-envelope": {
         "title": "Unipass Red Pocket",
         "desc": "Send NFT red pockets"
@@ -281,6 +288,26 @@
       "content": "We will request a digital signature for your address, so as to protect your private data from being leaked and tampered with, such as personal information, liked data, etc.",
       "ok": "OK"
     },
+    "shop": {
+      "title": "秘宝店铺",
+      "scan": "微信扫一扫",
+      "desc": "进入秘宝店铺微信小程序",
+      "save": "保存图片",
+      "buy": "购买"
+    },
+    "claim": {
+      "tips": "您有一个秘宝待领取",
+      "login": "请先登录秘宝",
+      "last-step": "您离领取还差最后一步",
+      "error": "领取码错误",
+      "confirm": "确认领取",
+      "continue": "您还可以继续操作",
+      "success": "领取成功",
+      "claimed": "Opps～秘宝已被领走",
+      "go-home": "进入秘宝查看",
+      "go-explore": "发现更多秘宝",
+      "placeholder": "请输入领取密码"
+    },
     "issuer": {
       "created": "Created",
       "selling": "Selling",
@@ -289,6 +316,21 @@
       "like": "Like",
       "more": "More",
       "no-on-sale": "No nft on sale"
+    },
+    "follow": {
+      "follow": "关注",
+      "followed": "已关注",
+      "confirm": "确认不再关注？",
+      "follower": "粉丝：",
+      "likes": "获赞：",
+      "count": "已关注 {{count}} 人",
+      "end": "已经拉到底啦~",
+      "login": {
+        "desc-1": "啊哦～您还未登录",
+        "desc-2": "请登录秘宝，查看您关注的精彩内容",
+        "login": "登录"
+      },
+      "no-data": "您还未关注任何创作者"
     }
   }
 }
