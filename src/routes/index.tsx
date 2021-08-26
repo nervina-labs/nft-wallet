@@ -7,7 +7,6 @@ import {
   Switch,
   useHistory,
   useLocation,
-  useRouteMatch,
 } from 'react-router-dom'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useWalletModel, WalletType } from '../hooks/useWallet'
@@ -34,6 +33,10 @@ import { Apps } from '../views/Apps'
 import { AddressCollector } from '../views/AddressCollector'
 import { useToast } from '../hooks/useToast'
 import { Collection } from '../views/Collection'
+import { Claim } from '../views/Claim'
+import { Issuer } from '../views/Issuer'
+import { UnipassConfig } from '../utils'
+import { Shop } from '../views/Shop'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -58,8 +61,11 @@ export enum RoutePath {
   Unipass = '/unipass',
   Apps = '/apps',
   License = '/license',
+  Shop = '/shop',
   AddressCollector = '/addresses',
+  Claim = '/claim',
   Collection = '/explore/collection',
+  Issuer = '/issuer',
 }
 
 export const RouterContext = React.createContext({
@@ -92,13 +98,16 @@ const RouterProvider: React.FC = ({ children }) => {
   )
 }
 
-const allowWithoutLoginList = new Set([
+const allowWithoutAuthList = new Set([
   RoutePath.Unipass,
   RoutePath.Explore,
   RoutePath.Apps,
   RoutePath.AddressCollector,
-  '/',
+  RoutePath.Claim,
+  RoutePath.NotFound,
 ])
+
+const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
 
 const WalletChange: React.FC = ({ children }) => {
   const {
@@ -127,16 +136,19 @@ const WalletChange: React.FC = ({ children }) => {
   const isSigning = useRef(false)
   const { toast } = useToast()
   const [t] = useTranslation('translations')
-  const matchAddressCollector = useRouteMatch(
-    `${RoutePath.AddressCollector}/:id`
-  )
+
   useEffect(() => {
+    const pathInForceAuthList = forceAuthList.has(
+      location.pathname + location.search
+    )
+    const pathInAllowList = [...allowWithoutAuthList].some((p) =>
+      location.pathname.startsWith(p)
+    )
     if (
       WalletType.Unipass === walletType &&
       isLogined &&
       !isAuthenticated &&
-      !allowWithoutLoginList.has(location.pathname) &&
-      !matchAddressCollector?.isExact &&
+      (!pathInAllowList || pathInForceAuthList) &&
       !isSigning.current &&
       pubkey
     ) {
@@ -148,6 +160,9 @@ const WalletChange: React.FC = ({ children }) => {
         showCloseIcon: false,
         show: true,
         onConfirm: () => {
+          if (pathInForceAuthList) {
+            UnipassConfig.setRedirectUri(location.pathname + location.search)
+          }
           signMessage(address).catch(Boolean)
         },
       })
@@ -158,11 +173,11 @@ const WalletChange: React.FC = ({ children }) => {
     address,
     signMessage,
     location.pathname,
+    location.search,
     isLogined,
     pubkey,
     t,
     toast,
-    matchAddressCollector?.isExact,
   ])
 
   return <>{children}</>
@@ -243,6 +258,12 @@ const routes: MibaoRouterProps[] = [
     path: RoutePath.Explore,
   },
   {
+    component: Shop,
+    exact: true,
+    key: 'Shop',
+    path: RoutePath.Shop,
+  },
+  {
     component: Help,
     exact: false,
     key: 'Help',
@@ -267,10 +288,30 @@ const routes: MibaoRouterProps[] = [
     path: RoutePath.Apps,
   },
   {
+    component: Claim,
+    exact: true,
+    key: 'claim',
+    path: RoutePath.Claim,
+  },
+  {
+    component: Claim,
+    exact: true,
+    key: 'claim-with-id',
+    path: RoutePath.Claim,
+    params: '/:id',
+  },
+  {
     component: Collection,
     exact: true,
     key: 'Collection',
     path: RoutePath.Collection,
+    params: '/:id',
+  },
+  {
+    component: Issuer,
+    exact: true,
+    key: 'Issuer',
+    path: RoutePath.Issuer,
     params: '/:id',
   },
 ]

@@ -35,6 +35,7 @@ import { AccountRecord } from 'das-sdk'
 import { Box, Container, DrawerContainer } from './styled'
 import { UnipassTransferNftState } from '../../models/unipass'
 import { DasSelector } from './dasSelector'
+import { useProfileModel } from '../../hooks/useProfile'
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -322,10 +323,12 @@ export const Transfer: React.FC = () => {
     }
   }, [])
 
+  const { getAuth } = useProfileModel()
   const { data: remoteNftDetail, failureCount } = useQuery(
-    [Query.NFTDetail, id, api],
+    [Query.NFTDetail, id, api, getAuth],
     async () => {
-      const { data } = await api.getNFTDetail(id)
+      const auth = await getAuth()
+      const { data } = await api.getNFTDetail(id, auth)
       return data
     },
     { enabled: id != null && routerLocation.state?.nftDetail == null }
@@ -390,6 +393,12 @@ export const Transfer: React.FC = () => {
       ) {
         return [AlertLevel.error, t('transfer.error.ckb')]
       }
+      if (
+        (addr.startsWith('ckt') || addr.startsWith('ckb')) &&
+        addr.length !== 95
+      ) {
+        return [AlertLevel.info, t('transfer.error.short-address')]
+      }
       if (type === AddressVerifiedType.eth) {
         return [AlertLevel.info, t('transfer.error.receive-eth')]
       }
@@ -407,7 +416,8 @@ export const Transfer: React.FC = () => {
       finalUsedAddressType === AddressVerifiedType.ckb
     const showAlert =
       (!valid && finalUsedAddress !== '') ||
-      (finalUsedAddressType === AddressVerifiedType.eth && valid)
+      (finalUsedAddressType === AddressVerifiedType.eth && valid) ||
+      (valid && finalUsedAddress.length !== 95)
     let level = ''
     let alertMsg = ''
     if (showAlert) {

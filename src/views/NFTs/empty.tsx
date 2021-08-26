@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import Emptypng from '../../assets/img/empty.png'
@@ -33,28 +33,41 @@ const Container = styled.div`
   }
 `
 
-export const Empty: React.FC = () => {
+export const Empty: React.FC<{ showExplore?: boolean }> = ({
+  showExplore = true,
+}) => {
   const { t } = useTranslation('translations')
   const history = useHistory()
   const isLiked = useRouteQuery('liked', '')
+  const tag = useRouteQuery<string>('tag', '')
+  const follow = useRouteQuery<string>('follow', '')
+  const isFollow = tag === 'follow' || follow
+  const desc = useMemo(() => {
+    if (isLiked) {
+      return t('nfts.no-likes')
+    } else if (isFollow) {
+      return t('follow.no-data')
+    }
+    return t('nfts.no-data')
+  }, [t, isLiked, isFollow])
   return (
     <Container>
       <LazyLoadImage src={Emptypng} width={260} height={172} />
-      <div className="desc">
-        {isLiked ? t('nfts.no-likes') : t('nfts.no-data')}
-      </div>
-      <a
-        className="link"
-        target="_blank"
-        rel="noopener noreferrer"
-        href={NFT_EXPLORER_URL}
-        onClick={(e) => {
-          e.preventDefault()
-          history.push(RoutePath.Explore)
-        }}
-      >
-        {t('nfts.link')}
-      </a>
+      <div className="desc">{desc}</div>
+      {showExplore ? (
+        <a
+          className="link"
+          target="_blank"
+          rel="noopener noreferrer"
+          href={NFT_EXPLORER_URL}
+          onClick={(e) => {
+            e.preventDefault()
+            history.push(RoutePath.Explore)
+          }}
+        >
+          {t('nfts.link')}
+        </a>
+      ) : null}
     </Container>
   )
 }
