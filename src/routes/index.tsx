@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import {
   BrowserRouter,
@@ -134,7 +135,7 @@ const WalletChange: React.FC = ({ children }) => {
   }, [prevAddress, address, walletType])
   const { isAuthenticated } = useProfileModel()
   const isSigning = useRef(false)
-  const { toast } = useToast()
+  const { toast, closeToast } = useToast()
   const [t] = useTranslation('translations')
 
   useEffect(() => {
@@ -145,27 +146,36 @@ const WalletChange: React.FC = ({ children }) => {
       location.pathname.startsWith(p)
     )
     if (
-      WalletType.Unipass === walletType &&
       isLogined &&
       !isAuthenticated &&
       (!pathInAllowList || pathInForceAuthList) &&
-      !isSigning.current &&
-      pubkey
+      !isSigning.current
     ) {
-      isSigning.current = true
-      toast({
-        title: t('auth.title'),
-        content: t('auth.content'),
-        okText: t('auth.ok'),
-        showCloseIcon: false,
-        show: true,
-        onConfirm: () => {
-          if (pathInForceAuthList) {
-            UnipassConfig.setRedirectUri(location.pathname + location.search)
-          }
-          signMessage(address).catch(Boolean)
-        },
-      })
+      if (
+        (WalletType.Unipass === walletType && pubkey) ||
+        WalletType.Metamask === walletType
+      ) {
+        isSigning.current = true
+        toast({
+          title: t('auth.title'),
+          content: t('auth.content'),
+          okText: t('auth.ok'),
+          showCloseIcon: false,
+          show: true,
+          onConfirm: () => {
+            if (pathInForceAuthList) {
+              UnipassConfig.setRedirectUri(location.pathname + location.search)
+            }
+            signMessage(address)
+              .then(() => {
+                if (WalletType.Metamask === walletType) {
+                  closeToast()
+                }
+              })
+              .catch(Boolean)
+          },
+        })
+      }
     }
   }, [
     isAuthenticated,
@@ -178,6 +188,7 @@ const WalletChange: React.FC = ({ children }) => {
     pubkey,
     t,
     toast,
+    closeToast,
   ])
 
   return <>{children}</>
