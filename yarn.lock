@@ -11702,13 +11702,6 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-<<<<<<< HEAD
-viewerjs@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/viewerjs/-/viewerjs-1.10.0.tgz#6dcd693b548dd6d7c8371b193136d1eae180621f"
-
-=======
->>>>>>> develop
 vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
