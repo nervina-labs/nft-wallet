@@ -314,6 +314,7 @@
       "title": "Issuer",
       "follower": "Follower",
       "like": "Like",
+      "no-data": "No data",
       "more": "More",
       "no-on-sale": "No nft on sale"
     },
