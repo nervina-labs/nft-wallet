@@ -413,8 +413,11 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     if (flipped && !isTouchDevice) {
       return false
     }
+    if (flipped && !hasCardCackContent) {
+      return false
+    }
     return isTiltEnable && enable
-  }, [isTiltEnable, enable, flipped, isTouchDevice])
+  }, [isTiltEnable, enable, flipped, isTouchDevice, hasCardCackContent])
   return (
     <>
       <Container
