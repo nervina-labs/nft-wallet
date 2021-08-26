@@ -12,14 +12,13 @@ import { RoutePath } from '../../routes'
 
 const Container = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
   position: relative;
   min-width: 232px;
   max-width: 232px;
-  min-height: 200px;
-  max-height: 200px;
+  min-height: 190px;
+  max-height: 190px;
   margin-right: 8px;
   border-radius: 8px;
   border: 1px solid #f4f4f4;
@@ -27,6 +26,7 @@ const Container = styled.div`
   padding: 8px;
   margin-top: 20px;
   .issuer {
+    margin-top: 30px;
     max-width: 100%;
   }
   .avatar {
