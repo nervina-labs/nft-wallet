@@ -5,7 +5,13 @@ import { Transaction } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
-import { FollowerResponse, Issuer, IssuersResponse } from './issuer'
+import {
+  Issuer,
+  IssuerInfo,
+  IssuerTokenClassResult,
+  FollowerResponse,
+  IssuersResponse,
+} from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
 
@@ -28,6 +34,9 @@ export enum ClassSortType {
 interface SpecialCategories {
   special_categories: SpecialAssets[]
 }
+
+export const PRODUCT_STATUE_SET = ['product_state', 'on_sale'] as const
+export type ProductState = typeof PRODUCT_STATUE_SET[number]
 
 export interface NFTWalletAPI {
   getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
@@ -108,6 +117,17 @@ export interface NFTWalletAPI {
   getClaimStatus: (uuid: string) => Promise<AxiosResponse<ClaimResult>>
 
   claim: (uuid: string) => Promise<AxiosResponse<void>>
+
+  getIssuerInfo: (uuid: string) => Promise<AxiosResponse<IssuerInfo>>
+
+  getIssuerTokenClass: (
+    uuid: string,
+    productState?: ProductState,
+    options?: {
+      limit?: number
+      page?: number
+    }
+  ) => Promise<AxiosResponse<IssuerTokenClassResult>>
 
   toggleFollow: (
     uuid: string,

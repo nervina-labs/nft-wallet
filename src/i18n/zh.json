@@ -299,6 +299,16 @@
       "go-explore": "发现更多秘宝",
       "placeholder": "请输入领取密码"
     },
+    "issuer": {
+      "created": "已创作",
+      "selling": "在售",
+      "title": "创作者个人主页",
+      "follower": "粉丝",
+      "like": "获赞",
+      "no-data": "无数据",
+      "more": "更多",
+      "no-on-sale": "无在售秘宝"
+    },
     "follow": {
       "follow": "关注",
       "followed": "已关注",
