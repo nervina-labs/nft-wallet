@@ -19,8 +19,6 @@ export const Container = styled(MainContainer)`
       background-position: bottom;
     }
     .boxes {
-      height: 340px;
-      max-height: 340px;
       overflow: hidden;
     }
     .desc {
@@ -90,12 +88,12 @@ export const Box = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 220px;
   position: relative;
   background: white;
   border-radius: 20px;
   margin: 0 15px;
   margin-top: 80px;
+  margin-bottom: 40px;
   padding: 0 40px;
   z-index: 3;
   label {
@@ -183,7 +181,7 @@ export const Box = styled.div`
     display: flex;
     align-items: center;
     margin-top: 10px;
-    height: 34px;
+    /* height: 34px; */
     svg {
       width: 12px;
       height: 12px;
