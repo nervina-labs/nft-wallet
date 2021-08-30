@@ -242,7 +242,7 @@ export const Claim: React.FC = () => {
       try {
         await api.claim(code)
         setSubmitStatus(SubmitStatus.Success)
-      } catch (error) {
+      } catch (error: any) {
         const errorCode = error?.response?.data.code
         if (errorCode === 1022) {
           setSubmitStatus(SubmitStatus.Claimed)
