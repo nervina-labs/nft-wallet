@@ -11,5 +11,6 @@ module.exports = {
     'multiline-ternary': 0,
     '@typescript-eslint/strict-boolean-expressions': 0,
     '@typescript-eslint/restrict-plus-operands': 0,
+    '@typescript-eslint/explicit-function-return-type': 0,
   },
 }
