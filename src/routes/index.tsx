@@ -67,6 +67,7 @@ export enum RoutePath {
   Claim = '/claim',
   Collection = '/explore/collection',
   Issuer = '/issuer',
+  Holder = '/holder',
 }
 
 export const RouterContext = React.createContext({
@@ -324,6 +325,13 @@ const routes: MibaoRouterProps[] = [
     key: 'Issuer',
     path: RoutePath.Issuer,
     params: '/:id',
+  },
+  {
+    component: NFTs,
+    exact: true,
+    key: 'Holder',
+    path: RoutePath.Holder,
+    params: '/:address',
   },
 ]
 

@@ -140,6 +140,11 @@
       "qrcode": "扫描二维码，快速接收秘宝",
       "address": "秘宝接收地址"
     },
+    "holder": {
+      "user-name-empty": "未设置昵称",
+      "desc": "这个人很懒，什么也没设置",
+      "title": "收藏者个人主页"
+    },
     "profile": {
       "title": "编辑资料",
       "username": "昵称",

@@ -116,11 +116,15 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
 
 export interface IssuerListProps {
   isFollow: boolean
+  address: string
 }
 
-export const IssuerList: React.FC<IssuerListProps> = ({ isFollow }) => {
+export const IssuerList: React.FC<IssuerListProps> = ({
+  isFollow,
+  address,
+}) => {
   const { getAuth } = useProfileModel()
-  const { address, api } = useWalletModel()
+  const { api } = useWalletModel()
   const { t } = useTranslation('translations')
   const {
     data,
@@ -132,7 +136,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({ isFollow }) => {
     [Query.FollowedIssuers, address, getAuth],
     async ({ pageParam }) => {
       const auth = await getAuth()
-      const { data } = await api.getFollowIssuers(auth, pageParam)
+      const { data } = await api.getFollowIssuers(auth, pageParam, { address })
       return data
     },
     {

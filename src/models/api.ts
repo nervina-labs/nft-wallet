@@ -39,7 +39,10 @@ export const PRODUCT_STATUE_SET = ['product_state', 'on_sale'] as const
 export type ProductState = typeof PRODUCT_STATUE_SET[number]
 
 export interface NFTWalletAPI {
-  getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
+  getNFTs: (
+    page: number,
+    options?: { address?: string }
+  ) => Promise<AxiosResponse<NFT>>
 
   getNFTDetail: (uuid: string, auth: Auth) => Promise<AxiosResponse<NFTDetail>>
 
@@ -64,7 +67,10 @@ export interface NFTWalletAPI {
     sortType: ClassSortType
   ) => Promise<AxiosResponse<ClassList>>
 
-  getUserLikesClassList: (page: number) => Promise<AxiosResponse<ClassList>>
+  getUserLikesClassList: (
+    page: number,
+    options?: { address?: string }
+  ) => Promise<AxiosResponse<ClassList>>
 
   toggleLike: (
     uuid: string,
@@ -78,7 +84,7 @@ export interface NFTWalletAPI {
     ext?: string
   ) => Promise<AxiosResponse<object>>
 
-  getProfile: () => Promise<UserResponse>
+  getProfile: (address?: string) => Promise<UserResponse>
 
   getTokenClass: (
     uuid: string,
@@ -136,7 +142,8 @@ export interface NFTWalletAPI {
 
   getFollowIssuers: (
     auth: Auth,
-    page: number
+    page: number,
+    options?: { address?: string }
   ) => Promise<AxiosResponse<IssuersResponse>>
 
   getFollowTokenClasses: (

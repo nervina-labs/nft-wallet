@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { MainContainer } from '../../styles'
+import { HEADER_HEIGHT } from '../../components/Appbar'
 
 export const Container = styled(MainContainer)`
   display: flex;
@@ -99,23 +100,27 @@ export const Container = styled(MainContainer)`
     }
   }
   .bg {
-    position: fixed;
+    position: relative;
     top: 0;
     width: 100%;
-    padding: 0 20px;
+    padding: calc(${HEADER_HEIGHT ?? 0}px + 20px) 20px 20px;
     max-width: calc(100% - 40px);
-    height: 400px;
     display: flex;
     flex-direction: column;
     transition: 100ms;
 
+    .info {
+      position: relative;
+      z-index: 1;
+    }
+
     .bg-image {
       position: absolute;
-      top: 0;
+      bottom: 0;
       left: 0;
       width: 100%;
       height: auto;
-      z-index: -1;
+      z-index: 0;
     }
 
     @media (min-width: 500px) {
@@ -151,11 +156,16 @@ export const Container = styled(MainContainer)`
     }
   }
   .list {
+    user-select: none;
     flex: 1;
     background: #f8fafd;
     border-radius: 35px 35px 0 0;
-    margin-top: 199px;
     z-index: 2;
+    img {
+      -webkit-user-drag: none;
+      -webkit-touch-callout: none;
+    }
+
     .infinite-scroll-component {
       > div {
         &:nth-child(2) {

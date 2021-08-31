@@ -74,14 +74,20 @@ export class ServerWalletAPI implements NFTWalletAPI {
     this.axios = axios.create({ baseURL: SERVER_URL })
   }
 
-  async getNFTs(page: number): Promise<AxiosResponse<NFT>> {
-    return await this.axios.get(`/holder_tokens/${this.address}`, {
-      params: {
-        page,
-        limit: PER_ITEM_LIMIT,
-        include_submitting: true,
-      },
-    })
+  async getNFTs(
+    page: number,
+    options?: { address?: string }
+  ): Promise<AxiosResponse<NFT>> {
+    return await this.axios.get(
+      `/holder_tokens/${options?.address ?? this.address}`,
+      {
+        params: {
+          page,
+          limit: PER_ITEM_LIMIT,
+          include_submitting: true,
+        },
+      }
+    )
   }
 
   async getNFTDetail(
@@ -180,14 +186,20 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getUserLikesClassList(page: number): Promise<AxiosResponse<ClassList>> {
+  async getUserLikesClassList(
+    page: number,
+    options?: { address?: string }
+  ): Promise<AxiosResponse<ClassList>> {
     const params: Record<string, string | number> = {
       page,
       limit: PER_ITEM_LIMIT,
     }
-    return await this.axios.get(`/liked_token_classes/${this.address}`, {
-      params,
-    })
+    return await this.axios.get(
+      `/liked_token_classes/${options?.address ?? this.address}`,
+      {
+        params,
+      }
+    )
   }
 
   async getTags(): Promise<AxiosResponse<{ tags: Tag[] }>> {
@@ -268,9 +280,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     return data
   }
 
-  async getProfile(): Promise<UserResponse> {
+  async getProfile(address?: string): Promise<UserResponse> {
     try {
-      const { data } = await this.axios.get(`/users/${this.address}`)
+      const { data } = await this.axios.get(`/users/${address ?? this.address}`)
       return data
     } catch (error) {
       return Object.create(null)
@@ -374,17 +386,24 @@ export class ServerWalletAPI implements NFTWalletAPI {
     )
   }
 
-  async getFollowIssuers(auth: Auth, page: number) {
+  async getFollowIssuers(
+    auth: Auth,
+    page: number,
+    options?: { address?: string }
+  ) {
     const params: Record<string, unknown> = {
       page,
       limit: PER_ITEM_LIMIT,
     }
-    return await this.axios.get(`/followed_issuers/${this.address}`, {
-      headers: {
-        auth: JSON.stringify(auth),
-      },
-      params,
-    })
+    return await this.axios.get(
+      `/followed_issuers/${options?.address ?? this.address}`,
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+        params,
+      }
+    )
   }
 
   async getFollowTokenClasses(

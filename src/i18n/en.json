@@ -140,6 +140,11 @@
       "qrcode": "Use this QR code to receive NFT",
       "address": "CKB address"
     },
+    "holder": {
+      "user-name-empty": "No nickname",
+      "desc": "No description",
+      "title": "Holder"
+    },
     "profile": {
       "title": "Edit Profile",
       "username": "Name",
