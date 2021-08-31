@@ -2,7 +2,7 @@ type ChainType = 'mainnet' | 'testnet'
 
 export const SERVER_URL =
   process.env.REACT_APP_SERVER_URL ??
-  'https://goldenlegend.staging.nervina.cn/api/explorer/v1'
+  'https://goldenlegend.staging.nervina.cn/api/wallet/v1'
 export const NODE_URL =
   process.env.REACT_APP_NODE_URL ?? 'https://testnet.ckb.dev'
 export const INDEXER_URL =
@@ -50,3 +50,6 @@ export const RED_ENVELOP_APP_URL = IS_MAINNET
 export const TICKET_APP_URL = IS_MAINNET
   ? 'https://ticket.unipass.xyz'
   : 'https://t.ticket.unipass.xyz'
+
+export const DAS_INDEXER_URL =
+  process.env.REACT_APP_DAS_INDEXER_URL ?? 'https://das.nervina.cn'
