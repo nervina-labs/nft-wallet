@@ -159,7 +159,7 @@ export const NFTs: React.FC = () => {
     return !user?.guide_finished
   }, [user, isUserLoading])
 
-  if (!isLogined) {
+  if (!isLogined && !isHolder) {
     return <Redirect to={RoutePath.Explore} />
   }
 
@@ -245,7 +245,7 @@ export const NFTs: React.FC = () => {
                           token={token}
                           key={token.token_uuid || `${i}.${j}`}
                           address={address}
-                          isClass={isLiked}
+                          isClass={isHolder || isLiked}
                         />
                       ))}
                     </React.Fragment>

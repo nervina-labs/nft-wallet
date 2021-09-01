@@ -23,6 +23,7 @@ import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
 import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
+import { GetHolderByTokenClassUuidResponse } from '../models/holder'
 
 function randomid(length = 10): string {
   let result = ''
@@ -450,6 +451,26 @@ export class ServerWalletAPI implements NFTWalletAPI {
         params: {
           address: this.address,
           product_state: productState,
+          limit,
+          page,
+        },
+      }
+    )
+  }
+
+  async getHolderByTokenClassUuid(
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) {
+    const limit = options?.limit ?? 20
+    const page = options?.page ?? 0
+    return await this.axios.get<GetHolderByTokenClassUuidResponse>(
+      `/token_classes/${uuid}/holders`,
+      {
+        params: {
           limit,
           page,
         },

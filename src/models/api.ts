@@ -14,6 +14,7 @@ import {
 } from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
+import { GetHolderByTokenClassUuidResponse } from './holder'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -151,4 +152,12 @@ export interface NFTWalletAPI {
     page: number,
     sortType: ClassSortType
   ) => Promise<AxiosResponse<FollowClassList>>
+
+  getHolderByTokenClassUuid: (
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) => Promise<AxiosResponse<GetHolderByTokenClassUuidResponse>>
 }
