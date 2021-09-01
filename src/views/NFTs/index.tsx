@@ -15,7 +15,6 @@ import { ReactComponent as ProfileSvg } from '../../assets/svg/menu.svg'
 import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
 import { HiddenBar } from '../../components/HiddenBar'
-import classNames from 'classnames'
 import { DrawerImage } from '../Profile/DrawerImage'
 import { useLocation, useRouteMatch } from 'react-router-dom'
 import { SetUsername } from '../Profile/SetUsername'
@@ -31,6 +30,7 @@ import { IssuerList } from './IssuerList'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
+import { Tab, Tabs, TabsAffix } from '../../components/Tab'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -57,6 +57,8 @@ export const NFTs: React.FC = () => {
   const isLiked = !!useRouteQuery<string>('liked', '')
   const isFollow = !!useRouteQuery<string>('follow', '')
   const isOwned = location.search === ''
+
+  const filterIndex = [isOwned, isLiked, isFollow].findIndex((bool) => bool)
 
   const getRemoteData = useCallback(
     async ({ pageParam = 1 }) => {
@@ -161,36 +163,6 @@ export const NFTs: React.FC = () => {
     return <Redirect to={RoutePath.Explore} />
   }
 
-  const filters = [
-    {
-      value: 'nfts.owned',
-      fn() {
-        if (!isOwned) {
-          history.replace(history.location.pathname)
-        }
-      },
-      isActive: () => isOwned,
-    },
-    {
-      value: 'nfts.liked',
-      fn() {
-        if (!isLiked) {
-          history.replace(history.location.pathname + '?liked=true')
-        }
-      },
-      isActive: () => isLiked,
-    },
-    {
-      value: 'follow.follow',
-      fn() {
-        if (!isFollow) {
-          history.replace(history.location.pathname + '?follow=true')
-        }
-      },
-      isActive: () => isFollow,
-    },
-  ]
-
   return (
     <Container id="main">
       {isHolder && (
@@ -209,21 +181,32 @@ export const NFTs: React.FC = () => {
         address={address}
       />
       <section className="list">
-        <div
-          className="filters"
-          style={{ top: `${isHolder ? HEADER_HEIGHT : 0}px` }}
-        >
-          {filters.map((filter, i) => (
-            <div
-              className={classNames('filter', { active: filter.isActive() })}
-              key={i}
-              onClick={filter.fn}
+        <TabsAffix top={isHolder ? HEADER_HEIGHT : 0} className="filters">
+          <Tabs activeKey={filterIndex}>
+            <Tab
+              onClick={() => history.replace(history.location.pathname)}
+              active={isOwned}
             >
-              {t(filter.value)}
-              {filter.isActive() ? <span className="active-line" /> : null}
-            </div>
-          ))}
-        </div>
+              {t('nfts.owned')}
+            </Tab>
+            <Tab
+              onClick={() =>
+                history.replace(history.location.pathname + '?liked=true')
+              }
+              active={isLiked}
+            >
+              {t('nfts.liked')}
+            </Tab>
+            <Tab
+              onClick={() =>
+                history.replace(history.location.pathname + '?follow=true')
+              }
+              active={isFollow}
+            >
+              {t('follow.follow')}
+            </Tab>
+          </Tabs>
+        </TabsAffix>
         {isFollow ? (
           <IssuerList isFollow={isFollow} address={address} />
         ) : (
