@@ -135,8 +135,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({
   } = useInfiniteQuery(
     [Query.FollowedIssuers, address, getAuth],
     async ({ pageParam }) => {
-      const auth = await getAuth()
-      const { data } = await api.getFollowIssuers(auth, pageParam, { address })
+      const { data } = await api.getFollowIssuers(pageParam, { address })
       return data
     },
     {
@@ -176,13 +175,11 @@ export const IssuerList: React.FC<IssuerListProps> = ({
   }
   return (
     <>
-      {
-        <LabelContainer>
-          <span className="label">
-            {t('follow.count', { count: dataLength })}
-          </span>
-        </LabelContainer>
-      }
+      <LabelContainer>
+        <span className="label">
+          {t('follow.count', { count: dataLength })}
+        </span>
+      </LabelContainer>
       {isRefetching ? <Loading /> : null}
       {data === undefined && status === 'loading' ? (
         <Loading />
@@ -209,15 +206,13 @@ export const IssuerList: React.FC<IssuerListProps> = ({
           {data?.pages?.map((group, i) => {
             return (
               <React.Fragment key={i}>
-                {group.issuers.map((issuer, j: number) => {
-                  return (
-                    <Issuer
-                      issuer={issuer}
-                      key={issuer.issuer_id || `${i}.${j}`}
-                      afterToggle={refetch}
-                    />
-                  )
-                })}
+                {group.issuers.map((issuer, j: number) => (
+                  <Issuer
+                    issuer={issuer}
+                    key={issuer.issuer_id || `${i}.${j}`}
+                    afterToggle={refetch}
+                  />
+                ))}
               </React.Fragment>
             )
           })}

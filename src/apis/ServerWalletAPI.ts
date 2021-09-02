@@ -388,20 +388,24 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getFollowIssuers(
-    auth: Auth,
     page: number,
-    options?: { address?: string }
+    options?: {
+      address?: string
+      auth?: Auth
+    }
   ) {
     const params: Record<string, unknown> = {
       page,
       limit: PER_ITEM_LIMIT,
     }
+    const headers: { auth?: string } = {}
+    if (options?.auth) {
+      headers.auth = JSON.stringify(options?.auth)
+    }
     return await this.axios.get(
       `/followed_issuers/${options?.address ?? this.address}`,
       {
-        headers: {
-          auth: JSON.stringify(auth),
-        },
+        headers,
         params,
       }
     )
