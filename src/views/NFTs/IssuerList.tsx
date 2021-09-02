@@ -135,7 +135,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({
   } = useInfiniteQuery(
     [Query.FollowedIssuers, address, getAuth],
     async ({ pageParam }) => {
-      const { data } = await api.getFollowIssuers(pageParam, { address })
+      const { data } = await api.getFollowIssuers({ address, page: pageParam })
       return data
     },
     {

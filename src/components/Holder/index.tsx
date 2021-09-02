@@ -1,5 +1,7 @@
 import React from 'react'
-import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
+import PeopleSvgPath, {
+  ReactComponent as PeopleSvg,
+} from '../../assets/svg/people.svg'
 import { LazyLoadImage } from '../Image'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
@@ -10,6 +12,7 @@ const HolderContainer = styled.div`
   display: inline-flex;
   height: var(--size);
   width: 100%;
+  user-select: none;
   .username {
     margin: auto auto auto 8px;
     font-size: 14px;
@@ -52,7 +55,15 @@ export const Holder: React.FC<HolderProps> = ({
           width={44}
           height={44}
           variant="circle"
-          backup={<PeopleSvg />}
+          backup={
+            <LazyLoadImage
+              src={(PeopleSvgPath as unknown) as string}
+              variant="circle"
+              width={44}
+              height={44}
+              backup={<PeopleSvg />}
+            />
+          }
         />
         <div className="username">
           {username ?? t('holder.user-name-empty')}

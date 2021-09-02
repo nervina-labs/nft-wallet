@@ -387,16 +387,17 @@ export class ServerWalletAPI implements NFTWalletAPI {
     )
   }
 
-  async getFollowIssuers(
-    page: number,
-    options?: {
-      address?: string
-      auth?: Auth
-    }
-  ) {
+  async getFollowIssuers(options?: {
+    address?: string
+    auth?: Auth
+    page?: number
+    limit?: number
+  }) {
+    const page = options?.page ?? 0
+    const limit = options?.limit ?? PER_ITEM_LIMIT
     const params: Record<string, unknown> = {
       page,
-      limit: PER_ITEM_LIMIT,
+      limit,
     }
     const headers: { auth?: string } = {}
     if (options?.auth) {

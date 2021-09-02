@@ -218,6 +218,10 @@ const TabsContainer = styled.div`
   margin-bottom: 24px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 
+  .tabs {
+    transform: translateY(1px);
+  }
+
   .tab {
     font-size: 14px;
   }
@@ -488,7 +492,7 @@ export const NFT: React.FC = () => {
               </div>
             ) : null}
             <TabsContainer>
-              <Tabs activeKey={isHolder ? 1 : 0}>
+              <Tabs activeKey={isHolder ? 1 : 0} className="tabs">
                 <Tab
                   className="tab"
                   active={!isHolder}
