@@ -320,6 +320,50 @@
       "more": "更多",
       "no-on-sale": "无在售秘宝"
     },
+    "exchange": {
+      "title": "兑换中心",
+      "type": {
+        "nft": "NFT",
+        "blind": "盲盒",
+        "other": "其他"
+      },
+      "progress": "兑换进度",
+      "tabs": {
+        "all": "全部活动",
+        "redeemable": "可兑换"
+      },
+      "actions": {
+        "exchange": "立即兑换",
+        "insufficient": "暂不满足"
+      },
+      "alert": {
+        "normal": "兑换不会销毁您参与兑换的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他兑换",
+        "destroy": "兑换将会销毁您参与兑换的NFT，该操作不可逆，一经销毁将无法找回",
+        "confirm": "确认兑换",
+        "cancel": "取消"
+      },
+      "exchanged": "已兑换",
+      "issuer": "发起人",
+      "issue-time": "发起时间",
+      "event": {
+        "title": "活动详情",
+        "on-going": "活动进行中",
+        "closed": "活动已关闭",
+        "end": "活动已结束",
+        "tabs": {
+          "price": "活动奖品",
+          "requirement": "兑换条件"
+        }
+      },
+      "warning": "兑换不会销毁您持有的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他任何兑换活动。",
+      "check": {
+        "price": "查看奖品",
+        "comment": "查看奖品和留言",
+        "wait": "待承兑"
+      },
+      "empty": "暂时还没有活动",
+      "no-more": "没有更多活动了"
+    },
     "follow": {
       "follow": "关注",
       "followed": "已关注",

@@ -38,6 +38,7 @@ import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
 import { UnipassConfig } from '../utils'
 import { Shop } from '../views/Shop'
+import { Redeem } from '../views/Reedem'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -67,6 +68,7 @@ export enum RoutePath {
   Claim = '/claim',
   Collection = '/explore/collection',
   Issuer = '/issuer',
+  Redeem = '/redeem',
 }
 
 export const RouterContext = React.createContext({
@@ -317,6 +319,12 @@ const routes: MibaoRouterProps[] = [
     key: 'Collection',
     path: RoutePath.Collection,
     params: '/:id',
+  },
+  {
+    component: Redeem,
+    exact: true,
+    key: 'Redeem',
+    path: RoutePath.Redeem,
   },
   {
     component: Issuer,

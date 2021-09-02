@@ -16,4 +16,5 @@ export enum Query {
   DetectClaim = 'DetectClaim',
   Claim = 'Claim',
   FollowedIssuers = 'FollowedIssuers',
+  RedeemList = 'RedeemList',
 }
