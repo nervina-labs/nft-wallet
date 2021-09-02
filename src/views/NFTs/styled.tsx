@@ -119,6 +119,7 @@ export const Container = styled(MainContainer)`
     background: #f8fafd;
     border-radius: 35px 35px 0 0;
     z-index: 2;
+    position: relative;
     img {
       -webkit-user-drag: none;
       -webkit-touch-callout: none;
@@ -130,6 +131,22 @@ export const Container = styled(MainContainer)`
           margin-top: 20px;
         }
       }
+    }
+  }
+
+  .list-empty {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    &.hide {
+      pointer-events: none;
+      opacity: 0;
+    }
+    img {
+      margin-top: 0;
     }
   }
 `

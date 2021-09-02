@@ -31,6 +31,7 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
 import { Tab, Tabs, TabsAffix } from '../../components/Tab'
+import classNames from 'classnames'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -251,7 +252,13 @@ export const NFTs: React.FC = () => {
                     </React.Fragment>
                   )
                 })}
-                {status === 'success' && dataLength === 0 ? <Empty /> : null}
+                <div
+                  className={classNames('list-empty', {
+                    hide: !(status === 'success' && dataLength === 0),
+                  })}
+                >
+                  <Empty />
+                </div>
               </InfiniteScroll>
             )}
           </>
