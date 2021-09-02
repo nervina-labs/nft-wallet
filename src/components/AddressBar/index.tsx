@@ -42,9 +42,13 @@ const Container = styled.div`
 
 export interface AddressbarProps {
   address: string
+  isHolder?: boolean
 }
 
-export const Addressbar: React.FC<AddressbarProps> = ({ address }) => {
+export const Addressbar: React.FC<AddressbarProps> = ({
+  address,
+  isHolder,
+}) => {
   const history = useHistory()
   const { snackbar } = useProfileModel()
   const [t] = useTranslation('translations')
@@ -59,7 +63,16 @@ export const Addressbar: React.FC<AddressbarProps> = ({ address }) => {
       >
         {truncateMiddle(address, 24, 12)}
       </div>
-      <div className="qrcode" onClick={() => history.push(RoutePath.Info)}>
+      <div
+        className="qrcode"
+        onClick={() => {
+          if (isHolder) {
+            history.push(RoutePath.HolderAddress + '/' + address)
+          } else {
+            history.push(RoutePath.Info)
+          }
+        }}
+      >
         <QrcodeSvg />
       </div>
     </Container>

@@ -33,9 +33,10 @@ const Container = styled.div`
   }
 `
 
-export const Empty: React.FC<{ showExplore?: boolean }> = ({
-  showExplore = true,
-}) => {
+export const Empty: React.FC<{
+  showExplore?: boolean
+  isHolder?: boolean
+}> = ({ showExplore = true, isHolder }) => {
   const { t } = useTranslation('translations')
   const history = useHistory()
   const isLiked = useRouteQuery('liked', '')

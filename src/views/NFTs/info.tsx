@@ -120,7 +120,7 @@ export const Info: React.FC<{
           isHolder={isHolder}
         />
         <div className="desc">{description}</div>
-        <Addressbar address={address} />
+        <Addressbar address={address} isHolder={isHolder} />
       </div>
       <img className="bg-image" src={(Bg as unknown) as string} alt="Bg" />
       {isLoading && (
