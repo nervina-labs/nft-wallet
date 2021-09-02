@@ -1,11 +1,10 @@
 import styled from 'styled-components'
 import { MainContainer } from '../../styles'
 import React from 'react'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Info } from '../Info'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 
 const Container = styled(MainContainer)`
@@ -16,11 +15,16 @@ const Container = styled(MainContainer)`
     flex: 1;
     background-color: white;
     z-index: 2;
+    padding: 15px;
+  }
+
+  .content {
+    width: 100%;
   }
 `
 
 export const HolderAddress: React.FC = () => {
-  const { address } = useWalletModel()
+  const { address } = useParams<{ address: string }>()
   const history = useHistory()
   const { t } = useTranslation('translations')
 
