@@ -17,6 +17,7 @@ const Container = styled.span`
   width: 58px;
   height: 17px;
   font-size: 12px;
+  border-radius: 2px;
 `
 
 export const Label: React.FC<LabelProps> = ({ type }) => {

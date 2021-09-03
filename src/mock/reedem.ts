@@ -38,4 +38,23 @@ const item = {
   uuid: Math.random(),
 }
 
+export const mockRedeemDetail: any = {
+  ...item,
+  timestamp: (Date.now() / 1000).toString(),
+  desciption: `
+  /Users/yuche/Developer/nft-wallet/src/apis/ServerWalletAPI.ts
+TypeScript error in /Users/yuche/Developer/nft-wallet/src/apis/ServerWalletAPI.ts(70,14):
+Class 'ServerWalletAPI' incorrectly implements interface 'NFTWalletAPI'.
+  `,
+  priceDesciption: `
+  > 70 | export class ServerWalletAPI implements NFTWalletAPI {
+    |              ^
+ 71 |   private readonly address: string
+ 72 |   private readonly axios: AxiosInstance
+ 73 |
+  `,
+  priceImages: [],
+  priceTitle: '123',
+}
+
 export const mockRedeems: any[] = [item, item, item, item]

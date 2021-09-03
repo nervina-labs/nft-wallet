@@ -14,7 +14,7 @@ import {
 } from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
-import { RedeemEvents } from './redeem'
+import { RedeemDetailModel, RedeemEvents } from './redeem'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -147,4 +147,6 @@ export interface NFTWalletAPI {
   ) => Promise<AxiosResponse<FollowClassList>>
 
   getRedeemEvents: (page: number) => Promise<RedeemEvents>
+
+  getRedeemDetail: (id: string) => Promise<RedeemDetailModel>
 }

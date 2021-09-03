@@ -13,6 +13,8 @@ import { RedeemEventItem, RedeemStatus } from '../../models/redeem'
 import { Divider } from '@material-ui/core'
 import { Label } from './Label'
 import classNames from 'classnames'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../../routes'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -226,8 +228,9 @@ const ExchangeAction: React.FC<{ status: RedeemStatus }> = ({ status }) => {
 
 export const ReedemEvent: React.FC<ExchangeEventProps> = ({ item }) => {
   const [t] = useTranslation('translations')
+  const history = useHistory()
   return (
-    <Container>
+    <Container onClick={() => history.push(`${RoutePath.Redeem}/${item.uuid}`)}>
       <div className="issuer">
         <Creator
           title=""

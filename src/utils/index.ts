@@ -1,4 +1,5 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
+import dayjs from 'dayjs'
 import Web3 from 'web3'
 import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
 export * from './unipass'
@@ -172,4 +173,13 @@ export async function downloadImage(imageSrc: string): Promise<void> {
 
 export function ellipsisIssuerID(value: string): string {
   return `${value.substr(0, 8)}...${value.substr(8, 6)}`
+}
+
+const TIME_FORMAT_CN = 'YYYY-MM-DD, HH:mm:ss'
+const TIME_FORMAT_EN = 'MMM DD, YYYY HH:mm:ss'
+
+export function formatTime(timestamp: string, lang: string) {
+  return dayjs(Number(timestamp + '000')).format(
+    lang !== 'en' ? TIME_FORMAT_CN : TIME_FORMAT_EN
+  )
 }

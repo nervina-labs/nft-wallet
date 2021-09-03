@@ -21,7 +21,7 @@ const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
 
-  background: #e5e5e5;
+  background: #f6f6f6;
   h4 {
     text-align: center;
     color: rgba(0, 0, 0, 0.6);

@@ -32,3 +32,12 @@ export interface RedeemEvents {
   meta: ListMeta
   events: RedeemEventItem[]
 }
+
+export interface RedeemDetailModel extends RedeemEventItem {
+  name: string
+  timestamp: string
+  desciption: string
+  priceDesciption: string
+  priceImages: string[]
+  priceTitle: string
+}

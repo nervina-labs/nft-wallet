@@ -23,8 +23,8 @@ import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
 import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
-import { mockRedeems } from '../mock/reedem'
-import { RedeemEvents } from '../models/redeem'
+import { mockRedeemDetail, mockRedeems } from '../mock/reedem'
+import { RedeemEvents, RedeemDetailModel } from '../models/redeem'
 
 function randomid(length = 10): string {
   let result = ''
@@ -427,6 +427,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
           },
           events: mockRedeems,
         })
+      }, 1e3)
+    })
+  }
+
+  async getRedeemDetail(uuid: string) {
+    return await new Promise<RedeemDetailModel>((resolve) => {
+      setTimeout(() => {
+        resolve(mockRedeemDetail)
       }, 1e3)
     })
   }
