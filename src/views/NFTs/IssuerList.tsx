@@ -116,11 +116,15 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
 
 export interface IssuerListProps {
   isFollow: boolean
+  address: string
 }
 
-export const IssuerList: React.FC<IssuerListProps> = ({ isFollow }) => {
+export const IssuerList: React.FC<IssuerListProps> = ({
+  isFollow,
+  address,
+}) => {
   const { getAuth } = useProfileModel()
-  const { address, api } = useWalletModel()
+  const { api } = useWalletModel()
   const { t } = useTranslation('translations')
   const {
     data,
@@ -131,8 +135,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({ isFollow }) => {
   } = useInfiniteQuery(
     [Query.FollowedIssuers, address, getAuth],
     async ({ pageParam }) => {
-      const auth = await getAuth()
-      const { data } = await api.getFollowIssuers(auth, pageParam)
+      const { data } = await api.getFollowIssuers({ address, page: pageParam })
       return data
     },
     {
@@ -172,13 +175,11 @@ export const IssuerList: React.FC<IssuerListProps> = ({ isFollow }) => {
   }
   return (
     <>
-      {
-        <LabelContainer>
-          <span className="label">
-            {t('follow.count', { count: dataLength })}
-          </span>
-        </LabelContainer>
-      }
+      <LabelContainer>
+        <span className="label">
+          {t('follow.count', { count: dataLength })}
+        </span>
+      </LabelContainer>
       {isRefetching ? <Loading /> : null}
       {data === undefined && status === 'loading' ? (
         <Loading />
@@ -205,15 +206,13 @@ export const IssuerList: React.FC<IssuerListProps> = ({ isFollow }) => {
           {data?.pages?.map((group, i) => {
             return (
               <React.Fragment key={i}>
-                {group.issuers.map((issuer, j: number) => {
-                  return (
-                    <Issuer
-                      issuer={issuer}
-                      key={issuer.issuer_id || `${i}.${j}`}
-                      afterToggle={refetch}
-                    />
-                  )
-                })}
+                {group.issuers.map((issuer, j: number) => (
+                  <Issuer
+                    issuer={issuer}
+                    key={issuer.issuer_id || `${i}.${j}`}
+                    afterToggle={refetch}
+                  />
+                ))}
               </React.Fragment>
             )
           })}

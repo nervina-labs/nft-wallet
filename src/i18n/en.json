@@ -130,6 +130,7 @@
       "title": "NFT Details",
       "transfer": "Transfer",
       "desc": "NFT description",
+      "no-desc": "No description",
       "lock": "Include card back content which can only be revealed by the owner of this NFT"
     },
     "account": {
@@ -139,6 +140,11 @@
       "warning": "This address only supports Nervos assets, please do not receive other chain assets",
       "qrcode": "Use this QR code to receive NFT",
       "address": "CKB address"
+    },
+    "holder": {
+      "user-name-empty": "No nickname",
+      "desc": "No description",
+      "title": "Holder"
     },
     "profile": {
       "title": "Edit Profile",

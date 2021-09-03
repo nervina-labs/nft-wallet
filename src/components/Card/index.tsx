@@ -16,6 +16,7 @@ export interface CardProps {
   address: string
   className?: string
   isClass: boolean
+  showTokenId?: boolean
 }
 
 interface LabelProps {
@@ -224,6 +225,7 @@ export const Card: React.FC<CardProps> = ({
   address,
   className,
   isClass,
+  showTokenId,
 }) => {
   const history = useHistory()
   const isClassBanned = token.is_class_banned
@@ -301,7 +303,7 @@ export const Card: React.FC<CardProps> = ({
           banned={isBanned}
           count={token.class_total}
           bold={false}
-          sn={isClass ? undefined : token.n_token_id}
+          sn={showTokenId === false ? undefined : token.n_token_id}
           color="rgba(63, 63, 63, 0.66) !important"
         />
         <Creator

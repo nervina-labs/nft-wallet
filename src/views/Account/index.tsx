@@ -70,6 +70,11 @@ const Container = styled(MainContainer)`
   }
 `
 
+export const InfoComponent: React.FC = () => {
+  const { address } = useWalletModel()
+  return <Info address={address} />
+}
+
 export const Account: React.FC = () => {
   const history = useHistory()
   const { t } = useTranslation('translations')
@@ -95,7 +100,7 @@ export const Account: React.FC = () => {
       />
       <section className="detail">
         <Switch>
-          <Route component={Info} path={RoutePath.Info} exact />
+          <Route component={InfoComponent} path={RoutePath.Info} exact />
           <Route component={Transactions} path={RoutePath.Transactions} exact />
           <Redirect to={RoutePath.NotFound} />
         </Switch>
