@@ -13,7 +13,7 @@ import PeopleSvg from '../../assets/svg/people.svg'
 import { SetUsername } from './SetUsername'
 import { SetDesc } from './setDesc'
 import { SetBirthday } from './setBirthday'
-import { DrawerAcion } from './DrawerAction'
+import { DrawerAction } from './DrawerAction'
 import { ProfilePath, RoutePath } from '../../routes'
 import { useWalletModel } from '../../hooks/useWallet'
 import { getRegionFromCode, SetRegion } from './SetRegion'
@@ -146,7 +146,7 @@ export const Profile: React.FC = () => {
   const matchDesc = useRouteMatch(ProfilePath.Description)
   const matchUsername = useRouteMatch(ProfilePath.Username)
 
-  const { data: user, isFetching } = useQuery(
+  const { data: user, isFetching, refetch } = useQuery(
     [Query.Profile, address],
     async () => {
       const profile = await api.getProfile()
@@ -265,7 +265,7 @@ export const Profile: React.FC = () => {
           history.goBack()
         }}
       />
-      <DrawerAcion
+      <DrawerAction
         isDrawerOpen={showGenderAction}
         close={() => setShowGenderAction(false)}
         actions={[
@@ -277,6 +277,7 @@ export const Profile: React.FC = () => {
       <DrawerImage
         showAvatarAction={showAvatarAction}
         setShowAvatarAction={setShowAvatarAction}
+        reloadProfile={refetch}
       />
     </Container>
   )

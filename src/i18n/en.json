@@ -149,6 +149,7 @@
       "description": "Description",
       "input": "Please enter",
       "select": "Please select ",
+      "choose-nft-avatar": "Choose NFT",
       "user-name": {
         "edit": "Edit Name",
         "desc": "2-24 characters",
@@ -170,7 +171,8 @@
       },
       "avatar": {
         "camera": "Take a Photo",
-        "photo-lib": "Pick from Library"
+        "photo-lib": "Pick from Library",
+        "nft": "Choose NFT as Avatar"
       },
       "save": "Save",
       "cancel": "Cancel",
