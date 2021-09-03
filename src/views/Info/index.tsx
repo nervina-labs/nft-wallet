@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import QRCode from 'qrcode.react'
 import { copyFallback, sleep } from '../../utils'
-import { useWalletModel } from '../../hooks/useWallet'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../../components/Button'
 import { ReactComponent as CheckSvg } from '../../assets/svg/check-circle.svg'
@@ -98,8 +97,7 @@ const Container = styled.div`
   }
 `
 
-export const Info: React.FC = () => {
-  const { address } = useWalletModel()
+export const Info: React.FC<{ address: string }> = ({ address = '' }) => {
   const { t } = useTranslation('translations')
   const [isCopying, setIsCopy] = useState(false)
 
