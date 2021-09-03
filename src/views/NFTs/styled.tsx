@@ -133,20 +133,4 @@ export const Container = styled(MainContainer)`
       }
     }
   }
-
-  .list-empty {
-    position: absolute;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    top: 0;
-    left: 0;
-    &.hide {
-      pointer-events: none;
-      opacity: 0;
-    }
-    img {
-      margin-top: 0;
-    }
-  }
 `

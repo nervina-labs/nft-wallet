@@ -2,11 +2,10 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import Emptypng from '../../assets/img/empty.png'
-import { NFT_EXPLORER_URL } from '../../constants'
 import { LazyLoadImage } from '../../components/Image'
-import { useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { Link } from 'react-router-dom'
 
 const Container = styled.div`
   margin-top: 80px;
@@ -37,7 +36,6 @@ export const Empty: React.FC<{
   showExplore?: boolean
 }> = ({ showExplore = true }) => {
   const { t } = useTranslation('translations')
-  const history = useHistory()
   const isLiked = useRouteQuery('liked', '')
   const tag = useRouteQuery<string>('tag', '')
   const follow = useRouteQuery<string>('follow', '')
@@ -55,18 +53,9 @@ export const Empty: React.FC<{
       <LazyLoadImage src={Emptypng} width={260} height={172} />
       <div className="desc">{desc}</div>
       {showExplore ? (
-        <a
-          className="link"
-          target="_blank"
-          rel="noopener noreferrer"
-          href={NFT_EXPLORER_URL}
-          onClick={(e) => {
-            e.preventDefault()
-            history.push(RoutePath.Explore)
-          }}
-        >
+        <Link className="link" to={RoutePath.Explore}>
           {t('nfts.link')}
-        </a>
+        </Link>
       ) : null}
     </Container>
   )

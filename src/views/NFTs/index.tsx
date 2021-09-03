@@ -31,7 +31,6 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
 import { Tab, Tabs, TabsAffix } from '../../components/Tab'
-import classNames from 'classnames'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -163,6 +162,9 @@ export const NFTs: React.FC = () => {
   if (!isLogined && !isHolder) {
     return <Redirect to={RoutePath.Explore} />
   }
+  if (params.address === localAddress) {
+    return <Redirect to={RoutePath.NFTs} />
+  }
 
   return (
     <Container id="main">
@@ -247,18 +249,13 @@ export const NFTs: React.FC = () => {
                           key={token.token_uuid || `${i}.${j}`}
                           address={address}
                           isClass={isHolder || isLiked}
+                          showTokenId={!isLiked}
                         />
                       ))}
                     </React.Fragment>
                   )
                 })}
-                <div
-                  className={classNames('list-empty', {
-                    hide: !(status === 'success' && dataLength === 0),
-                  })}
-                >
-                  <Empty />
-                </div>
+                {status === 'success' && dataLength === 0 ? <Empty /> : null}
               </InfiniteScroll>
             )}
           </>

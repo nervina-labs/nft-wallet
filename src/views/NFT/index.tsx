@@ -519,7 +519,7 @@ export const NFT: React.FC = () => {
                 <StatusText>{t('nft.no-desc')}</StatusText>
               )
             ) : (
-              <TokenHolderList id={id} />
+              <TokenHolderList id={(detail as NFTDetail).class_uuid ?? id} />
             )}
           </section>
           <Footer nft={detail} />

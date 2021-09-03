@@ -18,7 +18,6 @@ import { Empty } from './empty'
 import { truncateMiddle } from '../../utils'
 import { Link } from 'react-router-dom'
 import { RoutePath } from '../../routes'
-import classNames from 'classnames'
 
 interface IssuerProps {
   issuer: IIssuer
@@ -217,13 +216,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({
               </React.Fragment>
             )
           })}
-          <div
-            className={classNames('list-empty', {
-              hide: !(status === 'success' && dataLength === 0),
-            })}
-          >
-            <Empty />
-          </div>
+          {status === 'success' && dataLength === 0 ? <Empty /> : null}
         </InfiniteScroll>
       )}
     </>
