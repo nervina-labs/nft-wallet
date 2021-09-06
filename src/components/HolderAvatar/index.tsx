@@ -12,7 +12,6 @@ const Container = styled.div`
   width: 44px;
   height: 44px;
   position: relative;
-  overflow: hidden;
   .bg-animation-container {
     position: absolute;
     top: 0;
@@ -23,6 +22,7 @@ const Container = styled.div`
     transform: scale(1.35);
     transform-origin: center;
     pointer-events: none;
+    z-index: 1;
   }
   .bg-animation-img {
     position: absolute;
