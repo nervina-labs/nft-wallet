@@ -356,7 +356,7 @@ export const NFT: React.FC = () => {
       return null
     }
 
-    if (IS_WEXIN && productID) {
+    if (IS_WEXIN && productID && isWechatInited) {
       const weappHtml = `
         <wx-open-launch-weapp
         id="launch-btn"
@@ -391,12 +391,12 @@ export const NFT: React.FC = () => {
         </script>
       </wx-open-launch-weapp>
       `
-      return isWechatInited ? (
+      return (
         <div
           className="buy-container"
           dangerouslySetInnerHTML={{ __html: weappHtml }}
         ></div>
-      ) : null
+      )
     }
     return (
       <div
