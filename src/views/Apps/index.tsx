@@ -164,10 +164,7 @@ export const Apps: React.FC = () => {
   const history = useHistory()
   const { initWechat, isWechatInited } = useWechatLaunchWeapp()
   useEffect(() => {
-    initWechat().catch((error) => {
-      console.log(error)
-      console.log('no')
-    })
+    initWechat().catch(Boolean)
   }, [])
   console.log(isWechatInited)
   const getAppUrl = useCallback(
@@ -239,15 +236,41 @@ export const Apps: React.FC = () => {
       available: false,
     },
   ]
-  const html = `
+  const weappHtml = `
     <wx-open-launch-weapp
     id="launch-btn"
     username="${WEAPP_ID}"
-    path="pages/index/index.html"
+    path="pages/index/index"
   >
     <script type="text/wxtag-template">
-      <style>.btn { padding: 12px }</style>
-      <button class="btn">打开小程序</button>
+      <style>
+        .btn {
+          cursor: pointer;
+          width: 231px;
+          margin-left: 10px;
+          margin-right: 10px;
+          padding: 10px;
+          background-color: #f8f7fb;
+          box-shadow: 0px 10px 20px rgba(227, 227, 227, 0.25);
+          border-radius: 15px;
+        }
+        .title {
+          font-size: 16px;
+          color: black;
+          font-weight: bold;
+        }
+        .desc {
+          margin: 6px 0;
+          text-align: left;
+          font-size: 12px;
+          color: black;
+          word-break: break-all;
+        }
+      </style>
+      <div class="btn">
+        <div class="title">${t('apps.shop.title')}</div>
+        <div class="desc">${t('apps.shop.desc')}</div>
+      </div>
     </script>
   </wx-open-launch-weapp>
   `
@@ -256,12 +279,15 @@ export const Apps: React.FC = () => {
       <HiddenBar alwaysShow />
       <div className="shop">
         <ShopSvg />
-        <div className="content" onClick={() => history.push(RoutePath.Shop)}>
-          <div className="title">{t('apps.shop.title')}</div>
-          <div className="desc">{t('apps.shop.desc')}</div>
-        </div>
+        {isWechatInited ? (
+          <div dangerouslySetInnerHTML={{ __html: weappHtml }}></div>
+        ) : (
+          <div className="content" onClick={() => history.push(RoutePath.Shop)}>
+            <div className="title">{t('apps.shop.title')}</div>
+            <div className="desc">{t('apps.shop.desc')}</div>
+          </div>
+        )}
       </div>
-      <div dangerouslySetInnerHTML={{ __html: html }}></div>
       <div className="main">
         {data.map(({ title, desc, bg, onClick, available, color }) => {
           return (

@@ -35,16 +35,6 @@ export const useWechatLaunchWeapp = () => {
       })
       wx.ready(() => {
         setIsWechatInited(true)
-        const launchBtn = document.getElementById('launch-btn')
-        launchBtn?.addEventListener('ready', function (e) {
-          console.log('开放标签 ready')
-        })
-        launchBtn?.addEventListener('launch', function (e) {
-          console.log('开放标签 success')
-        })
-        launchBtn?.addEventListener('error', function (e) {
-          console.log('开放标签 fail', e)
-        })
         resolve()
       })
       wx.error((err) => {
