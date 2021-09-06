@@ -7,7 +7,7 @@
     "yarn": "1.22"
   },
   "scripts": {
-    "dev": "craco start",
+    "dev": "HTTPS=true PORT=443 craco start",
     "build": "craco build",
     "start": "serve -s build",
     "lint": "eslint src"

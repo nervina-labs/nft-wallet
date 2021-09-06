@@ -681,7 +681,7 @@ declare namespace wx {
    * 需要打开的卡券列表
    */
   interface OpenCardConfig extends WxBaseRequestConfig {
-      cardList: OpenCardObj[];
+      cardList: any[];
   }
 
   /**
