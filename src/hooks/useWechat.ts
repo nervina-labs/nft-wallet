@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { randomString } from '../utils'
 import { WxSignConfig } from '../models/wx'
 import { useWalletModel } from './useWallet'
-import { IS_MAINNET, WECHAT_APP_ID } from '../constants'
+import { WECHAT_APP_ID } from '../constants'
 
 export const generateWxConfig = (): WxSignConfig => {
   return {
@@ -25,7 +25,7 @@ export const useWechatLaunchWeapp = () => {
     const signature = data?.signature
     return await new Promise<void>((resolve, reject) => {
       wx.config({
-        debug: !IS_MAINNET,
+        debug: process.env.NODE_ENV === 'development',
         appId: WECHAT_APP_ID,
         signature,
         nonceStr: wxSignConfig.nonce_str,
