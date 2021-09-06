@@ -109,16 +109,6 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
 
   return (
     <Container style={{ width: sizePx, height: sizePx }}>
-      {avatar && avatarType === AvatarType.Token && (
-        <div className="bg-animation-container">
-          <img
-            src={animationPath}
-            alt="animation"
-            className="bg-animation-img"
-            style={{ width: `${size * 3}px`, height: `${size * 2}px` }}
-          />
-        </div>
-      )}
       <AvatarContainer>
         {avatar ? (
           <LazyLoadImage
@@ -134,6 +124,16 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
           <Backup size={size} />
         )}
       </AvatarContainer>
+      {avatar && avatarType === AvatarType.Token && (
+        <div className="bg-animation-container">
+          <img
+            src={animationPath}
+            alt="animation"
+            className="bg-animation-img"
+            style={{ width: `${size * 3}px`, height: `${size * 2}px` }}
+          />
+        </div>
+      )}
     </Container>
   )
 }

@@ -190,6 +190,7 @@ const Container = styled(MainContainer)`
 `
 
 const FooterContaienr = styled.footer`
+  z-index: 100;
   position: fixed;
   bottom: 0;
   height: 80px;
