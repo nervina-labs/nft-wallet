@@ -322,6 +322,10 @@
     },
     "exchange": {
       "title": "兑换中心",
+      "count": "{{count}} 个",
+      "nft-price": "奖品包含下面所有 NFT",
+      "blind-price": "奖品随机包含下面的 {{min}}~{{max}} 个",
+      "othder-price": "发起人会在你提交兑换后根据你提供的接收信息进行承兑",
       "type": {
         "nft": "NFT",
         "blind": "盲盒",

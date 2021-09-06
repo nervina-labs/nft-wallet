@@ -17,6 +17,7 @@ import { RedeemStatus } from '../../models/redeem'
 import { Creator } from '../../components/Creator'
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import { Price } from '../Reedem/Price'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -247,6 +248,7 @@ export const RedeemDetail: React.FC = () => {
             <Divider
               style={{ position: 'relative', top: '5px', margin: '0 20px' }}
             />
+            {showPrice ? <Price detail={data} /> : null}
           </>
         )}
       </main>

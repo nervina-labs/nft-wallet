@@ -79,26 +79,6 @@ const Container = styled.div`
     /* justify-content: center; */
     align-items: center;
     padding: 8px 16px;
-    .media {
-      position: relative;
-      border-radius: 8px;
-      margin-right: 4px;
-      overflow: hidden;
-      .player {
-        position: absolute;
-        right: 6px;
-        bottom: 6px;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        svg {
-          width: 20px;
-          height: 20px;
-        }
-      }
-    }
   }
 
   .progress {
@@ -134,19 +114,46 @@ const Container = styled.div`
   }
 `
 
-interface MediaProps {
+export interface MediaProps {
   src: string
   isPlayable: boolean
   hasCardBack: boolean
+  width?: number
 }
 
-const Media: React.FC<MediaProps> = ({ src, isPlayable, hasCardBack }) => {
+const MediaContainer = styled.div`
+  position: relative;
+  border-radius: 8px;
+  margin-right: 4px;
+  overflow: hidden;
+  .player {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+`
+
+export const Media: React.FC<MediaProps> = ({
+  src,
+  isPlayable,
+  hasCardBack,
+  width = 70,
+}) => {
   return (
-    <div className="media">
+    <MediaContainer>
       <LazyLoadImage
         src={getImagePreviewUrl(src)}
-        width={70}
-        height={70}
+        width={width}
+        height={width}
         skeletonStyle={{ borderRadius: '8px' }}
         cover={true}
         imageStyle={{ borderRadius: '8px' }}
@@ -154,9 +161,9 @@ const Media: React.FC<MediaProps> = ({ src, isPlayable, hasCardBack }) => {
         backup={
           <LazyLoadImage
             skeletonStyle={{ borderRadius: '8px' }}
-            width={70}
+            width={width}
             cover
-            height={70}
+            height={width}
             src={FallbackImg}
           />
         }
@@ -167,7 +174,7 @@ const Media: React.FC<MediaProps> = ({ src, isPlayable, hasCardBack }) => {
         </span>
       ) : null}
       {hasCardBack ? <CardBack tooltipPlacement="top-start" /> : null}
-    </div>
+    </MediaContainer>
   )
 }
 
