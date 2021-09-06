@@ -34,7 +34,8 @@
       "title": "NFT Account",
       "description": "View and manage your NFT anytime, anywhere",
       "img-lost": "Image lost",
-      "card-back": "Include card back content which can only be revealed by the owner of this NFT"
+      "card-back": "Include card back content which can only be revealed by the owner of this NFT",
+      "show-detail": "Show Detail"
     },
     "login": {
       "title": "NFT Account",

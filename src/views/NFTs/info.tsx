@@ -118,6 +118,7 @@ export const Info: React.FC<{
           setShowAvatarAction={setShowAvatarAction}
           closeMenu={closeMenu}
           isHolder={isHolder}
+          enablePreview={true}
         />
         <div className="desc">{description}</div>
         <Addressbar address={address} isHolder={isHolder} />

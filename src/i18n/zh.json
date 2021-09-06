@@ -34,7 +34,8 @@
       "title": "秘宝账户",
       "description": "随时随地查看并管理你的秘宝",
       "img-lost": "图片失联",
-      "card-back": "该秘宝卡背设置有信息，仅持有人可见"
+      "card-back": "该秘宝卡背设置有信息，仅持有人可见",
+      "show-detail": "查看详情"
     },
     "login": {
       "title": "秘宝账户",

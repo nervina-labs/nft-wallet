@@ -89,7 +89,9 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
       {shouldUseBackup ? (
         backup
       ) : enablePreview ? (
-        <PhotoConsumer src={dataSrc as string}>{ImgElement}</PhotoConsumer>
+        <PhotoConsumer src={(dataSrc ?? src) as string}>
+          {ImgElement}
+        </PhotoConsumer>
       ) : (
         ImgElement
       )}
