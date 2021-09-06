@@ -16,6 +16,7 @@ import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
 import {
   IS_MAC_SAFARI,
+  IS_SAFARI,
   IS_WEXIN,
   NFT_EXPLORER_URL,
   WEAPP_ID,
@@ -356,7 +357,7 @@ export const NFT: React.FC = () => {
       return null
     }
 
-    if (IS_WEXIN && productID && isWechatInited) {
+    if (IS_WEXIN && productID && isWechatInited && !IS_SAFARI) {
       const weappHtml = `
         <wx-open-launch-weapp
         id="launch-btn"
@@ -407,7 +408,7 @@ export const NFT: React.FC = () => {
         <span>{t('shop.buy')}</span>
       </div>
     )
-  }, [qrcode, history, t, productID, isWechatInited, matchTokenClass?.isExact])
+  }, [qrcode, history, t, productID, isWechatInited])
 
   const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
   const [showCardBack, setShowCardBack] = useState(false)
