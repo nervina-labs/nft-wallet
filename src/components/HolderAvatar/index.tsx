@@ -11,6 +11,8 @@ import { IS_IPHONE } from '../../constants'
 const Container = styled.div`
   width: 44px;
   height: 44px;
+  position: relative;
+  overflow: hidden;
   .bg-animation-container {
     position: absolute;
     top: 0;
@@ -68,8 +70,8 @@ const AvatarContainer = styled.div`
   height: 100%;
   position: relative;
 
-  img:not(.bg-animation-img),
-  svg:not(.bg-animation-img) {
+  img,
+  svg {
     border-radius: 100%;
     width: 100%;
     height: 100%;
@@ -104,32 +106,33 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
   enablePreview,
 }) => {
   const sizePx = `${size}px`
-  if (!avatar) {
-    return <Backup size={size} />
-  }
 
   return (
     <Container style={{ width: sizePx, height: sizePx }}>
+      {avatar && avatarType === AvatarType.Token && (
+        <div className="bg-animation-container">
+          <img
+            src={animationPath}
+            alt="animation"
+            className="bg-animation-img"
+            style={{ width: `${size * 3}px`, height: `${size * 2}px` }}
+          />
+        </div>
+      )}
       <AvatarContainer>
-        {avatarType === AvatarType.Token && (
-          <div className="bg-animation-container">
-            <img
-              src={animationPath}
-              alt="animation"
-              className="bg-animation-img"
-              style={{ width: `${size * 3}px`, height: `${size * 2}px` }}
-            />
-          </div>
+        {avatar ? (
+          <LazyLoadImage
+            src={avatar}
+            dataSrc={avatar}
+            width={size}
+            height={size}
+            variant="circle"
+            backup={<Backup size={size} />}
+            enablePreview={enablePreview}
+          />
+        ) : (
+          <Backup size={size} />
         )}
-        <LazyLoadImage
-          src={avatar}
-          dataSrc={avatar}
-          width={size}
-          height={size}
-          variant="circle"
-          backup={<Backup size={size} />}
-          enablePreview={enablePreview}
-        />
       </AvatarContainer>
     </Container>
   )
