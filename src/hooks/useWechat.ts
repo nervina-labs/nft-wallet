@@ -3,11 +3,11 @@ import { useCallback, useState } from 'react'
 import { randomString } from '../utils'
 import { WxSignConfig } from '../models/wx'
 import { useWalletModel } from './useWallet'
-import { IS_MAINNET, WECHAT_APP_ID } from '../constants'
+import { IS_MAINNET, IS_SAFARI, WECHAT_APP_ID } from '../constants'
 
 export const generateWxConfig = (): WxSignConfig => {
   return {
-    url: IntryUrl.get(),
+    url: IS_SAFARI ? IntryUrl.get() : location.href,
     nonce_str: randomString(12),
     timestamp: parseInt((Date.now() / 1000).toString(), 10),
   }
