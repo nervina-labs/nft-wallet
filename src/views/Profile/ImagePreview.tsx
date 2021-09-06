@@ -155,7 +155,7 @@ export const ImagePreview: React.FC = () => {
       } else {
         history.goBack()
       }
-    })
+    }).catch(Boolean)
   }, [confirm, onSave, history, t, fromCamera])
 
   if (datauri == null) {

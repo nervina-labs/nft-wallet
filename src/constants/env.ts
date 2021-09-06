@@ -2,7 +2,7 @@ type ChainType = 'mainnet' | 'testnet'
 
 export const SERVER_URL =
   process.env.REACT_APP_SERVER_URL ??
-  'https://goldenlegend.staging.nervina.cn/api/explorer/v1'
+  'https://goldenlegend.staging.nervina.cn/api/wallet/v1'
 export const NODE_URL =
   process.env.REACT_APP_NODE_URL ?? 'https://testnet.ckb.dev'
 export const INDEXER_URL =
@@ -55,3 +55,5 @@ export const WECHAT_APP_ID =
   process.env.REACT_APP_WECHAT_APP_ID ?? 'wx32f5170ce791de49'
 
 export const WEAPP_ID = process.env.REACT_APP_WEAPP_ID ?? 'gh_61a4f3f229f5'
+export const DAS_INDEXER_URL =
+  process.env.REACT_APP_DAS_INDEXER_URL ?? 'https://das.nervina.cn'

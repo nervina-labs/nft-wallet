@@ -1,17 +1,19 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { HiddenBar } from '../../components/HiddenBar'
 import { MainContainer } from '../../styles'
-import Exhibition from '../../assets/img/exhibition.png'
+import Exhibition from '../../assets/img/exhibition2.png'
 import PlzWait from '../../assets/img/plz-wait.png'
 import PlzWaitEN from '../../assets/img/plz-wait-en.png'
-import Red from '../../assets/svg/red-bucket.svg'
-import Ticket from '../../assets/svg/ticket.svg'
-import DAO from '../../assets/svg/dao.svg'
-import Exchange from '../../assets/svg/exchange.svg'
+import Red from '../../assets/svg/red-bucket2.svg'
+import Ticket from '../../assets/svg/ticket2.svg'
+import DAO from '../../assets/svg/dao2.svg'
+import Exchange from '../../assets/svg/exchange2.svg'
+import Vip from '../../assets/svg/vip2.svg'
 import { ReactComponent as ShopSvg } from '../../assets/svg/shop.svg'
-import Vip from '../../assets/svg/vip.svg'
+import ShopBg from '../../assets/svg/shop-bg.svg'
 import classNames from 'classnames'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RED_ENVELOP_APP_URL, TICKET_APP_URL, WEAPP_ID } from '../../constants'
@@ -19,11 +21,28 @@ import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router-dom'
 
+const shopBg = ShopBg as any
+
 const Container = styled(MainContainer)`
   padding-top: 20px;
   max-width: 500px;
   min-height: calc(100% - 20px);
   background: #fafafa;
+  .welcome {
+    width: 343px;
+    height: 40px;
+    color: #3d2a83;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-bottom: 16px;
+    > span {
+      padding: 0 50px;
+      line-height: 16px;
+      text-align: center;
+    }
+  }
   .shop {
     width: 343px;
     height: 96px;
@@ -53,7 +72,6 @@ const Container = styled(MainContainer)`
         text-align: left;
         font-size: 12px;
         color: black;
-        word-break: break-all;
       }
     }
   }
@@ -101,7 +119,6 @@ export const ItemContainer = styled.div`
     text-align: left;
     font-size: 12px;
     color: black;
-    word-break: break-all;
   }
   .content {
     margin-top: 10px;
@@ -111,6 +128,7 @@ export const ItemContainer = styled.div`
     width: 136px;
     height: 71px;
     padding: 10px 6px;
+    position: absolute;
   }
   .wait {
     img {
@@ -277,6 +295,9 @@ export const Apps: React.FC = () => {
   return (
     <Container>
       <HiddenBar alwaysShow />
+      <div className="welcome" style={{ background: `url(${shopBg})` }}>
+        <span>{t('apps.welcome')}</span>
+      </div>
       <div className="shop">
         <ShopSvg />
         {isWechatInited ? (
@@ -303,8 +324,10 @@ export const Apps: React.FC = () => {
             />
           )
         })}
-        <h4>{t('apps.welcome')}</h4>
       </div>
+      <br />
+      <br />
+      <br />
     </Container>
   )
 }

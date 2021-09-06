@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import {
   BrowserRouter,
@@ -34,6 +35,8 @@ import { AddressCollector } from '../views/AddressCollector'
 import { useToast } from '../hooks/useToast'
 import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
+import { Issuer } from '../views/Issuer'
+import { UnipassConfig } from '../utils'
 import { Shop } from '../views/Shop'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
@@ -63,6 +66,7 @@ export enum RoutePath {
   AddressCollector = '/addresses',
   Claim = '/claim',
   Collection = '/explore/collection',
+  Issuer = '/issuer',
 }
 
 export const RouterContext = React.createContext({
@@ -104,6 +108,8 @@ const allowWithoutAuthList = new Set([
   RoutePath.NotFound,
 ])
 
+const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
+
 const WalletChange: React.FC = ({ children }) => {
   const {
     address,
@@ -129,29 +135,47 @@ const WalletChange: React.FC = ({ children }) => {
   }, [prevAddress, address, walletType])
   const { isAuthenticated } = useProfileModel()
   const isSigning = useRef(false)
-  const { toast } = useToast()
+  const { toast, closeToast } = useToast()
   const [t] = useTranslation('translations')
 
   useEffect(() => {
+    const pathInForceAuthList = forceAuthList.has(
+      location.pathname + location.search
+    )
+    const pathInAllowList = [...allowWithoutAuthList].some((p) =>
+      location.pathname.startsWith(p)
+    )
     if (
-      WalletType.Unipass === walletType &&
       isLogined &&
       !isAuthenticated &&
-      ![...allowWithoutAuthList].some((p) => location.pathname.startsWith(p)) &&
-      !isSigning.current &&
-      pubkey
+      (!pathInAllowList || pathInForceAuthList) &&
+      !isSigning.current
     ) {
-      isSigning.current = true
-      toast({
-        title: t('auth.title'),
-        content: t('auth.content'),
-        okText: t('auth.ok'),
-        showCloseIcon: false,
-        show: true,
-        onConfirm: () => {
-          signMessage(address).catch(Boolean)
-        },
-      })
+      if (
+        (WalletType.Unipass === walletType && pubkey) ||
+        WalletType.Metamask === walletType
+      ) {
+        isSigning.current = true
+        toast({
+          title: t('auth.title'),
+          content: t('auth.content'),
+          okText: t('auth.ok'),
+          showCloseIcon: false,
+          show: true,
+          onConfirm: () => {
+            if (pathInForceAuthList && WalletType.Unipass === walletType) {
+              UnipassConfig.setRedirectUri(location.pathname + location.search)
+            }
+            signMessage(address)
+              .then(() => {
+                if (WalletType.Metamask === walletType) {
+                  closeToast()
+                }
+              })
+              .catch(Boolean)
+          },
+        })
+      }
     }
   }, [
     isAuthenticated,
@@ -159,10 +183,12 @@ const WalletChange: React.FC = ({ children }) => {
     address,
     signMessage,
     location.pathname,
+    location.search,
     isLogined,
     pubkey,
     t,
     toast,
+    closeToast,
   ])
 
   return <>{children}</>
@@ -290,6 +316,13 @@ const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Collection',
     path: RoutePath.Collection,
+    params: '/:id',
+  },
+  {
+    component: Issuer,
+    exact: true,
+    key: 'Issuer',
+    path: RoutePath.Issuer,
     params: '/:id',
   },
 ]

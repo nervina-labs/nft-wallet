@@ -39,6 +39,11 @@ export const verifyEthContractAddress = async (
   }
 }
 
+const DASReg: RegExp = /^((\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|[0-9a-zA-Z])+\.bit$/
+export const verifyDasAddress = (addr: string): boolean => {
+  return DASReg.test(addr)
+}
+
 export function truncateMiddle(
   str: string,
   takeLength = 6,
@@ -86,13 +91,14 @@ export function throttle(fn: () => void, wait: number): () => void {
 export function debounce<Params extends any[]>(
   func: (...args: Params) => any,
   timeout: number
-): (...args: Params) => void {
+): (...args: Params) => NodeJS.Timeout {
   let timer: NodeJS.Timeout
   return (...args: Params) => {
     clearTimeout(timer)
     timer = setTimeout(() => {
       func(...args)
     }, timeout)
+    return timer
   }
 }
 
@@ -112,10 +118,27 @@ export function getImagePreviewUrl(url?: string): string | undefined {
   if (url == null) {
     return url
   }
-  if (/\.svg$/i.test(url)) {
+  if (/\.(svg|webp)$/i.test(url)) {
     return url
   }
   return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
+}
+
+const MILLION = 1e6
+
+export const formatCount = (count: number, lang: string): number | string => {
+  if (lang === 'zh') {
+    if (count >= MILLION) {
+      return `${roundDown(count / MILLION)} 百万`
+    } else if (count >= 10000) {
+      return `${roundDown(count / 10000)} 万`
+    }
+    return count
+  }
+  if (count >= MILLION) {
+    return `${roundDown(count / MILLION)}m`
+  }
+  return count >= 1000 ? `${roundDown(count / 1000)}k` : count
 }
 
 export function randomString(length: number): string {
@@ -145,4 +168,8 @@ export async function downloadImage(imageSrc: string): Promise<void> {
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
+}
+
+export function ellipsisIssuerID(value: string): string {
+  return `${value.substr(0, 8)}...${value.substr(8, 6)}`
 }

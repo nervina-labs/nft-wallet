@@ -83,7 +83,7 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
 
   const onClose = useCallback(() => {
     if (prevValue !== value) {
-      confirm(t('profile.save-edit'), onSave, close)
+      confirm(t('profile.save-edit'), onSave, close).catch(Boolean)
     } else {
       close()
     }
