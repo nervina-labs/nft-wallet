@@ -437,8 +437,11 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getWechatSignature(config: WxSignConfig) {
-    return await this.axios.get('/mini_program_signers', {
-      params: config,
-    })
+    console.log(config.url, location.href.split('#')[0])
+    return await this.axios.get(
+      `/mini_program_signers?nonce_str=${
+        config.nonce_str
+      }&url=${encodeURIComponent(config.url)}&timestamp=${config.timestamp}`
+    )
   }
 }

@@ -16,7 +16,6 @@ import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
 import {
   IS_MAC_SAFARI,
-  IS_SAFARI,
   IS_WEXIN,
   NFT_EXPLORER_URL,
   WEAPP_ID,
@@ -357,7 +356,7 @@ export const NFT: React.FC = () => {
       return null
     }
 
-    if (IS_WEXIN && productID && isWechatInited && !IS_SAFARI) {
+    if (IS_WEXIN && productID && isWechatInited) {
       const weappHtml = `
         <wx-open-launch-weapp
         id="launch-btn"
