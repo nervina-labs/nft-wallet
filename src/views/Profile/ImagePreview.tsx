@@ -117,7 +117,7 @@ export const ImagePreview: React.FC = () => {
       } else {
         history.replace(route.from)
       }
-    } catch (error) {
+    } catch (error: any) {
       // axios error
       if (error?.message?.includes('Network Error')) {
         toast(t('profile.image-network-error'))
