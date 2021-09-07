@@ -11,6 +11,7 @@ import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import { Creator } from '../Creator'
+import { CardBack } from '../Cardback'
 
 const CardContainer = styled.div`
   width: 164px;
@@ -18,6 +19,7 @@ const CardContainer = styled.div`
 
   background: #ffffff;
   border-radius: 10px;
+  position: relative;
 
   .media {
     width: calc(100%);
@@ -25,11 +27,14 @@ const CardContainer = styled.div`
     position: relative;
     overflow: hidden;
 
-    img,
-    svg {
+    .img {
       width: 100%;
-      height: 164px;
-      object-fit: cover;
+      img,
+      svg {
+        width: 100%;
+        height: 164px;
+        object-fit: cover;
+      }
     }
 
     .player {
@@ -103,22 +108,27 @@ export const CardDialog: React.FC<{
     >
       <CardContainer>
         <div className="media">
-          <LazyLoadImage
-            src={isBanned ? FallbackImg : getImagePreviewUrl(nft.bg_image_url)}
-            width={164}
-            height={164}
-            skeletonStyle={{ borderRadius: '10px' }}
-            cover
-            disableContextMenu={true}
-            backup={
-              <LazyLoadImage
-                skeletonStyle={{ borderRadius: '10px' }}
-                width={164}
-                height={164}
-                src={FallbackImg}
-              />
-            }
-          />
+          {nft.class_card_back_content_exist && <CardBack />}
+          <div className="img">
+            <LazyLoadImage
+              src={
+                isBanned ? FallbackImg : getImagePreviewUrl(nft.bg_image_url)
+              }
+              width={164}
+              height={164}
+              skeletonStyle={{ borderRadius: '10px' }}
+              cover
+              disableContextMenu={true}
+              backup={
+                <LazyLoadImage
+                  skeletonStyle={{ borderRadius: '10px' }}
+                  width={164}
+                  height={164}
+                  src={FallbackImg}
+                />
+              }
+            />
+          </div>
           {isPlayable && (
             <span className="player">
               <PlayerSvg />
