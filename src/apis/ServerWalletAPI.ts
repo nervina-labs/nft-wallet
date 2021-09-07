@@ -96,7 +96,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async getNFTDetail(
     uuid: string,
-    auth: Auth
+    auth?: Auth
   ): Promise<AxiosResponse<NFTDetail>> {
     const params: Record<string, unknown> = {
       include_submitting: true,
@@ -104,11 +104,13 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (this.address) {
       params.address = this.address
     }
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
     return await this.axios.get(`/tokens/${uuid}`, {
       params,
-      headers: {
-        auth: JSON.stringify(auth),
-      },
+      headers,
     })
   }
 

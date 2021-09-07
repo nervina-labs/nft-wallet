@@ -27,7 +27,6 @@ import { useProfileModel } from '../../hooks/useProfile'
 
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
 import { getImagePreviewUrl } from '../../utils'
-import { Auth } from '../../models/user'
 import { Tab, Tabs } from '../../components/Tab'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { TokenHolderList } from './HolderList'
@@ -277,15 +276,11 @@ export const NFT: React.FC = () => {
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api, isLogined],
     async () => {
+      const auth = isLogined ? await getAuth() : undefined
       if (matchTokenClass?.isExact) {
-        let auth: undefined | Auth
-        if (isLogined) {
-          auth = await getAuth()
-        }
         const { data } = await api.getTokenClass(id, auth)
         return data
       }
-      const auth = await getAuth()
       const { data } = await api.getNFTDetail(id, auth)
       return data
     },
@@ -391,10 +386,6 @@ export const NFT: React.FC = () => {
     },
     [hasCardBack]
   )
-
-  if (!isLogined && matchTokenClass?.isExact !== true) {
-    return <Redirect to={RoutePath.Explore} />
-  }
 
   if (
     failureCount >= 3 ||

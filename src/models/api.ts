@@ -48,7 +48,7 @@ export interface NFTWalletAPI {
     }
   ) => Promise<AxiosResponse<NFT>>
 
-  getNFTDetail: (uuid: string, auth: Auth) => Promise<AxiosResponse<NFTDetail>>
+  getNFTDetail: (uuid: string, auth?: Auth) => Promise<AxiosResponse<NFTDetail>>
 
   getTransactions: (page: number) => Promise<AxiosResponse<Transaction>>
 

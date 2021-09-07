@@ -9,7 +9,6 @@ import { ReactComponent as MaleSvg } from '../../assets/svg/male.svg'
 import { ReactComponent as FemaleSvg } from '../../assets/svg/female.svg'
 import { HolderAvatar } from '../../components/HolderAvatar'
 import { PhotoProvider } from 'react-photo-view'
-import { useProfileModel } from '../../hooks/useProfile'
 import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
@@ -164,13 +163,11 @@ export const User: React.FC<UserConfig> = ({
     )
   }, [user, i18n.language])
 
-  const { getAuth } = useProfileModel()
   const { data: nft } = useQuery(
     [Query.NFTDetail, user?.avatar_token_uuid, api, isLogined],
     async () => {
       const id = user?.avatar_token_uuid as string
-      const auth = await getAuth()
-      const { data } = await api.getNFTDetail(id, auth)
+      const { data } = await api.getNFTDetail(id)
       return data
     },
     {
