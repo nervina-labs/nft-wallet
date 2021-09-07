@@ -108,8 +108,8 @@ export const CardDialog: React.FC<{
             backup={
               <LazyLoadImage
                 skeletonStyle={{ borderRadius: '10px' }}
-                width={100}
-                height={125}
+                width={164}
+                height={164}
                 src={FallbackImg}
               />
             }

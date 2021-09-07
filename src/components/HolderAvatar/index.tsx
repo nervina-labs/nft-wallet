@@ -1,67 +1,25 @@
 import React from 'react'
 import styled from 'styled-components'
-import animationPath from '../../assets/img/nft-avatar-animation.png'
 import { LazyLoadImage } from '../Image'
 import { AvatarType } from '../../models/user'
 import PeopleSrc, {
   ReactComponent as PeopleSvg,
 } from '../../assets/svg/people.svg'
 import { IS_IPHONE } from '../../constants'
+import NftAvatarDiamonds from '../../assets/svg/nft-avatar-diamonds.svg'
+import classNames from 'classnames'
 
 const Container = styled.div`
   width: 44px;
   height: 44px;
   position: relative;
-  .bg-animation-container {
+
+  .icon {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    transform: scale(1.35);
-    transform-origin: center;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .bg-animation-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 132px;
-    height: 88px;
-    animation: border-animation 0.6s step-end infinite;
-    border-radius: 0;
-  }
-
-  @keyframes border-animation {
-    0% {
-      transform: translate(0, 0);
-    }
-
-    16% {
-      transform: translateX(-33.3%);
-    }
-
-    32% {
-      transform: translateX(-66.6%);
-    }
-
-    48% {
-      transform: translateX(0) translateY(-50%);
-    }
-
-    64% {
-      transform: translateX(-33.3%) translateY(-50%);
-    }
-
-    80% {
-      transform: translateX(-66.6%) translateY(-50%);
-    }
-
-    100% {
-      transform: translate(0, 0);
-    }
+    top: -5px;
+    right: -5px;
+    width: 20px;
+    height: auto;
   }
 `
 
@@ -70,11 +28,52 @@ const AvatarContainer = styled.div`
   height: 100%;
   position: relative;
 
+  &.animation:before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    border-radius: 100%;
+    z-index: 0;
+    background-image: linear-gradient(
+      60deg,
+      rgb(205, 130, 15),
+      rgb(250, 190, 60),
+      rgb(205, 130, 15),
+      rgb(250, 190, 60),
+      rgb(205, 130, 15),
+      rgb(250, 190, 60)
+    );
+    background-size: 300%, 300%;
+    animation: background-animation 3s ease infinite alternate;
+    box-shadow: 0 0 5px rgba(250, 190, 60, 1);
+  }
+
+  @keyframes background-animation {
+    0% {
+      background-position: 0, 50%;
+    }
+
+    50% {
+      background-position: 100%, 50%;
+      box-shadow: 0 0 5px rgba(205, 130, 15, 1);
+    }
+
+    100% {
+      background-position: 0, 50%;
+    }
+  }
+
   img,
   svg {
     border-radius: 100%;
     width: 100%;
     height: 100%;
+    z-index: 1;
+    position: relative;
+    background: #fff;
   }
 `
 
@@ -106,10 +105,13 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
   enablePreview,
 }) => {
   const sizePx = `${size}px`
-
   return (
     <Container style={{ width: sizePx, height: sizePx }}>
-      <AvatarContainer>
+      <AvatarContainer
+        className={classNames({
+          animation: avatarType === AvatarType.Token,
+        })}
+      >
         {avatar ? (
           <LazyLoadImage
             src={avatar}
@@ -123,17 +125,14 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
         ) : (
           <Backup size={size} />
         )}
-      </AvatarContainer>
-      {avatar && avatarType === AvatarType.Token && (
-        <div className="bg-animation-container">
+        {avatarType === AvatarType.Token && (
           <img
-            src={animationPath}
-            alt="animation"
-            className="bg-animation-img"
-            style={{ width: `${size * 3}px`, height: `${size * 2}px` }}
+            src={(NftAvatarDiamonds as unknown) as string}
+            alt="nftAvatarDiamonds"
+            className="icon"
           />
-        </div>
-      )}
+        )}
+      </AvatarContainer>
     </Container>
   )
 }
