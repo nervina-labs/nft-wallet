@@ -10,10 +10,10 @@ import { Like } from '../Like'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
+import { Creator } from '../Creator'
 
 const CardContainer = styled.div`
   width: 164px;
-  height: 248px;
   padding: 10px;
 
   background: #ffffff;
@@ -51,12 +51,16 @@ const CardContainer = styled.div`
   .nft-name {
     font-size: 14px;
     line-height: 20px;
-    margin: 10px 0 16px;
+    margin: 10px 0;
   }
 
   .like-and-limit {
     display: flex;
     justify-content: space-between;
+  }
+
+  .creator {
+    margin: 10px 0;
   }
 `
 
@@ -122,6 +126,21 @@ export const CardDialog: React.FC<{
           )}
         </div>
         <div className="nft-name">{nft.name}</div>
+
+        <div className="creator">
+          <Creator
+            title=""
+            baned={nft.is_issuer_banned}
+            url={nft.issuer_info?.avatar_url ?? ''}
+            name={nft.issuer_info?.name}
+            uuid={nft.issuer_info?.uuid}
+            vipAlignRight
+            color="#000"
+            isVip={nft?.verified_info?.is_verified}
+            vipTitle={nft?.verified_info?.verified_title}
+            vipSource={nft?.verified_info?.verified_source}
+          />
+        </div>
 
         <div className="like-and-limit">
           <Limited
