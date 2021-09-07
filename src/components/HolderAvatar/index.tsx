@@ -16,10 +16,10 @@ const Container = styled.div`
 
   .icon {
     position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 20px;
-    height: auto;
+    top: -5%;
+    right: -5%;
+    width: 30% !important;
+    height: auto !important;
   }
 `
 

@@ -8,8 +8,6 @@ import { ReactComponent as RightArrowSvg } from '../../assets/svg/right-arrow.sv
 import { ReactComponent as CameraSvg } from '../../assets/svg/camera-avatar.svg'
 import ProfileBg from '../../assets/svg/profile-bg.svg'
 import { useTranslation } from 'react-i18next'
-import { LazyLoadImage } from '../../components/Image'
-import PeopleSvg from '../../assets/svg/people.svg'
 import { SetUsername } from './SetUsername'
 import { SetDesc } from './setDesc'
 import { SetBirthday } from './setBirthday'
@@ -23,8 +21,8 @@ import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { Skeleton } from '@material-ui/lab'
 import { DrawerImage } from './DrawerImage'
+import { HolderAvatar } from '../../components/HolderAvatar'
 
-const emptyAvatar = PeopleSvg as any
 const profileBg = ProfileBg as any
 
 const Container = styled(MainContainer)`
@@ -56,6 +54,7 @@ const Container = styled(MainContainer)`
       .cam {
         position: relative;
         top: -10px;
+        z-index: 10;
       }
     }
   }
@@ -198,13 +197,10 @@ export const Profile: React.FC = () => {
             {isFetching ? (
               <Skeleton variant="circle" width={90} height={90} />
             ) : (
-              <LazyLoadImage
-                width={90}
-                imageStyle={{ borderRadius: '50%' }}
-                height={90}
-                variant="circle"
-                src={user?.avatar_url ?? ''}
-                backup={<img src={emptyAvatar} />}
+              <HolderAvatar
+                avatar={user?.avatar_url}
+                avatarType={user?.avatar_type}
+                size={90}
               />
             )}
             <CameraSvg className="cam" />
