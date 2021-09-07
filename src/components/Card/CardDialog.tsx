@@ -135,7 +135,7 @@ export const CardDialog: React.FC<{
             name={nft.issuer_info?.name}
             uuid={nft.issuer_info?.uuid}
             vipAlignRight
-            color="#000"
+            color="rgba(63, 63, 63, 0.66)"
             isVip={nft?.verified_info?.is_verified}
             vipTitle={nft?.verified_info?.verified_title}
             vipSource={nft?.verified_info?.verified_source}
