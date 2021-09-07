@@ -77,7 +77,10 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async getNFTs(
     page: number,
-    options?: { address?: string }
+    options?: {
+      address?: string
+      exclude_banned?: boolean
+    }
   ): Promise<AxiosResponse<NFT>> {
     return await this.axios.get(
       `/holder_tokens/${options?.address ?? this.address}`,
@@ -85,6 +88,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
         params: {
           page,
           limit: PER_ITEM_LIMIT,
+          exclude_banned: options?.exclude_banned,
         },
       }
     )

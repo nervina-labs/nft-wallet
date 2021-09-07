@@ -91,7 +91,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   const [t] = useTranslation('translations')
   const { toast } = useWalletModel()
   const history = useHistory()
-  const ITEM_LIMIT = 20
+  const ITEM_LIMIT = 15
 
   const [openChooseTokenClassModal, setOpenChooseTokenClassModal] = useState(
     false
@@ -107,7 +107,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   } = useInfiniteQuery(
     [`${Query.NFTList}`, address],
     async ({ pageParam = 0 }) => {
-      const { data } = await api.getNFTs(pageParam)
+      const { data } = await api.getNFTs(pageParam, { exclude_banned: true })
       return data
     },
     {
@@ -139,6 +139,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
         [] as NFTToken[]
       )
     }, [data]) ?? []
+  console.log(tokenList, data)
 
   const onSave = useCallback(async () => {
     const token = tokenList[activeIndex]
@@ -219,7 +220,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
           ))}
           {((!data && status === 'loading') || isFetching) && <Loading />}
           {status === 'success' && tokenList.length === 0 ? <Empty /> : null}
-          {!hasNextPage && (
+          {!hasNextPage && !(status === 'loading') && !isFetching && (
             <h4 className="end">
               {tokenList.length <= 5 ? ' ' : t('common.actions.pull-to-down')}
             </h4>
