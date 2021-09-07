@@ -13,7 +13,6 @@ import { ReactComponent as FemaleSvg } from '../../assets/svg/female.svg'
 import { IS_IPHONE } from '../../constants'
 
 const UserContainer = styled.div`
-  margin-top: 65px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,7 +38,6 @@ const UserContainer = styled.div`
       justify-content: center;
     }
     .nickname {
-      color: white;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
@@ -105,8 +103,9 @@ const UserContainer = styled.div`
 
 export interface UserConfig {
   user?: UserResponse
-  setShowAvatarAction: (show: boolean) => void
-  closeMenu: () => void
+  setShowAvatarAction?: (show: boolean) => void
+  closeMenu?: () => void
+  isHolder?: boolean
 }
 
 export const Gender: React.FC<{ gender: string }> = ({ gender }) => {
@@ -151,6 +150,7 @@ export const User: React.FC<UserConfig> = ({
   user,
   setShowAvatarAction,
   closeMenu,
+  isHolder,
 }) => {
   const isInfoEmpty = useMemo(() => {
     return !user?.gender && !user?.region
@@ -173,7 +173,7 @@ export const User: React.FC<UserConfig> = ({
       <div
         className="avatar"
         onClick={() => {
-          if (!user?.avatar_url) {
+          if (!isHolder && !user?.avatar_url && setShowAvatarAction) {
             setShowAvatarAction(true)
           }
         }}
@@ -197,6 +197,8 @@ export const User: React.FC<UserConfig> = ({
         <div className="nickname">
           {user?.nickname ? (
             user?.nickname
+          ) : isHolder ?? !closeMenu ? (
+            t('holder.user-name-empty')
           ) : (
             <GotoProfile path={ProfilePath.Username} closeMenu={closeMenu}>
               {t('profile.user-name.empty')}

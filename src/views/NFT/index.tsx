@@ -19,7 +19,6 @@ import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
 import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
-import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
 import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
@@ -29,6 +28,10 @@ import { useProfileModel } from '../../hooks/useProfile'
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
 import { getImagePreviewUrl } from '../../utils'
 import { Auth } from '../../models/user'
+import { Tab, Tabs } from '../../components/Tab'
+import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { TokenHolderList } from './HolderList'
+import { StatusText } from './StatusText'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -100,11 +103,12 @@ const Container = styled(MainContainer)`
     color: rgba(0, 0, 0, 0.6);
   }
   .detail {
-    padding: 0 25px 40px;
+    padding: 0 25px 100px;
     border-radius: 25px 25px 0 0;
     position: relative;
     margin-bottom: 10px;
     background-color: #f7fafd;
+    min-height: calc(100vh - 450px);
     .title {
       font-weight: 500;
       font-size: 20px;
@@ -134,7 +138,7 @@ const Container = styled(MainContainer)`
       font-size: 12px;
     }
     .desc-title {
-      font-size: 18px;
+      font-size: 16px;
       line-height: 20px;
       margin-bottom: 8px;
     }
@@ -209,6 +213,20 @@ const FooterContaienr = styled.footer`
   }
 `
 
+const TabsContainer = styled.div`
+  margin-top: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+  .tabs {
+    transform: translateY(1px);
+  }
+
+  .tab {
+    font-size: 14px;
+  }
+`
+
 interface FooterProps {
   nft: NFTDetail | TokenClass
 }
@@ -252,6 +270,8 @@ export const NFT: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { api, address, isLogined } = useWalletModel()
   const { getAuth } = useProfileModel()
+
+  const isHolder = !!useRouteQuery<string>('holder', '')
 
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api, isLogined],
@@ -471,11 +491,36 @@ export const NFT: React.FC = () => {
                   : verifyTitle}
               </div>
             ) : null}
-            <Divider style={{ margin: '24px 0' }} />
-            <div className="desc-title">
-              {detail?.description ? t('nft.desc') : ''}
-            </div>
-            <div className="desc">{detail?.description}</div>
+            <TabsContainer>
+              <Tabs activeKey={isHolder ? 1 : 0} className="tabs">
+                <Tab
+                  className="tab"
+                  active={!isHolder}
+                  onClick={() => history.replace(history.location.pathname)}
+                >
+                  NFT简介
+                </Tab>
+                <Tab
+                  className="tab"
+                  active={isHolder}
+                  onClick={() =>
+                    history.replace(history.location.pathname + '?holder=true')
+                  }
+                >
+                  收藏者
+                </Tab>
+              </Tabs>
+            </TabsContainer>
+
+            {!isHolder ? (
+              detail?.description ? (
+                <div className="desc">{detail?.description}</div>
+              ) : (
+                <StatusText>{t('nft.no-desc')}</StatusText>
+              )
+            ) : (
+              <TokenHolderList id={(detail as NFTDetail).class_uuid ?? id} />
+            )}
           </section>
           <Footer nft={detail} />
         </>
