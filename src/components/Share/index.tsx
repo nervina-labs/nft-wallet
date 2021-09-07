@@ -4,6 +4,7 @@ import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-down
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
+import { SharingNftPost } from './poster'
 
 const DialogContainer = styled.div`
   position: fixed;
@@ -56,15 +57,6 @@ const ShareContainer = styled.div`
 `
 
 const HandleBar = styled.div`
-  :before {
-    content: ' ';
-    display: block;
-    width: 30px;
-    height: 5px;
-    background: #c4c4c4;
-    border-radius: 20px;
-    margin: 0 auto 6px;
-  }
   width: 100%;
   height: 36px;
   display: flex;
@@ -158,6 +150,7 @@ export const Share: React.FC<ShareProps> = ({
       })}
     >
       <div className="mask" onClick={closeDialog} />
+      <SharingNftPost />
       <ShareContainer
         className={classNames({
           hide: !isDialogOpen,
