@@ -105,6 +105,16 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
   enablePreview,
 }) => {
   const sizePx = `${size}px`
+  if (!avatar) {
+    return (
+      <Container style={{ width: sizePx, height: sizePx }}>
+        <AvatarContainer>
+          <Backup size={size} />
+        </AvatarContainer>
+      </Container>
+    )
+  }
+
   return (
     <Container style={{ width: sizePx, height: sizePx }}>
       <AvatarContainer

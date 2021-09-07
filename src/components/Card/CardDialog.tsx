@@ -81,6 +81,7 @@ export const CardDialog: React.FC<{
   const isBanned = nft.is_issuer_banned || nft.is_class_banned
   const isPlayable =
     nft.renderer_type === NftType.Audio || nft.renderer_type === NftType.Video
+  const detailUrl = `/nft/${nft.uuid}`
 
   return (
     <Dialog
@@ -138,9 +139,7 @@ export const CardDialog: React.FC<{
           />
         </div>
       </CardContainer>
-      <ShowDetailButton
-        onClick={() => history.push(`/class/${nft.class_uuid}`)}
-      >
+      <ShowDetailButton onClick={() => history.push(detailUrl)}>
         {t('common.show-detail')}
       </ShowDetailButton>
     </Dialog>

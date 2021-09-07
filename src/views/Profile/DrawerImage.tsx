@@ -139,7 +139,6 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
         [] as NFTToken[]
       )
     }, [data]) ?? []
-  console.log(tokenList, data)
 
   const onSave = useCallback(async () => {
     const token = tokenList[activeIndex]
