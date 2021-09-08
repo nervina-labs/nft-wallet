@@ -1,31 +1,23 @@
 import classNames from 'classnames'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { LazyLoadImage } from '../../components/Image'
-import { UserResponse } from '../../models/user'
+import { AvatarType, UserResponse } from '../../models/user'
 import { getRegionFromCode } from '../Profile/SetRegion'
-import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
-import PeopleSrc from '../../assets/img/people.png'
 import { ReactComponent as MaleSvg } from '../../assets/svg/male.svg'
 import { ReactComponent as FemaleSvg } from '../../assets/svg/female.svg'
-import { IS_IPHONE } from '../../constants'
+import { HolderAvatar } from '../../components/HolderAvatar'
+import { PhotoProvider } from 'react-photo-view'
+import { useQuery } from 'react-query'
+import { Query } from '../../models'
+import { useWalletModel } from '../../hooks/useWallet'
+import { CardDialog } from '../../components/Card/CardDialog'
 
 const UserContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  .avatar {
-    height: 56px;
-    width: 56px;
-    min-width: 56px;
-    img,
-    svg {
-      width: 56px;
-      height: 56px;
-    }
-  }
   .content {
     margin-left: 16px;
     flex: 1;
@@ -106,6 +98,7 @@ export interface UserConfig {
   setShowAvatarAction?: (show: boolean) => void
   closeMenu?: () => void
   isHolder?: boolean
+  enablePreview?: boolean
 }
 
 export const Gender: React.FC<{ gender: string }> = ({ gender }) => {
@@ -151,13 +144,15 @@ export const User: React.FC<UserConfig> = ({
   setShowAvatarAction,
   closeMenu,
   isHolder,
+  enablePreview,
 }) => {
   const isInfoEmpty = useMemo(() => {
     return !user?.gender && !user?.region
   }, [user])
 
   const { i18n, t } = useTranslation('translations')
-
+  const [showNftAvatarModal, setShowNftAvatarModal] = useState(false)
+  const { api, isLogined } = useWalletModel()
   const userInfo = useMemo(() => {
     const region = getRegionFromCode(user?.region, i18n.language as 'zh')
     return (
@@ -168,6 +163,21 @@ export const User: React.FC<UserConfig> = ({
     )
   }, [user, i18n.language])
 
+  const { data: nft } = useQuery(
+    [Query.NFTDetail, user?.avatar_token_uuid, api, isLogined],
+    async () => {
+      const id = user?.avatar_token_uuid as string
+      const { data } = await api.getNFTDetail(id)
+      return data
+    },
+    {
+      enabled:
+        enablePreview &&
+        user?.avatar_type === AvatarType.Token &&
+        Boolean(user?.avatar_token_uuid),
+    }
+  )
+
   return (
     <UserContainer>
       <div
@@ -175,24 +185,29 @@ export const User: React.FC<UserConfig> = ({
         onClick={() => {
           if (!isHolder && !user?.avatar_url && setShowAvatarAction) {
             setShowAvatarAction(true)
+          } else if (enablePreview && user?.avatar_type === AvatarType.Token) {
+            setShowNftAvatarModal(true)
           }
         }}
       >
-        {user?.avatar_url ? (
-          <LazyLoadImage
-            src={user?.avatar_url}
-            width={56}
-            height={56}
-            imageStyle={{ borderRadius: '50%' }}
-            variant="circle"
-            backup={<PeopleSvg />}
+        <PhotoProvider maskClassName="preview-mask">
+          <HolderAvatar
+            avatar={user?.avatar_url ?? ''}
+            avatarType={user?.avatar_type}
+            size={56}
+            enablePreview={
+              enablePreview && user?.avatar_type === AvatarType.Image
+            }
           />
-        ) : IS_IPHONE ? (
-          <img src={PeopleSrc} />
-        ) : (
-          <PeopleSvg />
-        )}
+        </PhotoProvider>
       </div>
+      {nft && (
+        <CardDialog
+          visible={showNftAvatarModal}
+          setVisible={setShowNftAvatarModal}
+          nft={nft}
+        />
+      )}
       <div className={classNames('content', { empty: isInfoEmpty })}>
         <div className="nickname">
           {user?.nickname ? (

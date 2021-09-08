@@ -44,7 +44,7 @@ export interface DrawerConfigProps {
   actionOnClick: (value: string) => void
 }
 
-export const DrawerAcion: React.FC<DrawerConfigProps> = ({
+export const DrawerAction: React.FC<DrawerConfigProps> = ({
   close,
   isDrawerOpen,
   actions,

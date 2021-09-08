@@ -1,14 +1,11 @@
 import React from 'react'
-import PeopleSvgPath, {
-  ReactComponent as PeopleSvg,
-} from '../../assets/svg/people.svg'
-import { LazyLoadImage } from '../Image'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { HolderAvatar } from '../HolderAvatar'
+import { AvatarType } from '../../models/user'
 
 const HolderContainer = styled.div`
-  --size: 44px;
   display: inline-flex;
   height: var(--size);
   width: 100%;
@@ -23,25 +20,20 @@ const HolderContainer = styled.div`
     overflow: hidden;
     max-width: 200px;
   }
-  img,
-  svg {
-    width: var(--size);
-    height: var(--size);
-    border-radius: 100%;
-    object-fit: cover;
-  }
 `
 
 interface HolderProps {
   avatar: string
   username: string
   address: string
+  avatarType?: AvatarType
 }
 
 export const Holder: React.FC<HolderProps> = ({
   avatar,
   username,
   address,
+  avatarType,
 }) => {
   const { t } = useTranslation('translations')
   return (
@@ -50,21 +42,7 @@ export const Holder: React.FC<HolderProps> = ({
       style={{ textDecoration: 'none', width: '100%', display: 'block' }}
     >
       <HolderContainer>
-        <LazyLoadImage
-          src={avatar}
-          width={44}
-          height={44}
-          variant="circle"
-          backup={
-            <LazyLoadImage
-              src={(PeopleSvgPath as unknown) as string}
-              variant="circle"
-              width={44}
-              height={44}
-              backup={<PeopleSvg />}
-            />
-          }
-        />
+        <HolderAvatar avatar={avatar} avatarType={avatarType} />
         <div className="username">
           {username ?? t('holder.user-name-empty')}
         </div>
