@@ -67,4 +67,5 @@ export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
   renderer_type: NftType
   renderer: string
   uuid: string
+  product_on_sale_uuid?: string
 }

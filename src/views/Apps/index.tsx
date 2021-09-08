@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { HiddenBar } from '../../components/HiddenBar'
@@ -16,8 +16,8 @@ import { ReactComponent as ShopSvg } from '../../assets/svg/shop.svg'
 import ShopBg from '../../assets/svg/shop-bg.svg'
 import classNames from 'classnames'
 import { useWalletModel } from '../../hooks/useWallet'
-import { RED_ENVELOP_APP_URL, TICKET_APP_URL } from '../../constants'
-// import { useWechatLaunchWeapp } from '../../hooks/useWechat'
+import { RED_ENVELOP_APP_URL, TICKET_APP_URL, WEAPP_ID } from '../../constants'
+import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router-dom'
 
@@ -180,13 +180,11 @@ export const Apps: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const { pubkey, email } = useWalletModel()
   const history = useHistory()
-  // const { initWechat, isWechatInited } = useWechatLaunchWeapp()
-  // useEffect(() => {
-  //   initWechat().catch((error) => {
-  //     console.log(error)
-  //     console.log('no')
-  //   })
-  // }, [])
+  const { initWechat, isWechatInited } = useWechatLaunchWeapp()
+  useEffect(() => {
+    initWechat().catch(Boolean)
+  }, [])
+  console.log(isWechatInited)
   const getAppUrl = useCallback(
     (baseUrl: string): string => {
       const url = `${baseUrl}`
@@ -256,18 +254,44 @@ export const Apps: React.FC = () => {
       available: false,
     },
   ]
-  // const html = `
-  //   <wx-open-launch-weapp
-  //   id="launch-btn"
-  //   username="${WEAPP_ID}"
-  //   path="pages/index/index.html"
-  // >
-  //   <script type="text/wxtag-template">
-  //     <style>.btn { padding: 12px }</style>
-  //     <button class="btn">打开小程序</button>
-  //   </script>
-  // </wx-open-launch-weapp>
-  // `
+  const weappHtml = `
+    <wx-open-launch-weapp
+    id="launch-btn"
+    username="${WEAPP_ID}"
+    path="pages/index/index.html"
+  >
+    <script type="text/wxtag-template">
+      <style>
+        .btn {
+          cursor: pointer;
+          width: 231px;
+          margin-left: 10px;
+          margin-right: 10px;
+          padding: 10px;
+          background-color: #f8f7fb;
+          box-shadow: 0px 10px 20px rgba(227, 227, 227, 0.25);
+          border-radius: 15px;
+        }
+        .title {
+          font-size: 16px;
+          color: black;
+          font-weight: bold;
+        }
+        .desc {
+          margin: 6px 0;
+          text-align: left;
+          font-size: 12px;
+          color: black;
+          word-break: break-all;
+        }
+      </style>
+      <div class="btn">
+        <div class="title">${t('apps.shop.title')}</div>
+        <div class="desc">${t('apps.shop.desc')}</div>
+      </div>
+    </script>
+  </wx-open-launch-weapp>
+  `
   return (
     <Container>
       <HiddenBar alwaysShow />
@@ -276,12 +300,15 @@ export const Apps: React.FC = () => {
       </div>
       <div className="shop">
         <ShopSvg />
-        <div className="content" onClick={() => history.push(RoutePath.Shop)}>
-          <div className="title">{t('apps.shop.title')}</div>
-          <div className="desc">{t('apps.shop.desc')}</div>
-        </div>
+        {isWechatInited ? (
+          <div dangerouslySetInnerHTML={{ __html: weappHtml }}></div>
+        ) : (
+          <div className="content" onClick={() => history.push(RoutePath.Shop)}>
+            <div className="title">{t('apps.shop.title')}</div>
+            <div className="desc">{t('apps.shop.desc')}</div>
+          </div>
+        )}
       </div>
-      {/* <div dangerouslySetInnerHTML={{ __html: html }}></div> */}
       <div className="main">
         {data.map(({ title, desc, bg, onClick, available, color }) => {
           return (
