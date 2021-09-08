@@ -70,10 +70,10 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
             if (err) {
               reject(err)
             }
-            if (result.error) {
+            if (result?.error) {
               reject(result.error)
             }
-            resolve(result.result)
+            resolve(result?.result)
           }
         )
       } else {
