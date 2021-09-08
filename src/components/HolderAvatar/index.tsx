@@ -5,7 +5,6 @@ import { AvatarType } from '../../models/user'
 import PeopleSrc, {
   ReactComponent as PeopleSvg,
 } from '../../assets/svg/people.svg'
-import { IS_IPHONE } from '../../constants'
 import NftAvatarDiamonds from '../../assets/svg/nft-avatar-diamonds.svg'
 import classNames from 'classnames'
 
@@ -85,16 +84,14 @@ interface HolderAvatarProps {
 }
 
 const Backup: React.FC<{ size: number }> = ({ size }) => {
-  return IS_IPHONE ? (
+  return (
     <LazyLoadImage
-      src={PeopleSrc.src}
+      src={(PeopleSrc as unknown) as string}
       width={size}
       height={size}
       variant="circle"
       backup={<PeopleSvg />}
     />
-  ) : (
-    <PeopleSvg />
   )
 }
 
