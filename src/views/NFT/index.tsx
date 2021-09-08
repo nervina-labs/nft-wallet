@@ -26,7 +26,6 @@ import { Follow } from '../../components/Follow'
 import { useProfileModel } from '../../hooks/useProfile'
 
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
-import { getImagePreviewUrl } from '../../utils'
 import { Tab, Tabs } from '../../components/Tab'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { TokenHolderList } from './HolderList'
@@ -406,7 +405,7 @@ export const NFT: React.FC = () => {
       />
       {!isFallBackImgLoaded ? (
         <Background
-          url={getImagePreviewUrl(detail?.bg_image_url)}
+          url={detail?.bg_image_url}
           style={{ height: `${innerHeight - 44 - 280}px` }}
         />
       ) : null}
