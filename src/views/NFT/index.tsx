@@ -32,6 +32,7 @@ import { Tab, Tabs } from '../../components/Tab'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
+import { PosterType } from '../../components/Share/poster.interface'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -525,12 +526,16 @@ export const NFT: React.FC = () => {
           <Footer nft={detail} />
         </>
       )}
-      <Share
-        isDialogOpen={isDialogOpen}
-        closeDialog={closeDialog}
-        displayText={explorerURL}
-        copyText={explorerURL}
-      />
+      {data && (
+        <Share
+          isDialogOpen={isDialogOpen}
+          closeDialog={closeDialog}
+          displayText={explorerURL}
+          copyText={explorerURL}
+          data={data}
+          type={PosterType.Nft}
+        />
+      )}
     </Container>
   )
 }

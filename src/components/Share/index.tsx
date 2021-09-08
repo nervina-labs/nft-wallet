@@ -4,7 +4,8 @@ import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-down
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
-import { SharingNftPost } from './poster'
+import { SharingNftPoster } from './nft-poster'
+import { NftPoster, PosterType } from './poster.interface'
 
 const DialogContainer = styled.div`
   position: fixed;
@@ -59,12 +60,12 @@ const ShareContainer = styled.div`
 const HandleBar = styled.div`
   width: 100%;
   height: 36px;
+  line-height: 36px;
   display: flex;
   flex-direction: column;
   font-size: 13px;
   text-align: center;
   color: #666666;
-  margin-bottom: 25px;
 `
 
 const IconGroupContainer = styled.div`
@@ -114,10 +115,10 @@ const Button = styled.button`
   color: #333;
   border-radius: 40px;
   font-size: 18px;
-  margin-top: 25px;
+  margin-top: 15px;
 `
 
-export interface ShareProps {
+export interface ShareProps extends Partial<NftPoster> {
   isDialogOpen: boolean
   closeDialog: () => void
   displayText: string
@@ -129,6 +130,8 @@ export const Share: React.FC<ShareProps> = ({
   closeDialog,
   displayText,
   copyText,
+  data,
+  type,
 }) => {
   const { t } = useTranslation('translations')
 
@@ -150,7 +153,9 @@ export const Share: React.FC<ShareProps> = ({
       })}
     >
       <div className="mask" onClick={closeDialog} />
-      <SharingNftPost />
+      {data && type === PosterType.Nft && (
+        <SharingNftPoster tokenOrClass={data} open={isDialogOpen} />
+      )}
       <ShareContainer
         className={classNames({
           hide: !isDialogOpen,
