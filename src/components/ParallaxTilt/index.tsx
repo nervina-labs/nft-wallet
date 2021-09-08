@@ -354,6 +354,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     window.addEventListener('touchmove', onTouchMove, { passive: false })
     return () => {
       window.removeEventListener('touchmove', onTouchMove)
+      clearBackdrop()
     }
   }, [])
 
@@ -389,12 +390,15 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   const imageRef = useRef<HTMLImageElement>(null)
   const hasCardCackContent = !!cardBackContent
   const [isPreviewCardback, setIsPreviewCardback] = useState(false)
-  const closePreviewCardback = (): void => {
-    setIsPreviewCardback(false)
+  const clearBackdrop = () => {
     const root = document.getElementById('root')
     if (root) {
       root.style.filter = ''
     }
+  }
+  const closePreviewCardback = (): void => {
+    setIsPreviewCardback(false)
+    clearBackdrop()
   }
   const openPreviewCardback = (): void => {
     if (!hasCardCackContent) {
