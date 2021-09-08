@@ -376,7 +376,7 @@ export const NFT: React.FC = () => {
         <wx-open-launch-weapp
         id="launch-btn"
         username="${WEAPP_ID}"
-        path="pages/detail/index.html?scene=${productID as string}"
+        path="pages/detail/index.html?scene=${productID}"
       >
         <script type="text/wxtag-template">
           <style>
