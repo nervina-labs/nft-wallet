@@ -38,6 +38,7 @@ import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
 import { UnipassConfig } from '../utils'
 import { Shop } from '../views/Shop'
+import { HolderAddress } from '../views/HolderAddress'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -67,6 +68,8 @@ export enum RoutePath {
   Claim = '/claim',
   Collection = '/explore/collection',
   Issuer = '/issuer',
+  Holder = '/holder',
+  HolderAddress = '/holder/address',
 }
 
 export const RouterContext = React.createContext({
@@ -324,6 +327,20 @@ const routes: MibaoRouterProps[] = [
     key: 'Issuer',
     path: RoutePath.Issuer,
     params: '/:id',
+  },
+  {
+    component: HolderAddress,
+    exact: true,
+    key: 'HolderAddress',
+    path: RoutePath.HolderAddress,
+    params: '/:address',
+  },
+  {
+    component: NFTs,
+    exact: true,
+    key: 'Holder',
+    path: RoutePath.Holder,
+    params: '/:address',
   },
 ]
 

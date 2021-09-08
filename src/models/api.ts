@@ -15,6 +15,7 @@ import {
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
 import { WxSignConfig } from './wx'
+import { GetHolderByTokenClassUuidResponse } from './holder'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -40,7 +41,10 @@ export const PRODUCT_STATUE_SET = ['product_state', 'on_sale'] as const
 export type ProductState = typeof PRODUCT_STATUE_SET[number]
 
 export interface NFTWalletAPI {
-  getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
+  getNFTs: (
+    page: number,
+    options?: { address?: string }
+  ) => Promise<AxiosResponse<NFT>>
 
   getNFTDetail: (uuid: string, auth: Auth) => Promise<AxiosResponse<NFTDetail>>
 
@@ -65,7 +69,10 @@ export interface NFTWalletAPI {
     sortType: ClassSortType
   ) => Promise<AxiosResponse<ClassList>>
 
-  getUserLikesClassList: (page: number) => Promise<AxiosResponse<ClassList>>
+  getUserLikesClassList: (
+    page: number,
+    options?: { address?: string }
+  ) => Promise<AxiosResponse<ClassList>>
 
   toggleLike: (
     uuid: string,
@@ -79,7 +86,7 @@ export interface NFTWalletAPI {
     ext?: string
   ) => Promise<AxiosResponse<object>>
 
-  getProfile: () => Promise<UserResponse>
+  getProfile: (address?: string) => Promise<UserResponse>
 
   getTokenClass: (
     uuid: string,
@@ -139,14 +146,24 @@ export interface NFTWalletAPI {
     auth: Auth
   ) => Promise<AxiosResponse<FollowerResponse>>
 
-  getFollowIssuers: (
-    auth: Auth,
-    page: number
-  ) => Promise<AxiosResponse<IssuersResponse>>
+  getFollowIssuers: (options?: {
+    address?: string
+    auth?: Auth
+    page?: number
+    limit?: number
+  }) => Promise<AxiosResponse<IssuersResponse>>
 
   getFollowTokenClasses: (
     auth: Auth,
     page: number,
     sortType: ClassSortType
   ) => Promise<AxiosResponse<FollowClassList>>
+
+  getHolderByTokenClassUuid: (
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) => Promise<AxiosResponse<GetHolderByTokenClassUuidResponse>>
 }

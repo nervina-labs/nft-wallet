@@ -24,6 +24,8 @@ import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
 import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
 import { WxSignConfig } from '../models/wx'
+import { GetHolderByTokenClassUuidResponse } from '../models/holder'
+
 function randomid(length = 10): string {
   let result = ''
   const characters =
@@ -74,14 +76,19 @@ export class ServerWalletAPI implements NFTWalletAPI {
     this.axios = axios.create({ baseURL: SERVER_URL })
   }
 
-  async getNFTs(page: number): Promise<AxiosResponse<NFT>> {
-    return await this.axios.get(`/holder_tokens/${this.address}`, {
-      params: {
-        page,
-        limit: PER_ITEM_LIMIT,
-        include_submitting: true,
-      },
-    })
+  async getNFTs(
+    page: number,
+    options?: { address?: string }
+  ): Promise<AxiosResponse<NFT>> {
+    return await this.axios.get(
+      `/holder_tokens/${options?.address ?? this.address}`,
+      {
+        params: {
+          page,
+          limit: PER_ITEM_LIMIT,
+        },
+      }
+    )
   }
 
   async getNFTDetail(
@@ -178,14 +185,20 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getUserLikesClassList(page: number): Promise<AxiosResponse<ClassList>> {
+  async getUserLikesClassList(
+    page: number,
+    options?: { address?: string }
+  ): Promise<AxiosResponse<ClassList>> {
     const params: Record<string, string | number> = {
       page,
       limit: PER_ITEM_LIMIT,
     }
-    return await this.axios.get(`/liked_token_classes/${this.address}`, {
-      params,
-    })
+    return await this.axios.get(
+      `/liked_token_classes/${options?.address ?? this.address}`,
+      {
+        params,
+      }
+    )
   }
 
   async getTags(): Promise<AxiosResponse<{ tags: Tag[] }>> {
@@ -266,9 +279,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     return data
   }
 
-  async getProfile(): Promise<UserResponse> {
+  async getProfile(address?: string): Promise<UserResponse> {
     try {
-      const { data } = await this.axios.get(`/users/${this.address}`)
+      const { data } = await this.axios.get(`/users/${address ?? this.address}`)
       return data
     } catch (error) {
       return Object.create(null)
@@ -372,17 +385,29 @@ export class ServerWalletAPI implements NFTWalletAPI {
     )
   }
 
-  async getFollowIssuers(auth: Auth, page: number) {
+  async getFollowIssuers(options?: {
+    address?: string
+    auth?: Auth
+    page?: number
+    limit?: number
+  }) {
+    const page = options?.page ?? 0
+    const limit = options?.limit ?? PER_ITEM_LIMIT
     const params: Record<string, unknown> = {
       page,
-      limit: PER_ITEM_LIMIT,
+      limit,
     }
-    return await this.axios.get(`/followed_issuers/${this.address}`, {
-      headers: {
-        auth: JSON.stringify(auth),
-      },
-      params,
-    })
+    const headers: { auth?: string } = {}
+    if (options?.auth) {
+      headers.auth = JSON.stringify(options?.auth)
+    }
+    return await this.axios.get(
+      `/followed_issuers/${options?.address ?? this.address}`,
+      {
+        headers,
+        params,
+      }
+    )
   }
 
   async getFollowTokenClasses(
@@ -441,6 +466,26 @@ export class ServerWalletAPI implements NFTWalletAPI {
       `/mini_program_signers?nonce_str=${
         config.nonce_str
       }&url=${encodeURIComponent(config.url)}&timestamp=${config.timestamp}`
+    )
+  }
+
+  async getHolderByTokenClassUuid(
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) {
+    const limit = options?.limit ?? 20
+    const page = options?.page ?? 0
+    return await this.axios.get<GetHolderByTokenClassUuidResponse>(
+      `/token_classes/${uuid}/holders`,
+      {
+        params: {
+          limit,
+          page,
+        },
+      }
     )
   }
 }
