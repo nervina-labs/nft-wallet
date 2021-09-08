@@ -357,7 +357,13 @@
         "tabs": {
           "price": "活动奖品",
           "requirement": "兑换条件"
-        }
+        },
+        "condition": "同时持有以下 NFT 的用户才可参与兑换"
+      },
+      "condition": {
+        "nft": "NFT",
+        "needed": "需持有",
+        "held": "当前可兑换"
       },
       "warning": "兑换不会销毁您持有的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他任何兑换活动。",
       "check": {

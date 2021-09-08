@@ -149,7 +149,7 @@ export const Media: React.FC<MediaProps> = ({
   width = 70,
 }) => {
   return (
-    <MediaContainer>
+    <MediaContainer style={{ minWidth: `${width}px` }}>
       <LazyLoadImage
         src={getImagePreviewUrl(src)}
         width={width}

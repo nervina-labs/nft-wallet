@@ -18,6 +18,8 @@ import { Creator } from '../../components/Creator'
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { Price } from '../Reedem/Price'
+import { Condition } from './Condition'
+import Alert from '@material-ui/lab/Alert'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -41,6 +43,10 @@ const Container = styled(MainContainer)`
   flex-direction: column;
   background: #f6f6f6;
   main {
+    .MuiAlert-root {
+      font-size: 12px;
+      margin: 8px 20px;
+    }
     background: #f6f6f6;
     flex: 1;
     .article {
@@ -248,7 +254,8 @@ export const RedeemDetail: React.FC = () => {
             <Divider
               style={{ position: 'relative', top: '5px', margin: '0 20px' }}
             />
-            {showPrice ? <Price detail={data} /> : null}
+            {showPrice ? <Price detail={data} /> : <Condition detail={data} />}
+            <Alert severity="error">{t('exchange.warning')}</Alert>
           </>
         )}
       </main>
