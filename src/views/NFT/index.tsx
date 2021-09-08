@@ -4,6 +4,7 @@ import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as BuySvg } from '../../assets/svg/buy.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
+import Buypng from '../../assets/img/buy.png'
 import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
@@ -13,7 +14,12 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
-import { IS_MAC_SAFARI, NFT_EXPLORER_URL } from '../../constants'
+import {
+  IS_MAC_SAFARI,
+  IS_WEXIN,
+  NFT_EXPLORER_URL,
+  WEAPP_ID,
+} from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
@@ -27,6 +33,7 @@ import { useProfileModel } from '../../hooks/useProfile'
 
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
 import { Auth } from '../../models/user'
+import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 import { Tab, Tabs } from '../../components/Tab'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { TokenHolderList } from './HolderList'
@@ -156,6 +163,11 @@ const Container = styled(MainContainer)`
       -webkit-line-clamp: 20;
       line-clamp: 20;
       /* margin-bottom: 10px; */
+    }
+    .buy-container {
+      position: absolute;
+      right: 25px;
+      top: -20px;
     }
     .transfer {
       background-color: #fd5c31;
@@ -317,6 +329,8 @@ export const NFT: React.FC = () => {
     return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
   }, [data, id])
 
+  const productID = data?.product_on_sale_uuid
+
   const isTransferable = useMemo(() => {
     if (detail === undefined) {
       return false
@@ -351,9 +365,57 @@ export const NFT: React.FC = () => {
     return data?.product_qr_code
   }, [data])
 
+  const { initWechat, isWechatInited } = useWechatLaunchWeapp()
+  useEffect(() => {
+    initWechat().catch(Boolean)
+  }, [])
+
   const buyButton = useMemo(() => {
     if (!qrcode) {
       return null
+    }
+
+    if (IS_WEXIN && productID && isWechatInited) {
+      const weappHtml = `
+        <wx-open-launch-weapp
+        id="launch-btn"
+        username="${WEAPP_ID}"
+        path="pages/detail/index.html?scene=${productID}"
+      >
+        <script type="text/wxtag-template">
+          <style>
+            .buy {
+              background-color: #fd5c31;
+              width: 60px;
+              height: 60px;
+              cursor: pointer;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              font-size: 10px;
+              border-radius: 50%;
+              color: white;
+            }
+            .icon {
+              width: 14px;
+              height: 14px;
+              margin-bottom: 4px;
+            }
+          </style>
+          <div class="buy">
+            <img class="icon" src="${Buypng as string}" />
+            <span>${t('shop.buy')}</span>
+          </div>
+        </script>
+      </wx-open-launch-weapp>
+      `
+      return (
+        <div
+          className="buy-container"
+          dangerouslySetInnerHTML={{ __html: weappHtml }}
+        ></div>
+      )
     }
     return (
       <div
@@ -364,7 +426,7 @@ export const NFT: React.FC = () => {
         <span>{t('shop.buy')}</span>
       </div>
     )
-  }, [qrcode, history, t])
+  }, [qrcode, history, t, productID, isWechatInited])
 
   const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
   const [showCardBack, setShowCardBack] = useState(false)
