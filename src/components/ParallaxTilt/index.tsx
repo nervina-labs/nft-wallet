@@ -11,7 +11,6 @@ import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
 import { IS_IPHONE, IS_MAC_SAFARI, IS_SAFARI } from '../../constants'
-import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
 import { PhotoProvider } from 'react-photo-view'
@@ -358,7 +357,6 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     }
   }, [])
 
-  const imagePreviewUrl = useMemo(() => getImagePreviewUrl(src), [src])
   const openPreview = (): void => {
     if (!enableImagePreview) {
       setIsPlayerOpen(true)
@@ -475,7 +473,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
                 }
               >
                 <LazyLoadImage
-                  src={imagePreviewUrl}
+                  src={src}
                   dataSrc={src}
                   width={width}
                   height={height}
@@ -529,7 +527,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       </Container>
       {enablePlayer && (
         <Player
-          poster={imagePreviewUrl}
+          poster={src}
           type={type as NftType}
           renderer={renderer}
           open={isPlayerOpen}

@@ -162,7 +162,7 @@ export const NFTs: React.FC = () => {
   if (!isLogined && !isHolder) {
     return <Redirect to={RoutePath.Explore} />
   }
-  if (params.address === localAddress) {
+  if (params.address === localAddress && isLogined) {
     return <Redirect to={RoutePath.NFTs} />
   }
 

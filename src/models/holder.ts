@@ -1,4 +1,5 @@
 import { ListMeta } from './nft'
+import { AvatarType } from './user'
 
 export interface GetHolderByTokenClassUuidResponse {
   token_holder_list: TokenClassUuidHolder[]
@@ -11,5 +12,6 @@ export interface TokenClassUuidHolder {
     address: string
     nickname: string
     avatar_url: string
+    avatar_type: AvatarType
   }
 }

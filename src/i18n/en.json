@@ -38,7 +38,8 @@
       "title": "NFT Account",
       "description": "View and manage your NFT anytime, anywhere",
       "img-lost": "Image lost",
-      "card-back": "Include card back content which can only be revealed by the owner of this NFT"
+      "card-back": "Include card back content which can only be revealed by the owner of this NFT",
+      "show-detail": "Show Detail"
     },
     "login": {
       "title": "NFT Account",
@@ -159,6 +160,7 @@
       "description": "Description",
       "input": "Please enter",
       "select": "Please select ",
+      "choose-nft-avatar": "Choose NFT",
       "user-name": {
         "edit": "Edit Name",
         "desc": "2-24 characters",
@@ -180,7 +182,8 @@
       },
       "avatar": {
         "camera": "Take a Photo",
-        "photo-lib": "Pick from Library"
+        "photo-lib": "Pick from Library",
+        "nft": "Choose NFT as Avatar"
       },
       "save": "Save",
       "cancel": "Cancel",

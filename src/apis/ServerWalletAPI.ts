@@ -23,6 +23,7 @@ import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
 import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
+import { WxSignConfig } from '../models/wx'
 import { GetHolderByTokenClassUuidResponse } from '../models/holder'
 
 function randomid(length = 10): string {
@@ -77,7 +78,10 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async getNFTs(
     page: number,
-    options?: { address?: string }
+    options?: {
+      address?: string
+      exclude_banned?: boolean
+    }
   ): Promise<AxiosResponse<NFT>> {
     return await this.axios.get(
       `/holder_tokens/${options?.address ?? this.address}`,
@@ -85,6 +89,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
         params: {
           page,
           limit: PER_ITEM_LIMIT,
+          exclude_banned: options?.exclude_banned,
         },
       }
     )
@@ -92,7 +97,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async getNFTDetail(
     uuid: string,
-    auth: Auth
+    auth?: Auth
   ): Promise<AxiosResponse<NFTDetail>> {
     const params: Record<string, unknown> = {
       include_submitting: true,
@@ -100,11 +105,13 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (this.address) {
       params.address = this.address
     }
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
     return await this.axios.get(`/tokens/${uuid}`, {
       params,
-      headers: {
-        auth: JSON.stringify(auth),
-      },
+      headers,
     })
   }
 
@@ -257,19 +264,19 @@ export class ServerWalletAPI implements NFTWalletAPI {
 
   async setProfile(
     user: Partial<User>,
-    auth?: Auth,
-    ext?: string
+    options?: {
+      auth?: Auth
+      ext?: string
+    }
   ): Promise<AxiosResponse<object>> {
     const fd = new FormData()
-    await writeFormData(user, 'user', fd, ext)
-    if (auth) {
-      await writeFormData(auth as any, 'auth', fd)
-    }
+    await writeFormData(user, 'user', fd, options?.ext)
     const headers: Record<string, any> = {
       'Content-Type': 'multipart/form-data',
     }
-    if (auth) {
-      headers.auth = JSON.stringify(auth)
+    if (options?.auth) {
+      await writeFormData(options?.auth as any, 'auth', fd)
+      headers.auth = JSON.stringify(options?.auth)
     }
     const { data } = await this.axios.put(`/users/${this.address}`, fd, {
       headers,
@@ -457,6 +464,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
           page,
         },
       }
+    )
+  }
+
+  async getWechatSignature(config: WxSignConfig) {
+    return await this.axios.get(
+      `/mini_program_signers?nonce_str=${
+        config.nonce_str
+      }&url=${encodeURIComponent(config.url)}&timestamp=${config.timestamp}`
     )
   }
 
