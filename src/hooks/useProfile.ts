@@ -26,7 +26,12 @@ export interface UseProfile {
   setShowEditSuccess: React.Dispatch<React.SetStateAction<boolean>>
   previewImageData: string
   getAuth: () => Promise<Auth>
-  setRemoteProfile: (user: Partial<User>, ext?: string) => Promise<void>
+  setRemoteProfile: (
+    user: Partial<User>,
+    options?: {
+      ext?: string
+    }
+  ) => Promise<void>
   snackbarMsg: React.ReactNode
   snackbar: (msg: React.ReactNode) => void
   closeSnackbar: () => void
@@ -99,9 +104,9 @@ function useProfile(): UseProfile {
   }, [])
 
   const setRemoteProfile = useCallback(
-    async (user: Partial<User>, ext?: string) => {
+    async (user: Partial<User>, options?: { ext?: string }) => {
       const auth = await getAuth()
-      await api.setProfile(user, auth, ext)
+      await api.setProfile(user, { auth, ext: options?.ext })
       snackbar(i18n.t('profile.success', { ns: 'translations' }))
     },
     [getAuth, api, snackbar]

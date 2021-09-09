@@ -8,7 +8,7 @@ export interface HeaderProps {
   transparent?: boolean
 }
 
-export const HEADER_HEIGHT = 44
+export const HEADER_HEIGHT = 44 as const
 
 const Header = styled.header<HeaderProps>`
   position: fixed;

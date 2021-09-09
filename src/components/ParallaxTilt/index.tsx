@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
-import FallbackImg from '../../assets/img/detail-fallback.png'
+import FallbackImg from '../../assets/svg/fallback.svg'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { ReactComponent as DotSvg } from '../../assets/svg/dot.svg'
 import { ReactComponent as LockSvg } from '../../assets/svg/lock.svg'
@@ -11,7 +11,6 @@ import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import classNames from 'classnames'
 import styled from 'styled-components'
 import { IS_IPHONE, IS_MAC_SAFARI, IS_SAFARI } from '../../constants'
-import { getImagePreviewUrl } from '../../utils'
 import { Player } from '../Player'
 import { NftType } from '../../models'
 import { PhotoProvider } from 'react-photo-view'
@@ -355,10 +354,10 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     window.addEventListener('touchmove', onTouchMove, { passive: false })
     return () => {
       window.removeEventListener('touchmove', onTouchMove)
+      clearBackdrop()
     }
   }, [])
 
-  const imagePreviewUrl = useMemo(() => getImagePreviewUrl(src), [src])
   const openPreview = (): void => {
     if (!enableImagePreview) {
       setIsPlayerOpen(true)
@@ -391,12 +390,15 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   const imageRef = useRef<HTMLImageElement>(null)
   const hasCardCackContent = !!cardBackContent
   const [isPreviewCardback, setIsPreviewCardback] = useState(false)
-  const closePreviewCardback = (): void => {
-    setIsPreviewCardback(false)
+  const clearBackdrop = () => {
     const root = document.getElementById('root')
     if (root) {
       root.style.filter = ''
     }
+  }
+  const closePreviewCardback = (): void => {
+    setIsPreviewCardback(false)
+    clearBackdrop()
   }
   const openPreviewCardback = (): void => {
     if (!hasCardCackContent) {
@@ -475,7 +477,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
                 }
               >
                 <LazyLoadImage
-                  src={imagePreviewUrl}
+                  src={src}
                   dataSrc={src}
                   width={width}
                   height={height}
@@ -529,7 +531,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
       </Container>
       {enablePlayer && (
         <Player
-          poster={imagePreviewUrl}
+          poster={src}
           type={type as NftType}
           renderer={renderer}
           open={isPlayerOpen}

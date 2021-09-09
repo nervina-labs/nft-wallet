@@ -35,6 +35,8 @@ export const IS_SAFARI =
   !navigator.userAgent.includes('CriOS') &&
   !navigator.userAgent.includes('FxiOS')
 
+export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
+
 export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE
 
 export const OSS_IMG_PROCESS_QUERY = '?x-oss-process=image/resize,s_300'
@@ -51,5 +53,11 @@ export const TICKET_APP_URL = IS_MAINNET
   ? 'https://ticket.unipass.xyz'
   : 'https://t.ticket.unipass.xyz'
 
+export const WECHAT_APP_ID =
+  process.env.REACT_APP_WECHAT_APP_ID ?? 'wx32f5170ce791de49'
+
+export const WEAPP_ID = process.env.REACT_APP_WEAPP_ID ?? 'gh_61a4f3f229f5'
 export const DAS_INDEXER_URL =
   process.env.REACT_APP_DAS_INDEXER_URL ?? 'https://das.nervina.cn'
+
+export const HOST = location.origin

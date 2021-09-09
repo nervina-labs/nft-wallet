@@ -40,6 +40,7 @@ import { UnipassConfig } from '../utils'
 import { Shop } from '../views/Shop'
 import { Redeem } from '../views/Reedem'
 import { RedeemDetail } from '../views/RedeemDetail'
+import { HolderAddress } from '../views/HolderAddress'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -70,6 +71,8 @@ export enum RoutePath {
   Collection = '/explore/collection',
   Issuer = '/issuer',
   Redeem = '/redeem',
+  Holder = '/holder',
+  HolderAddress = '/holder/address',
 }
 
 export const RouterContext = React.createContext({
@@ -118,7 +121,6 @@ const WalletChange: React.FC = ({ children }) => {
     address,
     prevAddress,
     walletType,
-    signMessage,
     isLogined,
     pubkey,
   } = useWalletModel()
@@ -136,7 +138,7 @@ const WalletChange: React.FC = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prevAddress, address, walletType])
-  const { isAuthenticated } = useProfileModel()
+  const { isAuthenticated, getAuth } = useProfileModel()
   const isSigning = useRef(false)
   const { toast, closeToast } = useToast()
   const [t] = useTranslation('translations')
@@ -169,7 +171,7 @@ const WalletChange: React.FC = ({ children }) => {
             if (pathInForceAuthList && WalletType.Unipass === walletType) {
               UnipassConfig.setRedirectUri(location.pathname + location.search)
             }
-            signMessage(address)
+            getAuth()
               .then(() => {
                 if (WalletType.Metamask === walletType) {
                   closeToast()
@@ -184,7 +186,6 @@ const WalletChange: React.FC = ({ children }) => {
     isAuthenticated,
     walletType,
     address,
-    signMessage,
     location.pathname,
     location.search,
     isLogined,
@@ -192,6 +193,7 @@ const WalletChange: React.FC = ({ children }) => {
     t,
     toast,
     closeToast,
+    getAuth,
   ])
 
   return <>{children}</>
@@ -340,6 +342,20 @@ const routes: MibaoRouterProps[] = [
     key: 'Issuer',
     path: RoutePath.Issuer,
     params: '/:id',
+  },
+  {
+    component: HolderAddress,
+    exact: true,
+    key: 'HolderAddress',
+    path: RoutePath.HolderAddress,
+    params: '/:address',
+  },
+  {
+    component: NFTs,
+    exact: true,
+    key: 'Holder',
+    path: RoutePath.Holder,
+    params: '/:address',
   },
 ]
 

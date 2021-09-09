@@ -18,4 +18,5 @@ export enum Query {
   FollowedIssuers = 'FollowedIssuers',
   RedeemList = 'RedeemList',
   RedeemDetail = 'RedeemDetail',
+  NftHolderList = 'nft-holder-list',
 }
