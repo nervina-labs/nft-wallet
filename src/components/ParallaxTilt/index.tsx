@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
-import FallbackImg from '../../assets/img/detail-fallback.png'
+import FallbackImg from '../../assets/svg/fallback.svg'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { ReactComponent as DotSvg } from '../../assets/svg/dot.svg'
 import { ReactComponent as LockSvg } from '../../assets/svg/lock.svg'

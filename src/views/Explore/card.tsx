@@ -3,7 +3,7 @@ import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { LazyLoadImage } from '../../components/Image'
 import { getImagePreviewUrl } from '../../utils'
-import FallbackImg from '../../assets/img/card-fallback.png'
+import FallbackImg from '../../assets/svg/fallback.svg'
 import { Creator } from '../../components/Creator'
 import { Limited } from '../../components/Limited'
 import { Like } from '../../components/Like'
@@ -131,7 +131,7 @@ export const Card: React.FC<CardProps> = ({
               width={width}
               cover
               height={width}
-              src={FallbackImg}
+              src={FallbackImg as any}
             />
           }
         />
