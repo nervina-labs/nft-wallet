@@ -133,7 +133,7 @@
       "desc": "NFT description",
       "lock": "Include card back content which can only be revealed by the owner of this NFT",
       "no-desc": "No description",
-      "no-holder": "No collector"
+      "no-holder": "No collector",
       "holder": "Collectors",
       "lock": "Include card back content which can only be revealed by the owner of this NFT"
     },
