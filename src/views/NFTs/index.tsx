@@ -244,7 +244,7 @@ export const NFTs: React.FC = () => {
                           token={token}
                           key={token.token_uuid || `${i}.${j}`}
                           address={address}
-                          isClass={isHolder || isLiked}
+                          isClass={!isHolder && isLiked}
                           showTokenId={!isLiked}
                         />
                       ))}
