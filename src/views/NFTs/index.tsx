@@ -1,27 +1,20 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Card } from '../../components/Card'
-import {
-  IS_IPHONE,
-  IS_WEXIN,
-  NFT_EXPLORER_URL,
-  PER_ITEM_LIMIT,
-} from '../../constants'
+import { IS_WEXIN, NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
 import { useWalletModel } from '../../hooks/useWallet'
 import { NFTToken, Query, TransactionStatus } from '../../models'
 import { Empty } from './empty'
 import { Loading } from '../../components/Loading'
-import { Redirect, useHistory } from 'react-router'
+import { Redirect, useHistory, useParams } from 'react-router'
 import { RoutePath } from '../../routes'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share-new.svg'
 import { ReactComponent as ProfileSvg } from '../../assets/svg/menu.svg'
 import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
 import { HiddenBar } from '../../components/HiddenBar'
-import { CircularProgress } from '@material-ui/core'
-import classNames from 'classnames'
 import { DrawerImage } from '../Profile/DrawerImage'
 import { useLocation, useRouteMatch } from 'react-router-dom'
 import { SetUsername } from '../Profile/SetUsername'
@@ -29,25 +22,32 @@ import { SetDesc } from '../Profile/setDesc'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
-import { GotoProfile, ProfilePath, User } from './User'
+import { ProfilePath } from './User'
 import { Container } from './styled'
 import { DrawerMenu } from './DrawerMenu'
-import { Addressbar } from '../../components/AddressBar'
 import { Intro } from '../../components/Intro'
-import Bg from '../../assets/svg/home-bg.svg'
 import { IssuerList } from './IssuerList'
+import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
+import { Info } from './info'
+import { Tab, Tabs, TabsAffix } from '../../components/Tab'
 
 export const NFTs: React.FC = () => {
-  const { api, isLogined, address } = useWalletModel()
+  const params = useParams<{ address?: string }>()
+  const { api, isLogined, address: localAddress } = useWalletModel()
+  const address = useMemo(
+    () => (params.address ? params.address : localAddress),
+    [localAddress, params.address]
+  )
+  const isHolder = useMemo(() => Boolean(params.address), [params.address])
   const { t } = useTranslation('translations')
   const history = useHistory()
   const [showAvatarAction, setShowAvatarAction] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
-  const closeMenu = (): void => setShowMenu(false)
   useScrollRestoration()
   const { data: user, isLoading: isUserLoading } = useQuery(
     [Query.Profile, address, api],
-    async () => await api.getProfile(),
+    async () => await api.getProfile(address),
     {
       enabled: !!address,
     }
@@ -58,37 +58,36 @@ export const NFTs: React.FC = () => {
   const isFollow = !!useRouteQuery<string>('follow', '')
   const isOwned = location.search === ''
 
+  const filterIndex = [isOwned, isLiked, isFollow].findIndex((bool) => bool)
+
   const getRemoteData = useCallback(
     async ({ pageParam = 1 }) => {
       if (isLiked) {
-        const { data } = await api.getUserLikesClassList(pageParam)
+        const { data } = await api.getUserLikesClassList(pageParam, { address })
         return {
           meta: data.meta,
-          token_list: data.class_list.map((c) => {
-            const token: NFTToken = {
-              class_name: c.name,
-              class_bg_image_url: c.bg_image_url,
-              class_uuid: c.uuid,
-              class_description: c.description,
-              class_total: c.total,
-              token_uuid: '',
-              issuer_avatar_url: c.issuer_info?.avatar_url,
-              issuer_name: c.issuer_info?.name,
-              issuer_uuid: c.issuer_info?.uuid,
-              tx_state: TransactionStatus.Committed,
-              is_class_banned: false,
-              is_issuer_banned: false,
-              n_token_id: 0,
-              verified_info: c.verified_info,
-              renderer_type: c.renderer_type,
-              card_back_content_exist: c.card_back_content_exist,
-              card_back_content: c.card_back_content,
-            }
-            return token
-          }),
+          token_list: data.class_list.map<NFTToken>((c) => ({
+            class_name: c.name,
+            class_bg_image_url: c.bg_image_url,
+            class_uuid: c.uuid,
+            class_description: c.description,
+            class_total: c.total,
+            token_uuid: '',
+            issuer_avatar_url: c.issuer_info?.avatar_url,
+            issuer_name: c.issuer_info?.name,
+            issuer_uuid: c.issuer_info?.uuid,
+            tx_state: TransactionStatus.Committed,
+            is_class_banned: false,
+            is_issuer_banned: false,
+            n_token_id: 0,
+            verified_info: c.verified_info,
+            renderer_type: c.renderer_type,
+            card_back_content_exist: c.card_back_content_exist,
+            card_back_content: c.card_back_content,
+          })),
         }
       }
-      const { data } = await api.getNFTs(pageParam)
+      const { data } = await api.getNFTs(pageParam, { address })
       return data
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,49 +141,16 @@ export const NFTs: React.FC = () => {
     return `${NFT_EXPLORER_URL}/holder/tokens/${address}`
   }, [address])
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-  const openDialog = useCallback(() => {
-    setIsDialogOpen(true)
-  }, [])
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
 
   const matchDesc = useRouteMatch(ProfilePath.Description)
   const matchUsername = useRouteMatch(ProfilePath.Username)
 
-  const closeDialog = (): void => setIsDialogOpen(false)
-
-  const bgRef = useRef<HTMLDivElement>(null)
-  const [bgheight, setBgHeight] = useState(16)
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
 
   useEffect(() => {
     setAlwaysShowTabbar(!isVerticalScrollable())
   }, [data])
-
-  useEffect(() => {
-    const height = bgRef.current?.clientHeight
-    if (height) {
-      setBgHeight(height + 206)
-    }
-  }, [user, isUserLoading])
-
-  const [scrollY, setScrollY] = useState(window.scrollY)
-
-  const getBgBlur = (): number => {
-    const s = scrollY - 20
-    if (s <= 0) {
-      return 0
-    }
-    return Math.min(s / 10, 30)
-  }
-
-  useEffect(() => {
-    const fn = (): void => {
-      setScrollY(window.scrollY)
-    }
-    window.addEventListener('scroll', fn)
-    return () => window.removeEventListener('scroll', fn)
-  })
 
   const showGuide = useMemo(() => {
     if (isUserLoading) {
@@ -193,110 +159,60 @@ export const NFTs: React.FC = () => {
     return !user?.guide_finished
   }, [user, isUserLoading])
 
-  if (!isLogined) {
+  if (!isLogined && !isHolder) {
     return <Redirect to={RoutePath.Explore} />
   }
-
-  const filters = [
-    {
-      value: 'nfts.owned',
-      fn() {
-        if (!isOwned) {
-          history.push(RoutePath.NFTs)
-        }
-      },
-      isActive: () => isOwned,
-    },
-    {
-      value: 'nfts.liked',
-      fn() {
-        if (!isLiked) {
-          history.push(RoutePath.NFTs + '?liked=true')
-        }
-      },
-      isActive: () => isLiked,
-    },
-    {
-      value: 'follow.follow',
-      fn() {
-        if (!isFollow) {
-          history.push(RoutePath.NFTs + '?follow=true')
-        }
-      },
-      isActive: () => isFollow,
-    },
-  ]
+  if (params.address === localAddress && isLogined) {
+    return <Redirect to={RoutePath.NFTs} />
+  }
 
   return (
     <Container id="main">
-      <Intro show={showGuide} />
-      <div className="share" onClick={openDialog}>
-        <ShareSvg />
-        {t('nfts.share')}
-      </div>
-      <div
-        className={classNames('bg', { loading: isUserLoading })}
-        style={{
-          filter: `blur(${getBgBlur()}px)`,
-        }}
-      >
-        {isUserLoading ? (
-          <CircularProgress size="20px" style={{ color: 'white' }} />
-        ) : (
-          <>
-            <User
-              user={user}
-              setShowAvatarAction={setShowAvatarAction}
-              closeMenu={closeMenu}
-            />
-            <div className="desc" ref={bgRef}>
-              {user?.description ? (
-                user?.description
-              ) : (
-                <GotoProfile
-                  path={ProfilePath.Description}
-                  closeMenu={closeMenu}
-                >
-                  {t('profile.desc.empty')}
-                </GotoProfile>
-              )}
-            </div>
-            <Addressbar address={address} />
-            <br />
-            <br />
-          </>
-        )}
-        <div className="account" onClick={() => setShowMenu(true)}>
-          <ProfileSvg />
-        </div>
-        <img className="bg-image" src={(Bg as unknown) as string} alt="Bg" />
-      </div>
-      <section
-        className="list"
-        style={
-          IS_IPHONE
-            ? {
-                width: '100%',
-                maxWidth: '100%',
-                marginTop: `${bgheight}px`,
-              }
-            : { marginTop: `${bgheight}px` }
-        }
-      >
-        <div className="filters">
-          {filters.map((filter, i) => (
-            <div
-              className={classNames('filter', { active: filter.isActive() })}
-              key={i}
-              onClick={filter.fn}
+      {isHolder && (
+        <Appbar
+          title={t('holder.title')}
+          left={<BackSvg onClick={() => history.goBack()} />}
+          right={<ShareSvg onClick={() => setIsShareDialogOpen(true)} />}
+        />
+      )}
+      <Info
+        isLoading={isUserLoading}
+        user={user}
+        setShowAvatarAction={setShowAvatarAction}
+        closeMenu={() => setShowMenu(false)}
+        isHolder={isHolder}
+        address={address}
+      />
+      <section className="list">
+        <TabsAffix top={isHolder ? HEADER_HEIGHT : 0} className="filters">
+          <Tabs activeKey={filterIndex}>
+            <Tab
+              onClick={() => history.replace(history.location.pathname)}
+              active={isOwned}
             >
-              {t(filter.value)}
-              {filter.isActive() ? <span className="active-line" /> : null}
-            </div>
-          ))}
-        </div>
-        <IssuerList isFollow={isFollow} />
-        {isFollow ? null : (
+              {t('nfts.owned')}
+            </Tab>
+            <Tab
+              onClick={() =>
+                history.replace(history.location.pathname + '?liked=true')
+              }
+              active={isLiked}
+            >
+              {t('nfts.liked')}
+            </Tab>
+            <Tab
+              onClick={() =>
+                history.replace(history.location.pathname + '?follow=true')
+              }
+              active={isFollow}
+            >
+              {t('follow.follow')}
+            </Tab>
+          </Tabs>
+        </TabsAffix>
+        {isFollow ? (
+          <IssuerList isFollow={isFollow} address={address} />
+        ) : (
           <>
             {isRefetching ? <Loading /> : null}
             {data === undefined && status === 'loading' ? (
@@ -326,17 +242,16 @@ export const NFTs: React.FC = () => {
                 {data?.pages?.map((group, i) => {
                   return (
                     <React.Fragment key={i}>
-                      {group.token_list.map((token, j: number) => {
-                        return (
-                          <Card
-                            className={i === 0 && j === 0 ? 'first' : ''}
-                            token={token}
-                            key={token.token_uuid || `${i}.${j}`}
-                            address={address}
-                            isClass={isLiked}
-                          />
-                        )
-                      })}
+                      {group.token_list.map((token, j: number) => (
+                        <Card
+                          className={i === 0 && j === 0 ? 'first' : ''}
+                          token={token}
+                          key={token.token_uuid || `${i}.${j}`}
+                          address={address}
+                          isClass={isHolder || isLiked}
+                          showTokenId={!isLiked}
+                        />
+                      ))}
                     </React.Fragment>
                   )
                 })}
@@ -349,30 +264,42 @@ export const NFTs: React.FC = () => {
       <Share
         displayText={explorerURL}
         copyText={explorerURL}
-        closeDialog={closeDialog}
-        isDialogOpen={isDialogOpen}
+        closeDialog={() => setIsShareDialogOpen(false)}
+        isDialogOpen={isShareDialogOpen}
       />
-      <DrawerImage
-        showAvatarAction={showAvatarAction}
-        setShowAvatarAction={setShowAvatarAction}
-      />
-      <SetUsername
-        username={user?.nickname}
-        open={!!matchUsername?.isExact}
-        close={() => history.goBack()}
-      />
-      <SetDesc
-        desc={user?.description}
-        open={!!matchDesc?.isExact}
-        close={() => history.goBack()}
-      />
-      <DrawerMenu
-        close={closeMenu}
-        isDrawerOpen={showMenu}
-        user={user}
-        setShowAvatarAction={setShowAvatarAction}
-      />
-      <HiddenBar alwaysShow={alwayShowTabbar} />
+      {!isHolder && (
+        <>
+          <div className="account" onClick={() => setShowMenu(true)}>
+            <ProfileSvg />
+          </div>
+          <div className="share" onClick={() => setIsShareDialogOpen(true)}>
+            <ShareSvg />
+            {t('nfts.share')}
+          </div>
+          <DrawerImage
+            showAvatarAction={showAvatarAction}
+            setShowAvatarAction={setShowAvatarAction}
+          />
+          <DrawerMenu
+            close={() => setShowMenu(false)}
+            isDrawerOpen={showMenu}
+            user={user}
+            setShowAvatarAction={setShowAvatarAction}
+          />
+          <SetUsername
+            username={user?.nickname}
+            open={!!matchUsername?.isExact}
+            close={() => history.goBack()}
+          />
+          <SetDesc
+            desc={user?.description}
+            open={!!matchDesc?.isExact}
+            close={() => history.goBack()}
+          />
+          <Intro show={showGuide} />
+          <HiddenBar alwaysShow={alwayShowTabbar} />
+        </>
+      )}
     </Container>
   )
 }

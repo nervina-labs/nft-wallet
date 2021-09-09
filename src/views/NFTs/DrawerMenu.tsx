@@ -18,7 +18,7 @@ import { ReactComponent as TxSvg } from '../../assets/svg/tx-list.svg'
 import { ReactComponent as LangSvg } from '../../assets/svg/language.svg'
 import { ReactComponent as HelpSvg } from '../../assets/svg/help.svg'
 import { useWalletModel } from '../../hooks/useWallet'
-import { DrawerAcion } from '../Profile/DrawerAction'
+import { DrawerAction } from '../Profile/DrawerAction'
 import { LocalCache } from '../../cache'
 import { getHelpCenterUrl } from '../../data/help'
 
@@ -170,7 +170,7 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
           </div>
         </DrawerContainer>
       </Drawer>
-      <DrawerAcion
+      <DrawerAction
         isDrawerOpen={showAction}
         close={() => setShowAction(false)}
         actions={[

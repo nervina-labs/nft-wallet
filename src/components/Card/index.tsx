@@ -6,7 +6,7 @@ import { LazyLoadImage } from '../Image'
 import { Limited } from '../Limited'
 import { Creator } from '../Creator'
 import { useTranslation } from 'react-i18next'
-import FallbackImg from '../../assets/img/card-fallback.png'
+import FallbackImg from '../../assets/svg/fallback.svg'
 import { getImagePreviewUrl } from '../../utils'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { CardBack } from '../Cardback'
@@ -16,6 +16,7 @@ export interface CardProps {
   address: string
   className?: string
   isClass: boolean
+  showTokenId?: boolean
 }
 
 interface LabelProps {
@@ -224,6 +225,7 @@ export const Card: React.FC<CardProps> = ({
   address,
   className,
   isClass,
+  showTokenId,
 }) => {
   const history = useHistory()
   const isClassBanned = token.is_class_banned
@@ -301,7 +303,7 @@ export const Card: React.FC<CardProps> = ({
           banned={isBanned}
           count={token.class_total}
           bold={false}
-          sn={isClass ? undefined : token.n_token_id}
+          sn={showTokenId === false ? undefined : token.n_token_id}
           color="rgba(63, 63, 63, 0.66) !important"
         />
         <Creator
