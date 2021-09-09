@@ -475,9 +475,7 @@ export const NFT: React.FC = () => {
         className="figure"
         style={{
           height: `${innerHeight - 44 - 300}px`,
-          background: `${
-            isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
-          }`,
+          background: 'transparent',
         }}
       >
         <ParallaxTilt

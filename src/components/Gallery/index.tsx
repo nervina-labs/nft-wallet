@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import FallbackImg from '../../assets/img/card-fallback.png'
+import FallbackImg from '../../assets/svg/fallback.svg'
 import { LazyLoadImage } from '../../components/Image'
 
 const Container = styled.header`
