@@ -131,8 +131,9 @@
       "title": "NFT Details",
       "transfer": "Transfer",
       "desc": "NFT description",
-      "no-desc": "No description",
-      "lock": "Include card back content which can only be revealed by the owner of this NFT"
+      "lock": "Include card back content which can only be revealed by the owner of this NFT",
+      "no-desc": "无简介",
+      "no-holder": "无收藏者"
     },
     "account": {
       "title": "My Account",
