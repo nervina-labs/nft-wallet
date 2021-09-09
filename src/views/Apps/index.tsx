@@ -256,7 +256,7 @@ export const Apps: React.FC = () => {
     <wx-open-launch-weapp
     id="launch-btn"
     username="${WEAPP_ID}"
-    path="pages/index/index"
+    path="pages/index/index.html"
   >
     <script type="text/wxtag-template">
       <style>

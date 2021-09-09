@@ -8,12 +8,10 @@ import { ReactComponent as RightArrowSvg } from '../../assets/svg/right-arrow.sv
 import { ReactComponent as CameraSvg } from '../../assets/svg/camera-avatar.svg'
 import ProfileBg from '../../assets/svg/profile-bg.svg'
 import { useTranslation } from 'react-i18next'
-import { LazyLoadImage } from '../../components/Image'
-import PeopleSvg from '../../assets/svg/people.svg'
 import { SetUsername } from './SetUsername'
 import { SetDesc } from './setDesc'
 import { SetBirthday } from './setBirthday'
-import { DrawerAcion } from './DrawerAction'
+import { DrawerAction } from './DrawerAction'
 import { ProfilePath, RoutePath } from '../../routes'
 import { useWalletModel } from '../../hooks/useWallet'
 import { getRegionFromCode, SetRegion } from './SetRegion'
@@ -23,8 +21,8 @@ import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { Skeleton } from '@material-ui/lab'
 import { DrawerImage } from './DrawerImage'
+import { HolderAvatar } from '../../components/HolderAvatar'
 
-const emptyAvatar = PeopleSvg
 const profileBg = ProfileBg
 
 const Container = styled(MainContainer)`
@@ -56,6 +54,7 @@ const Container = styled(MainContainer)`
       .cam {
         position: relative;
         top: -10px;
+        z-index: 10;
       }
     }
   }
@@ -146,7 +145,7 @@ export const Profile: React.FC = () => {
   const matchDesc = useRouteMatch(ProfilePath.Description)
   const matchUsername = useRouteMatch(ProfilePath.Username)
 
-  const { data: user, isFetching } = useQuery(
+  const { data: user, isFetching, refetch } = useQuery(
     [Query.Profile, address],
     async () => {
       const profile = await api.getProfile()
@@ -198,13 +197,10 @@ export const Profile: React.FC = () => {
             {isFetching ? (
               <Skeleton variant="circle" width={90} height={90} />
             ) : (
-              <LazyLoadImage
-                width={90}
-                imageStyle={{ borderRadius: '50%' }}
-                height={90}
-                variant="circle"
-                src={user?.avatar_url ?? ''}
-                backup={<img src={emptyAvatar} />}
+              <HolderAvatar
+                avatar={user?.avatar_url}
+                avatarType={user?.avatar_type}
+                size={90}
               />
             )}
             <CameraSvg className="cam" />
@@ -265,7 +261,7 @@ export const Profile: React.FC = () => {
           history.goBack()
         }}
       />
-      <DrawerAcion
+      <DrawerAction
         isDrawerOpen={showGenderAction}
         close={() => setShowGenderAction(false)}
         actions={[
@@ -277,6 +273,7 @@ export const Profile: React.FC = () => {
       <DrawerImage
         showAvatarAction={showAvatarAction}
         setShowAvatarAction={setShowAvatarAction}
+        reloadProfile={refetch}
       />
     </Container>
   )

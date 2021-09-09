@@ -55,9 +55,7 @@ export const TokenHolderList: React.FC<{
           : lastPage.meta.current_page + 1
       },
       enabled: true,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: true,
     }
   )
 
@@ -78,6 +76,7 @@ export const TokenHolderList: React.FC<{
       loader={<Loading />}
       refreshFunction={refetch}
       next={fetchNextPage}
+      style={{ overflow: 'initial' }}
     >
       {holders.map((item) => (
         <HolderItem>
@@ -86,6 +85,7 @@ export const TokenHolderList: React.FC<{
             username={item.holder_info.nickname}
             address={item.holder_info.address}
             avatar={item.holder_info.avatar_url}
+            avatarType={item.holder_info.avatar_type}
           />
           <div className="id">#{item.n_token_id}</div>
         </HolderItem>

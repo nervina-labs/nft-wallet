@@ -43,10 +43,13 @@ export type ProductState = typeof PRODUCT_STATUE_SET[number]
 export interface NFTWalletAPI {
   getNFTs: (
     page: number,
-    options?: { address?: string }
+    options?: {
+      address?: string
+      exclude_banned?: boolean
+    }
   ) => Promise<AxiosResponse<NFT>>
 
-  getNFTDetail: (uuid: string, auth: Auth) => Promise<AxiosResponse<NFTDetail>>
+  getNFTDetail: (uuid: string, auth?: Auth) => Promise<AxiosResponse<NFTDetail>>
 
   getTransactions: (page: number) => Promise<AxiosResponse<Transaction>>
 
@@ -82,8 +85,10 @@ export interface NFTWalletAPI {
 
   setProfile: (
     user: Partial<User>,
-    auth?: Auth,
-    ext?: string
+    options?: {
+      auth?: Auth
+      ext?: string
+    }
   ) => Promise<AxiosResponse<object>>
 
   getProfile: (address?: string) => Promise<UserResponse>

@@ -34,7 +34,8 @@
       "title": "秘宝账户",
       "description": "随时随地查看并管理你的秘宝",
       "img-lost": "图片失联",
-      "card-back": "该秘宝卡背设置有信息，仅持有人可见"
+      "card-back": "该秘宝卡背设置有信息，仅持有人可见",
+      "show-detail": "查看详情"
     },
     "login": {
       "title": "秘宝账户",
@@ -156,6 +157,7 @@
       "description": "简介",
       "input": "请填写",
       "select": "请选择",
+      "choose-nft-avatar": "请选择NFT",
       "user-name": {
         "edit": "修改昵称",
         "desc": "请输入 2-24 个字符",
@@ -179,7 +181,8 @@
       },
       "avatar": {
         "camera": "拍照",
-        "photo-lib": "图片库"
+        "photo-lib": "图片库",
+        "nft": "选择 NFT 做头像"
       },
       "save": "保存",
       "cancel": "取消",
