@@ -65,7 +65,10 @@ const IssuerContainer = styled(Link)`
 `
 
 const LabelContainer = styled.div`
-  margin: 10px 20px 20px 10px;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  padding: 10px 20px 20px 10px;
   .label {
     background: #f1f1f1;
     border-radius: 50px;
@@ -73,6 +76,10 @@ const LabelContainer = styled.div`
     font-size: 12px;
     color: #666;
   }
+`
+
+const LabelPlaceholder = styled.div`
+  height: 52px;
 `
 
 const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
@@ -180,6 +187,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({
           {t('follow.count', { count: dataLength })}
         </span>
       </LabelContainer>
+      {dataLength > 0 && <LabelPlaceholder />}
       {isRefetching ? <Loading /> : null}
       {data === undefined && status === 'loading' ? (
         <Loading />
