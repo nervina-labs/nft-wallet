@@ -17,7 +17,7 @@ import { MainContainer } from '../../styles'
 import {
   IS_MAC_SAFARI,
   IS_WEXIN,
-  NFT_EXPLORER_URL,
+  MAIN_NET_URL,
   WEAPP_ID,
 } from '../../constants'
 import { RoutePath } from '../../routes'
@@ -318,13 +318,6 @@ export const NFT: React.FC = () => {
     return imageColor
   }, [isFallBackImgLoaded, imageColor])
 
-  const explorerURL = useMemo(() => {
-    if (isTokenClass(data)) {
-      return `${NFT_EXPLORER_URL}/nft/${id ?? ''}`
-    }
-    return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
-  }, [data, id])
-
   const productID = data?.product_on_sale_uuid
 
   const isTransferable = useMemo(() => {
@@ -410,7 +403,7 @@ export const NFT: React.FC = () => {
         <div
           className="buy-container"
           dangerouslySetInnerHTML={{ __html: weappHtml }}
-        ></div>
+        />
       )
     }
     return (
@@ -579,8 +572,8 @@ export const NFT: React.FC = () => {
       <Share
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}
-        displayText={explorerURL}
-        copyText={explorerURL}
+        displayText={MAIN_NET_URL + history.location.pathname}
+        copyText={MAIN_NET_URL + history.location.pathname}
       />
     </Container>
   )

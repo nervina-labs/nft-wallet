@@ -293,7 +293,10 @@ export const Apps: React.FC = () => {
   return (
     <Container>
       <HiddenBar alwaysShow />
-      <div className="welcome" style={{ background: `url(${ShopBg})` }}>
+      <div
+        className="welcome"
+        style={{ background: `url(${(ShopBg as unknown) as string})` }}
+      >
         <span>{t('apps.welcome')}</span>
       </div>
       <div className="shop">
