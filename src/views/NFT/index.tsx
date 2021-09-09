@@ -14,12 +14,7 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
-import {
-  IS_MAC_SAFARI,
-  IS_WEXIN,
-  MAIN_NET_URL,
-  WEAPP_ID,
-} from '../../constants'
+import { HOST, IS_MAC_SAFARI, IS_WEXIN, WEAPP_ID } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
@@ -572,8 +567,8 @@ export const NFT: React.FC = () => {
       <Share
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}
-        displayText={MAIN_NET_URL + history.location.pathname}
-        copyText={MAIN_NET_URL + history.location.pathname}
+        displayText={HOST + history.location.pathname}
+        copyText={HOST + history.location.pathname}
       />
     </Container>
   )

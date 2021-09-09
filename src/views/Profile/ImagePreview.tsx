@@ -191,7 +191,7 @@ export const ImagePreview: React.FC = () => {
         <div className="circle" />
       </div>
       <footer>
-        {!isBlob ? (
+        {isBlob ? (
           <div
             className="cancel"
             onClick={() => history.replace(RoutePath.TakePhoto)}

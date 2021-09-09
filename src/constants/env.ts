@@ -59,3 +59,5 @@ export const WECHAT_APP_ID =
 export const WEAPP_ID = process.env.REACT_APP_WEAPP_ID ?? 'gh_61a4f3f229f5'
 export const DAS_INDEXER_URL =
   process.env.REACT_APP_DAS_INDEXER_URL ?? 'https://das.nervina.cn'
+
+export const HOST = location.origin

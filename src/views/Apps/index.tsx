@@ -293,16 +293,13 @@ export const Apps: React.FC = () => {
   return (
     <Container>
       <HiddenBar alwaysShow />
-      <div
-        className="welcome"
-        style={{ background: `url(${(ShopBg as unknown) as string})` }}
-      >
+      <div className="welcome" style={{ background: `url(${ShopBg})` }}>
         <span>{t('apps.welcome')}</span>
       </div>
       <div className="shop">
         <ShopSvg />
         {isWechatInited ? (
-          <div dangerouslySetInnerHTML={{ __html: weappHtml }}></div>
+          <div dangerouslySetInnerHTML={{ __html: weappHtml }} />
         ) : (
           <div className="content" onClick={() => history.push(RoutePath.Shop)}>
             <div className="title">{t('apps.shop.title')}</div>
