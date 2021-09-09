@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { TokenClass } from '../../models/class-list'
-import { Media } from './RedeemEvent'
+import { Media } from './Media'
 import { Limited } from '../../components/Limited'
 
 const Container = styled.div`

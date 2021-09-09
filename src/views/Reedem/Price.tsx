@@ -1,10 +1,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+import { LazyLoadImage } from '../../components/Image'
 import { TokenClass } from '../../models/class-list'
 import { RedeemDetailModel, RedeemType } from '../../models/redeem'
+import { getImagePreviewUrl } from '../../utils'
 import { Label } from './Label'
+import FallbackImg from '../../assets/img/card-fallback.png'
 import { NFTCard } from './NFTCard'
+import { PhotoProvider } from 'react-photo-view'
 
 export interface PriceCardProps {
   token: TokenClass
@@ -80,17 +84,67 @@ export const NFTPrice: React.FC<PriceProps> = ({ detail }) => {
   )
 }
 
+const OthderPriceContainer = styled.div`
+  .price-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: normal;
+  }
+  .price-desc {
+    color: #666666;
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .imgs {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    .img {
+      margin-right: 8px;
+      border-radius: 8px;
+      min-width: 140px;
+    }
+  }
+`
+
 export const OtherPrice: React.FC<PriceProps> = ({ detail }) => {
   const [t] = useTranslation('translations')
   return (
-    <>
+    <OthderPriceContainer>
       <Label type={detail.type} />
-      <div className="contain">
-        {t('exchange.blind-price', { min: 2, max: 3 })}
+      <div className="contain">{t('exchange.othder-price')}</div>
+      <div className="price-title">{detail.priceTitle}</div>
+      <div className="price-desc">{detail.priceDesciption}</div>
+      <div className="imgs">
+        <PhotoProvider maskClassName="preview-mask" toolbarRender={() => null}>
+          {detail.priceImages.map((src) => {
+            return (
+              <div className="img">
+                <LazyLoadImage
+                  src={getImagePreviewUrl(src)}
+                  dataSrc={src}
+                  enablePreview
+                  width={140}
+                  height={140}
+                  skeletonStyle={{ borderRadius: '8px' }}
+                  cover={true}
+                  imageStyle={{ borderRadius: '8px' }}
+                  disableContextMenu={true}
+                  backup={
+                    <LazyLoadImage
+                      skeletonStyle={{ borderRadius: '8px' }}
+                      width={140}
+                      cover
+                      height={140}
+                      src={FallbackImg}
+                    />
+                  }
+                />
+              </div>
+            )
+          })}
+        </PhotoProvider>
       </div>
-      {detail.tokens.map((token) => {
-        return <PriceCard token={token} count={3} key={token.uuid} />
-      })}
-    </>
+    </OthderPriceContainer>
   )
 }

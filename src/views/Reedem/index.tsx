@@ -15,7 +15,7 @@ import { useWalletModel } from '../../hooks/useWallet'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Loading } from '../../components/Loading'
-import { ReedemEvent } from './RedeemEvent'
+import { ReedemCard } from './RedeemEvent'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -190,7 +190,7 @@ export const Redeem: React.FC = () => {
               return (
                 <React.Fragment key={i}>
                   {group.events.map((e, j: number) => {
-                    return <ReedemEvent item={e} />
+                    return <ReedemCard item={e} />
                   })}
                 </React.Fragment>
               )

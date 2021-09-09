@@ -57,7 +57,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.9",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
     "babel-plugin-styled-components": "^1.12.0",
     "eslint": "7",
     "eslint-config-standard-with-typescript": "^20.0.0",
