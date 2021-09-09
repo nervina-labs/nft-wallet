@@ -132,6 +132,7 @@
       "transfer": "Transfer",
       "desc": "NFT description",
       "no-desc": "No description",
+      "holder": "Holder",
       "lock": "Include card back content which can only be revealed by the owner of this NFT"
     },
     "account": {

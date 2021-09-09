@@ -542,7 +542,7 @@ export const NFT: React.FC = () => {
                   active={!isHolder}
                   onClick={() => history.replace(history.location.pathname)}
                 >
-                  NFT简介
+                  {t('nft.desc')}
                 </Tab>
                 <Tab
                   className="tab"
@@ -551,7 +551,7 @@ export const NFT: React.FC = () => {
                     history.replace(history.location.pathname + '?holder=true')
                   }
                 >
-                  收藏者
+                  {t('nft.holder')}
                 </Tab>
               </Tabs>
             </TabsContainer>
