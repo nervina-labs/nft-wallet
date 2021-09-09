@@ -66,6 +66,11 @@ const CardContainer = styled.div`
 
   .creator {
     margin: 10px 0;
+    .name {
+      width: 100px;
+      white-space: nowrap;
+      margin-right: auto;
+    }
   }
 `
 
