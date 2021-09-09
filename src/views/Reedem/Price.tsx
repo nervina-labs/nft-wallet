@@ -6,7 +6,7 @@ import { TokenClass } from '../../models/class-list'
 import { RedeemDetailModel, RedeemType } from '../../models/redeem'
 import { getImagePreviewUrl } from '../../utils'
 import { Label } from './Label'
-import FallbackImg from '../../assets/img/card-fallback.png'
+import FallbackImg from '../../assets/svg/fallback.svg'
 import { NFTCard } from './NFTCard'
 import { PhotoProvider } from 'react-photo-view'
 

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { LazyLoadImage } from '../../components/Image'
 import { getImagePreviewUrl } from '../../utils'
-import FallbackImg from '../../assets/img/card-fallback.png'
+import FallbackImg from '../../assets/svg/fallback.svg'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { CardBack } from '../../components/Cardback'
 
