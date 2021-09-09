@@ -134,8 +134,7 @@
       "lock": "Include card back content which can only be revealed by the owner of this NFT",
       "no-desc": "No description",
       "no-holder": "No collector",
-      "holder": "Collectors",
-      "lock": "Include card back content which can only be revealed by the owner of this NFT"
+      "holder": "Collectors"
     },
     "account": {
       "title": "My Account",
