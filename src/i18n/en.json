@@ -131,8 +131,10 @@
       "title": "NFT Details",
       "transfer": "Transfer",
       "desc": "NFT description",
+      "lock": "Include card back content which can only be revealed by the owner of this NFT",
       "no-desc": "No description",
-      "lock": "Include card back content which can only be revealed by the owner of this NFT"
+      "no-holder": "No collector",
+      "holder": "Collectors"
     },
     "account": {
       "title": "My Account",
@@ -145,7 +147,7 @@
     "holder": {
       "user-name-empty": "No nickname",
       "desc": "No description",
-      "title": "Holder"
+      "title": "Collector"
     },
     "profile": {
       "title": "Edit Profile",
@@ -173,7 +175,9 @@
       "regions": {
         "edit": "Select the region",
         "location": "Location",
+        "locating": "Locating...",
         "all": "All",
+        "error": "Location failed",
         "selected": "Selected"
       },
       "avatar": {
