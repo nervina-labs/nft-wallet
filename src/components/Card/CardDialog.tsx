@@ -70,6 +70,7 @@ const CardContainer = styled.div`
       width: 100px;
       white-space: nowrap;
       margin-right: auto;
+      display: block;
     }
   }
 `
