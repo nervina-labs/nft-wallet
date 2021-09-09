@@ -118,7 +118,6 @@ const WalletChange: React.FC = ({ children }) => {
     address,
     prevAddress,
     walletType,
-    signMessage,
     isLogined,
     pubkey,
   } = useWalletModel()
@@ -136,7 +135,7 @@ const WalletChange: React.FC = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prevAddress, address, walletType])
-  const { isAuthenticated } = useProfileModel()
+  const { isAuthenticated, getAuth } = useProfileModel()
   const isSigning = useRef(false)
   const { toast, closeToast } = useToast()
   const [t] = useTranslation('translations')
@@ -169,7 +168,7 @@ const WalletChange: React.FC = ({ children }) => {
             if (pathInForceAuthList && WalletType.Unipass === walletType) {
               UnipassConfig.setRedirectUri(location.pathname + location.search)
             }
-            signMessage(address)
+            getAuth()
               .then(() => {
                 if (WalletType.Metamask === walletType) {
                   closeToast()
@@ -184,7 +183,6 @@ const WalletChange: React.FC = ({ children }) => {
     isAuthenticated,
     walletType,
     address,
-    signMessage,
     location.pathname,
     location.search,
     isLogined,
@@ -192,6 +190,7 @@ const WalletChange: React.FC = ({ children }) => {
     t,
     toast,
     closeToast,
+    getAuth,
   ])
 
   return <>{children}</>

@@ -35,6 +35,8 @@ export const IS_SAFARI =
   !navigator.userAgent.includes('CriOS') &&
   !navigator.userAgent.includes('FxiOS')
 
+export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
+
 export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE
 
 export const OSS_IMG_PROCESS_QUERY = '?x-oss-process=image/resize,s_300'
