@@ -1,5 +1,5 @@
 import { CircularProgress } from '@material-ui/core'
-import React, { useMemo, useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { Redirect, useHistory, useLocation } from 'react-router'
@@ -9,6 +9,9 @@ import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { RoutePath, useRoute } from '../../routes'
 import { MainContainer } from '../../styles'
+import { AvatarType } from '../../models/user'
+import { LazyLoadImage } from '../../components/Image'
+import PeopleSrc from '../../assets/img/people.png'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -67,21 +70,26 @@ interface HistoryData {
   datauri?: string
   ext?: string
   fromCamera?: boolean
+  tokenUuid?: string
 }
 
+const MAX_WIDTH = 500
+
 export const ImagePreview: React.FC = () => {
-  const width = `${(window.innerWidth > 500 ? 500 : window.innerWidth) - 50}px`
+  const imageWidth = Math.min(MAX_WIDTH, window.innerWidth)
+  const circleWidth = imageWidth - 50
   const [t] = useTranslation('translations')
   const history = useHistory()
   const location = useLocation<HistoryData>()
   const [isSaving, setIsSaving] = useState(false)
   const { setRemoteProfile } = useProfileModel()
 
-  const [datauri, ext, fromCamera] = useMemo(() => {
+  const [datauri, ext, fromCamera, tokenUuid] = useMemo(() => {
     return [
       location.state.datauri,
       location.state.ext,
       location.state.fromCamera,
+      location.state.tokenUuid,
     ]
   }, [location.state])
   const { confirm, toast } = useWalletModel()
@@ -106,12 +114,20 @@ export const ImagePreview: React.FC = () => {
     }
     setIsSaving(true)
     try {
-      await setRemoteProfile(
-        {
-          avatar: datauri,
-        },
-        ext
-      )
+      if (!tokenUuid) {
+        await setRemoteProfile(
+          {
+            avatar: datauri,
+            avatar_type: AvatarType.Image,
+          },
+          { ext }
+        )
+      } else {
+        await setRemoteProfile({
+          avatar_token_uuid: tokenUuid,
+          avatar_type: AvatarType.Token,
+        })
+      }
       if (fromCamera) {
         history.go(-2)
       } else {
@@ -138,6 +154,7 @@ export const ImagePreview: React.FC = () => {
   }, [
     datauri,
     setRemoteProfile,
+    tokenUuid,
     history,
     isSaving,
     ext,
@@ -158,18 +175,23 @@ export const ImagePreview: React.FC = () => {
     }).catch(Boolean)
   }, [confirm, onSave, history, t, fromCamera])
 
-  if (datauri == null) {
+  if (!datauri && !tokenUuid) {
     return <Redirect to={RoutePath.Profile} />
   }
 
   return (
-    <Container width={width}>
+    <Container width={`${circleWidth}px`}>
       <div className="image">
-        <img src={datauri} />
+        <LazyLoadImage
+          src={datauri}
+          width={imageWidth}
+          height={imageWidth}
+          backup={<img src={PeopleSrc} />}
+        />
         <div className="circle" />
       </div>
       <footer>
-        {!isBlob ? (
+        {!isBlob && !tokenUuid ? (
           <div
             className="cancel"
             onClick={() => history.replace(RoutePath.TakePhoto)}

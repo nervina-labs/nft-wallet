@@ -14,18 +14,12 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
-import {
-  IS_MAC_SAFARI,
-  IS_WEXIN,
-  NFT_EXPLORER_URL,
-  WEAPP_ID,
-} from '../../constants'
+import { HOST, IS_MAC_SAFARI, IS_WEXIN, WEAPP_ID } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
 import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
-import Divider from '@material-ui/core/Divider'
 import { useLikeStatusModel } from '../../hooks/useLikeStatus'
 import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
@@ -33,9 +27,11 @@ import { Follow } from '../../components/Follow'
 import { useProfileModel } from '../../hooks/useProfile'
 
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
-import { getImagePreviewUrl } from '../../utils'
-import { Auth } from '../../models/user'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
+import { Tab, Tabs } from '../../components/Tab'
+import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { TokenHolderList } from './HolderList'
+import { StatusText } from './StatusText'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -107,11 +103,12 @@ const Container = styled(MainContainer)`
     color: rgba(0, 0, 0, 0.6);
   }
   .detail {
-    padding: 0 25px 40px;
+    padding: 0 25px 100px;
     border-radius: 25px 25px 0 0;
     position: relative;
     margin-bottom: 10px;
     background-color: #f7fafd;
+    min-height: calc(100vh - 450px);
     .title {
       font-weight: 500;
       font-size: 20px;
@@ -141,7 +138,7 @@ const Container = styled(MainContainer)`
       font-size: 12px;
     }
     .desc-title {
-      font-size: 18px;
+      font-size: 16px;
       line-height: 20px;
       margin-bottom: 8px;
     }
@@ -198,6 +195,7 @@ const Container = styled(MainContainer)`
 `
 
 const FooterContaienr = styled.footer`
+  z-index: 100;
   position: fixed;
   bottom: 0;
   height: 80px;
@@ -218,6 +216,20 @@ const FooterContaienr = styled.footer`
       margin-left: 4px;
       margin-right: 23px;
     }
+  }
+`
+
+const TabsContainer = styled.div`
+  margin-top: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+  .tabs {
+    transform: translateY(1px);
+  }
+
+  .tab {
+    font-size: 14px;
   }
 `
 
@@ -265,18 +277,16 @@ export const NFT: React.FC = () => {
   const { api, address, isLogined } = useWalletModel()
   const { getAuth } = useProfileModel()
 
+  const isHolder = !!useRouteQuery<string>('holder', '')
+
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api, isLogined],
     async () => {
+      const auth = isLogined ? await getAuth() : undefined
       if (matchTokenClass?.isExact) {
-        let auth: undefined | Auth
-        if (isLogined) {
-          auth = await getAuth()
-        }
         const { data } = await api.getTokenClass(id, auth)
         return data
       }
-      const auth = await getAuth()
       const { data } = await api.getNFTDetail(id, auth)
       return data
     },
@@ -302,13 +312,6 @@ export const NFT: React.FC = () => {
     }
     return imageColor
   }, [isFallBackImgLoaded, imageColor])
-
-  const explorerURL = useMemo(() => {
-    if (isTokenClass(data)) {
-      return `${NFT_EXPLORER_URL}/nft/${id ?? ''}`
-    }
-    return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
-  }, [data, id])
 
   const productID = data?.product_on_sale_uuid
 
@@ -395,7 +398,7 @@ export const NFT: React.FC = () => {
         <div
           className="buy-container"
           dangerouslySetInnerHTML={{ __html: weappHtml }}
-        ></div>
+        />
       )
     }
     return (
@@ -433,10 +436,6 @@ export const NFT: React.FC = () => {
     [hasCardBack]
   )
 
-  if (!isLogined && matchTokenClass?.isExact !== true) {
-    return <Redirect to={RoutePath.Explore} />
-  }
-
   if (
     failureCount >= 3 ||
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -456,7 +455,7 @@ export const NFT: React.FC = () => {
       />
       {!isFallBackImgLoaded ? (
         <Background
-          url={getImagePreviewUrl(detail?.bg_image_url)}
+          url={detail?.bg_image_url}
           style={{ height: `${innerHeight - 44 - 280}px` }}
         />
       ) : null}
@@ -464,9 +463,7 @@ export const NFT: React.FC = () => {
         className="figure"
         style={{
           height: `${innerHeight - 44 - 300}px`,
-          background: `${
-            isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
-          }`,
+          background: 'transparent',
         }}
       >
         <ParallaxTilt
@@ -533,11 +530,36 @@ export const NFT: React.FC = () => {
                   : verifyTitle}
               </div>
             ) : null}
-            <Divider style={{ margin: '24px 0' }} />
-            <div className="desc-title">
-              {detail?.description ? t('nft.desc') : ''}
-            </div>
-            <div className="desc">{detail?.description}</div>
+            <TabsContainer>
+              <Tabs activeKey={isHolder ? 1 : 0} className="tabs">
+                <Tab
+                  className="tab"
+                  active={!isHolder}
+                  onClick={() => history.replace(history.location.pathname)}
+                >
+                  {t('nft.desc')}
+                </Tab>
+                <Tab
+                  className="tab"
+                  active={isHolder}
+                  onClick={() =>
+                    history.replace(history.location.pathname + '?holder=true')
+                  }
+                >
+                  {t('nft.holder')}
+                </Tab>
+              </Tabs>
+            </TabsContainer>
+
+            {!isHolder ? (
+              detail?.description ? (
+                <div className="desc">{detail?.description}</div>
+              ) : (
+                <StatusText>{t('nft.no-desc')}</StatusText>
+              )
+            ) : (
+              <TokenHolderList id={(detail as NFTDetail).class_uuid ?? id} />
+            )}
           </section>
           <Footer nft={detail} />
         </>
@@ -545,8 +567,8 @@ export const NFT: React.FC = () => {
       <Share
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}
-        displayText={explorerURL}
-        copyText={explorerURL}
+        displayText={HOST + history.location.pathname}
+        copyText={HOST + history.location.pathname}
       />
     </Container>
   )
