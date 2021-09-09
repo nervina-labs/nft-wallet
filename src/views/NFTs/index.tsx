@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Card } from '../../components/Card'
-import { IS_WEXIN, NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
+import { HOST, IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import { useWalletModel } from '../../hooks/useWallet'
 import { NFTToken, Query, TransactionStatus } from '../../models'
 import { Empty } from './empty'
@@ -137,10 +137,6 @@ export const NFTs: React.FC = () => {
     )
   }, [data])
 
-  const explorerURL = useMemo(() => {
-    return `${NFT_EXPLORER_URL}/holder/tokens/${address}`
-  }, [address])
-
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
 
   const matchDesc = useRouteMatch(ProfilePath.Description)
@@ -248,7 +244,7 @@ export const NFTs: React.FC = () => {
                           token={token}
                           key={token.token_uuid || `${i}.${j}`}
                           address={address}
-                          isClass={isHolder || isLiked}
+                          isClass={!isHolder || isLiked}
                           showTokenId={!isLiked}
                         />
                       ))}
@@ -262,8 +258,8 @@ export const NFTs: React.FC = () => {
         )}
       </section>
       <Share
-        displayText={explorerURL}
-        copyText={explorerURL}
+        displayText={HOST + `${RoutePath.Holder}/${address}`}
+        copyText={HOST + `${RoutePath.Holder}/${address}`}
         closeDialog={() => setIsShareDialogOpen(false)}
         isDialogOpen={isShareDialogOpen}
       />
