@@ -10,6 +10,8 @@ import { Query } from '../../models'
 import { RoutePath, useRoute } from '../../routes'
 import { MainContainer } from '../../styles'
 import { AvatarType } from '../../models/user'
+import { LazyLoadImage } from '../../components/Image'
+import PeopleSrc from '../../assets/img/people.png'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -71,8 +73,11 @@ interface HistoryData {
   tokenUuid?: string
 }
 
+const MAX_WIDTH = 500
+
 export const ImagePreview: React.FC = () => {
-  const width = `${(window.innerWidth > 500 ? 500 : window.innerWidth) - 50}px`
+  const imageWidth = Math.min(MAX_WIDTH, window.innerWidth)
+  const circleWidth = imageWidth - 50
   const [t] = useTranslation('translations')
   const history = useHistory()
   const location = useLocation<HistoryData>()
@@ -175,9 +180,14 @@ export const ImagePreview: React.FC = () => {
   }
 
   return (
-    <Container width={width}>
+    <Container width={`${circleWidth}px`}>
       <div className="image">
-        <img src={datauri} />
+        <LazyLoadImage
+          src={datauri}
+          width={imageWidth}
+          height={imageWidth}
+          backup={<img src={PeopleSrc} />}
+        />
         <div className="circle" />
       </div>
       <footer>
