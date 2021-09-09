@@ -14,12 +14,7 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
-import {
-  IS_MAC_SAFARI,
-  IS_WEXIN,
-  NFT_EXPLORER_URL,
-  WEAPP_ID,
-} from '../../constants'
+import { HOST, IS_MAC_SAFARI, IS_WEXIN, WEAPP_ID } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
@@ -318,13 +313,6 @@ export const NFT: React.FC = () => {
     return imageColor
   }, [isFallBackImgLoaded, imageColor])
 
-  const explorerURL = useMemo(() => {
-    if (isTokenClass(data)) {
-      return `${NFT_EXPLORER_URL}/nft/${id ?? ''}`
-    }
-    return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
-  }, [data, id])
-
   const productID = data?.product_on_sale_uuid
 
   const isTransferable = useMemo(() => {
@@ -410,7 +398,7 @@ export const NFT: React.FC = () => {
         <div
           className="buy-container"
           dangerouslySetInnerHTML={{ __html: weappHtml }}
-        ></div>
+        />
       )
     }
     return (
@@ -549,7 +537,7 @@ export const NFT: React.FC = () => {
                   active={!isHolder}
                   onClick={() => history.replace(history.location.pathname)}
                 >
-                  NFT简介
+                  {t('nft.desc')}
                 </Tab>
                 <Tab
                   className="tab"
@@ -558,7 +546,7 @@ export const NFT: React.FC = () => {
                     history.replace(history.location.pathname + '?holder=true')
                   }
                 >
-                  收藏者
+                  {t('nft.holder')}
                 </Tab>
               </Tabs>
             </TabsContainer>
@@ -579,8 +567,8 @@ export const NFT: React.FC = () => {
       <Share
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}
-        displayText={explorerURL}
-        copyText={explorerURL}
+        displayText={HOST + history.location.pathname}
+        copyText={HOST + history.location.pathname}
       />
     </Container>
   )

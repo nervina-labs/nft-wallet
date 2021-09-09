@@ -299,7 +299,7 @@ export const Apps: React.FC = () => {
       <div className="shop">
         <ShopSvg />
         {isWechatInited ? (
-          <div dangerouslySetInnerHTML={{ __html: weappHtml }}></div>
+          <div dangerouslySetInnerHTML={{ __html: weappHtml }} />
         ) : (
           <div className="content" onClick={() => history.push(RoutePath.Shop)}>
             <div className="title">{t('apps.shop.title')}</div>
