@@ -7,8 +7,7 @@ import { LazyLoadImage } from '../Image'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { Limited } from '../Limited'
 import classNames from 'classnames'
-import html2canvas from 'html2canvas'
-import * as imageToBase64 from 'image-to-base64'
+import html2canvas from 'html2canvas-objectfit-fix'
 
 const BaseContainer = styled.div`
   position: fixed;
@@ -58,11 +57,9 @@ const SharingNftPostContainer = styled.div`
   top: 0;
   left: 0;
   position: absolute;
-  width: 95%;
-  height: auto;
-  min-height: 493px;
-  max-width: 328px;
-  //content-visibility: hidden;
+  width: 323px;
+  height: 484px;
+  content-visibility: hidden;
 `
 
 const IssuerContainer = styled.div`
@@ -128,7 +125,7 @@ const CardContainer = styled.div`
 `
 
 const Card = styled.div`
-  --width: 50%;
+  --width: 182px;
   width: var(--width);
   background-color: #fff;
   border-radius: 10px;
@@ -158,43 +155,41 @@ export const SharingNftPoster: React.FC<{
   const imgRef = useRef<HTMLImageElement>(null)
   const posterRef = useRef<HTMLDivElement>(null)
   const baseRef = useRef<HTMLDivElement>(null)
-  const issuerAvatar = tokenOrClass.issuer_info?.avatar_url
-  const issuerName = tokenOrClass.issuer_info?.name
-  const height = imgRef.current?.height ?? 328
-  const width = imgRef.current?.width ?? 328
-
+  const issuerName = (tokenOrClass.issuer_info?.name ?? '').substring(0, 10)
+  const time = new Date().getTime()
+  const cardImageUrl =
+    tokenOrClass.bg_image_url.replace(
+      'https://oss.jinse.cc/',
+      'https://goldenlegend.oss-accelerate.aliyuncs.com/'
+    ) +
+    '?' +
+    time
+  const avatarImageUrl =
+    (tokenOrClass.issuer_info?.avatar_url ?? '').replace(
+      'https://oss.jinse.cc/',
+      'https://goldenlegend.oss-accelerate.aliyuncs.com/'
+    ) +
+    '?' +
+    time
   const [imgSrc, setImgSrc] = useState('')
 
   useEffect(() => {
-    setTimeout(() => {
-      if (posterRef.current && baseRef.current) {
-        // eslint-disable-next-line no-void
-        void html2canvas(posterRef.current).then((canvas) => {
+    if (posterRef.current && baseRef.current && open) {
+      html2canvas(posterRef.current, { useCORS: true, allowTaint: true })
+        .then((canvas) => {
           setImgSrc(canvas.toDataURL('image/png'))
         })
-      }
-    }, 10000)
-  }, [baseRef.current])
-
-  const [avatarSrc, setAvatarSrc] = useState('')
-
-  useEffect(() => {
-    imageToBase64.then((base64) => {
-      setAvatarSrc(base64)
-    })
-  }, [tokenOrClass])
-  console.log(width)
+        .catch((error) => {
+          console.error('oops, something went wrong!', error)
+        })
+    }
+  }, [open])
 
   return (
     <BaseContainer className={classNames({ hide: !open })} ref={baseRef}>
       {imgSrc && <img src={imgSrc} alt="" />}
 
-      <SharingNftPostContainer
-        ref={posterRef}
-        style={{
-          height: `${height}px`,
-        }}
-      >
+      <SharingNftPostContainer ref={posterRef}>
         <BackgroundContainer>
           <img src={ShareNftBackground} alt="bg" ref={imgRef} />
         </BackgroundContainer>
@@ -202,7 +197,7 @@ export const SharingNftPoster: React.FC<{
           <Issuer>
             <div className="avatar">
               <LazyLoadImage
-                src={avatarSrc}
+                src={avatarImageUrl}
                 width={35}
                 height={35}
                 backup={<PeopleSvg />}
@@ -216,19 +211,16 @@ export const SharingNftPoster: React.FC<{
         <CardContainer>
           <Card>
             <img
-              src={tokenOrClass.bg_image_url}
+              src={cardImageUrl}
               alt=""
               className="img"
-              style={{
-                width: `${Math.floor(width * 0.5) - 20}px`,
-                height: `${Math.floor(width * 0.5) - 20}px`,
-              }}
+              crossOrigin="anonymous"
             />
             <div className="nft-name">{tokenOrClass.name}</div>
             <Issuer className="small">
               <div className="avatar">
                 <LazyLoadImage
-                  src={issuerAvatar}
+                  src={avatarImageUrl}
                   width={18}
                   height={18}
                   backup={<PeopleSvg />}

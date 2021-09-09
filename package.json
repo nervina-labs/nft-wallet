@@ -31,7 +31,7 @@
     "das-sdk": "^0.4.1",
     "dayjs": "1.10.4",
     "hox": "^1.1.3",
-    "html2canvas": "^1.3.2",
+    "html2canvas-objectfit-fix": "1.2.0",
     "i18next": "^20.2.2",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.0",
