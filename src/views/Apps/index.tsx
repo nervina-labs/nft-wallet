@@ -21,8 +21,6 @@ import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router-dom'
 
-const shopBg = ShopBg as any
-
 const Container = styled(MainContainer)`
   padding-top: 20px;
   max-width: 500px;
@@ -208,7 +206,7 @@ export const Apps: React.FC = () => {
     {
       title: t('apps.red-envelope.title'),
       desc: t('apps.red-envelope.desc'),
-      bg: Red as any,
+      bg: Red,
       color: '#FFF6F1',
       available: true,
       onClick: () => {
@@ -218,7 +216,7 @@ export const Apps: React.FC = () => {
     {
       title: t('apps.ticket.title'),
       desc: t('apps.ticket.desc'),
-      bg: Ticket as any,
+      bg: Ticket,
       available: true,
       color: '#F7FFF0',
       onClick: () => {
@@ -229,14 +227,14 @@ export const Apps: React.FC = () => {
       title: t('apps.dao.title'),
       color: '#F1FBFF',
       desc: t('apps.dao.desc'),
-      bg: DAO as any,
+      bg: DAO,
       available: false,
     },
     {
       title: t('apps.exchange.title'),
       desc: t('apps.exchange.desc'),
       color: '#F7F3FF',
-      bg: Exchange as any,
+      bg: Exchange,
       available: false,
     },
     {
@@ -250,7 +248,7 @@ export const Apps: React.FC = () => {
       title: t('apps.vip.title'),
       desc: t('apps.vip.desc'),
       color: '#FFF9E8',
-      bg: Vip as any,
+      bg: Vip,
       available: false,
     },
   ]
@@ -295,7 +293,7 @@ export const Apps: React.FC = () => {
   return (
     <Container>
       <HiddenBar alwaysShow />
-      <div className="welcome" style={{ background: `url(${shopBg})` }}>
+      <div className="welcome" style={{ background: `url(${ShopBg})` }}>
         <span>{t('apps.welcome')}</span>
       </div>
       <div className="shop">

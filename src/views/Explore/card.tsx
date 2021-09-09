@@ -131,7 +131,7 @@ export const Card: React.FC<CardProps> = ({
               width={width}
               cover
               height={width}
-              src={FallbackImg as any}
+              src={FallbackImg}
             />
           }
         />

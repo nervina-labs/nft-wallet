@@ -24,8 +24,8 @@ import { Query } from '../../models'
 import { Skeleton } from '@material-ui/lab'
 import { DrawerImage } from './DrawerImage'
 
-const emptyAvatar = PeopleSvg as any
-const profileBg = ProfileBg as any
+const emptyAvatar = PeopleSvg
+const profileBg = ProfileBg
 
 const Container = styled(MainContainer)`
   display: flex;
