@@ -3,8 +3,7 @@ import Web3 from 'web3'
 import {
   BOWSER_BROWSER,
   INFURA_ID,
-  OSS_IMG_HOST,
-  OSS_IMG_HOST_2,
+  OSS_IMG_HOSTS,
   OSS_IMG_PROCESS_QUERY_KEY,
   OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
   OSS_IMG_PROCESS_QUERY_KEY_SCALE,
@@ -154,7 +153,7 @@ export function getImagePreviewUrl(
   if (/\.(svg|webp)$/i.test(url)) {
     return url
   }
-  if (url.startsWith(OSS_IMG_HOST) || url.startsWith(OSS_IMG_HOST_2)) {
+  if (OSS_IMG_HOSTS.some((h) => url.startsWith(h))) {
     const [base, params = ''] = url.split('?')
     const urlParams = new URLSearchParams(params)
     const webp = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
