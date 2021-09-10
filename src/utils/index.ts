@@ -1,6 +1,14 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import Web3 from 'web3'
-import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
+import {
+  BOWSER_BROWSER,
+  INFURA_ID,
+  OSS_IMG_HOST,
+  OSS_IMG_PROCESS_QUERY_KEY,
+  OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
+  OSS_IMG_PROCESS_QUERY_KEY_SCALE,
+} from '../constants'
+import queryString from 'query-string'
 export * from './unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
@@ -114,6 +122,23 @@ export function isVerticalScrollable(): boolean {
   return document.body.scrollHeight > document.body.clientHeight
 }
 
+export function isSupportWebp(): boolean {
+  const supportedBrowsers = {
+    macos: {
+      safari: '>=14',
+    },
+    edge: '>=18',
+    mobile: {
+      safari: '>13.7',
+      'android browser': '>=4.2',
+    },
+    chrome: '>=32',
+    firefox: '>=65',
+  }
+
+  return !!BOWSER_BROWSER.satisfies(supportedBrowsers)
+}
+
 export function getImagePreviewUrl(url?: string): string | undefined {
   if (url == null) {
     return url
@@ -121,7 +146,13 @@ export function getImagePreviewUrl(url?: string): string | undefined {
   if (/\.(svg|webp)$/i.test(url)) {
     return url
   }
-  return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
+  if (url.startsWith(OSS_IMG_HOST)) {
+    const qs = queryString.parseUrl(url)
+    const webp = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
+    qs.query[OSS_IMG_PROCESS_QUERY_KEY] = OSS_IMG_PROCESS_QUERY_KEY_SCALE + webp
+    return decodeURIComponent(queryString.stringifyUrl(qs))
+  }
+  return url
 }
 
 const MILLION = 1e6
