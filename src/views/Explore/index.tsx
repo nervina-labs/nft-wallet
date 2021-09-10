@@ -17,7 +17,7 @@ import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useRouteMatch } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import classNames from 'classnames'
-import qs from 'query-string'
+import { parse, stringify } from 'query-string'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
 import { Home } from './home'
@@ -194,13 +194,13 @@ const Header: React.FC<{
           if (sortType === SortType.Latest) {
             return
           }
-          const o = qs.parse(location.search.slice(1))
+          const o = parse(location.search.slice(1))
           if (currentTag === 'all') {
             o.sort = 'latest'
           } else {
             delete o.sort
           }
-          const s = qs.stringify(o)
+          const s = stringify(o)
           const target = `${RoutePath.Explore}${s.length === 0 ? '' : '?' + s}`
           history.push(target)
         },
@@ -213,9 +213,9 @@ const Header: React.FC<{
           if (sortType === SortType.Likes) {
             return
           }
-          const o = qs.parse(location.search.slice(1))
+          const o = parse(location.search.slice(1))
           o.sort = 'likes'
-          const target = `${RoutePath.Explore}?${qs.stringify(o)}`
+          const target = `${RoutePath.Explore}?${stringify(o)}`
           history.push(target)
         },
       },
