@@ -72,7 +72,9 @@ export const Tabs: React.FC<TabsProps> = (props) => {
       {children}
       <ActiveBar
         style={{
-          width: `calc(100% / ${(children as { length: number }).length})`,
+          width: `calc(100% / ${
+            (children as boolean[]).filter((e) => e).length
+          })`,
           transform: `translateX(${activeKey * 100}%)`,
         }}
       />
