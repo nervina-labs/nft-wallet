@@ -118,36 +118,9 @@ const Container = styled.div`
     width: 100px;
     height: 125px;
     min-width: 100px;
-    /* border-right: 1px solid rgba(0, 0, 0, 0.1); */
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 10px;
-    background-color: white;
-    position: relative;
     img {
       border-radius: 10px;
-    }
-    .fallback {
-      position: absolute;
-      bottom: 8px;
-      font-size: 10px;
-      color: #2b2b2b;
-      opacity: 0.6;
-    }
-    .player {
-      position: absolute;
-      bottom: 6px;
-      right: 6px;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      svg {
-        width: 20px;
-        height: 20px;
-      }
     }
   }
   .content {
