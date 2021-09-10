@@ -8,7 +8,6 @@ import {
   OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
   OSS_IMG_PROCESS_QUERY_KEY_SCALE,
 } from '../constants'
-import { stringifyUrl, parseUrl } from 'query-string'
 export * from './unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
@@ -147,10 +146,14 @@ export function getImagePreviewUrl(url?: string): string | undefined {
     return url
   }
   if (url.startsWith(OSS_IMG_HOST)) {
-    const qs = parseUrl(url)
+    const [base, params = ''] = url.split('?')
+    const urlParams = new URLSearchParams(params)
     const webp = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
-    qs.query[OSS_IMG_PROCESS_QUERY_KEY] = OSS_IMG_PROCESS_QUERY_KEY_SCALE + webp
-    return decodeURIComponent(stringifyUrl(qs))
+    urlParams.set(
+      OSS_IMG_PROCESS_QUERY_KEY,
+      OSS_IMG_PROCESS_QUERY_KEY_SCALE + webp
+    )
+    return decodeURIComponent(`${base}?${urlParams.toString()}`)
   }
   return url
 }
