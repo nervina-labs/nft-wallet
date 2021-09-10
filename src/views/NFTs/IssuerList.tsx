@@ -15,7 +15,7 @@ import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 import { useTranslation } from 'react-i18next'
 import { Empty } from './empty'
-import { truncateMiddle } from '../../utils'
+import { getImagePreviewUrl, truncateMiddle } from '../../utils'
 import { Link } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 
@@ -88,7 +88,7 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
       <div className="main">
         <div className="avatar">
           <LazyLoadImage
-            src={issuer?.avatar_url}
+            src={getImagePreviewUrl(issuer?.avatar_url, 100)}
             width={44}
             height={44}
             imageStyle={{ borderRadius: '50%' }}

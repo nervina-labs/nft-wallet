@@ -123,11 +123,16 @@ export function isVerticalScrollable(): boolean {
 }
 
 export function isSupportWebp(): boolean {
+  // https://caniuse.com/?search=webp
+  // https://x5.tencent.com/guide/caniuse/index.html
   const supportedBrowsers = {
     macos: {
       safari: '>=14',
     },
     edge: '>=18',
+    android: {
+      wechat: '>=4',
+    },
     mobile: {
       safari: '>13.7',
       'android browser': '>=4.2',
@@ -139,7 +144,10 @@ export function isSupportWebp(): boolean {
   return !!BOWSER_BROWSER.satisfies(supportedBrowsers)
 }
 
-export function getImagePreviewUrl(url?: string): string | undefined {
+export function getImagePreviewUrl(
+  url?: string,
+  size = 300
+): string | undefined {
   if (url == null) {
     return url
   }
@@ -152,7 +160,7 @@ export function getImagePreviewUrl(url?: string): string | undefined {
     const webp = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
     urlParams.set(
       OSS_IMG_PROCESS_QUERY_KEY,
-      OSS_IMG_PROCESS_QUERY_KEY_SCALE + webp
+      `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webp}`
     )
     return decodeURIComponent(`${base}?${urlParams.toString()}`)
   }

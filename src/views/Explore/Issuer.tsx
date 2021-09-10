@@ -7,7 +7,7 @@ import { Creator } from '../../components/Creator'
 import { Follow } from '../../components/Follow'
 import { LazyLoadImage } from '../../components/Image'
 import { Issuer } from '../../models/issuer'
-import { formatCount } from '../../utils'
+import { formatCount, getImagePreviewUrl } from '../../utils'
 import { RoutePath } from '../../routes'
 
 const Container = styled.div`
@@ -93,7 +93,7 @@ export const RecommendIssuser: React.FC<IssuerProps> = ({
       <Container>
         <span className="avatar">
           <LazyLoadImage
-            src={issuer?.avatar_url}
+            src={getImagePreviewUrl(issuer?.avatar_url, 150)}
             width={38}
             height={38}
             variant="circle"
