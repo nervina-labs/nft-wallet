@@ -114,14 +114,38 @@ export function isVerticalScrollable(): boolean {
   return document.body.scrollHeight > document.body.clientHeight
 }
 
-export function getImagePreviewUrl(url?: string): string | undefined {
-  if (url == null) {
+export function getImagePreviewUrl<U extends string | undefined>(
+  url: U
+): U extends string ? string : undefined {
+  if (!url) {
+    return url as any
+  }
+  const isOssHost = url?.startsWith(OSS_IMG_HOST)
+  const isSvgOrWebp = /\.(svg|webp)$/i.test(url)
+  if (!isOssHost || isSvgOrWebp) {
+    return url as any
+  }
+  const urlObj = new URL(url)
+  const urlSearchParams = new URLSearchParams(urlObj.search)
+  if (urlSearchParams.has(OSS_IMG_PROCESS_QUERY[0])) {
+    return url as any
+  }
+  urlSearchParams.append(OSS_IMG_PROCESS_QUERY[0], OSS_IMG_PROCESS_QUERY[1])
+  const search = decodeURIComponent(urlSearchParams.toString())
+  return `${urlObj.href}?${search}` as any
+}
+
+export function createUrlTid(url: string, tid: string): string {
+  if (!url) {
+    return url ?? ''
+  }
+  const urlObj = new URL(url)
+  const urlSearchParams = new URLSearchParams(urlObj.search)
+  if (urlSearchParams.has('tid')) {
     return url
   }
-  if (/\.(svg|webp)$/i.test(url)) {
-    return url
-  }
-  return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
+  urlSearchParams.append('tid', tid)
+  return `${urlObj.href}?${decodeURIComponent(urlSearchParams.toString())}`
 }
 
 const MILLION = 1e6

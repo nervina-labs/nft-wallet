@@ -22,7 +22,6 @@ const Container = styled(MainContainer)`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   overflow: hidden;
   background: black;
 

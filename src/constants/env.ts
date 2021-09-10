@@ -39,7 +39,10 @@ export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 
 export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE
 
-export const OSS_IMG_PROCESS_QUERY = '?x-oss-process=image/resize,s_300'
+export const OSS_IMG_PROCESS_QUERY = [
+  'x-oss-process',
+  'image/resize,s_300',
+] as const
 export const OSS_IMG_HOST = 'https://oss.jinse.cc'
 
 export const UNIPASS_URL = IS_MAINNET

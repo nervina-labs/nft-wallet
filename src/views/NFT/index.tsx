@@ -32,6 +32,7 @@ import { Tab, Tabs } from '../../components/Tab'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
+import { createUrlTid } from '../../utils'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -354,6 +355,23 @@ export const NFT: React.FC = () => {
     initWechat().catch(Boolean)
   }, [])
 
+  const { renderer, bgImgUrl } = useMemo(() => {
+    const nftDetail = detail as NFTDetail
+    const renderer =
+      nftDetail?.n_token_id !== undefined
+        ? createUrlTid(nftDetail.renderer, `${nftDetail.n_token_id}`)
+        : nftDetail?.renderer
+    const bgImgUrl =
+      nftDetail?.n_token_id !== undefined
+        ? createUrlTid(nftDetail.bg_image_url, `${nftDetail.n_token_id}`)
+        : nftDetail?.bg_image_url
+
+    return {
+      renderer,
+      bgImgUrl,
+    }
+  }, [detail])
+
   const buyButton = useMemo(() => {
     if (!qrcode) {
       return null
@@ -467,14 +485,14 @@ export const NFT: React.FC = () => {
         }}
       >
         <ParallaxTilt
-          src={detail?.bg_image_url}
+          src={bgImgUrl}
           width={imageWidth}
           height={imageWidth}
           enable={!isDialogOpen && !disbaleTilt}
           onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
           onColorDetected={(color) => setImageColor(color)}
           type={detail?.renderer_type}
-          renderer={detail?.renderer}
+          renderer={renderer}
           cardBackContent={
             detail?.card_back_content ?? detail?.class_card_back_content
           }
