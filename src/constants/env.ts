@@ -43,11 +43,11 @@ export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE
 
 export const OSS_IMG_PROCESS_QUERY_KEY = 'x-oss-process'
-export const OSS_IMG_PROCESS_QUERY_KEY_SCALE = 'image/resize,s_300'
+export const OSS_IMG_PROCESS_QUERY_KEY_SCALE = 'image/resize,s_'
 export const OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP = '/format,webp'
 export const OSS_IMG_HOST = 'https://oss.jinse.cc'
 export const OSS_IMG_HOST_2 =
-  'https://http://goldenlegend.oss-cn-hangzhou.aliyuncs.com'
+  'https://goldenlegend.oss-cn-hangzhou.aliyuncs.com'
 
 export const UNIPASS_URL = IS_MAINNET
   ? 'https://unipass.xyz'
