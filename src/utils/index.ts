@@ -114,6 +114,26 @@ export function isVerticalScrollable(): boolean {
   return document.body.scrollHeight > document.body.clientHeight
 }
 
+export function addParamsToUrl(
+  url: string,
+  params: { [key: string]: string },
+  options?: {
+    ignoreDuplicates?: boolean
+  }
+): string {
+  if (!url) {
+    return url
+  }
+  const urlObj = new URL(url)
+  const urlSearchParams = urlObj.searchParams
+  Object.keys(params).forEach((key) => {
+    if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
+      urlSearchParams.set(key, params[key])
+    }
+  })
+  return urlObj.toString()
+}
+
 export function getImagePreviewUrl<U extends string | undefined>(
   url: U
 ): U extends string ? string : undefined {
@@ -125,27 +145,26 @@ export function getImagePreviewUrl<U extends string | undefined>(
   if (!isOssHost || isSvgOrWebp) {
     return url as any
   }
-  const urlObj = new URL(url)
-  const urlSearchParams = new URLSearchParams(urlObj.search)
-  if (urlSearchParams.has(OSS_IMG_PROCESS_QUERY[0])) {
-    return url as any
-  }
-  urlSearchParams.append(OSS_IMG_PROCESS_QUERY[0], OSS_IMG_PROCESS_QUERY[1])
-  const search = decodeURIComponent(urlSearchParams.toString())
-  return `${urlObj.href}?${search}` as any
+  type OssQuery = typeof OSS_IMG_PROCESS_QUERY
+  const params: {
+    [key in OssQuery[0]]?: OssQuery[1]
+  } = {}
+  params[OSS_IMG_PROCESS_QUERY[0]] = OSS_IMG_PROCESS_QUERY[1]
+  return addParamsToUrl(url, params) as any
 }
 
-export function createUrlTid(url: string, tid: string): string {
+export function addTidToUrl(url: string, tid: string): string {
   if (!url) {
     return url ?? ''
   }
-  const urlObj = new URL(url)
-  const urlSearchParams = new URLSearchParams(urlObj.search)
-  if (urlSearchParams.has('tid')) {
-    return url
+  return addParamsToUrl(url, { tid })
+}
+
+export function addLocaleToUrl(url: string, locale: 'zh' | 'en'): string {
+  if (!url) {
+    return url ?? ''
   }
-  urlSearchParams.append('tid', tid)
-  return `${urlObj.href}?${decodeURIComponent(urlSearchParams.toString())}`
+  return addParamsToUrl(url, { locale })
 }
 
 const MILLION = 1e6

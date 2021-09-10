@@ -3,10 +3,11 @@ import styled from 'styled-components'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { CardBack } from '../Cardback'
 import FallbackImg from '../../assets/svg/fallback.svg'
-import { createUrlTid, getImagePreviewUrl } from '../../utils'
+import { addLocaleToUrl, addTidToUrl, getImagePreviewUrl } from '../../utils'
 import { LazyLoadImage } from '../Image'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
+import i18n from 'i18next'
 
 const CardImageContainer = styled.div`
   position: relative;
@@ -56,6 +57,7 @@ const CardImageContainer = styled.div`
 interface CardImageProps {
   src: string
   tid?: string
+  locale?: string
   isBanned?: string
   hasCardBack?: boolean
   isPlayable?: boolean
@@ -86,8 +88,8 @@ export const CardImage: React.FC<CardImageProps> = ({
   const [t] = useTranslation('translations')
   const finalSrc = useMemo(() => {
     let ret = loadOriginal ? src : getImagePreviewUrl(src)
-    ret = tid ? createUrlTid(ret, tid) : ret
-    return ret
+    ret = tid ? addTidToUrl(ret, tid) : ret
+    return addLocaleToUrl(ret, i18n.language === 'en' ? 'en' : 'zh')
   }, [src, loadOriginal, tid])
 
   return (

@@ -32,7 +32,8 @@ import { Tab, Tabs } from '../../components/Tab'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
-import { createUrlTid } from '../../utils'
+import { addLocaleToUrl, addTidToUrl } from '../../utils'
+import i18n from 'i18next'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -357,15 +358,17 @@ export const NFT: React.FC = () => {
 
   const { renderer, bgImgUrl } = useMemo(() => {
     const nftDetail = detail as NFTDetail
-    const renderer =
+    let renderer =
       nftDetail?.n_token_id !== undefined
-        ? createUrlTid(nftDetail.renderer, `${nftDetail.n_token_id}`)
+        ? addTidToUrl(nftDetail.renderer, `${nftDetail.n_token_id}`)
         : nftDetail?.renderer
-    const bgImgUrl =
+    let bgImgUrl =
       nftDetail?.n_token_id !== undefined
-        ? createUrlTid(nftDetail.bg_image_url, `${nftDetail.n_token_id}`)
+        ? addTidToUrl(nftDetail.bg_image_url, `${nftDetail.n_token_id}`)
         : nftDetail?.bg_image_url
-
+    const locale = i18n.language === 'en' ? 'en' : 'zh'
+    renderer = addLocaleToUrl(renderer, locale)
+    bgImgUrl = addLocaleToUrl(bgImgUrl, locale)
     return {
       renderer,
       bgImgUrl,
