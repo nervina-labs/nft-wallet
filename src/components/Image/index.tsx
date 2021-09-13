@@ -49,7 +49,11 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
+  const [timer, setTimer] = useState<NodeJS.Timeout | undefined>()
   useEffect(() => {
+    if (timer) {
+      clearTimeout(timer)
+    }
     setShouldUseBackup(false)
     setLoaded(false)
   }, [src])
@@ -63,11 +67,17 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     setShouldUseBackup(false)
   }, [onLoaded])
   const onError = useCallback(() => {
-    if (backup) {
+    if (!backup) {
       setShouldUseBackup(true)
       setLoaded(true)
     }
-  }, [backup])
+
+    const timeout = setTimeout(() => {
+      setShouldUseBackup(true)
+      setLoaded(true)
+    }, 2000)
+    setTimer(timeout)
+  }, [])
 
   const ImgElement = (
     <img
