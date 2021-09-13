@@ -141,7 +141,7 @@ export const Redeem: React.FC = () => {
     <Container>
       <Appbar
         title={t('exchange.title')}
-        left={<BackSvg onClick={() => history.goBack()} />}
+        left={<BackSvg onClick={() => history.replace(RoutePath.Apps)} />}
         right={<MyExchangeSvg />}
       />
       <div className="filters">

@@ -331,7 +331,7 @@ const routes: MibaoRouterProps[] = [
   },
   {
     component: RedeemDetail,
-    exact: true,
+    exact: false,
     key: 'ReedemDetail',
     path: RoutePath.Redeem,
     params: '/:id',

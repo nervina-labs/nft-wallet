@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { Redirect, useHistory, useParams } from 'react-router'
+import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { Loading } from '../../components/Loading'
@@ -20,6 +20,10 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import { Price } from '../Reedem/Price'
 import { Condition } from './Condition'
 import Alert from '@material-ui/lab/Alert'
+import { Footer } from './Footer'
+import { SubmitAddress } from './SubmitAddress'
+import { SubmitEmail } from './SubmitEmail'
+import { SubmitCkb } from './SubmitCkb'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +50,7 @@ const Container = styled(MainContainer)`
     .MuiAlert-root {
       font-size: 12px;
       margin: 8px 20px;
+      margin-bottom: 80px;
     }
     background: #f6f6f6;
     flex: 1;
@@ -177,7 +182,9 @@ export const RedeemDetail: React.FC = () => {
     return t('exchange.event.on-going')
   }, [data?.status, t])
   const [showPrice, setShowPrice] = useState(true)
-
+  const matchAddress = useRouteMatch(`${RoutePath.Redeem}/:id/address`)
+  const matchEmail = useRouteMatch(`${RoutePath.Redeem}/:id/email`)
+  const matchCkb = useRouteMatch(`${RoutePath.Redeem}/:id/ckb`)
   if (isError) {
     return <Redirect to={RoutePath.NotFound} />
   }
@@ -256,6 +263,22 @@ export const RedeemDetail: React.FC = () => {
             />
             {showPrice ? <Price detail={data} /> : <Condition detail={data} />}
             <Alert severity="error">{t('exchange.warning')}</Alert>
+            <Footer status={data.status} isReedemable />
+            <SubmitAddress
+              open={!!matchAddress?.isExact}
+              status={data?.status}
+              close={() => history.goBack()}
+            />
+            <SubmitEmail
+              open={!!matchEmail?.isExact}
+              status={data?.status}
+              close={() => history.goBack()}
+            />
+            <SubmitCkb
+              open={!!matchCkb?.isExact}
+              status={data?.status}
+              close={() => history.goBack()}
+            />
           </>
         )}
       </main>

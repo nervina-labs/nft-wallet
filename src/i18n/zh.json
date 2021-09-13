@@ -348,14 +348,36 @@
         "redeemable": "可兑换"
       },
       "actions": {
-        "exchange": "立即兑换",
-        "insufficient": "暂不满足"
+        "redeem": "立即兑换",
+        "insufficient": "条件不足无法兑换"
       },
       "alert": {
         "normal": "兑换不会销毁您参与兑换的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他兑换",
         "destroy": "兑换将会销毁您参与兑换的NFT，该操作不可逆，一经销毁将无法找回",
         "confirm": "确认兑换",
         "cancel": "取消"
+      },
+      "form": {
+        "address": {
+          "title": "填写邮寄地址",
+          "name-label": "姓名",
+          "name-placeholder": "请输入姓名",
+          "phone-label": "电话号码",
+          "phone-placeholder": "请输入电话号码",
+          "address-label": "详细地址",
+          "address-placeholder": "请输入填写地址"
+        },
+        "email": {
+          "title": "填写邮箱地址",
+          "label": "邮箱地址",
+          "placeholder": "请输入邮箱地址"
+        },
+        "ckb": {
+          "title": "填写 CKB 地址",
+          "label": "CKB 地址",
+          "placeholder": "请输入 CKB 地址",
+          "fill": "填充当前账户地址"
+        }
       },
       "exchanged": "已兑换",
       "issuer": "发起人",
