@@ -1,6 +1,13 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import Web3 from 'web3'
-import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
+import {
+  BOWSER_BROWSER,
+  INFURA_ID,
+  OSS_IMG_HOSTS,
+  OSS_IMG_PROCESS_QUERY_KEY,
+  OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
+  OSS_IMG_PROCESS_QUERY_KEY_SCALE,
+} from '../constants'
 export * from './unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
@@ -114,14 +121,49 @@ export function isVerticalScrollable(): boolean {
   return document.body.scrollHeight > document.body.clientHeight
 }
 
-export function getImagePreviewUrl(url?: string): string | undefined {
+export function isSupportWebp(): boolean {
+  // https://caniuse.com/?search=webp
+  // https://x5.tencent.com/guide/caniuse/index.html
+  const supportedBrowsers = {
+    macos: {
+      safari: '>=14',
+    },
+    edge: '>=18',
+    android: {
+      wechat: '>=4',
+    },
+    mobile: {
+      safari: '>13.7',
+      'android browser': '>=4.2',
+    },
+    chrome: '>=32',
+    firefox: '>=65',
+  }
+
+  return !!BOWSER_BROWSER.satisfies(supportedBrowsers)
+}
+
+export function getImagePreviewUrl(
+  url?: string,
+  size = 300
+): string | undefined {
   if (url == null) {
     return url
   }
   if (/\.(svg|webp)$/i.test(url)) {
     return url
   }
-  return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
+  if (OSS_IMG_HOSTS.some((h) => url.startsWith(h))) {
+    const [base, params = ''] = url.split('?')
+    const urlParams = new URLSearchParams(params)
+    const webp = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
+    urlParams.set(
+      OSS_IMG_PROCESS_QUERY_KEY,
+      `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webp}`
+    )
+    return decodeURIComponent(`${base}?${urlParams.toString()}`)
+  }
+  return url
 }
 
 const MILLION = 1e6
