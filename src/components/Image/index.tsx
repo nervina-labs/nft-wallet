@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 import { PhotoConsumer } from 'react-photo-view'
 
@@ -49,6 +49,10 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
+  useEffect(() => {
+    setShouldUseBackup(false)
+    setLoaded(false)
+  }, [src])
   const onLoad = useCallback(async () => {
     try {
       await onLoaded?.()
@@ -59,7 +63,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     setShouldUseBackup(false)
   }, [onLoaded])
   const onError = useCallback(() => {
-    if (!backup) {
+    if (backup) {
       setShouldUseBackup(true)
       setLoaded(true)
     }
@@ -87,17 +91,15 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     />
   )
 
+  const ImageElement = enablePreview ? (
+    <PhotoConsumer src={(dataSrc ?? src) as string}>{ImgElement}</PhotoConsumer>
+  ) : (
+    ImgElement
+  )
+
   return (
     <>
-      {shouldUseBackup ? (
-        backup
-      ) : enablePreview ? (
-        <PhotoConsumer src={(dataSrc ?? src) as string}>
-          {ImgElement}
-        </PhotoConsumer>
-      ) : (
-        ImgElement
-      )}
+      {shouldUseBackup ? backup : ImageElement}
       {!loaded ? (
         <Skeleton
           variant={variant ?? 'rect'}
