@@ -160,25 +160,28 @@ export function addParamsToUrl(
       urlSearchParams.set(key, params[key])
     }
   })
-  return urlObj.toString()
+  return decodeURIComponent(urlObj.toString())
 }
 
 export function getImagePreviewUrl<U extends string | undefined>(
-  url: U
+  url: U,
+  size = 300
 ): U extends string ? string : undefined {
   if (!url) {
     return url as any
   }
-  const isOssHost = url?.startsWith(OSS_IMG_HOST)
+  const isOssHost = OSS_IMG_HOSTS.some((host) => url?.startsWith(host))
   const isSvgOrWebp = /\.(svg|webp)$/i.test(url)
   if (!isOssHost || isSvgOrWebp) {
     return url as any
   }
-  type OssQuery = typeof OSS_IMG_PROCESS_QUERY
+  const webpParam = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
   const params: {
-    [key in OssQuery[0]]?: OssQuery[1]
+    [key in typeof OSS_IMG_PROCESS_QUERY_KEY]?: string
   } = {}
-  params[OSS_IMG_PROCESS_QUERY[0]] = OSS_IMG_PROCESS_QUERY[1]
+  params[
+    OSS_IMG_PROCESS_QUERY_KEY
+  ] = `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webpParam}`
   return addParamsToUrl(url, params) as any
 }
 
