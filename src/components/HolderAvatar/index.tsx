@@ -8,7 +8,6 @@ import PeopleSrc, {
 import NftAvatarDiamonds from '../../assets/svg/nft-avatar-diamonds.svg'
 import classNames from 'classnames'
 import { getImagePreviewUrl } from '../../utils'
-import { CardImage } from '../Card/CardImage'
 
 const Container = styled.div`
   width: 44px;
@@ -123,25 +122,15 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
           animation: avatarType === AvatarType.Token,
         })}
       >
-        {avatarType === AvatarType.Token ? (
-          <CardImage
-            src={avatar}
-            width={size}
-            height={size}
-            variant="circle"
-            tid={tid}
-          />
-        ) : (
-          <LazyLoadImage
-            src={getImagePreviewUrl(avatar, 100)}
-            dataSrc={avatar}
-            width={size}
-            height={size}
-            variant="circle"
-            backup={<Backup size={size} />}
-            enablePreview={enablePreview}
-          />
-        )}
+        <LazyLoadImage
+          src={getImagePreviewUrl(avatar, 100)}
+          dataSrc={avatar}
+          width={size}
+          height={size}
+          variant="circle"
+          backup={<Backup size={size} />}
+          enablePreview={enablePreview}
+        />
         {avatarType === AvatarType.Token && (
           <img
             src={(NftAvatarDiamonds as unknown) as string}
