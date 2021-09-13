@@ -188,14 +188,14 @@ export function getImagePreviewUrl<U extends string | undefined>(
 
 export function addTidToUrl(url: string, tid: string): string {
   if (!url) {
-    return url ?? ''
+    return url
   }
   return addParamsToUrl(url, { tid })
 }
 
 export function addLocaleToUrl(url: string, locale: 'zh' | 'en'): string {
   if (!url) {
-    return url ?? ''
+    return url
   }
   return addParamsToUrl(url, { locale })
 }

@@ -32,7 +32,7 @@ import { Tab, Tabs } from '../../components/Tab'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
-import { addLocaleToUrl, addTidToUrl } from '../../utils'
+import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 
 const CardBackIconContainer = styled.div`
@@ -360,19 +360,19 @@ export const NFT: React.FC = () => {
     const nftDetail = detail as NFTDetail
     const isClass = nftDetail?.n_token_id !== undefined
     const ret = {
-      renderer: nftDetail?.renderer ?? '',
-      bgImgUrl: nftDetail?.bg_image_url ?? '',
+      renderer: nftDetail?.renderer,
+      bgImgUrl: nftDetail?.bg_image_url,
     }
     if (isClass) {
       const locale = i18n.language === 'en' ? 'en' : 'zh'
-      ret.renderer = addLocaleToUrl(
-        addTidToUrl(ret.renderer, `${nftDetail.n_token_id}`),
-        locale
-      )
-      ret.bgImgUrl = addLocaleToUrl(
-        addTidToUrl(ret.bgImgUrl, `${nftDetail.n_token_id}`),
-        locale
-      )
+      ret.renderer = addParamsToUrl(ret.renderer, {
+        tid: `${nftDetail.n_token_id}`,
+        locale,
+      })
+      ret.bgImgUrl = addParamsToUrl(ret.bgImgUrl, {
+        tid: `${nftDetail.n_token_id}`,
+        locale,
+      })
     }
     return ret
   }, [detail])
