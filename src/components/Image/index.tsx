@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 import { PhotoConsumer } from 'react-photo-view'
 
@@ -49,29 +49,21 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
+  const onLoad = useCallback(async () => {
+    try {
+      await onLoaded?.()
+    } catch (error) {
+      console.error(error)
+    }
+    setLoaded(true)
+    setShouldUseBackup(false)
+  }, [onLoaded])
   const onError = useCallback(() => {
-    if (backup != null) {
+    if (!backup) {
       setShouldUseBackup(true)
       setLoaded(true)
     }
   }, [backup])
-
-  useEffect(() => {
-    const img = new Image()
-    img.src = src ?? ''
-    img.onload = async () => {
-      try {
-        await onLoaded?.()
-      } catch (error) {
-        console.log(error)
-      }
-      setLoaded(true)
-      setShouldUseBackup(false)
-    }
-    img.onerror = () => {
-      onError()
-    }
-  }, [src, onError, onLoaded])
 
   const ImgElement = (
     <img
@@ -80,6 +72,8 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
       onContextMenu={disableContextMenu ? disableContext : undefined}
       data-src={dataSrc}
       onClick={onClick}
+      onLoad={onLoad}
+      onError={onError}
       alt={alt}
       style={{
         objectFit: variant === 'circle' || cover ? 'cover' : 'contain',
