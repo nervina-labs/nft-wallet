@@ -21,7 +21,6 @@ export interface LazyLoadImageProps {
   onClick?: (e: React.SyntheticEvent<HTMLImageElement>) => void
   dataSrc?: string
   enablePreview?: boolean
-  loading?: boolean
 }
 
 const disableContext: React.MouseEventHandler = (e): boolean => {
@@ -47,7 +46,6 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
   onClick,
   dataSrc,
   enablePreview,
-  loading,
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
@@ -60,9 +58,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
 
   useEffect(() => {
     const img = new Image()
-    if (!loading) {
-      img.src = src ?? ''
-    }
+    img.src = src ?? ''
     img.onload = async () => {
       try {
         await onLoaded?.()
@@ -75,7 +71,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     img.onerror = () => {
       onError()
     }
-  }, [src, onError, onLoaded, loading])
+  }, [src, onError, onLoaded])
 
   const ImgElement = (
     <img

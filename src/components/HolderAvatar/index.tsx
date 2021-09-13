@@ -81,6 +81,7 @@ const AvatarContainer = styled.div`
 interface HolderAvatarProps {
   avatar?: string
   avatarType?: AvatarType
+  tid?: string
   size?: number
   enablePreview?: boolean
 }
@@ -102,6 +103,7 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
   avatarType = AvatarType.Image,
   size = 44,
   enablePreview,
+  tid,
 }) => {
   const sizePx = `${size}px`
   if (!avatar) {
@@ -123,10 +125,11 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
       >
         {avatarType === AvatarType.Token ? (
           <CardImage
-            src={getImagePreviewUrl(avatar, 100)}
+            src={avatar}
             width={size}
             height={size}
             variant="circle"
+            tid={tid}
           />
         ) : (
           <LazyLoadImage
