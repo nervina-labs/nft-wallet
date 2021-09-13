@@ -181,13 +181,13 @@ const Header: React.FC<{
     if (sortType === SortType.Latest) {
       return
     }
-    const o = qs.parse(location.search.slice(1))
+    const o = new URLSearchParams(location.search)
     if (currentTag === 'all') {
-      o.sort = 'latest'
+      o.set('sort', 'latest')
     } else {
-      delete o.sort
+      o.delete('sort')
     }
-    const s = qs.stringify(o)
+    const s = decodeURIComponent(o.toString())
     const target = `${RoutePath.Explore}${s.length === 0 ? '' : '?' + s}`
     history.push(target)
   }, [currentTag, history, sortType])
@@ -196,9 +196,11 @@ const Header: React.FC<{
     if (sortType === SortType.Likes) {
       return
     }
-    const o = qs.parse(location.search.slice(1))
-    o.sort = 'likes'
-    const target = `${RoutePath.Explore}?${qs.stringify(o)}`
+    const o = new URLSearchParams(location.search)
+    o.set('sort', 'likes')
+    const target = `${RoutePath.Explore}?${decodeURIComponent(
+      o.toString()
+    )}`
     history.push(target)
   }, [history, sortType])
 
@@ -480,13 +482,6 @@ export const Explore: React.FC = () => {
             currentTagId={currentTagId ?? ''}
             sortType={sortType}
             currentTagName={currentTagName}
-          />
-          <Header
-            currentTag={currentTag}
-            currentTagId={currentTagId ?? ''}
-            sortType={sortType}
-            currentTagName={currentTagName}
-            enableFixed={true}
           />
           <section className="content">
             {isRefetching ? <Loading /> : null}
