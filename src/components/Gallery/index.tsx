@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import FallbackImg from '../../assets/svg/fallback.svg'
-import { LazyLoadImage } from '../../components/Image'
+import { CardImage } from '../Card/CardImage'
 
 const Container = styled.header`
   height: 74px;
@@ -9,26 +8,27 @@ const Container = styled.header`
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   width: 100%;
-  .first,
-  .second,
-  .third {
+
+  .image {
     position: absolute;
-  }
 
-  .first {
-    bottom: 11px;
-    left: 80px;
-    z-index: 3;
-  }
+    img {
+      border-radius: 4px;
+    }
 
-  .second {
-    left: 20px;
-    bottom: 16px;
-  }
-
-  .third {
-    right: 20px;
-    bottom: 16px;
+    &:nth-child(1) {
+      bottom: 11px;
+      left: 80px;
+      z-index: 3;
+    }
+    &:nth-child(2) {
+      left: 20px;
+      bottom: 16px;
+    }
+    &:nth-child(3) {
+      right: 20px;
+      bottom: 16px;
+    }
   }
 `
 
@@ -55,83 +55,28 @@ export const Gallery: React.FC<GalleryProps> = ({
   secondHiddenWidth = 12,
   height = 74,
 }) => {
-  const [first, second, third] = imgs
   const primaryLeft = (containerWidth - primaryWidth) / 2
   const secondLength = primaryLeft - secondWidth + secondHiddenWidth
   return (
     <Container style={{ background: bg, height }} className="gallery">
-      <div
-        className="first"
-        style={{ left: primaryLeft, bottom: primaryMarginBottom }}
-      >
-        <LazyLoadImage
-          src={first}
-          width={primaryWidth}
-          height={primaryWidth}
-          imageStyle={{ borderRadius: '4px' }}
-          skeletonStyle={{ borderRadius: '4px' }}
-          cover
-          disableContextMenu={true}
-          backup={
-            <LazyLoadImage
-              imageStyle={{ borderRadius: '4px' }}
-              cover
-              skeletonStyle={{ borderRadius: '4px' }}
-              width={primaryWidth}
-              height={primaryWidth}
-              src={FallbackImg}
-            />
-          }
-        />
-      </div>
-      <div
-        className="second"
-        style={{ bottom: secondMarginBottom, left: secondLength }}
-      >
-        <LazyLoadImage
-          src={second}
-          width={secondWidth}
-          height={secondWidth}
-          imageStyle={{ borderRadius: '4px' }}
-          skeletonStyle={{ borderRadius: '4px' }}
-          cover
-          disableContextMenu={true}
-          backup={
-            <LazyLoadImage
-              cover
-              imageStyle={{ borderRadius: '4px' }}
-              skeletonStyle={{ borderRadius: '4px' }}
-              width={secondWidth}
-              height={secondWidth}
-              src={FallbackImg}
-            />
-          }
-        />
-      </div>
-      <div
-        className="third"
-        style={{ bottom: secondMarginBottom, right: secondLength }}
-      >
-        <LazyLoadImage
-          src={third}
-          width={secondWidth}
-          height={secondWidth}
-          imageStyle={{ borderRadius: '4px' }}
-          skeletonStyle={{ borderRadius: '4px' }}
-          cover
-          disableContextMenu={true}
-          backup={
-            <LazyLoadImage
-              cover
-              imageStyle={{ borderRadius: '4px' }}
-              skeletonStyle={{ borderRadius: '4px' }}
-              width={secondWidth}
-              height={secondWidth}
-              src={FallbackImg}
-            />
-          }
-        />
-      </div>
+      {imgs.map((img, i) => (
+        <div
+          key={i}
+          className="image"
+          style={{
+            ...(i < 2
+              ? { left: i === 0 ? primaryLeft : secondLength }
+              : { right: secondLength }),
+            bottom: i === 0 ? primaryMarginBottom : secondMarginBottom,
+          }}
+        >
+          <CardImage
+            src={img}
+            width={i === 0 ? primaryWidth : secondWidth}
+            height={i === 0 ? primaryWidth : secondWidth}
+          />
+        </div>
+      ))}
     </Container>
   )
 }

@@ -160,6 +160,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
     history.push(RoutePath.ImagePreview, {
       datauri: token.class_bg_image_url,
       tokenUuid: token.token_uuid,
+      tid: `${token.n_token_id}`,
     })
   }, [
     activeIndex,

@@ -56,6 +56,9 @@ export const DrawerContainer = styled.div`
   }
   .card {
     margin-top: 20px;
+    img {
+      border-radius: 10px;
+    }
   }
   .title {
     margin-top: 20px;

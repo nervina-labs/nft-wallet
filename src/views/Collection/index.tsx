@@ -7,7 +7,7 @@ import { HiddenBar } from '../../components/HiddenBar'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { TokenClass } from '../../models/class-list'
-import { getImagePreviewUrl, isVerticalScrollable } from '../../utils'
+import { isVerticalScrollable } from '../../utils'
 import { Masonry } from '../../components/Masonry'
 import { Loading } from '../../components/Loading'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -135,12 +135,7 @@ export const Collection: React.FC = () => {
   const appRef = useRef(null)
   const containerWidth = useWidth(appRef)
   const imgs = useMemo(() => {
-    if (tokens) {
-      return tokens
-        ?.slice(0, 3)
-        .map((t) => getImagePreviewUrl(t.bg_image_url) as string)
-    }
-    return []
+    return tokens?.slice(0, 3).map((t) => t.bg_image_url) ?? []
   }, [tokens])
 
   useEffect(() => {
