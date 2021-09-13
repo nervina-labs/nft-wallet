@@ -2,13 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 import { PhotoConsumer } from 'react-photo-view'
 
+export type LazyLoadImageVariant = 'circle' | 'rect' | 'text'
+
 export interface LazyLoadImageProps {
   src: string | undefined
   alt?: string
   width: number
   height: number
   backup?: React.ReactNode
-  variant?: 'circle' | 'rect' | 'text'
+  variant?: LazyLoadImageVariant
   cover?: boolean
   skeletonStyle?: React.CSSProperties
   onLoaded?: () => void

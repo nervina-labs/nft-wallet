@@ -4,7 +4,7 @@ import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { CardBack } from '../Cardback'
 import FallbackImg from '../../assets/svg/fallback.svg'
 import { addLocaleToUrl, addTidToUrl, getImagePreviewUrl } from '../../utils'
-import { LazyLoadImage } from '../Image'
+import { LazyLoadImage, LazyLoadImageVariant } from '../Image'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import i18n from 'i18next'
@@ -67,6 +67,7 @@ interface CardImageProps {
   loadOriginal?: boolean
   playerCenter?: boolean
   hideFallBackText?: boolean
+  variant?: LazyLoadImageVariant
 }
 
 export const CardImage: React.FC<CardImageProps> = ({
@@ -81,6 +82,7 @@ export const CardImage: React.FC<CardImageProps> = ({
   loadOriginal,
   playerCenter,
   hideFallBackText,
+  variant,
 }) => {
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(
     Boolean(isBanned)
@@ -104,12 +106,14 @@ export const CardImage: React.FC<CardImageProps> = ({
         height={height}
         cover
         disableContextMenu={true}
+        variant={variant}
         backup={
           <LazyLoadImage
             width={width}
             height={height}
             src={FallbackImg}
             dataSrc={finalSrc}
+            variant={variant}
             onLoaded={() => setFallBackImgLoaded(true)}
           />
         }
