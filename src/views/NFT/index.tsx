@@ -362,13 +362,13 @@ export const NFT: React.FC = () => {
       nftDetail?.n_token_id !== undefined
         ? addTidToUrl(nftDetail.renderer, `${nftDetail.n_token_id}`)
         : nftDetail?.renderer
-    let bgImgUrl =
+    const bgImgUrl =
       nftDetail?.n_token_id !== undefined
         ? addTidToUrl(nftDetail.bg_image_url, `${nftDetail.n_token_id}`)
         : nftDetail?.bg_image_url
     const locale = i18n.language === 'en' ? 'en' : 'zh'
     renderer = addLocaleToUrl(renderer, locale)
-    bgImgUrl = addLocaleToUrl(bgImgUrl, locale)
+
     return {
       renderer,
       bgImgUrl,
