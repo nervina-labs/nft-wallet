@@ -1,4 +1,7 @@
+import * as Bowser from 'bowser'
 type ChainType = 'mainnet' | 'testnet'
+
+export const BOWSER_BROWSER = Bowser.getParser(window.navigator.userAgent)
 
 export const SERVER_URL =
   process.env.REACT_APP_SERVER_URL ??
@@ -39,8 +42,14 @@ export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 
 export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE
 
-export const OSS_IMG_PROCESS_QUERY = '?x-oss-process=image/resize,s_300'
-export const OSS_IMG_HOST = 'https://oss.jinse.cc'
+export const OSS_IMG_PROCESS_QUERY_KEY = 'x-oss-process'
+export const OSS_IMG_PROCESS_QUERY_KEY_SCALE = 'image/resize,s_'
+export const OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP = '/format,webp'
+export const OSS_IMG_HOSTS = [
+  'https://oss.jinse.cc',
+  'https://goldenlegend.oss-cn-hangzhou.aliyuncs.com',
+  'https://goldenlegend.oss-accelerate.aliyuncs.com',
+]
 
 export const UNIPASS_URL = IS_MAINNET
   ? 'https://unipass.xyz'

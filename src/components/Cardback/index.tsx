@@ -2,7 +2,10 @@ import React from 'react'
 import { Tooltip } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
+import CardBackPath, {
+  ReactComponent as CardBackSvg,
+} from '../../assets/svg/card-back.svg'
+import { IS_IPHONE } from '../../constants'
 
 const CardBackContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -16,6 +19,11 @@ const CardBackContainer = styled.div`
   top: 0;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
+
+  img {
+    width: 100%;
+    height: auto;
+  }
 `
 
 export type Placement =
@@ -46,7 +54,11 @@ export const CardBack: React.FC<CardBackProps> = ({
   return (
     <Tooltip placement={tooltipPlacement ?? 'top-end'} title={title}>
       <CardBackContainer style={style}>
-        <CardBackSvg />
+        {IS_IPHONE ? (
+          <img src={CardBackPath} alt="CardBack" />
+        ) : (
+          <CardBackSvg />
+        )}
       </CardBackContainer>
     </Tooltip>
   )
