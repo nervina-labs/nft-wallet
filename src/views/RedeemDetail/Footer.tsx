@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory, useLocation } from 'react-router'
+// import { useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
+import { useWarning } from '../../hooks/useWarning'
 import { RedeemStatus } from '../../models/redeem'
 import { Button, ButtonProps } from '../Reedem/Button'
 
@@ -30,8 +31,8 @@ export const Footer: React.FC<FooterProps> = ({
   ...props
 }) => {
   const [t] = useTranslation('translations')
-  const history = useHistory()
-  const location = useLocation()
+  // const history = useHistory()
+  // const location = useLocation()
   const text = useMemo(() => {
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
@@ -43,8 +44,15 @@ export const Footer: React.FC<FooterProps> = ({
     }
     return t('exchange.actions.insufficient')
   }, [isReedemable, status, t])
+  const warning = useWarning()
   const onClick = () => {
-    history.push(`${location.pathname}/email`)
+    warning(t('exchange.warning'), async () => {
+      return await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve()
+        }, 1000)
+      })
+    })
   }
   return (
     <Container>

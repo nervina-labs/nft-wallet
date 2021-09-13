@@ -41,6 +41,7 @@ import { Shop } from '../views/Shop'
 import { Redeem } from '../views/Reedem'
 import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
+import { WarningDialog } from '../components/WarningDialog'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -413,6 +414,7 @@ export const Routers: React.FC = () => {
               />
               <Route component={NotFound} path="*" />
             </Switch>
+            <WarningDialog />
             <ActionDialog
               icon={<FailSvg />}
               content={errorMsg}

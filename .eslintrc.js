@@ -13,5 +13,6 @@ module.exports = {
     '@typescript-eslint/restrict-plus-operands': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/prefer-nullish-coalescing': 0,
+    '@typescript-eslint/no-floating-promises': 0,
   },
 }

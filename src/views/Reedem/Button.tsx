@@ -15,6 +15,14 @@ const ButtonContainer = styled(MdButton)`
     width: 280px;
     background: rgb(43, 69, 78);
     color: white;
+    &.cancel {
+      border: 1px solid rgb(226, 226, 226);
+      background: white;
+      color: #23262f;
+      &:hover {
+        background: white;
+      }
+    }
     .text {
       margin-right: 8px;
     }
@@ -49,6 +57,7 @@ const ButtonContainer = styled(MdButton)`
 
 export interface ButtonProps extends MdButtonProps {
   isLoading?: boolean
+  cancel?: boolean
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -56,12 +65,13 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   className,
   disabled,
+  cancel,
   ...props
 }) => {
   return (
     <ButtonContainer
       {...props}
-      className={classNames(className, 'btn')}
+      className={classNames(className, 'btn', { cancel })}
       disabled={disabled || isLoading}
     >
       <span className="text">{children}</span>

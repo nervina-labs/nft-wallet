@@ -4,6 +4,7 @@
       "beian": "浙ICP备2021006943号-3",
       "actions": {
         "comfirm": "确认",
+        "cancel": "取消",
         "loading": "加载中",
         "pull-to-down": "暂无更多秘宝~",
         "pull-down-refresh": " 下拉刷新",

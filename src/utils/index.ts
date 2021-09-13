@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import Web3 from 'web3'
 import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
 export * from './unipass'
+export * from './atom'
 
 export const sleep = async (ms: number): Promise<void> =>
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -68,8 +69,6 @@ export function copyFallback(data: string): void {
   document.execCommand('copy')
   document.body.removeChild(input)
 }
-
-export const noop: () => void = () => {}
 
 export function getRandomNumber(min: number, max: number): number {
   return parseInt((Math.random() * (max - min) + min).toString(), 10)
