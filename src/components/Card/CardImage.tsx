@@ -109,6 +109,7 @@ export const CardImage: React.FC<CardImageProps> = ({
             width={width}
             height={height}
             src={FallbackImg}
+            dataSrc={finalSrc}
             onLoaded={() => setFallBackImgLoaded(true)}
           />
         }

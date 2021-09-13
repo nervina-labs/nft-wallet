@@ -170,8 +170,9 @@ export function getImagePreviewUrl<U extends string | undefined>(
   if (!url) {
     return url as any
   }
+  const urlObj = new URL(url)
   const isOssHost = OSS_IMG_HOSTS.some((host) => url?.startsWith(host))
-  const isSvgOrWebp = /\.(svg|webp)$/i.test(url)
+  const isSvgOrWebp = /\.(svg|webp)$/i.test(urlObj.pathname)
   if (!isOssHost || isSvgOrWebp) {
     return url as any
   }

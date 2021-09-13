@@ -227,7 +227,7 @@ export const Card: React.FC<CardProps> = ({
           token.renderer_type === NftType.Audio ||
           token.renderer_type === NftType.Video
         }
-        tid={`${token.n_token_id}`}
+        tid={!isClass ? `${token.n_token_id}` : undefined}
       />
       <div className="content">
         <div className="title">
