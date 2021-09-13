@@ -63,7 +63,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     setShouldUseBackup(false)
   }, [onLoaded])
   const onError = useCallback(() => {
-    if (!backup) {
+    if (backup != null) {
       setShouldUseBackup(true)
       setLoaded(true)
     }
