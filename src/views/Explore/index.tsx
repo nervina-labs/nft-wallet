@@ -17,7 +17,6 @@ import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useRouteMatch } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import classNames from 'classnames'
-import qs from 'querystring'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
 import { Home } from './home'
@@ -194,13 +193,13 @@ const Header: React.FC<{
           if (sortType === SortType.Latest) {
             return
           }
-          const o = qs.parse(location.search.slice(1))
+          const o = new URLSearchParams(location.search)
           if (currentTag === 'all') {
-            o.sort = 'latest'
+            o.set('sort', 'latest')
           } else {
-            delete o.sort
+            o.delete('sort')
           }
-          const s = qs.stringify(o)
+          const s = decodeURIComponent(o.toString())
           const target = `${RoutePath.Explore}${s.length === 0 ? '' : '?' + s}`
           history.push(target)
         },
@@ -213,9 +212,11 @@ const Header: React.FC<{
           if (sortType === SortType.Likes) {
             return
           }
-          const o = qs.parse(location.search.slice(1))
-          o.sort = 'likes'
-          const target = `${RoutePath.Explore}?${qs.stringify(o)}`
+          const o = new URLSearchParams(location.search)
+          o.set('sort', 'likes')
+          const target = `${RoutePath.Explore}?${decodeURIComponent(
+            o.toString()
+          )}`
           history.push(target)
         },
       },

@@ -10,6 +10,7 @@ import { VipSource } from '../../models/class-list'
 import { Link } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import PeopleSrc from '../../assets/img/people.png'
+import { getImagePreviewUrl } from '../../utils'
 
 const Container = styled.div`
   display: flex;
@@ -129,7 +130,7 @@ export const Creator: React.FC<CreatorProps> = ({
             <PeopleSvg />
           ) : (
             <LazyLoadImage
-              src={url}
+              src={getImagePreviewUrl(url, 150)}
               width={24}
               height={24}
               variant="circle"

@@ -7,6 +7,7 @@ import PeopleSrc, {
 } from '../../assets/svg/people.svg'
 import NftAvatarDiamonds from '../../assets/svg/nft-avatar-diamonds.svg'
 import classNames from 'classnames'
+import { getImagePreviewUrl } from '../../utils'
 
 const Container = styled.div`
   width: 44px;
@@ -121,7 +122,7 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
       >
         {avatar ? (
           <LazyLoadImage
-            src={avatar}
+            src={getImagePreviewUrl(avatar, 100)}
             dataSrc={avatar}
             width={size}
             height={size}

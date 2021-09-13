@@ -1,6 +1,13 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import Web3 from 'web3'
-import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
+import {
+  BOWSER_BROWSER,
+  INFURA_ID,
+  OSS_IMG_HOSTS,
+  OSS_IMG_PROCESS_QUERY_KEY,
+  OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
+  OSS_IMG_PROCESS_QUERY_KEY_SCALE,
+} from '../constants'
 export * from './unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
@@ -112,6 +119,28 @@ export function roundDown(n: number, decimals = 1): number {
 
 export function isVerticalScrollable(): boolean {
   return document.body.scrollHeight > document.body.clientHeight
+}
+
+export function isSupportWebp(): boolean {
+  // https://caniuse.com/?search=webp
+  // https://x5.tencent.com/guide/caniuse/index.html
+  const supportedBrowsers = {
+    macos: {
+      safari: '>=14',
+    },
+    edge: '>=18',
+    android: {
+      wechat: '>=4',
+    },
+    mobile: {
+      safari: '>13.7',
+      'android browser': '>=4.2',
+    },
+    chrome: '>=32',
+    firefox: '>=65',
+  }
+
+  return !!BOWSER_BROWSER.satisfies(supportedBrowsers)
 }
 
 export function addParamsToUrl(
