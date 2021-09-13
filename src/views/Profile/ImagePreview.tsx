@@ -12,6 +12,8 @@ import { MainContainer } from '../../styles'
 import { AvatarType } from '../../models/user'
 import { LazyLoadImage } from '../../components/Image'
 import PeopleSrc from '../../assets/img/people.png'
+import { addLocaleToUrl, addTidToUrl } from '../../utils'
+import i18n from 'i18next'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -70,6 +72,7 @@ interface HistoryData {
   ext?: string
   fromCamera?: boolean
   tokenUuid?: string
+  tid?: string
 }
 
 const MAX_WIDTH = 500
@@ -84,8 +87,14 @@ export const ImagePreview: React.FC = () => {
   const { setRemoteProfile } = useProfileModel()
 
   const [datauri, ext, fromCamera, tokenUuid] = useMemo(() => {
+    const locale = i18n.language === 'en' ? 'en' : 'zh'
+    let datauri = location?.state?.datauri ?? ''
+    datauri = location.state.tid
+      ? addLocaleToUrl(addTidToUrl(datauri, location.state.tid), locale)
+      : datauri
+
     return [
-      location.state.datauri,
+      datauri,
       location.state.ext,
       location.state.fromCamera,
       location.state.tokenUuid,
@@ -99,7 +108,7 @@ export const ImagePreview: React.FC = () => {
     return () => {
       if (isBlob) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        URL.revokeObjectURL(datauri!)
+        URL.revokeObjectURL(datauri)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
