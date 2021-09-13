@@ -23,7 +23,7 @@ import {
 } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
-import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
+import { QrcodeScaner } from '../../components/QRcodeScaner'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
