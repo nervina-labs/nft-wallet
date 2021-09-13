@@ -88,8 +88,11 @@ export const CardImage: React.FC<CardImageProps> = ({
   const [t] = useTranslation('translations')
   const finalSrc = useMemo(() => {
     let ret = loadOriginal ? src : getImagePreviewUrl(src)
-    ret = tid ? addTidToUrl(ret, tid) : ret
-    return addLocaleToUrl(ret, i18n.language === 'en' ? 'en' : 'zh')
+    if (tid) {
+      ret = addTidToUrl(ret, tid)
+      ret = addLocaleToUrl(ret, i18n.language === 'en' ? 'en' : 'zh')
+    }
+    return ret
   }, [src, loadOriginal, tid])
 
   return (
