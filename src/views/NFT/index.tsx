@@ -358,21 +358,23 @@ export const NFT: React.FC = () => {
 
   const { renderer, bgImgUrl } = useMemo(() => {
     const nftDetail = detail as NFTDetail
-    let renderer =
-      nftDetail?.n_token_id !== undefined
-        ? addTidToUrl(nftDetail.renderer, `${nftDetail.n_token_id}`)
-        : nftDetail?.renderer
-    const bgImgUrl =
-      nftDetail?.n_token_id !== undefined
-        ? addTidToUrl(nftDetail.bg_image_url, `${nftDetail.n_token_id}`)
-        : nftDetail?.bg_image_url
-    const locale = i18n.language === 'en' ? 'en' : 'zh'
-    renderer = addLocaleToUrl(renderer, locale)
-
-    return {
-      renderer,
-      bgImgUrl,
+    const isClass = nftDetail?.n_token_id !== undefined
+    const ret = {
+      renderer: nftDetail?.renderer ?? '',
+      bgImgUrl: nftDetail?.bg_image_url ?? '',
     }
+    if (isClass) {
+      const locale = i18n.language === 'en' ? 'en' : 'zh'
+      ret.renderer = addLocaleToUrl(
+        addTidToUrl(ret.renderer, `${nftDetail.n_token_id}`),
+        locale
+      )
+      ret.bgImgUrl = addLocaleToUrl(
+        addTidToUrl(ret.bgImgUrl, `${nftDetail.n_token_id}`),
+        locale
+      )
+    }
+    return ret
   }, [detail])
 
   const buyButton = useMemo(() => {
