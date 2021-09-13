@@ -218,7 +218,7 @@ export const Card: React.FC<CardProps> = ({
       }}
     >
       <CardImage
-        src={token.class_bg_image_url}
+        src={isClassBanned || isIssuerBaned ? '' : token.class_bg_image_url}
         className="media"
         width={100}
         height={125}

@@ -85,7 +85,7 @@ export const CardImage: React.FC<CardImageProps> = ({
   className,
   loadOriginal,
   playerCenter,
-  hideFallBackText,
+  hideFallBackText = true,
   variant,
 }) => {
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(
