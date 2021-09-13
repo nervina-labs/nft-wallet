@@ -25,6 +25,10 @@ const Container = styled.section`
     overflow-x: auto;
     /* height: 484px; */
   }
+
+  .MuiSkeleton-root {
+    margin-right: 8px;
+  }
 `
 
 export const Home: React.FC = () => {

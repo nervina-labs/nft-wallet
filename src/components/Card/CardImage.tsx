@@ -52,6 +52,10 @@ const CardImageContainer = styled.div`
     opacity: 0.6;
     text-align: center;
   }
+
+  .MuiSkeleton-root {
+    margin-right: 0 !important;
+  }
 `
 
 interface CardImageProps {
