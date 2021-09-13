@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 import { PhotoConsumer } from 'react-photo-view'
 
@@ -54,23 +54,33 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     }
   }, [backup])
 
+  useEffect(() => {
+    const img = new Image()
+    if (src) {
+      img.src = src
+    }
+    img.onload = async () => {
+      try {
+        await onLoaded?.()
+      } catch (error) {
+        console.log(error)
+      }
+      setLoaded(true)
+      setShouldUseBackup(false)
+    }
+    img.onerror = () => {
+      console.log('error')
+      onError()
+    }
+  }, [src, onError, onLoaded])
+
   const ImgElement = (
     <img
       src={src === null ? '' : src}
       ref={imgRef}
       onContextMenu={disableContextMenu ? disableContext : undefined}
       data-src={dataSrc}
-      onLoad={async () => {
-        try {
-          await onLoaded?.()
-        } catch (error) {
-          //
-        }
-        setLoaded(true)
-        setShouldUseBackup(false)
-      }}
       onClick={onClick}
-      onError={onError}
       alt={alt}
       style={{
         objectFit: variant === 'circle' || cover ? 'cover' : 'contain',
