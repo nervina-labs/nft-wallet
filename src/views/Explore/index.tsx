@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-// import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { TokenClass } from '../../models/class-list'
 import { ClassSortType as SortType, Query } from '../../models'
@@ -17,7 +16,6 @@ import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useRouteMatch } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import classNames from 'classnames'
-import qs from 'querystring'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
 import { Home } from './home'
@@ -181,7 +179,7 @@ const Header: React.FC<{
     if (sortType === SortType.Latest) {
       return
     }
-    const o = new URLSearchParams(location.search)
+    const o = new URLSearchParams(location.href)
     if (currentTag === 'all') {
       o.set('sort', 'latest')
     } else {
@@ -198,9 +196,7 @@ const Header: React.FC<{
     }
     const o = new URLSearchParams(location.search)
     o.set('sort', 'likes')
-    const target = `${RoutePath.Explore}?${decodeURIComponent(
-      o.toString()
-    )}`
+    const target = `${RoutePath.Explore}?${decodeURIComponent(o.toString())}`
     history.push(target)
   }, [history, sortType])
 
