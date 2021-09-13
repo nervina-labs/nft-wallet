@@ -143,27 +143,61 @@ export function isSupportWebp(): boolean {
   return !!BOWSER_BROWSER.satisfies(supportedBrowsers)
 }
 
-export function getImagePreviewUrl(
-  url?: string,
+export function addParamsToUrl(
+  url: string,
+  params: { [key: string]: string },
+  options?: {
+    ignoreDuplicates?: boolean
+  }
+): string {
+  if (!url) {
+    return url
+  }
+  const urlObj = new URL(url)
+  const urlSearchParams = urlObj.searchParams
+  Object.keys(params).forEach((key) => {
+    if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
+      urlSearchParams.set(key, params[key])
+    }
+  })
+  return decodeURIComponent(urlObj.toString())
+}
+
+export function getImagePreviewUrl<U extends string | undefined>(
+  url: U,
   size = 300
-): string | undefined {
-  if (url == null) {
+): U extends string ? string : undefined {
+  if (!url) {
+    return url as any
+  }
+  const urlObj = new URL(url)
+  const isOssHost = OSS_IMG_HOSTS.some((host) => url?.startsWith(host))
+  const isSvgOrWebp = /\.(svg|webp)$/i.test(urlObj.pathname)
+  if (!isOssHost || isSvgOrWebp) {
+    return url as any
+  }
+  const webpParam = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
+  const params: {
+    [key in typeof OSS_IMG_PROCESS_QUERY_KEY]?: string
+  } = {}
+  params[
+    OSS_IMG_PROCESS_QUERY_KEY
+  ] = `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webpParam}`
+  return addParamsToUrl(url, params) as any
+}
+
+export function addTidToUrl(url: string, tid: string): string {
+  if (!url) {
     return url
   }
-  if (/\.(svg|webp)$/i.test(url)) {
+  return addParamsToUrl(url, { tid })
+}
+
+export function addLocaleToUrl(url: string, locale: 'zh' | 'en'): string {
+  if (!url) {
     return url
   }
-  if (OSS_IMG_HOSTS.some((h) => url.startsWith(h))) {
-    const [base, params = ''] = url.split('?')
-    const urlParams = new URLSearchParams(params)
-    const webp = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
-    urlParams.set(
-      OSS_IMG_PROCESS_QUERY_KEY,
-      `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webp}`
-    )
-    return decodeURIComponent(`${base}?${urlParams.toString()}`)
-  }
-  return url
+  return addParamsToUrl(url, { locale })
 }
 
 const MILLION = 1e6

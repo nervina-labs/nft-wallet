@@ -1,6 +1,8 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 import { PhotoConsumer } from 'react-photo-view'
+
+export type LazyLoadImageVariant = 'circle' | 'rect' | 'text'
 
 export interface LazyLoadImageProps {
   src: string | undefined
@@ -8,7 +10,7 @@ export interface LazyLoadImageProps {
   width: number
   height: number
   backup?: React.ReactNode
-  variant?: 'circle' | 'rect' | 'text'
+  variant?: LazyLoadImageVariant
   cover?: boolean
   skeletonStyle?: React.CSSProperties
   onLoaded?: () => void
@@ -47,12 +49,25 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
 }) => {
   const [loaded, setLoaded] = useState(false)
   const [shouldUseBackup, setShouldUseBackup] = useState(false)
+  useEffect(() => {
+    setShouldUseBackup(false)
+    setLoaded(false)
+  }, [src])
+  const onLoad = useCallback(async () => {
+    try {
+      await onLoaded?.()
+    } catch (error) {
+      console.error(error)
+    }
+    setLoaded(true)
+    setShouldUseBackup(false)
+  }, [onLoaded])
   const onError = useCallback(() => {
     if (backup != null) {
       setShouldUseBackup(true)
       setLoaded(true)
     }
-  }, [backup])
+  }, [])
 
   const ImgElement = (
     <img
@@ -60,16 +75,8 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
       ref={imgRef}
       onContextMenu={disableContextMenu ? disableContext : undefined}
       data-src={dataSrc}
-      onLoad={async () => {
-        try {
-          await onLoaded?.()
-        } catch (error) {
-          //
-        }
-        setLoaded(true)
-        setShouldUseBackup(false)
-      }}
       onClick={onClick}
+      onLoad={onLoad}
       onError={onError}
       alt={alt}
       style={{
@@ -84,17 +91,15 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     />
   )
 
+  const ImageElement = enablePreview ? (
+    <PhotoConsumer src={(dataSrc ?? src) as string}>{ImgElement}</PhotoConsumer>
+  ) : (
+    ImgElement
+  )
+
   return (
     <>
-      {shouldUseBackup ? (
-        backup
-      ) : enablePreview ? (
-        <PhotoConsumer src={(dataSrc ?? src) as string}>
-          {ImgElement}
-        </PhotoConsumer>
-      ) : (
-        ImgElement
-      )}
+      {shouldUseBackup ? backup : ImageElement}
       {!loaded ? (
         <Skeleton
           variant={variant ?? 'rect'}
