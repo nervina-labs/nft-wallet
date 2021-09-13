@@ -72,6 +72,7 @@ interface CardImageProps {
   playerCenter?: boolean
   hideFallBackText?: boolean
   variant?: LazyLoadImageVariant
+  backup?: React.ReactNode
 }
 
 export const CardImage: React.FC<CardImageProps> = ({
@@ -87,6 +88,7 @@ export const CardImage: React.FC<CardImageProps> = ({
   playerCenter,
   hideFallBackText = true,
   variant,
+  backup,
 }) => {
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(
     Boolean(isBanned)
@@ -117,14 +119,16 @@ export const CardImage: React.FC<CardImageProps> = ({
         disableContextMenu={true}
         variant={variant}
         backup={
-          <LazyLoadImage
-            width={width}
-            height={height}
-            src={FallbackImg}
-            dataSrc={finalSrc}
-            variant={variant}
-            onLoaded={() => setFallBackImgLoaded(true)}
-          />
+          backup ?? (
+            <LazyLoadImage
+              width={width}
+              height={height}
+              src={FallbackImg}
+              dataSrc={finalSrc}
+              variant={variant}
+              onLoaded={() => setFallBackImgLoaded(true)}
+            />
+          )
         }
       />
       {isFallBackImgLoaded && !hideFallBackText && (
