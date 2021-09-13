@@ -382,6 +382,7 @@ export const IssuerInfo: React.FC = () => {
             width={60}
             height={60}
             variant="circle"
+            loading={isLoading}
             backup={<PeopleSvg />}
           />
         </div>
