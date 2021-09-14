@@ -65,7 +65,7 @@ In summary, Mibao is a React-based single-page application that implements routi
   └── views # route component
 ```
 
-Note that the `env.example` in `<ROOT>/.env.example` includes both the mainnet/testnet environment variables. The compiled files are generated in the `<ROOT>/build` folder.
+Note that `<ROOT>/.env.example` includes both the mainnet/testnet environment variables. The compiled files are generated in the `<ROOT>/build` folder.
 
 ## Contribution
 
