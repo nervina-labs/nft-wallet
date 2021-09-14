@@ -84,7 +84,10 @@ const LabelPlaceholder = styled.div`
 
 const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
   return (
-    <IssuerContainer to={`${RoutePath.Issuer}/${issuer.uuid}`}>
+    <IssuerContainer
+      to={`${RoutePath.Issuer}/${issuer.uuid}`}
+      style={{ pointerEvents: issuer.is_issuer_banned ? 'none' : 'auto' }}
+    >
       <div className="main">
         <div className="avatar">
           <LazyLoadImage
@@ -99,7 +102,7 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
         <div className="content">
           <Creator
             title=""
-            baned={false}
+            baned={issuer.is_issuer_banned}
             name={issuer.name}
             isVip={issuer?.verified_info?.is_verified}
             vipTitle={issuer?.verified_info?.verified_title}
