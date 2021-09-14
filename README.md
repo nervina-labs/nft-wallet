@@ -73,4 +73,4 @@ Please make sure that the Pull Request follows the requirements in [PULL REQUEST
 
 ## License
 
-Neuron is released under the terms of the Apache-2.0 license.
+Mibao is released under the terms of the Apache-2.0 license.
