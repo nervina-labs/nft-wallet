@@ -1,7 +1,13 @@
 {
   "name": "nft-wallet",
   "version": "0.0.1",
-  "license": "Apache",
+  "license": "Apache-2.0",
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
   "engines": {
     "node": "14",
     "yarn": "1.22"
