@@ -20,7 +20,7 @@ const Container = styled.span`
   border-radius: 2px;
 `
 
-export const Label: React.FC<LabelProps> = ({ type }) => {
+export const RedeeemLabel: React.FC<LabelProps> = ({ type }) => {
   const [t] = useTranslation('translations')
   const text = t(`exchange.type.${type}`)
   const color = useMemo(() => {

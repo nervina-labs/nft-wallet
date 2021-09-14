@@ -17,7 +17,7 @@ import { RedeemStatus } from '../../models/redeem'
 import { Creator } from '../../components/Creator'
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { Price } from '../Reedem/Prize'
+import { Prize } from '../Reedem/Prize'
 import { Condition } from './Condition'
 import Alert from '@material-ui/lab/Alert'
 import { Footer } from './Footer'
@@ -265,7 +265,7 @@ export const RedeemDetail: React.FC = () => {
             <Divider
               style={{ position: 'relative', top: '5px', margin: '0 20px' }}
             />
-            {showPrize ? <Price detail={data} /> : <Condition detail={data} />}
+            {showPrize ? <Prize detail={data} /> : <Condition detail={data} />}
             <Alert severity="error">{t('exchange.warning')}</Alert>
             <Footer status={data.status} isReedemable />
             <SubmitAddress

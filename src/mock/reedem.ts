@@ -32,7 +32,7 @@ const item = {
   tokens: [token, token, token, token],
   type: RedeemType.Blind,
   images: [],
-  status: RedeemStatus.Open,
+  status: RedeemStatus.Exchanged,
   exchanged: 24,
   total: 48,
   title: '👻🌻k1-test ε≡٩(๑>₃<)۶ 空 空 空13',
@@ -63,7 +63,7 @@ const otherItem = {
 }
 
 export const mockRedeemDetail: any = {
-  ...otherItem,
+  ...item,
   timestamp: (Date.now() / 1000).toString(),
   desciption: `
   /Users/yuche/Developer/nft-wallet/src/apis/ServerWalletAPI.ts

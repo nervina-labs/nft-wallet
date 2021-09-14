@@ -5,7 +5,7 @@ import { LazyLoadImage } from '../../components/Image'
 import { TokenClass } from '../../models/class-list'
 import { RedeemDetailModel, RedeemType } from '../../models/redeem'
 import { getImagePreviewUrl } from '../../utils'
-import { Label } from './Label'
+import { RedeeemLabel } from './Label'
 import FallbackImg from '../../assets/svg/fallback.svg'
 import { NFTCard } from './NFTCard'
 import { PhotoProvider } from 'react-photo-view'
@@ -40,6 +40,8 @@ export const PriceCard: React.FC<PriceCardProps> = ({ token, count }) => {
 
 export interface PriceProps {
   detail: RedeemDetailModel
+  showLabel?: boolean
+  className?: string
 }
 
 const PriceContainer = styled.div`
@@ -55,28 +57,36 @@ const PriceContainer = styled.div`
   }
 `
 
-export const Price: React.FC<PriceProps> = ({ detail }) => {
+export const Prize: React.FC<PriceProps> = ({
+  detail,
+  showLabel = true,
+  className,
+}) => {
   return (
-    <PriceContainer>
+    <PriceContainer className={className}>
       {detail.type === RedeemType.Other ? (
-        <OtherPrice detail={detail} />
+        <OtherPrice detail={detail} showLabel={showLabel} />
       ) : (
-        <NFTPrice detail={detail} />
+        <NFTPrice detail={detail} showLabel={showLabel} />
       )}
     </PriceContainer>
   )
 }
 
-export const NFTPrice: React.FC<PriceProps> = ({ detail }) => {
+export const NFTPrice: React.FC<PriceProps> = ({ detail, showLabel }) => {
   const [t] = useTranslation('translations')
   return (
     <>
-      <Label type={detail.type} />
-      <div className="contain">
-        {detail.type === RedeemType.NFT
-          ? t('exchange.nft-prize')
-          : t('exchange.blind-prize', { min: 2, max: 3 })}
-      </div>
+      {showLabel ? (
+        <>
+          <RedeeemLabel type={detail.type} />
+          <div className="contain">
+            {detail.type === RedeemType.NFT
+              ? t('exchange.nft-prize')
+              : t('exchange.blind-prize', { min: 2, max: 3 })}
+          </div>
+        </>
+      ) : null}
       {detail.tokens.map((token) => {
         return <PriceCard token={token} count={3} key={token.uuid} />
       })}
@@ -107,12 +117,16 @@ const OthderPriceContainer = styled.div`
   }
 `
 
-export const OtherPrice: React.FC<PriceProps> = ({ detail }) => {
+export const OtherPrice: React.FC<PriceProps> = ({ detail, showLabel }) => {
   const [t] = useTranslation('translations')
   return (
     <OthderPriceContainer>
-      <Label type={detail.type} />
-      <div className="contain">{t('exchange.othder-prize')}</div>
+      {showLabel ? (
+        <>
+          <RedeeemLabel type={detail.type} />
+          <div className="contain">{t('exchange.othder-prize')}</div>
+        </>
+      ) : null}
       <div className="price-title">{detail.priceTitle}</div>
       <div className="price-desc">{detail.priceDesciption}</div>
       <div className="imgs">

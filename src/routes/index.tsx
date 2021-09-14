@@ -43,6 +43,7 @@ import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
 import { WarningDialog } from '../components/WarningDialog'
 import { MyRedeem } from '../views/Reedem/My'
+import { RedeemPrize } from '../views/RedeemPrize'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -344,6 +345,13 @@ const routes: MibaoRouterProps[] = [
     exact: false,
     key: 'ReedemDetail',
     path: RoutePath.Redeem,
+    params: '/:id',
+  },
+  {
+    component: RedeemPrize,
+    exact: true,
+    key: 'ReedemPrize',
+    path: RoutePath.RedeemPrize,
     params: '/:id',
   },
   {

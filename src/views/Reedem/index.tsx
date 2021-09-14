@@ -14,7 +14,7 @@ import { useWalletModel } from '../../hooks/useWallet'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Loading } from '../../components/Loading'
-import { ReedemCard } from './RedeemEvent'
+import { ReedemCard } from './RedeemCard'
 import { Link } from 'react-router-dom'
 import { Tab, Tabs } from '../../components/Tab'
 

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { Creator } from '../../components/Creator'
 import { RedeemEventItem, RedeemStatus } from '../../models/redeem'
 import { Divider } from '@material-ui/core'
-import { Label } from './Label'
+import { RedeeemLabel } from './Label'
 import classNames from 'classnames'
 import { useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
@@ -141,8 +141,14 @@ export interface ExchangeEventProps {
   item: RedeemEventItem
 }
 
-const ExchangeAction: React.FC<{ status: RedeemStatus }> = ({ status }) => {
+interface ActionProps {
+  status: RedeemStatus
+  id: string
+}
+
+const ExchangeAction: React.FC<ActionProps> = ({ status, id }) => {
   const [t] = useTranslation('translations')
+  const history = useHistory()
   const text = useMemo(() => {
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
@@ -160,9 +166,13 @@ const ExchangeAction: React.FC<{ status: RedeemStatus }> = ({ status }) => {
     (e: React.SyntheticEvent) => {
       e.stopPropagation()
       e.preventDefault()
-      warning(t('exchange.warning'))
+      if (status === RedeemStatus.Exchanged) {
+        history.push(`${RoutePath.RedeemPrize}/${id}`)
+      } else {
+        warning(t('exchange.warning'))
+      }
     },
-    [warning, t]
+    [warning, t, history, status, id]
   )
   return (
     <div
@@ -205,7 +215,7 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
       <Divider />
       <div className="header">
         <span className="title">{item.title}</span>
-        <Label type={item.type} />
+        <RedeeemLabel type={item.type} />
       </div>
       <div className="content">
         {item.tokens.slice(0, 4).map((token) => {
@@ -214,7 +224,7 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
       </div>
       <Progress exchanged={item.exchanged} total={item.total} />
       <Divider />
-      <ExchangeAction status={item.status} />
+      <ExchangeAction status={item.status} id={item.uuid} />
     </Container>
   )
 }

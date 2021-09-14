@@ -338,10 +338,10 @@
       "nft-prize": "奖品包含下面所有 NFT",
       "blind-prize": "奖品随机包含下面的 {{min}}~{{max}} 个",
       "othder-prize": "发起人会在你提交兑换后根据你提供的接收信息进行承兑",
-      "time": "兑换时间",
+      "redeem-time": "兑换时间：",
       "type": {
         "nft": "NFT",
-        "blind": "盲盒",
+        "blind": "NFT 盲盒",
         "other": "其他"
       },
       "progress": "兑换进度",
@@ -363,13 +363,13 @@
         "get": "本次兑换获得",
         "receiver": {
           "info": "接收人信息",
-          "address": "接收人地址"
+          "address": "接收人地址："
         },
         "issuer": {
           "comment": "发起人留言",
-          "company": "物流公司",
-          "sn": "发货单号",
-          "time": "发货时间"
+          "company": "物流公司：",
+          "sn": "发货单号：",
+          "time": "发货时间："
         }
       },
       "alert": {
