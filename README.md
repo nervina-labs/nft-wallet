@@ -38,6 +38,8 @@ $ yarn dev
 
 * [pw-core](https://github.com/lay2dev/pw-core), CKB SDK for dApps
 
+In summary, Mibao is a React-based single-page application that implements routing via `react-router`. Mibao generates pure HTML/CSS/JavaScript files and does not require a server with a specific back-end language to run it.
+
 ### File Structure
 
 ```bash
