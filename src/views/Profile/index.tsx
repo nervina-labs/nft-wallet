@@ -23,7 +23,7 @@ import { Skeleton } from '@material-ui/lab'
 import { DrawerImage } from './DrawerImage'
 import { HolderAvatar } from '../../components/HolderAvatar'
 
-const profileBg = ProfileBg as any
+const profileBg = ProfileBg
 
 const Container = styled(MainContainer)`
   display: flex;

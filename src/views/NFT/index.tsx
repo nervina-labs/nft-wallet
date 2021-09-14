@@ -14,12 +14,7 @@ import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
 import { MainContainer } from '../../styles'
-import {
-  IS_MAC_SAFARI,
-  IS_WEXIN,
-  NFT_EXPLORER_URL,
-  WEAPP_ID,
-} from '../../constants'
+import { HOST, IS_MAC_SAFARI, IS_WEXIN, WEAPP_ID } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
@@ -38,6 +33,8 @@ import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
 import { PosterType } from '../../components/Share/poster.interface'
+import { addParamsToUrl } from '../../utils'
+import i18n from 'i18next'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -319,13 +316,6 @@ export const NFT: React.FC = () => {
     return imageColor
   }, [isFallBackImgLoaded, imageColor])
 
-  const explorerURL = useMemo(() => {
-    if (isTokenClass(data)) {
-      return `${NFT_EXPLORER_URL}/nft/${id ?? ''}`
-    }
-    return `${NFT_EXPLORER_URL}/nft/${data?.class_uuid ?? ''}`
-  }, [data, id])
-
   const productID = data?.product_on_sale_uuid
 
   const isTransferable = useMemo(() => {
@@ -366,6 +356,27 @@ export const NFT: React.FC = () => {
   useEffect(() => {
     initWechat().catch(Boolean)
   }, [])
+
+  const { renderer, bgImgUrl } = useMemo(() => {
+    const nftDetail = detail as NFTDetail
+    const isClass = nftDetail?.n_token_id !== undefined
+    const ret = {
+      renderer: nftDetail?.renderer,
+      bgImgUrl: nftDetail?.bg_image_url,
+    }
+    if (isClass) {
+      const locale = i18n.language === 'en' ? 'en' : 'zh'
+      ret.renderer = addParamsToUrl(ret.renderer, {
+        tid: `${nftDetail.n_token_id}`,
+        locale,
+      })
+      ret.bgImgUrl = addParamsToUrl(ret.bgImgUrl, {
+        tid: `${nftDetail.n_token_id}`,
+        locale,
+      })
+    }
+    return ret
+  }, [detail])
 
   const buyButton = useMemo(() => {
     if (!qrcode) {
@@ -411,7 +422,7 @@ export const NFT: React.FC = () => {
         <div
           className="buy-container"
           dangerouslySetInnerHTML={{ __html: weappHtml }}
-        ></div>
+        />
       )
     }
     return (
@@ -476,20 +487,18 @@ export const NFT: React.FC = () => {
         className="figure"
         style={{
           height: `${innerHeight - 44 - 300}px`,
-          background: `${
-            isFallBackImgLoaded ? 'rgb(178, 217, 229)' : 'transparent'
-          }`,
+          background: 'transparent',
         }}
       >
         <ParallaxTilt
-          src={detail?.bg_image_url}
+          src={bgImgUrl}
           width={imageWidth}
           height={imageWidth}
           enable={!isDialogOpen && !disbaleTilt}
           onFallBackImageLoaded={() => setFallBackImgLoaded(true)}
           onColorDetected={(color) => setImageColor(color)}
           type={detail?.renderer_type}
-          renderer={detail?.renderer}
+          renderer={renderer}
           cardBackContent={
             detail?.card_back_content ?? detail?.class_card_back_content
           }
@@ -552,7 +561,7 @@ export const NFT: React.FC = () => {
                   active={!isHolder}
                   onClick={() => history.replace(history.location.pathname)}
                 >
-                  NFT简介
+                  {t('nft.desc')}
                 </Tab>
                 <Tab
                   className="tab"
@@ -561,7 +570,7 @@ export const NFT: React.FC = () => {
                     history.replace(history.location.pathname + '?holder=true')
                   }
                 >
-                  收藏者
+                  {t('nft.holder')}
                 </Tab>
               </Tabs>
             </TabsContainer>
@@ -583,8 +592,8 @@ export const NFT: React.FC = () => {
         <Share
           isDialogOpen={isDialogOpen}
           closeDialog={closeDialog}
-          displayText={explorerURL}
-          copyText={explorerURL}
+          displayText={HOST + history.location.pathname}
+          copyText={HOST + history.location.pathname}
           data={data}
           type={PosterType.Nft}
         />

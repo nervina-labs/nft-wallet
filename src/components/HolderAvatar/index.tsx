@@ -7,6 +7,8 @@ import PeopleSrc, {
 } from '../../assets/svg/people.svg'
 import NftAvatarDiamonds from '../../assets/svg/nft-avatar-diamonds.svg'
 import classNames from 'classnames'
+import { getImagePreviewUrl } from '../../utils'
+import { CardImage } from '../Card/CardImage'
 
 const Container = styled.div`
   width: 44px;
@@ -79,6 +81,7 @@ const AvatarContainer = styled.div`
 interface HolderAvatarProps {
   avatar?: string
   avatarType?: AvatarType
+  tid?: string
   size?: number
   enablePreview?: boolean
 }
@@ -100,6 +103,7 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
   avatarType = AvatarType.Image,
   size = 44,
   enablePreview,
+  tid,
 }) => {
   const sizePx = `${size}px`
   if (!avatar) {
@@ -119,9 +123,18 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
           animation: avatarType === AvatarType.Token,
         })}
       >
-        {avatar ? (
-          <LazyLoadImage
+        {avatarType === AvatarType.Token ? (
+          <CardImage
             src={avatar}
+            width={size}
+            height={size}
+            variant="circle"
+            tid={tid}
+            backup={<Backup size={size} />}
+          />
+        ) : (
+          <LazyLoadImage
+            src={getImagePreviewUrl(avatar, 100)}
             dataSrc={avatar}
             width={size}
             height={size}
@@ -129,8 +142,6 @@ export const HolderAvatar: React.FC<HolderAvatarProps> = ({
             backup={<Backup size={size} />}
             enablePreview={enablePreview}
           />
-        ) : (
-          <Backup size={size} />
         )}
         {avatarType === AvatarType.Token && (
           <img

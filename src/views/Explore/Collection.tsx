@@ -2,14 +2,11 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { Creator } from '../../components/Creator'
-import { LazyLoadImage } from '../../components/Image'
 import { SpecialAssets, SpecialAssetsToken } from '../../models/special-assets'
-import FallbackImg from '../../assets/img/card-fallback.png'
-import { getImagePreviewUrl } from '../../utils'
-import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { useHistory } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { Gallery } from '../../components/Gallery'
+import { CardImage } from '../../components/Card/CardImage'
 
 interface CollectionProps {
   collection: SpecialAssets
@@ -39,22 +36,8 @@ const Container = styled.div`
     cursor: pointer;
 
     .media {
-      border-radius: 4px;
       width: 50px;
       height: 50px;
-      min-width: 50px;
-      max-width: 50px;
-      position: relative;
-      .player {
-        border-radius: 4px;
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        svg {
-          width: 20px;
-          height: 20px;
-        }
-      }
     }
 
     .body {
@@ -63,7 +46,7 @@ const Container = styled.div`
       flex-direction: column;
       overflow: hidden;
       margin: 0 8px;
-      width: 100%;
+      width: calc(100% - 50px - 16px);
       .name {
         text-overflow: ellipsis;
         overflow: hidden;
@@ -84,31 +67,15 @@ const Item: React.FC<ItemProps> = ({ item }) => {
 
   return (
     <div className="item">
-      <div className="media">
-        <LazyLoadImage
-          src={getImagePreviewUrl(item.bg_image_url)}
-          width={50}
-          height={50}
-          imageStyle={{ borderRadius: '4px' }}
-          skeletonStyle={{ borderRadius: '4px' }}
-          cover
-          disableContextMenu={true}
-          backup={
-            <LazyLoadImage
-              imageStyle={{ borderRadius: '4px' }}
-              skeletonStyle={{ borderRadius: '4px' }}
-              width={50}
-              height={50}
-              src={FallbackImg}
-            />
-          }
-        />
-        {isPlayable ? (
-          <div className="player">
-            <PlayerSvg />
-          </div>
-        ) : null}
-      </div>
+      <CardImage
+        className="media"
+        src={item.bg_image_url}
+        width={50}
+        height={50}
+        isPlayable={isPlayable}
+        playerCenter
+        hideFallBackText
+      />
       <div className="body">
         <div className="name">{item.name}</div>
         <Creator
@@ -144,9 +111,7 @@ export const Collection: React.FC<CollectionProps> = ({ collection }) => {
     >
       <Gallery
         bg={collection.bg_color}
-        imgs={collection.token_classes.map(
-          (c) => getImagePreviewUrl(c.bg_image_url) as string
-        )}
+        imgs={collection.token_classes.map((c) => c.bg_image_url)}
       />
       <div className="title">{name}</div>
       {collection.token_classes.map((token) => {

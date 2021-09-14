@@ -14,7 +14,6 @@ import FailPng from '../../assets/img/fail.png'
 import InfoIcon from '@material-ui/icons/Info'
 import { Button } from '../../components/Button'
 import { Drawer, TextareaAutosize } from '@material-ui/core'
-import { LazyLoadImage } from '../../components/Image'
 import {
   verifyEthContractAddress,
   verifyCkbAddress,
@@ -24,7 +23,7 @@ import {
 } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
-import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
+import { QrcodeScaner } from '../../components/QRcodeScaner'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
@@ -36,6 +35,7 @@ import { Box, Container, DrawerContainer } from './styled'
 import { UnipassTransferNftState } from '../../models/unipass'
 import { DasSelector } from './dasSelector'
 import { useProfileModel } from '../../hooks/useProfile'
+import { CardImage } from '../../components/Card/CardImage'
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -592,12 +592,11 @@ export const Transfer: React.FC = () => {
               }
             </div>
             <div className="card">
-              <LazyLoadImage
+              <CardImage
                 src={nftDetail.bg_image_url}
                 width={100}
                 height={100}
-                cover
-                imageStyle={{ borderRadius: '10px' }}
+                tid={`${nftDetail.n_token_id}`}
               />
             </div>
             <div className="title">

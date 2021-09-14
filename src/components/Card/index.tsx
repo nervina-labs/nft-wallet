@@ -1,15 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { NFTToken, NftType, TransactionStatus } from '../../models'
-import { LazyLoadImage } from '../Image'
 import { Limited } from '../Limited'
 import { Creator } from '../Creator'
 import { useTranslation } from 'react-i18next'
-import FallbackImg from '../../assets/img/card-fallback.png'
-import { getImagePreviewUrl } from '../../utils'
-import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
-import { CardBack } from '../Cardback'
+import { CardImage } from './CardImage'
 
 export interface CardProps {
   token: NFTToken
@@ -122,36 +118,9 @@ const Container = styled.div`
     width: 100px;
     height: 125px;
     min-width: 100px;
-    /* border-right: 1px solid rgba(0, 0, 0, 0.1); */
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 10px;
-    background-color: white;
-    position: relative;
     img {
       border-radius: 10px;
-    }
-    .fallback {
-      position: absolute;
-      bottom: 8px;
-      font-size: 10px;
-      color: #2b2b2b;
-      opacity: 0.6;
-    }
-    .player {
-      position: absolute;
-      bottom: 6px;
-      right: 6px;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      svg {
-        width: 20px;
-        height: 20px;
-      }
     }
   }
   .content {
@@ -231,12 +200,7 @@ export const Card: React.FC<CardProps> = ({
   const isClassBanned = token.is_class_banned
   const isIssuerBaned = token.is_issuer_banned
   const isBanned = isClassBanned || isIssuerBaned
-  const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(isBanned)
   const [t] = useTranslation('translations')
-  const isPlayable =
-    token.renderer_type === NftType.Audio ||
-    token.renderer_type === NftType.Video
-  const hasCardBack = token.card_back_content_exist
 
   return (
     <Container
@@ -253,45 +217,18 @@ export const Card: React.FC<CardProps> = ({
         cursor: isBanned ? 'default' : 'pointer',
       }}
     >
-      <div className="media">
-        <LazyLoadImage
-          src={
-            isBanned
-              ? FallbackImg
-              : getImagePreviewUrl(token.class_bg_image_url)
-          }
-          width={100}
-          height={125}
-          skeletonStyle={{ borderRadius: '10px' }}
-          cover
-          disableContextMenu={true}
-          backup={
-            <LazyLoadImage
-              skeletonStyle={{ borderRadius: '10px' }}
-              width={100}
-              height={125}
-              src={FallbackImg}
-              onLoaded={() => setFallBackImgLoaded(true)}
-            />
-          }
-        />
-        {isFallBackImgLoaded ? (
-          <span className="fallback">{t('common.img-lost')}</span>
-        ) : null}
-        {isPlayable ? (
-          <span className="player">
-            <PlayerSvg />
-          </span>
-        ) : null}
-        {hasCardBack ? (
-          <CardBack
-            style={{
-              borderTopRightRadius: '10px',
-            }}
-            tooltipPlacement="top-start"
-          />
-        ) : null}
-      </div>
+      <CardImage
+        src={isClassBanned || isIssuerBaned ? '' : token.class_bg_image_url}
+        className="media"
+        width={100}
+        height={125}
+        hasCardBack={token.card_back_content_exist}
+        isPlayable={
+          token.renderer_type === NftType.Audio ||
+          token.renderer_type === NftType.Video
+        }
+        tid={!isClass ? `${token.n_token_id}` : undefined}
+      />
       <div className="content">
         <div className="title">
           <span className={isBanned ? 'error' : ''}>

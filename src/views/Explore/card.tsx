@@ -1,17 +1,13 @@
 import React from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { LazyLoadImage } from '../../components/Image'
-import { getImagePreviewUrl } from '../../utils'
-import FallbackImg from '../../assets/img/card-fallback.png'
 import { Creator } from '../../components/Creator'
 import { Limited } from '../../components/Limited'
 import { Like } from '../../components/Like'
 import { TokenClass } from '../../models/class-list'
 import classNames from 'classnames'
 import { NftType } from '../../models'
-import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
-import { CardBack } from '../../components/Cardback'
+import { CardImage } from '../../components/Card/CardImage'
 
 const CardContainer = styled.div`
   display: flex;
@@ -32,30 +28,13 @@ const CardContainer = styled.div`
     img {
       border-radius: 8px;
     }
-    position: relative;
-
-    .player {
-      position: absolute;
-      right: 6px;
-      bottom: 6px;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
   }
 
   .title {
     font-size: 14px;
     line-height: 16px;
     color: #000000;
-    margin: 10px 8px;
-    margin-bottom: 16px;
+    margin: 10px 8px 16px;
     display: -webkit-box;
     display: -moz-box;
     flex: 1;
@@ -70,8 +49,7 @@ const CardContainer = styled.div`
   }
 
   .issuer {
-    margin: 10px;
-    margin-top: 0;
+    margin: 0 10px 10px;
     .name {
       display: -webkit-box;
       display: -moz-box;
@@ -117,31 +95,14 @@ export const Card: React.FC<CardProps> = ({
       }}
       className={classNames({ horizontal: isHorizontal })}
     >
-      <div className="media">
-        <LazyLoadImage
-          src={getImagePreviewUrl(token.bg_image_url)}
-          width={width}
-          height={width}
-          skeletonStyle={{ borderRadius: '8px' }}
-          cover={true}
-          disableContextMenu={true}
-          backup={
-            <LazyLoadImage
-              skeletonStyle={{ borderRadius: '8px' }}
-              width={width}
-              cover
-              height={width}
-              src={FallbackImg}
-            />
-          }
-        />
-        {isPlayable ? (
-          <span className="player">
-            <PlayerSvg />
-          </span>
-        ) : null}
-        {hasCardBack ? <CardBack /> : null}
-      </div>
+      <CardImage
+        className="media"
+        src={token.bg_image_url}
+        isPlayable={isPlayable}
+        hasCardBack={hasCardBack}
+        width={width}
+        height={width}
+      />
       <div className={classNames('title', { oneline: oneLineName })}>
         {token.name}
       </div>
