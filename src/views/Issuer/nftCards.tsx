@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
-import { PRODUCT_STATUE_SET, ProductState } from '../../models'
+import { PRODUCT_STATUE_SET, ProductState, Query } from '../../models'
 import { NftCard } from './nftCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Masonry } from '../../components/Masonry'
@@ -11,6 +11,8 @@ import { useHistory } from 'react-router-dom'
 import { Loading } from '../../components/Loading'
 import { HEADER_HEIGHT } from '../../components/Appbar'
 import { IssuerTokenClass } from '../../models/issuer'
+import { useInfiniteQuery } from 'react-query'
+import { useWalletModel } from '../../hooks/useWallet'
 
 const NftCardsContainer = styled.div`
   --header-border-color: #ececec;
@@ -202,27 +204,10 @@ const Header: React.FC = () => {
   )
 }
 
-interface CardGroupProps {
-  id: string
-  tokenClasses: IssuerTokenClass[]
-  isLoading: boolean
-  fetchNextPage: () => void
-  refetch: () => void
-  hasNextPage?: boolean
-}
-
-const CardGroup: React.FC<CardGroupProps> = ({
-  id,
-  tokenClasses,
-  isLoading,
-  fetchNextPage,
-  hasNextPage,
-  refetch,
-}) => {
+function useNftCardWidth() {
   const [width, setWidth] = useState(
     (Math.min(window.innerWidth, 530) - 35) / 2
   )
-  const [t] = useTranslation('translations')
   const resizeWidth = useCallback(() => {
     setWidth((Math.min(window.innerWidth, 530) - 35) / 2)
   }, [])
@@ -233,37 +218,89 @@ const CardGroup: React.FC<CardGroupProps> = ({
       window.removeEventListener('resize', resizeWidth)
     }
   })
-
-  return (
-    <div className="card-group">
-      <InfiniteScroll
-        dataLength={tokenClasses.length}
-        hasMore={hasNextPage === true}
-        loader={<Loading />}
-        refreshFunction={refetch}
-        next={fetchNextPage}
-      >
-        {tokenClasses.length > 0 && (
-          <Masonry columns={2}>
-            {tokenClasses.map((token, i) => (
-              <NftCard token={token} key={i} uuid={id} imgSize={width} />
-            ))}
-          </Masonry>
-        )}
-        {isLoading && <Loading />}
-      </InfiniteScroll>
-      {tokenClasses.length === 0 && !isLoading && (
-        <div className="no-data">{t('issuer.no-data')}</div>
-      )}
-    </div>
-  )
+  return width
 }
 
-export const NftCards: React.FC<CardGroupProps> = (props) => {
+interface NftCardsProps {
+  id: string
+  onLoaded?: (tokenClasses: IssuerTokenClass[]) => void
+}
+
+export const NftCards: React.FC<NftCardsProps> = ({ id, onLoaded }) => {
+  const ITEM_LIMIT = 20
+  const width = useNftCardWidth()
+  const [t] = useTranslation('translations')
+  const { api } = useWalletModel()
+  const [loaded, setLoaded] = useState(false)
+  const productState = useRouteQuery<ProductState>(
+    'productState',
+    'product_state'
+  )
+  const query = useInfiniteQuery(
+    [Query.Issuers, api, id, productState],
+    async ({ pageParam = 0 }) => {
+      const productStateParam = PRODUCT_STATUE_SET.find(
+        (e) => e === productState
+      )
+        ? productState
+        : undefined
+
+      const { data } = await api.getIssuerTokenClass(id, productStateParam, {
+        page: pageParam,
+      })
+      return data
+    },
+    {
+      getNextPageParam(lastPage) {
+        return ITEM_LIMIT * lastPage.meta.current_page >=
+          lastPage.meta.total_count
+          ? undefined
+          : lastPage.meta.current_page + 1
+      },
+      enabled: true,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+    }
+  )
+  const { hasNextPage, refetch, fetchNextPage, isLoading } = query
+  const tokenClasses = useMemo(() => {
+    const tokenClasses =
+      query.data?.pages.reduce(
+        (acc, page) => acc.concat(page.token_classes),
+        [] as IssuerTokenClass[]
+      ) ?? []
+    if (onLoaded && !loaded && tokenClasses.length) {
+      onLoaded(tokenClasses)
+      setLoaded(true)
+    }
+    return tokenClasses
+  }, [query.data?.pages, onLoaded, loaded])
+
   return (
     <NftCardsContainer>
       <Header />
-      <CardGroup {...props} />
+      <div className="card-group">
+        <InfiniteScroll
+          dataLength={tokenClasses.length}
+          hasMore={hasNextPage === true}
+          loader={<Loading />}
+          refreshFunction={refetch}
+          next={fetchNextPage}
+        >
+          {tokenClasses.length > 0 && (
+            <Masonry columns={2}>
+              {tokenClasses.map((token, i) => (
+                <NftCard token={token} key={i} uuid={id} imgSize={width} />
+              ))}
+            </Masonry>
+          )}
+          {isLoading && <Loading />}
+        </InfiniteScroll>
+        {tokenClasses.length === 0 && !isLoading && (
+          <div className="no-data">{t('issuer.no-data')}</div>
+        )}
+      </div>
     </NftCardsContainer>
   )
 }

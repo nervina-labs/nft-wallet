@@ -9,11 +9,10 @@ import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { useHistory } from 'react-router-dom'
 import { Share } from '../../components/Share'
 import { PosterType } from '../../components/Share/poster.interface'
-import { useInfiniteQuery, useQuery } from 'react-query'
-import { PRODUCT_STATUE_SET, ProductState, Query } from '../../models'
+import { useQuery } from 'react-query'
+import { Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useParams } from 'react-router'
-import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { IssuerTokenClass } from '../../models/issuer'
 
 const IssuerContainer = styled.main`
@@ -27,57 +26,20 @@ const IssuerContainer = styled.main`
   }
 `
 
-const ITEM_LIMIT = 20
-
 export const Issuer: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const [t] = useTranslation('translations')
   const history = useHistory()
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
   const { api } = useWalletModel()
-  const productState = useRouteQuery<ProductState>(
-    'productState',
-    'product_state'
-  )
 
   const issuerInfoQuery = useQuery([Query.Issuers, api, id], async () => {
     const { data } = await api.getIssuerInfo(id)
     return data
   })
-  const tokenClassesQuery = useInfiniteQuery(
-    [Query.Issuers, api, id, productState],
-    async ({ pageParam = 0 }) => {
-      const productStateParam = PRODUCT_STATUE_SET.find(
-        (e) => e === productState
-      )
-        ? productState
-        : undefined
+  const [tokenClasses, setTokenClasses] = useState<IssuerTokenClass[]>([])
 
-      const { data } = await api.getIssuerTokenClass(id, productStateParam, {
-        page: pageParam,
-      })
-      return data
-    },
-    {
-      getNextPageParam(lastPage) {
-        return ITEM_LIMIT * lastPage.meta.current_page >=
-          lastPage.meta.total_count
-          ? undefined
-          : lastPage.meta.current_page + 1
-      },
-      enabled: true,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
-  const tokenClasses =
-    tokenClassesQuery.data?.pages.reduce(
-      (acc, page) => acc.concat(page.token_classes),
-      [] as IssuerTokenClass[]
-    ) ?? []
-
-  if (issuerInfoQuery.error && tokenClassesQuery.error) {
+  if (issuerInfoQuery.error) {
     history.replace('/404')
   }
 
@@ -95,15 +57,8 @@ export const Issuer: React.FC = () => {
         isLoading={issuerInfoQuery.isLoading}
         refetch={issuerInfoQuery.refetch}
       />
-      <NftCards
-        id={id}
-        tokenClasses={tokenClasses}
-        isLoading={tokenClassesQuery.isLoading && tokenClassesQuery.isFetching}
-        fetchNextPage={tokenClassesQuery.fetchNextPage}
-        refetch={tokenClassesQuery.refetch}
-        hasNextPage={tokenClassesQuery.hasNextPage}
-      />
-      {issuerInfoQuery.data && tokenClassesQuery.data && (
+      <NftCards id={id} onLoaded={setTokenClasses} />
+      {issuerInfoQuery.data && (
         <Share
           isDialogOpen={isShareDialogOpen}
           closeDialog={() => setIsShareDialogOpen(false)}
