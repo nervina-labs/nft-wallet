@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-download.svg'
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
-import { SharingNftPoster } from './nft-poster'
-import { NftPoster, PosterType } from './poster.interface'
+import { NftPoster } from './nft-poster'
+import { NftPosterType, PosterType } from './poster.interface'
+import { useHtml2Canvas } from './tools'
 
 const DialogContainer = styled.div`
   position: fixed;
@@ -118,7 +119,22 @@ const Button = styled.button`
   margin-top: 15px;
 `
 
-export interface ShareProps extends Partial<NftPoster> {
+const SharePosterContainer = styled.div`
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 95%;
+  max-width: 450px;
+  z-index: 9;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+`
+
+export interface ShareProps extends Partial<NftPosterType> {
   isDialogOpen: boolean
   closeDialog: () => void
   displayText: string
@@ -134,7 +150,6 @@ export const Share: React.FC<ShareProps> = ({
   type,
 }) => {
   const { t } = useTranslation('translations')
-
   useEffect(() => {
     if (isDialogOpen) {
       document.body.classList.add('fixed')
@@ -146,16 +161,34 @@ export const Share: React.FC<ShareProps> = ({
     }
   }, [isDialogOpen])
 
+  const [el, setEl] = useState<HTMLDivElement | null>(null)
+
+  const imgSrc = useHtml2Canvas(el, {
+    enable: isDialogOpen,
+  })
+
   return (
     <DialogContainer
       className={classNames({
         hide: !isDialogOpen,
       })}
     >
-      <div className="mask" onClick={closeDialog} />
-      {data && type === PosterType.Nft && (
-        <SharingNftPoster tokenOrClass={data} open={isDialogOpen} />
+      {isDialogOpen && (
+        <>
+          <SharePosterContainer>
+            <img src={imgSrc} alt="" />
+          </SharePosterContainer>
+          {data && type === PosterType.Nft && (
+            <NftPoster
+              tokenOrClass={data}
+              onLoad={(x) => {
+                setEl(x)
+              }}
+            />
+          )}
+        </>
       )}
+      <div className="mask" onClick={closeDialog} />
       <ShareContainer
         className={classNames({
           hide: !isDialogOpen,

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import ShareNftBackground from '../../assets/img/share-bg/share-nft@3x.png'
 import { TokenClass } from '../../models/class-list'
@@ -6,39 +6,7 @@ import { NFTDetail } from '../../models'
 import { LazyLoadImage } from '../Image'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { Limited } from '../Limited'
-import classNames from 'classnames'
-import html2canvas from 'html2canvas-objectfit-fix'
-
-const BaseContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  pointer-events: none;
-  transition: opacity 0.2s;
-
-  &.hide {
-    opacity: 0;
-  }
-
-  @media (max-height: 736px) {
-    transform: scale(0.9) translateY(-5%);
-  }
-
-  @media (max-height: 667px) {
-    transform: scale(0.85) translateY(-10%);
-  }
-
-  @media (max-height: 568px) {
-    transform: scale(0.7) translateY(-20%);
-  }
-
-  canvas {
-    position: fixed;
-  }
-`
+import { useHtml2CanvasImageUrl } from './tools'
 
 const BackgroundContainer = styled.div`
   width: 100%;
@@ -50,13 +18,13 @@ const BackgroundContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: -1;
 `
 
 const SharingNftPostContainer = styled.div`
-  top: 0;
-  left: 0;
-  position: absolute;
+  top: -100%;
+  left: -100%;
+  position: fixed;
   width: 323px;
   height: 484px;
   content-visibility: hidden;
@@ -148,94 +116,71 @@ const Card = styled.div`
   }
 `
 
-export const SharingNftPoster: React.FC<{
+export const NftPoster: React.FC<{
   tokenOrClass: TokenClass | NFTDetail
-  open?: boolean
-}> = ({ tokenOrClass, open }) => {
+  onLoad?: (el: HTMLDivElement) => void
+}> = ({ tokenOrClass, onLoad }) => {
   const imgRef = useRef<HTMLImageElement>(null)
   const posterRef = useRef<HTMLDivElement>(null)
-  const baseRef = useRef<HTMLDivElement>(null)
   const issuerName = (tokenOrClass.issuer_info?.name ?? '').substring(0, 10)
-  const time = new Date().getTime()
-  const cardImageUrl =
-    tokenOrClass.bg_image_url.replace(
-      'https://oss.jinse.cc/',
-      'https://goldenlegend.oss-accelerate.aliyuncs.com/'
-    ) +
-    '?' +
-    time
-  const avatarImageUrl =
-    (tokenOrClass.issuer_info?.avatar_url ?? '').replace(
-      'https://oss.jinse.cc/',
-      'https://goldenlegend.oss-accelerate.aliyuncs.com/'
-    ) +
-    '?' +
-    time
-  const [imgSrc, setImgSrc] = useState('')
+  const cardImageUrl = useHtml2CanvasImageUrl(tokenOrClass.bg_image_url ?? '')
+  const avatarImageUrl = useHtml2CanvasImageUrl(
+    tokenOrClass.issuer_info?.avatar_url ?? ''
+  )
 
   useEffect(() => {
-    if (posterRef.current && baseRef.current && open) {
-      html2canvas(posterRef.current, { useCORS: true, allowTaint: true })
-        .then((canvas) => {
-          setImgSrc(canvas.toDataURL('image/png'))
-        })
-        .catch((error) => {
-          console.error('oops, something went wrong!', error)
-        })
+    if (onLoad && posterRef.current) {
+      onLoad(posterRef.current)
     }
-  }, [open])
+  }, [onLoad, cardImageUrl, avatarImageUrl, posterRef.current])
 
   return (
-    <BaseContainer className={classNames({ hide: !open })} ref={baseRef}>
-      {imgSrc && <img src={imgSrc} alt="" />}
+    <SharingNftPostContainer ref={posterRef}>
+      <BackgroundContainer>
+        <img src={ShareNftBackground} alt="bg" ref={imgRef} />
+      </BackgroundContainer>
+      <IssuerContainer>
+        <Issuer>
+          <div className="avatar">
+            <LazyLoadImage
+              src={avatarImageUrl}
+              width={35}
+              height={35}
+              backup={<PeopleSvg />}
+              variant="circle"
+            />
+          </div>
+          <div className="issuer-name">{issuerName}</div>
+        </Issuer>
+      </IssuerContainer>
 
-      <SharingNftPostContainer ref={posterRef}>
-        <BackgroundContainer>
-          <img src={ShareNftBackground} alt="bg" ref={imgRef} />
-        </BackgroundContainer>
-        <IssuerContainer>
-          <Issuer>
+      <CardContainer>
+        <Card>
+          <img
+            src={cardImageUrl}
+            alt=""
+            className="img"
+            crossOrigin="anonymous"
+          />
+          <div className="nft-name">{tokenOrClass.name}</div>
+          <Issuer className="small">
             <div className="avatar">
               <LazyLoadImage
                 src={avatarImageUrl}
-                width={35}
-                height={35}
+                width={18}
+                height={18}
                 backup={<PeopleSvg />}
                 variant="circle"
               />
             </div>
             <div className="issuer-name">{issuerName}</div>
           </Issuer>
-        </IssuerContainer>
-
-        <CardContainer>
-          <Card>
-            <img
-              src={cardImageUrl}
-              alt=""
-              className="img"
-              crossOrigin="anonymous"
-            />
-            <div className="nft-name">{tokenOrClass.name}</div>
-            <Issuer className="small">
-              <div className="avatar">
-                <LazyLoadImage
-                  src={avatarImageUrl}
-                  width={18}
-                  height={18}
-                  backup={<PeopleSvg />}
-                  variant="circle"
-                />
-              </div>
-              <div className="issuer-name">{issuerName}</div>
-            </Issuer>
-            <Limited
-              count={tokenOrClass.total}
-              sn={(tokenOrClass as NFTDetail).n_token_id}
-            />
-          </Card>
-        </CardContainer>
-      </SharingNftPostContainer>
-    </BaseContainer>
+          <Limited
+            count={tokenOrClass.total}
+            sn={(tokenOrClass as NFTDetail).n_token_id}
+          />
+        </Card>
+      </CardContainer>
+    </SharingNftPostContainer>
   )
 }

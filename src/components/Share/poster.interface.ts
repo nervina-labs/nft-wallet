@@ -7,7 +7,7 @@ export enum PosterType {
   Account = 'account',
 }
 
-export interface NftPoster {
+export interface NftPosterType {
   type: PosterType.Nft
   data: TokenClass | NFTDetail
 }
