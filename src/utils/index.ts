@@ -7,6 +7,7 @@ import {
   OSS_IMG_PROCESS_QUERY_KEY,
   OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
   OSS_IMG_PROCESS_QUERY_KEY_SCALE,
+  SERVER_URL,
 } from '../constants'
 export * from './unipass'
 
@@ -248,4 +249,15 @@ export async function downloadImage(imageSrc: string): Promise<void> {
 
 export function ellipsisIssuerID(value: string): string {
   return `${value.substr(0, 8)}...${value.substr(8, 6)}`
+}
+
+export function getImageForwardingsUrl<T extends string[] | string>(
+  urls: T
+): T extends string ? string : string[] {
+  if (Array.isArray(urls)) {
+    return urls.map((url) => getImageForwardingsUrl(url)) as any
+  }
+  return `${SERVER_URL}/image_forwardings?url=${
+    (urls as unknown) as string
+  }` as any
 }

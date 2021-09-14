@@ -1,10 +1,7 @@
 import styled from 'styled-components'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
-import { useParams } from 'react-router'
-import { useWalletModel } from '../../hooks/useWallet'
-import { useInfiniteQuery } from 'react-query'
-import { PRODUCT_STATUE_SET, ProductState, Query } from '../../models'
+import { PRODUCT_STATUE_SET, ProductState } from '../../models'
 import { NftCard } from './nftCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Masonry } from '../../components/Masonry'
@@ -14,8 +11,6 @@ import { useHistory } from 'react-router-dom'
 import { Loading } from '../../components/Loading'
 import { HEADER_HEIGHT } from '../../components/Appbar'
 import { IssuerTokenClass } from '../../models/issuer'
-
-const ITEM_LIMIT = 20
 
 const NftCardsContainer = styled.div`
   --header-border-color: #ececec;
@@ -207,7 +202,23 @@ const Header: React.FC = () => {
   )
 }
 
-const CardGroup: React.FC = () => {
+interface CardGroupProps {
+  id: string
+  tokenClasses: IssuerTokenClass[]
+  isLoading: boolean
+  fetchNextPage: () => void
+  refetch: () => void
+  hasNextPage?: boolean
+}
+
+const CardGroup: React.FC<CardGroupProps> = ({
+  id,
+  tokenClasses,
+  isLoading,
+  fetchNextPage,
+  hasNextPage,
+  refetch,
+}) => {
   const [width, setWidth] = useState(
     (Math.min(window.innerWidth, 530) - 35) / 2
   )
@@ -223,65 +234,16 @@ const CardGroup: React.FC = () => {
     }
   })
 
-  const { id } = useParams<{ id: string }>()
-  const productState = useRouteQuery<ProductState>(
-    'productState',
-    'product_state'
-  )
-  const { api } = useWalletModel()
-
-  const {
-    data,
-    isLoading,
-    refetch,
-    fetchNextPage,
-    isFetching,
-    hasNextPage,
-  } = useInfiniteQuery(
-    [Query.Issuers, api, id, productState],
-    async ({ pageParam = 0 }) => {
-      const productStateParam = PRODUCT_STATUE_SET.find(
-        (e) => e === productState
-      )
-        ? productState
-        : undefined
-
-      const { data } = await api.getIssuerTokenClass(id, productStateParam, {
-        page: pageParam,
-      })
-      return data
-    },
-    {
-      getNextPageParam(lastPage) {
-        return ITEM_LIMIT * lastPage.meta.current_page >=
-          lastPage.meta.total_count
-          ? undefined
-          : lastPage.meta.current_page + 1
-      },
-      enabled: true,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
-
-  const tokenClasses =
-    data?.pages.reduce(
-      (acc, page) => acc.concat(page.token_classes),
-      [] as IssuerTokenClass[]
-    ) ?? []
-  const tokenClassLength = tokenClasses.length
-
   return (
     <div className="card-group">
       <InfiniteScroll
-        dataLength={tokenClassLength}
+        dataLength={tokenClasses.length}
         hasMore={hasNextPage === true}
         loader={<Loading />}
         refreshFunction={refetch}
         next={fetchNextPage}
       >
-        {tokenClassLength > 0 && (
+        {tokenClasses.length > 0 && (
           <Masonry columns={2}>
             {tokenClasses.map((token, i) => (
               <NftCard token={token} key={i} uuid={id} imgSize={width} />
@@ -290,18 +252,18 @@ const CardGroup: React.FC = () => {
         )}
         {isLoading && <Loading />}
       </InfiniteScroll>
-      {tokenClassLength === 0 && !isLoading && !isFetching && (
+      {tokenClasses.length === 0 && !isLoading && (
         <div className="no-data">{t('issuer.no-data')}</div>
       )}
     </div>
   )
 }
 
-export const NftCards: React.FC = () => {
+export const NftCards: React.FC<CardGroupProps> = (props) => {
   return (
     <NftCardsContainer>
       <Header />
-      <CardGroup />
+      <CardGroup {...props} />
     </NftCardsContainer>
   )
 }

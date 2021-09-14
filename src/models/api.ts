@@ -7,7 +7,7 @@ import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
 import {
   Issuer,
-  IssuerInfo,
+  IssuerInfoResult,
   IssuerTokenClassResult,
   FollowerResponse,
   IssuersResponse,
@@ -135,7 +135,7 @@ export interface NFTWalletAPI {
     config: WxSignConfig
   ) => Promise<AxiosResponse<{ signature: string }>>
 
-  getIssuerInfo: (uuid: string) => Promise<AxiosResponse<IssuerInfo>>
+  getIssuerInfo: (uuid: string) => Promise<AxiosResponse<IssuerInfoResult>>
 
   getIssuerTokenClass: (
     uuid: string,
@@ -171,4 +171,6 @@ export interface NFTWalletAPI {
       limit?: number
     }
   ) => Promise<AxiosResponse<GetHolderByTokenClassUuidResponse>>
+
+  getUrlBase64: (url: string) => Promise<AxiosResponse<{ result: string }>>
 }

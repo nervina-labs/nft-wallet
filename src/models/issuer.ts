@@ -25,7 +25,7 @@ export interface IssuersResponse {
   meta: ListMeta
 }
 
-export interface IssuerInfo extends VipInfo {
+export interface IssuerInfoResult extends VipInfo {
   avatar_url: string
   name: string
   description: string | null

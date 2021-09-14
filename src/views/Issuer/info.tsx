@@ -1,9 +1,6 @@
 import styled from 'styled-components'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
-import { useWalletModel } from '../../hooks/useWallet'
-import { useQuery } from 'react-query'
-import { Query } from '../../models'
 import { LazyLoadImage } from '../../components/Image'
 import { Follow as FollowButton } from '../../components/Follow'
 import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
@@ -15,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import { HEADER_HEIGHT } from '../../components/Appbar'
 import { copyFallback, ellipsisIssuerID, getImagePreviewUrl } from '../../utils'
-import { useHistory } from 'react-router-dom'
+import { IssuerInfoResult } from '../../models/issuer'
 
 const VerifySvgPath = (VerifySvg as unknown) as string
 
@@ -351,23 +348,13 @@ const VerifiedTitle: React.FC<{
   )
 }
 
-export const IssuerInfo: React.FC = () => {
+export const IssuerInfo: React.FC<{
+  data?: IssuerInfoResult
+  isLoading: boolean
+  refetch: () => void
+}> = ({ data, isLoading, refetch }) => {
   const { id } = useParams<{ id: string }>()
-  const { api } = useWalletModel()
   const [t] = useTranslation('translations')
-  const history = useHistory()
-
-  const { data, isLoading, refetch, error } = useQuery(
-    [Query.Issuers, api, id],
-    async () => {
-      const { data } = await api.getIssuerInfo(id)
-      return data
-    }
-  )
-
-  if (error) {
-    history.replace('/404')
-  }
 
   useEffect(() => {
     window.scroll({ top: 0 })
@@ -400,7 +387,7 @@ export const IssuerInfo: React.FC = () => {
             <FollowButton
               followed={data.issuer_followed}
               uuid={id}
-              afterToggle={refetch}
+              afterToggle={async () => refetch()}
             />
           )}
         </div>

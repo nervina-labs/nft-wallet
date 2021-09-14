@@ -22,7 +22,7 @@ import {
 import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
-import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
+import { IssuerInfoResult, IssuerTokenClassResult } from '../models/issuer'
 import { WxSignConfig } from '../models/wx'
 import { GetHolderByTokenClassUuidResponse } from '../models/holder'
 
@@ -437,7 +437,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
   }
 
   async getIssuerInfo(uuid: string) {
-    return await this.axios.get<IssuerInfo>(`/issuers/${uuid}`, {
+    return await this.axios.get<IssuerInfoResult>(`/issuers/${uuid}`, {
       params: {
         address: this.address,
       },
@@ -493,5 +493,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
         },
       }
     )
+  }
+
+  async getUrlBase64(url: string) {
+    return await this.axios.get<{ result: string }>('/image_forwardings', {
+      params: {
+        url,
+        type: 'base64',
+      },
+    })
   }
 }

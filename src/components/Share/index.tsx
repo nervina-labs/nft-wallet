@@ -4,9 +4,10 @@ import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-down
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
-import { NftPoster } from './nft-poster'
-import { NftPosterType, PosterType } from './poster.interface'
-import { useHtml2Canvas } from './tools'
+import { NftPoster } from './nftPoster'
+import { Poster, PosterType } from './poster.interface'
+import { useHtml2Canvas } from './shareUtils'
+import { IssuerPoster } from './issuerPoster'
 
 const DialogContainer = styled.div`
   position: fixed;
@@ -134,12 +135,12 @@ const SharePosterContainer = styled.div`
   }
 `
 
-export interface ShareProps extends Partial<NftPosterType> {
+export type ShareProps = {
   isDialogOpen: boolean
   closeDialog: () => void
   displayText: string
   copyText: string
-}
+} & Partial<Poster>
 
 export const Share: React.FC<ShareProps> = ({
   isDialogOpen,
@@ -178,13 +179,25 @@ export const Share: React.FC<ShareProps> = ({
           <SharePosterContainer>
             <img src={imgSrc} alt="" />
           </SharePosterContainer>
-          {data && type === PosterType.Nft && (
-            <NftPoster
-              tokenOrClass={data}
-              onLoad={(x) => {
-                setEl(x)
-              }}
-            />
+          {data && (
+            <>
+              {type === PosterType.Nft ? (
+                <NftPoster
+                  data={data as any}
+                  onLoad={(x) => {
+                    setEl(x)
+                  }}
+                />
+              ) : null}
+              {type === PosterType.Issuer ? (
+                <IssuerPoster
+                  data={data as any}
+                  onLoad={(x) => {
+                    setEl(x)
+                  }}
+                />
+              ) : null}
+            </>
           )}
         </>
       )}
