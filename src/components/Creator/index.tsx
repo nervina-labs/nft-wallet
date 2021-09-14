@@ -146,7 +146,7 @@ export const Creator: React.FC<CreatorProps> = ({
       >
         {baned ? t('common.baned.issuer') : name}
       </span>
-      {isVip ? (
+      {isVip && !baned ? (
         showTooltip ? (
           <Tooltip
             title={vt}
@@ -164,7 +164,7 @@ export const Creator: React.FC<CreatorProps> = ({
   return (
     <Container fontSize={fontSize} color={color} style={style}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
-      {uuid != null ? (
+      {uuid != null && !baned ? (
         <Link
           onClick={(e) => e.stopPropagation()}
           style={{ textDecoration: 'none' }}
