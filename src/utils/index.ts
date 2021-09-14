@@ -1,7 +1,14 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
 import dayjs from 'dayjs'
 import Web3 from 'web3'
-import { INFURA_ID, OSS_IMG_HOST, OSS_IMG_PROCESS_QUERY } from '../constants'
+import {
+  BOWSER_BROWSER,
+  INFURA_ID,
+  OSS_IMG_HOSTS,
+  OSS_IMG_PROCESS_QUERY_KEY,
+  OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
+  OSS_IMG_PROCESS_QUERY_KEY_SCALE,
+} from '../constants'
 export * from './unipass'
 export * from './atom'
 
@@ -114,14 +121,83 @@ export function isVerticalScrollable(): boolean {
   return document.body.scrollHeight > document.body.clientHeight
 }
 
-export function getImagePreviewUrl(url?: string): string | undefined {
-  if (url == null) {
+export function isSupportWebp(): boolean {
+  // https://caniuse.com/?search=webp
+  // https://x5.tencent.com/guide/caniuse/index.html
+  const supportedBrowsers = {
+    macos: {
+      safari: '>=14',
+    },
+    edge: '>=18',
+    android: {
+      wechat: '>=4',
+    },
+    mobile: {
+      safari: '>13.7',
+      'android browser': '>=4.2',
+    },
+    chrome: '>=32',
+    firefox: '>=65',
+  }
+
+  return !!BOWSER_BROWSER.satisfies(supportedBrowsers)
+}
+
+export function addParamsToUrl(
+  url: string,
+  params: { [key: string]: string },
+  options?: {
+    ignoreDuplicates?: boolean
+  }
+): string {
+  if (!url) {
     return url
   }
-  if (/\.(svg|webp)$/i.test(url)) {
+  const urlObj = new URL(url)
+  const urlSearchParams = urlObj.searchParams
+  Object.keys(params).forEach((key) => {
+    if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
+      urlSearchParams.set(key, params[key])
+    }
+  })
+  return decodeURIComponent(urlObj.toString())
+}
+
+export function getImagePreviewUrl<U extends string | undefined>(
+  url: U,
+  size = 300
+): U extends string ? string : undefined {
+  if (!url) {
+    return url as any
+  }
+  const urlObj = new URL(url)
+  const isOssHost = OSS_IMG_HOSTS.some((host) => url?.startsWith(host))
+  const isSvgOrWebp = /\.(svg|webp)$/i.test(urlObj.pathname)
+  if (!isOssHost || isSvgOrWebp) {
+    return url as any
+  }
+  const webpParam = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
+  const params: {
+    [key in typeof OSS_IMG_PROCESS_QUERY_KEY]?: string
+  } = {}
+  params[
+    OSS_IMG_PROCESS_QUERY_KEY
+  ] = `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webpParam}`
+  return addParamsToUrl(url, params) as any
+}
+
+export function addTidToUrl(url: string, tid: string): string {
+  if (!url) {
     return url
   }
-  return url.startsWith(OSS_IMG_HOST) ? `${url}${OSS_IMG_PROCESS_QUERY}` : url
+  return addParamsToUrl(url, { tid })
+}
+
+export function addLocaleToUrl(url: string, locale: 'zh' | 'en'): string {
+  if (!url) {
+    return url
+  }
+  return addParamsToUrl(url, { locale })
 }
 
 const MILLION = 1e6

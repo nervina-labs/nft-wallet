@@ -27,6 +27,7 @@ interface HolderProps {
   username: string
   address: string
   avatarType?: AvatarType
+  tid?: string
 }
 
 export const Holder: React.FC<HolderProps> = ({
@@ -34,6 +35,7 @@ export const Holder: React.FC<HolderProps> = ({
   username,
   address,
   avatarType,
+  tid,
 }) => {
   const { t } = useTranslation('translations')
   return (
@@ -42,7 +44,7 @@ export const Holder: React.FC<HolderProps> = ({
       style={{ textDecoration: 'none', width: '100%', display: 'block' }}
     >
       <HolderContainer>
-        <HolderAvatar avatar={avatar} avatarType={avatarType} />
+        <HolderAvatar avatar={avatar} avatarType={avatarType} tid={tid} />
         <div className="username">
           {username ?? t('holder.user-name-empty')}
         </div>

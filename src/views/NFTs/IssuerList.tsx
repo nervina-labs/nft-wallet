@@ -15,7 +15,7 @@ import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 import { useTranslation } from 'react-i18next'
 import { Empty } from './empty'
-import { truncateMiddle } from '../../utils'
+import { getImagePreviewUrl, truncateMiddle } from '../../utils'
 import { Link } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 
@@ -65,7 +65,10 @@ const IssuerContainer = styled(Link)`
 `
 
 const LabelContainer = styled.div`
-  margin: 10px 20px 20px 10px;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  padding: 10px 20px 20px 10px;
   .label {
     background: #f1f1f1;
     border-radius: 50px;
@@ -75,13 +78,17 @@ const LabelContainer = styled.div`
   }
 `
 
+const LabelPlaceholder = styled.div`
+  height: 52px;
+`
+
 const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
   return (
     <IssuerContainer to={`${RoutePath.Issuer}/${issuer.uuid}`}>
       <div className="main">
         <div className="avatar">
           <LazyLoadImage
-            src={issuer?.avatar_url}
+            src={getImagePreviewUrl(issuer?.avatar_url, 100)}
             width={44}
             height={44}
             imageStyle={{ borderRadius: '50%' }}
@@ -180,6 +187,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({
           {t('follow.count', { count: dataLength })}
         </span>
       </LabelContainer>
+      {dataLength > 0 && <LabelPlaceholder />}
       {isRefetching ? <Loading /> : null}
       {data === undefined && status === 'loading' ? (
         <Loading />

@@ -3,15 +3,11 @@ import React from 'react'
 import { NFTDetail, NftType } from '../../models'
 import styled from 'styled-components'
 import { Limited } from '../Limited'
-import FallbackImg from '../../assets/svg/fallback.svg'
-import { getImagePreviewUrl } from '../../utils'
-import { LazyLoadImage } from '../Image'
 import { Like } from '../Like'
-import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import { Creator } from '../Creator'
-import { CardBack } from '../Cardback'
+import { CardImage } from './CardImage'
 
 const CardContainer = styled.div`
   width: 164px;
@@ -20,38 +16,6 @@ const CardContainer = styled.div`
   background: #ffffff;
   border-radius: 10px;
   position: relative;
-
-  .media {
-    width: calc(100%);
-    border-radius: 8px 8px 0 0;
-    position: relative;
-    overflow: hidden;
-
-    .img {
-      width: 100%;
-      img,
-      svg {
-        width: 100%;
-        height: 164px;
-        object-fit: cover;
-      }
-    }
-
-    .player {
-      position: absolute;
-      bottom: 6px;
-      right: 6px;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
 
   .nft-name {
     font-size: 14px;
@@ -66,6 +30,12 @@ const CardContainer = styled.div`
 
   .creator {
     margin: 10px 0;
+    .name {
+      width: 100px;
+      white-space: nowrap;
+      margin-right: auto;
+      display: block;
+    }
   }
 `
 
@@ -88,8 +58,6 @@ export const CardDialog: React.FC<{
   const { t } = useTranslation('translations')
   const history = useHistory()
   const isBanned = nft.is_issuer_banned || nft.is_class_banned
-  const isPlayable =
-    nft.renderer_type === NftType.Audio || nft.renderer_type === NftType.Video
   const detailUrl = `/nft/${nft.uuid}`
 
   return (
@@ -107,34 +75,18 @@ export const CardDialog: React.FC<{
       }}
     >
       <CardContainer>
-        <div className="media">
-          {nft.class_card_back_content_exist && <CardBack />}
-          <div className="img">
-            <LazyLoadImage
-              src={
-                isBanned ? FallbackImg : getImagePreviewUrl(nft.bg_image_url)
-              }
-              width={164}
-              height={164}
-              skeletonStyle={{ borderRadius: '10px' }}
-              cover
-              disableContextMenu={true}
-              backup={
-                <LazyLoadImage
-                  skeletonStyle={{ borderRadius: '10px' }}
-                  width={164}
-                  height={164}
-                  src={FallbackImg}
-                />
-              }
-            />
-          </div>
-          {isPlayable && (
-            <span className="player">
-              <PlayerSvg />
-            </span>
-          )}
-        </div>
+        <CardImage
+          src={nft.bg_image_url}
+          width={164}
+          height={164}
+          isPlayable={
+            nft.renderer_type === NftType.Audio ||
+            nft.renderer_type === NftType.Video
+          }
+          hasCardBack={nft.class_card_back_content_exist}
+          tid={`${nft.n_token_id}`}
+        />
+
         <div className="nft-name">{nft.name}</div>
 
         <div className="creator">

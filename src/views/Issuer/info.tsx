@@ -14,7 +14,7 @@ import { Skeleton } from '@material-ui/lab'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import { HEADER_HEIGHT } from '../../components/Appbar'
-import { copyFallback, ellipsisIssuerID } from '../../utils'
+import { copyFallback, ellipsisIssuerID, getImagePreviewUrl } from '../../utils'
 import { useHistory } from 'react-router-dom'
 
 const VerifySvgPath = (VerifySvg as unknown) as string
@@ -378,7 +378,7 @@ export const IssuerInfo: React.FC = () => {
       <div className="avatar-and-follow">
         <div className="avatar">
           <LazyLoadImage
-            src={data?.avatar_url}
+            src={getImagePreviewUrl(data?.avatar_url, 150)}
             width={60}
             height={60}
             variant="circle"

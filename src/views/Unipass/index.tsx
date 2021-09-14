@@ -28,7 +28,7 @@ export const Unipass: React.FC = () => {
     switch (action) {
       case UnipassAction.Login: {
         UnipassConfig.clear()
-        if (code !== 200) {
+        if (code !== 200 && code !== 401) {
           history.replace(redirectUri || RoutePath.Login)
           break
         }
@@ -46,7 +46,7 @@ export const Unipass: React.FC = () => {
       }
       case UnipassAction.Sign: {
         UnipassConfig.clear()
-        if (code !== 200) {
+        if (code !== 200 && code !== 401) {
           history.replace(redirectUri || RoutePath.NFTs)
           break
         }
@@ -57,9 +57,11 @@ export const Unipass: React.FC = () => {
           address: addr,
           walletType: WalletType.Unipass,
         })
-        setProfile({
-          auth: `0x01${data.sig.replace('0x', '')}`,
-        })
+        if (code === 200) {
+          setProfile({
+            auth: `0x01${data.sig.replace('0x', '')}`,
+          })
+        }
         history.replace(redirectUri ?? RoutePath.NFTs)
         break
       }

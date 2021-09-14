@@ -78,8 +78,8 @@ export const TokenHolderList: React.FC<{
       next={fetchNextPage}
       style={{ overflow: 'initial' }}
     >
-      {holders.map((item) => (
-        <HolderItem>
+      {holders.map((item, index) => (
+        <HolderItem key={item.n_token_id ?? index}>
           <Holder
             key={item.n_token_id}
             username={item.holder_info.nickname}
