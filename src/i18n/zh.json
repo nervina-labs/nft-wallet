@@ -335,9 +335,10 @@
     "exchange": {
       "title": "兑换中心",
       "count": "{{count}} 个",
-      "nft-price": "奖品包含下面所有 NFT",
-      "blind-price": "奖品随机包含下面的 {{min}}~{{max}} 个",
-      "othder-price": "发起人会在你提交兑换后根据你提供的接收信息进行承兑",
+      "nft-prize": "奖品包含下面所有 NFT",
+      "blind-prize": "奖品随机包含下面的 {{min}}~{{max}} 个",
+      "othder-prize": "发起人会在你提交兑换后根据你提供的接收信息进行承兑",
+      "time": "兑换时间",
       "type": {
         "nft": "NFT",
         "blind": "盲盒",
@@ -351,6 +352,25 @@
       "actions": {
         "redeem": "立即兑换",
         "insufficient": "条件不足无法兑换"
+      },
+      "mine": {
+        "title": "我的兑换",
+        "all": "全部兑换",
+        "wait": "待承兑"
+      },
+      "prize": {
+        "title": "奖品",
+        "get": "本次兑换获得",
+        "receiver": {
+          "info": "接收人信息",
+          "address": "接收人地址"
+        },
+        "issuer": {
+          "comment": "发起人留言",
+          "company": "物流公司",
+          "sn": "发货单号",
+          "time": "发货时间"
+        }
       },
       "alert": {
         "normal": "兑换不会销毁您参与兑换的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他兑换",

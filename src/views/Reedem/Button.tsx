@@ -14,6 +14,7 @@ const ButtonContainer = styled(MdButton)`
     border-radius: 25px;
     width: 280px;
     background: rgb(43, 69, 78);
+    font-size: 16px;
     color: white;
     &.cancel {
       border: 1px solid rgb(226, 226, 226);
@@ -34,6 +35,10 @@ const ButtonContainer = styled(MdButton)`
         fill: white;
       }
     }
+  }
+
+  .loading {
+    color: rgb(214, 214, 214);
   }
 
   &:disabled {

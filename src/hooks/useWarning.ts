@@ -60,6 +60,7 @@ export const useWarning = () => {
           fn: async () => {
             setIsOpen(false)
             await onClose?.()
+            setIsLoading(false)
             resolve()
           },
         })

@@ -446,7 +446,21 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getRedeemEvents(page: number) {
+  async getAllRedeemEvents(page: number) {
+    return await new Promise<RedeemEvents>((resolve) => {
+      setTimeout(() => {
+        resolve({
+          meta: {
+            current_page: 1,
+            total_count: 100,
+          },
+          events: mockRedeems,
+        })
+      }, 1e3)
+    })
+  }
+
+  async getMyRedeemEvents(page: number) {
     return await new Promise<RedeemEvents>((resolve) => {
       setTimeout(() => {
         resolve({

@@ -17,13 +17,14 @@ import { RedeemStatus } from '../../models/redeem'
 import { Creator } from '../../components/Creator'
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { Price } from '../Reedem/Price'
+import { Price } from '../Reedem/Prize'
 import { Condition } from './Condition'
 import Alert from '@material-ui/lab/Alert'
 import { Footer } from './Footer'
 import { SubmitAddress } from './SubmitAddress'
 import { SubmitEmail } from './SubmitEmail'
 import { SubmitCkb } from './SubmitCkb'
+import { Tab, Tabs } from '../../components/Tab'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -51,6 +52,9 @@ const Container = styled(MainContainer)`
       font-size: 12px;
       margin: 8px 20px;
       margin-bottom: 80px;
+    }
+    .tab {
+      font-size: 14px;
     }
     background: #f6f6f6;
     flex: 1;
@@ -181,7 +185,7 @@ export const RedeemDetail: React.FC = () => {
     }
     return t('exchange.event.on-going')
   }, [data?.status, t])
-  const [showPrice, setShowPrice] = useState(true)
+  const [showPrize, setShowPrice] = useState(true)
   const matchAddress = useRouteMatch(`${RoutePath.Redeem}/:id/address`)
   const matchEmail = useRouteMatch(`${RoutePath.Redeem}/:id/email`)
   const matchCkb = useRouteMatch(`${RoutePath.Redeem}/:id/ckb`)
@@ -242,26 +246,26 @@ export const RedeemDetail: React.FC = () => {
               />
               <div className="issuer">{t('exchange.issuer')}</div>
             </div>
-            <div className="tabs">
-              <div
-                className={classNames('tab', { active: showPrice })}
+            <Tabs activeKey={showPrize ? 0 : 1}>
+              <Tab
+                active={showPrize}
                 onClick={() => setShowPrice(true)}
+                className="tab"
               >
                 {t('exchange.event.tabs.price')}
-                {showPrice ? <span className="active-line" /> : null}
-              </div>
-              <div
-                className={classNames('tab', { active: !showPrice })}
+              </Tab>
+              <Tab
+                active={!showPrize}
                 onClick={() => setShowPrice(false)}
+                className="tab"
               >
                 {t('exchange.event.tabs.requirement')}
-                {!showPrice ? <span className="active-line" /> : null}
-              </div>
-            </div>
+              </Tab>
+            </Tabs>
             <Divider
               style={{ position: 'relative', top: '5px', margin: '0 20px' }}
             />
-            {showPrice ? <Price detail={data} /> : <Condition detail={data} />}
+            {showPrize ? <Price detail={data} /> : <Condition detail={data} />}
             <Alert severity="error">{t('exchange.warning')}</Alert>
             <Footer status={data.status} isReedemable />
             <SubmitAddress

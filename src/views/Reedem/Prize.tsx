@@ -74,8 +74,8 @@ export const NFTPrice: React.FC<PriceProps> = ({ detail }) => {
       <Label type={detail.type} />
       <div className="contain">
         {detail.type === RedeemType.NFT
-          ? t('exchange.nft-price')
-          : t('exchange.blind-price', { min: 2, max: 3 })}
+          ? t('exchange.nft-prize')
+          : t('exchange.blind-prize', { min: 2, max: 3 })}
       </div>
       {detail.tokens.map((token) => {
         return <PriceCard token={token} count={3} key={token.uuid} />
@@ -112,7 +112,7 @@ export const OtherPrice: React.FC<PriceProps> = ({ detail }) => {
   return (
     <OthderPriceContainer>
       <Label type={detail.type} />
-      <div className="contain">{t('exchange.othder-price')}</div>
+      <div className="contain">{t('exchange.othder-prize')}</div>
       <div className="price-title">{detail.priceTitle}</div>
       <div className="price-desc">{detail.priceDesciption}</div>
       <div className="imgs">

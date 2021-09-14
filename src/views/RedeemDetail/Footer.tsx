@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { useWarning } from '../../hooks/useWarning'
 import { RedeemStatus } from '../../models/redeem'
+import { sleep } from '../../utils'
 import { Button, ButtonProps } from '../Reedem/Button'
 
 const Container = styled.footer`
@@ -47,11 +48,7 @@ export const Footer: React.FC<FooterProps> = ({
   const warning = useWarning()
   const onClick = () => {
     warning(t('exchange.warning'), async () => {
-      return await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          resolve()
-        }, 1000)
-      })
+      await sleep(100000)
     })
   }
   return (

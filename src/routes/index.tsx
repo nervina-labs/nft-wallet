@@ -42,6 +42,7 @@ import { Redeem } from '../views/Reedem'
 import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
 import { WarningDialog } from '../components/WarningDialog'
+import { MyRedeem } from '../views/Reedem/My'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -72,6 +73,8 @@ export enum RoutePath {
   Collection = '/explore/collection',
   Issuer = '/issuer',
   Redeem = '/redeem',
+  MyRedeem = '/my-redeem',
+  RedeemPrize = '/redeem-prize',
   Holder = '/holder',
   HolderAddress = '/holder/address',
 }
@@ -329,6 +332,12 @@ const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Redeem',
     path: RoutePath.Redeem,
+  },
+  {
+    component: MyRedeem,
+    exact: true,
+    key: 'MyRedeem',
+    path: RoutePath.MyRedeem,
   },
   {
     component: RedeemDetail,

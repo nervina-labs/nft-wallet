@@ -165,7 +165,9 @@ export interface NFTWalletAPI {
     sortType: ClassSortType
   ) => Promise<AxiosResponse<FollowClassList>>
 
-  getRedeemEvents: (page: number) => Promise<RedeemEvents>
+  getAllRedeemEvents: (page: number) => Promise<RedeemEvents>
+
+  getMyRedeemEvents: (page: number) => Promise<RedeemEvents>
 
   getRedeemDetail: (id: string) => Promise<RedeemDetailModel>
 

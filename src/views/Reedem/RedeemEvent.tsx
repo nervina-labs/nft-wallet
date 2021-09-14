@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -11,6 +11,7 @@ import classNames from 'classnames'
 import { useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
+import { useWarning } from '../../hooks/useWarning'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -96,11 +97,16 @@ const Container = styled.div`
     position: relative;
     color: #999999;
     font-size: 14px;
+    cursor: pointer;
     &.exchange {
       color: #ff6e30;
     }
     &.exchanged {
       color: black;
+    }
+    &.disabled {
+      color: #999999;
+      cursor: not-allowed;
     }
     .wait {
       color: #fb5d3b;
@@ -147,14 +153,26 @@ const ExchangeAction: React.FC<{ status: RedeemStatus }> = ({ status }) => {
     } else if (status === RedeemStatus.Wait) {
       return t('exchange.check.wait')
     }
-    return t('exchange.actions.exchange')
+    return t('exchange.actions.redeem')
   }, [status, t])
+  const warning = useWarning()
+  const onClick = useCallback(
+    (e: React.SyntheticEvent) => {
+      e.stopPropagation()
+      e.preventDefault()
+      warning(t('exchange.warning'))
+    },
+    [warning, t]
+  )
   return (
     <div
       className={classNames('status', {
         exchange: status === RedeemStatus.Open,
         exchanged: status === RedeemStatus.Exchanged,
+        disabled:
+          status === RedeemStatus.Closed || status === RedeemStatus.Ended,
       })}
+      onClick={onClick}
     >
       <span>{text}</span>
       {status === RedeemStatus.Wait ? (

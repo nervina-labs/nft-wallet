@@ -1,9 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
-import { ReactComponent as MyExchangeSvg } from '../../assets/svg/my-exchange.svg'
-import styled from 'styled-components'
-import { MainContainer } from '../../styles'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
@@ -15,50 +12,23 @@ import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Loading } from '../../components/Loading'
 import { ReedemCard } from './RedeemEvent'
-import { Link } from 'react-router-dom'
 import { Tab, Tabs } from '../../components/Tab'
+import { RedeemContainer } from '.'
 
-export const RedeemContainer = styled(MainContainer)`
-  display: flex;
-  flex-direction: column;
-
-  background: #f6f6f6;
-  h4 {
-    text-align: center;
-    color: rgba(0, 0, 0, 0.6);
-  }
-  .tabs {
-    background: white;
-    display: flex;
-    justify-content: center;
-    > nav {
-      background: white;
-      width: 60%;
-      .tab {
-        font-size: 14px;
-      }
-    }
-  }
-
-  .list {
-    flex: 1;
-  }
-`
-
-export const Redeem: React.FC = () => {
+export const MyRedeem: React.FC = () => {
   const { t } = useTranslation('translations')
   const history = useHistory()
-  const isRedeemable = !!useRouteQuery<string>('redeemable', '')
+  const isWait = !!useRouteQuery<string>('wait', '')
   const tabOnClick = useCallback(
-    (type: 'all' | 'redeemable') => {
-      if (type === 'all' && isRedeemable) {
-        history.push(RoutePath.Redeem)
+    (type: 'all' | 'wait') => {
+      if (type === 'all' && isWait) {
+        history.replace(RoutePath.MyRedeem)
       }
-      if (type === 'redeemable' && !isRedeemable) {
-        history.push(RoutePath.Redeem + '?redeemable=true')
+      if (type === 'wait' && !isWait) {
+        history.replace(RoutePath.MyRedeem + '?wait=true')
       }
     },
-    [isRedeemable, history]
+    [isWait, history]
   )
 
   const { address, api } = useWalletModel()
@@ -70,9 +40,9 @@ export const Redeem: React.FC = () => {
     fetchNextPage,
     refetch,
   } = useInfiniteQuery(
-    [`${Query.RedeemList}${isRedeemable.toString()}`, address, isRedeemable],
+    [`${Query.MyRedeemList}${isWait.toString()}`, address, isWait],
     async ({ pageParam = 1 }) => {
-      return await api.getAllRedeemEvents(pageParam)
+      return await api.getMyRedeemEvents(pageParam)
     },
     {
       getNextPageParam: (lastPage) => {
@@ -107,29 +77,25 @@ export const Redeem: React.FC = () => {
   return (
     <RedeemContainer>
       <Appbar
-        title={t('exchange.title')}
+        title={t('exchange.mine.title')}
         left={<BackSvg onClick={() => history.replace(RoutePath.Apps)} />}
-        right={
-          <Link to={RoutePath.MyRedeem}>
-            <MyExchangeSvg />
-          </Link>
-        }
+        right={<div />}
       />
       <div className="tabs">
-        <Tabs activeKey={isRedeemable ? 1 : 0}>
+        <Tabs activeKey={isWait ? 1 : 0}>
           <Tab
             className="tab"
-            active={!isRedeemable}
+            active={!isWait}
             onClick={() => tabOnClick('all')}
           >
-            {t('exchange.tabs.all')}
+            {t('exchange.mine.all')}
           </Tab>
           <Tab
             className="tab"
-            active={isRedeemable}
-            onClick={() => tabOnClick('redeemable')}
+            active={isWait}
+            onClick={() => tabOnClick('wait')}
           >
-            {t('exchange.tabs.redeemable')}
+            {t('exchange.mine.wait')}
           </Tab>
         </Tabs>
       </div>
