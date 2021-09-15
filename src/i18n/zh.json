@@ -340,9 +340,9 @@
       "othder-prize": "发起人会在你提交兑换后根据你提供的接收信息进行承兑",
       "redeem-time": "兑换时间：",
       "type": {
-        "nft": "NFT",
-        "blind": "NFT 盲盒",
-        "other": "其他"
+        "RedemptionTokenReward": "NFT",
+        "RedemptionBlindBoxReward": "NFT 盲盒",
+        "RedemptionCustomReward": "其他"
       },
       "progress": "兑换进度",
       "tabs": {
@@ -423,7 +423,7 @@
       "check": {
         "price": "查看奖品",
         "comment": "查看奖品和留言",
-        "wait": "待承兑"
+        "wait": "• 待承兑"
       },
       "empty": "暂时还没有活动",
       "no-more": "没有更多活动了"

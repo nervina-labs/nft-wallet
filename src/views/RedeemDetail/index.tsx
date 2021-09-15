@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { formatTime } from '../../utils'
 import { Divider } from '@material-ui/core'
 import classNames from 'classnames'
-import { RedeemStatus } from '../../models/redeem'
+import { RedeemStatus, UserRedeemState } from '../../models/redeem'
 import { Creator } from '../../components/Creator'
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -174,17 +174,18 @@ export const RedeemDetail: React.FC = () => {
     }
   )
 
-  const isClosed = data?.status === RedeemStatus.Closed
+  const isClosed = data?.event_info?.state === RedeemStatus.Closed
+  const isDone = data?.event_info?.state === RedeemStatus.Done
 
   const status = useMemo(() => {
-    const status = data?.status
+    const status = data?.event_info.state
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
-    } else if (status === RedeemStatus.Ended) {
+    } else if (status === RedeemStatus.Done) {
       return t('exchange.event.end')
     }
     return t('exchange.event.on-going')
-  }, [data?.status, t])
+  }, [data?.event_info?.state, t])
   const [showPrize, setShowPrice] = useState(true)
   const matchAddress = useRouteMatch(`${RoutePath.Redeem}/:id/address`)
   const matchEmail = useRouteMatch(`${RoutePath.Redeem}/:id/email`)
@@ -211,38 +212,46 @@ export const RedeemDetail: React.FC = () => {
                 </div>
                 <BorderLinearProgress
                   variant="determinate"
-                  value={(data.exchanged / data.total) * 100}
+                  value={
+                    isDone
+                      ? 100
+                      : (data.event_info?.progress.claimed /
+                          data.event_info?.progress.total) *
+                        100
+                  }
                   style={{ flex: 1, marginBottom: '6px' }}
                   className={classNames({ closed: isClosed })}
                 />
                 <div className={classNames('progress', { closed: isClosed })}>
                   <span>{t('exchange.progress')}</span>
                   <span>
-                    <span className="exchanged">{data.exchanged}</span>/
-                    <span>{data.total}</span>
+                    <span className="exchanged">
+                      {data.event_info?.progress.claimed}
+                    </span>
+                    /<span>{data.event_info?.progress.total}</span>
                   </span>
                 </div>
               </div>
             </div>
             <div className="issue-time">
               {t('exchange.issuer')}:{' '}
-              {formatTime(data.timestamp, i18n.language)}
+              {formatTime(data.event_info.timestamp, i18n.language)}
             </div>
             <Divider />
-            <div className="title">{data.title}</div>
-            <div className="desc">{data.desciption}</div>
+            <div className="title">{data.event_info.name}</div>
+            <div className="desc">{data.event_info.descrition}</div>
             <div className="issue">
               <Creator
                 title=""
                 baned={false}
-                url={data.issuer.avatar_url}
-                name={data.issuer?.name}
-                uuid={data.issuer?.uuid}
+                url={data.issuer_info.avatar_url}
+                name={data.issuer_info?.name}
+                uuid={data.issuer_info?.issuer_id}
                 vipAlignRight
                 color="#333333"
-                isVip={data?.issuer?.verified_info?.is_verified}
-                vipTitle={data?.issuer?.verified_info?.verified_title}
-                vipSource={data?.issuer?.verified_info?.verified_source}
+                isVip={data?.issuer_info?.verified_info?.is_verified}
+                vipTitle={data?.issuer_info?.verified_info?.verified_title}
+                vipSource={data?.issuer_info?.verified_info?.verified_source}
               />
               <div className="issuer">{t('exchange.issuer')}</div>
             </div>
@@ -265,22 +274,35 @@ export const RedeemDetail: React.FC = () => {
             <Divider
               style={{ position: 'relative', top: '5px', margin: '0 20px' }}
             />
-            {showPrize ? <Prize detail={data} /> : <Condition detail={data} />}
+            {showPrize ? (
+              <Prize
+                prizes={data.reward_info}
+                type={data.event_info.reward_type}
+              />
+            ) : (
+              <Condition detail={data} />
+            )}
             <Alert severity="error">{t('exchange.warning')}</Alert>
-            <Footer status={data.status} isReedemable />
+            <Footer
+              status={data.event_info.state}
+              isReedemable={
+                data.event_info.user_redeemed_info.state ===
+                UserRedeemState.AllowRedeem
+              }
+            />
             <SubmitAddress
               open={!!matchAddress?.isExact}
-              status={data?.status}
+              status={data.event_info.state}
               close={() => history.goBack()}
             />
             <SubmitEmail
               open={!!matchEmail?.isExact}
-              status={data?.status}
+              status={data.event_info.state}
               close={() => history.goBack()}
             />
             <SubmitCkb
               open={!!matchCkb?.isExact}
-              status={data?.status}
+              status={data.event_info.state}
               close={() => history.goBack()}
             />
           </>

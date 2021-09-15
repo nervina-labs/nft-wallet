@@ -129,14 +129,19 @@ export const RedeemPrize: React.FC = () => {
             <BoxContainer>
               <div className="header">
                 <span title="title">{t('exchange.prize.get')}</span>
-                <RedeeemLabel type={data.type} />
+                <RedeeemLabel type={data.event_info.reward_type} />
               </div>
               <Divider />
-              <Prize detail={data} showLabel={false} className="prize" />
+              <Prize
+                type={data.event_info.reward_type}
+                prizes={data.reward_info}
+                showLabel={false}
+                className="prize"
+              />
               <Divider />
               <div className="time">
                 {t('exchange.redeem-time')}
-                {formatTime(data.timestamp, i18n.language)}
+                {formatTime(data.event_info.timestamp, i18n.language)}
               </div>
             </BoxContainer>
             <BoxContainer>

@@ -37,8 +37,8 @@ export const Footer: React.FC<FooterProps> = ({
   const text = useMemo(() => {
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
-    } else if (status === RedeemStatus.Ended) {
-      return t('exchange.event.ends')
+    } else if (status === RedeemStatus.Done) {
+      return t('exchange.event.end')
     }
     if (isReedemable) {
       return t('exchange.actions.redeem')

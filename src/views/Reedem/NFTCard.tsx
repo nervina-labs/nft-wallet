@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { TokenClass } from '../../models/class-list'
 import { Media } from './Media'
 import { Limited } from '../../components/Limited'
+import { RewardInfo } from '../../models/redeem'
+import { NftType } from '../../models'
 
 const Container = styled.div`
   display: flex;
@@ -29,17 +30,22 @@ const Container = styled.div`
 `
 
 export interface NFTCardProps {
-  token: TokenClass
+  info: RewardInfo
 }
 
-export const NFTCard: React.FC<NFTCardProps> = ({ token }) => {
+export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
   return (
     <Container>
-      <Media isPlayable hasCardBack src={token.bg_image_url} width={70} />
+      <Media
+        isPlayable={info.renderer_type !== NftType.Picture}
+        hasCardBack={info.class_card_back_content_exist}
+        src={info.class_bg_image_url}
+        width={70}
+      />
       <div className="content">
-        <div className="name">{token.name}</div>
+        <div className="name">{info.class_name}</div>
         <Limited
-          count={token.total}
+          count={info.class_total}
           fontSize={12}
           bold={false}
           color="#999999"

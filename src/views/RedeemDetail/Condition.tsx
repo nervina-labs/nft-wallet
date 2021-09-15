@@ -99,16 +99,25 @@ export const Condition: React.FC<ConditionProps> = ({ detail }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {detail.tokens.map((token, i) => (
+            {detail.rule_info.options.map((option, i) => (
               <TableRow key={i}>
                 <StyledTableCell component="th" scope="row">
-                  <NFTCard token={token} />
+                  <NFTCard info={option} />
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  {t('exchange.count', { count: 5 })}
+                  {t('exchange.count', { count: option.item_count })}
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  {t('exchange.count', { count: 3 })}
+                  <span
+                    style={{
+                      color:
+                        option.item_owned_count < option.item_count
+                          ? '#FF5C00'
+                          : '',
+                    }}
+                  >
+                    {t('exchange.count', { count: option.item_owned_count })}
+                  </span>
                 </StyledTableCell>
               </TableRow>
             ))}

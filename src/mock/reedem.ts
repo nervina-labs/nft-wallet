@@ -1,23 +1,17 @@
-import { RedeemStatus, RedeemType } from '../models/redeem'
+import { RedeemStatus, RedeemType, UserRedeemState } from '../models/redeem'
 
 const token = {
-  bg_image_url:
+  class_bg_image_url:
     'https://oss.jinse.cc/development/f1c8f297-2039-4a77-9861-fca4e5b25035.png',
-  card_back_content_exist: true,
-  class_liked: true,
-  class_likes: 1,
-  description: '',
-  name: 'webm',
-  product_qr_code: null,
-  renderer:
-    'https://oss.jinse.cc/development/01861538-d5b2-4059-9e16-bac443b5ea71.webm',
-  renderer_type: 'video',
-  uuid: Math.random(),
-  total: 0,
+  class_name: 'prize',
+  class_total: 6,
+  item_count: 8,
+  class_card_back_content_exist: true,
+  renderer_type: 'audio',
 }
 
 const item = {
-  issuer: {
+  issuer_info: {
     avatar_url:
       'https://oss.jinse.cc/production/d58e3110-f84f-4c07-9dd8-6a41c72261d1.jpg',
     bg_image_url:
@@ -29,18 +23,25 @@ const item = {
     name: "People's Punk",
     uuid: 'd56830ba-4562-4a5d-95d2-4c135dec85ee',
   },
-  tokens: [token, token, token, token],
+  reward_info: [token, token, token, token],
   type: RedeemType.Blind,
-  images: [],
-  status: RedeemStatus.Exchanged,
-  exchanged: 24,
-  total: 48,
-  title: '👻🌻k1-test ε≡٩(๑>₃<)۶ 空 空 空13',
   uuid: Math.random(),
+  name: 'fucsancksa',
+  descrition: 'NFT type redeem',
+  reward_type: RedeemType.NFT,
+  progress: {
+    total: 48,
+    claimed: 24,
+  },
+  state: RedeemStatus.Open,
+  user_redeemed_info: {
+    state: UserRedeemState.NotAllow,
+    redeemd_reward_uuid: 'prize',
+  },
 }
 
 const otherItem = {
-  issuer: {
+  issuer_info: {
     avatar_url:
       'https://oss.jinse.cc/production/d58e3110-f84f-4c07-9dd8-6a41c72261d1.jpg',
     bg_image_url:
@@ -52,36 +53,65 @@ const otherItem = {
     name: "People's Punk",
     uuid: 'd56830ba-4562-4a5d-95d2-4c135dec85ee',
   },
-  tokens: [token, token, token, token],
-  type: RedeemType.Other,
-  images: [],
-  status: RedeemStatus.Open,
-  exchanged: 24,
-  total: 48,
-  title: '👻🌻k1-test ε≡٩(๑>₃<)۶ 空 空 空13',
+  reward_info: [token, token, token, token],
   uuid: Math.random(),
+  name: 'fucsancksa',
+  descrition: 'NFT type redeem',
+  reward_type: RedeemType.Other,
+  progress: {
+    total: 48,
+    claimed: 24,
+  },
+  state: RedeemStatus.Open,
+  user_redeemed_info: {
+    state: UserRedeemState.WaittingRedeem,
+    redeemd_reward_uuid: 'prize',
+  },
 }
 
 export const mockRedeemDetail: any = {
-  ...item,
+  event_info: otherItem,
+  reward_info: otherItem.reward_info,
+  issuer_info: otherItem.issuer_info,
   timestamp: (Date.now() / 1000).toString(),
-  desciption: `
-  /Users/yuche/Developer/nft-wallet/src/apis/ServerWalletAPI.ts
-TypeScript error in /Users/yuche/Developer/nft-wallet/src/apis/ServerWalletAPI.ts(70,14):
-Class 'ServerWalletAPI' incorrectly implements interface 'NFTWalletAPI'.
-  `,
-  priceDesciption: `
-  > 70 | export class ServerWalletAPI implements NFTWalletAPI {
-    |              ^
- 71 |   private readonly address: string
- 72 |   private readonly axios: AxiosInstance
- 73 |
-  `,
-  priceImages: [item, item, item, otherItem].map(
-    () =>
-      'https://oss.jinse.cc/production/e5dd0cdf-4913-474c-8c95-a42da5981cf8.jpeg'
-  ),
-  priceTitle: 'ServerWalletAPI implements NFTWalletAPI',
+  rule_info: {
+    rule_type: 'token',
+    will_destroyed: true,
+    options: [
+      {
+        class_bg_image_url:
+          'https://oss.jinse.cc/development/f1c8f297-2039-4a77-9861-fca4e5b25035.png',
+        class_name: 'string',
+        class_total: 'string',
+        item_count: 4,
+        item_owned_count: 3,
+      },
+      {
+        class_bg_image_url:
+          'https://oss.jinse.cc/development/f1c8f297-2039-4a77-9861-fca4e5b25035.png',
+        class_name: 'string',
+        class_total: 'string',
+        item_count: 1,
+        item_owned_count: 1,
+      },
+      {
+        class_bg_image_url:
+          'https://oss.jinse.cc/development/f1c8f297-2039-4a77-9861-fca4e5b25035.png',
+        class_name: 'string',
+        class_total: 'string',
+        item_count: 1,
+        item_owned_count: 3,
+      },
+      {
+        class_bg_image_url:
+          'https://oss.jinse.cc/development/f1c8f297-2039-4a77-9861-fca4e5b25035.png',
+        class_name: 'string',
+        class_total: 'string',
+        item_count: 3,
+        item_owned_count: 1,
+      },
+    ],
+  },
 }
 
 export const mockRedeems: any[] = [item, item, item, otherItem]

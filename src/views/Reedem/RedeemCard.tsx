@@ -4,7 +4,11 @@ import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { useTranslation } from 'react-i18next'
 import { Creator } from '../../components/Creator'
-import { RedeemEventItem, RedeemStatus } from '../../models/redeem'
+import {
+  RedeemEventItem,
+  RedeemStatus,
+  UserRedeemState,
+} from '../../models/redeem'
 import { Divider } from '@material-ui/core'
 import { RedeeemLabel } from './Label'
 import classNames from 'classnames'
@@ -12,6 +16,7 @@ import { useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
 import { useWarning } from '../../hooks/useWarning'
+import { NftType } from '../../models'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -144,48 +149,60 @@ export interface ExchangeEventProps {
 interface ActionProps {
   status: RedeemStatus
   id: string
+  prizeId: string
+  userState: UserRedeemState
 }
 
-const ExchangeAction: React.FC<ActionProps> = ({ status, id }) => {
+const ExchangeAction: React.FC<ActionProps> = ({
+  status,
+  id,
+  userState,
+  prizeId,
+}) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
+  const isReedemed =
+    userState === UserRedeemState.Redeemed ||
+    userState === UserRedeemState.WaittingRedeem
+  const isAllowRedeem =
+    status === RedeemStatus.Open && UserRedeemState.AllowRedeem === userState
   const text = useMemo(() => {
-    if (status === RedeemStatus.Closed) {
-      return t('exchange.event.closed')
-    } else if (status === RedeemStatus.Ended) {
-      return t('exchange.event.end')
-    } else if (status === RedeemStatus.Exchanged) {
+    if (isReedemed) {
       return t('exchange.check.price')
-    } else if (status === RedeemStatus.Wait) {
-      return t('exchange.check.wait')
+    } else if (status === RedeemStatus.Closed) {
+      return t('exchange.event.closed')
+    } else if (status === RedeemStatus.Done) {
+      return t('exchange.event.end')
+    } else if (userState === UserRedeemState.AllowRedeem) {
+      return t('exchange.actions.redeem')
     }
-    return t('exchange.actions.redeem')
-  }, [status, t])
+
+    return t('exchange.actions.insufficient')
+  }, [status, t, userState, isReedemed])
   const warning = useWarning()
   const onClick = useCallback(
     (e: React.SyntheticEvent) => {
       e.stopPropagation()
       e.preventDefault()
-      if (status === RedeemStatus.Exchanged) {
-        history.push(`${RoutePath.RedeemPrize}/${id}`)
-      } else {
+      if (isReedemed) {
+        history.push(`${RoutePath.RedeemPrize}/${prizeId}`)
+      } else if (isAllowRedeem) {
         warning(t('exchange.warning'))
       }
     },
-    [warning, t, history, status, id]
+    [warning, t, history, isReedemed, prizeId, isAllowRedeem]
   )
   return (
     <div
       className={classNames('status', {
-        exchange: status === RedeemStatus.Open,
-        exchanged: status === RedeemStatus.Exchanged,
-        disabled:
-          status === RedeemStatus.Closed || status === RedeemStatus.Ended,
+        exchange: isAllowRedeem,
+        exchanged: isReedemed,
+        disabled: !isAllowRedeem && !isReedemed,
       })}
       onClick={onClick}
     >
       <span>{text}</span>
-      {status === RedeemStatus.Wait ? (
+      {userState === UserRedeemState.WaittingRedeem ? (
         <span className="wait">{t('exchange.check.wait')}</span>
       ) : null}
     </div>
@@ -201,30 +218,41 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
         <Creator
           title=""
           baned={false}
-          url={item.issuer.avatar_url}
-          name={item.issuer?.name}
-          uuid={item.issuer?.uuid}
+          url={item.issuer_info.avatar_url}
+          name={item.issuer_info?.name}
+          uuid={item.issuer_info?.uuid}
           vipAlignRight
           color="rgb(51, 51, 51)"
-          isVip={item?.issuer?.verified_info?.is_verified}
-          vipTitle={item?.issuer?.verified_info?.verified_title}
-          vipSource={item?.issuer?.verified_info?.verified_source}
+          isVip={item?.issuer_info?.verified_info?.is_verified}
+          vipTitle={item?.issuer_info?.verified_info?.verified_title}
+          vipSource={item?.issuer_info?.verified_info?.verified_source}
         />
         <span>{t('exchange.issuer')}</span>
       </div>
       <Divider />
       <div className="header">
-        <span className="title">{item.title}</span>
-        <RedeeemLabel type={item.type} />
+        <span className="title">{item.name}</span>
+        <RedeeemLabel type={item.reward_type} />
       </div>
       <div className="content">
-        {item.tokens.slice(0, 4).map((token) => {
-          return <Media isPlayable hasCardBack src={token.bg_image_url} />
+        {item.reward_info.slice(0, 4).map((token) => {
+          return (
+            <Media
+              isPlayable={token.renderer_type !== NftType.Picture}
+              hasCardBack={token.class_card_back_content_exist}
+              src={token.class_bg_image_url}
+            />
+          )
         })}
       </div>
-      <Progress exchanged={item.exchanged} total={item.total} />
+      <Progress exchanged={item.progress.claimed} total={item.progress.total} />
       <Divider />
-      <ExchangeAction status={item.status} id={item.uuid} />
+      <ExchangeAction
+        status={item.state}
+        id={item.uuid}
+        prizeId={item.user_redeemed_info.redeemd_reward_uuid}
+        userState={item.user_redeemed_info.state}
+      />
     </Container>
   )
 }

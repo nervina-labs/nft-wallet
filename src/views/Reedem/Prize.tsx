@@ -2,8 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { LazyLoadImage } from '../../components/Image'
-import { TokenClass } from '../../models/class-list'
-import { RedeemDetailModel, RedeemType } from '../../models/redeem'
+import { RedeemType, RewardInfo } from '../../models/redeem'
 import { getImagePreviewUrl } from '../../utils'
 import { RedeeemLabel } from './Label'
 import FallbackImg from '../../assets/svg/fallback.svg'
@@ -11,7 +10,7 @@ import { NFTCard } from './NFTCard'
 import { PhotoProvider } from 'react-photo-view'
 
 export interface PriceCardProps {
-  token: TokenClass
+  info: RewardInfo
   count: number
 }
 
@@ -28,18 +27,19 @@ const PriceCardContainer = styled.div`
   }
 `
 
-export const PriceCard: React.FC<PriceCardProps> = ({ token, count }) => {
+export const PriceCard: React.FC<PriceCardProps> = ({ info, count }) => {
   const [t] = useTranslation('translations')
   return (
     <PriceCardContainer>
-      <NFTCard token={token} />
+      <NFTCard info={info} />
       <div className="count">{t('exchange.count', { count })}</div>
     </PriceCardContainer>
   )
 }
 
 export interface PriceProps {
-  detail: RedeemDetailModel
+  prizes: RewardInfo[]
+  type: RedeemType
   showLabel?: boolean
   className?: string
 }
@@ -58,37 +58,38 @@ const PriceContainer = styled.div`
 `
 
 export const Prize: React.FC<PriceProps> = ({
-  detail,
+  prizes,
+  type,
   showLabel = true,
   className,
 }) => {
   return (
     <PriceContainer className={className}>
-      {detail.type === RedeemType.Other ? (
-        <OtherPrice detail={detail} showLabel={showLabel} />
+      {type === RedeemType.Other ? (
+        <OtherPrice prizes={prizes} type={type} showLabel={showLabel} />
       ) : (
-        <NFTPrice detail={detail} showLabel={showLabel} />
+        <NFTPrice prizes={prizes} type={type} showLabel={showLabel} />
       )}
     </PriceContainer>
   )
 }
 
-export const NFTPrice: React.FC<PriceProps> = ({ detail, showLabel }) => {
+export const NFTPrice: React.FC<PriceProps> = ({ prizes, type, showLabel }) => {
   const [t] = useTranslation('translations')
   return (
     <>
       {showLabel ? (
         <>
-          <RedeeemLabel type={detail.type} />
+          <RedeeemLabel type={type} />
           <div className="contain">
-            {detail.type === RedeemType.NFT
+            {type === RedeemType.NFT
               ? t('exchange.nft-prize')
               : t('exchange.blind-prize', { min: 2, max: 3 })}
           </div>
         </>
       ) : null}
-      {detail.tokens.map((token) => {
-        return <PriceCard token={token} count={3} key={token.uuid} />
+      {prizes.map((info, i) => {
+        return <PriceCard info={info} count={3} key={i} />
       })}
     </>
   )
@@ -117,26 +118,30 @@ const OthderPriceContainer = styled.div`
   }
 `
 
-export const OtherPrice: React.FC<PriceProps> = ({ detail, showLabel }) => {
+export const OtherPrice: React.FC<PriceProps> = ({
+  prizes,
+  type,
+  showLabel,
+}) => {
   const [t] = useTranslation('translations')
   return (
     <OthderPriceContainer>
       {showLabel ? (
         <>
-          <RedeeemLabel type={detail.type} />
+          <RedeeemLabel type={type} />
           <div className="contain">{t('exchange.othder-prize')}</div>
         </>
       ) : null}
-      <div className="price-title">{detail.priceTitle}</div>
-      <div className="price-desc">{detail.priceDesciption}</div>
+      <div className="price-title">{'detail.priceTitle'}</div>
+      <div className="price-desc">{'detail.priceDesciption'}</div>
       <div className="imgs">
         <PhotoProvider maskClassName="preview-mask" toolbarRender={() => null}>
-          {detail.priceImages.map((src) => {
+          {prizes.map((p) => {
             return (
               <div className="img">
                 <LazyLoadImage
-                  src={getImagePreviewUrl(src)}
-                  dataSrc={src}
+                  src={getImagePreviewUrl(p.class_bg_image_url)}
+                  dataSrc={p.class_bg_image_url}
                   enablePreview
                   width={140}
                   height={140}
