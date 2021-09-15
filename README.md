@@ -69,7 +69,7 @@ Note that `<ROOT>/.env.example` includes both the mainnet/testnet environment va
 
 ## Contribution
 
-Please make sure that the Pull Request follows the requirements in [PULL REQUEST TEMPLATE](./github/PULL_REQUEST_TEMPLATE.md).
+Please make sure that the Pull Request follows the requirements in [PULL REQUEST TEMPLATE](/.github/PULL_REQUEST_TEMPLATE.md).
 
 ## License
 
