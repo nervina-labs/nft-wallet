@@ -257,6 +257,15 @@ export function getImageForwardingsUrl<T extends string[] | string>(
   if (Array.isArray(urls)) {
     return urls.map((url) => getImageForwardingsUrl(url)) as any
   }
+
+  const url = (urls as unknown) as string
+  if (!url) {
+    return url as any
+  }
+  const isOssHost = OSS_IMG_HOSTS.find((host) => url?.startsWith(host))
+  if (isOssHost) {
+    return addParamsToUrl(url, { time: `${new Date().getTime()}` }) as any
+  }
   return `${SERVER_URL}/image_forwardings?url=${
     (urls as unknown) as string
   }` as any

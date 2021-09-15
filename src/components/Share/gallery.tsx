@@ -2,19 +2,15 @@ import styled from 'styled-components'
 import React from 'react'
 
 const GalleryContainer = styled.div`
-  width: calc(100% - 46px);
+  width: 100%;
   height: 191px;
   display: grid;
   grid-template-columns: 50% 50%;
   grid-template-rows: 50% 50%;
-
-  position: absolute;
-  top: 83px;
-  left: 23px;
   z-index: 2;
   overflow: hidden;
   border-radius: 10px;
-  background-color: #fff;
+  position: relative;
 
   &.count-1 {
     grid-template-columns: 100%;
@@ -58,9 +54,12 @@ const GalleryContainer = styled.div`
   }
 `
 
-export const Gallery: React.FC<{ images: string[] }> = ({ images }) => {
+export const Gallery: React.FC<{
+  images: string[]
+  style?: React.CSSProperties
+}> = ({ images, style }) => {
   return (
-    <GalleryContainer className={`count-${images.length}`}>
+    <GalleryContainer className={`count-${images.length}`} style={style}>
       {images.slice(0, 4).map((src, i) => (
         <img src={src} key={i} alt="img" />
       ))}

@@ -101,7 +101,16 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
         <div className="issuer-name">{data.issuerInfo.name}</div>
       </IssuerContainer>
 
-      <Gallery images={nftImages} />
+      <Gallery
+        images={nftImages}
+        style={{
+          width: 'calc(100% - 46px)',
+          position: 'absolute',
+          top: '83px',
+          left: '23px',
+          backgroundColor: '#fff',
+        }}
+      />
 
       <IssuerInfoContainer>
         <div className="avatar">

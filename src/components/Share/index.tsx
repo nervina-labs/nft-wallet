@@ -8,6 +8,7 @@ import { NftPoster } from './nftPoster'
 import { Poster, PosterType } from './poster.interface'
 import { useHtml2Canvas } from './shareUtils'
 import { IssuerPoster } from './issuerPoster'
+import { HolderPoster } from './holderPoster'
 
 const DialogContainer = styled.div`
   position: fixed;
@@ -196,6 +197,9 @@ export const Share: React.FC<ShareProps> = ({
                     setEl(x)
                   }}
                 />
+              ) : null}
+              {type === PosterType.Holder ? (
+                <HolderPoster data={data as any} onLoad={setEl} />
               ) : null}
             </>
           )}

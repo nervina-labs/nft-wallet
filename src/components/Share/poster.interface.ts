@@ -9,30 +9,30 @@ export enum PosterType {
   Holder = 'holder',
 }
 
-export interface PosterDataBase {
+export interface PosterDataBase<T> {
   type: PosterType
-  data: any
+  data: T
 }
 
-export interface NftPosterData extends PosterDataBase {
+export interface NftPosterData extends PosterDataBase<TokenClass | NFTDetail> {
   type: PosterType.Nft
-  data: TokenClass | NFTDetail
 }
 
-export interface IssuerPosterData extends PosterDataBase {
-  type: PosterType.Issuer
-  data: {
+export interface IssuerPosterData
+  extends PosterDataBase<{
     issuerInfo: IssuerInfoResult
     tokenClasses: IssuerTokenClass[]
-  }
+  }> {
+  type: PosterType.Issuer
 }
 
-export interface HolderPosterData extends PosterDataBase {
-  type: PosterType.Holder
-  data: {
+export interface HolderPosterData
+  extends PosterDataBase<{
     userInfo: UserResponse
     tokens: NFTToken[]
-  }
+    tokenLength: number
+  }> {
+  type: PosterType.Holder
 }
 
 export type Poster = NftPosterData | IssuerPosterData | HolderPosterData

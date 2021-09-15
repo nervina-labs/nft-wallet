@@ -31,6 +31,7 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
 import { Tab, Tabs, TabsAffix } from '../../components/Tab'
+import { PosterType } from '../../components/Share/poster.interface'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -257,12 +258,20 @@ export const NFTs: React.FC = () => {
           </>
         )}
       </section>
-      <Share
-        displayText={HOST + `${RoutePath.Holder}/${address}`}
-        copyText={HOST + `${RoutePath.Holder}/${address}`}
-        closeDialog={() => setIsShareDialogOpen(false)}
-        isDialogOpen={isShareDialogOpen}
-      />
+      {user && (
+        <Share
+          displayText={HOST + `${RoutePath.Holder}/${address}`}
+          copyText={HOST + `${RoutePath.Holder}/${address}`}
+          closeDialog={() => setIsShareDialogOpen(false)}
+          isDialogOpen={isShareDialogOpen}
+          type={PosterType.Holder}
+          data={{
+            userInfo: user,
+            tokens: data?.pages[0].token_list ?? [],
+            tokenLength: dataLength,
+          }}
+        />
+      )}
       {!isHolder && (
         <>
           <div className="account" onClick={() => setShowMenu(true)}>
