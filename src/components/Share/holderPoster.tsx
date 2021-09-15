@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { HolderPosterData, PosterProps } from './poster.interface'
 import {
   BackgroundImageContainer,
@@ -48,22 +48,11 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
     data.tokens.slice(0, 5).map((token) => token.class_bg_image_url)
   )
 
-  const [loaded, setLoaded] = useState(0)
-
   useEffect(() => {
-    const img = new Image()
-    img.src = avatarImageUrl
-    img.onload = () => {
-      setLoaded(1)
-    }
-  }, [avatarImageUrl])
-
-  useEffect(() => {
-    console.log(loaded)
-    if (posterRef.current && loaded > 0) {
+    if (posterRef.current) {
       onLoad(posterRef.current)
     }
-  }, [onLoad, posterRef.current, loaded])
+  }, [onLoad, posterRef.current])
 
   return (
     <PosterContainer

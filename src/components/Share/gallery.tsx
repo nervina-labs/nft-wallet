@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import React from 'react'
+import { NftCard } from './nftCard'
 
 const GalleryContainer = styled.div`
   width: 100%;
@@ -61,7 +62,7 @@ export const Gallery: React.FC<{
   return (
     <GalleryContainer className={`count-${images.length}`} style={style}>
       {images.slice(0, 4).map((src, i) => (
-        <img src={src} key={i} alt="img" />
+        <NftCard src={src} key={i} />
       ))}
       {images[4] && (
         <div className="center">{<img src={images[4]} alt="" />}</div>
