@@ -270,3 +270,32 @@ export function getImageForwardingsUrl<T extends string[] | string>(
     (urls as unknown) as string
   }` as any
 }
+
+export async function toDataUrl(
+  src: string,
+  outputFormat = 'image/png'
+): Promise<string> {
+  return await new Promise<string>((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      canvas.height = img.height
+      canvas.width = img.width
+      if (ctx) {
+        ctx.drawImage(img, 0, 0)
+      }
+      const dataURL = canvas.toDataURL(outputFormat)
+      resolve(dataURL)
+    }
+    img.onerror = reject
+    img.src = src
+    if (img.complete || img.complete === undefined) {
+      img.src =
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
+      img.src = src
+      resolve(src)
+    }
+  })
+}

@@ -11,27 +11,36 @@ export const SharePosterImage: React.FC<{
   const [loaded, setLoaded] = useState(false)
   const { data, isLoading, error } = useUrlToBase64(src)
   const onError = useCallback(() => {
-    if (onLoaded && !loaded) {
-      onLoaded()
-    }
-    setFailed(true)
-    setLoaded(true)
-  }, [onLoaded, loaded])
-
-  useEffect(() => {
-    if (error) {
-      onError()
-    }
-  }, [error, onError])
-
-  useEffect(() => {
-    if (!src) {
+    if (loaded) return
+    if (!isLoading) {
       setFailed(true)
       setLoaded(true)
-    } else {
-      setLoaded(false)
     }
-  }, [src])
+    if (onLoaded) {
+      onLoaded()
+    }
+  }, [onLoaded, loaded, isLoading])
+  const onLoad = useCallback(() => {
+    if (loaded) return
+    if (!isLoading) {
+      setFailed(false)
+      setLoaded(true)
+    }
+    if (onLoaded) {
+      onLoaded()
+    }
+  }, [onLoaded, loaded, isLoading])
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (data) {
+        onLoad()
+      } else {
+        onError()
+      }
+    }
+    console.log('loaded src', src)
+  }, [isLoading, error])
 
   return (
     <img
@@ -39,8 +48,6 @@ export const SharePosterImage: React.FC<{
       alt="url"
       data-src={src}
       data-loading={isLoading}
-      onLoad={onLoaded}
-      onError={onError}
     />
   )
 }

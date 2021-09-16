@@ -3,6 +3,7 @@ import html2canvas from 'html2canvas-objectfit-fix'
 import styled from 'styled-components'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useQuery } from 'react-query'
+import { toDataUrl } from '../../utils'
 
 export function useHtml2Canvas(
   element: HTMLDivElement | null,
@@ -34,13 +35,18 @@ export function useUrlToBase64(url?: string) {
       if (!url) {
         return url
       }
-      const extMatch = url.match(/\.\w+$/) ?? ['.png']
-      const ext = extMatch[0] === '.jpg' ? '.jpeg' : extMatch[0]
-      const base64Content = (await api.getUrlBase64(url)).data.result
-      if (!base64Content) {
-        return url
+      try {
+        // @typescript-eslint/return-await
+        return await toDataUrl(url)
+      } catch {
+        const extMatch = url.match(/\.\w+$/) ?? ['.png']
+        const ext = extMatch[0] === '.jpg' ? '.jpeg' : extMatch[0]
+        const base64Content = (await api.getUrlBase64(url)).data.result
+        if (!base64Content) {
+          return url
+        }
+        return `data:image/${ext.slice(1, ext.length)};base64,${base64Content}`
       }
-      return `data:image/${ext.slice(1, ext.length)};base64,${base64Content}`
     },
     {
       refetchOnMount: false,
@@ -53,10 +59,11 @@ export function useUrlToBase64(url?: string) {
 export function useLoaded(imageLength: number, onLoadedFn: () => void) {
   const [loadedCount, setLoadedCount] = useState(0)
   useEffect(() => {
-    if (loadedCount >= imageLength) {
+    console.log('loadedCount', loadedCount)
+    if (loadedCount >= imageLength - 1) {
       onLoadedFn()
     }
-  }, [imageLength, loadedCount, onLoadedFn])
+  }, [imageLength, loadedCount])
   return () => {
     setLoadedCount(loadedCount + 1)
   }

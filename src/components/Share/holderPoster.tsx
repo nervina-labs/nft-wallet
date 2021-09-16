@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { HolderPosterData, PosterProps } from './poster.interface'
 import {
   BackgroundImageContainer,
@@ -13,6 +13,7 @@ import { Gallery } from './gallery'
 import { HolderAvatar } from '../HolderAvatar'
 import styled from 'styled-components'
 import { AvatarType } from '../../models/user'
+import { useTranslation } from 'react-i18next'
 
 const ContentContainer = styled.div`
   background-color: #fff;
@@ -54,7 +55,6 @@ export const HolderAvatarBase64: React.FC<{
     if (!isLoading && onLoaded && !loaded) {
       onLoaded()
       setLoaded(true)
-      console.log('loaded')
     }
   }, [isLoading, onLoaded, loaded])
 
@@ -65,23 +65,26 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
   data,
   onLoad,
 }) => {
+  const { t } = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
   const avatarImageUrl = getImageForwardingsUrl(data.userInfo.avatar_url)
   const [loaded, setLoaded] = useState(false)
   const addLoadedCount = useLoaded(2, () => setLoaded(true))
-  const base64Strings = data.tokens.slice(0, 5).map((token) => {
-    if (!token.class_bg_image_url) {
-      return undefined
-    }
-    const url = new URL(token.class_bg_image_url)
-    return getImagePreviewUrl(`${url.origin}${url.pathname}`)
-  })
+  const base64Strings = useMemo(() => {
+    return data.tokens.slice(0, 5).map((token) => {
+      if (!token.class_bg_image_url) {
+        return undefined
+      }
+      const url = new URL(token.class_bg_image_url)
+      return getImagePreviewUrl(`${url.origin}${url.pathname}`)
+    })
+  }, [data.tokens])
 
   useEffect(() => {
     if (posterRef.current && loaded) {
       onLoad(posterRef.current)
     }
-  }, [onLoad, posterRef.current, loaded])
+  }, [onLoad, loaded])
 
   return (
     <PosterContainer
@@ -105,11 +108,11 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
         }}
       >
         <div className="avatar">
-          <HolderAvatarBase64
+          <HolderAvatar
             avatar={avatarImageUrl}
             avatarType={data.userInfo.avatar_type}
             size={21}
-            onLoaded={addLoadedCount}
+            // onLoaded={addLoadedCount}
           />
         </div>
         <div className="issuer-name">{data.userInfo.nickname}</div>
@@ -125,7 +128,9 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
           />
         </div>
         <div className="text bold">{data.userInfo.nickname}</div>
-        <div className="text">已收藏秘宝: {data.tokenLength}</div>
+        <div className="text">
+          {t('common.share.collected-nft')}: {data.tokenLength}
+        </div>
       </ContentContainer>
     </PosterContainer>
   )
