@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Media } from './Media'
 import { Limited } from '../../components/Limited'
-import { RewardInfo } from '../../models/redeem'
+import { NormalRewardInfo } from '../../models/redeem'
 import { NftType } from '../../models'
 
 const Container = styled.div`
@@ -30,7 +30,7 @@ const Container = styled.div`
 `
 
 export interface NFTCardProps {
-  info: RewardInfo
+  info: NormalRewardInfo
 }
 
 export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {

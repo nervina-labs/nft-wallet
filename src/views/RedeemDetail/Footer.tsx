@@ -1,10 +1,7 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-// import { useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
-import { useWarning } from '../../hooks/useWarning'
 import { RedeemStatus } from '../../models/redeem'
-import { sleep } from '../../utils'
 import { Button, ButtonProps } from '../Reedem/Button'
 
 const Container = styled.footer`
@@ -24,11 +21,13 @@ const Container = styled.footer`
 export interface FooterProps extends ButtonProps {
   status: RedeemStatus
   isReedemable: boolean
+  willDestroyed: boolean
 }
 
 export const Footer: React.FC<FooterProps> = ({
   isReedemable,
   status,
+  willDestroyed,
   ...props
 }) => {
   const [t] = useTranslation('translations')
@@ -45,12 +44,7 @@ export const Footer: React.FC<FooterProps> = ({
     }
     return t('exchange.actions.insufficient')
   }, [isReedemable, status, t])
-  const warning = useWarning()
-  const onClick = () => {
-    warning(t('exchange.warning'), async () => {
-      await sleep(100000)
-    })
-  }
+  const onClick = () => {}
   return (
     <Container>
       <Button

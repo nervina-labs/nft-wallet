@@ -336,7 +336,7 @@
       "title": "兑换中心",
       "count": "{{count}} 个",
       "nft-prize": "奖品包含下面所有 NFT",
-      "blind-prize": "奖品随机包含下面的 {{min}}~{{max}} 个",
+      "blind-prize": "奖品随机包含下面的 {{count}} 个",
       "othder-prize": "发起人会在你提交兑换后根据你提供的接收信息进行承兑",
       "redeem-time": "兑换时间：",
       "type": {
@@ -420,6 +420,7 @@
         "held": "当前可兑换"
       },
       "warning": "兑换不会销毁您持有的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他任何兑换活动。",
+      "warning-destroyed": "兑换将会销毁您参与兑换的 NFT ，该操作不可逆，一经销毁将无法找回",
       "check": {
         "price": "查看奖品",
         "comment": "查看奖品和留言",

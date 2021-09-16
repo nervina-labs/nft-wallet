@@ -6,8 +6,9 @@ import { RedeemDrawer } from './Drawer'
 import { InputBaseFix } from '../Profile/InputMod'
 import styled from 'styled-components'
 import { Footer } from './Footer'
-import { RedeemStatus } from '../../models/redeem'
+import { CustomRewardType, RedeemStatus } from '../../models/redeem'
 import Alert from '@material-ui/lab/Alert'
+import { useSignRedeem } from '../../hooks/useRedeem'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +32,8 @@ export interface SubmitAddressProps {
   open: boolean
   close: () => void
   status: RedeemStatus
+  willDestroyed: boolean
+  id: string
 }
 
 const Container = styled(RedeemDrawer)`
@@ -55,6 +58,8 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
   open,
   close,
   status,
+  willDestroyed,
+  id,
 }) => {
   const [t] = useTranslation('translations')
   const location = useLocation<FormState>()
@@ -82,6 +87,8 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
     formState.name &&
     formState.phone
   )
+
+  const { onRedeem, isRedeeming } = useSignRedeem()
 
   return (
     <Container
@@ -123,12 +130,28 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
             dispatch({ key: 'address', value: e.target.value })
           }
         />
-        <Alert severity="error">{t('exchange.warning')}</Alert>
+        <Alert severity="error">
+          {t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`)}
+        </Alert>
       </div>
       <Footer
         status={status}
         isReedemable
-        onClick={() => {}}
+        willDestroyed={willDestroyed}
+        isLoading={isRedeeming}
+        onClick={() => {
+          onRedeem({
+            deliverType: CustomRewardType.Address,
+            isAllow: true,
+            customData: {
+              phone_number: formState.phone,
+              name: formState.name,
+              address: formState.address,
+            },
+            id,
+            willDestroyed,
+          })
+        }}
         disabled={!isReadyForSumit}
       />
     </Container>

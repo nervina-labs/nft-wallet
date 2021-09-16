@@ -14,13 +14,23 @@ import {
 } from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
-import { RedeemDetailModel, RedeemEvents } from './redeem'
+import {
+  RedeemDetailModel,
+  RedeemEvents,
+  RedeemParams,
+  RedeemResultResponse,
+} from './redeem'
 import { WxSignConfig } from './wx'
 import { GetHolderByTokenClassUuidResponse } from './holder'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
   token_ckb_transaction_uuid: string
+}
+
+export interface UnsignedReddemTransaction {
+  unsigned_tx: RPC.RawTransaction
+  redemption_event_uuid: string
 }
 
 export interface NFTTransaction {
@@ -170,6 +180,13 @@ export interface NFTWalletAPI {
   getMyRedeemEvents: (page: number) => Promise<RedeemEvents>
 
   getRedeemDetail: (id: string) => Promise<RedeemDetailModel>
+
+  getReddemTransaction: (
+    id: string,
+    isUnipass?: boolean
+  ) => Promise<NFTTransaction>
+
+  redeem: (params: RedeemParams) => Promise<RedeemResultResponse>
 
   getHolderByTokenClassUuid: (
     uuid: string,

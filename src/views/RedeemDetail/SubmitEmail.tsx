@@ -6,8 +6,9 @@ import { RedeemDrawer } from './Drawer'
 import { InputBaseFix } from '../Profile/InputMod'
 import styled from 'styled-components'
 import { Footer } from './Footer'
-import { RedeemStatus } from '../../models/redeem'
+import { CustomRewardType, RedeemStatus } from '../../models/redeem'
 import Alert from '@material-ui/lab/Alert'
+import { useSignRedeem } from '../../hooks/useRedeem'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +32,8 @@ export interface SubmitAddressProps {
   open: boolean
   close: () => void
   status: RedeemStatus
+  willDestroyed: boolean
+  id: string
 }
 
 const Container = styled(RedeemDrawer)`
@@ -57,6 +60,8 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
   open,
   close,
   status,
+  willDestroyed,
+  id,
 }) => {
   const [t] = useTranslation('translations')
   const location = useLocation<FormState>()
@@ -77,6 +82,7 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
   }, [open])
 
   const isReadyForSumit = !!formState.email
+  const { onRedeem, isRedeeming } = useSignRedeem()
 
   return (
     <Container
@@ -96,12 +102,24 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
             dispatch({ key: 'email', value: e.target.value })
           }
         />
-        <Alert severity="error">{t('exchange.warning')}</Alert>
+        <Alert severity="error">
+          {t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`)}
+        </Alert>
       </div>
       <Footer
         status={status}
         isReedemable
-        onClick={() => {}}
+        isLoading={isRedeeming}
+        willDestroyed={willDestroyed}
+        onClick={() => {
+          onRedeem({
+            deliverType: CustomRewardType.Email,
+            isAllow: true,
+            customData: { address: formState.email },
+            id,
+            willDestroyed,
+          })
+        }}
         disabled={!isReadyForSumit}
       />
     </Container>

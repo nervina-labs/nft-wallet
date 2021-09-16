@@ -24,7 +24,12 @@ import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
 import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
 import { mockRedeemDetail, mockRedeems } from '../mock/reedem'
-import { RedeemEvents, RedeemDetailModel } from '../models/redeem'
+import {
+  RedeemEvents,
+  RedeemDetailModel,
+  RedeemParams,
+  RedeemResultResponse,
+} from '../models/redeem'
 import { WxSignConfig } from '../models/wx'
 import { GetHolderByTokenClassUuidResponse } from '../models/holder'
 
@@ -480,6 +485,52 @@ export class ServerWalletAPI implements NFTWalletAPI {
         resolve(mockRedeemDetail)
       }, 1e3)
     })
+  }
+
+  async getReddemTransaction(
+    uuid: string,
+    isUnipass = true
+  ): Promise<NFTTransaction> {
+    const { data } = await this.axios.get(
+      `/redemption_events/${uuid}/records`,
+      {
+        params: {
+          uuid,
+          ckb_address: this.address,
+        },
+      }
+    )
+    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, isUnipass)
+
+    return {
+      tx,
+      uuid: data.redemption_event_uuid,
+    }
+  }
+
+  async redeem({
+    uuid,
+    tx,
+    customData,
+    sig,
+  }: RedeemParams): Promise<RedeemResultResponse> {
+    const rawTx = transformers.TransformTransaction(tx) as any
+    if (sig) {
+      const witnessArgs: WitnessArgs = {
+        lock: sig,
+        input_type: '',
+        output_type: '',
+      }
+      const witness = new Reader(
+        SerializeWitnessArgs(normalizers.NormalizeWitnessArgs(witnessArgs))
+      ).serializeJson()
+      rawTx.witnesses[0] = witness
+    }
+    const data = {
+      signed_tx: JSON.stringify(rawTx),
+      ...customData,
+    }
+    return await this.axios.post(`/redemption_events/${uuid}/records`, data)
   }
 
   async getIssuerTokenClass(

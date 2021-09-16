@@ -76,6 +76,7 @@ export enum RoutePath {
   Redeem = '/redeem',
   MyRedeem = '/my-redeem',
   RedeemPrize = '/redeem-prize',
+  RedeemResult = '/redeem-result',
   Holder = '/holder',
   HolderAddress = '/holder/address',
 }
@@ -352,6 +353,13 @@ const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'ReedemPrize',
     path: RoutePath.RedeemPrize,
+    params: '/:id',
+  },
+  {
+    component: () => null,
+    exact: true,
+    key: 'ReedemResult',
+    path: RoutePath.RedeemResult,
     params: '/:id',
   },
   {

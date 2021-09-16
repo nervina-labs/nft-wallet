@@ -5,6 +5,8 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import { useTranslation } from 'react-i18next'
 import { Creator } from '../../components/Creator'
 import {
+  isBlindReward,
+  isCustomReward,
   RedeemEventItem,
   RedeemStatus,
   UserRedeemState,
@@ -151,6 +153,7 @@ interface ActionProps {
   id: string
   prizeId: string
   userState: UserRedeemState
+  willDestroyed: boolean
 }
 
 const ExchangeAction: React.FC<ActionProps> = ({
@@ -158,6 +161,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
   id,
   userState,
   prizeId,
+  willDestroyed,
 }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
@@ -179,6 +183,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
 
     return t('exchange.actions.insufficient')
   }, [status, t, userState, isReedemed])
+
   const warning = useWarning()
   const onClick = useCallback(
     (e: React.SyntheticEvent) => {
@@ -187,10 +192,10 @@ const ExchangeAction: React.FC<ActionProps> = ({
       if (isReedemed) {
         history.push(`${RoutePath.RedeemPrize}/${prizeId}`)
       } else if (isAllowRedeem) {
-        warning(t('exchange.warning'))
+        warning(t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`))
       }
     },
-    [warning, t, history, isReedemed, prizeId, isAllowRedeem]
+    [warning, t, history, isReedemed, prizeId, isAllowRedeem, willDestroyed]
   )
   return (
     <div
@@ -212,6 +217,28 @@ const ExchangeAction: React.FC<ActionProps> = ({
 export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
+  const rewards = useMemo(() => {
+    if (isCustomReward(item.reward_info)) {
+      return item.reward_info.images.slice(0, 4).map((src, i) => {
+        return (
+          <Media isPlayable={false} hasCardBack={false} src={src} key={i} />
+        )
+      })
+    }
+    const tokens = isBlindReward(item.reward_info)
+      ? item.reward_info.options
+      : item.reward_info
+
+    return tokens.slice(0, 4).map((t, i) => {
+      return (
+        <Media
+          isPlayable={t.renderer_type !== NftType.Picture}
+          hasCardBack={t.class_card_back_content_exist}
+          src={t.class_bg_image_url}
+        />
+      )
+    })
+  }, [item.reward_info])
   return (
     <Container onClick={() => history.push(`${RoutePath.Redeem}/${item.uuid}`)}>
       <div className="issuer">
@@ -234,22 +261,13 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
         <span className="title">{item.name}</span>
         <RedeeemLabel type={item.reward_type} />
       </div>
-      <div className="content">
-        {item.reward_info.slice(0, 4).map((token) => {
-          return (
-            <Media
-              isPlayable={token.renderer_type !== NftType.Picture}
-              hasCardBack={token.class_card_back_content_exist}
-              src={token.class_bg_image_url}
-            />
-          )
-        })}
-      </div>
+      <div className="content">{rewards}</div>
       <Progress exchanged={item.progress.claimed} total={item.progress.total} />
       <Divider />
       <ExchangeAction
         status={item.state}
         id={item.uuid}
+        willDestroyed={item?.rule_info?.will_destroyed}
         prizeId={item.user_redeemed_info.redeemd_reward_uuid}
         userState={item.user_redeemed_info.state}
       />

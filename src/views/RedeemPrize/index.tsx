@@ -141,7 +141,7 @@ export const RedeemPrize: React.FC = () => {
               <Divider />
               <div className="time">
                 {t('exchange.redeem-time')}
-                {formatTime(data.event_info.timestamp, i18n.language)}
+                {formatTime(data.event_info.start_timestamp, i18n.language)}
               </div>
             </BoxContainer>
             <BoxContainer>

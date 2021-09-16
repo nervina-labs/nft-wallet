@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
+import { Redirect, useHistory, useParams } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { Loading } from '../../components/Loading'
@@ -13,7 +13,12 @@ import { useTranslation } from 'react-i18next'
 import { formatTime } from '../../utils'
 import { Divider } from '@material-ui/core'
 import classNames from 'classnames'
-import { RedeemStatus, UserRedeemState } from '../../models/redeem'
+import {
+  isCustomReward,
+  RedeemDetailModel,
+  RedeemStatus,
+  UserRedeemState,
+} from '../../models/redeem'
 import { Creator } from '../../components/Creator'
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -21,10 +26,9 @@ import { Prize } from '../Reedem/Prize'
 import { Condition } from './Condition'
 import Alert from '@material-ui/lab/Alert'
 import { Footer } from './Footer'
-import { SubmitAddress } from './SubmitAddress'
-import { SubmitEmail } from './SubmitEmail'
-import { SubmitCkb } from './SubmitCkb'
 import { Tab, Tabs } from '../../components/Tab'
+import { useSignRedeem } from '../../hooks/useRedeem'
+import { SubmitInfo } from './SubmitInfo'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -155,6 +159,36 @@ const Container = styled(MainContainer)`
   }
 `
 
+interface CustomFooterProps {
+  data: RedeemDetailModel
+}
+
+const CustomFooter: React.FC<CustomFooterProps> = ({ data }) => {
+  const { onRedeem } = useSignRedeem()
+
+  return (
+    <Footer
+      status={data.event_info.state}
+      willDestroyed={data?.rule_info?.will_destroyed}
+      isReedemable={
+        data.event_info.user_redeemed_info.state === UserRedeemState.AllowRedeem
+      }
+      onClick={() => {
+        onRedeem({
+          isAllow:
+            data.event_info?.user_redeemed_info?.state ===
+            UserRedeemState.AllowRedeem,
+          willDestroyed: data?.rule_info?.will_destroyed,
+          id: data.event_info.uuid,
+          deliverType: isCustomReward(data?.reward_info)
+            ? data?.reward_info.delivery_type
+            : undefined,
+        })
+      }}
+    />
+  )
+}
+
 export const RedeemDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { t, i18n } = useTranslation('translations')
@@ -187,9 +221,7 @@ export const RedeemDetail: React.FC = () => {
     return t('exchange.event.on-going')
   }, [data?.event_info?.state, t])
   const [showPrize, setShowPrice] = useState(true)
-  const matchAddress = useRouteMatch(`${RoutePath.Redeem}/:id/address`)
-  const matchEmail = useRouteMatch(`${RoutePath.Redeem}/:id/email`)
-  const matchCkb = useRouteMatch(`${RoutePath.Redeem}/:id/ckb`)
+
   if (isError) {
     return <Redirect to={RoutePath.NotFound} />
   }
@@ -235,7 +267,7 @@ export const RedeemDetail: React.FC = () => {
             </div>
             <div className="issue-time">
               {t('exchange.issuer')}:{' '}
-              {formatTime(data.event_info.timestamp, i18n.language)}
+              {formatTime(data.event_info.start_timestamp, i18n.language)}
             </div>
             <Divider />
             <div className="title">{data.event_info.name}</div>
@@ -282,29 +314,15 @@ export const RedeemDetail: React.FC = () => {
             ) : (
               <Condition detail={data} />
             )}
-            <Alert severity="error">{t('exchange.warning')}</Alert>
-            <Footer
-              status={data.event_info.state}
-              isReedemable={
-                data.event_info.user_redeemed_info.state ===
-                UserRedeemState.AllowRedeem
-              }
-            />
-            <SubmitAddress
-              open={!!matchAddress?.isExact}
-              status={data.event_info.state}
-              close={() => history.goBack()}
-            />
-            <SubmitEmail
-              open={!!matchEmail?.isExact}
-              status={data.event_info.state}
-              close={() => history.goBack()}
-            />
-            <SubmitCkb
-              open={!!matchCkb?.isExact}
-              status={data.event_info.state}
-              close={() => history.goBack()}
-            />
+            <Alert severity="error">
+              {t(
+                `exchange.warning${
+                  data?.rule_info?.will_destroyed ? '-destroyed' : ''
+                }`
+              )}
+            </Alert>
+            <CustomFooter data={data} />
+            <SubmitInfo data={data} />
           </>
         )}
       </main>

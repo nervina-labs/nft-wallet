@@ -33,7 +33,7 @@ const item = {
     total: 48,
     claimed: 24,
   },
-  state: RedeemStatus.Open,
+  state: RedeemStatus.Done,
   user_redeemed_info: {
     state: UserRedeemState.NotAllow,
     redeemd_reward_uuid: 'prize',

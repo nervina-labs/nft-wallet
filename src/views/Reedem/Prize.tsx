@@ -1,8 +1,17 @@
-import React from 'react'
+/* eslint-disable @typescript-eslint/indent */
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { LazyLoadImage } from '../../components/Image'
-import { RedeemType, RewardInfo } from '../../models/redeem'
+import {
+  BlindRewardInfo,
+  CustomRewardInfo,
+  isCustomReward,
+  isNormalReward,
+  NormalRewardInfo,
+  RedeemType,
+  RewardInfo,
+} from '../../models/redeem'
 import { getImagePreviewUrl } from '../../utils'
 import { RedeeemLabel } from './Label'
 import FallbackImg from '../../assets/svg/fallback.svg'
@@ -11,6 +20,11 @@ import { PhotoProvider } from 'react-photo-view'
 
 export interface PriceCardProps {
   info: RewardInfo
+  count: number
+}
+
+export interface NftPriceCardProps {
+  info: NormalRewardInfo
   count: number
 }
 
@@ -27,7 +41,7 @@ const PriceCardContainer = styled.div`
   }
 `
 
-export const PriceCard: React.FC<PriceCardProps> = ({ info, count }) => {
+export const PriceCard: React.FC<NftPriceCardProps> = ({ info, count }) => {
   const [t] = useTranslation('translations')
   return (
     <PriceCardContainer>
@@ -38,7 +52,7 @@ export const PriceCard: React.FC<PriceCardProps> = ({ info, count }) => {
 }
 
 export interface PriceProps {
-  prizes: RewardInfo[]
+  prizes: RewardInfo
   type: RedeemType
   showLabel?: boolean
   className?: string
@@ -65,7 +79,7 @@ export const Prize: React.FC<PriceProps> = ({
 }) => {
   return (
     <PriceContainer className={className}>
-      {type === RedeemType.Other ? (
+      {isCustomReward(prizes) ? (
         <OtherPrice prizes={prizes} type={type} showLabel={showLabel} />
       ) : (
         <NFTPrice prizes={prizes} type={type} showLabel={showLabel} />
@@ -74,21 +88,36 @@ export const Prize: React.FC<PriceProps> = ({
   )
 }
 
-export const NFTPrice: React.FC<PriceProps> = ({ prizes, type, showLabel }) => {
+export interface NFTPriceProps extends PriceProps {
+  prizes: NormalRewardInfo[] | BlindRewardInfo
+}
+
+export const NFTPrice: React.FC<NFTPriceProps> = ({
+  prizes,
+  type,
+  showLabel,
+}) => {
   const [t] = useTranslation('translations')
+  const tokens = useMemo(() => {
+    if (isNormalReward(prizes)) {
+      return prizes
+    }
+    return prizes.options
+  }, [prizes])
+  const desc = isNormalReward(prizes)
+    ? t('exchange.nft-prize')
+    : t('exchange.blind-prize', {
+        count: prizes.every_box_reward_count as any,
+      })
   return (
     <>
       {showLabel ? (
         <>
           <RedeeemLabel type={type} />
-          <div className="contain">
-            {type === RedeemType.NFT
-              ? t('exchange.nft-prize')
-              : t('exchange.blind-prize', { min: 2, max: 3 })}
-          </div>
+          <div className="contain">{desc}</div>
         </>
       ) : null}
-      {prizes.map((info, i) => {
+      {tokens.map((info, i) => {
         return <PriceCard info={info} count={3} key={i} />
       })}
     </>
@@ -118,7 +147,11 @@ const OthderPriceContainer = styled.div`
   }
 `
 
-export const OtherPrice: React.FC<PriceProps> = ({
+export interface OtherPriceProps extends PriceProps {
+  prizes: CustomRewardInfo
+}
+
+export const OtherPrice: React.FC<OtherPriceProps> = ({
   prizes,
   type,
   showLabel,
@@ -136,12 +169,12 @@ export const OtherPrice: React.FC<PriceProps> = ({
       <div className="price-desc">{'detail.priceDesciption'}</div>
       <div className="imgs">
         <PhotoProvider maskClassName="preview-mask" toolbarRender={() => null}>
-          {prizes.map((p) => {
+          {prizes.images.map((p) => {
             return (
               <div className="img">
                 <LazyLoadImage
-                  src={getImagePreviewUrl(p.class_bg_image_url)}
-                  dataSrc={p.class_bg_image_url}
+                  src={getImagePreviewUrl(p)}
+                  dataSrc={p}
                   enablePreview
                   width={140}
                   height={140}
