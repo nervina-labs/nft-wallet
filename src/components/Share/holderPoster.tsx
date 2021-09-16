@@ -1,15 +1,18 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { HolderPosterData, PosterProps } from './poster.interface'
 import {
   BackgroundImageContainer,
   IssuerContainer,
   PosterContainer,
+  useLoaded,
+  useUrlToBase64,
 } from './shareUtils'
 import BackgroundImage from '../../assets/img/share-bg/share-holder@3x.png'
-import { getImageForwardingsUrl } from '../../utils'
+import { getImageForwardingsUrl, getImagePreviewUrl } from '../../utils'
 import { Gallery } from './gallery'
 import { HolderAvatar } from '../HolderAvatar'
 import styled from 'styled-components'
+import { AvatarType } from '../../models/user'
 
 const ContentContainer = styled.div`
   background-color: #fff;
@@ -38,21 +41,47 @@ const ContentContainer = styled.div`
   }
 `
 
+export const HolderAvatarBase64: React.FC<{
+  avatar: string
+  avatarType: AvatarType
+  size: number
+  onLoaded?: () => void
+}> = ({ avatar, avatarType = AvatarType.Image, size = 44, onLoaded }) => {
+  const { data, isLoading } = useUrlToBase64(avatar)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!isLoading && onLoaded && !loaded) {
+      onLoaded()
+      setLoaded(true)
+      console.log('loaded')
+    }
+  }, [isLoading, onLoaded, loaded])
+
+  return <HolderAvatar avatar={data} avatarType={avatarType} size={21} />
+}
+
 export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
   data,
   onLoad,
 }) => {
   const posterRef = useRef<HTMLDivElement>(null)
   const avatarImageUrl = getImageForwardingsUrl(data.userInfo.avatar_url)
-  const base64Strings = getImageForwardingsUrl(
-    data.tokens.slice(0, 5).map((token) => token.class_bg_image_url)
-  )
+  const [loaded, setLoaded] = useState(false)
+  const addLoadedCount = useLoaded(2, () => setLoaded(true))
+  const base64Strings = data.tokens.slice(0, 5).map((token) => {
+    if (!token.class_bg_image_url) {
+      return undefined
+    }
+    const url = new URL(token.class_bg_image_url)
+    return getImagePreviewUrl(`${url.origin}${url.pathname}`)
+  })
 
   useEffect(() => {
-    if (posterRef.current) {
+    if (posterRef.current && loaded) {
       onLoad(posterRef.current)
     }
-  }, [onLoad, posterRef.current])
+  }, [onLoad, posterRef.current, loaded])
 
   return (
     <PosterContainer
@@ -76,17 +105,18 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
         }}
       >
         <div className="avatar">
-          <HolderAvatar
+          <HolderAvatarBase64
             avatar={avatarImageUrl}
             avatarType={data.userInfo.avatar_type}
             size={21}
+            onLoaded={addLoadedCount}
           />
         </div>
         <div className="issuer-name">{data.userInfo.nickname}</div>
       </IssuerContainer>
 
       <ContentContainer>
-        <Gallery images={base64Strings} />
+        <Gallery images={base64Strings} onLoaded={addLoadedCount} />
         <div className="avatar">
           <HolderAvatar
             avatar={avatarImageUrl}

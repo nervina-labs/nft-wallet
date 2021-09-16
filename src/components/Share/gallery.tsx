@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import React from 'react'
-import { NftCard } from './nftCard'
+import { SharePosterImage } from './sharePosterImage'
+import { useLoaded } from './shareUtils'
 
 const GalleryContainer = styled.div`
   width: 100%;
@@ -56,16 +57,21 @@ const GalleryContainer = styled.div`
 `
 
 export const Gallery: React.FC<{
-  images: string[]
+  images: Array<string | undefined>
   style?: React.CSSProperties
-}> = ({ images, style }) => {
+  onLoaded?: () => void
+}> = ({ images, style, onLoaded }) => {
+  const addLoadedCount = useLoaded(images.length, onLoaded ?? (() => {}))
+
   return (
     <GalleryContainer className={`count-${images.length}`} style={style}>
       {images.slice(0, 4).map((src, i) => (
-        <NftCard src={src} key={i} />
+        <SharePosterImage src={src} key={i} onLoaded={addLoadedCount} />
       ))}
       {images[4] && (
-        <div className="center">{<img src={images[4]} alt="" />}</div>
+        <div className="center">
+          <SharePosterImage src={images[4]} onLoaded={addLoadedCount} />
+        </div>
       )}
     </GalleryContainer>
   )

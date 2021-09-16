@@ -26,20 +26,40 @@ export function useHtml2Canvas(
   return imgSrc
 }
 
-export function useUrlToBase64(url: string) {
+export function useUrlToBase64(url?: string) {
   const { api } = useWalletModel()
-  return useQuery([url, api, 'urlToBase64'], async () => {
-    return (await api.getUrlBase64(url)).data.result
-  })
+  return useQuery(
+    [url, api, 'urlToBase64'],
+    async () => {
+      if (!url) {
+        return url
+      }
+      const extMatch = url.match(/\.\w+$/) ?? ['.png']
+      const ext = extMatch[0] === '.jpg' ? '.jpeg' : extMatch[0]
+      const base64Content = (await api.getUrlBase64(url)).data.result
+      if (!base64Content) {
+        return url
+      }
+      return `data:image/${ext.slice(1, ext.length)};base64,${base64Content}`
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
+  )
 }
 
-export function useHtml2CanvasImageUrl(urls: string[]) {
-  const { api } = useWalletModel()
-  return useQuery([...urls, api, 'useHtml2CanvasImageUrl'], async () => {
-    return await Promise.all(
-      urls.map(async (url) => (await api.getUrlBase64(url)).data.result)
-    )
-  })
+export function useLoaded(imageLength: number, onLoadedFn: () => void) {
+  const [loadedCount, setLoadedCount] = useState(0)
+  useEffect(() => {
+    if (loadedCount >= imageLength) {
+      onLoadedFn()
+    }
+  }, [imageLength, loadedCount, onLoadedFn])
+  return () => {
+    setLoadedCount(loadedCount + 1)
+  }
 }
 
 export const BackgroundImageContainer = styled.div`
