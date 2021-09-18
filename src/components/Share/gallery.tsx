@@ -1,7 +1,5 @@
 import styled from 'styled-components'
 import React from 'react'
-import { SharePosterImage } from './sharePosterImage'
-import { useLoaded } from './shareUtils'
 
 const GalleryContainer = styled.div`
   width: 100%;
@@ -59,18 +57,15 @@ const GalleryContainer = styled.div`
 export const Gallery: React.FC<{
   images: Array<string | undefined>
   style?: React.CSSProperties
-  onLoaded?: () => void
-}> = ({ images, style, onLoaded }) => {
-  const addLoadedCount = useLoaded(images.length, onLoaded ?? (() => {}))
-
+}> = ({ images, style }) => {
   return (
     <GalleryContainer className={`count-${images.length}`} style={style}>
       {images.slice(0, 4).map((src, i) => (
-        <SharePosterImage src={src} key={i} onLoaded={addLoadedCount} />
+        <img src={src} alt="img" key={i} />
       ))}
       {images[4] && (
         <div className="center">
-          <SharePosterImage src={images[4]} onLoaded={addLoadedCount} />
+          <img src={images[4]} alt="img" />
         </div>
       )}
     </GalleryContainer>

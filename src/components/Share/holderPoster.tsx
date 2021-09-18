@@ -4,11 +4,11 @@ import {
   BackgroundImageContainer,
   IssuerContainer,
   PosterContainer,
-  useLoaded,
+  useUrlsToBase64,
   useUrlToBase64,
 } from './shareUtils'
 import BackgroundImage from '../../assets/img/share-bg/share-holder@3x.png'
-import { getImageForwardingsUrl, getImagePreviewUrl } from '../../utils'
+import { getImagePreviewUrl } from '../../utils'
 import { Gallery } from './gallery'
 import { HolderAvatar } from '../HolderAvatar'
 import styled from 'styled-components'
@@ -67,10 +67,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
 }) => {
   const { t } = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
-  const avatarImageUrl = getImageForwardingsUrl(data.userInfo.avatar_url)
-  const [loaded, setLoaded] = useState(false)
-  const addLoadedCount = useLoaded(2, () => setLoaded(true))
-  const base64Strings = useMemo(() => {
+  const nftImageUrls = useMemo(() => {
     return data.tokens.slice(0, 5).map((token) => {
       if (!token.class_bg_image_url) {
         return undefined
@@ -79,12 +76,20 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
       return getImagePreviewUrl(`${url.origin}${url.pathname}`)
     })
   }, [data.tokens])
+  const { data: base64Strings, isLoading } = useUrlsToBase64([
+    data.userInfo.avatar_url,
+    ...nftImageUrls,
+  ])
+  const avatarImageUrl = base64Strings
+    ? base64Strings[0]
+    : data.userInfo.avatar_url
+  const galleryImages = base64Strings?.slice(1, base64Strings?.length) ?? []
 
   useEffect(() => {
-    if (posterRef.current && loaded) {
+    if (posterRef.current && !isLoading) {
       onLoad(posterRef.current)
     }
-  }, [onLoad, loaded])
+  }, [onLoad, posterRef.current, isLoading])
 
   return (
     <PosterContainer
@@ -119,7 +124,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
       </IssuerContainer>
 
       <ContentContainer>
-        <Gallery images={base64Strings} onLoaded={addLoadedCount} />
+        <Gallery images={galleryImages} />
         <div className="avatar">
           <HolderAvatar
             avatar={avatarImageUrl}

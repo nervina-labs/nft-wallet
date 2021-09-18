@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useQuery } from 'react-query'
 import { toDataUrl } from '../../utils'
+import FallbackImg from '../../assets/svg/fallback.svg'
 
 export function useHtml2Canvas(
   element: HTMLDivElement | null,
@@ -25,6 +26,37 @@ export function useHtml2Canvas(
     }
   }, [element, options?.enable].concat(options?.deps ?? []))
   return imgSrc
+}
+
+export function useUrlsToBase64(urls: Array<string | undefined>) {
+  const { api } = useWalletModel()
+  return useQuery([...urls, api], async () => {
+    const urlPromises = urls.map(async (url) => {
+      if (!url) {
+        return FallbackImg
+      }
+      try {
+        // @typescript-eslint/return-await
+        return await toDataUrl(url)
+      } catch {
+        const extMatch = url.match(/\.\w+$/) ?? ['.png']
+        const ext = extMatch[0] === '.jpg' ? '.jpeg' : extMatch[0]
+        try {
+          const base64Content = (await api.getUrlBase64(url)).data.result
+          if (!base64Content) {
+            return url
+          }
+          return `data:image/${ext.slice(
+            1,
+            ext.length
+          )};base64,${base64Content}`
+        } catch {
+          return FallbackImg
+        }
+      }
+    })
+    return await Promise.all(urlPromises)
+  })
 }
 
 export function useUrlToBase64(url?: string) {
@@ -60,7 +92,7 @@ export function useLoaded(imageLength: number, onLoadedFn: () => void) {
   const [loadedCount, setLoadedCount] = useState(0)
   useEffect(() => {
     console.log('loadedCount', loadedCount)
-    if (loadedCount >= imageLength - 1) {
+    if (loadedCount >= imageLength) {
       onLoadedFn()
     }
   }, [imageLength, loadedCount])
