@@ -173,11 +173,13 @@ export const Share: React.FC<ShareProps> = ({
     >
       {isDialogOpen && (
         <>
-          <img
-            className="share-poster-image"
-            src={imgSrc}
-            alt="share-poster-image"
-          />
+          {imgSrc && (
+            <img
+              className="share-poster-image"
+              src={imgSrc}
+              alt="share-poster-image"
+            />
+          )}
           {data && (
             <>
               {type === PosterType.Nft ? (
