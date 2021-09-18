@@ -1,19 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { HolderPosterData, PosterProps } from './poster.interface'
 import {
   BackgroundImageContainer,
   IssuerContainer,
   PosterContainer,
   useUrlsToBase64,
-  useUrlToBase64,
 } from './shareUtils'
 import BackgroundImage from '../../assets/img/share-bg/share-holder@3x.png'
 import { getImagePreviewUrl } from '../../utils'
 import { Gallery } from './gallery'
-import { HolderAvatar } from '../HolderAvatar'
 import styled from 'styled-components'
 import { AvatarType } from '../../models/user'
 import { useTranslation } from 'react-i18next'
+import classnames from 'classnames'
+import NftAvatarDiamonds from '../../assets/svg/nft-avatar-diamonds.svg'
 
 const ContentContainer = styled.div`
   background-color: #fff;
@@ -42,23 +42,72 @@ const ContentContainer = styled.div`
   }
 `
 
+const HolderAvatarBase64Container = styled.div`
+  --size: ${(props: { size?: number }) =>
+    props.size ? `${props.size}px` : '40px'};
+  padding: 2px;
+  position: relative;
+  display: flex;
+  width: var(--size);
+  height: var(--size);
+  .img {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    object-fit: cover;
+    margin: auto;
+    position: relative;
+    z-index: 1;
+  }
+  &.nft:before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    border-radius: 100%;
+    z-index: 0;
+    background-image: linear-gradient(
+      60deg,
+      rgb(205, 130, 15),
+      rgb(250, 190, 60),
+      rgb(205, 130, 15),
+      rgb(250, 190, 60),
+      rgb(205, 130, 15),
+      rgb(250, 190, 60)
+    );
+    background-size: 300%, 300%;
+  }
+  &.nft:after {
+    content: '';
+    background: url('${NftAvatarDiamonds}') no-repeat;
+    background-size: 100%, 100%;
+    display: block;
+    top: 0;
+    right: 0;
+    width: calc(var(--size) / 3);
+    height: calc(var(--size) / 3);
+    position: absolute;
+    z-index: 2;
+  }
+`
+
 export const HolderAvatarBase64: React.FC<{
-  avatar: string
+  avatar?: string
   avatarType: AvatarType
   size: number
-  onLoaded?: () => void
-}> = ({ avatar, avatarType = AvatarType.Image, size = 44, onLoaded }) => {
-  const { data, isLoading } = useUrlToBase64(avatar)
-  const [loaded, setLoaded] = useState(false)
-
-  useEffect(() => {
-    if (!isLoading && onLoaded && !loaded) {
-      onLoaded()
-      setLoaded(true)
-    }
-  }, [isLoading, onLoaded, loaded])
-
-  return <HolderAvatar avatar={data} avatarType={avatarType} size={21} />
+}> = ({ avatar, avatarType = AvatarType.Image, size = 44 }) => {
+  return (
+    <HolderAvatarBase64Container
+      className={classnames({
+        nft: avatarType === AvatarType.Token,
+      })}
+      size={size}
+    >
+      <img src={avatar} alt={avatarType} className="img" />
+    </HolderAvatarBase64Container>
+  )
 }
 
 export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
@@ -76,14 +125,18 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
       return getImagePreviewUrl(`${url.origin}${url.pathname}`)
     })
   }, [data.tokens])
-  const { data: base64Strings, isLoading } = useUrlsToBase64([
-    data.userInfo.avatar_url,
-    ...nftImageUrls,
-  ])
-  const avatarImageUrl = base64Strings
-    ? base64Strings[0]
-    : data.userInfo.avatar_url
-  const galleryImages = base64Strings?.slice(1, base64Strings?.length) ?? []
+  const {
+    data: nftImageUrlsBase64,
+    isLoading: nftImageLoading,
+  } = useUrlsToBase64(nftImageUrls)
+  const {
+    data: avatarImageUrlsBase64,
+    isLoading: avatarImageLoading,
+  } = useUrlsToBase64([data.userInfo.avatar_url])
+  const isLoading = nftImageLoading || avatarImageLoading
+  const avatarImageUrlBase64 = avatarImageUrlsBase64
+    ? avatarImageUrlsBase64[0]
+    : undefined
 
   useEffect(() => {
     if (posterRef.current && !isLoading) {
@@ -112,25 +165,26 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
           fontSize: '13px',
         }}
       >
-        <div className="avatar">
-          <HolderAvatar
-            avatar={avatarImageUrl}
+        {avatarImageUrlBase64 && (
+          <HolderAvatarBase64
+            avatar={avatarImageUrlBase64}
             avatarType={data.userInfo.avatar_type}
             size={21}
-            // onLoaded={addLoadedCount}
           />
-        </div>
+        )}
         <div className="issuer-name">{data.userInfo.nickname}</div>
       </IssuerContainer>
 
       <ContentContainer>
-        <Gallery images={galleryImages} />
+        {nftImageUrlsBase64 && <Gallery images={nftImageUrlsBase64} />}
         <div className="avatar">
-          <HolderAvatar
-            avatar={avatarImageUrl}
-            avatarType={data.userInfo.avatar_type}
-            size={45}
-          />
+          {avatarImageUrlBase64 && (
+            <HolderAvatarBase64
+              avatar={avatarImageUrlBase64}
+              avatarType={data.userInfo.avatar_type}
+              size={45}
+            />
+          )}
         </div>
         <div className="text bold">{data.userInfo.nickname}</div>
         <div className="text">

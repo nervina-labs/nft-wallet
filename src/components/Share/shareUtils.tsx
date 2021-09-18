@@ -28,12 +28,18 @@ export function useHtml2Canvas(
   return imgSrc
 }
 
-export function useUrlsToBase64(urls: Array<string | undefined>) {
+export function useUrlsToBase64(
+  urls: Array<string | undefined>,
+  options?: {
+    fallbackImg?: string
+  }
+) {
   const { api } = useWalletModel()
+  const fallbackImg = options?.fallbackImg ?? FallbackImg
   return useQuery([...urls, api], async () => {
     const urlPromises = urls.map(async (url) => {
       if (!url) {
-        return FallbackImg
+        return fallbackImg
       }
       try {
         // @typescript-eslint/return-await
@@ -51,7 +57,7 @@ export function useUrlsToBase64(urls: Array<string | undefined>) {
             ext.length
           )};base64,${base64Content}`
         } catch {
-          return FallbackImg
+          return fallbackImg
         }
       }
     })

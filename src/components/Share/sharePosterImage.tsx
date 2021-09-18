@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import FallbackImg from '../../assets/svg/fallback.svg'
 import { useUrlToBase64 } from './shareUtils'
 
 export const SharePosterImage: React.FC<{
   src?: string
   onLoaded?: () => void
   fallbackImg?: string
-}> = ({ src, onLoaded, fallbackImg = FallbackImg }) => {
+}> = ({ src, onLoaded, fallbackImg }) => {
   const [failed, setFailed] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const { data, isLoading, error } = useUrlToBase64(src)
