@@ -126,8 +126,9 @@ export const PosterContainer = styled.div`
   position: fixed;
   width: 323px;
   height: 484px;
-  //content-visibility: hidden;
+  content-visibility: hidden;
   z-index: 10;
+  overflow: hidden;
 `
 
 export const IssuerContainer = styled.div`
@@ -148,7 +149,6 @@ export const IssuerContainer = styled.div`
     background: #fff;
     overflow: hidden;
     border-radius: 100%;
-    margin-right: 10px;
 
     img,
     svg {
@@ -158,6 +158,7 @@ export const IssuerContainer = styled.div`
   }
 
   .issuer-name {
+    margin-left: 10px;
     line-height: var(--height);
     height: var(--height);
     text-overflow: ellipsis;

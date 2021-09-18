@@ -10,10 +10,8 @@ import BackgroundImage from '../../assets/img/share-bg/share-holder@3x.png'
 import { getImagePreviewUrl } from '../../utils'
 import { Gallery } from './gallery'
 import styled from 'styled-components'
-import { AvatarType } from '../../models/user'
 import { useTranslation } from 'react-i18next'
-import classnames from 'classnames'
-import NftAvatarDiamonds from '../../assets/svg/nft-avatar-diamonds.svg'
+import { ShareAvatar } from './avatar'
 
 const ContentContainer = styled.div`
   background-color: #fff;
@@ -41,74 +39,6 @@ const ContentContainer = styled.div`
     font-weight: 500;
   }
 `
-
-const HolderAvatarBase64Container = styled.div`
-  --size: ${(props: { size?: number }) =>
-    props.size ? `${props.size}px` : '40px'};
-  padding: 2px;
-  position: relative;
-  display: flex;
-  width: var(--size);
-  height: var(--size);
-  .img {
-    width: 100%;
-    height: 100%;
-    border-radius: 100%;
-    object-fit: cover;
-    margin: auto;
-    position: relative;
-    z-index: 1;
-  }
-  &.nft:before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    width: calc(100% + 2px);
-    height: calc(100% + 2px);
-    border-radius: 100%;
-    z-index: 0;
-    background-image: linear-gradient(
-      60deg,
-      rgb(205, 130, 15),
-      rgb(250, 190, 60),
-      rgb(205, 130, 15),
-      rgb(250, 190, 60),
-      rgb(205, 130, 15),
-      rgb(250, 190, 60)
-    );
-    background-size: 300%, 300%;
-  }
-  &.nft:after {
-    content: '';
-    background: url('${NftAvatarDiamonds}') no-repeat;
-    background-size: 100%, 100%;
-    display: block;
-    top: 0;
-    right: 0;
-    width: calc(var(--size) / 3);
-    height: calc(var(--size) / 3);
-    position: absolute;
-    z-index: 2;
-  }
-`
-
-export const HolderAvatarBase64: React.FC<{
-  avatar?: string
-  avatarType: AvatarType
-  size: number
-}> = ({ avatar, avatarType = AvatarType.Image, size = 44 }) => {
-  return (
-    <HolderAvatarBase64Container
-      className={classnames({
-        nft: avatarType === AvatarType.Token,
-      })}
-      size={size}
-    >
-      <img src={avatar} alt={avatarType} className="img" />
-    </HolderAvatarBase64Container>
-  )
-}
 
 export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
   data,
@@ -166,7 +96,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
         }}
       >
         {avatarImageUrlBase64 && (
-          <HolderAvatarBase64
+          <ShareAvatar
             avatar={avatarImageUrlBase64}
             avatarType={data.userInfo.avatar_type}
             size={21}
@@ -179,7 +109,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
         {nftImageUrlsBase64 && <Gallery images={nftImageUrlsBase64} />}
         <div className="avatar">
           {avatarImageUrlBase64 && (
-            <HolderAvatarBase64
+            <ShareAvatar
               avatar={avatarImageUrlBase64}
               avatarType={data.userInfo.avatar_type}
               size={45}
