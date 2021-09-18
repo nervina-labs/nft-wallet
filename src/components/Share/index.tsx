@@ -36,6 +36,17 @@ const DialogContainer = styled.div`
   &.hide .mask {
     opacity: 0;
   }
+
+  .share-poster-image {
+    max-width: 450px;
+    max-height: calc(100% - 270px);
+    object-fit: contain;
+    z-index: 9;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
 `
 
 const ShareContainer = styled.div`
@@ -121,21 +132,6 @@ const Button = styled.button`
   margin-top: 15px;
 `
 
-const SharePosterContainer = styled.div`
-  position: absolute;
-  top: 50px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  width: 95%;
-  max-width: 450px;
-  z-index: 9;
-
-  img {
-    width: 100%;
-    height: auto;
-  }
-`
-
 export type ShareProps = {
   isDialogOpen: boolean
   closeDialog: () => void
@@ -177,9 +173,11 @@ export const Share: React.FC<ShareProps> = ({
     >
       {isDialogOpen && (
         <>
-          <SharePosterContainer>
-            <img src={imgSrc} alt="" />
-          </SharePosterContainer>
+          <img
+            className="share-poster-image"
+            src={imgSrc}
+            alt="share-poster-image"
+          />
           {data && (
             <>
               {type === PosterType.Nft ? (

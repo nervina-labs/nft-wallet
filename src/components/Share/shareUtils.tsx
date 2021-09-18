@@ -98,8 +98,8 @@ const BackgroundImageContainer = styled.div`
 `
 
 export const PosterContainer = styled.div`
-  top: 0;
-  left: 0;
+  top: -100%;
+  left: -100%;
   position: fixed;
   width: 323px;
   height: 484px;
