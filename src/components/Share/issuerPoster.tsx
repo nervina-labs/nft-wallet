@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react'
 import { IssuerPosterData, PosterProps } from './poster.interface'
 import {
   BackgroundImage,
-  IssuerContainer,
+  UserContainer,
   PosterContainer,
   usePosterLoader,
   useUrlToBase64,
@@ -97,8 +97,8 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
       }}
     >
       <BackgroundImage src={BackgroundImagePath} />
-      <IssuerContainer
-        height={21}
+      <UserContainer
+        avatarSize={21}
         style={{
           top: '23px',
           left: '23px',
@@ -112,7 +112,7 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
           )}
         </div>
         <div className="issuer-name">{data.issuerInfo.name}</div>
-      </IssuerContainer>
+      </UserContainer>
 
       {nftImageUrlsBase64 && (
         <Gallery

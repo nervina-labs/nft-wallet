@@ -108,10 +108,10 @@ export const PosterContainer = styled.div`
   overflow: hidden;
 `
 
-export const IssuerContainer = styled.div`
-  --height: ${(props: { height?: number }) =>
-    props.height ? `${props.height}px` : '35px'};
-  --width: 180px;
+export const UserContainer = styled.div`
+  --avatar-size: ${(props: { avatarSize?: number }) =>
+    props.avatarSize ? `${props.avatarSize}px` : '35px'};
+  --width: calc(180px - var(--avatar-size));
   width: 100%;
   display: flex;
   height: var(--height);
@@ -120,28 +120,28 @@ export const IssuerContainer = styled.div`
   font-size: 14px;
 
   .avatar {
-    width: var(--height);
-    min-width: var(--height);
-    height: var(--height);
+    width: var(--avatar-size);
+    min-width: var(--avatar-size);
+    height: var(--avatar-size);
     background: #fff;
     overflow: hidden;
     border-radius: 100%;
 
     img,
     svg {
-      width: var(--height);
-      height: var(--height);
+      width: var(--avatar-size);
+      height: var(--avatar-size);
     }
   }
 
   .issuer-name {
     margin-left: 10px;
-    line-height: var(--height);
-    height: var(--height);
+    line-height: var(--avatar-size);
+    height: var(--avatar-size);
     text-overflow: ellipsis;
-    width: var(--width);
     white-space: nowrap;
     overflow: hidden;
     font-weight: 500;
+    width: var(--width);
   }
 `

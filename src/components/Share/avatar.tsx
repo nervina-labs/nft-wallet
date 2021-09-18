@@ -11,7 +11,7 @@ const ShareAvatarContainer = styled.div`
   display: flex;
   width: var(--size);
   height: var(--size);
-  .img {
+  .avatar-img {
     width: 100%;
     height: 100%;
     border-radius: 100%;
@@ -67,7 +67,7 @@ export const ShareAvatar: React.FC<{
       })}
       size={size}
     >
-      <img src={avatar} alt={avatarType} className="img" />
+      <img src={avatar} alt={avatarType} className="avatar-img" />
     </ShareAvatarContainer>
   )
 }

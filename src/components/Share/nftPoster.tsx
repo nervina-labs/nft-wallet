@@ -6,7 +6,7 @@ import PeopleImage from '../../assets/svg/people.svg'
 import { Limited } from '../Limited'
 import {
   BackgroundImage,
-  IssuerContainer,
+  UserContainer,
   PosterContainer,
   usePosterLoader,
   useUrlToBase64,
@@ -66,14 +66,13 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
   return (
     <PosterContainer ref={posterRef}>
       <BackgroundImage src={BackgroundImagePath} />
-      <IssuerContainer
+      <UserContainer
+        avatarSize={35}
         style={{ top: '33px', left: '22px', position: 'absolute' }}
       >
-        <div className="avatar">
-          {avatarImageUrl && <ShareAvatar avatar={avatarImageUrl} size={35} />}
-        </div>
+        {avatarImageUrl && <ShareAvatar avatar={avatarImageUrl} size={35} />}
         <div className="issuer-name">{issuerName}</div>
-      </IssuerContainer>
+      </UserContainer>
 
       <CardContainer>
         <Card>
@@ -84,14 +83,12 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
             crossOrigin="anonymous"
           />
           <div className="nft-name">{data.name}</div>
-          <IssuerContainer height={18} style={{ fontSize: '12px' }}>
-            <div className="avatar">
-              {avatarImageUrl && (
-                <ShareAvatar avatar={avatarImageUrl} size={18} />
-              )}
-            </div>
+          <UserContainer avatarSize={18} style={{ fontSize: '12px' }}>
+            {avatarImageUrl && (
+              <ShareAvatar avatar={avatarImageUrl} size={18} />
+            )}
             <div className="issuer-name">{issuerName}</div>
-          </IssuerContainer>
+          </UserContainer>
           <Limited count={data.total} sn={(data as NFTDetail).n_token_id} />
         </Card>
       </CardContainer>
