@@ -7,7 +7,6 @@ import NftAvatarDiamonds from '../../assets/svg/nft-avatar-diamonds.svg'
 const ShareAvatarContainer = styled.div`
   --size: ${(props: { size?: number }) =>
     props.size ? `${props.size}px` : '40px'};
-  padding: 2px;
   position: relative;
   display: flex;
   width: var(--size);
@@ -20,14 +19,15 @@ const ShareAvatarContainer = styled.div`
     margin: auto;
     position: relative;
     z-index: 1;
+    background-color: #fff;
   }
   &.nft:before {
     content: '';
     position: absolute;
-    top: -1px;
-    left: -1px;
-    width: calc(100% + 2px);
-    height: calc(100% + 2px);
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
     border-radius: 100%;
     z-index: 0;
     background-image: linear-gradient(
@@ -46,8 +46,8 @@ const ShareAvatarContainer = styled.div`
     background: url('${NftAvatarDiamonds}') no-repeat;
     background-size: 100%, 100%;
     display: block;
-    top: 0;
-    right: 0;
+    top: -2px;
+    right: -2px;
     width: calc(var(--size) / 3);
     height: calc(var(--size) / 3);
     position: absolute;
@@ -57,7 +57,7 @@ const ShareAvatarContainer = styled.div`
 
 export const ShareAvatar: React.FC<{
   avatar?: string
-  avatarType: AvatarType
+  avatarType?: AvatarType
   size: number
 }> = ({ avatar, avatarType = AvatarType.Image, size = 44 }) => {
   return (

@@ -1,15 +1,19 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { IssuerPosterData, PosterProps } from './poster.interface'
 import {
-  BackgroundImageContainer,
+  BackgroundImage,
   IssuerContainer,
   PosterContainer,
+  usePosterLoader,
+  useUrlToBase64,
 } from './shareUtils'
-import BackgroundImage from '../../assets/img/share-bg/share-issuer@3x.png'
+import BackgroundImagePath from '../../assets/img/share-bg/share-issuer@3x.png'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { getImageForwardingsUrl } from '../../utils'
+import { getImagePreviewUrl } from '../../utils'
 import { Gallery } from './gallery'
+import { ShareAvatar } from './avatar'
+import PeopleImage from '../../assets/svg/people.svg'
 
 const IssuerInfoContainer = styled.div`
   position: absolute;
@@ -62,18 +66,27 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
   data,
   onLoad,
 }) => {
-  const posterRef = useRef<HTMLDivElement>(null)
-  const base64Strings = getImageForwardingsUrl(
-    data.tokenClasses.slice(0, 5).map((tokenClass) => tokenClass.bg_image_url)
-  )
-  const avatarImageUrl = getImageForwardingsUrl(data.issuerInfo.avatar_url)
-  const nftImages = base64Strings
   const [t] = useTranslation('translations')
-  useEffect(() => {
-    if (posterRef.current) {
-      onLoad(posterRef.current)
-    }
-  }, [onLoad, avatarImageUrl, posterRef.current])
+  const posterRef = useRef<HTMLDivElement>(null)
+  const nftImageUrls = useMemo(() => {
+    return data.tokenClasses.slice(0, 5).map((token) => {
+      if (!token.bg_image_url) {
+        return undefined
+      }
+      const url = new URL(token.bg_image_url)
+      return getImagePreviewUrl(`${url.origin}${url.pathname}`)
+    })
+  }, [data.tokenClasses])
+  const {
+    data: avatarImageUrlBase64,
+    isLoading: avatarImageLoading,
+  } = useUrlToBase64(data.issuerInfo.avatar_url, { fallbackImg: PeopleImage })
+  const {
+    data: nftImageUrlsBase64,
+    isLoading: nftImageLoading,
+  } = useUrlToBase64(nftImageUrls)
+  const isLoading = avatarImageLoading || nftImageLoading
+  usePosterLoader(posterRef.current, onLoad, isLoading)
 
   return (
     <PosterContainer
@@ -83,9 +96,7 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
         height: '442px',
       }}
     >
-      <BackgroundImageContainer>
-        <img src={BackgroundImage} alt="bg" />
-      </BackgroundImageContainer>
+      <BackgroundImage src={BackgroundImagePath} />
       <IssuerContainer
         height={21}
         style={{
@@ -96,25 +107,31 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
         }}
       >
         <div className="avatar">
-          <img src={avatarImageUrl} alt="" width="21px" height="21px" />
+          {avatarImageUrlBase64 && (
+            <ShareAvatar avatar={avatarImageUrlBase64} size={30} />
+          )}
         </div>
         <div className="issuer-name">{data.issuerInfo.name}</div>
       </IssuerContainer>
 
-      <Gallery
-        images={nftImages}
-        style={{
-          width: 'calc(100% - 46px)',
-          position: 'absolute',
-          top: '83px',
-          left: '23px',
-          backgroundColor: '#fff',
-        }}
-      />
+      {nftImageUrlsBase64 && (
+        <Gallery
+          images={nftImageUrlsBase64}
+          style={{
+            width: 'calc(100% - 46px)',
+            position: 'absolute',
+            top: '83px',
+            left: '23px',
+            backgroundColor: '#fff',
+          }}
+        />
+      )}
 
       <IssuerInfoContainer>
         <div className="avatar">
-          <img src={avatarImageUrl} alt="" width="30px" height="30px" />
+          {avatarImageUrlBase64 && (
+            <ShareAvatar avatar={avatarImageUrlBase64} size={30} />
+          )}
         </div>
         <div className="name">{data.issuerInfo.name}</div>
         <div className="follow-and-likes">

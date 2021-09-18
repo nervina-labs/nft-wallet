@@ -1,16 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
-import BackgroundImage from '../../assets/img/share-bg/share-nft@3x.png'
+import BackgroundImagePath from '../../assets/img/share-bg/share-nft@3x.png'
 import { NFTDetail } from '../../models'
-import { LazyLoadImage } from '../Image'
-import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
+import PeopleImage from '../../assets/svg/people.svg'
 import { Limited } from '../Limited'
 import {
-  BackgroundImageContainer,
+  BackgroundImage,
   IssuerContainer,
   PosterContainer,
+  usePosterLoader,
+  useUrlToBase64,
 } from './shareUtils'
 import { NftPosterData, PosterProps } from './poster.interface'
+import { ShareAvatar } from './avatar'
 
 const CardContainer = styled.div`
   position: absolute;
@@ -51,35 +53,24 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
 }) => {
   const posterRef = useRef<HTMLDivElement>(null)
   const issuerName = (data.issuer_info?.name ?? '').substring(0, 10)
-  const [loadedCount, serLoadedCount] = useState(0)
-  const [cardImageUrl, avatarImageUrl] = [
-    data.bg_image_url ?? '',
-    data.issuer_info?.avatar_url ?? '',
-  ]
-
-  useEffect(() => {
-    if (posterRef.current && loadedCount >= 2) {
-      onLoad(posterRef.current)
-    }
-  }, [onLoad, cardImageUrl, avatarImageUrl, loadedCount])
+  const { data: cardImageUrl, isLoading: cardImageLoading } = useUrlToBase64(
+    data.bg_image_url
+  )
+  const {
+    data: avatarImageUrl,
+    isLoading: avatarImageLoading,
+  } = useUrlToBase64(data.issuer_info?.avatar_url, { fallbackImg: PeopleImage })
+  const isLoading = cardImageLoading || avatarImageLoading
+  usePosterLoader(posterRef.current, onLoad, isLoading)
 
   return (
     <PosterContainer ref={posterRef}>
-      <BackgroundImageContainer>
-        <img src={BackgroundImage} alt="bg" />
-      </BackgroundImageContainer>
+      <BackgroundImage src={BackgroundImagePath} />
       <IssuerContainer
         style={{ top: '33px', left: '22px', position: 'absolute' }}
       >
         <div className="avatar">
-          <LazyLoadImage
-            src={avatarImageUrl}
-            width={35}
-            height={35}
-            backup={<PeopleSvg />}
-            onLoaded={() => serLoadedCount(loadedCount + 1)}
-            variant="circle"
-          />
+          {avatarImageUrl && <ShareAvatar avatar={avatarImageUrl} size={35} />}
         </div>
         <div className="issuer-name">{issuerName}</div>
       </IssuerContainer>
@@ -95,14 +86,9 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
           <div className="nft-name">{data.name}</div>
           <IssuerContainer height={18} style={{ fontSize: '12px' }}>
             <div className="avatar">
-              <LazyLoadImage
-                src={avatarImageUrl}
-                width={18}
-                height={18}
-                onLoaded={() => serLoadedCount(loadedCount + 1)}
-                backup={<PeopleSvg />}
-                variant="circle"
-              />
+              {avatarImageUrl && (
+                <ShareAvatar avatar={avatarImageUrl} size={18} />
+              )}
             </div>
             <div className="issuer-name">{issuerName}</div>
           </IssuerContainer>

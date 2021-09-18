@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import html2canvas from 'html2canvas-objectfit-fix'
 import styled from 'styled-components'
 import { useWalletModel } from '../../hooks/useWallet'
@@ -28,86 +28,63 @@ export function useHtml2Canvas(
   return imgSrc
 }
 
-export function useUrlsToBase64(
-  urls: Array<string | undefined>,
+export function useUrlToBase64<S extends string | undefined, U extends S | S[]>(
+  urls: U,
   options?: {
     fallbackImg?: string
   }
 ) {
   const { api } = useWalletModel()
   const fallbackImg = options?.fallbackImg ?? FallbackImg
-  return useQuery([...urls, api], async () => {
-    const urlPromises = urls.map(async (url) => {
-      if (!url) {
-        return fallbackImg
-      }
-      try {
-        // @typescript-eslint/return-await
-        return await toDataUrl(url)
-      } catch {
-        const extMatch = url.match(/\.\w+$/) ?? ['.png']
-        const ext = extMatch[0] === '.jpg' ? '.jpeg' : extMatch[0]
-        try {
-          const base64Content = (await api.getUrlBase64(url)).data.result
-          if (!base64Content) {
-            return url
-          }
-          return `data:image/${ext.slice(
-            1,
-            ext.length
-          )};base64,${base64Content}`
-        } catch {
-          return fallbackImg
-        }
-      }
-    })
-    return await Promise.all(urlPromises)
-  })
-}
-
-export function useUrlToBase64(url?: string) {
-  const { api } = useWalletModel()
-  return useQuery(
-    [url, api, 'urlToBase64'],
-    async () => {
-      if (!url) {
-        return url
-      }
-      try {
-        // @typescript-eslint/return-await
-        return await toDataUrl(url)
-      } catch {
-        const extMatch = url.match(/\.\w+$/) ?? ['.png']
-        const ext = extMatch[0] === '.jpg' ? '.jpeg' : extMatch[0]
+  const toDataUrlFromApi = async (url?: string) => {
+    if (!url) {
+      return fallbackImg
+    }
+    return await toDataUrl(url)
+      .catch(async () => {
         const base64Content = (await api.getUrlBase64(url)).data.result
-        if (!base64Content) {
-          return url
-        }
-        return `data:image/${ext.slice(1, ext.length)};base64,${base64Content}`
-      }
-    },
+        return base64Content
+          ? `data:image/jpeg;base64,${base64Content}`
+          : fallbackImg
+      })
+      .catch(() => fallbackImg)
+  }
+  type QueryReturn = U extends S[] ? S[] : S
+  return useQuery(
+    [...(Array.isArray(urls) ? urls : [urls]), api],
+    async (): Promise<QueryReturn> =>
+      (Array.isArray(urls)
+        ? await Promise.all(urls.map(toDataUrlFromApi))
+        : await toDataUrlFromApi(urls)) as any,
     {
       refetchOnMount: false,
-      refetchOnWindowFocus: false,
       refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     }
   )
 }
 
-export function useLoaded(imageLength: number, onLoadedFn: () => void) {
-  const [loadedCount, setLoadedCount] = useState(0)
+export function usePosterLoader<E extends HTMLDivElement>(
+  posterElement: E | null,
+  onLoad: (el: E) => void,
+  loading = true
+) {
   useEffect(() => {
-    console.log('loadedCount', loadedCount)
-    if (loadedCount >= imageLength) {
-      onLoadedFn()
+    if (posterElement && !loading) {
+      onLoad(posterElement)
     }
-  }, [imageLength, loadedCount])
-  return () => {
-    setLoadedCount(loadedCount + 1)
-  }
+  }, [onLoad, posterElement, loading])
 }
 
-export const BackgroundImageContainer = styled.div`
+export const BackgroundImage: React.FC<{ src: string }> = ({ src }) => {
+  return (
+    <BackgroundImageContainer>
+      <img src={src} alt="bg" />
+    </BackgroundImageContainer>
+  )
+}
+
+const BackgroundImageContainer = styled.div`
   width: 100%;
   height: auto;
   img {

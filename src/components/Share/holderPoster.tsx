@@ -1,17 +1,19 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { HolderPosterData, PosterProps } from './poster.interface'
 import {
-  BackgroundImageContainer,
+  BackgroundImage,
   IssuerContainer,
   PosterContainer,
-  useUrlsToBase64,
+  usePosterLoader,
+  useUrlToBase64,
 } from './shareUtils'
-import BackgroundImage from '../../assets/img/share-bg/share-holder@3x.png'
+import BackgroundImagePath from '../../assets/img/share-bg/share-holder@3x.png'
 import { getImagePreviewUrl } from '../../utils'
 import { Gallery } from './gallery'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { ShareAvatar } from './avatar'
+import PeopleImage from '../../assets/svg/people.svg'
 
 const ContentContainer = styled.div`
   background-color: #fff;
@@ -44,7 +46,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
   data,
   onLoad,
 }) => {
-  const { t } = useTranslation('translations')
+  const [t] = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
   const nftImageUrls = useMemo(() => {
     return data.tokens.slice(0, 5).map((token) => {
@@ -58,21 +60,13 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
   const {
     data: nftImageUrlsBase64,
     isLoading: nftImageLoading,
-  } = useUrlsToBase64(nftImageUrls)
+  } = useUrlToBase64(nftImageUrls)
   const {
-    data: avatarImageUrlsBase64,
+    data: avatarImageUrlBase64,
     isLoading: avatarImageLoading,
-  } = useUrlsToBase64([data.userInfo.avatar_url])
+  } = useUrlToBase64(data.userInfo.avatar_url, { fallbackImg: PeopleImage })
   const isLoading = nftImageLoading || avatarImageLoading
-  const avatarImageUrlBase64 = avatarImageUrlsBase64
-    ? avatarImageUrlsBase64[0]
-    : undefined
-
-  useEffect(() => {
-    if (posterRef.current && !isLoading) {
-      onLoad(posterRef.current)
-    }
-  }, [onLoad, posterRef.current, isLoading])
+  usePosterLoader(posterRef.current, onLoad, isLoading)
 
   return (
     <PosterContainer
@@ -82,10 +76,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
         height: '519px',
       }}
     >
-      <BackgroundImageContainer>
-        <img src={BackgroundImage} alt="bg" />
-      </BackgroundImageContainer>
-
+      <BackgroundImage src={BackgroundImagePath} />
       <IssuerContainer
         height={21}
         style={{
