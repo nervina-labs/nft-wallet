@@ -47,7 +47,7 @@ export const OSS_IMG_PROCESS_QUERY_KEY_SCALE = 'image/resize,s_'
 export const OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP = '/format,webp'
 export const OSS_IMG_HOSTS = [
   'https://oss.jinse.cc',
-  'https://goldenlegend.oss-cn-hangzhou.aliyuncs.com',
+  // 'https://goldenlegend.oss-cn-hangzhou.aliyuncs.com',
   'https://goldenlegend.oss-accelerate.aliyuncs.com',
 ]
 
