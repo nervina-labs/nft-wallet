@@ -110,7 +110,11 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
         }}
       >
         {avatarImageUrlBase64 && (
-          <ShareAvatar avatar={avatarImageUrlBase64} size={21} />
+          <ShareAvatar
+            avatar={avatarImageUrlBase64}
+            size={21}
+            verify={data.issuerInfo.verified_info?.is_verified}
+          />
         )}
         <div className="issuer-name">{issuerName}</div>
       </UserContainer>
@@ -131,7 +135,11 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
       <IssuerInfoContainer>
         <div className="avatar">
           {avatarImageUrlBase64 && (
-            <ShareAvatar avatar={avatarImageUrlBase64} size={30} />
+            <ShareAvatar
+              avatar={avatarImageUrlBase64}
+              size={30}
+              verify={data.issuerInfo.verified_info?.is_verified}
+            />
           )}
         </div>
         <div className="name">{issuerName}</div>

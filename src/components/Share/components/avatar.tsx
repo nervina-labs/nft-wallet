@@ -2,7 +2,8 @@ import React from 'react'
 import { AvatarType } from '../../../models/user'
 import classnames from 'classnames'
 import styled from 'styled-components'
-import NftAvatarDiamonds from '../../../assets/svg/nft-avatar-diamonds.svg'
+import NftAvatarDiamondsPath from '../../../assets/img/nft-avatar-diamonds.png'
+import IssuerVerifyPath from '../../../assets/img/issuer-verify.png'
 
 const ShareAvatarContainer = styled.div`
   --size: ${(props: { size?: number }) =>
@@ -11,6 +12,13 @@ const ShareAvatarContainer = styled.div`
   display: flex;
   width: var(--size);
   height: var(--size);
+  .verify {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: calc(var(--size) / 3);
+    z-index: 2;
+  }
   .avatar-img {
     width: 100%;
     height: 100%;
@@ -21,29 +29,13 @@ const ShareAvatarContainer = styled.div`
     z-index: 1;
     background-color: #fff;
   }
-  &.nft:before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    width: calc(100% + 4px);
-    height: calc(100% + 4px);
-    border-radius: 100%;
-    z-index: 0;
-    background-image: linear-gradient(
-      60deg,
-      rgb(205, 130, 15),
-      rgb(250, 190, 60),
-      rgb(205, 130, 15),
-      rgb(250, 190, 60),
-      rgb(205, 130, 15),
-      rgb(250, 190, 60)
-    );
-    background-size: 300%, 300%;
+
+  &.nft .avatar-img {
+    border: 2px solid rgb(250, 190, 60);
   }
-  &.nft:after {
+  .nft-icon {
     content: '';
-    background: url('${NftAvatarDiamonds}') no-repeat;
+    background: url('${NftAvatarDiamondsPath}') no-repeat;
     background-size: 100%, 100%;
     display: block;
     top: -2px;
@@ -59,7 +51,8 @@ export const ShareAvatar: React.FC<{
   avatar?: string
   avatarType?: AvatarType
   size: number
-}> = ({ avatar, avatarType = AvatarType.Image, size = 44 }) => {
+  verify?: boolean
+}> = ({ avatar, avatarType = AvatarType.Image, size = 44, verify }) => {
   return (
     <ShareAvatarContainer
       className={classnames({
@@ -68,6 +61,12 @@ export const ShareAvatar: React.FC<{
       size={size}
     >
       <img src={avatar} alt={avatarType} className="avatar-img" />
+      {verify && (
+        <img src={IssuerVerifyPath} alt="issuerVerify" className="verify" />
+      )}
+      {avatarType === AvatarType.Token && (
+        <img src={NftAvatarDiamondsPath} alt="nftIcon" className="nft-icon" />
+      )}
     </ShareAvatarContainer>
   )
 }
