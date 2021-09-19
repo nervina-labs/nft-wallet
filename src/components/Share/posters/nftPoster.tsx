@@ -13,7 +13,7 @@ import { NftPosterData, PosterProps } from './poster.interface'
 import { ShareAvatar } from '../components/avatar'
 import { useUrlToBase64, usePosterLoader } from '../hooks'
 import { useQrcode } from '../hooks/useQrcode'
-import PlayerPath from '../../../assets/svg/player.svg'
+import PlayerPath from '../../../assets/img/player.png'
 import CardBackPath from '../../../assets/svg/card-back.svg'
 
 const CardContainer = styled.div`
@@ -46,10 +46,7 @@ const Card = styled.div`
     right: 6px;
     bottom: 12px;
     width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: auto;
   }
 
   .card-back {
@@ -99,6 +96,9 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
   const { qrcodeSrc, isLoading: QrcodeLoading } = useQrcode(shareUrl)
   const isLoading = cardImageLoading || avatarImageLoading || QrcodeLoading
   usePosterLoader(posterRef.current, onLoad, isLoading)
+  const hasPlayer =
+    data.renderer_type === NftType.Video || data.renderer_type === NftType.Audio
+  const hasCardBack = data.card_back_content_exist
 
   return (
     <PosterContainer ref={posterRef}>
@@ -120,11 +120,10 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
               className="img"
               crossOrigin="anonymous"
             />
-            {(data.renderer_type === NftType.Video ||
-              data.renderer_type === NftType.Audio) && (
+            {hasPlayer && (
               <img className="player" src={PlayerPath} alt="player" />
             )}
-            {data.card_back_content_exist && (
+            {hasCardBack && (
               <img className="card-back" src={CardBackPath} alt="CardBack" />
             )}
           </div>

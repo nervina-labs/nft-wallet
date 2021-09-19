@@ -110,6 +110,10 @@ const IconContainer = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  a {
+    color: #666666;
+    text-decoration: none;
+  }
 `
 
 const Icon = styled.div`
@@ -223,18 +227,18 @@ export const Share: React.FC<ShareProps> = ({
         <HandleBar>{t('common.share.title')}</HandleBar>
         <IconGroupContainer>
           {imgSrc && (
-            <a
-              href={imgSrc}
-              download="poster.png"
-              style={{ textDecoration: 'none' }}
-            >
-              <IconContainer>
+            <IconContainer>
+              <a
+                href={imgSrc}
+                download="poster.png"
+                style={{ textDecoration: 'none' }}
+              >
                 <Icon>
                   <ShareDownloadIcon />
                 </Icon>
                 {t('common.share.download')}
-              </IconContainer>
-            </a>
+              </a>
+            </IconContainer>
           )}
 
           {navigator?.share !== undefined ? (

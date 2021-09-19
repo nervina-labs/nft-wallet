@@ -7,7 +7,6 @@ import {
 import BackgroundImagePath from '../../../assets/img/share-bg/share-issuer@3x.png'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { getImagePreviewUrl } from '../../../utils'
 import { Gallery } from '../components/gallery'
 import { ShareAvatar } from '../components/avatar'
 import PeopleImage from '../../../assets/img/people.png'
@@ -70,13 +69,7 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
   const [t] = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
   const nftImageUrls = useMemo(() => {
-    return data.tokenClasses.slice(0, 5).map((token) => {
-      if (!token.bg_image_url) {
-        return undefined
-      }
-      const url = new URL(token.bg_image_url)
-      return getImagePreviewUrl(`${url.origin}${url.pathname}`)
-    })
+    return data.tokenClasses.slice(0, 5).map((token) => token.bg_image_url)
   }, [data.tokenClasses])
   const {
     data: avatarImageUrlBase64,

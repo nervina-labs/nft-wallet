@@ -6,7 +6,6 @@ import {
   PosterContainer,
 } from '../components/layout'
 import BackgroundImagePath from '../../../assets/img/share-bg/share-holder@3x.png'
-import { getImagePreviewUrl } from '../../../utils'
 import { Gallery } from '../components/gallery'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
@@ -50,13 +49,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
   const [t] = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
   const nftImageUrls = useMemo(() => {
-    return data.tokens.slice(0, 5).map((token) => {
-      if (!token.class_bg_image_url) {
-        return undefined
-      }
-      const url = new URL(token.class_bg_image_url)
-      return getImagePreviewUrl(`${url.origin}${url.pathname}`)
-    })
+    return data.tokens.slice(0, 5).map((token) => token.class_bg_image_url)
   }, [data.tokens])
   const {
     data: nftImageUrlsBase64,
