@@ -60,11 +60,16 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
   const {
     data: nftImageUrlsBase64,
     isLoading: nftImageLoading,
-  } = useUrlToBase64(nftImageUrls)
+  } = useUrlToBase64(nftImageUrls, {
+    toBlob: true,
+  })
   const {
     data: avatarImageUrlBase64,
     isLoading: avatarImageLoading,
-  } = useUrlToBase64(data.userInfo.avatar_url, { fallbackImg: PeopleImage })
+  } = useUrlToBase64(data.userInfo.avatar_url, {
+    fallbackImg: PeopleImage,
+    toBlob: true,
+  })
   const isLoading = nftImageLoading || avatarImageLoading
   usePosterLoader(posterRef.current, onLoad, isLoading)
 

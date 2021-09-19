@@ -28,10 +28,15 @@ export function useHtml2Canvas(
   return imgSrc
 }
 
-export function useUrlToBase64<S extends string | undefined, U extends S | S[]>(
+export function useUrlToBase64<
+  S extends string | undefined,
+  U extends S | S[],
+  RETURN = U extends S[] ? S[] : S
+>(
   urls: U,
   options?: {
     fallbackImg?: string
+    toBlob?: boolean
   }
 ) {
   const { api } = useWalletModel()
@@ -47,12 +52,19 @@ export function useUrlToBase64<S extends string | undefined, U extends S | S[]>(
           ? `data:image/jpeg;base64,${base64Content}`
           : fallbackImg
       })
+      .then((base64) => {
+        if (options?.toBlob) {
+          return fetch(base64).then(async (res) =>
+            URL.createObjectURL(await res.blob())
+          )
+        }
+        return base64
+      })
       .catch(() => fallbackImg)
   }
-  type QueryReturn = U extends S[] ? S[] : S
   return useQuery(
     [...(Array.isArray(urls) ? urls : [urls]), api],
-    async (): Promise<QueryReturn> =>
+    async (): Promise<RETURN> =>
       (Array.isArray(urls)
         ? await Promise.all(urls.map(toDataUrlFromApi))
         : await toDataUrlFromApi(urls)) as any,

@@ -54,12 +54,18 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
   const posterRef = useRef<HTMLDivElement>(null)
   const issuerName = (data.issuer_info?.name ?? '').substring(0, 10)
   const { data: cardImageUrl, isLoading: cardImageLoading } = useUrlToBase64(
-    data.bg_image_url
+    data.bg_image_url,
+    {
+      toBlob: true,
+    }
   )
   const {
     data: avatarImageUrl,
     isLoading: avatarImageLoading,
-  } = useUrlToBase64(data.issuer_info?.avatar_url, { fallbackImg: PeopleImage })
+  } = useUrlToBase64(data.issuer_info?.avatar_url, {
+    fallbackImg: PeopleImage,
+    toBlob: true,
+  })
   const isLoading = cardImageLoading || avatarImageLoading
   usePosterLoader(posterRef.current, onLoad, isLoading)
 

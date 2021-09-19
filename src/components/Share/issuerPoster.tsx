@@ -80,11 +80,16 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
   const {
     data: avatarImageUrlBase64,
     isLoading: avatarImageLoading,
-  } = useUrlToBase64(data.issuerInfo.avatar_url, { fallbackImg: PeopleImage })
+  } = useUrlToBase64(data.issuerInfo.avatar_url, {
+    fallbackImg: PeopleImage,
+    toBlob: true,
+  })
   const {
     data: nftImageUrlsBase64,
     isLoading: nftImageLoading,
-  } = useUrlToBase64(nftImageUrls)
+  } = useUrlToBase64(nftImageUrls, {
+    toBlob: true,
+  })
   const isLoading = avatarImageLoading || nftImageLoading
   usePosterLoader(posterRef.current, onLoad, isLoading)
 
@@ -106,11 +111,9 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
           fontSize: '13px',
         }}
       >
-        <div className="avatar">
-          {avatarImageUrlBase64 && (
-            <ShareAvatar avatar={avatarImageUrlBase64} size={30} />
-          )}
-        </div>
+        {avatarImageUrlBase64 && (
+          <ShareAvatar avatar={avatarImageUrlBase64} size={21} />
+        )}
         <div className="issuer-name">{data.issuerInfo.name}</div>
       </UserContainer>
 
