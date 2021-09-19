@@ -1,7 +1,7 @@
-import { TokenClass } from '../../models/class-list'
-import { NFTDetail, NFTToken } from '../../models'
-import { IssuerInfoResult, IssuerTokenClass } from '../../models/issuer'
-import { UserResponse } from '../../models/user'
+import { TokenClass } from '../../../models/class-list'
+import { NFTDetail, NFTToken } from '../../../models'
+import { IssuerInfoResult, IssuerTokenClass } from '../../../models/issuer'
+import { UserResponse } from '../../../models/user'
 
 export enum PosterType {
   Nft = 'nft',

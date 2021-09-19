@@ -1,5 +1,4 @@
 import React, { useMemo, useRef } from 'react'
-import { IssuerPosterData, PosterProps } from '../poster.interface'
 import {
   BackgroundImage,
   UserContainer,
@@ -14,6 +13,7 @@ import { ShareAvatar } from '../components/avatar'
 import PeopleImage from '../../../assets/img/people.png'
 import { useUrlToBase64, usePosterLoader } from '../hooks'
 import { useQrcode } from '../hooks/useQrcode'
+import { IssuerPosterData, PosterProps } from './poster.interface'
 
 const IssuerInfoContainer = styled.div`
   position: absolute;

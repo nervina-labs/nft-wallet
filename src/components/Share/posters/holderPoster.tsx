@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react'
-import { HolderPosterData, PosterProps } from '../poster.interface'
+import { HolderPosterData, PosterProps } from './poster.interface'
 import {
   BackgroundImage,
   UserContainer,

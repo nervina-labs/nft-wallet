@@ -32,7 +32,7 @@ import { Tab, Tabs } from '../../components/Tab'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
-import { PosterType } from '../../components/Share/poster.interface'
+import { PosterType } from '../../components/Share/posters/poster.interface'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 

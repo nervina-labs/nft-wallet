@@ -31,7 +31,7 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
 import { Tab, Tabs, TabsAffix } from '../../components/Tab'
-import { PosterType } from '../../components/Share/poster.interface'
+import { PosterType } from '../../components/Share/posters/poster.interface'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()

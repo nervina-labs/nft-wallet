@@ -4,11 +4,9 @@ import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-down
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
-import { NftPoster } from './posters/nftPoster'
-import { Poster, PosterType } from './poster.interface'
-import { IssuerPoster } from './posters/issuerPoster'
-import { HolderPoster } from './posters/holderPoster'
-import { useHtml2Canvas } from './hooks/useHtml2Canvas'
+import { NftPoster, IssuerPoster, HolderPoster } from './posters'
+import { Poster, PosterType } from './posters/poster.interface'
+import { useHtml2Canvas } from './hooks'
 
 const DialogContainer = styled.div`
   position: fixed;

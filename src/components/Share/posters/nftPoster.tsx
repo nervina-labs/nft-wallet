@@ -9,7 +9,7 @@ import {
   UserContainer,
   PosterContainer,
 } from '../components/layout'
-import { NftPosterData, PosterProps } from '../poster.interface'
+import { NftPosterData, PosterProps } from './poster.interface'
 import { ShareAvatar } from '../components/avatar'
 import { useUrlToBase64, usePosterLoader } from '../hooks'
 import { useQrcode } from '../hooks/useQrcode'
