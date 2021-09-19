@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { ShareAvatar } from '../components/avatar'
 import PeopleImage from '../../../assets/img/people.png'
 import { useUrlToBase64, usePosterLoader } from '../hooks'
+import { useQrcode } from '../hooks/useQrcode'
 
 const ContentContainer = styled.div`
   background-color: #fff;
@@ -44,6 +45,7 @@ const ContentContainer = styled.div`
 export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
   data,
   onLoad,
+  shareUrl,
 }) => {
   const [t] = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
@@ -69,7 +71,8 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
     fallbackImg: PeopleImage,
     toBlob: true,
   })
-  const isLoading = nftImageLoading || avatarImageLoading
+  const { qrcodeSrc, isLoading: QrcodeLoading } = useQrcode(shareUrl)
+  const isLoading = nftImageLoading || avatarImageLoading || QrcodeLoading
   usePosterLoader(posterRef.current, onLoad, isLoading)
 
   return (
@@ -116,6 +119,17 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
           {t('common.share.collected-nft')}: {data.tokenLength}
         </div>
       </ContentContainer>
+
+      {qrcodeSrc && (
+        <img
+          className="qrcode"
+          src={qrcodeSrc}
+          alt="qrcode"
+          style={{
+            bottom: '40px',
+          }}
+        />
+      )}
     </PosterContainer>
   )
 }

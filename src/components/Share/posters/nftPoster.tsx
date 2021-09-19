@@ -12,6 +12,7 @@ import {
 import { NftPosterData, PosterProps } from '../poster.interface'
 import { ShareAvatar } from '../components/avatar'
 import { useUrlToBase64, usePosterLoader } from '../hooks'
+import { useQrcode } from '../hooks/useQrcode'
 
 const CardContainer = styled.div`
   position: absolute;
@@ -49,6 +50,7 @@ const Card = styled.div`
 export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
   data,
   onLoad,
+  shareUrl,
 }) => {
   const posterRef = useRef<HTMLDivElement>(null)
   const issuerName = (data.issuer_info?.name ?? '').substring(0, 10)
@@ -65,7 +67,8 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
     fallbackImg: PeopleImage,
     toBlob: true,
   })
-  const isLoading = cardImageLoading || avatarImageLoading
+  const { qrcodeSrc, isLoading: QrcodeLoading } = useQrcode(shareUrl)
+  const isLoading = cardImageLoading || avatarImageLoading || QrcodeLoading
   usePosterLoader(posterRef.current, onLoad, isLoading)
 
   return (
@@ -97,6 +100,7 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
           <Limited count={data.total} sn={(data as NFTDetail).n_token_id} />
         </Card>
       </CardContainer>
+      {qrcodeSrc && <img className="qrcode" src={qrcodeSrc} alt="qrcode" />}
     </PosterContainer>
   )
 }

@@ -32,6 +32,14 @@ export const PosterContainer = styled.div`
   z-index: 10;
   overflow: hidden;
   pointer-events: none;
+
+  .qrcode {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    bottom: 16px;
+    right: 30px;
+  }
 `
 
 export const UserContainer = styled.div`
