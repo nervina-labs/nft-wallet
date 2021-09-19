@@ -1,5 +1,5 @@
 import { useWalletModel } from '../../../hooks/useWallet'
-import FallbackImg from '../../../assets/svg/fallback.svg'
+import FallbackImgPath from '../../../assets/img/fallback.png'
 import { toDataUrl } from '../../../utils'
 import { useQuery } from 'react-query'
 
@@ -15,7 +15,7 @@ export function useUrlToBase64<
   }
 ) {
   const { api } = useWalletModel()
-  const fallbackImg = options?.fallbackImg ?? FallbackImg
+  const fallbackImg = options?.fallbackImg ?? FallbackImgPath
   const toDataUrlFromApi = async (url?: string) => {
     if (!url) {
       return fallbackImg
@@ -40,9 +40,9 @@ export function useUrlToBase64<
   return useQuery(
     [...(Array.isArray(urls) ? urls : [urls]), api],
     async (): Promise<RETURN> =>
-      (Array.isArray(urls)
+      Array.isArray(urls)
         ? await Promise.all(urls.map(toDataUrlFromApi))
-        : await toDataUrlFromApi(urls)) as any,
+        : await toDataUrlFromApi(urls),
     {
       refetchOnMount: false,
       refetchOnReconnect: false,
