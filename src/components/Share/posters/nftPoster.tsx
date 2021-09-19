@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 import BackgroundImagePath from '../../../assets/img/share-bg/share-nft@3x.png'
-import { NFTDetail } from '../../../models'
+import { NFTDetail, NftType } from '../../../models'
 import PeopleImage from '../../../assets/img/people.png'
 import { Limited } from '../../Limited'
 import {
@@ -13,6 +13,8 @@ import { NftPosterData, PosterProps } from './poster.interface'
 import { ShareAvatar } from '../components/avatar'
 import { useUrlToBase64, usePosterLoader } from '../hooks'
 import { useQrcode } from '../hooks/useQrcode'
+import PlayerPath from '../../../assets/svg/player.svg'
+import CardBackPath from '../../../assets/svg/card-back.svg'
 
 const CardContainer = styled.div`
   position: absolute;
@@ -35,9 +37,36 @@ const Card = styled.div`
   .img {
     width: calc(var(--width) - 20px);
     height: calc(var(--width) - 20px);
-    border-radius: 8px;
     margin: 0;
     object-fit: cover;
+  }
+
+  .player {
+    position: absolute;
+    right: 6px;
+    bottom: 12px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-back {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    border-bottom-left-radius: 8px;
+    padding: 3px;
+    width: 24px;
+  }
+
+  .img-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
   }
 
   .nft-name {
@@ -84,12 +113,21 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
 
       <CardContainer>
         <Card>
-          <img
-            src={cardImageUrl}
-            alt=""
-            className="img"
-            crossOrigin="anonymous"
-          />
+          <div className="img-container">
+            <img
+              src={cardImageUrl}
+              alt=""
+              className="img"
+              crossOrigin="anonymous"
+            />
+            {(data.renderer_type === NftType.Video ||
+              data.renderer_type === NftType.Audio) && (
+              <img className="player" src={PlayerPath} alt="player" />
+            )}
+            {data.card_back_content_exist && (
+              <img className="card-back" src={CardBackPath} alt="CardBack" />
+            )}
+          </div>
           <div className="nft-name">{data.name}</div>
           <UserContainer avatarSize={18} style={{ fontSize: '12px' }}>
             {avatarImageUrl && (

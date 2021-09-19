@@ -49,7 +49,6 @@ const GalleryContainer = styled.div`
       width: 100px;
       height: 80px;
       margin: auto;
-      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     }
   }
 `
