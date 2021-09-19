@@ -14,9 +14,18 @@ export function useHtml2Canvas(
   }
 ): string {
   const [imgSrc, setImgSrc] = useState('')
+  const scrollTop =
+    document.documentElement.scrollTop || document.body.scrollTop
   useEffect(() => {
     if (element && options?.enable !== false) {
-      html2canvas(element, { useCORS: true, allowTaint: true })
+      html2canvas(element, {
+        useCORS: true,
+        allowTaint: true,
+        height: element.offsetHeight,
+        width: element.offsetWidth,
+        x: 0,
+        y: scrollTop,
+      })
         .then((canvas) => {
           setImgSrc(canvas.toDataURL('image/png'))
         })
@@ -110,14 +119,15 @@ const BackgroundImageContainer = styled.div`
 `
 
 export const PosterContainer = styled.div`
-  top: -100%;
-  left: -100%;
+  top: 0;
+  left: 0;
   position: fixed;
   width: 323px;
   height: 484px;
   content-visibility: hidden;
   z-index: 10;
   overflow: hidden;
+  pointer-events: none;
 `
 
 export const UserContainer = styled.div`

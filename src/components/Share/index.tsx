@@ -46,6 +46,16 @@ const DialogContainer = styled.div`
     top: 30px;
     left: 50%;
     transform: translate(-50%, 0);
+    animation: show-poster 0.2s;
+  }
+
+  @keyframes show-poster {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 `
 
@@ -212,20 +222,28 @@ export const Share: React.FC<ShareProps> = ({
       >
         <HandleBar>{t('common.share.title')}</HandleBar>
         <IconGroupContainer>
-          <IconContainer>
-            <Icon>
-              <ShareDownloadIcon />
-            </Icon>
-            {t('common.share.download')}
-          </IconContainer>
+          {imgSrc && (
+            <a
+              href={imgSrc}
+              download="poster.png"
+              style={{ textDecoration: 'none' }}
+            >
+              <IconContainer>
+                <Icon>
+                  <ShareDownloadIcon />
+                </Icon>
+                {t('common.share.download')}
+              </IconContainer>
+            </a>
+          )}
 
           {navigator?.share !== undefined ? (
             <IconContainer
               onClick={async () => {
                 await navigator.share({
                   title: document.title,
-                  text: 'Hello World',
-                  url: 'https://developer.mozilla.org',
+                  text: 'Share',
+                  url: copyText,
                 })
               }}
             >
