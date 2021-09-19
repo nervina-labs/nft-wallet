@@ -11,7 +11,7 @@ import {
 } from '../components/layout'
 import { NftPosterData, PosterProps } from './poster.interface'
 import { ShareAvatar } from '../components/avatar'
-import { useUrlToBase64, usePosterLoader } from '../hooks'
+import { useUrlToBase64, usePosterLoader, useTextEllipsis } from '../hooks'
 import { useQrcode } from '../hooks/useQrcode'
 import PlayerPath from '../../../assets/img/player.png'
 import CardBackPath from '../../../assets/svg/card-back.svg'
@@ -79,7 +79,7 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
   shareUrl,
 }) => {
   const posterRef = useRef<HTMLDivElement>(null)
-  const issuerName = (data.issuer_info?.name ?? '').substring(0, 10)
+  const [issuerName] = useTextEllipsis(data.issuer_info?.name ?? '', 100)
   const { data: cardImageUrl, isLoading: cardImageLoading } = useUrlToBase64(
     data.bg_image_url,
     {

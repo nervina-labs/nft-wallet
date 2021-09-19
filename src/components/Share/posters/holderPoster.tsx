@@ -11,7 +11,7 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { ShareAvatar } from '../components/avatar'
 import PeopleImage from '../../../assets/img/people.png'
-import { useUrlToBase64, usePosterLoader } from '../hooks'
+import { useUrlToBase64, usePosterLoader, useTextEllipsis } from '../hooks'
 import { useQrcode } from '../hooks/useQrcode'
 
 const ContentContainer = styled.div`
@@ -48,6 +48,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
 }) => {
   const [t] = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
+  const nickname = useTextEllipsis(data.userInfo.nickname, 100)
   const nftImageUrls = useMemo(() => {
     return data.tokens.slice(0, 5).map((token) => token.class_bg_image_url)
   }, [data.tokens])
@@ -93,7 +94,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
             size={21}
           />
         )}
-        <div className="issuer-name">{data.userInfo.nickname}</div>
+        <div className="issuer-name">{nickname}</div>
       </UserContainer>
 
       <ContentContainer>
@@ -107,7 +108,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
             />
           )}
         </div>
-        <div className="text bold">{data.userInfo.nickname}</div>
+        <div className="text bold">{nickname}</div>
         <div className="text">
           {t('common.share.collected-nft')}: {data.tokenLength}
         </div>

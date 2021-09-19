@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { Gallery } from '../components/gallery'
 import { ShareAvatar } from '../components/avatar'
 import PeopleImage from '../../../assets/img/people.png'
-import { useUrlToBase64, usePosterLoader } from '../hooks'
+import { useUrlToBase64, usePosterLoader, useTextEllipsis } from '../hooks'
 import { useQrcode } from '../hooks/useQrcode'
 import { IssuerPosterData, PosterProps } from './poster.interface'
 
@@ -58,6 +58,7 @@ const IssuerInfoContainer = styled.div`
     font-weight: 300;
     font-size: 12px;
     line-height: 17px;
+    white-space: pre-wrap;
   }
 `
 
@@ -68,6 +69,8 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
 }) => {
   const [t] = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
+  const [issuerName] = useTextEllipsis(data.issuerInfo?.name ?? '', 100)
+  const [description] = useTextEllipsis(data.issuerInfo?.description ?? '', 500)
   const nftImageUrls = useMemo(() => {
     return data.tokenClasses.slice(0, 5).map((token) => token.bg_image_url)
   }, [data.tokenClasses])
@@ -109,7 +112,7 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
         {avatarImageUrlBase64 && (
           <ShareAvatar avatar={avatarImageUrlBase64} size={21} />
         )}
-        <div className="issuer-name">{data.issuerInfo.name}</div>
+        <div className="issuer-name">{issuerName}</div>
       </UserContainer>
 
       {nftImageUrlsBase64 && (
@@ -131,13 +134,13 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
             <ShareAvatar avatar={avatarImageUrlBase64} size={30} />
           )}
         </div>
-        <div className="name">{data.issuerInfo.name}</div>
+        <div className="name">{issuerName}</div>
         <div className="follow-and-likes">
           {t('issuer.follower')}: {data.issuerInfo.issuer_follows}
           {'   |   '}
           {t('issuer.like')}: {data.issuerInfo.issuer_likes}
         </div>
-        <div className="description">{data.issuerInfo.description}</div>
+        <div className="description">{description}</div>
       </IssuerInfoContainer>
 
       {qrcodeSrc && (
