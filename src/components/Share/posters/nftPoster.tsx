@@ -1,18 +1,17 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
-import BackgroundImagePath from '../../assets/img/share-bg/share-nft@3x.png'
-import { NFTDetail } from '../../models'
-import PeopleImage from '../../assets/img/people.png'
-import { Limited } from '../Limited'
+import BackgroundImagePath from '../../../assets/img/share-bg/share-nft@3x.png'
+import { NFTDetail } from '../../../models'
+import PeopleImage from '../../../assets/img/people.png'
+import { Limited } from '../../Limited'
 import {
   BackgroundImage,
   UserContainer,
   PosterContainer,
-  usePosterLoader,
-  useUrlToBase64,
-} from './shareUtils'
-import { NftPosterData, PosterProps } from './poster.interface'
-import { ShareAvatar } from './avatar'
+} from '../components/layout'
+import { NftPosterData, PosterProps } from '../poster.interface'
+import { ShareAvatar } from '../components/avatar'
+import { useUrlToBase64, usePosterLoader } from '../hooks'
 
 const CardContainer = styled.div`
   position: absolute;

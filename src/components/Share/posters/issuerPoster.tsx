@@ -1,19 +1,18 @@
 import React, { useMemo, useRef } from 'react'
-import { IssuerPosterData, PosterProps } from './poster.interface'
+import { IssuerPosterData, PosterProps } from '../poster.interface'
 import {
   BackgroundImage,
   UserContainer,
   PosterContainer,
-  usePosterLoader,
-  useUrlToBase64,
-} from './shareUtils'
-import BackgroundImagePath from '../../assets/img/share-bg/share-issuer@3x.png'
+} from '../components/layout'
+import BackgroundImagePath from '../../../assets/img/share-bg/share-issuer@3x.png'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { getImagePreviewUrl } from '../../utils'
-import { Gallery } from './gallery'
-import { ShareAvatar } from './avatar'
-import PeopleImage from '../../assets/img/people.png'
+import { getImagePreviewUrl } from '../../../utils'
+import { Gallery } from '../components/gallery'
+import { ShareAvatar } from '../components/avatar'
+import PeopleImage from '../../../assets/img/people.png'
+import { useUrlToBase64, usePosterLoader } from '../hooks'
 
 const IssuerInfoContainer = styled.div`
   position: absolute;

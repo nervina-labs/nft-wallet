@@ -1,8 +1,8 @@
 import React from 'react'
-import { AvatarType } from '../../models/user'
+import { AvatarType } from '../../../models/user'
 import classnames from 'classnames'
 import styled from 'styled-components'
-import NftAvatarDiamonds from '../../assets/svg/nft-avatar-diamonds.svg'
+import NftAvatarDiamonds from '../../../assets/svg/nft-avatar-diamonds.svg'
 
 const ShareAvatarContainer = styled.div`
   --size: ${(props: { size?: number }) =>

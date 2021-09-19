@@ -4,11 +4,11 @@ import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-down
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
-import { NftPoster } from './nftPoster'
+import { NftPoster } from './posters/nftPoster'
 import { Poster, PosterType } from './poster.interface'
-import { useHtml2Canvas } from './shareUtils'
-import { IssuerPoster } from './issuerPoster'
-import { HolderPoster } from './holderPoster'
+import { IssuerPoster } from './posters/issuerPoster'
+import { HolderPoster } from './posters/holderPoster'
+import { useHtml2Canvas } from './hooks/useHtml2Canvas'
 
 const DialogContainer = styled.div`
   position: fixed;
@@ -190,7 +190,7 @@ export const Share: React.FC<ShareProps> = ({
             />
           )}
           {data && (
-            <>
+            <div style={{ opacity: 0 }}>
               {type === PosterType.Nft ? (
                 <NftPoster
                   data={data as any}
@@ -210,7 +210,7 @@ export const Share: React.FC<ShareProps> = ({
               {type === PosterType.Holder ? (
                 <HolderPoster data={data as any} onLoad={setEl} />
               ) : null}
-            </>
+            </div>
           )}
         </>
       )}
