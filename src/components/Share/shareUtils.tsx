@@ -111,7 +111,7 @@ export const PosterContainer = styled.div`
 export const UserContainer = styled.div`
   --avatar-size: ${(props: { avatarSize?: number }) =>
     props.avatarSize ? `${props.avatarSize}px` : '35px'};
-  --width: calc(180px - var(--avatar-size));
+  --width: calc(180px - var(--avatar-size) - 30px);
   width: 100%;
   display: flex;
   height: var(--height);

@@ -160,7 +160,6 @@ export const Share: React.FC<ShareProps> = ({
   }, [isDialogOpen])
 
   const [el, setEl] = useState<HTMLDivElement | null>(null)
-
   const imgSrc = useHtml2Canvas(el, {
     enable: isDialogOpen,
   })

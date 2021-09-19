@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { getImagePreviewUrl } from '../../utils'
 import { Gallery } from './gallery'
 import { ShareAvatar } from './avatar'
-import PeopleImage from '../../assets/svg/people.svg'
+import PeopleImage from '../../assets/img/people.png'
 
 const IssuerInfoContainer = styled.div`
   position: absolute;

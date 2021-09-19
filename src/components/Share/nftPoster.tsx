@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import styled from 'styled-components'
 import BackgroundImagePath from '../../assets/img/share-bg/share-nft@3x.png'
 import { NFTDetail } from '../../models'
-import PeopleImage from '../../assets/svg/people.svg'
+import PeopleImage from '../../assets/img/people.png'
 import { Limited } from '../Limited'
 import {
   BackgroundImage,

@@ -13,7 +13,7 @@ import { Gallery } from './gallery'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { ShareAvatar } from './avatar'
-import PeopleImage from '../../assets/svg/people.svg'
+import PeopleImage from '../../assets/img/people.png'
 
 const ContentContainer = styled.div`
   background-color: #fff;

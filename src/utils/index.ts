@@ -273,8 +273,15 @@ export function getImageForwardingsUrl<T extends string[] | string>(
 
 export async function toDataUrl(
   src: string,
-  outputFormat = 'image/png'
+  options?: {
+    outputFormat?: string
+    disableCache?: boolean
+  }
 ): Promise<string> {
+  const outputFormat = options?.outputFormat ?? 'image/png'
+  const urlObj = new URL(src)
+  urlObj.searchParams.append('time', `${new Date().getTime()}`)
+  const url = decodeURI(urlObj.toString())
   return await new Promise<string>((resolve, reject) => {
     const img = new Image()
     img.crossOrigin = 'anonymous'
@@ -290,12 +297,12 @@ export async function toDataUrl(
       resolve(dataURL)
     }
     img.onerror = reject
-    img.src = src
+    img.src = url
     if (img.complete || img.complete === undefined) {
       img.src =
         'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
-      img.src = src
-      resolve(src)
+      img.src = url
+      resolve(url)
     }
   })
 }
