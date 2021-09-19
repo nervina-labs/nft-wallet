@@ -13,6 +13,7 @@ import { Gallery } from '../components/gallery'
 import { ShareAvatar } from '../components/avatar'
 import PeopleImage from '../../../assets/img/people.png'
 import { useUrlToBase64, usePosterLoader } from '../hooks'
+import { useQrcode } from '../hooks/useQrcode'
 
 const IssuerInfoContainer = styled.div`
   position: absolute;
@@ -64,6 +65,7 @@ const IssuerInfoContainer = styled.div`
 export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
   data,
   onLoad,
+  shareUrl,
 }) => {
   const [t] = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
@@ -89,7 +91,8 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
   } = useUrlToBase64(nftImageUrls, {
     toBlob: true,
   })
-  const isLoading = avatarImageLoading || nftImageLoading
+  const { qrcodeSrc, isLoading: QrcodeLoading } = useQrcode(shareUrl)
+  const isLoading = avatarImageLoading || nftImageLoading || QrcodeLoading
   usePosterLoader(posterRef.current, onLoad, isLoading)
 
   return (
@@ -143,6 +146,15 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
         </div>
         <div className="description">{data.issuerInfo.description}</div>
       </IssuerInfoContainer>
+
+      {qrcodeSrc && (
+        <img
+          className="qrcode"
+          src={qrcodeSrc}
+          alt="qrcode"
+          style={{ bottom: '13px' }}
+        />
+      )}
     </PosterContainer>
   )
 }

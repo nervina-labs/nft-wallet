@@ -39,4 +39,5 @@ export type Poster = NftPosterData | IssuerPosterData | HolderPosterData
 
 export type PosterProps<T extends Poster> = Pick<T, 'data'> & {
   onLoad: (el: HTMLDivElement) => void
+  shareUrl?: string
 }

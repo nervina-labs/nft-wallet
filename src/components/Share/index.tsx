@@ -194,21 +194,23 @@ export const Share: React.FC<ShareProps> = ({
               {type === PosterType.Nft ? (
                 <NftPoster
                   data={data as any}
-                  onLoad={(x) => {
-                    setEl(x)
-                  }}
+                  onLoad={setEl}
+                  shareUrl={copyText}
                 />
               ) : null}
               {type === PosterType.Issuer ? (
                 <IssuerPoster
                   data={data as any}
-                  onLoad={(x) => {
-                    setEl(x)
-                  }}
+                  onLoad={setEl}
+                  shareUrl={copyText}
                 />
               ) : null}
               {type === PosterType.Holder ? (
-                <HolderPoster data={data as any} onLoad={setEl} />
+                <HolderPoster
+                  data={data as any}
+                  onLoad={setEl}
+                  shareUrl={copyText}
+                />
               ) : null}
             </div>
           )}
