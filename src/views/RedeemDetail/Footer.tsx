@@ -44,6 +44,7 @@ export const Footer: React.FC<FooterProps> = ({
     }
     return t('exchange.actions.insufficient')
   }, [isReedemable, status, t])
+
   const onClick = () => {}
   return (
     <Container>

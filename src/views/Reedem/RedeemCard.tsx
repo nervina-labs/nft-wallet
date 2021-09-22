@@ -5,6 +5,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import { useTranslation } from 'react-i18next'
 import { Creator } from '../../components/Creator'
 import {
+  CustomRewardType,
   isBlindReward,
   isCustomReward,
   RedeemEventItem,
@@ -14,11 +15,11 @@ import {
 import { Divider } from '@material-ui/core'
 import { RedeeemLabel } from './Label'
 import classNames from 'classnames'
-import { useHistory } from 'react-router'
+import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
-import { useWarning } from '../../hooks/useWarning'
 import { NftType } from '../../models'
+import { useSignRedeem } from '../../hooks/useRedeem'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -154,6 +155,7 @@ interface ActionProps {
   prizeId: string
   userState: UserRedeemState
   willDestroyed: boolean
+  deliverType: CustomRewardType
 }
 
 const ExchangeAction: React.FC<ActionProps> = ({
@@ -162,6 +164,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
   userState,
   prizeId,
   willDestroyed,
+  deliverType,
 }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
@@ -170,8 +173,9 @@ const ExchangeAction: React.FC<ActionProps> = ({
     userState === UserRedeemState.WaittingRedeem
   const isAllowRedeem =
     status === RedeemStatus.Open && UserRedeemState.AllowRedeem === userState
+  const matchMyRedeem = useRouteMatch(RoutePath.MyRedeem)
   const text = useMemo(() => {
-    if (isReedemed) {
+    if (isReedemed && matchMyRedeem) {
       return t('exchange.check.price')
     } else if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
@@ -182,9 +186,9 @@ const ExchangeAction: React.FC<ActionProps> = ({
     }
 
     return t('exchange.actions.insufficient')
-  }, [status, t, userState, isReedemed])
+  }, [status, t, userState, isReedemed, matchMyRedeem])
 
-  const warning = useWarning()
+  const { onRedeem } = useSignRedeem()
   const onClick = useCallback(
     (e: React.SyntheticEvent) => {
       e.stopPropagation()
@@ -192,10 +196,24 @@ const ExchangeAction: React.FC<ActionProps> = ({
       if (isReedemed) {
         history.push(`${RoutePath.RedeemPrize}/${prizeId}`)
       } else if (isAllowRedeem) {
-        warning(t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`))
+        onRedeem({
+          deliverType,
+          isAllow: true,
+          id,
+          willDestroyed,
+        })
       }
     },
-    [warning, t, history, isReedemed, prizeId, isAllowRedeem, willDestroyed]
+    [
+      history,
+      isReedemed,
+      prizeId,
+      isAllowRedeem,
+      willDestroyed,
+      id,
+      onRedeem,
+      deliverType,
+    ]
   )
   return (
     <div
@@ -240,7 +258,9 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
     })
   }, [item.reward_info])
   return (
-    <Container onClick={() => history.push(`${RoutePath.Redeem}/${item.uuid}`)}>
+    <Container
+      onClick={() => history.push(`${RoutePath.Redeem}/${item.uuid}`, item)}
+    >
       <div className="issuer">
         <Creator
           title=""
@@ -270,6 +290,11 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
         willDestroyed={item?.rule_info?.will_destroyed}
         prizeId={item.user_redeemed_info.redeemd_reward_uuid}
         userState={item.user_redeemed_info.state}
+        deliverType={
+          isCustomReward(item?.reward_info)
+            ? item?.reward_info?.delivery_type
+            : CustomRewardType.None
+        }
       />
     </Container>
   )

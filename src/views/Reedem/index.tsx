@@ -17,6 +17,7 @@ import { Loading } from '../../components/Loading'
 import { ReedemCard } from './RedeemCard'
 import { Link } from 'react-router-dom'
 import { Tab, Tabs } from '../../components/Tab'
+import { SubmitInfo } from '../RedeemDetail/SubmitInfo'
 
 export const RedeemContainer = styled(MainContainer)`
   display: flex;
@@ -174,6 +175,7 @@ export const Redeem: React.FC = () => {
           </InfiniteScroll>
         )}
       </section>
+      <SubmitInfo />
     </RedeemContainer>
   )
 }

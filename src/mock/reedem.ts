@@ -1,4 +1,9 @@
-import { RedeemStatus, RedeemType, UserRedeemState } from '../models/redeem'
+import {
+  CustomRewardType,
+  RedeemStatus,
+  RedeemType,
+  UserRedeemState,
+} from '../models/redeem'
 
 const token = {
   class_bg_image_url:
@@ -40,6 +45,13 @@ const item = {
   },
 }
 
+const customReward = {
+  reward_name: 'string',
+  reward_description: 'string',
+  images: [''],
+  delivery_type: CustomRewardType.Address,
+}
+
 const otherItem = {
   issuer_info: {
     avatar_url:
@@ -53,7 +65,7 @@ const otherItem = {
     name: "People's Punk",
     uuid: 'd56830ba-4562-4a5d-95d2-4c135dec85ee',
   },
-  reward_info: [token, token, token, token],
+  reward_info: customReward,
   uuid: Math.random(),
   name: 'fucsancksa',
   descrition: 'NFT type redeem',
@@ -64,7 +76,7 @@ const otherItem = {
   },
   state: RedeemStatus.Open,
   user_redeemed_info: {
-    state: UserRedeemState.WaittingRedeem,
+    state: UserRedeemState.AllowRedeem,
     redeemd_reward_uuid: 'prize',
   },
 }
