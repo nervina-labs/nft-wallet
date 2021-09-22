@@ -197,7 +197,8 @@ export const RedeemDetail: React.FC = () => {
   const { isError, data } = useQuery(
     [Query.RedeemDetail, id, api],
     async () => {
-      return await api.getRedeemDetail(id)
+      const { data } = await api.getRedeemDetail(id)
+      return data
     },
     {
       enabled: id != null,

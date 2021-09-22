@@ -17,6 +17,7 @@ import { ClaimResult } from './claim'
 import {
   RedeemDetailModel,
   RedeemEvents,
+  RedeemListType,
   RedeemParams,
   RedeemResultResponse,
 } from './redeem'
@@ -175,18 +176,24 @@ export interface NFTWalletAPI {
     sortType: ClassSortType
   ) => Promise<AxiosResponse<FollowClassList>>
 
-  getAllRedeemEvents: (page: number) => Promise<RedeemEvents>
+  getAllRedeemEvents: (
+    page: number,
+    type: RedeemListType
+  ) => Promise<AxiosResponse<RedeemEvents>>
 
-  getMyRedeemEvents: (page: number) => Promise<RedeemEvents>
+  getMyRedeemEvents: (
+    page: number,
+    type: RedeemListType
+  ) => Promise<AxiosResponse<RedeemEvents>>
 
-  getRedeemDetail: (id: string) => Promise<RedeemDetailModel>
+  getRedeemDetail: (id: string) => Promise<AxiosResponse<RedeemDetailModel>>
 
-  getReddemTransaction: (
+  getRedeemTransaction: (
     id: string,
     isUnipass?: boolean
   ) => Promise<NFTTransaction>
 
-  redeem: (params: RedeemParams) => Promise<RedeemResultResponse>
+  redeem: (params: RedeemParams) => Promise<AxiosResponse<RedeemResultResponse>>
 
   getHolderByTokenClassUuid: (
     uuid: string,

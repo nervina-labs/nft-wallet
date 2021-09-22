@@ -14,6 +14,7 @@ import { Loading } from '../../components/Loading'
 import { ReedemCard } from './RedeemCard'
 import { Tab, Tabs } from '../../components/Tab'
 import { RedeemContainer } from '.'
+import { RedeemListType } from '../../models/redeem'
 
 export const MyRedeem: React.FC = () => {
   const { t } = useTranslation('translations')
@@ -42,7 +43,11 @@ export const MyRedeem: React.FC = () => {
   } = useInfiniteQuery(
     [`${Query.MyRedeemList}${isWait.toString()}`, address, isWait],
     async ({ pageParam = 1 }) => {
-      return await api.getMyRedeemEvents(pageParam)
+      const { data } = await api.getMyRedeemEvents(
+        pageParam,
+        isWait ? RedeemListType.UserWaittingRedeem : RedeemListType.UserRedeemed
+      )
+      return data
     },
     {
       getNextPageParam: (lastPage) => {
@@ -78,7 +83,7 @@ export const MyRedeem: React.FC = () => {
     <RedeemContainer>
       <Appbar
         title={t('exchange.mine.title')}
-        left={<BackSvg onClick={() => history.replace(RoutePath.Apps)} />}
+        left={<BackSvg onClick={() => history.replace(RoutePath.Redeem)} />}
         right={<div />}
       />
       <div className="tabs">

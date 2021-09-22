@@ -23,13 +23,7 @@ import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
 import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
-import { mockRedeemDetail, mockRedeems } from '../mock/reedem'
-import {
-  RedeemEvents,
-  RedeemDetailModel,
-  RedeemParams,
-  RedeemResultResponse,
-} from '../models/redeem'
+import { RedeemParams, RedeemListType } from '../models/redeem'
 import { WxSignConfig } from '../models/wx'
 import { GetHolderByTokenClassUuidResponse } from '../models/holder'
 
@@ -451,43 +445,44 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getAllRedeemEvents(page: number) {
-    return await new Promise<RedeemEvents>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          meta: {
-            current_page: 1,
-            total_count: 100,
-          },
-          events: mockRedeems,
-        })
-      }, 1e3)
+  async getAllRedeemEvents(page: number, type: RedeemListType) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+      type,
+    }
+    if (this.address) {
+      params.ckb_address = this.address
+    }
+    return await this.axios.get('/redemption_events', {
+      params,
     })
   }
 
-  async getMyRedeemEvents(page: number) {
-    return await new Promise<RedeemEvents>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          meta: {
-            current_page: 1,
-            total_count: 100,
-          },
-          events: mockRedeems,
-        })
-      }, 1e3)
+  async getMyRedeemEvents(page: number, type: RedeemListType) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+      type,
+    }
+    if (this.address) {
+      params.ckb_address = this.address
+    }
+    return await this.axios.get('/redemption_events', {
+      params,
     })
   }
 
   async getRedeemDetail(uuid: string) {
-    return await new Promise<RedeemDetailModel>((resolve) => {
-      setTimeout(() => {
-        resolve(mockRedeemDetail)
-      }, 1e3)
+    return await this.axios.get(`/redemption_events/${uuid}`, {
+      params: {
+        uuid,
+        ckb_address: this.address,
+      },
     })
   }
 
-  async getReddemTransaction(
+  async getRedeemTransaction(
     uuid: string,
     isUnipass = true
   ): Promise<NFTTransaction> {
@@ -508,12 +503,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     }
   }
 
-  async redeem({
-    uuid,
-    tx,
-    customData,
-    sig,
-  }: RedeemParams): Promise<RedeemResultResponse> {
+  async redeem({ uuid, tx, customData, sig }: RedeemParams) {
     const rawTx = transformers.TransformTransaction(tx) as any
     if (sig) {
       const witnessArgs: WitnessArgs = {

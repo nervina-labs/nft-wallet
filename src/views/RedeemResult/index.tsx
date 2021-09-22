@@ -109,15 +109,15 @@ export const RedeemResult: React.FC = () => {
   const transfer = useCallback(async () => {
     const { signature = '', tx, customData } = location?.state
     if (tx) {
-      const data = await api.redeem({
+      const { data } = await api.redeem({
         uuid: id,
         customData,
         tx,
       })
       return data
     }
-    const { tx: unsignTx } = await api.getReddemTransaction(id, true)
-    const data = await api.redeem({
+    const { tx: unsignTx } = await api.getRedeemTransaction(id, true)
+    const { data } = await api.redeem({
       uuid: id,
       customData,
       tx: unsignTx,

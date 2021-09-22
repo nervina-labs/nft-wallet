@@ -12,7 +12,7 @@ export enum RedeemListType {
   All = 'all',
   CanRedeem = 'can_redeem',
   UserRedeemed = 'user_redeemed',
-  UserWaitting_redeem = 'user_waitting_redeem',
+  UserWaittingRedeem = 'user_waitting_redeem',
 }
 
 export enum RedeemStatus {

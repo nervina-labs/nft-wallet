@@ -18,6 +18,7 @@ import { ReedemCard } from './RedeemCard'
 import { Link } from 'react-router-dom'
 import { Tab, Tabs } from '../../components/Tab'
 import { SubmitInfo } from '../RedeemDetail/SubmitInfo'
+import { RedeemListType } from '../../models/redeem'
 
 export const RedeemContainer = styled(MainContainer)`
   display: flex;
@@ -32,6 +33,12 @@ export const RedeemContainer = styled(MainContainer)`
     background: white;
     display: flex;
     justify-content: center;
+    position: fixed;
+    width: 100%;
+    max-width: 500px;
+    top: 44px;
+    background: #fff;
+    z-index: 2;
     > nav {
       background: white;
       width: 60%;
@@ -43,6 +50,7 @@ export const RedeemContainer = styled(MainContainer)`
 
   .list {
     flex: 1;
+    margin-top: 40px;
   }
 `
 
@@ -73,7 +81,11 @@ export const Redeem: React.FC = () => {
   } = useInfiniteQuery(
     [`${Query.RedeemList}${isRedeemable.toString()}`, address, isRedeemable],
     async ({ pageParam = 1 }) => {
-      return await api.getAllRedeemEvents(pageParam)
+      const { data } = await api.getAllRedeemEvents(
+        pageParam,
+        isRedeemable ? RedeemListType.CanRedeem : RedeemListType.All
+      )
+      return data
     },
     {
       getNextPageParam: (lastPage) => {

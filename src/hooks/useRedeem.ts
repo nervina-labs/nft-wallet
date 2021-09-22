@@ -45,7 +45,7 @@ export const useSignRedeem = () => {
       setIsRedeeming(true)
       try {
         const { tx } = await api
-          .getReddemTransaction(id, walletType === WalletType.Unipass)
+          .getRedeemTransaction(id, walletType === WalletType.Unipass)
           .catch((err) => {
             throw new Error(err)
           })
@@ -142,7 +142,7 @@ export const useSendRedeem = () => {
         await api.redeem({ tx, uuid: id, customData })
       }
       if (signature) {
-        const { tx } = await api.getReddemTransaction(id, true)
+        const { tx } = await api.getRedeemTransaction(id, true)
         await api.redeem({ tx, uuid: id, customData, sig: signature })
       }
     } catch (error) {
