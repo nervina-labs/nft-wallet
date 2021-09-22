@@ -168,18 +168,17 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ data }) => {
 
   return (
     <Footer
-      status={data.event_info.state}
+      status={data.state}
       willDestroyed={data?.rule_info?.will_destroyed}
       isReedemable={
-        data.event_info.user_redeemed_info.state === UserRedeemState.AllowRedeem
+        data.user_redeemed_info.state === UserRedeemState.AllowRedeem
       }
       onClick={() => {
         onRedeem({
           isAllow:
-            data.event_info?.user_redeemed_info?.state ===
-            UserRedeemState.AllowRedeem,
+            data?.user_redeemed_info?.state === UserRedeemState.AllowRedeem,
           willDestroyed: data?.rule_info?.will_destroyed,
-          id: data.event_info.uuid,
+          id: data.uuid,
           deliverType: isCustomReward(data?.reward_info)
             ? data?.reward_info.delivery_type
             : undefined,
@@ -209,18 +208,18 @@ export const RedeemDetail: React.FC = () => {
     }
   )
 
-  const isClosed = data?.event_info?.state === RedeemStatus.Closed
-  const isDone = data?.event_info?.state === RedeemStatus.Done
+  const isClosed = data?.state === RedeemStatus.Closed
+  const isDone = data?.state === RedeemStatus.Done
 
   const status = useMemo(() => {
-    const status = data?.event_info.state
+    const status = data?.state
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
     } else if (status === RedeemStatus.Done) {
       return t('exchange.event.end')
     }
     return t('exchange.event.on-going')
-  }, [data?.event_info?.state, t])
+  }, [data?.state, t])
   const [showPrize, setShowPrice] = useState(true)
 
   if (isError) {
@@ -248,9 +247,7 @@ export const RedeemDetail: React.FC = () => {
                   value={
                     isDone
                       ? 100
-                      : (data.event_info?.progress.claimed /
-                          data.event_info?.progress.total) *
-                        100
+                      : (data?.progress.claimed / data?.progress.total) * 100
                   }
                   style={{ flex: 1, marginBottom: '6px' }}
                   className={classNames({ closed: isClosed })}
@@ -258,21 +255,19 @@ export const RedeemDetail: React.FC = () => {
                 <div className={classNames('progress', { closed: isClosed })}>
                   <span>{t('exchange.progress')}</span>
                   <span>
-                    <span className="exchanged">
-                      {data.event_info?.progress.claimed}
-                    </span>
-                    /<span>{data.event_info?.progress.total}</span>
+                    <span className="exchanged">{data?.progress.claimed}</span>/
+                    <span>{data?.progress.total}</span>
                   </span>
                 </div>
               </div>
             </div>
             <div className="issue-time">
-              {t('exchange.issuer')}:{' '}
-              {formatTime(data.event_info.start_timestamp, i18n.language)}
+              {t('exchange.issue-time')}
+              {formatTime(data.start_timestamp, i18n.language)}
             </div>
             <Divider />
-            <div className="title">{data.event_info.name}</div>
-            <div className="desc">{data.event_info.descrition}</div>
+            <div className="title">{data.name}</div>
+            <div className="desc">{data.description}</div>
             <div className="issue">
               <Creator
                 title=""
@@ -308,10 +303,7 @@ export const RedeemDetail: React.FC = () => {
               style={{ position: 'relative', top: '5px', margin: '0 20px' }}
             />
             {showPrize ? (
-              <Prize
-                prizes={data.reward_info}
-                type={data.event_info.reward_type}
-              />
+              <Prize prizes={data.reward_info} type={data.reward_type} />
             ) : (
               <Condition detail={data} />
             )}

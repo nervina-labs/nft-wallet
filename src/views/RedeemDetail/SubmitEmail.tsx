@@ -113,7 +113,7 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
         willDestroyed={willDestroyed}
         onClick={() => {
           onRedeem({
-            deliverType: CustomRewardType.Email,
+            deliverType: CustomRewardType.None,
             isAllow: true,
             customData: { address: formState.email },
             id,

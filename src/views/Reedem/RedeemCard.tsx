@@ -220,7 +220,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
       className={classNames('status', {
         exchange: isAllowRedeem,
         exchanged: isReedemed,
-        disabled: !isAllowRedeem && !isReedemed,
+        disabled: !isAllowRedeem,
       })}
       onClick={onClick}
     >
@@ -253,6 +253,7 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
           isPlayable={t.renderer_type !== NftType.Picture}
           hasCardBack={t.class_card_back_content_exist}
           src={t.class_bg_image_url}
+          key={i}
         />
       )
     })
@@ -281,7 +282,7 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
         <span className="title">{item.name}</span>
         <RedeeemLabel type={item.reward_type} />
       </div>
-      <div className="content">{rewards}</div>
+      {rewards.length ? <div className="content">{rewards}</div> : null}
       <Progress exchanged={item.progress.claimed} total={item.progress.total} />
       <Divider />
       <ExchangeAction

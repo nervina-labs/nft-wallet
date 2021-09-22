@@ -3,20 +3,20 @@ import { Issuer, IssuerInfo } from './issuer'
 import type { Transaction as PwTransaction } from '@lay2/pw-core'
 
 export enum RedeemType {
-  NFT = 'RedemptionTokenReward',
-  Blind = 'RedemptionBlindBoxReward',
-  Other = 'RedemptionCustomReward',
+  NFT = 'token',
+  Blind = 'blind_box',
+  Other = 'custom',
 }
 
 export enum RedeemListType {
   All = 'all',
   CanRedeem = 'can_redeem',
   UserRedeemed = 'user_redeemed',
-  UserWaittingRedeem = 'user_waitting_redeem',
+  UserWaittingRedeem = 'user_pending_acceptance',
 }
 
 export enum RedeemStatus {
-  Open = 'open',
+  Open = 'ongoing',
   Closed = 'closed',
   Done = 'done',
 }
@@ -41,7 +41,7 @@ export interface RedeemProgress {
 export interface RedeemItem {
   uuid: string
   name: string
-  descrition: string
+  description: string
   reward_type: RedeemType
   progress: RedeemProgress
   state: RedeemStatus
@@ -121,10 +121,7 @@ export function isRedeemDetail(
 
 export function formatToRedeemItem(data: RedeemDetailModel | RedeemEventItem) {
   if (isRedeemDetail(data)) {
-    return {
-      ...data,
-      ...data.event_info,
-    }
+    return data
   }
   return data
 }
@@ -157,12 +154,11 @@ export interface RedeemParams {
 
 export interface RedeemEvents {
   meta: ListMeta
-  events: RedeemEventItem[]
+  event_list: RedeemEventItem[]
 }
 
-export interface RedeemDetailModel {
+export interface RedeemDetailModel extends RedeemItem {
   issuer_info: IssuerInfo
-  event_info: RedeemItem
   rule_info: RuleInfo
   reward_info: RewardInfo
 }

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useHistory, useLocation, useParams } from 'react-router'
 import { CustomRedeemParams, CustomRewardType } from '../models/redeem'
 import { RoutePath } from '../routes'
-import { generateUnipassSignTxUrl, UnipassConfig } from '../utils'
+import { generateUnipassRedeemUrl, UnipassConfig } from '../utils'
 import { useWalletModel, WalletType } from './useWallet'
 import { useWarning } from './useWarning'
 
@@ -57,16 +57,19 @@ export const useSignRedeem = () => {
         if (walletType === WalletType.Unipass) {
           const url = `${location.origin}${RoutePath.Unipass}`
           UnipassConfig.setRedirectUri(`${RoutePath.RedeemResult}/${id}`)
-          location.href = generateUnipassSignTxUrl(
+          const state: Record<string, string> = {
+            prevPathname: reactLocation.pathname,
+            uuid: id,
+          }
+          if (customData) {
+            state.customData = encodeURIComponent(JSON.stringify(customData))
+          }
+          location.href = generateUnipassRedeemUrl(
             url,
             url,
             pubkey,
             signTx as any,
-            {
-              customData: encodeURIComponent(JSON.stringify(customData)),
-              prevPathname: reactLocation.pathname,
-              uuid: id,
-            }
+            state
           )
           return
         } else {
@@ -103,7 +106,7 @@ export const useSignRedeem = () => {
       }
       if (deliverType && deliverType !== CustomRewardType.None) {
         history.push(
-          `${reactLocation.pathname}${
+          `${reactLocation.pathname}${reactLocation.search ?? ''}${
             reactLocation.search?.length > 0 ? '&' : '?'
           }deliverType=${deliverType}`
         )

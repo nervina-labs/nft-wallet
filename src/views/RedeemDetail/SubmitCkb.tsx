@@ -1,5 +1,5 @@
 import { makeStyles, InputAdornment } from '@material-ui/core'
-import React, { useEffect, useReducer } from 'react'
+import React, { useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { RedeemDrawer } from './Drawer'
@@ -76,13 +76,6 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
   )
   const classes = useStyles()
 
-  useEffect(() => {
-    if (!open) {
-      dispatch({ key: 'ckb', value: routerState.ckb ?? '' })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-
   const isReadyForSumit = !!formState.ckb
 
   const { onRedeem, isRedeeming } = useSignRedeem()
@@ -126,7 +119,7 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
         isLoading={isRedeeming}
         onClick={() =>
           onRedeem({
-            deliverType: CustomRewardType.Ckb,
+            deliverType: CustomRewardType.None,
             isAllow: true,
             customData: { ckb_address: formState.ckb },
             id,

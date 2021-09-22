@@ -487,7 +487,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     isUnipass = true
   ): Promise<NFTTransaction> {
     const { data } = await this.axios.get(
-      `/redemption_events/${uuid}/records`,
+      `/redemption_events/${uuid}/records/new`,
       {
         params: {
           uuid,

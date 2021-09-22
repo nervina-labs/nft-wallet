@@ -88,10 +88,15 @@ export const Unipass: React.FC = () => {
           break
         }
         const data = unipassInfo?.data as UnipassSignData
-        history.replace(`${RoutePath.RedeemResult}/${id}`, {
+        const state: Record<string, string> = {
           signature: `0x01${data.sig.replace('0x', '')}`,
-          customData: JSON.parse(decodeURIComponent(prevState.customData)),
-        })
+        }
+        if (prevState.customData) {
+          state.customData = JSON.parse(
+            decodeURIComponent(prevState.customData) || '{}'
+          )
+        }
+        history.replace(`${RoutePath.RedeemResult}/${id}`, state)
         break
       }
       default:

@@ -70,7 +70,7 @@ export const Redeem: React.FC = () => {
     [isRedeemable, history]
   )
 
-  const { address, api } = useWalletModel()
+  const { address, api, isLogined } = useWalletModel()
 
   const {
     data,
@@ -114,7 +114,9 @@ export const Redeem: React.FC = () => {
   }, [refetch])
 
   const dataLength = useMemo(() => {
-    return data?.pages.reduce((acc, token) => token.events.length + acc, 0) ?? 0
+    return (
+      data?.pages.reduce((acc, token) => token.event_list.length + acc, 0) ?? 0
+    )
   }, [data])
 
   return (
@@ -123,9 +125,11 @@ export const Redeem: React.FC = () => {
         title={t('exchange.title')}
         left={<BackSvg onClick={() => history.replace(RoutePath.Apps)} />}
         right={
-          <Link to={RoutePath.MyRedeem}>
-            <MyExchangeSvg />
-          </Link>
+          isLogined ? (
+            <Link to={RoutePath.MyRedeem}>
+              <MyExchangeSvg />
+            </Link>
+          ) : null
         }
       />
       <div className="tabs">
@@ -175,8 +179,8 @@ export const Redeem: React.FC = () => {
             {data?.pages?.map((group, i) => {
               return (
                 <React.Fragment key={i}>
-                  {group.events.map((e, j: number) => {
-                    return <ReedemCard item={e} />
+                  {group.event_list.map((e, j: number) => {
+                    return <ReedemCard item={e} key={`${i}+${j}`} />
                   })}
                 </React.Fragment>
               )

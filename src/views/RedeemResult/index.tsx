@@ -22,6 +22,7 @@ const Container = styled(MainContainer)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: white;
 
   .icon {
     text-align: center;
@@ -106,6 +107,7 @@ export const RedeemResult: React.FC = () => {
   const resultFlag = useRouteQuery<ResultFlag>('result', ResultFlag.None)
   const { id } = useParams<{ id: string }>()
   const location = useLocation<TransferState>()
+  const { t } = useTranslation('translations')
   const transfer = useCallback(async () => {
     const { signature = '', tx, customData } = location?.state
     if (tx) {
@@ -149,7 +151,7 @@ export const RedeemResult: React.FC = () => {
           )}
         </>
       ) : (
-        <Loading />
+        <Loading desc={t('exchange.result.redeeming')} />
       )}
     </Container>
   )

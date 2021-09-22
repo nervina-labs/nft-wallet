@@ -165,8 +165,8 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
           <div className="contain">{t('exchange.othder-prize')}</div>
         </>
       ) : null}
-      <div className="price-title">{'detail.priceTitle'}</div>
-      <div className="price-desc">{'detail.priceDesciption'}</div>
+      <div className="price-title">{prizes.reward_name}</div>
+      <div className="price-desc">{prizes.reward_description}</div>
       <div className="imgs">
         <PhotoProvider maskClassName="preview-mask" toolbarRender={() => null}>
           {prizes.images.map((p) => {

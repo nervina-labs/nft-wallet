@@ -25,7 +25,7 @@ export function generateUnipassUrl(
     furl.searchParams.set('redirect', redirectUri)
     failURL = furl.href
   }
-  if (action === UnipassAction.SignTx) {
+  if (action === UnipassAction.SignTx || action === UnipassAction.Redeem) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     surl.searchParams.set(
       'prev_state',
@@ -94,6 +94,23 @@ export function generateUnipassSignTxUrl(
 ): string {
   return generateUnipassUrl(
     UnipassAction.SignTx,
+    successURL,
+    failURL,
+    pubkey,
+    message,
+    state
+  )
+}
+
+export function generateUnipassRedeemUrl(
+  successURL: string,
+  failURL: string,
+  pubkey?: string,
+  message?: string,
+  state?: Record<string, string>
+) {
+  return generateUnipassUrl(
+    UnipassAction.Redeem,
     successURL,
     failURL,
     pubkey,

@@ -141,7 +141,7 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
         isLoading={isRedeeming}
         onClick={() => {
           onRedeem({
-            deliverType: CustomRewardType.Address,
+            deliverType: CustomRewardType.None,
             isAllow: true,
             customData: {
               phone_number: formState.phone,

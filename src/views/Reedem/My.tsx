@@ -76,7 +76,9 @@ export const MyRedeem: React.FC = () => {
   }, [refetch])
 
   const dataLength = useMemo(() => {
-    return data?.pages.reduce((acc, token) => token.events.length + acc, 0) ?? 0
+    return (
+      data?.pages.reduce((acc, token) => token.event_list.length + acc, 0) ?? 0
+    )
   }, [data])
 
   return (
@@ -133,8 +135,8 @@ export const MyRedeem: React.FC = () => {
             {data?.pages?.map((group, i) => {
               return (
                 <React.Fragment key={i}>
-                  {group.events.map((e, j: number) => {
-                    return <ReedemCard item={e} />
+                  {group.event_list.map((e, j: number) => {
+                    return <ReedemCard item={e} key={`${i}+${j}`} />
                   })}
                 </React.Fragment>
               )
