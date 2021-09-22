@@ -171,7 +171,8 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ data }) => {
       status={data.state}
       willDestroyed={data?.rule_info?.will_destroyed}
       isReedemable={
-        data.user_redeemed_info.state === UserRedeemState.AllowRedeem
+        data.user_redeemed_info.state === UserRedeemState.AllowRedeem &&
+        data?.state === RedeemStatus.Open
       }
       onClick={() => {
         onRedeem({

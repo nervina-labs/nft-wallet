@@ -3,7 +3,11 @@ import { atom, useAtom } from 'jotai'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory, useLocation, useParams } from 'react-router'
-import { CustomRedeemParams, CustomRewardType } from '../models/redeem'
+import {
+  CustomRedeemParams,
+  CustomRewardType,
+  RedeemEventItem,
+} from '../models/redeem'
 import { RoutePath } from '../routes'
 import { generateUnipassRedeemUrl, UnipassConfig } from '../utils'
 import { useWalletModel, WalletType } from './useWallet'
@@ -15,6 +19,7 @@ export interface onRedeemProps {
   isAllow: boolean
   willDestroyed: boolean
   customData?: CustomRedeemParams
+  item?: RedeemEventItem
 }
 
 export interface ConfirmRedeemProps {
@@ -100,6 +105,7 @@ export const useSignRedeem = () => {
       isAllow,
       willDestroyed,
       customData,
+      item,
     }: onRedeemProps) => {
       if (!isAllow) {
         return
@@ -108,7 +114,8 @@ export const useSignRedeem = () => {
         history.push(
           `${reactLocation.pathname}${reactLocation.search ?? ''}${
             reactLocation.search?.length > 0 ? '&' : '?'
-          }deliverType=${deliverType}`
+          }deliverType=${deliverType}`,
+          item
         )
       } else {
         warning(

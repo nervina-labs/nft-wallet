@@ -363,8 +363,14 @@
         "get": "本次兑换获得",
         "receiver": {
           "info": "接收人信息",
-          "address": "接收人地址："
+          "address": "接收地址："
         },
+        "address": {
+          "name": "姓名：",
+          "phone": "电话号码：",
+          "address": "地址："
+        },
+        "ckb": "CKB 地址：",
         "issuer": {
           "comment": "发起人留言",
           "company": "物流公司：",
@@ -426,11 +432,12 @@
         "comment": "查看奖品和留言",
         "wait": "• 待承兑"
       },
-      "empty": "暂时还没有活动",
-      "no-more": "没有更多活动了",
+      "empty": "暂时还没有兑换",
+      "no-more": "没有更多兑换了",
       "result": {
         "success": "兑换成功",
         "submited": "已提交兑换",
+        "time": "提交时间：",
         "fail": "兑换失败",
         "custom": "活动发起人会根据您提供的接收信息进行承兑",
         "check": "查看兑换的 NFT",

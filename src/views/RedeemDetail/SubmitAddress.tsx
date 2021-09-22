@@ -66,7 +66,6 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
   const routerState = location.state ?? { name: '', phone: '', address: '' }
   const [formState, dispatch] = useReducer(
     (prevState: FormState, { key, value }: FormAction) => {
-      // eslint-disable-next-line no-debugger
       return { ...prevState, [key]: value }
     },
     routerState

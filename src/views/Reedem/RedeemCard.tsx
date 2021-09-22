@@ -156,6 +156,7 @@ interface ActionProps {
   userState: UserRedeemState
   willDestroyed: boolean
   deliverType: CustomRewardType
+  item?: RedeemEventItem
 }
 
 const ExchangeAction: React.FC<ActionProps> = ({
@@ -165,6 +166,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
   prizeId,
   willDestroyed,
   deliverType,
+  item,
 }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
@@ -201,6 +203,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
           isAllow: true,
           id,
           willDestroyed,
+          item,
         })
       }
     },
@@ -213,6 +216,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
       id,
       onRedeem,
       deliverType,
+      item,
     ]
   )
   return (
@@ -289,8 +293,9 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
         status={item.state}
         id={item.uuid}
         willDestroyed={item?.rule_info?.will_destroyed}
-        prizeId={item.user_redeemed_info.redeemd_reward_uuid}
+        prizeId={item.user_redeemed_info.redeemed_reward_uuid}
         userState={item.user_redeemed_info.state}
+        item={item}
         deliverType={
           isCustomReward(item?.reward_info)
             ? item?.reward_info?.delivery_type

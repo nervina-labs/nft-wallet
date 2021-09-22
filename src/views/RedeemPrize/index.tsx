@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import styled from 'styled-components'
@@ -14,12 +14,17 @@ import { RedeeemLabel } from '../Reedem/Label'
 import { Divider } from '@material-ui/core'
 import { Prize } from '../Reedem/Prize'
 import { formatTime } from '../../utils'
+import { isCustomReward } from '../../models/redeem'
 
 const BoxContainer = styled.div`
   padding: 16px;
   margin: 20px;
   border-radius: 20px;
   background: #fff;
+  .comment {
+    font-size: 12px;
+    margin-top: 8px;
+  }
   .header {
     display: flex;
     justify-content: space-between;
@@ -98,7 +103,7 @@ export const RedeemPrize: React.FC = () => {
   const { isError, data } = useQuery(
     [Query.RedeemPrize, id, api],
     async () => {
-      const { data } = await api.getRedeemDetail(id)
+      const { data } = await api.getRedeemPrize(id)
       return data
     },
     {
@@ -111,6 +116,18 @@ export const RedeemPrize: React.FC = () => {
   )
 
   const { address } = useWalletModel()
+
+  const comment = useMemo(() => {
+    if (isCustomReward(data?.record_info)) {
+      return data?.record_info.comment
+    }
+  }, [data])
+
+  const addressInfo = useMemo(() => {
+    if (isCustomReward(data?.record_info)) {
+      return data?.record_info.delivery_info
+    }
+  }, [data])
 
   if (isError) {
     return <Redirect to={RoutePath.NotFound} />
@@ -135,14 +152,14 @@ export const RedeemPrize: React.FC = () => {
               <Divider />
               <Prize
                 type={data.reward_type}
-                prizes={data.reward_info}
+                prizes={data.record_info}
                 showLabel={false}
                 className="prize"
               />
               <Divider />
               <div className="time">
                 {t('exchange.redeem-time')}
-                {formatTime(data.start_timestamp, i18n.language)}
+                {formatTime(data.redeemed_timestamp, i18n.language)}
               </div>
             </BoxContainer>
             <BoxContainer>
@@ -150,12 +167,53 @@ export const RedeemPrize: React.FC = () => {
                 <span title="title">{t('exchange.prize.receiver.info')}</span>
               </div>
               <Divider />
-              <RowContainer>
-                <Row label={t('exchange.prize.receiver.address')}>
-                  {address}
-                </Row>
-              </RowContainer>
+              {addressInfo?.name ? (
+                <RowContainer>
+                  <Row label={t('exchange.prize.address.name')}>
+                    {addressInfo.name}
+                  </Row>
+                </RowContainer>
+              ) : null}
+              {addressInfo?.phone_number ? (
+                <RowContainer>
+                  <Row label={t('exchange.prize.address.phone')}>
+                    {addressInfo.phone_number}
+                  </Row>
+                </RowContainer>
+              ) : null}
+              {addressInfo?.address ? (
+                <RowContainer>
+                  <Row label={t('exchange.prize.address.address')}>
+                    {addressInfo.address}
+                  </Row>
+                </RowContainer>
+              ) : null}
+              {addressInfo?.ckb_address ? (
+                <RowContainer>
+                  <Row label={t('exchange.prize.ckb')}>
+                    {addressInfo.ckb_address}
+                  </Row>
+                </RowContainer>
+              ) : null}
+              {addressInfo == null ? (
+                <RowContainer>
+                  <Row label={t('exchange.prize.address.address')}>
+                    {address}
+                  </Row>
+                </RowContainer>
+              ) : null}
             </BoxContainer>
+            {comment ? (
+              <BoxContainer>
+                <div className="header">
+                  <span title="title">
+                    {t('exchange.prize.issuer.comment')}
+                  </span>
+                </div>
+                <Divider />
+                <div className="comment">{comment}</div>
+              </BoxContainer>
+            ) : null}
           </>
         )}
       </main>

@@ -118,7 +118,7 @@ export const NFTPrice: React.FC<NFTPriceProps> = ({
         </>
       ) : null}
       {tokens.map((info, i) => {
-        return <PriceCard info={info} count={3} key={i} />
+        return <PriceCard info={info} count={info.item_count} key={i} />
       })}
     </>
   )

@@ -452,7 +452,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       type,
     }
     if (this.address) {
-      params.ckb_address = this.address
+      params.wallet_address = this.address
     }
     return await this.axios.get('/redemption_events', {
       params,
@@ -466,7 +466,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       type,
     }
     if (this.address) {
-      params.ckb_address = this.address
+      params.wallet_address = this.address
     }
     return await this.axios.get('/redemption_events', {
       params,
@@ -477,9 +477,13 @@ export class ServerWalletAPI implements NFTWalletAPI {
     return await this.axios.get(`/redemption_events/${uuid}`, {
       params: {
         uuid,
-        ckb_address: this.address,
+        wallet_address: this.address,
       },
     })
+  }
+
+  async getRedeemPrize(uuid: string) {
+    return await this.axios.get(`/redemption_records/${uuid}`)
   }
 
   async getRedeemTransaction(
@@ -491,7 +495,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       {
         params: {
           uuid,
-          ckb_address: this.address,
+          wallet_address: this.address,
         },
       }
     )
@@ -519,6 +523,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     const data = {
       signed_tx: JSON.stringify(rawTx),
       ...customData,
+      wallet_address: this.address,
     }
     return await this.axios.post(`/redemption_events/${uuid}/records`, data)
   }

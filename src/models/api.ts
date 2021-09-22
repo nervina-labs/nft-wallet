@@ -20,6 +20,7 @@ import {
   RedeemListType,
   RedeemParams,
   RedeemResultResponse,
+  RewardDetailResponse,
 } from './redeem'
 import { WxSignConfig } from './wx'
 import { GetHolderByTokenClassUuidResponse } from './holder'
@@ -192,6 +193,8 @@ export interface NFTWalletAPI {
     id: string,
     isUnipass?: boolean
   ) => Promise<NFTTransaction>
+
+  getRedeemPrize: (id: string) => Promise<AxiosResponse<RewardDetailResponse>>
 
   redeem: (params: RedeemParams) => Promise<AxiosResponse<RedeemResultResponse>>
 

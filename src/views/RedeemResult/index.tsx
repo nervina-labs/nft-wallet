@@ -74,7 +74,8 @@ const Success: React.FC<ResultStateProps> = ({ state, result }) => {
           : t('exchange.result.success')}
       </div>
       <div className="time">
-        {formatTime(result?.created_timestamp, i18n.language)}
+        {t('exchange.result.time')}
+        {formatTime(result?.redeemed_timestamp, i18n.language)}
       </div>
       <Button onClick={() => history.push(RoutePath.MyRedeem)}>
         {hasCustomData

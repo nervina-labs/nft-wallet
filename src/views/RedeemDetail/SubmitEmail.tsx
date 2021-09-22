@@ -115,7 +115,7 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
           onRedeem({
             deliverType: CustomRewardType.None,
             isAllow: true,
-            customData: { address: formState.email },
+            customData: { email: formState.email },
             id,
             willDestroyed,
           })

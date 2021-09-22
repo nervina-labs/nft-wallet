@@ -30,7 +30,7 @@ export enum UserRedeemState {
 
 export interface UseRedeemedInfo {
   state: UserRedeemState
-  redeemd_reward_uuid: string
+  redeemed_reward_uuid: string
 }
 
 export interface RedeemProgress {
@@ -58,6 +58,7 @@ export interface NormalRewardInfo {
   item_count: number
   class_card_back_content_exist: boolean
   renderer_type: NftType
+  n_token_id: number
 }
 
 export interface BlindRewardInfo {
@@ -77,6 +78,8 @@ export interface CustomRewardInfo {
   reward_description: string
   images: string[]
   delivery_type: CustomRewardType
+  delivery_info: CustomRedeemParams
+  comment: string
 }
 
 export function isNormalReward(info: RewardInfo): info is NormalRewardInfo[] {
@@ -90,7 +93,10 @@ export function isBlindReward(info: RewardInfo): info is BlindRewardInfo {
   )
 }
 
-export function isCustomReward(info: RewardInfo): info is CustomRewardInfo {
+export function isCustomReward(info?: RewardInfo): info is CustomRewardInfo {
+  if (!info) {
+    return false
+  }
   return (
     !isNormalReward(info) &&
     Object.prototype.hasOwnProperty.call(info, 'reward_name')
@@ -113,6 +119,12 @@ export interface RedeemEventItem extends RedeemItem {
   rule_info: RuleInfo
 }
 
+export interface RewardDetailResponse {
+  reward_type: RedeemType
+  redeemed_timestamp: string
+  record_info: RewardInfo
+}
+
 export function isRedeemDetail(
   data: RedeemDetailModel | RedeemEventItem
 ): data is RedeemDetailModel {
@@ -129,7 +141,7 @@ export function formatToRedeemItem(data: RedeemDetailModel | RedeemEventItem) {
 export interface RedeemRewardDetail {
   reward_type: RedeemType
   reward_info: RewardInfo
-  ckb_address?: string
+  wallet_address?: string
   user_ship_info?: {
     name: string
     phone_number: string
@@ -143,6 +155,7 @@ export interface CustomRedeemParams {
   phone_number?: string
   address?: string
   ckb_address?: string
+  email?: string
 }
 
 export interface RedeemParams {
@@ -164,6 +177,6 @@ export interface RedeemDetailModel extends RedeemItem {
 }
 
 export interface RedeemResultResponse {
-  created_timestamp: string
+  redeemed_timestamp: string
   reward_uuid: string
 }

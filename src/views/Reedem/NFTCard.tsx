@@ -49,6 +49,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
           fontSize={12}
           bold={false}
           color="#999999"
+          sn={info.n_token_id}
         />
       </div>
     </Container>
