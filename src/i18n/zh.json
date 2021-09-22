@@ -427,7 +427,17 @@
         "wait": "• 待承兑"
       },
       "empty": "暂时还没有活动",
-      "no-more": "没有更多活动了"
+      "no-more": "没有更多活动了",
+      "result": {
+        "success": "兑换成功",
+        "submited": "已提交兑换",
+        "fail": "兑换失败",
+        "custom": "活动发起人会根据您提供的接收信息进行承兑",
+        "check": "查看兑换的 NFT",
+        "confirm": "确认",
+        "go-back": "返回兑换中心",
+        "error": "请检查当前网络情况或兑换条件"
+      }
     },
     "follow": {
       "follow": "关注",

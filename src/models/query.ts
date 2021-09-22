@@ -17,6 +17,7 @@ export enum Query {
   MyRedeemList = 'MyRedeemList',
   RedeemDetail = 'RedeemDetail',
   RedeemPrize = 'RedeemPrize',
+  SendRedeem = 'SendRedeem',
   DetectClaim = 'DetectClaim',
   Claim = 'Claim',
   FollowedIssuers = 'FollowedIssuers',
