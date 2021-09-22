@@ -276,11 +276,11 @@ export const RedeemDetail: React.FC = () => {
                 url={data.issuer_info.avatar_url}
                 name={data.issuer_info?.name}
                 uuid={data.issuer_info?.issuer_id}
-                vipAlignRight
+                vipAlignRight={false}
                 color="#333333"
-                isVip={data?.issuer_info?.verified_info?.is_verified}
-                vipTitle={data?.issuer_info?.verified_info?.verified_title}
-                vipSource={data?.issuer_info?.verified_info?.verified_source}
+                isVip={data?.verified_info?.is_verified}
+                vipTitle={data?.verified_info?.verified_title}
+                vipSource={data?.verified_info?.verified_source}
               />
               <div className="issuer">{t('exchange.issuer')}</div>
             </div>

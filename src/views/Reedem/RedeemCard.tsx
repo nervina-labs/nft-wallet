@@ -15,7 +15,7 @@ import {
 import { Divider } from '@material-ui/core'
 import { RedeeemLabel } from './Label'
 import classNames from 'classnames'
-import { useHistory, useRouteMatch } from 'react-router'
+import { useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
 import { NftType } from '../../models'
@@ -103,7 +103,6 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     position: relative;
-    color: #999999;
     font-size: 14px;
     cursor: pointer;
     &.exchange {
@@ -175,9 +174,9 @@ const ExchangeAction: React.FC<ActionProps> = ({
     userState === UserRedeemState.WaittingRedeem
   const isAllowRedeem =
     status === RedeemStatus.Open && UserRedeemState.AllowRedeem === userState
-  const matchMyRedeem = useRouteMatch(RoutePath.MyRedeem)
+  // const matchMyRedeem = useRouteMatch(RoutePath.MyRedeem)
   const text = useMemo(() => {
-    if (isReedemed && matchMyRedeem) {
+    if (isReedemed) {
       return t('exchange.check.price')
     } else if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
@@ -188,7 +187,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
     }
 
     return t('exchange.actions.insufficient')
-  }, [status, t, userState, isReedemed, matchMyRedeem])
+  }, [status, t, userState, isReedemed])
 
   const { onRedeem } = useSignRedeem()
   const onClick = useCallback(
@@ -219,12 +218,13 @@ const ExchangeAction: React.FC<ActionProps> = ({
       item,
     ]
   )
+
   return (
     <div
       className={classNames('status', {
         exchange: isAllowRedeem,
         exchanged: isReedemed,
-        disabled: !isAllowRedeem,
+        disabled: !isAllowRedeem && !isReedemed,
       })}
       onClick={onClick}
     >
@@ -273,11 +273,11 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
           url={item.issuer_info.avatar_url}
           name={item.issuer_info?.name}
           uuid={item.issuer_info?.uuid}
-          vipAlignRight
+          vipAlignRight={false}
           color="rgb(51, 51, 51)"
-          isVip={item?.issuer_info?.verified_info?.is_verified}
-          vipTitle={item?.issuer_info?.verified_info?.verified_title}
-          vipSource={item?.issuer_info?.verified_info?.verified_source}
+          isVip={item?.verified_info?.is_verified}
+          vipTitle={item?.verified_info?.verified_title}
+          vipSource={item?.verified_info?.verified_source}
         />
         <span>{t('exchange.issuer')}</span>
       </div>

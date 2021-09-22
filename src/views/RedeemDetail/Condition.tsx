@@ -65,7 +65,8 @@ const Container = styled.div`
     box-shadow: none;
   }
   .MuiTableCell-root {
-    padding: 6px 0;
+    padding: 6px 3px;
+    word-break: keep-all;
     border: none;
     &:first-child {
       padding: 6px 10px;

@@ -1,6 +1,7 @@
 import { ListMeta, NftType } from '.'
 import { Issuer, IssuerInfo } from './issuer'
 import type { Transaction as PwTransaction } from '@lay2/pw-core'
+import { VipInfo } from './class-list'
 
 export enum RedeemType {
   NFT = 'token',
@@ -58,7 +59,9 @@ export interface NormalRewardInfo {
   item_count: number
   class_card_back_content_exist: boolean
   renderer_type: NftType
-  n_token_id: number
+  n_token_id?: number
+  class_uuid: string
+  token_uuid?: string
 }
 
 export interface BlindRewardInfo {
@@ -113,8 +116,8 @@ export interface RuleInfo {
   options: RuleInfoOption[]
 }
 
-export interface RedeemEventItem extends RedeemItem {
-  issuer_info: Issuer
+export interface RedeemEventItem extends RedeemItem, VipInfo {
+  issuer_info: Omit<Issuer, 'verified_info'>
   reward_info: RewardInfo
   rule_info: RuleInfo
 }
@@ -170,8 +173,8 @@ export interface RedeemEvents {
   event_list: RedeemEventItem[]
 }
 
-export interface RedeemDetailModel extends RedeemItem {
-  issuer_info: IssuerInfo
+export interface RedeemDetailModel extends RedeemItem, VipInfo {
+  issuer_info: Omit<IssuerInfo, 'verified_info'>
   rule_info: RuleInfo
   reward_info: RewardInfo
 }

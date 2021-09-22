@@ -4,10 +4,12 @@ import { Media } from './Media'
 import { Limited } from '../../components/Limited'
 import { NormalRewardInfo } from '../../models/redeem'
 import { NftType } from '../../models'
+import { Link } from 'react-router-dom'
 
-const Container = styled.div`
+const Container = styled(Link)`
   display: flex;
   flex: 1;
+  text-decoration: none;
   .content {
     display: flex;
     flex-direction: column;
@@ -19,6 +21,7 @@ const Container = styled.div`
       font-size: 12px;
       color: #000000;
       display: -webkit-box;
+      text-overflow: ellipsis;
       display: -moz-box;
       -webkit-box-orient: vertical;
       overflow: hidden;
@@ -35,7 +38,11 @@ export interface NFTCardProps {
 
 export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
   return (
-    <Container>
+    <Container
+      to={`${info.n_token_id ? '/nft' : '/class'}/${
+        info.token_uuid || info.class_uuid
+      }`}
+    >
       <Media
         isPlayable={info.renderer_type !== NftType.Picture}
         hasCardBack={info.class_card_back_content_exist}
