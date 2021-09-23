@@ -134,6 +134,7 @@ const OthderPriceContainer = styled.div`
     color: #666666;
     font-size: 12px;
     margin-bottom: 16px;
+    white-space: pre-line;
   }
   .imgs {
     display: flex;

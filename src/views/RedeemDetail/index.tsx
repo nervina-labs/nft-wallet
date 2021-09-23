@@ -118,6 +118,7 @@ const Container = styled(MainContainer)`
       font-size: 14px;
       margin: 16px 20px;
       color: #666666;
+      white-space: pre-line;
     }
     .issue {
       margin-left: 20px;
