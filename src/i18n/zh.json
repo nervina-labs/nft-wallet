@@ -393,7 +393,7 @@
           "phone-label": "电话号码",
           "phone-placeholder": "请输入电话号码",
           "address-label": "详细地址",
-          "address-placeholder": "请输入填写地址"
+          "address-placeholder": "请填写地址"
         },
         "email": {
           "title": "填写邮箱地址",
