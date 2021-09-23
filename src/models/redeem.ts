@@ -25,7 +25,7 @@ export enum RedeemStatus {
 export enum UserRedeemState {
   NotAllow = 'not_allow_redeem',
   AllowRedeem = 'allow_redeem',
-  WaittingRedeem = 'waitting_redeem',
+  WaittingRedeem = 'pending_acceptance',
   Redeemed = 'redeemed',
 }
 

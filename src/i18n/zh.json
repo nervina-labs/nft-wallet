@@ -370,7 +370,7 @@
           "phone": "电话号码：",
           "address": "地址："
         },
-        "ckb": "CKB 地址：",
+        "ckb": "接收地址：",
         "issuer": {
           "comment": "发起人留言",
           "company": "物流公司：",
@@ -397,13 +397,15 @@
         "email": {
           "title": "填写邮箱地址",
           "label": "邮箱地址",
-          "placeholder": "请输入邮箱地址"
+          "placeholder": "请输入邮箱地址",
+          "error": "请输入合法 Email 地址"
         },
         "ckb": {
           "title": "填写 CKB 地址",
           "label": "CKB 地址",
           "placeholder": "请输入 CKB 地址",
-          "fill": "填充当前账户地址"
+          "fill": "填充当前账户地址",
+          "error": "请输入合法 CKB 地址"
         }
       },
       "exchanged": "已兑换",

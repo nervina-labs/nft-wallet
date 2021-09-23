@@ -15,7 +15,7 @@ import {
 import { Divider } from '@material-ui/core'
 import { RedeeemLabel } from './Label'
 import classNames from 'classnames'
-import { useHistory } from 'react-router'
+import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
 import { NftType } from '../../models'
@@ -34,6 +34,8 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
     bar: {
       borderRadius: 5,
       backgroundColor: '#45B26B',
+      transition: 'none',
+      animation: 'none',
     },
   })
 )(LinearProgress)
@@ -169,16 +171,20 @@ const ExchangeAction: React.FC<ActionProps> = ({
 }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
-  const isReedemed =
-    userState === UserRedeemState.Redeemed ||
-    userState === UserRedeemState.WaittingRedeem
   const isAllowRedeem =
     status === RedeemStatus.Open && UserRedeemState.AllowRedeem === userState
-  // const matchMyRedeem = useRouteMatch(RoutePath.MyRedeem)
+  const matchMyRedeem = useRouteMatch(RoutePath.MyRedeem)
   const text = useMemo(() => {
-    if (isReedemed) {
-      return t('exchange.check.price')
-    } else if (status === RedeemStatus.Closed) {
+    if (matchMyRedeem) {
+      if (
+        deliverType === CustomRewardType.None ||
+        userState === UserRedeemState.WaittingRedeem
+      ) {
+        return t('exchange.check.price')
+      }
+      return t('exchange.check.comment')
+    }
+    if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
     } else if (status === RedeemStatus.Done) {
       return t('exchange.event.end')
@@ -187,14 +193,14 @@ const ExchangeAction: React.FC<ActionProps> = ({
     }
 
     return t('exchange.actions.insufficient')
-  }, [status, t, userState, isReedemed])
+  }, [status, t, userState, deliverType, matchMyRedeem])
 
   const { onRedeem } = useSignRedeem()
   const onClick = useCallback(
     (e: React.SyntheticEvent) => {
       e.stopPropagation()
       e.preventDefault()
-      if (isReedemed) {
+      if (matchMyRedeem) {
         history.push(`${RoutePath.RedeemPrize}/${prizeId}`)
       } else if (isAllowRedeem) {
         onRedeem({
@@ -208,7 +214,6 @@ const ExchangeAction: React.FC<ActionProps> = ({
     },
     [
       history,
-      isReedemed,
       prizeId,
       isAllowRedeem,
       willDestroyed,
@@ -216,6 +221,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
       onRedeem,
       deliverType,
       item,
+      matchMyRedeem,
     ]
   )
 
@@ -223,13 +229,13 @@ const ExchangeAction: React.FC<ActionProps> = ({
     <div
       className={classNames('status', {
         exchange: isAllowRedeem,
-        exchanged: isReedemed,
-        disabled: !isAllowRedeem && !isReedemed,
+        exchanged: !!matchMyRedeem,
+        disabled: !isAllowRedeem && !matchMyRedeem,
       })}
       onClick={onClick}
     >
       <span>{text}</span>
-      {userState === UserRedeemState.WaittingRedeem ? (
+      {userState === UserRedeemState.WaittingRedeem && matchMyRedeem ? (
         <span className="wait">{t('exchange.check.wait')}</span>
       ) : null}
     </div>

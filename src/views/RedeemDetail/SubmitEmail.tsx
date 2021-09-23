@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { RedeemDrawer } from './Drawer'
@@ -9,6 +9,7 @@ import { Footer } from './Footer'
 import { CustomRewardType, RedeemStatus } from '../../models/redeem'
 import Alert from '@material-ui/lab/Alert'
 import { useSignRedeem } from '../../hooks/useRedeem'
+import { verifyEmail } from '../../utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,8 +82,22 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
-  const isReadyForSumit = !!formState.email
   const { onRedeem, isRedeeming } = useSignRedeem()
+
+  const showAlert = useMemo(() => {
+    if (formState.email == null) {
+      return false
+    }
+    if (formState.email === '') {
+      return false
+    }
+    if (verifyEmail(formState.email)) {
+      return false
+    }
+    return true
+  }, [formState.email])
+
+  const isReadyForSumit = !!formState.email && !showAlert
 
   return (
     <Container
@@ -102,6 +117,12 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
             dispatch({ key: 'email', value: e.target.value })
           }
         />
+        <div
+          className="alert"
+          style={{ visibility: showAlert ? 'visible' : 'hidden' }}
+        >
+          {t('exchange.form.email.error')}
+        </div>
         <Alert severity="error">
           {t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`)}
         </Alert>

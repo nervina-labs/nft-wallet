@@ -1,5 +1,5 @@
 import { makeStyles, InputAdornment } from '@material-ui/core'
-import React, { useReducer } from 'react'
+import React, { useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { RedeemDrawer } from './Drawer'
@@ -10,6 +10,7 @@ import { CustomRewardType, RedeemStatus } from '../../models/redeem'
 import Alert from '@material-ui/lab/Alert'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useSignRedeem } from '../../hooks/useRedeem'
+import { verifyCkbAddress } from '../../utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +42,10 @@ const Container = styled(RedeemDrawer)`
   .label {
     font-size: 14px;
     margin: 8px 0;
+  }
+  .alert {
+    font-size: 10px;
+    color: #d03a3a;
   }
 `
 
@@ -76,9 +81,22 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
   )
   const classes = useStyles()
 
-  const isReadyForSumit = !!formState.ckb
-
   const { onRedeem, isRedeeming } = useSignRedeem()
+
+  const showAlert = useMemo(() => {
+    if (formState.ckb == null) {
+      return false
+    }
+    if (formState.ckb === '') {
+      return false
+    }
+    if (verifyCkbAddress(formState.ckb)) {
+      return false
+    }
+    return true
+  }, [formState.ckb])
+
+  const isReadyForSumit = !!formState.ckb && !showAlert
 
   return (
     <Container
@@ -108,6 +126,12 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
             </InputAdornment>
           }
         />
+        <div
+          className="alert"
+          style={{ visibility: showAlert ? 'visible' : 'hidden' }}
+        >
+          {t('exchange.form.ckb.error')}
+        </div>
         <Alert severity="error">
           {t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`)}
         </Alert>
