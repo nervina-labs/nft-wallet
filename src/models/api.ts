@@ -15,6 +15,7 @@ import {
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
 import {
+  MyRedeemEvents,
   RedeemDetailModel,
   RedeemEvents,
   RedeemListType,
@@ -185,7 +186,7 @@ export interface NFTWalletAPI {
   getMyRedeemEvents: (
     page: number,
     type: RedeemListType
-  ) => Promise<AxiosResponse<RedeemEvents>>
+  ) => Promise<AxiosResponse<MyRedeemEvents>>
 
   getRedeemDetail: (id: string) => Promise<AxiosResponse<RedeemDetailModel>>
 

@@ -47,7 +47,16 @@ export const MyRedeem: React.FC = () => {
         pageParam,
         isWait ? RedeemListType.UserWaittingRedeem : RedeemListType.UserRedeemed
       )
-      return data
+
+      return {
+        ...data,
+        record_list: data.record_list.map((d: any) => {
+          return {
+            ...d.event_info,
+            ...d,
+          }
+        }),
+      }
     },
     {
       getNextPageParam: (lastPage) => {
@@ -77,7 +86,7 @@ export const MyRedeem: React.FC = () => {
 
   const dataLength = useMemo(() => {
     return (
-      data?.pages.reduce((acc, token) => token.event_list.length + acc, 0) ?? 0
+      data?.pages.reduce((acc, token) => token.record_list.length + acc, 0) ?? 0
     )
   }, [data])
 
@@ -135,7 +144,7 @@ export const MyRedeem: React.FC = () => {
             {data?.pages?.map((group, i) => {
               return (
                 <React.Fragment key={i}>
-                  {group.event_list.map((e, j: number) => {
+                  {group.record_list.map((e, j: number) => {
                     return <ReedemCard item={e} key={`${i}+${j}`} />
                   })}
                 </React.Fragment>

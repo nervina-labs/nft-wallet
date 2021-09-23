@@ -468,7 +468,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (this.address) {
       params.wallet_address = this.address
     }
-    return await this.axios.get('/redemption_events', {
+    return await this.axios.get('/redemption_records', {
       params,
     })
   }

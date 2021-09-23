@@ -29,11 +29,6 @@ export enum UserRedeemState {
   Redeemed = 'redeemed',
 }
 
-export interface UseRedeemedInfo {
-  state: UserRedeemState
-  redeemed_reward_uuid: string
-}
-
 export interface RedeemProgress {
   total: number
   claimed: number
@@ -46,8 +41,9 @@ export interface RedeemItem {
   reward_type: RedeemType
   progress: RedeemProgress
   state: RedeemStatus
-  user_redeemed_info: UseRedeemedInfo
+  user_redeemed_state: UserRedeemState
   start_timestamp: string
+  user_redeemed_record_uuid: string
 }
 
 export type RewardInfo = NormalRewardInfo[] | BlindRewardInfo | CustomRewardInfo
@@ -171,6 +167,11 @@ export interface RedeemParams {
 export interface RedeemEvents {
   meta: ListMeta
   event_list: RedeemEventItem[]
+}
+
+export interface MyRedeemEvents {
+  meta: ListMeta
+  record_list: RedeemEventItem[]
 }
 
 export interface RedeemDetailModel extends RedeemItem, VipInfo {
