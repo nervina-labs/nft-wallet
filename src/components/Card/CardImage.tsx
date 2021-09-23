@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { CardBack } from '../Cardback'
 import FallbackImg from '../../assets/svg/fallback.svg'
-import { addLocaleToUrl, addTidToUrl, getImagePreviewUrl } from '../../utils'
+import { addParamsToUrl, getImagePreviewUrl } from '../../utils'
 import { LazyLoadImage, LazyLoadImageVariant } from '../Image'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
@@ -97,13 +97,10 @@ export const CardImage: React.FC<CardImageProps> = ({
   const finalSrc = useMemo(() => {
     let ret = loadOriginal ? src : getImagePreviewUrl(src)
     if (ret) {
-      const urlObj = new URL(ret)
-      if (urlObj.searchParams.has('tid')) {
-        ret = addLocaleToUrl(ret, i18n.language === 'en' ? 'en' : 'zh')
-      }
-    }
-    if (tid) {
-      ret = addTidToUrl(ret, tid)
+      ret = addParamsToUrl(ret, {
+        locate: i18n.language === 'en' ? 'en' : 'zh',
+        ...(tid ? { tid } : {}),
+      })
     }
     return ret
   }, [src, loadOriginal, tid])

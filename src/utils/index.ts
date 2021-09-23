@@ -186,20 +186,6 @@ export function getImagePreviewUrl<U extends string | undefined>(
   return addParamsToUrl(url, params) as any
 }
 
-export function addTidToUrl(url: string, tid: string): string {
-  if (!url) {
-    return url
-  }
-  return addParamsToUrl(url, { tid })
-}
-
-export function addLocaleToUrl(url: string, locale: 'zh' | 'en'): string {
-  if (!url) {
-    return url
-  }
-  return addParamsToUrl(url, { locale })
-}
-
 const MILLION = 1e6
 
 export const formatCount = (count: number, lang: string): number | string => {

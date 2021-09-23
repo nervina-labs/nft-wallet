@@ -38,4 +38,5 @@ export interface UserResponse {
   region: string
   guide_finished: boolean
   description: string
+  avatar_tid?: number
 }
