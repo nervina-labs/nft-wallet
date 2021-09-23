@@ -335,6 +335,7 @@
     "exchange": {
       "title": "兑换中心",
       "count": "{{count}} 个",
+      "redeemed": "已兑",
       "nft-prize": "奖品包含下面所有 NFT",
       "blind-prize": "奖品随机包含下面的 {{count}} 个",
       "othder-prize": "发起人会在你提交兑换后根据你提供的接收信息进行承兑",
