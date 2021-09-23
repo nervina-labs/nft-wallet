@@ -263,7 +263,7 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
       return (
         <Media
           isPlayable={t.renderer_type !== NftType.Picture}
-          hasCardBack={t.class_card_back_content_exist}
+          hasCardBack={t.card_back_content_exist}
           src={t.class_bg_image_url}
           key={i}
         />

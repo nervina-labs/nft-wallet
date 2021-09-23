@@ -273,10 +273,10 @@ export const RedeemDetail: React.FC = () => {
             <div className="issue">
               <Creator
                 title=""
-                baned={false}
+                baned={data?.issuer_info?.is_issuer_banned}
                 url={data.issuer_info.avatar_url}
                 name={data.issuer_info?.name}
-                uuid={data.issuer_info?.issuer_id}
+                uuid={data.issuer_info?.issuer_id ?? data.issuer_info?.uuid}
                 vipAlignRight={false}
                 color="#333333"
                 isVip={data?.verified_info?.is_verified}

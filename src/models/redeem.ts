@@ -53,11 +53,12 @@ export interface NormalRewardInfo {
   class_name: string
   class_total: string
   item_count: number
-  class_card_back_content_exist: boolean
+  card_back_content_exist: boolean
   renderer_type: NftType
   n_token_id?: number
   class_uuid: string
   token_uuid?: string
+  is_banned: boolean
 }
 
 export interface BlindRewardInfo {

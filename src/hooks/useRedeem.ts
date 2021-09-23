@@ -10,6 +10,7 @@ import {
 } from '../models/redeem'
 import { RoutePath } from '../routes'
 import { generateUnipassRedeemUrl, UnipassConfig } from '../utils'
+import { useProfileModel } from './useProfile'
 import { useWalletModel, WalletType } from './useWallet'
 import { useWarning } from './useWarning'
 
@@ -25,6 +26,7 @@ export interface onRedeemProps {
 export interface ConfirmRedeemProps {
   id: string
   customData?: CustomRedeemParams
+  onConfirmError?: () => any
 }
 
 const isSigningAtom = atom(false)
@@ -44,9 +46,9 @@ export const useSignRedeem = () => {
   const [t] = useTranslation('translations')
 
   const [isRedeeming, setIsRedeeming] = useAtom(isSigningAtom)
-
+  const { snackbar } = useProfileModel()
   const confirmRedeem = useCallback(
-    async ({ customData, id }: ConfirmRedeemProps) => {
+    async ({ customData, id, onConfirmError }: ConfirmRedeemProps) => {
       setIsRedeeming(true)
       try {
         const { tx } = await api
@@ -85,6 +87,8 @@ export const useSignRedeem = () => {
         }
       } catch (error) {
         setIsRedeeming(false)
+        snackbar(t('exchange.error'))
+        await onConfirmError?.()
       }
     },
     [
@@ -95,6 +99,8 @@ export const useSignRedeem = () => {
       walletType,
       reactLocation.pathname,
       setIsRedeeming,
+      snackbar,
+      t,
     ]
   )
 
