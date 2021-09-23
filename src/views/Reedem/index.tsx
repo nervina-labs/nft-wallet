@@ -102,7 +102,7 @@ export const Redeem: React.FC = () => {
       },
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: true,
     }
   )
 
@@ -129,7 +129,9 @@ export const Redeem: React.FC = () => {
             <Link to={RoutePath.MyRedeem}>
               <MyExchangeSvg />
             </Link>
-          ) : null
+          ) : (
+            <div />
+          )
         }
       />
       <div className="tabs">

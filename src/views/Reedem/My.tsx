@@ -73,7 +73,7 @@ export const MyRedeem: React.FC = () => {
       },
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: true,
     }
   )
 

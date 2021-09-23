@@ -122,6 +122,7 @@ const Container = styled(MainContainer)`
     .issue {
       margin-left: 20px;
       margin-bottom: 16px;
+      margin-right: 20px;
       .issuer {
         margin-top: 8px;
         color: #999999;

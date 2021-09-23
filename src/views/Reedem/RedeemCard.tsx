@@ -48,13 +48,15 @@ const Container = styled.div`
   /* margin-top: 0; */
   .issuer {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
     > span {
       font-size: 12px;
       margin-left: auto;
       color: #999999;
+      word-break: keep-all;
+      margin-left: 4px;
     }
   }
   .header {

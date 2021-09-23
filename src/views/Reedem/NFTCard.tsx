@@ -39,7 +39,7 @@ export interface NFTCardProps {
 export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
   return (
     <Container
-      to={`${info.n_token_id ? '/nft' : '/class'}/${
+      to={`${info.n_token_id != null ? '/nft' : '/class'}/${
         info.token_uuid || info.class_uuid
       }`}
     >
