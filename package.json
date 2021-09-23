@@ -1,7 +1,13 @@
 {
   "name": "nft-wallet",
   "version": "0.0.1",
-  "license": "MIT",
+  "license": "Apache-2.0",
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
   "engines": {
     "node": "14",
     "yarn": "1.22"
@@ -9,7 +15,6 @@
   "scripts": {
     "dev": "craco start",
     "build": "craco build",
-    "start": "serve -s build",
     "lint": "eslint src"
   },
   "dependencies": {
@@ -45,13 +50,11 @@
     "react-query": "^3.13.4",
     "react-router-dom": "^5.2.0",
     "react-webcam": "^5.2.4",
-    "serve": "^11.3.2",
     "styled-components": "^5.2.3",
     "swiper": "^6.8.0",
     "unstated-next": "^1.1.0",
     "web3": "^1.3.5",
-    "web3modal": "^1.9.3",
-    "weixin-js-sdk": "^1.6.0"
+    "web3modal": "^1.9.3"
   },
   "devDependencies": {
     "@craco/craco": "^6.1.1",
