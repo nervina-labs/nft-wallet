@@ -179,7 +179,7 @@ const Header: React.FC<{
     if (sortType === SortType.Latest) {
       return
     }
-    const o = new URLSearchParams(location.href)
+    const o = new URLSearchParams(location.search)
     if (currentTag === 'all') {
       o.set('sort', 'latest')
     } else {
@@ -201,9 +201,11 @@ const Header: React.FC<{
   }, [history, sortType])
 
   const tabsActiveKey = Math.max(
-    [SortType.Recommend, SortType.Latest, SortType.Likes].findIndex(
-      (e) => e === sortType
-    ),
+    [
+      ...(currentTagId === 'all' ? [SortType.Recommend] : []),
+      SortType.Latest,
+      SortType.Likes,
+    ].findIndex((e) => e === sortType),
     0
   )
   return (
@@ -215,11 +217,11 @@ const Header: React.FC<{
     >
       {!enableFixed && <h3>{currentTagName}</h3>}
       <Tabs activeKey={tabsActiveKey} className="filters">
-        {currentTagId === 'all' && (
+        {currentTagId === 'all' ? (
           <Tab className="filter" onClick={goToRecommend}>
             {t('explore.recommended')}
           </Tab>
-        )}
+        ) : null}
         <Tab className="filter" onClick={goToLatest}>
           {t('explore.latest')}
         </Tab>
@@ -478,6 +480,13 @@ export const Explore: React.FC = () => {
             currentTagId={currentTagId ?? ''}
             sortType={sortType}
             currentTagName={currentTagName}
+          />
+          <Header
+            currentTag={currentTag}
+            currentTagId={currentTagId ?? ''}
+            sortType={sortType}
+            currentTagName={currentTagName}
+            enableFixed={true}
           />
           <section className="content">
             {isRefetching ? <Loading /> : null}
