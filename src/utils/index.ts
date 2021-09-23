@@ -4,6 +4,7 @@ import Web3 from 'web3'
 import {
   BOWSER_BROWSER,
   INFURA_ID,
+  IS_MAINNET,
   OSS_IMG_HOSTS,
   OSS_IMG_PROCESS_QUERY_KEY,
   OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
@@ -27,7 +28,7 @@ export const verifyCkbAddress = (address: string): boolean => {
     return false
   }
   return (
-    (address.startsWith('ckb') || address.startsWith('ckt')) &&
+    address.startsWith(IS_MAINNET ? 'ckb' : 'ckt') &&
     /^[A-Za-z0-9]+$/.test(address)
   )
 }

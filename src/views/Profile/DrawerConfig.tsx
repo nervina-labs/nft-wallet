@@ -17,6 +17,11 @@ const DrawerContainer = styled.div`
   .container {
     margin: 0 20px;
     margin-top: 10px;
+    .alert {
+      font-size: 11px;
+      color: #d03a3a;
+      margin-top: 8px;
+    }
   }
   .label {
     font-size: 14px;
@@ -100,6 +105,7 @@ const Header = styled.header`
   background: white;
   color: #2c454c;
   border-bottom: 1px solid #ccc;
+
   .left {
     width: 50px;
     text-align: left;
