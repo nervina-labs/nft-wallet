@@ -31,7 +31,7 @@ const Container = styled(Link)`
       line-clamp: 1;
       margin-bottom: 4px;
 
-      &.baned {
+      &.banned {
         color: #d03a3a;
       }
     }
