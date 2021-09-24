@@ -6,7 +6,7 @@ import { Appbar } from '../../components/Appbar'
 import { Loading } from '../../components/Loading'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
-import { RoutePath } from '../../routes'
+import { RoutePath, useRoute } from '../../routes'
 import { MainContainer } from '../../styles'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { useTranslation } from 'react-i18next'
@@ -212,6 +212,7 @@ export const RedeemDetail: React.FC = () => {
 
   const isClosed = data?.state === RedeemStatus.Closed
   const isDone = data?.state === RedeemStatus.Done
+  const { from } = useRoute()
 
   const status = useMemo(() => {
     const status = data?.state
@@ -227,11 +228,20 @@ export const RedeemDetail: React.FC = () => {
   if (isError) {
     return <Redirect to={RoutePath.NotFound} />
   }
+
   return (
     <Container>
       <Appbar
         title={t('exchange.event.title')}
-        left={<BackSvg onClick={() => history.replace(RoutePath.Redeem)} />}
+        left={
+          <BackSvg
+            onClick={() =>
+              history.replace(
+                from === location.pathname ? RoutePath.Redeem : from
+              )
+            }
+          />
+        }
         right={<></>}
       />
       <main>
