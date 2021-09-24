@@ -2,6 +2,7 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
+      "login": "登录",
       "actions": {
         "comfirm": "确认",
         "cancel": "取消",

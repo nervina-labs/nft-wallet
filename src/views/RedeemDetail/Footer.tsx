@@ -1,7 +1,11 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
+import { useWalletModel } from '../../hooks/useWallet'
 import { RedeemStatus } from '../../models/redeem'
+import { RoutePath } from '../../routes'
+import { UnipassConfig } from '../../utils'
 import { Button, ButtonProps } from '../Reedem/Button'
 
 const Container = styled.footer`
@@ -31,9 +35,13 @@ export const Footer: React.FC<FooterProps> = ({
   ...props
 }) => {
   const [t] = useTranslation('translations')
-  // const history = useHistory()
-  // const location = useLocation()
+  const { isLogined } = useWalletModel()
+  const history = useHistory()
+  const location = useLocation()
   const text = useMemo(() => {
+    if (!isLogined) {
+      return t('common.login')
+    }
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
     } else if (status === RedeemStatus.Done) {
@@ -43,14 +51,20 @@ export const Footer: React.FC<FooterProps> = ({
       return t('exchange.actions.redeem')
     }
     return t('exchange.actions.insufficient')
-  }, [isReedemable, status, t])
+  }, [isReedemable, status, t, isLogined])
 
-  const onClick = () => {}
+  const onClick = useCallback(() => {
+    if (!isLogined) {
+      UnipassConfig.setRedirectUri(location.pathname)
+      history.replace(RoutePath.Login)
+    }
+    return props.onClick
+  }, [isLogined, history, props.onClick, location.pathname])
   return (
     <Container>
       <Button
         {...props}
-        onClick={props.onClick ?? onClick}
+        onClick={onClick}
         disabled={props.disabled || !isReedemable}
       >
         {text}

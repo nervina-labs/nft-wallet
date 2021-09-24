@@ -20,6 +20,7 @@ import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
 import { useProfileModel } from '../../hooks/useProfile'
 import { getLicenseUrl } from '../../data/license'
+import { UnipassConfig } from '../../utils'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -255,7 +256,13 @@ export const Login: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
-      <div className="close" onClick={() => history.replace(RoutePath.Explore)}>
+      <div
+        className="close"
+        onClick={() => {
+          UnipassConfig.clear()
+          history.replace(RoutePath.Explore)
+        }}
+      >
         <CloseSvg />
       </div>
       <div className="header">
