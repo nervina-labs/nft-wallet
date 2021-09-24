@@ -84,6 +84,7 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
     data.bg_image_url,
     {
       toBlob: true,
+      usePreviewUrl: true,
     }
   )
   const {

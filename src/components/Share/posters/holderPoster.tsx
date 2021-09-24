@@ -57,6 +57,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
     isLoading: nftImageLoading,
   } = useUrlToBase64(nftImageUrls, {
     toBlob: true,
+    usePreviewUrl: true,
   })
   const {
     data: avatarImageUrlBase64,

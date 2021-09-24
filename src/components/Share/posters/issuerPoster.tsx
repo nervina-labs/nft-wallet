@@ -86,6 +86,7 @@ export const IssuerPoster: React.FC<PosterProps<IssuerPosterData>> = ({
     isLoading: nftImageLoading,
   } = useUrlToBase64(nftImageUrls, {
     toBlob: true,
+    usePreviewUrl: true,
   })
   const { qrcodeSrc, isLoading: QrcodeLoading } = useQrcode(shareUrl)
   const isLoading = avatarImageLoading || nftImageLoading || QrcodeLoading

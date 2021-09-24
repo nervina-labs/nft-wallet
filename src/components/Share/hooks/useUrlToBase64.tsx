@@ -1,6 +1,6 @@
 import { useWalletModel } from '../../../hooks/useWallet'
 import FallbackImgPath from '../../../assets/img/fallback.png'
-import { toDataUrl } from '../../../utils'
+import { getImagePreviewUrl, toDataUrl } from '../../../utils'
 import { useQuery } from 'react-query'
 
 export function useUrlToBase64<
@@ -12,17 +12,19 @@ export function useUrlToBase64<
   options?: {
     fallbackImg?: string
     toBlob?: boolean
+    usePreviewUrl?: boolean
   }
 ) {
   const { api } = useWalletModel()
   const fallbackImg = options?.fallbackImg ?? FallbackImgPath
   const toDataUrlFromApi = async (url?: string) => {
-    if (!url) {
+    const previewUrl = options?.usePreviewUrl ? getImagePreviewUrl(url) : url
+    if (!previewUrl) {
       return fallbackImg
     }
-    return await toDataUrl(url)
+    return await toDataUrl(previewUrl)
       .catch(async () => {
-        const base64Content = (await api.getUrlBase64(url)).data.result
+        const base64Content = (await api.getUrlBase64(previewUrl)).data.result
         return base64Content
           ? `data:image/jpeg;base64,${base64Content}`
           : fallbackImg
