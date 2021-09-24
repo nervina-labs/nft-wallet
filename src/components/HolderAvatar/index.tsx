@@ -81,7 +81,7 @@ const AvatarContainer = styled.div`
 interface HolderAvatarProps {
   avatar?: string
   avatarType?: AvatarType
-  tid?: string
+  tid?: string | number
   size?: number
   enablePreview?: boolean
 }

@@ -38,7 +38,13 @@ import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
 import { UnipassConfig } from '../utils'
 import { Shop } from '../views/Shop'
+import { Redeem } from '../views/Reedem'
+import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
+import { WarningDialog } from '../components/WarningDialog'
+import { MyRedeem } from '../views/Reedem/My'
+import { RedeemPrize } from '../views/RedeemPrize'
+import { RedeemResult } from '../views/RedeemResult'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -68,6 +74,10 @@ export enum RoutePath {
   Claim = '/claim',
   Collection = '/explore/collection',
   Issuer = '/issuer',
+  Redeem = '/redeem',
+  MyRedeem = '/redemption',
+  RedeemPrize = '/redeem-prize',
+  RedeemResult = '/redeem-result',
   Holder = '/holder',
   HolderAddress = '/holder/address',
 }
@@ -109,6 +119,11 @@ const allowWithoutAuthList = new Set([
   RoutePath.AddressCollector,
   RoutePath.Claim,
   RoutePath.NotFound,
+  RoutePath.Redeem,
+  RoutePath.RedeemPrize,
+  RoutePath.RedeemResult,
+  RoutePath.MyRedeem,
+  RoutePath.Login,
 ])
 
 const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
@@ -321,6 +336,39 @@ const routes: MibaoRouterProps[] = [
     params: '/:id',
   },
   {
+    component: Redeem,
+    exact: true,
+    key: 'Redeem',
+    path: RoutePath.Redeem,
+  },
+  {
+    component: MyRedeem,
+    exact: true,
+    key: 'MyRedeem',
+    path: RoutePath.MyRedeem,
+  },
+  {
+    component: RedeemDetail,
+    exact: false,
+    key: 'ReedemDetail',
+    path: RoutePath.Redeem,
+    params: '/:id',
+  },
+  {
+    component: RedeemPrize,
+    exact: true,
+    key: 'ReedemPrize',
+    path: RoutePath.RedeemPrize,
+    params: '/:id',
+  },
+  {
+    component: RedeemResult,
+    exact: true,
+    key: 'ReedemResult',
+    path: RoutePath.RedeemResult,
+    params: '/:id',
+  },
+  {
     component: Issuer,
     exact: true,
     key: 'Issuer',
@@ -397,6 +445,7 @@ export const Routers: React.FC = () => {
               />
               <Route component={NotFound} path="*" />
             </Switch>
+            <WarningDialog />
             <ActionDialog
               icon={<FailSvg />}
               content={errorMsg}

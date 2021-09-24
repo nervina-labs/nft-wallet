@@ -80,6 +80,25 @@ export const Unipass: React.FC = () => {
         })
         break
       }
+      case UnipassAction.Redeem: {
+        const id = prevState.uuid as string
+        const prevPath = prevState.prevPathname as string
+        if (code !== 200) {
+          history.replace(prevPath)
+          break
+        }
+        const data = unipassInfo?.data as UnipassSignData
+        const state: Record<string, string> = {
+          signature: `0x01${data.sig.replace('0x', '')}`,
+        }
+        if (prevState.customData) {
+          state.customData = JSON.parse(
+            decodeURIComponent(prevState.customData) || '{}'
+          )
+        }
+        history.replace(`${RoutePath.RedeemResult}/${id}`, state)
+        break
+      }
       default:
         break
     }
