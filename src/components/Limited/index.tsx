@@ -22,7 +22,7 @@ const Container = styled.div`
 `
 
 export interface LimitedProps {
-  count: string
+  count: string | number
   fontSize?: number
   bold?: boolean
   color?: string
@@ -38,7 +38,7 @@ export const Limited: React.FC<LimitedProps> = ({
   banned = false,
   sn,
 }) => {
-  const isUnlimited = count === '0'
+  const isUnlimited = count === '0' || count === 0
   const { t, i18n } = useTranslation('translations')
   const content = useMemo(() => {
     if (banned) {
