@@ -334,122 +334,122 @@
       "no-on-sale": "No NFT on sale"
     },
     "exchange": {
-      "title": "兑换中心",
-      "count": "{{count}} 个",
-      "redeemed": "已兑",
-      "nft-prize": "奖品包含下面所有 NFT",
-      "blind-prize": "奖品随机包含下面的 {{count}} 个",
-      "othder-prize": "发起人会在你提交兑换后根据你提供的接收信息进行承兑",
-      "redeem-time": "兑换时间：",
+      "title": "Redeem Center",
+      "count": "{{count}}",
+      "redeemed": "Redeemed",
+      "nft-prize": "The prize includes all the following NFTs",
+      "blind-prize": "The prize randomly includes {{count}} NFT(s) below",
+      "othder-prize": "The organizer will give out the prize after you submit the redeem",
+      "redeem-time": "Time: ",
       "type": {
         "token": "NFT",
-        "blind_box": "NFT 盲盒",
-        "custom": "其他"
+        "blind_box": "NFT Mystery Box",
+        "custom": "Others"
       },
       "progress": "兑换进度",
       "tabs": {
-        "all": "全部活动",
-        "redeemable": "可兑换"
+        "all": "All",
+        "redeemable": "Redeemable"
       },
       "actions": {
-        "redeem": "立即兑换",
-        "insufficient": "条件不足无法兑换"
+        "redeem": "Redeem",
+        "insufficient": "Cannot redeem"
       },
       "mine": {
-        "title": "我的兑换",
-        "all": "全部兑换",
-        "wait": "待承兑"
+        "title": "My Prizes",
+        "all": "All",
+        "wait": "Pending"
       },
       "prize": {
-        "title": "奖品",
-        "get": "本次兑换获得",
+        "title": "Prize",
+        "get": "You get",
         "receiver": {
-          "info": "接收人信息",
-          "address": "接收地址："
+          "info": "Redeemer Info",
+          "address": "Redeemer Address"
         },
         "address": {
-          "name": "姓名：",
-          "phone": "电话号码：",
-          "address": "地址："
+          "name": "Name: ",
+          "phone": "Phone: ",
+          "address": "Address: "
         },
-        "ckb": "接收地址：",
+        "ckb": "Address: ",
         "issuer": {
-          "comment": "发起人留言",
-          "company": "物流公司：",
-          "sn": "发货单号：",
-          "time": "发货时间："
+          "comment": "Organizer's comment",
+          "company": "Express Company",
+          "sn": "Order number: ",
+          "time": "Packing time: "
         }
       },
       "alert": {
-        "normal": "兑换不会销毁您参与兑换的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他兑换",
-        "destroy": "兑换将会销毁您参与兑换的NFT，该操作不可逆，一经销毁将无法找回",
-        "confirm": "确认兑换",
-        "cancel": "取消"
+        "normal": "The NFT(s) participating in the activity will be still owned by redeemer but marked as redeemed on chain. Redeemed NFT cannot be involved in other redeem activities anymore.",
+      "destroy": "The NFT(s) participating in the activity will be destroyed and cannot be retrieved once destroyed.",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
       },
       "form": {
         "address": {
-          "title": "填写邮寄地址",
-          "name-label": "姓名",
-          "name-placeholder": "请输入姓名",
-          "phone-label": "电话号码",
-          "phone-placeholder": "请输入电话号码",
-          "address-label": "详细地址",
-          "address-placeholder": "请填写地址"
+          "title": "Fill in the mailing address",
+          "name-label": "Name",
+          "name-placeholder": "Fill in the name",
+          "phone-label": "Phone",
+          "phone-placeholder": "Fill in the phone number",
+          "address-label": "Address",
+          "address-placeholder": "Fill in the address"
         },
         "email": {
-          "title": "填写邮箱地址",
-          "label": "邮箱地址",
-          "placeholder": "请输入邮箱地址",
-          "error": "请输入合法 Email 地址"
+          "title": "Fill in the email",
+          "label": "Email",
+          "placeholder": "Fill in the email",
+          "error": "Invalid email"
         },
         "ckb": {
-          "title": "填写 CKB 地址",
-          "label": "CKB 地址",
-          "placeholder": "请输入 CKB 地址",
-          "fill": "填充当前账户地址",
-          "error": "请输入合法 CKB 地址"
+          "title": "Fill in the CKB address",
+          "label": "CKB Address",
+          "placeholder": "Fill in the CKB address",
+          "fill": "Current address",
+          "error": "Invalid CKB address"
         }
       },
-      "exchanged": "已兑换",
-      "issuer": "发起人",
-      "issue-time": "发起时间：",
+      "exchanged": "Redeemed",
+      "issuer": "Organizer",
+      "issue-time": "Time: ",
       "event": {
-        "title": "活动详情",
-        "on-going": "活动进行中",
-        "closed": "活动已关闭",
-        "end": "活动已结束",
+        "title": "Activity Details",
+        "on-going": "Ongoing",
+        "closed": "Closed",
+        "end": "Ended",
         "tabs": {
-          "price": "活动奖品",
-          "requirement": "兑换条件"
+          "price": "Prizes",
+          "requirement": "Rules"
         },
-        "condition": "同时持有以下 NFT 的用户才可参与兑换"
+        "condition": "Only users who own the following NFTs can participate in the activity"
       },
       "condition": {
         "nft": "NFT",
-        "needed": "需持有",
-        "held": "当前可兑换"
+        "needed": "Need to own",
+        "held": "Owned"
       },
-      "warning": "兑换不会销毁您持有的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他任何兑换活动。",
-      "warning-destroyed": "兑换将会销毁您参与兑换的 NFT ，该操作不可逆，一经销毁将无法找回",
+      "warning": "The NFT(s) participating in the activity will be still owned by redeemer but marked as redeemed on chain. Redeemed NFT cannot be involved in other redeem activities anymore.",
+      "warning-destroyed": "The NFT(s) participating in the activity will be destroyed and cannot be retrieved once destroyed.",
       "check": {
-        "price": "查看奖品",
-        "comment": "查看奖品和留言",
-        "wait": "• 待承兑"
+        "price": "View prizes",
+        "comment": " View prizes and comments",
+        "wait": "• pending"
       },
-      "empty": "暂时还没有兑换",
-      "no-more": "没有更多兑换了",
-      "error": "兑换失败，请检查当前网络情况或兑换条件",
+      "empty": "No record",
+      "no-more": "No more",
+      "error": "Redeem failed, please check your network and redeem rules",
       "result": {
-        "success": "兑换成功",
-        "submited": "已提交兑换",
-        "time": "提交时间：",
-        "fail": "兑换失败",
-        "custom": "活动发起人会根据您提供的接收信息进行承兑",
-        "check": "查看兑换的 NFT",
-        "confirm": "确认",
-        "go-back": "返回兑换中心",
-        "error": "请检查当前网络情况或兑换条件",
-        "redeeming": "兑换中..."
+        "success": "Redeem Successfully",
+        "submited": "Summitted",
+        "time": "Submit time: ",
+        "fail": "Redeem failed",
+        "custom": "The activity organizer will give out prize based on the info you provided",
+        "check": "View Prizes",
+        "confirm": "Confirm",
+        "go-back": "Back to redeem center",
+        "error": "Please check your network and redeem rules",
+        "redeeming": "Redeeming"
       }
     },
     "follow": {
