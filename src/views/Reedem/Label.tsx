@@ -14,7 +14,7 @@ const Container = styled.span`
   color: ${(props) => props.color};
   border: 1px solid;
   border-color: ${(props) => props.color};
-  width: 58px;
+  padding: 0 10px;
   height: 17px;
   font-size: 12px;
   border-radius: 2px;

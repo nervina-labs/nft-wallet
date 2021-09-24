@@ -113,7 +113,9 @@ export const NFTPrice: React.FC<NFTPriceProps> = ({
     <>
       {showLabel ? (
         <>
-          <RedeeemLabel type={type} />
+          <div style={{ display: 'flex' }}>
+            <RedeeemLabel type={type} />
+          </div>
           <div className="contain">{desc}</div>
         </>
       ) : null}
@@ -162,7 +164,9 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
     <OthderPriceContainer>
       {showLabel ? (
         <>
-          <RedeeemLabel type={type} />
+          <div style={{ display: 'flex' }}>
+            <RedeeemLabel type={type} />
+          </div>
           <div className="contain">{t('exchange.othder-prize')}</div>
         </>
       ) : null}

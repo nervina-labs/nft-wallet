@@ -57,6 +57,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
   )
   return (
     <Container
+      replace
       to={
         isBaned ? '#' : `${info.n_token_id != null ? '/nft' : '/class'}/${id}`
       }
