@@ -62,8 +62,8 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
       }
     >
       <Media
-        isPlayable={info.renderer_type !== NftType.Picture}
-        hasCardBack={info.card_back_content_exist}
+        isPlayable={isBaned ? false : info.renderer_type !== NftType.Picture}
+        hasCardBack={isBaned ? false : info.card_back_content_exist}
         src={isBaned ? '' : info.class_bg_image_url}
         width={70}
       />
