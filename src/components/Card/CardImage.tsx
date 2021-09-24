@@ -105,14 +105,14 @@ export const CardImage: React.FC<CardImageProps> = ({
         : {}
     )
   }, [src, tid])
-  const finalSrc = useMemo(() => {
+  const previewSrc = useMemo(() => {
     return loadOriginal ? dataSrc : getImagePreviewUrl(dataSrc)
   }, [dataSrc, loadOriginal])
 
   return (
     <CardImageContainer className={className}>
       <LazyLoadImage
-        src={isBanned ? FallbackImg : finalSrc}
+        src={isBanned ? FallbackImg : previewSrc}
         dataSrc={dataSrc}
         width={width}
         height={height}
