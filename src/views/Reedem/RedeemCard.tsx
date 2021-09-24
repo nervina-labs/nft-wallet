@@ -263,8 +263,8 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
       const isBaned = t.is_banned || t.is_class_banned || t.is_issuer_banned
       return (
         <Media
-          isPlayable={t.renderer_type !== NftType.Picture}
-          hasCardBack={t.card_back_content_exist}
+          isPlayable={isBaned ? false : t.renderer_type !== NftType.Picture}
+          hasCardBack={isBaned ? false : t.card_back_content_exist}
           src={isBaned ? '' : t.class_bg_image_url}
           key={i}
         />
