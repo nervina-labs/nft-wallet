@@ -60,7 +60,7 @@ const CardImageContainer = styled.div`
 
 interface CardImageProps {
   src: string
-  tid?: string
+  tid?: string | number
   locale?: string
   isBanned?: string
   hasCardBack?: boolean
@@ -99,7 +99,9 @@ export const CardImage: React.FC<CardImageProps> = ({
     if (ret) {
       ret = addParamsToUrl(
         ret,
-        tid ? { tid, locale: i18n.language === 'en' ? 'en' : 'zh' } : {}
+        tid !== undefined
+          ? { tid: `${tid}`, locale: i18n.language === 'en' ? 'en' : 'zh' }
+          : {}
       )
     }
     return ret

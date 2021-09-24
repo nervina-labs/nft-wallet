@@ -192,7 +192,7 @@ export const User: React.FC<UserConfig> = ({
       >
         <PhotoProvider maskClassName="preview-mask">
           <HolderAvatar
-            tid={user?.avatar_tid ? `${user?.avatar_tid}` : undefined}
+            tid={user?.avatar_tid}
             avatar={user?.avatar_url ?? ''}
             avatarType={user?.avatar_type}
             size={56}
