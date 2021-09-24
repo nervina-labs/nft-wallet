@@ -149,7 +149,7 @@ export const Creator: React.FC<CreatorProps> = ({
       >
         {baned ? t('common.baned.issuer') : name}
       </span>
-      {isVip ? (
+      {isVip && !baned ? (
         showTooltip ? (
           <Tooltip
             title={vt}
