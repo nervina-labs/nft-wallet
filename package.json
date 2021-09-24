@@ -29,7 +29,7 @@
     "@types/qrcode": "^1.4.1",
     "@types/qrcode.react": "^1.0.1",
     "@zxing/library": "^0.18.5",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bowser": "^2.11.0",
     "byte-guide": "^1.0.5",
     "china-division": "^2.3.1",
