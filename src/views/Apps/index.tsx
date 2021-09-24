@@ -182,7 +182,6 @@ export const Apps: React.FC = () => {
   useEffect(() => {
     initWechat().catch(Boolean)
   }, [])
-  console.log(isWechatInited)
   const getAppUrl = useCallback(
     (baseUrl: string): string => {
       const url = `${baseUrl}`
@@ -203,6 +202,16 @@ export const Apps: React.FC = () => {
     [pubkey, email]
   )
   const data: ItemProps[] = [
+    {
+      title: t('apps.exchange.title'),
+      desc: t('apps.exchange.desc'),
+      color: '#F7F3FF',
+      bg: Exchange,
+      available: true,
+      onClick: () => {
+        history.push(RoutePath.Redeem)
+      },
+    },
     {
       title: t('apps.red-envelope.title'),
       desc: t('apps.red-envelope.desc'),
@@ -228,13 +237,6 @@ export const Apps: React.FC = () => {
       color: '#F1FBFF',
       desc: t('apps.dao.desc'),
       bg: DAO,
-      available: false,
-    },
-    {
-      title: t('apps.exchange.title'),
-      desc: t('apps.exchange.desc'),
-      color: '#F7F3FF',
-      bg: Exchange,
       available: false,
     },
     {

@@ -13,7 +13,7 @@ const checkIOSVer = (): number | null => {
 }
 
 interface InputBaseFixProps {
-  formatter: (v: string) => string
+  formatter?: (v: string) => string
 }
 
 type Props = InputBaseProps & InputBaseFixProps

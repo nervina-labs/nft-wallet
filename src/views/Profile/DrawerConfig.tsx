@@ -5,6 +5,7 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import styled from 'styled-components'
 import { useWidth } from '../../hooks/useWidth'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
+import classNames from 'classnames'
 
 const DrawerContainer = styled.div`
   height: 100%;
@@ -12,6 +13,41 @@ const DrawerContainer = styled.div`
   .username {
     margin: 0 20px;
     margin-top: 38px;
+  }
+  .container {
+    margin: 0 20px;
+    margin-top: 10px;
+    .alert {
+      font-size: 11px;
+      color: #d03a3a;
+      margin-top: 8px;
+    }
+  }
+  .label {
+    font-size: 14px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  .adornment-container {
+    position: absolute;
+    bottom: 18px;
+    right: 8px;
+    > span {
+      color: #fb5d3b;
+    }
+  }
+
+  .warning {
+    margin-top: 4px;
+    font-size: 10px;
+    color: #d03a3a;
+  }
+
+  .MuiAlert-root {
+    font-size: 12px;
+    margin: 16px 0;
+    margin-bottom: 80px;
   }
 
   .adornment {
@@ -69,6 +105,7 @@ const Header = styled.header`
   background: white;
   color: #2c454c;
   border-bottom: 1px solid #ccc;
+
   .left {
     width: 50px;
     text-align: left;
@@ -97,6 +134,10 @@ const Header = styled.header`
       color: #ccc;
       cursor: not-allowed;
     }
+
+    &.hidden {
+      visibility: hidden;
+    }
   }
 `
 
@@ -109,6 +150,7 @@ export interface DrawerConfigProps {
   isValid: boolean
   onSaving?: () => void
   onClose?: () => void
+  showSave?: boolean
   bg?: string
 }
 
@@ -122,6 +164,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
   onSaving,
   onClose,
   bg = 'white',
+  showSave = true,
 }) => {
   const [t] = useTranslation('translations')
   const bodyRef = useRef(document.body)
@@ -166,16 +209,21 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
             <BackSvg />
           </span>
           <span className="title">{title}</span>
-          <span
-            className={`right ${isValid ? '' : 'invalid'}`}
-            onClick={isValid && !isSaving ? onSaving : undefined}
-          >
-            {isSaving ? (
-              <CircularProgress size="1em" className="loading" />
-            ) : (
-              t('profile.save')
-            )}
-          </span>
+          {
+            <span
+              className={classNames('right', {
+                invalid: !isValid,
+                hidden: !showSave,
+              })}
+              onClick={isValid && !isSaving ? onSaving : undefined}
+            >
+              {isSaving ? (
+                <CircularProgress size="1em" className="loading" />
+              ) : (
+                t('profile.save')
+              )}
+            </span>
+          }
         </Header>
         {children}
       </DrawerContainer>

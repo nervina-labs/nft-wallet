@@ -31,6 +31,7 @@ export interface TokenClass extends VipInfo, ClassLikes, CardBack {
   name: string
   description: string
   issued: string
+  is_redeemed?: boolean
   is_issuer_banned: boolean
   is_class_banned: boolean
   uuid: string

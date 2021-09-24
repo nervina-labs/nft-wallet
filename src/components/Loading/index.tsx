@@ -11,11 +11,11 @@ const LoadingContainer = styled.h4`
   }
 `
 
-export const Loading: React.FC = () => {
+export const Loading: React.FC<{ desc?: string }> = ({ desc }) => {
   const { t } = useTranslation('translations')
   return (
     <LoadingContainer>
-      {t('common.actions.loading')}
+      {desc ?? t('common.actions.loading')}
       <CircularProgress size="1em" className="loading" />
     </LoadingContainer>
   )

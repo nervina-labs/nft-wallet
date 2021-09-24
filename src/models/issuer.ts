@@ -18,6 +18,8 @@ export interface Issuer extends VipInfo, Follower {
   uuid: string
   issuer_likes: string
   issuer_id: string
+  is_banned: boolean
+  is_issuer_banned: boolean
 }
 
 export interface IssuersResponse {
@@ -35,7 +37,9 @@ export interface IssuerInfo extends VipInfo {
   issuer_likes: number
   issuer_follows: number
   issuer_followed: boolean
+  is_issuer_banned: boolean
   issuer_id: string
+  uuid: string
 }
 
 export interface IssuerTokenClassResult {
