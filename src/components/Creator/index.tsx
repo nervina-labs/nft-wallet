@@ -60,6 +60,9 @@ const Container = styled.div`
     &.max {
       flex: 1;
     }
+    &.error {
+      color: #d03a3a;
+    }
   }
   > a {
     display: flex;
