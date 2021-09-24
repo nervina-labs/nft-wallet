@@ -97,10 +97,10 @@ export const CardImage: React.FC<CardImageProps> = ({
   const finalSrc = useMemo(() => {
     let ret = loadOriginal ? src : getImagePreviewUrl(src)
     if (ret) {
-      ret = addParamsToUrl(ret, {
-        locate: i18n.language === 'en' ? 'en' : 'zh',
-        ...(tid ? { tid } : {}),
-      })
+      ret = addParamsToUrl(
+        ret,
+        tid ? { tid, locate: i18n.language === 'en' ? 'en' : 'zh' } : {}
+      )
     }
     return ret
   }, [src, loadOriginal, tid])
