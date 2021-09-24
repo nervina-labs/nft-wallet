@@ -198,6 +198,7 @@ export const Profile: React.FC = () => {
               <Skeleton variant="circle" width={90} height={90} />
             ) : (
               <HolderAvatar
+                tid={user?.avatar_tid}
                 avatar={user?.avatar_url}
                 avatarType={user?.avatar_type}
                 size={90}

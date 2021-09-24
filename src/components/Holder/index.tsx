@@ -27,7 +27,7 @@ interface HolderProps {
   username: string
   address: string
   avatarType?: AvatarType
-  tid?: string
+  tid?: string | number
 }
 
 export const Holder: React.FC<HolderProps> = ({
