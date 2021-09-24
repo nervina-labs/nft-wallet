@@ -69,3 +69,5 @@ export const DAS_INDEXER_URL =
   process.env.REACT_APP_DAS_INDEXER_URL ?? 'https://das.nervina.cn'
 
 export const HOST = location.origin
+
+export const IS_SUPPORT_DOWNLOAD = 'download' in document.createElement('a')

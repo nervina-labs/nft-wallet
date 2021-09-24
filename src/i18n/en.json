@@ -21,6 +21,9 @@
         "download": "Download",
         "more": "More",
         "title": "Share",
+        "copy-link": "Copy Link",
+        "creating-poster":  "Creating Poster...",
+        "copied": "Copied",
         "collected-nft": "Collected NFT"
       },
       "limit": {

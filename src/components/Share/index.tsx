@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-download.svg'
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
+import { ReactComponent as ShareCopyLinkIcon } from '../../assets/svg/share-copy-link.svg'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import { NftPoster, IssuerPoster, HolderPoster } from './posters'
 import { Poster, PosterType } from './posters/poster.interface'
 import { useHtml2Canvas } from './hooks'
+import { IS_ANDROID, IS_WEXIN } from '../../constants'
+import { copyContent } from '../../utils'
+import { useProfileModel } from '../../hooks/useProfile'
 
 const DialogContainer = styled.div`
   position: fixed;
@@ -47,6 +51,11 @@ const DialogContainer = styled.div`
     animation: show-poster 0.2s;
   }
 
+  .share-poster-image-loading {
+    color: #fff;
+    text-align: center;
+  }
+
   @keyframes show-poster {
     from {
       opacity: 0;
@@ -66,7 +75,7 @@ const ShareContainer = styled.div`
   border-radius: 10px 10px 0 0;
   --padding-bottom: calc(70px - env(safe-area-inset-bottom));
   transform: translateX(-50%) translateY(var(--padding-bottom));
-  padding: 10px 15px 80px;
+  padding: 0 15px 80px;
   box-sizing: border-box;
   user-select: none;
   background-color: rgba(255, 255, 255, 0.7);
@@ -88,19 +97,18 @@ const HandleBar = styled.div`
   font-size: 13px;
   text-align: center;
   color: #666666;
+  padding-bottom: 10px;
 `
 
 const IconGroupContainer = styled.div`
   display: flex;
+  height: 86px;
 `
 
 const IconContainer = styled.div`
   display: flex;
   flex-direction: column;
-
-  &:not(:last-child) {
-    margin-right: 15px;
-  }
+  padding-right: 15px;
   width: 56px;
   font-size: 13px;
   line-height: 30px;
@@ -142,6 +150,7 @@ const Button = styled.button`
   border-radius: 40px;
   font-size: 18px;
   margin-top: 15px;
+  cursor: pointer;
 `
 
 export type ShareProps = {
@@ -160,6 +169,7 @@ export const Share: React.FC<ShareProps> = ({
   type,
 }) => {
   const { t } = useTranslation('translations')
+  const { snackbar } = useProfileModel()
   useEffect(() => {
     if (isDialogOpen) {
       document.body.classList.add('fixed')
@@ -184,12 +194,16 @@ export const Share: React.FC<ShareProps> = ({
     >
       {isDialogOpen && (
         <>
-          {imgSrc && (
+          {imgSrc ? (
             <img
               className="share-poster-image"
               src={imgSrc}
               alt="share-poster-image"
             />
+          ) : (
+            <div className="share-poster-image-loading share-poster-image">
+              {t('common.share.creating-poster')}
+            </div>
           )}
           {data && (
             <div style={{ opacity: 0 }}>
@@ -257,6 +271,24 @@ export const Share: React.FC<ShareProps> = ({
               {t('common.share.more')}
             </IconContainer>
           ) : null}
+
+          {
+            <IconContainer
+              onClick={async () => {
+                const isAndroidWeChat = IS_WEXIN && IS_ANDROID
+                const content = isAndroidWeChat
+                  ? copyText.replace('https://', '').replace('http://', '')
+                  : copyText
+                await copyContent(content)
+                snackbar(t('common.share.copied'))
+              }}
+            >
+              <Icon>
+                <ShareCopyLinkIcon />
+              </Icon>
+              {t('common.share.copy-link')}
+            </IconContainer>
+          }
         </IconGroupContainer>
         <Button onClick={closeDialog}>{t('common.share.cancel')}</Button>
       </ShareContainer>

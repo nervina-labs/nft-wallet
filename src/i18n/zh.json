@@ -21,6 +21,9 @@
         "download": "下载",
         "more": "更多",
         "title": "分享",
+        "copy-link": "复制链接",
+        "creating-poster":  "海报生成中...",
+        "copied": "复制成功",
         "collected-nft": "已收藏秘宝"
       },
       "limit": {

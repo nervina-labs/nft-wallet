@@ -9,6 +9,7 @@ import {
   OSS_IMG_PROCESS_QUERY_KEY_SCALE,
   SERVER_URL,
 } from '../constants'
+import * as clipboard from 'clipboard-polyfill/text'
 export * from './unipass'
 
 export const sleep = async (ms: number): Promise<void> =>
@@ -60,6 +61,14 @@ export function truncateMiddle(
 ): string {
   if (takeLength + tailLength >= str.length) return str
   return `${str.slice(0, takeLength)}${pad}${str.slice(-tailLength)}`
+}
+
+export async function copyContent(text: string) {
+  try {
+    await clipboard.writeText(text)
+  } catch (error) {
+    copyFallback(text)
+  }
 }
 
 export function copyFallback(data: string): void {
