@@ -83,8 +83,12 @@ const LabelPlaceholder = styled.div`
 `
 
 const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
+  const isBanned = issuer.is_banned || issuer.is_issuer_banned
   return (
-    <IssuerContainer to={`${RoutePath.Issuer}/${issuer.uuid}`}>
+    <IssuerContainer
+      to={isBanned ? '#' : `${RoutePath.Issuer}/${issuer.uuid}`}
+      style={{ pointerEvents: isBanned ? 'none' : 'auto' }}
+    >
       <div className="main">
         <div className="avatar">
           <LazyLoadImage
@@ -99,7 +103,7 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
         <div className="content">
           <Creator
             title=""
-            baned={false}
+            baned={isBanned}
             name={issuer.name}
             isVip={issuer?.verified_info?.is_verified}
             vipTitle={issuer?.verified_info?.verified_title}
@@ -107,7 +111,10 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
             color="#999999"
             showAvatar={false}
           />
-          <span className="id">
+          <span
+            className="id"
+            style={{ visibility: isBanned ? 'hidden' : 'inherit' }}
+          >
             ID: {truncateMiddle(issuer.issuer_id, 12, 12)}
           </span>
         </div>

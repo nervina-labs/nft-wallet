@@ -367,12 +367,12 @@ export const NFT: React.FC = () => {
 
   const { renderer, bgImgUrl } = useMemo(() => {
     const nftDetail = detail as NFTDetail
-    const isClass = nftDetail?.n_token_id !== undefined
+    const isNft = nftDetail?.n_token_id !== undefined
     const ret = {
       renderer: nftDetail?.renderer,
       bgImgUrl: nftDetail?.bg_image_url,
     }
-    if (isClass) {
+    if (isNft) {
       const locale = i18n.language === 'en' ? 'en' : 'zh'
       ret.renderer = addParamsToUrl(ret.renderer, {
         tid: `${nftDetail.n_token_id}`,

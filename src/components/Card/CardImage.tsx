@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
 import { CardBack } from '../Cardback'
 import FallbackImg from '../../assets/svg/fallback.svg'
-import { addLocaleToUrl, addTidToUrl, getImagePreviewUrl } from '../../utils'
+import { addParamsToUrl, getImagePreviewUrl } from '../../utils'
 import { LazyLoadImage, LazyLoadImageVariant } from '../Image'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
@@ -60,7 +60,7 @@ const CardImageContainer = styled.div`
 
 interface CardImageProps {
   src: string
-  tid?: string
+  tid?: string | number
   locale?: string
   isBanned?: string
   hasCardBack?: boolean
@@ -94,25 +94,26 @@ export const CardImage: React.FC<CardImageProps> = ({
     Boolean(isBanned)
   )
   const [t] = useTranslation('translations')
-  const finalSrc = useMemo(() => {
-    let ret = loadOriginal ? src : getImagePreviewUrl(src)
-    if (ret) {
-      const urlObj = new URL(ret)
-      if (urlObj.searchParams.has('tid')) {
-        ret = addLocaleToUrl(ret, i18n.language === 'en' ? 'en' : 'zh')
-      }
+  const dataSrc = useMemo(() => {
+    if (!src) {
+      return src
     }
-    if (tid) {
-      ret = addTidToUrl(ret, tid)
-    }
-    return ret
-  }, [src, loadOriginal, tid])
+    return addParamsToUrl(
+      src,
+      tid !== undefined
+        ? { tid: `${tid}`, locale: i18n.language === 'en' ? 'en' : 'zh' }
+        : {}
+    )
+  }, [src, tid])
+  const previewSrc = useMemo(() => {
+    return loadOriginal ? dataSrc : getImagePreviewUrl(dataSrc)
+  }, [dataSrc, loadOriginal])
 
   return (
     <CardImageContainer className={className}>
       <LazyLoadImage
-        src={isBanned ? FallbackImg : finalSrc}
-        dataSrc={src}
+        src={isBanned ? FallbackImg : previewSrc}
+        dataSrc={dataSrc}
         width={width}
         height={height}
         cover
@@ -124,7 +125,7 @@ export const CardImage: React.FC<CardImageProps> = ({
               width={width}
               height={height}
               src={FallbackImg}
-              dataSrc={finalSrc}
+              dataSrc={dataSrc}
               variant={variant}
               onLoaded={() => setFallBackImgLoaded(true)}
             />
