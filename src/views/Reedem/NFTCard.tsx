@@ -50,8 +50,11 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
     }
     return info.token_uuid ?? info.class_uuid
   }, [info])
-  const isBaned =
-    info.is_banned || info.is_issuer_banned || info.is_class_banned
+  const isBaned = !!(
+    info.is_banned ||
+    info.is_issuer_banned ||
+    info.is_class_banned
+  )
   return (
     <Container
       to={
@@ -61,7 +64,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
       <Media
         isPlayable={info.renderer_type !== NftType.Picture}
         hasCardBack={info.card_back_content_exist}
-        src={info.is_banned ? '' : info.class_bg_image_url}
+        src={isBaned ? '' : info.class_bg_image_url}
         width={70}
       />
       <div className="content">
