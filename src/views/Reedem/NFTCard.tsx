@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { Media } from './Media'
 import { Limited } from '../../components/Limited'
@@ -39,12 +39,14 @@ export interface NFTCardProps {
 
 export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
   const [t] = useTranslation('translations')
+  const id = useMemo(() => {
+    if (info.n_token_id == null && info.token_uuid) {
+      return info.token_class_uuid
+    }
+    return info.token_uuid ?? info.class_uuid
+  }, [info])
   return (
-    <Container
-      to={`${info.n_token_id != null ? '/nft' : '/class'}/${
-        info.token_uuid || info.class_uuid
-      }`}
-    >
+    <Container to={`${info.n_token_id != null ? '/nft' : '/class'}/${id}`}>
       <Media
         isPlayable={info.renderer_type !== NftType.Picture}
         hasCardBack={info.card_back_content_exist}

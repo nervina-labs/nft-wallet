@@ -59,6 +59,7 @@ export interface NormalRewardInfo {
   class_uuid: string
   token_uuid?: string
   is_banned: boolean
+  token_class_uuid: string
 }
 
 export interface BlindRewardInfo {

@@ -119,6 +119,11 @@ const allowWithoutAuthList = new Set([
   RoutePath.AddressCollector,
   RoutePath.Claim,
   RoutePath.NotFound,
+  RoutePath.Redeem,
+  RoutePath.RedeemPrize,
+  RoutePath.RedeemResult,
+  RoutePath.MyRedeem,
+  RoutePath.Login,
 ])
 
 const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
@@ -168,6 +173,8 @@ const WalletChange: React.FC = ({ children }) => {
         WalletType.Metamask === walletType
       ) {
         isSigning.current = true
+        // eslint-disable-next-line no-debugger
+        debugger
         toast({
           title: t('auth.title'),
           content: t('auth.content'),

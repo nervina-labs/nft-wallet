@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
-import Logo from '../../assets/img/logo.png'
+import Logo from '../../assets/img/login.png'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
@@ -14,7 +14,7 @@ import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { Redirect, useHistory } from 'react-router'
+import { Redirect, useHistory, useLocation } from 'react-router'
 import { useTranslation, Trans } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
@@ -188,6 +188,8 @@ export const Login: React.FC = () => {
   const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
   const { snackbar } = useProfileModel()
   const history = useHistory()
+  const location = useLocation<{ redirect?: string }>()
+  const redirectUrl = location?.state?.redirect
   const errorMsg = useMemo(() => {
     return t(`login.errors.${errorStatus}`)
   }, [errorStatus, t])
@@ -238,6 +240,9 @@ export const Login: React.FC = () => {
         }
         await login(walletType)
         setLoading(false, walletType)
+        if (redirectUrl) {
+          history.replace(redirectUrl)
+        }
       } catch (error) {
         setLoading(false, walletType)
         if (IS_IMTOKEN && walletType === WalletType.Metamask) {
@@ -247,10 +252,10 @@ export const Login: React.FC = () => {
         }
       }
     },
-    [login, isLicenseChecked, snackbar, t]
+    [login, isLicenseChecked, snackbar, t, redirectUrl, history]
   )
 
-  if (isLogined) {
+  if (isLogined && redirectUrl == null) {
     return <Redirect to={RoutePath.NFTs} />
   }
 

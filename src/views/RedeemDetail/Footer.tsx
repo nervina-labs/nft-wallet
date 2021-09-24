@@ -53,13 +53,18 @@ export const Footer: React.FC<FooterProps> = ({
     return t('exchange.actions.insufficient')
   }, [isReedemable, status, t, isLogined])
 
-  const onClick = useCallback(() => {
-    if (!isLogined) {
-      UnipassConfig.setRedirectUri(location.pathname)
-      history.replace(RoutePath.Login)
-    }
-    return props.onClick
-  }, [isLogined, history, props.onClick, location.pathname])
+  const onClick = useCallback(
+    (e: any) => {
+      if (!isLogined) {
+        UnipassConfig.setRedirectUri(location.pathname)
+        history.replace(RoutePath.Login, {
+          redirect: location.pathname,
+        })
+      }
+      props.onClick?.(e)
+    },
+    [isLogined, history, props, location.pathname]
+  )
 
   const disabled = useMemo(() => {
     if (isLogined) {
