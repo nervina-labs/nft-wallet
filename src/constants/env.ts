@@ -47,7 +47,7 @@ export const OSS_IMG_PROCESS_QUERY_KEY_SCALE = 'image/resize,s_'
 export const OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP = '/format,webp'
 export const OSS_IMG_HOSTS = [
   'https://oss.jinse.cc',
-  'https://goldenlegend.oss-cn-hangzhou.aliyuncs.com',
+  // 'https://goldenlegend.oss-cn-hangzhou.aliyuncs.com',
   'https://goldenlegend.oss-accelerate.aliyuncs.com',
 ]
 
@@ -62,10 +62,9 @@ export const TICKET_APP_URL = IS_MAINNET
   ? 'https://ticket.unipass.xyz'
   : 'https://t.ticket.unipass.xyz'
 
-export const WECHAT_APP_ID =
-  process.env.REACT_APP_WECHAT_APP_ID ?? 'wx32f5170ce791de49'
+export const WECHAT_APP_ID = process.env.REACT_APP_WECHAT_APP_ID ?? ''
 
-export const WEAPP_ID = process.env.REACT_APP_WEAPP_ID ?? 'gh_61a4f3f229f5'
+export const WEAPP_ID = process.env.REACT_APP_WEAPP_ID ?? ''
 export const DAS_INDEXER_URL =
   process.env.REACT_APP_DAS_INDEXER_URL ?? 'https://das.nervina.cn'
 
