@@ -60,13 +60,16 @@ export const Footer: React.FC<FooterProps> = ({
     }
     return props.onClick
   }, [isLogined, history, props.onClick, location.pathname])
+
+  const disabled = useMemo(() => {
+    if (isLogined) {
+      return props.disabled || !isReedemable
+    }
+    return false
+  }, [props.disabled, isReedemable, isLogined])
   return (
     <Container>
-      <Button
-        {...props}
-        onClick={onClick}
-        disabled={props.disabled || !isReedemable}
-      >
+      <Button {...props} onClick={onClick} disabled={disabled}>
         {text}
       </Button>
     </Container>
