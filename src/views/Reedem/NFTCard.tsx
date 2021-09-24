@@ -6,6 +6,7 @@ import { NormalRewardInfo } from '../../models/redeem'
 import { NftType } from '../../models'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import classNames from 'classnames'
 
 const Container = styled(Link)`
   display: flex;
@@ -29,6 +30,10 @@ const Container = styled(Link)`
       -webkit-line-clamp: 1;
       line-clamp: 1;
       margin-bottom: 4px;
+
+      &.baned {
+        color: #d03a3a;
+      }
     }
   }
 `
@@ -45,8 +50,14 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
     }
     return info.token_uuid ?? info.class_uuid
   }, [info])
+  const isBaned =
+    info.is_banned || info.is_issuer_banned || info.is_class_banned
   return (
-    <Container to={`${info.n_token_id != null ? '/nft' : '/class'}/${id}`}>
+    <Container
+      to={
+        isBaned ? '#' : `${info.n_token_id != null ? '/nft' : '/class'}/${id}`
+      }
+    >
       <Media
         isPlayable={info.renderer_type !== NftType.Picture}
         hasCardBack={info.card_back_content_exist}
@@ -54,13 +65,13 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
         width={70}
       />
       <div className="content">
-        <div className="name">
-          {info.is_banned ? t('common.baned.nft') : info.class_name}
+        <div className={classNames('name', { banned: isBaned })}>
+          {isBaned ? t('common.baned.nft') : info.class_name}
         </div>
         <Limited
           count={info.class_total}
           fontSize={12}
-          banned={info.is_banned}
+          banned={isBaned}
           bold={false}
           color="#999999"
           sn={info.n_token_id}

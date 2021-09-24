@@ -260,11 +260,12 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
       : item.reward_info
 
     return tokens.slice(0, 4).map((t, i) => {
+      const isBaned = t.is_banned || t.is_class_banned || t.is_issuer_banned
       return (
         <Media
           isPlayable={t.renderer_type !== NftType.Picture}
           hasCardBack={t.card_back_content_exist}
-          src={t.class_bg_image_url}
+          src={isBaned ? '' : t.class_bg_image_url}
           key={i}
         />
       )
@@ -277,13 +278,17 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
       <div className="issuer">
         <Creator
           title=""
-          baned={false}
+          baned={item.issuer_info.is_issuer_banned}
           url={item.issuer_info.avatar_url}
           name={item.issuer_info?.name}
           uuid={item.issuer_info?.uuid}
           vipAlignRight={false}
           color="rgb(51, 51, 51)"
-          isVip={item?.verified_info?.is_verified}
+          isVip={
+            item.issuer_info.is_issuer_banned
+              ? false
+              : item?.verified_info?.is_verified
+          }
           vipTitle={item?.verified_info?.verified_title}
           vipSource={item?.verified_info?.verified_source}
         />

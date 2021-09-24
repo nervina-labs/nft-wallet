@@ -173,8 +173,6 @@ const WalletChange: React.FC = ({ children }) => {
         WalletType.Metamask === walletType
       ) {
         isSigning.current = true
-        // eslint-disable-next-line no-debugger
-        debugger
         toast({
           title: t('auth.title'),
           content: t('auth.content'),

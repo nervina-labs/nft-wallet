@@ -60,6 +60,9 @@ const Container = styled.div`
     &.max {
       flex: 1;
     }
+    &.error {
+      color: #d03a3a;
+    }
   }
   > a {
     display: flex;
@@ -164,7 +167,7 @@ export const Creator: React.FC<CreatorProps> = ({
   return (
     <Container fontSize={fontSize} color={color} style={style}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
-      {uuid != null ? (
+      {uuid != null && !baned ? (
         <Link
           onClick={(e) => e.stopPropagation()}
           style={{ textDecoration: 'none' }}

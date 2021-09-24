@@ -59,6 +59,8 @@ export interface NormalRewardInfo {
   class_uuid: string
   token_uuid?: string
   is_banned: boolean
+  is_class_banned: boolean
+  is_issuer_banned: boolean
   token_class_uuid: string
 }
 

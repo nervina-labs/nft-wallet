@@ -289,7 +289,11 @@ export const RedeemDetail: React.FC = () => {
                 uuid={data.issuer_info?.issuer_id ?? data.issuer_info?.uuid}
                 vipAlignRight={false}
                 color="#333333"
-                isVip={data?.verified_info?.is_verified}
+                isVip={
+                  data?.issuer_info?.is_issuer_banned
+                    ? false
+                    : data?.verified_info?.is_verified
+                }
                 vipTitle={data?.verified_info?.verified_title}
                 vipSource={data?.verified_info?.verified_source}
               />
