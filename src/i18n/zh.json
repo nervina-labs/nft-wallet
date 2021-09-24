@@ -338,8 +338,8 @@
       "count": "{{count}} 个",
       "redeemed": "已兑",
       "nft-prize": "奖品包含下面所有 NFT",
-      "blind-prize": "奖品随机包含下面的 {{count}} 个",
-      "othder-prize": "发起人会在你提交兑换后根据你提供的接收信息进行承兑",
+      "blind-prize": "奖品随机包含下面的 {{count}} 个 NFT",
+      "othder-prize": "发起人会在您提交兑换后根据您提供的接收信息进行承兑",
       "redeem-time": "兑换时间：",
       "type": {
         "token": "NFT",
@@ -357,7 +357,7 @@
       },
       "mine": {
         "title": "我的兑换",
-        "all": "全部兑换",
+        "all": "全部",
         "wait": "待承兑"
       },
       "prize": {
@@ -436,7 +436,7 @@
         "comment": "查看奖品和留言",
         "wait": "• 待承兑"
       },
-      "empty": "暂时还没有兑换",
+      "empty": "无记录",
       "no-more": "没有更多兑换了",
       "error": "兑换失败，请检查当前网络情况或兑换条件",
       "result": {
