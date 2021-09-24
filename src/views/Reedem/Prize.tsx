@@ -170,9 +170,9 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
       <div className="price-desc">{prizes.reward_description}</div>
       <div className="imgs">
         <PhotoProvider maskClassName="preview-mask" toolbarRender={() => null}>
-          {prizes.images.map((p) => {
+          {prizes.images.map((p, i) => {
             return (
-              <div className="img">
+              <div className="img" key={p + i}>
                 <LazyLoadImage
                   src={getImagePreviewUrl(p)}
                   dataSrc={p}
