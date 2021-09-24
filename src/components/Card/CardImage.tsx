@@ -99,7 +99,7 @@ export const CardImage: React.FC<CardImageProps> = ({
     if (ret) {
       ret = addParamsToUrl(
         ret,
-        tid ? { tid, locate: i18n.language === 'en' ? 'en' : 'zh' } : {}
+        tid ? { tid, locale: i18n.language === 'en' ? 'en' : 'zh' } : {}
       )
     }
     return ret
