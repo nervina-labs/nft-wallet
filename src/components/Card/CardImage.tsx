@@ -94,24 +94,26 @@ export const CardImage: React.FC<CardImageProps> = ({
     Boolean(isBanned)
   )
   const [t] = useTranslation('translations')
-  const finalSrc = useMemo(() => {
-    let ret = loadOriginal ? src : getImagePreviewUrl(src)
-    if (ret) {
-      ret = addParamsToUrl(
-        ret,
-        tid !== undefined
-          ? { tid: `${tid}`, locale: i18n.language === 'en' ? 'en' : 'zh' }
-          : {}
-      )
+  const dataSrc = useMemo(() => {
+    if (!src) {
+      return src
     }
-    return ret
-  }, [src, loadOriginal, tid])
+    return addParamsToUrl(
+      src,
+      tid !== undefined
+        ? { tid: `${tid}`, locale: i18n.language === 'en' ? 'en' : 'zh' }
+        : {}
+    )
+  }, [src, tid])
+  const finalSrc = useMemo(() => {
+    return loadOriginal ? dataSrc : getImagePreviewUrl(dataSrc)
+  }, [dataSrc, loadOriginal])
 
   return (
     <CardImageContainer className={className}>
       <LazyLoadImage
         src={isBanned ? FallbackImg : finalSrc}
-        dataSrc={src}
+        dataSrc={dataSrc}
         width={width}
         height={height}
         cover
@@ -123,7 +125,7 @@ export const CardImage: React.FC<CardImageProps> = ({
               width={width}
               height={height}
               src={FallbackImg}
-              dataSrc={finalSrc}
+              dataSrc={dataSrc}
               variant={variant}
               onLoaded={() => setFallBackImgLoaded(true)}
             />
