@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import React, { useEffect, useReducer } from 'react'
+import React, { useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { RedeemDrawer } from './Drawer'
@@ -71,15 +71,6 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
     routerState
   )
   const classes = useStyles()
-
-  useEffect(() => {
-    if (!open) {
-      dispatch({ key: 'address', value: routerState.address })
-      dispatch({ key: 'name', value: routerState.name })
-      dispatch({ key: 'phone', value: routerState.phone })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
 
   const isReadyForSumit = !!(
     formState.address &&
