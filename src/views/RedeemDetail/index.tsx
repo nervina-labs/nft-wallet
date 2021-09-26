@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { Loading } from '../../components/Loading'
 import { Query } from '../../models'
-import { RoutePath, useRoute } from '../../routes'
+import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { useTranslation } from 'react-i18next'
@@ -29,6 +29,7 @@ import { Tab, Tabs } from '../../components/Tab'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { SubmitInfo } from './SubmitInfo'
 import { useAPI } from '../../hooks/useAccount'
+import { useRoute } from '../../hooks/useRoute'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({

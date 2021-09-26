@@ -7,9 +7,9 @@ import { useConfirm } from '../../hooks/useConfirm'
 import { usePrevious } from '../../hooks/usePrevious'
 import { useSetServerProfile } from '../../hooks/useProfile'
 import { Query } from '../../models'
-import { useRoute } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
 import { InputBaseFix } from './InputMod'
+import { useRoute } from '../../hooks/useRoute'
 
 const useStyles = makeStyles((theme) => ({
   root: {

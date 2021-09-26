@@ -6,7 +6,7 @@ import { Redirect, useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
 import { useSetServerProfile } from '../../hooks/useProfile'
 import { Query } from '../../models'
-import { RoutePath, useRoute } from '../../routes'
+import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { AvatarType } from '../../models/user'
 import { LazyLoadImage } from '../../components/Image'
@@ -15,6 +15,7 @@ import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 import { useConfirm } from '../../hooks/useConfirm'
 import { useErrorToast } from '../../hooks/useErrorToast'
+import { useRoute } from '../../hooks/useRoute'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
