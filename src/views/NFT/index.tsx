@@ -112,6 +112,14 @@ const Container = styled(MainContainer)`
     margin-bottom: 10px;
     background-color: #f7fafd;
     min-height: calc(100vh - 450px);
+    .redeem-label {
+      border: 1px solid #43b89a;
+      box-sizing: border-box;
+      border-radius: 4px;
+      padding: 0 10px;
+      color: #43b89a;
+      font-size: 12px;
+    }
     .title {
       font-weight: 500;
       font-size: 20px;
@@ -124,12 +132,13 @@ const Container = styled(MainContainer)`
       overflow: hidden;
       -webkit-line-clamp: 2;
       line-clamp: 2;
-      margin-bottom: 16px;
+      margin-bottom: 6px;
     }
     .issuer {
       display: flex;
       /* justify-content: center; */
       align-items: center;
+      margin-top: 10px;
       margin-bottom: 8px;
       > div {
         flex: 1;
@@ -359,12 +368,12 @@ export const NFT: React.FC = () => {
 
   const { renderer, bgImgUrl } = useMemo(() => {
     const nftDetail = detail as NFTDetail
-    const isClass = nftDetail?.n_token_id !== undefined
+    const isNft = nftDetail?.n_token_id !== undefined
     const ret = {
       renderer: nftDetail?.renderer,
       bgImgUrl: nftDetail?.bg_image_url,
     }
-    if (isClass) {
+    if (isNft) {
       const locale = i18n.language === 'en' ? 'en' : 'zh'
       ret.renderer = addParamsToUrl(ret.renderer, {
         tid: `${nftDetail.n_token_id}`,
@@ -527,6 +536,9 @@ export const NFT: React.FC = () => {
               </div>
             )}
             <div className="title">{detail?.name}</div>
+            {detail?.is_redeemed ? (
+              <span className="redeem-label">{t('exchange.redeemed')}</span>
+            ) : null}
             <div className="issuer">
               <Creator
                 title=""

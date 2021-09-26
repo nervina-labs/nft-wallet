@@ -2,8 +2,10 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
+      "login": "登录",
       "actions": {
         "comfirm": "确认",
+        "cancel": "取消",
         "loading": "加载中",
         "pull-to-down": "暂无更多秘宝~",
         "pull-down-refresh": " 下拉刷新",
@@ -338,6 +340,125 @@
       "no-data": "无数据",
       "more": "更多",
       "no-on-sale": "无在售秘宝"
+    },
+    "exchange": {
+      "title": "兑换中心",
+      "count": "{{count}} 个",
+      "redeemed": "已兑",
+      "nft-prize": "奖品包含下面所有 NFT",
+      "blind-prize": "奖品随机包含下面的 {{count}} 个 NFT",
+      "othder-prize": "发起人会在您提交兑换后根据您提供的接收信息进行承兑",
+      "redeem-time": "兑换时间：",
+      "type": {
+        "token": "NFT",
+        "blind_box": "NFT 盲盒",
+        "custom": "其他"
+      },
+      "progress": "兑换进度",
+      "tabs": {
+        "all": "全部活动",
+        "redeemable": "可兑换"
+      },
+      "actions": {
+        "redeem": "立即兑换",
+        "insufficient": "条件不足无法兑换"
+      },
+      "mine": {
+        "title": "我的兑换",
+        "all": "全部",
+        "wait": "待承兑"
+      },
+      "prize": {
+        "title": "奖品",
+        "get": "本次兑换获得",
+        "receiver": {
+          "info": "接收人信息",
+          "address": "接收地址："
+        },
+        "address": {
+          "name": "姓名：",
+          "phone": "电话号码：",
+          "address": "地址："
+        },
+        "ckb": "接收地址：",
+        "issuer": {
+          "comment": "发起人留言",
+          "company": "物流公司：",
+          "sn": "发货单号：",
+          "time": "发货时间："
+        }
+      },
+      "alert": {
+        "normal": "兑换不会销毁您参与兑换的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他兑换",
+        "destroy": "兑换将会销毁您参与兑换的NFT，该操作不可逆，一经销毁将无法找回",
+        "confirm": "确认兑换",
+        "cancel": "取消"
+      },
+      "form": {
+        "address": {
+          "title": "填写邮寄地址",
+          "name-label": "姓名",
+          "name-placeholder": "请输入姓名",
+          "phone-label": "电话号码",
+          "phone-placeholder": "请输入电话号码",
+          "address-label": "详细地址",
+          "address-placeholder": "请填写地址"
+        },
+        "email": {
+          "title": "填写邮箱地址",
+          "label": "邮箱地址",
+          "placeholder": "请输入邮箱地址",
+          "error": "请输入合法 Email 地址"
+        },
+        "ckb": {
+          "title": "填写 CKB 地址",
+          "label": "CKB 地址",
+          "placeholder": "请输入 CKB 地址",
+          "fill": "填充当前账户地址",
+          "error": "请输入合法 CKB 地址"
+        }
+      },
+      "exchanged": "已兑换",
+      "issuer": "发起人",
+      "issue-time": "发起时间：",
+      "event": {
+        "title": "活动详情",
+        "on-going": "活动进行中",
+        "closed": "活动已关闭",
+        "end": "活动已结束",
+        "tabs": {
+          "price": "活动奖品",
+          "requirement": "兑换条件"
+        },
+        "condition": "同时持有以下 NFT 的用户才可参与兑换"
+      },
+      "condition": {
+        "nft": "NFT",
+        "needed": "需持有",
+        "held": "当前可兑换"
+      },
+      "warning": "兑换不会销毁您持有的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他任何兑换活动。",
+      "warning-destroyed": "兑换将会销毁您参与兑换的 NFT ，该操作不可逆，一经销毁将无法找回",
+      "check": {
+        "price": "查看奖品",
+        "comment": "查看奖品和留言",
+        "wait": "• 待承兑"
+      },
+      "empty": "无记录",
+      "no-more": "没有更多兑换了",
+      "error": "兑换失败，请检查当前网络情况或兑换条件",
+      "result": {
+        "success": "兑换成功",
+        "submited": "已提交兑换",
+        "time": "提交时间：",
+        "fail": "兑换失败",
+        "custom": "活动发起人会根据您提供的接收信息进行承兑",
+        "check": "查看兑换的 NFT",
+        "confirm": "确认",
+        "go-back": "返回兑换中心",
+        "error": "请检查当前网络情况或兑换条件",
+        "redeeming": "兑换中..."
+      }
     },
     "follow": {
       "follow": "关注",

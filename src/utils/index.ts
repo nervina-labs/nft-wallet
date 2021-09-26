@@ -1,8 +1,10 @@
 import { parseAddress } from '@nervosnetwork/ckb-sdk-utils'
+import dayjs from 'dayjs'
 import Web3 from 'web3'
 import {
   BOWSER_BROWSER,
   INFURA_ID,
+  IS_MAINNET,
   OSS_IMG_HOSTS,
   OSS_IMG_PROCESS_QUERY_KEY,
   OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
@@ -11,9 +13,15 @@ import {
 } from '../constants'
 import * as clipboard from 'clipboard-polyfill/text'
 export * from './unipass'
+export * from './atom'
 
 export const sleep = async (ms: number): Promise<void> =>
   await new Promise((resolve) => setTimeout(resolve, ms))
+
+export function verifyEmail(email: string) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(email).toLowerCase())
+}
 
 export const verifyCkbAddress = (address: string): boolean => {
   try {
@@ -22,7 +30,7 @@ export const verifyCkbAddress = (address: string): boolean => {
     return false
   }
   return (
-    (address.startsWith('ckb') || address.startsWith('ckt')) &&
+    address.startsWith(IS_MAINNET ? 'ckb' : 'ckt') &&
     /^[A-Za-z0-9]+$/.test(address)
   )
 }
@@ -84,8 +92,6 @@ export function copyFallback(data: string): void {
   document.execCommand('copy')
   document.body.removeChild(input)
 }
-
-export const noop: () => void = () => {}
 
 export function getRandomNumber(min: number, max: number): number {
   return parseInt((Math.random() * (max - min) + min).toString(), 10)
@@ -196,20 +202,6 @@ export function getImagePreviewUrl<U extends string | undefined>(
   return addParamsToUrl(url, params) as any
 }
 
-export function addTidToUrl(url: string, tid: string): string {
-  if (!url) {
-    return url
-  }
-  return addParamsToUrl(url, { tid })
-}
-
-export function addLocaleToUrl(url: string, locale: 'zh' | 'en'): string {
-  if (!url) {
-    return url
-  }
-  return addParamsToUrl(url, { locale })
-}
-
 const MILLION = 1e6
 
 export const formatCount = (count: number, lang: string): number | string => {
@@ -258,6 +250,15 @@ export async function downloadImage(imageSrc: string): Promise<void> {
 
 export function ellipsisIssuerID(value: string): string {
   return `${value.substr(0, 8)}...${value.substr(8, 6)}`
+}
+
+const TIME_FORMAT_CN = 'YYYY-MM-DD, HH:mm:ss'
+const TIME_FORMAT_EN = 'MMM DD, YYYY HH:mm:ss'
+
+export function formatTime(timestamp: string, lang: string) {
+  return dayjs(Number(timestamp + '000')).format(
+    lang !== 'en' ? TIME_FORMAT_CN : TIME_FORMAT_EN
+  )
 }
 
 export function getImageForwardingsUrl<T extends string[] | string>(

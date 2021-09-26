@@ -23,6 +23,7 @@ import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
 import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
 import { IssuerInfoResult, IssuerTokenClassResult } from '../models/issuer'
+import { RedeemParams, RedeemListType } from '../models/redeem'
 import { WxSignConfig } from '../models/wx'
 import { GetHolderByTokenClassUuidResponse } from '../models/holder'
 
@@ -442,6 +443,89 @@ export class ServerWalletAPI implements NFTWalletAPI {
         address: this.address,
       },
     })
+  }
+
+  async getAllRedeemEvents(page: number, type: RedeemListType) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+      type,
+    }
+    if (this.address) {
+      params.wallet_address = this.address
+    }
+    return await this.axios.get('/redemption_events', {
+      params,
+    })
+  }
+
+  async getMyRedeemEvents(page: number, type: RedeemListType) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+      type,
+    }
+    if (this.address) {
+      params.wallet_address = this.address
+    }
+    return await this.axios.get('/redemption_records', {
+      params,
+    })
+  }
+
+  async getRedeemDetail(uuid: string) {
+    return await this.axios.get(`/redemption_events/${uuid}`, {
+      params: {
+        uuid,
+        wallet_address: this.address,
+      },
+    })
+  }
+
+  async getRedeemPrize(uuid: string) {
+    return await this.axios.get(`/redemption_records/${uuid}`)
+  }
+
+  async getRedeemTransaction(
+    uuid: string,
+    isUnipass = true
+  ): Promise<NFTTransaction> {
+    const { data } = await this.axios.get(
+      `/redemption_events/${uuid}/records/new`,
+      {
+        params: {
+          uuid,
+          wallet_address: this.address,
+        },
+      }
+    )
+    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, isUnipass)
+
+    return {
+      tx,
+      uuid: data.redemption_event_uuid,
+    }
+  }
+
+  async redeem({ uuid, tx, customData, sig }: RedeemParams) {
+    const rawTx = transformers.TransformTransaction(tx) as any
+    if (sig) {
+      const witnessArgs: WitnessArgs = {
+        lock: sig,
+        input_type: '',
+        output_type: '',
+      }
+      const witness = new Reader(
+        SerializeWitnessArgs(normalizers.NormalizeWitnessArgs(witnessArgs))
+      ).serializeJson()
+      rawTx.witnesses[0] = witness
+    }
+    const data = {
+      signed_tx: JSON.stringify(rawTx),
+      ...customData,
+      wallet_address: this.address,
+    }
+    return await this.axios.post(`/redemption_events/${uuid}/records`, data)
   }
 
   async getIssuerTokenClass(
