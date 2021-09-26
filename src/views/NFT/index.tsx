@@ -36,6 +36,15 @@ import { StatusText } from './StatusText'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 
+const IconGroupContainer = styled.div`
+  width: 32px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+`
+
 const IconContainer = styled.div`
   border-bottom-left-radius: 8px;
   width: 32px;
@@ -44,11 +53,9 @@ const IconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  right: 8px;
-  top: 8px;
   background: rgba(0, 0, 0, 0.33);
   backdrop-filter: blur(4px);
+  margin-bottom: 12px;
 `
 
 const Background = styled.div`
@@ -504,16 +511,18 @@ export const NFT: React.FC = () => {
           tiltRef={tiltRef}
           flipped={showCardBack}
         />
-        {hasCardBack ? (
-          <IconContainer onClick={cardBackOnClick}>
-            <CardBackSvg />
-          </IconContainer>
-        ) : null}
-        {detail?.renderer_type === NftType._3D ? (
-          <IconContainer style={{ top: '48px' }}>
-            <NFT3dSvg />
-          </IconContainer>
-        ) : null}
+        <IconGroupContainer>
+          {hasCardBack ? (
+            <IconContainer onClick={cardBackOnClick}>
+              <CardBackSvg />
+            </IconContainer>
+          ) : null}
+          {detail?.renderer_type === NftType._3D ? (
+            <IconContainer>
+              <NFT3dSvg />
+            </IconContainer>
+          ) : null}
+        </IconGroupContainer>
       </div>
       {detail == null ? null : (
         <>
