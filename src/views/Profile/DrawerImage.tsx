@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
-import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { DrawerAction } from './DrawerAction'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
@@ -16,6 +15,7 @@ import { Empty } from '../NFTs/empty'
 import { useProfileModel } from '../../hooks/useProfile'
 import { AvatarType } from '../../models/user'
 import { useErrorToast } from '../../hooks/useErrorToast'
+import { useAccount, useAPI } from '../../hooks/useAccount'
 
 export interface DrawerImageProps {
   showAvatarAction: boolean
@@ -97,7 +97,8 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   const [openChooseTokenClassModal, setOpenChooseTokenClassModal] = useState(
     false
   )
-  const { api, address } = useWalletModel()
+  const api = useAPI()
+  const { address } = useAccount()
   const { setRemoteProfile } = useProfileModel()
   const {
     data,

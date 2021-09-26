@@ -1,4 +1,3 @@
-import { createModel } from 'hox'
 import { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
@@ -62,7 +61,7 @@ export function toHex(str: string): string {
   return result
 }
 
-function useWallet(): UseWallet {
+export function useWallet(): UseWallet {
   const [provider, setProvider] = useState<Provider>()
 
   const [unipassAccount, setAccount] = useLocalStorage<UnipassAccount | null>(
@@ -321,4 +320,4 @@ function useWallet(): UseWallet {
   }
 }
 
-export const useWalletModel = createModel(useWallet)
+export const useWalletModel = () => {}

@@ -15,11 +15,11 @@ import Vip from '../../assets/svg/vip2.svg'
 import { ReactComponent as ShopSvg } from '../../assets/svg/shop.svg'
 import ShopBg from '../../assets/svg/shop-bg.svg'
 import classNames from 'classnames'
-import { useWalletModel } from '../../hooks/useWallet'
 import { RED_ENVELOP_APP_URL, TICKET_APP_URL, WEAPP_ID } from '../../constants'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router-dom'
+import { useAccount } from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
   padding-top: 20px;
@@ -176,7 +176,7 @@ export const Item: React.FC<ItemProps> = ({
 
 export const Apps: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
-  const { pubkey, email } = useWalletModel()
+  const { pubkey, email } = useAccount()
   const history = useHistory()
   const { initWechat, isWechatInited } = useWechatLaunchWeapp()
   useEffect(() => {

@@ -3,9 +3,10 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { createContainer } from 'unstated-next'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
+import { useAccount, useAPI, useProvider, useSignMessage } from './useAccount'
 import { useLocalStorage } from './useLocalStorage'
 import { useSnackbar } from './useSnackbar'
-import { useWalletModel, WalletType } from './useWallet'
+import { WalletType } from './useWallet'
 
 export type Gender = 'male' | 'female'
 
@@ -40,7 +41,10 @@ export interface Auths {
 }
 
 function useProfile(): UseProfile {
-  const { address, walletType, signMessage, api, provider } = useWalletModel()
+  const signMessage = useSignMessage()
+  const { address, walletType } = useAccount()
+  const api = useAPI()
+  const provider = useProvider()
   const [profile, _setProfile] = useLocalStorage<Auths | null>(
     'mibao_account_profile',
     null

@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { Loading } from '../../components/Loading'
 import { TransferState } from '../../hooks/useRedeem'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { MainContainer } from '../../styles'
 import { ReactComponent as WarningSvg } from '../../assets/svg/warning-dialog.svg'
@@ -15,6 +14,7 @@ import { Button } from '../Reedem/Button'
 import { RedeemResultResponse } from '../../models/redeem'
 import { RoutePath } from '../../routes'
 import { formatTime } from '../../utils'
+import { useAPI } from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
   padding: 0;
@@ -104,7 +104,7 @@ const Fail: React.FC = () => {
 }
 
 export const RedeemResult: React.FC = () => {
-  const { api } = useWalletModel()
+  const api = useAPI()
   const resultFlag = useRouteQuery<ResultFlag>('result', ResultFlag.None)
   const { id } = useParams<{ id: string }>()
   const location = useLocation<TransferState>()

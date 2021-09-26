@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../../assets/img/login.png'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
-import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { IS_IMTOKEN } from '../../constants'
@@ -21,6 +20,7 @@ import { getHelpUnipassUrl } from '../../data/help'
 import { getLicenseUrl } from '../../data/license'
 import { UnipassConfig } from '../../utils'
 import { useSnackbar } from '../../hooks/useSnackbar'
+import { useAccountStatus, useLogin, WalletType } from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -178,7 +178,8 @@ enum ErrorMsg {
 }
 
 export const Login: React.FC = () => {
-  const { login, isLogined } = useWalletModel()
+  const { login } = useLogin()
+  const { isLogined } = useAccountStatus()
   const { t, i18n } = useTranslation('translations')
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)

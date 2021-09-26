@@ -9,7 +9,6 @@ import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { NFTDetail, Query } from '../../models'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
@@ -34,6 +33,7 @@ import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
+import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -285,7 +285,9 @@ export const NFT: React.FC = () => {
   }, [width])
 
   const { id } = useParams<{ id: string }>()
-  const { api, address, isLogined } = useWalletModel()
+  const api = useAPI()
+  const { address } = useAccount()
+  const { isLogined } = useAccountStatus()
   const { getAuth } = useProfileModel()
 
   const isHolder = !!useRouteQuery<string>('holder', '')

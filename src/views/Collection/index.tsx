@@ -4,7 +4,6 @@ import { useInfiniteQuery, useQuery } from 'react-query'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { HiddenBar } from '../../components/HiddenBar'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { TokenClass } from '../../models/class-list'
 import { isVerticalScrollable } from '../../utils'
@@ -19,6 +18,7 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { MainContainer } from '../../styles'
 import { useWidth } from '../../hooks/useWidth'
 import { Gallery } from '../../components/Gallery'
+import { useAPI } from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
   padding-top: 44px;
@@ -59,7 +59,7 @@ export interface CollectionData {
 
 export const Collection: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
-  const { api } = useWalletModel()
+  const api = useAPI()
   const history = useHistory()
   const { id } = useParams<{ id: string }>()
   const location = useLocation<CollectionData>()

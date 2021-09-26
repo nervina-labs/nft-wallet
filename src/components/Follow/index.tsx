@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { useConfirm } from '../../hooks/useConfirm'
 import { useFollowStatus } from '../../hooks/useFollowStatus'
 import { useProfileModel } from '../../hooks/useProfile'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useAPI, useAccountStatus } from '../../hooks/useAccount'
 import { RoutePath } from '../../routes'
 
 const Container = styled.button`
@@ -48,7 +48,8 @@ export const Follow: React.FC<FollowProps> = ({
   afterToggle,
 }) => {
   const [t] = useTranslation('translations')
-  const { api, isLogined } = useWalletModel()
+  const api = useAPI()
+  const { isLogined } = useAccountStatus()
   const confirm = useConfirm()
   const { followStatus, setFollowStatus } = useFollowStatus()
   const { getAuth } = useProfileModel()

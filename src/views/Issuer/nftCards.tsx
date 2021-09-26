@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { useParams } from 'react-router'
-import { useWalletModel } from '../../hooks/useWallet'
 import { useInfiniteQuery } from 'react-query'
 import { PRODUCT_STATUE_SET, ProductState, Query } from '../../models'
 import { NftCard } from './nftCard'
@@ -14,6 +13,7 @@ import { useHistory } from 'react-router-dom'
 import { Loading } from '../../components/Loading'
 import { HEADER_HEIGHT } from '../../components/Appbar'
 import { IssuerTokenClass } from '../../models/issuer'
+import { useAPI } from '../../hooks/useAccount'
 
 const ITEM_LIMIT = 20
 
@@ -228,7 +228,7 @@ const CardGroup: React.FC = () => {
     'productState',
     'product_state'
   )
-  const { api } = useWalletModel()
+  const api = useAPI()
 
   const {
     data,

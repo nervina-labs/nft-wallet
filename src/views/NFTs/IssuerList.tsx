@@ -10,7 +10,6 @@ import { Creator } from '../../components/Creator'
 import { useInfiniteQuery } from 'react-query'
 import { Query } from '../../models'
 import { useProfileModel } from '../../hooks/useProfile'
-import { useWalletModel } from '../../hooks/useWallet'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +17,7 @@ import { Empty } from './empty'
 import { getImagePreviewUrl, truncateMiddle } from '../../utils'
 import { Link } from 'react-router-dom'
 import { RoutePath } from '../../routes'
+import { useAPI } from '../../hooks/useAccount'
 
 interface IssuerProps {
   issuer: IIssuer
@@ -138,7 +138,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({
   address,
 }) => {
   const { getAuth } = useProfileModel()
-  const { api } = useWalletModel()
+  const api = useAPI()
   const { t } = useTranslation('translations')
   const {
     data,

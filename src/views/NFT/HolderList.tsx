@@ -3,12 +3,12 @@ import styled from 'styled-components'
 import { Holder } from '../../components/Holder'
 import { useInfiniteQuery } from 'react-query'
 import { Query } from '../../models'
-import { useWalletModel } from '../../hooks/useWallet'
 import { TokenClassUuidHolder } from '../../models/holder'
 import { Loading } from '../../components/Loading'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
 import { StatusText } from './StatusText'
+import { useAPI } from '../../hooks/useAccount'
 
 const HolderItem = styled.div`
   width: 100%;
@@ -30,7 +30,7 @@ export const TokenHolderList: React.FC<{
   id: string
   limit?: number
 }> = ({ id, limit = 20 }) => {
-  const { api } = useWalletModel()
+  const api = useAPI()
   const { t } = useTranslation('translations')
   const {
     data,

@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { MainContainer } from '../../styles'
 import { TokenClass } from '../../models/class-list'
 import { ClassSortType as SortType, Query } from '../../models'
-import { useWalletModel } from '../../hooks/useWallet'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import { Masonry } from '../../components/Masonry'
@@ -23,6 +22,7 @@ import { Home } from './home'
 import { Card } from './card'
 import { useProfileModel } from '../../hooks/useProfile'
 import { Empty } from '../NFTs/empty'
+import { useAPI } from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -381,7 +381,7 @@ export const Explore: React.FC = () => {
     return allTags.find((t) => t.routeName === currentTag)?.name
   }, [allTags, currentTag])
 
-  const { api } = useWalletModel()
+  const api = useAPI()
   const { getAuth, isAuthenticated } = useProfileModel()
   const {
     data,

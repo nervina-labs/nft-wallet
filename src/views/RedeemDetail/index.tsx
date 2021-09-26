@@ -4,7 +4,6 @@ import { Redirect, useHistory, useParams } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { Loading } from '../../components/Loading'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { RoutePath, useRoute } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -29,6 +28,7 @@ import { Footer } from './Footer'
 import { Tab, Tabs } from '../../components/Tab'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { SubmitInfo } from './SubmitInfo'
+import { useAPI } from '../../hooks/useAccount'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -193,7 +193,7 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ data }) => {
 export const RedeemDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { t, i18n } = useTranslation('translations')
-  const { api } = useWalletModel()
+  const api = useAPI()
   const history = useHistory()
   const { isError, data } = useQuery(
     [Query.RedeemDetail, id, api],

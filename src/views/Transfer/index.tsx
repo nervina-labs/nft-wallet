@@ -22,7 +22,6 @@ import {
   generateUnipassSignTxUrl,
 } from '../../utils'
 import { ActionDialog } from '../../components/ActionDialog'
-import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import { QrcodeScaner } from '../../components/QRcodeScaner'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
@@ -36,6 +35,14 @@ import { UnipassTransferNftState } from '../../models/unipass'
 import { DasSelector } from './dasSelector'
 import { useProfileModel } from '../../hooks/useProfile'
 import { CardImage } from '../../components/Card/CardImage'
+import {
+  useAccount,
+  useAccountStatus,
+  useAPI,
+  useProvider,
+  useSignTransaction,
+  WalletType,
+} from '../../hooks/useAccount'
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -102,16 +109,11 @@ function verifyAddress(address: string, self?: string): AddressVerifiedType {
 export const Transfer: React.FC = () => {
   const routerLocation = useLocation<TransferState>()
   const history = useHistory()
-  const {
-    signTransaction,
-    api,
-    isLogined,
-    address,
-    prevAddress,
-    provider,
-    walletType,
-    pubkey,
-  } = useWalletModel()
+  const signTransaction = useSignTransaction()
+  const api = useAPI()
+  const { isLogined, prevAddress } = useAccountStatus()
+  const { address, walletType, pubkey } = useAccount()
+  const provider = useProvider()
   const prevState = routerLocation.state?.prevState
   const hasSignature = !!routerLocation.state?.signature
   const [isDrawerOpen, setIsDrawerOpen] = useState(hasSignature ?? false)
@@ -253,18 +255,15 @@ export const Transfer: React.FC = () => {
           })
         } else {
           const url = `${location.origin}${RoutePath.Unipass}`
-          location.href = generateUnipassSignTxUrl(
-            url,
-            url,
-            pubkey,
-            signTx as any,
-            { uuid: id, ckbAddress: sentAddress }
-          )
+          location.href = generateUnipassSignTxUrl(url, url, pubkey, signTx, {
+            uuid: id,
+            ckbAddress: sentAddress,
+          })
           return
         }
       } else {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await api.transfer(id, signTx!, sentAddress).catch((err) => {
+        await api.transfer(id, signTx, sentAddress).catch((err) => {
           setFailedMessage(FailedMessage.TranferFail)
           stopTranfer(false)
           console.log(err)

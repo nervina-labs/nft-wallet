@@ -2,8 +2,8 @@
 import { useCallback, useState } from 'react'
 import { randomString } from '../utils'
 import { WxSignConfig } from '../models/wx'
-import { useWalletModel } from './useWallet'
 import { IS_SAFARI, WECHAT_APP_ID } from '../constants'
+import { useAPI } from './useAccount'
 
 export const generateWxConfig = (): WxSignConfig => {
   return {
@@ -30,7 +30,7 @@ export class IntryUrl {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const useWechatLaunchWeapp = () => {
   const [isWechatInited, setIsWechatInited] = useState(false)
-  const { api } = useWalletModel()
+  const api = useAPI()
   const initWechat = useCallback(async () => {
     if (isWechatInited) {
       return

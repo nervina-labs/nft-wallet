@@ -47,7 +47,7 @@ export enum ClassSortType {
   Likes = 'likes',
 }
 
-interface SpecialCategories {
+export interface SpecialCategories {
   special_categories: SpecialAssets[]
 }
 

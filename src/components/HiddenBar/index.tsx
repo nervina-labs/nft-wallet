@@ -7,8 +7,8 @@ import { ReactComponent as AppsSvg } from '../../assets/svg/apps.svg'
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import classnames from 'classnames'
-import { useWalletModel } from '../../hooks/useWallet'
 import { useScrollTriggerWithThreshold } from '../../hooks/useScroll'
+import { useAccountStatus } from '../../hooks/useAccount'
 
 export const HideOnScroll: React.FC<{ alwaysShow?: boolean }> = ({
   children,
@@ -69,7 +69,7 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
   })
   const matchApps = useRouteMatch(RoutePath.Apps)
   const history = useHistory()
-  const { isLogined } = useWalletModel()
+  const { isLogined } = useAccountStatus()
 
   const myOnClick = useCallback(() => {
     if (matchNFTs?.isExact) {

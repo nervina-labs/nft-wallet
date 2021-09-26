@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
-import { useWalletModel } from '../../hooks/useWallet'
 import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { LazyLoadImage } from '../../components/Image'
@@ -16,6 +15,7 @@ import classNames from 'classnames'
 import { HEADER_HEIGHT } from '../../components/Appbar'
 import { copyFallback, ellipsisIssuerID, getImagePreviewUrl } from '../../utils'
 import { useHistory } from 'react-router-dom'
+import { useAPI } from '../../hooks/useAccount'
 
 const VerifySvgPath = (VerifySvg as unknown) as string
 
@@ -353,7 +353,7 @@ const VerifiedTitle: React.FC<{
 
 export const IssuerInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const { api } = useWalletModel()
+  const api = useAPI()
   const [t] = useTranslation('translations')
   const history = useHistory()
 

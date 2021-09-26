@@ -10,7 +10,6 @@ import {
   useLocation,
 } from 'react-router-dom'
 import { I18nextProvider, useTranslation } from 'react-i18next'
-import { useWalletModel, WalletType } from '../hooks/useWallet'
 import { Account } from '../views/Account'
 import { Login } from '../views/Login'
 import { NFT } from '../views/NFT'
@@ -22,7 +21,6 @@ import { Profile } from '../views/Profile'
 import { ImagePreview } from '../views/Profile/ImagePreview'
 import { TakePhoto } from '../views/Profile/TakePhoto'
 import { Explore } from '../views/Explore'
-import { ActionDialog } from '../components/ActionDialog'
 import { Comfirm } from '../components/Confirm'
 import { useProfileModel } from '../hooks/useProfile'
 import { Help } from '../views/Help'
@@ -44,6 +42,13 @@ import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
 import { ErrorToastDialog } from '../components/ErrorToast'
 import { GlobalSnackbar } from '../components/GlobalSnackbar'
+import { ConfirmToast } from '../components/ConfirmToast'
+import {
+  useAccount,
+  useAccountStatus,
+  useLogin,
+  WalletType,
+} from '../hooks/useAccount'
 
 export enum RoutePath {
   Launch = '/',
@@ -124,13 +129,8 @@ const allowWithoutAuthList = new Set([
 const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
 
 const WalletChange: React.FC = ({ children }) => {
-  const {
-    address,
-    prevAddress,
-    walletType,
-    isLogined,
-    pubkey,
-  } = useWalletModel()
+  const { address, walletType, pubkey } = useAccount()
+  const { prevAddress, isLogined } = useAccountStatus()
   const history = useHistory()
   const location = useLocation()
   useEffect(() => {
@@ -396,8 +396,9 @@ export enum ProfilePath {
 }
 
 export const Routers: React.FC = () => {
-  const { isLogined, walletType, login } = useWalletModel()
-  const { toastConfig } = useToast()
+  const { walletType } = useAccount()
+  const { isLogined } = useAccountStatus()
+  const { login } = useLogin()
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
       login(walletType).catch((e) => {
@@ -434,16 +435,7 @@ export const Routers: React.FC = () => {
             </Switch>
             <WarningDialog />
             <ErrorToastDialog />
-            <ActionDialog
-              icon={null}
-              dialogTitle={toastConfig.title}
-              content={toastConfig.content}
-              open={toastConfig.show}
-              okText={toastConfig.okText}
-              showCloseIcon={toastConfig.showCloseIcon}
-              onConfrim={toastConfig.onConfirm}
-              onBackdropClick={toastConfig.onBackdropClick}
-            />
+            <ConfirmToast />
             <GlobalSnackbar />
             <Comfirm open disableBackdropClick />
           </WalletChange>
