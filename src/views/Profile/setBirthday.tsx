@@ -3,9 +3,9 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
+import { useConfirm } from '../../hooks/useConfirm'
 import { usePrevious } from '../../hooks/usePrevious'
 import { useProfileModel } from '../../hooks/useProfile'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
@@ -33,7 +33,7 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
   )
 
   const prevValue = usePrevious(value)
-  const { confirm } = useWalletModel()
+  const confirm = useConfirm()
 
   const isChinese = i18n.language !== 'en'
 

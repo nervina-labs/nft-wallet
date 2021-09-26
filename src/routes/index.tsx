@@ -24,9 +24,6 @@ import { TakePhoto } from '../views/Profile/TakePhoto'
 import { Explore } from '../views/Explore'
 import { ActionDialog } from '../components/ActionDialog'
 import { Comfirm } from '../components/Confirm'
-import { ReactComponent as FailSvg } from '../assets/svg/fail.svg'
-import Snackbar from '@material-ui/core/Snackbar'
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useProfileModel } from '../hooks/useProfile'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
@@ -45,10 +42,8 @@ import { WarningDialog } from '../components/WarningDialog'
 import { MyRedeem } from '../views/Reedem/My'
 import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
-
-const Alert: React.FC<AlertProps> = (props: AlertProps) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />
-}
+import { ErrorToastDialog } from '../components/ErrorToast'
+import { GlobalSnackbar } from '../components/GlobalSnackbar'
 
 export enum RoutePath {
   Launch = '/',
@@ -401,15 +396,7 @@ export enum ProfilePath {
 }
 
 export const Routers: React.FC = () => {
-  const {
-    isLogined,
-    walletType,
-    login,
-    errorMsg,
-    isErrorDialogOpen,
-    setIsErrorDialogOpen,
-  } = useWalletModel()
-  const { showEditSuccess, closeSnackbar, snackbarMsg } = useProfileModel()
+  const { isLogined, walletType, login } = useWalletModel()
   const { toastConfig } = useToast()
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
@@ -446,13 +433,7 @@ export const Routers: React.FC = () => {
               <Route component={NotFound} path="*" />
             </Switch>
             <WarningDialog />
-            <ActionDialog
-              icon={<FailSvg />}
-              content={errorMsg}
-              open={isErrorDialogOpen}
-              onConfrim={() => setIsErrorDialogOpen(false)}
-              onBackdropClick={() => setIsErrorDialogOpen(false)}
-            />
+            <ErrorToastDialog />
             <ActionDialog
               icon={null}
               dialogTitle={toastConfig.title}
@@ -463,26 +444,7 @@ export const Routers: React.FC = () => {
               onConfrim={toastConfig.onConfirm}
               onBackdropClick={toastConfig.onBackdropClick}
             />
-            <Snackbar
-              open={showEditSuccess}
-              autoHideDuration={1500}
-              onClose={closeSnackbar}
-              style={{
-                bottom: `${window.innerHeight / 2 + 16}px`,
-              }}
-            >
-              <Alert
-                style={{
-                  borderRadius: '16px',
-                  background: 'rgba(51, 51, 51, 0.692657)',
-                  padding: '0px 40px',
-                }}
-                icon={false}
-                severity="success"
-              >
-                {snackbarMsg}
-              </Alert>
-            </Snackbar>
+            <GlobalSnackbar />
             <Comfirm open disableBackdropClick />
           </WalletChange>
         </RouterProvider>

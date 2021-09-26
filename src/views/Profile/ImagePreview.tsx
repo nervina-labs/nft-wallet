@@ -5,7 +5,6 @@ import { useQueryClient } from 'react-query'
 import { Redirect, useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
 import { useProfileModel } from '../../hooks/useProfile'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { RoutePath, useRoute } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -14,6 +13,8 @@ import { LazyLoadImage } from '../../components/Image'
 import PeopleSrc from '../../assets/img/people.png'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
+import { useConfirm } from '../../hooks/useConfirm'
+import { useErrorToast } from '../../hooks/useErrorToast'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -100,7 +101,8 @@ export const ImagePreview: React.FC = () => {
       location.state.tokenUuid,
     ]
   }, [location.state])
-  const { confirm, toast } = useWalletModel()
+  const toast = useErrorToast()
+  const confirm = useConfirm()
 
   const isBlob = useMemo(() => datauri?.startsWith('blob:'), [datauri])
 

@@ -18,9 +18,9 @@ import { Redirect, useHistory, useLocation } from 'react-router'
 import { useTranslation, Trans } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
-import { useProfileModel } from '../../hooks/useProfile'
 import { getLicenseUrl } from '../../data/license'
 import { UnipassConfig } from '../../utils'
+import { useSnackbar } from '../../hooks/useSnackbar'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -186,7 +186,7 @@ export const Login: React.FC = () => {
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isLicenseChecked, setIsLicenseChecked] = useState(false)
   const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
-  const { snackbar } = useProfileModel()
+  const { snackbar } = useSnackbar()
   const history = useHistory()
   const location = useLocation<{ redirect?: string }>()
   const redirectUrl = location?.state?.redirect

@@ -1,5 +1,5 @@
 import { createModel } from 'hox'
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { NFTWalletAPI } from '../models'
 import { Address, DefaultSigner, Provider, Transaction } from '@lay2/pw-core'
@@ -35,21 +35,6 @@ export interface UseWallet {
   prevAddress: string | undefined
   walletType?: WalletType
   signMessage: (msg: string) => Promise<string>
-  setIsErrorDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  isErrorDialogOpen: boolean
-  errorMsg?: React.ReactNode
-  toast: (msg: React.ReactNode) => void
-  confirm: (
-    msg: React.ReactNode,
-    onConfirm: PromiseFunc,
-    onClose: PromiseFunc
-  ) => Promise<void>
-  confirmContent: React.ReactNode
-  showConfirmDialog: boolean
-  onDialogConfirm: PromiseFunc
-  onDialogClose: PromiseFunc
-  setScrollScrollRestoration: (path: string, scroll: ScrollPosition) => void
-  getScrollScrollRestoration: (path: string) => ScrollPosition | undefined
   setUnipassAccount: (account: UnipassAccount | null) => void
 }
 
@@ -77,67 +62,13 @@ export function toHex(str: string): string {
   return result
 }
 
-const noop: any = (): void => {}
-
 function useWallet(): UseWallet {
   const [provider, setProvider] = useState<Provider>()
-  const scrollRestoration = useRef(new Map<string, ScrollPosition>())
-
-  const setScrollScrollRestoration = useCallback(
-    (path: string, scroll: ScrollPosition) => {
-      scrollRestoration.current.set(path, scroll)
-    },
-    []
-  )
-
-  const getScrollScrollRestoration = useCallback((path: string) => {
-    return scrollRestoration.current.get(path)
-  }, [])
 
   const [unipassAccount, setAccount] = useLocalStorage<UnipassAccount | null>(
     UNIPASS_ACCOUNT_KEY,
     null
   )
-
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
-  const [errorMsg, setErrorMsg] = useState<React.ReactNode>('')
-  const [confirmContent, setConfirmContent] = useState<React.ReactNode>('')
-  const [showConfirmDialog, setShowConfifrmDialog] = useState(false)
-  const [onDialogConfirm, setOnDialogConfirm] = useState<PromiseFunc>(noop)
-  const [onDialogClose, setOnDialogClose] = useState<PromiseFunc>(noop)
-
-  const confirm = useCallback(
-    async (
-      content: React.ReactNode,
-      onConfirm: PromiseFunc,
-      onClose: PromiseFunc
-    ): Promise<void> => {
-      setConfirmContent(content)
-      setShowConfifrmDialog(true)
-      return await new Promise<void>((resolve) => {
-        setOnDialogConfirm(() => {
-          return async () => {
-            setShowConfifrmDialog(false)
-            await onConfirm()
-            resolve()
-          }
-        })
-        setOnDialogClose(() => {
-          return async () => {
-            await onClose()
-            setShowConfifrmDialog(false)
-            resolve()
-          }
-        })
-      })
-    },
-    []
-  )
-
-  const toast = useCallback((errorMsg: React.ReactNode) => {
-    setIsErrorDialogOpen(true)
-    setErrorMsg(errorMsg)
-  }, [])
 
   const setUnipassAccount = useCallback(
     (account: UnipassAccount | null) => {
@@ -384,17 +315,6 @@ function useWallet(): UseWallet {
     prevAddress,
     walletType,
     signMessage,
-    setIsErrorDialogOpen,
-    isErrorDialogOpen,
-    errorMsg,
-    toast,
-    confirmContent,
-    showConfirmDialog,
-    onDialogClose,
-    onDialogConfirm,
-    confirm,
-    setScrollScrollRestoration,
-    getScrollScrollRestoration,
     setUnipassAccount,
     pubkey,
     email,

@@ -3,9 +3,9 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
+import { useConfirm } from '../../hooks/useConfirm'
 import { usePrevious } from '../../hooks/usePrevious'
 import { useProfileModel } from '../../hooks/useProfile'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { useRoute } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
@@ -46,7 +46,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
     if (value.length >= 100) return 100
     return value.length
   }, [value])
-  const { confirm } = useWalletModel()
+  const confirm = useConfirm()
 
   const classes = useStyles()
 

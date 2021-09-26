@@ -10,7 +10,7 @@ import {
 } from '../models/redeem'
 import { RoutePath } from '../routes'
 import { generateUnipassRedeemUrl, UnipassConfig } from '../utils'
-import { useProfileModel } from './useProfile'
+import { useSnackbar } from './useSnackbar'
 import { useWalletModel, WalletType } from './useWallet'
 import { useWarning } from './useWarning'
 
@@ -46,7 +46,7 @@ export const useSignRedeem = () => {
   const [t] = useTranslation('translations')
 
   const [isRedeeming, setIsRedeeming] = useAtom(isSigningAtom)
-  const { snackbar } = useProfileModel()
+  const { snackbar } = useSnackbar()
   const confirmRedeem = useCallback(
     async ({ customData, id, onConfirmError }: ConfirmRedeemProps) => {
       setIsRedeeming(true)

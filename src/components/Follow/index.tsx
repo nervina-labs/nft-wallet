@@ -4,6 +4,7 @@ import React, { useCallback, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { useConfirm } from '../../hooks/useConfirm'
 import { useFollowStatusModel } from '../../hooks/useFollowStatus'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
@@ -47,7 +48,8 @@ export const Follow: React.FC<FollowProps> = ({
   afterToggle,
 }) => {
   const [t] = useTranslation('translations')
-  const { api, confirm, isLogined } = useWalletModel()
+  const { api, isLogined } = useWalletModel()
+  const confirm = useConfirm()
   const { followStatus, setFollowStatus } = useFollowStatusModel()
   const { getAuth } = useProfileModel()
   const isFollow = useMemo(() => {

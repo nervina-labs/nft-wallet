@@ -12,7 +12,7 @@ import { useProfileModel } from '../../hooks/useProfile'
 import { useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { usePrevious } from '../../hooks/usePrevious'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useConfirm } from '../../hooks/useConfirm'
 
 export interface SetUsernameProps {
   open: boolean
@@ -159,7 +159,7 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
   }, [value])
   const { setRemoteProfile } = useProfileModel()
   const prevValue = usePrevious(value)
-  const { confirm } = useWalletModel()
+  const confirm = useConfirm()
 
   useEffect(() => {
     if (!open) {

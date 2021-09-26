@@ -4,6 +4,7 @@ import { createContainer } from 'unstated-next'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
 import { useLocalStorage } from './useLocalStorage'
+import { useSnackbar } from './useSnackbar'
 import { useWalletModel, WalletType } from './useWallet'
 
 export type Gender = 'male' | 'female'
@@ -22,8 +23,6 @@ export interface UseProfile {
   profile: Auths | null
   setProfile: (profile: Partial<Profile>) => void
   setPreviewImageData: React.Dispatch<React.SetStateAction<string>>
-  showEditSuccess: boolean
-  setShowEditSuccess: React.Dispatch<React.SetStateAction<boolean>>
   previewImageData: string
   getAuth: () => Promise<Auth>
   setRemoteProfile: (
@@ -32,9 +31,6 @@ export interface UseProfile {
       ext?: string
     }
   ) => Promise<void>
-  snackbarMsg: React.ReactNode
-  snackbar: (msg: React.ReactNode) => void
-  closeSnackbar: () => void
   toggleLike: (uuid: string, like: boolean) => Promise<boolean>
   isAuthenticated: boolean
 }
@@ -91,17 +87,7 @@ function useProfile(): UseProfile {
     }
   }, [signMessage, walletType, address, profile, setProfile, provider])
 
-  const [showEditSuccess, setShowEditSuccess] = useState(false)
-  const [snackbarMsg, setSnackbarMsg] = useState<React.ReactNode>()
-
-  const snackbar = useCallback((message: React.ReactNode) => {
-    setShowEditSuccess(true)
-    setSnackbarMsg(message)
-  }, [])
-
-  const closeSnackbar = useCallback(() => {
-    setShowEditSuccess(false)
-  }, [])
+  const { snackbar } = useSnackbar()
 
   const setRemoteProfile = useCallback(
     async (user: Partial<User>, options?: { ext?: string }) => {
@@ -135,11 +121,6 @@ function useProfile(): UseProfile {
     setPreviewImageData,
     getAuth,
     setRemoteProfile,
-    showEditSuccess,
-    setShowEditSuccess,
-    snackbarMsg,
-    snackbar,
-    closeSnackbar,
     toggleLike,
     isAuthenticated,
   }

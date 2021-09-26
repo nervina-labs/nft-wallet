@@ -15,6 +15,7 @@ import classNames from 'classnames'
 import { Empty } from '../NFTs/empty'
 import { useProfileModel } from '../../hooks/useProfile'
 import { AvatarType } from '../../models/user'
+import { useErrorToast } from '../../hooks/useErrorToast'
 
 export interface DrawerImageProps {
   showAvatarAction: boolean
@@ -89,7 +90,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   reloadProfile,
 }) => {
   const [t] = useTranslation('translations')
-  const { toast } = useWalletModel()
+  const toast = useErrorToast()
   const history = useHistory()
   const ITEM_LIMIT = 15
 
