@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import React, { useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
 import { RedeemDrawer } from './Drawer'
 import { InputBaseFix } from '../Profile/InputMod'
 import styled from 'styled-components'
@@ -62,13 +61,11 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
   id,
 }) => {
   const [t] = useTranslation('translations')
-  const location = useLocation<FormState>()
-  const routerState = location.state ?? { name: '', phone: '', address: '' }
   const [formState, dispatch] = useReducer(
     (prevState: FormState, { key, value }: FormAction) => {
       return { ...prevState, [key]: value }
     },
-    routerState
+    { name: '', phone: '', address: '' }
   )
   const classes = useStyles()
 
@@ -83,7 +80,12 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
   return (
     <Container
       isDrawerOpen={open}
-      close={close}
+      close={() => {
+        dispatch({ key: 'name', value: '' })
+        dispatch({ key: 'phone', value: '' })
+        dispatch({ key: 'address', value: '' })
+        close()
+      }}
       title={t('exchange.form.address.title')}
       isValid
     >
