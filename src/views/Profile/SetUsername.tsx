@@ -5,7 +5,7 @@ import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
 import { useConfirm } from '../../hooks/useConfirm'
 import { usePrevious } from '../../hooks/usePrevious'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useSetServerProfile } from '../../hooks/useProfile'
 import { Query } from '../../models'
 import { useRoute } from '../../routes'
 import { DrawerConfig } from './DrawerConfig'
@@ -54,7 +54,7 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
 
   const [isSaving, setIsSaving] = useState(false)
   const history = useHistory()
-  const { setRemoteProfile } = useProfileModel()
+  const setRemoteProfile = useSetServerProfile()
   const qc = useQueryClient()
   const onSave = useCallback(async () => {
     if (isSaving) {

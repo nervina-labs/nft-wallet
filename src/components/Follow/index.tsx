@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { useConfirm } from '../../hooks/useConfirm'
 import { useFollowStatus } from '../../hooks/useFollowStatus'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { useAPI, useAccountStatus } from '../../hooks/useAccount'
 import { RoutePath } from '../../routes'
 
@@ -52,7 +52,7 @@ export const Follow: React.FC<FollowProps> = ({
   const { isLogined } = useAccountStatus()
   const confirm = useConfirm()
   const { followStatus, setFollowStatus } = useFollowStatus()
-  const { getAuth } = useProfileModel()
+  const getAuth = useGetAndSetAuth()
   const isFollow = useMemo(() => {
     return followStatus[uuid] ?? followed
   }, [followStatus, uuid, followed])

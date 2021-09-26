@@ -15,7 +15,7 @@ import { DrawerAction } from './DrawerAction'
 import { ProfilePath, RoutePath } from '../../routes'
 import { getRegionFromCode, SetRegion } from './SetRegion'
 import { useRouteMatch } from 'react-router-dom'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useSetServerProfile } from '../../hooks/useProfile'
 import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { Skeleton } from '@material-ui/lab'
@@ -159,7 +159,7 @@ export const Profile: React.FC = () => {
     }
   )
 
-  const { setRemoteProfile } = useProfileModel()
+  const setRemoteProfile = useSetServerProfile()
   const qc = useQueryClient()
   const onSaveGender = useCallback(
     async (gender: string) => {

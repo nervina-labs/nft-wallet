@@ -23,7 +23,7 @@ import { useLikeStatus } from '../../hooks/useLikeStatus'
 import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
 import { Follow } from '../../components/Follow'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
 
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
@@ -288,7 +288,7 @@ export const NFT: React.FC = () => {
   const api = useAPI()
   const { address } = useAccount()
   const { isLogined } = useAccountStatus()
-  const { getAuth } = useProfileModel()
+  const getAuth = useGetAndSetAuth()
 
   const isHolder = !!useRouteQuery<string>('holder', '')
 

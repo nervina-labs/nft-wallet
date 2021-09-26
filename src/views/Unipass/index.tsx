@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSetAccount, WalletType } from '../../hooks/useAccount'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useProfile } from '../../hooks/useProfile'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import {
   UnipassAction,
@@ -19,7 +19,7 @@ export const Unipass: React.FC = () => {
   const unipassInfo: UnipassResponse = JSON.parse(ret)
   const history = useHistory()
   const setUnipassAccount = useSetAccount()
-  const { setProfile, profile } = useProfileModel()
+  const { setProfile, profile } = useProfile()
   const ps = useRouteQuery('prev_state', '{}')
   const prevState = JSON.parse(ps)
   const redirectUri = useRouteQuery('redirect', '')

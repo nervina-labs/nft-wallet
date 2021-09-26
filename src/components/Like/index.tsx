@@ -7,7 +7,7 @@ import { ReactComponent as Heart } from '../../assets/svg/liked.svg'
 import { ReactComponent as UnHeart } from '../../assets/svg/unlike.svg'
 import { useAccountStatus } from '../../hooks/useAccount'
 import { useLikeStatus } from '../../hooks/useLikeStatus'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useToggleLike } from '../../hooks/useProfile'
 import { RoutePath } from '../../routes'
 import { formatCount } from '../../utils'
 
@@ -59,7 +59,7 @@ export const Like: React.FC<LikeProps> = ({
     }
     return formatCount(c, i18n.language)
   }, [i18n.language, count, isLiked, isLikedFromList])
-  const { toggleLike } = useProfileModel()
+  const toggleLike = useToggleLike()
   const { isLogined } = useAccountStatus()
   const history = useHistory()
 

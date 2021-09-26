@@ -8,7 +8,7 @@ import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN } from '../../constants'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { CircularProgress } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
@@ -154,7 +154,8 @@ export const AddressCollector: React.FC = () => {
   const { walletType, address } = useAccount()
   const { isLogined } = useAccountStatus()
   const provider = useProvider()
-  const { getAuth, isAuthenticated } = useProfileModel()
+  const { isAuthenticated } = useProfile()
+  const getAuth = useGetAndSetAuth()
   const { id } = useParams<{ id: string }>()
   const history = useHistory()
 

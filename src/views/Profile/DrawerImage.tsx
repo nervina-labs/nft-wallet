@@ -12,7 +12,7 @@ import { ReactComponent as SelectedArrow } from '../../assets/svg/selected-arrow
 import styled from 'styled-components'
 import classNames from 'classnames'
 import { Empty } from '../NFTs/empty'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useSetServerProfile } from '../../hooks/useProfile'
 import { AvatarType } from '../../models/user'
 import { useErrorToast } from '../../hooks/useErrorToast'
 import { useAccount, useAPI } from '../../hooks/useAccount'
@@ -99,7 +99,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   )
   const api = useAPI()
   const { address } = useAccount()
-  const { setRemoteProfile } = useProfileModel()
+  const setRemoteProfile = useSetServerProfile()
   const {
     data,
     status,

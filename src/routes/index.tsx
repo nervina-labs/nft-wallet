@@ -22,7 +22,7 @@ import { ImagePreview } from '../views/Profile/ImagePreview'
 import { TakePhoto } from '../views/Profile/TakePhoto'
 import { Explore } from '../views/Explore'
 import { Comfirm } from '../components/Confirm'
-import { useProfileModel } from '../hooks/useProfile'
+import { useGetAndSetAuth, useProfile } from '../hooks/useProfile'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
 import { Apps } from '../views/Apps'
@@ -145,7 +145,8 @@ const WalletChange: React.FC = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prevAddress, address, walletType])
-  const { isAuthenticated, getAuth } = useProfileModel()
+  const { isAuthenticated } = useProfile()
+  const getAuth = useGetAndSetAuth()
   const isSigning = useRef(false)
   const { toast, closeToast } = useToast()
   const [t] = useTranslation('translations')

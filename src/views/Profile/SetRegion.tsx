@@ -8,7 +8,7 @@ import pc from 'china-division/dist/pc-code.json'
 import { allRegions, ChinaRegions } from '../../data/regions'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { ProfilePath, RoutePath } from '../../routes'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useSetServerProfile } from '../../hooks/useProfile'
 import { useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { usePrevious } from '../../hooks/usePrevious'
@@ -157,7 +157,7 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
   const [selectedCountry, selectedCity] = useMemo(() => {
     return value.split(';;')
   }, [value])
-  const { setRemoteProfile } = useProfileModel()
+  const setRemoteProfile = useSetServerProfile()
   const prevValue = usePrevious(value)
   const confirm = useConfirm()
 

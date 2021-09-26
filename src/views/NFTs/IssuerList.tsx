@@ -9,7 +9,7 @@ import { ReactComponent as PeopleSvg } from '../../assets/svg/people.svg'
 import { Creator } from '../../components/Creator'
 import { useInfiniteQuery } from 'react-query'
 import { Query } from '../../models'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 import { useTranslation } from 'react-i18next'
@@ -137,7 +137,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({
   isFollow,
   address,
 }) => {
-  const { getAuth } = useProfileModel()
+  const getAuth = useGetAndSetAuth()
   const api = useAPI()
   const { t } = useTranslation('translations')
   const {

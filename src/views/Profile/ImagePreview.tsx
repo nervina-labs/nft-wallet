@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { Redirect, useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useSetServerProfile } from '../../hooks/useProfile'
 import { Query } from '../../models'
 import { RoutePath, useRoute } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -85,7 +85,7 @@ export const ImagePreview: React.FC = () => {
   const history = useHistory()
   const location = useLocation<HistoryData>()
   const [isSaving, setIsSaving] = useState(false)
-  const { setRemoteProfile } = useProfileModel()
+  const setRemoteProfile = useSetServerProfile()
 
   const [datauri, ext, fromCamera, tokenUuid] = useMemo(() => {
     const locale = i18n.language === 'en' ? 'en' : 'zh'

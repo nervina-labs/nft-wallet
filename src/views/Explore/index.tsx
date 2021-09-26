@@ -20,7 +20,7 @@ import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
 import { Home } from './home'
 import { Card } from './card'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { Empty } from '../NFTs/empty'
 import { useAPI } from '../../hooks/useAccount'
 
@@ -382,7 +382,8 @@ export const Explore: React.FC = () => {
   }, [allTags, currentTag])
 
   const api = useAPI()
-  const { getAuth, isAuthenticated } = useProfileModel()
+  const { isAuthenticated } = useProfile()
+  const getAuth = useGetAndSetAuth()
   const {
     data,
     hasNextPage,
