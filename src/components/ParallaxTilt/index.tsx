@@ -288,7 +288,7 @@ const Cardback: React.FC<CardbackProps> = ({
           <div
             className="content"
             dangerouslySetInnerHTML={{ __html: content }}
-          ></div>
+          />
         ) : (
           <>
             <div
@@ -564,7 +564,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
             <div
               className="card-back"
               dangerouslySetInnerHTML={{ __html: cardBackContent }}
-            ></div>
+            />
           ) : null}
         </CardbackPreviewContainer>
       </Dialog>
