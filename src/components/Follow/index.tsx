@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { useConfirm } from '../../hooks/useConfirm'
-import { useFollowStatusModel } from '../../hooks/useFollowStatus'
+import { useFollowStatus } from '../../hooks/useFollowStatus'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
@@ -50,7 +50,7 @@ export const Follow: React.FC<FollowProps> = ({
   const [t] = useTranslation('translations')
   const { api, isLogined } = useWalletModel()
   const confirm = useConfirm()
-  const { followStatus, setFollowStatus } = useFollowStatusModel()
+  const { followStatus, setFollowStatus } = useFollowStatus()
   const { getAuth } = useProfileModel()
   const isFollow = useMemo(() => {
     return followStatus[uuid] ?? followed

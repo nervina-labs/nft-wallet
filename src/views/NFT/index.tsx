@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
 import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
-import { useLikeStatusModel } from '../../hooks/useLikeStatus'
+import { useLikeStatus } from '../../hooks/useLikeStatus'
 import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
 import { Follow } from '../../components/Follow'
@@ -340,7 +340,7 @@ export const NFT: React.FC = () => {
     )
   }, [address, detail])
 
-  const { setLikeStatus } = useLikeStatusModel()
+  const { setLikeStatus } = useLikeStatus()
 
   useEffect(() => {
     if (data == null) {

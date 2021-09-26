@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createModel } from 'hox'
-import React, { useCallback, useState } from 'react'
+import { atom, useAtom } from 'jotai'
+import React, { useCallback } from 'react'
 
 export interface ToastConfig {
   show: boolean
@@ -18,11 +18,13 @@ export interface UseToast {
   closeToast: () => void
 }
 
-function useToastModel(): UseToast {
-  const [toastConfig, setToastConfig] = useState<ToastConfig>({
-    show: false,
-    content: '',
-  })
+const toastConfigAtom = atom<ToastConfig>({
+  show: false,
+  content: '',
+})
+
+export function useToast(): UseToast {
+  const [toastConfig, setToastConfig] = useAtom(toastConfigAtom)
 
   const toast = useCallback((config: ToastConfig) => {
     setToastConfig({
@@ -31,7 +33,9 @@ function useToastModel(): UseToast {
     })
   }, [])
 
-  const closeToast = (): void => setToastConfig({ show: false, content: '' })
+  const closeToast = (): void => {
+    setToastConfig({ show: false, content: '' })
+  }
 
   return {
     toastConfig,
@@ -39,5 +43,3 @@ function useToastModel(): UseToast {
     closeToast,
   }
 }
-
-export const useToast = createModel(useToastModel)
