@@ -1,5 +1,5 @@
 import { ListMeta, NftType } from '.'
-import { Issuer, IssuerInfo } from './issuer'
+import { Issuer, IssuerInfoResult } from './issuer'
 import type { Transaction as PwTransaction } from '@lay2/pw-core'
 import { VipInfo } from './class-list'
 
@@ -179,7 +179,7 @@ export interface MyRedeemEvents {
 }
 
 export interface RedeemDetailModel extends RedeemItem, VipInfo {
-  issuer_info: Omit<IssuerInfo, 'verified_info'>
+  issuer_info: Omit<IssuerInfoResult, 'verified_info'>
   rule_info: RuleInfo
   reward_info: RewardInfo
 }
