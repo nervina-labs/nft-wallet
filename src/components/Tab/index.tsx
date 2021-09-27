@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import React, { HTMLAttributes, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import classNames from 'classnames'
 
@@ -34,17 +34,11 @@ const ActiveBar = styled.div`
   left: 0;
   position: absolute;
   display: flex;
-  width: 100%;
+  width: 30px;
+  background-color: #ff5c00;
   height: 3px;
   transition: 0.2s;
-  &:before {
-    content: ' ';
-    width: 30px;
-    height: 100%;
-    background-color: #ff5c00;
-    margin: auto;
-    border-radius: 10px;
-  }
+  border-radius: 10px;
 `
 
 interface TabsAffixProps extends HTMLAttributes<HTMLDivElement> {
@@ -63,19 +57,32 @@ export const TabsAffix: React.FC<TabsAffixProps> = (props) => {
 
 interface TabsProps extends HTMLAttributes<HTMLDivElement> {
   activeKey: number
+  tabCount?: number
 }
 
 export const Tabs: React.FC<TabsProps> = (props) => {
-  const { children, activeKey } = props
+  const { children, activeKey, tabCount } = props
+  const tabsRef = useRef<HTMLDivElement>(null)
+  const [activeBarTranslateX, setActiveBarTranslateX] = useState(0)
+  useEffect(() => {
+    const childrenElements = Array.from(
+      (tabsRef.current?.children ?? []) as HTMLDivElement[]
+    ).filter((el) => el.className.startsWith('Tab__TabContainer'))
+    if (childrenElements.length > 0) {
+      const width = childrenElements[activeKey].offsetWidth
+      const translateX = childrenElements
+        .slice(0, activeKey)
+        .reduce((acc, el) => acc + el.offsetWidth, 0)
+      setActiveBarTranslateX(translateX + Math.floor(width / 2) - 15)
+    }
+  }, [activeKey, tabCount])
+
   return (
-    <TabsContainer {...props}>
+    <TabsContainer {...props} ref={tabsRef}>
       {children}
       <ActiveBar
         style={{
-          width: `calc(100% / ${
-            (children as boolean[]).filter((e) => e).length
-          })`,
-          transform: `translateX(${activeKey * 100}%)`,
+          transform: `translateX(${activeBarTranslateX}px)`,
         }}
       />
     </TabsContainer>
