@@ -74,7 +74,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
         width={50}
         height={50}
         isPlayable={isPlayable}
-        playerCenter
+        playerOr3dIconCenter
         hideFallBackText
         has3dIcon={item.renderer_type === NftType._3D}
       />

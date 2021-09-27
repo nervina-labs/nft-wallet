@@ -32,14 +32,6 @@ const CardImageContainer = styled.div`
       width: 20px;
       height: 20px;
     }
-
-    &.center {
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      bottom: unset;
-      right: unset;
-    }
   }
 
   .fallback {
@@ -68,6 +60,14 @@ const CardImageContainer = styled.div`
     backdrop-filter: blur(4px);
     border-radius: 100%;
   }
+
+  .center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    bottom: unset;
+    right: unset;
+  }
 `
 
 interface CardImageProps {
@@ -81,7 +81,7 @@ interface CardImageProps {
   height?: number
   className?: string
   loadOriginal?: boolean
-  playerCenter?: boolean
+  playerOr3dIconCenter?: boolean
   hideFallBackText?: boolean
   variant?: LazyLoadImageVariant
   backup?: React.ReactNode
@@ -98,7 +98,7 @@ export const CardImage: React.FC<CardImageProps> = ({
   height = 100,
   className,
   loadOriginal,
-  playerCenter,
+  playerOr3dIconCenter,
   hideFallBackText = true,
   variant,
   backup,
@@ -152,7 +152,7 @@ export const CardImage: React.FC<CardImageProps> = ({
       {isPlayable && (
         <span
           className={classNames('player', {
-            center: playerCenter,
+            center: playerOr3dIconCenter,
           })}
         >
           <PlayerSvg />
@@ -166,7 +166,15 @@ export const CardImage: React.FC<CardImageProps> = ({
           tooltipPlacement="top-start"
         />
       )}
-      {has3dIcon && <img className="icon3d" src={NFT3dSvg} alt="3d-icon" />}
+      {has3dIcon && (
+        <img
+          className={classNames('icon3d', {
+            center: playerOr3dIconCenter,
+          })}
+          src={NFT3dSvg}
+          alt="3d-icon"
+        />
+      )}
     </CardImageContainer>
   )
 }
