@@ -10,7 +10,6 @@ const Model = (props: {
 }) => {
   return (
     <>
-      {/* @ts-expect-error */}
       <model-viewer
         {...props}
         shadow-intensity="1"
