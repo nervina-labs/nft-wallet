@@ -29,3 +29,8 @@ code {
 .PhotoView-PhotoSlider__Counter {
   opacity: 0;
 }
+
+model-viewer {
+  --poster-color: rgba(0 , 0, 0, 0);
+  --poster-image: rgba(0 , 0, 0, 0);
+}

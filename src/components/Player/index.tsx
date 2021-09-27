@@ -32,13 +32,14 @@ const PreviewContainer = styled.div`
 
   .main {
     position: fixed;
-    width: calc(100% - 20px);
+    width: 100%;
     max-width: 500px;
     height: 500px;
     top: 50%;
     left: 50%;
     margin: auto;
     transform: translate(-50%, -50%);
+    display: flex;
   }
 
   .audio {
@@ -50,8 +51,10 @@ const PreviewContainer = styled.div`
   }
 
   .video {
-    width: 100%;
+    width: calc(100% - 20px);
     background-color: #000;
+    height: 500px;
+    margin: auto;
   }
 
   .model3d {
@@ -60,8 +63,7 @@ const PreviewContainer = styled.div`
     position: fixed;
     touch-action: none;
     backdrop-filter: blur(10px);
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0);
   }
 
   .close {
@@ -71,6 +73,7 @@ const PreviewContainer = styled.div`
     cursor: pointer;
     color: #fff;
     opacity: 0.75;
+    z-index: 10;
     &:hover {
       opacity: 1;
     }
@@ -91,12 +94,15 @@ export const Player: React.FC<PlayerProps> = ({
   const [noPoster, setNoPoster] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [height, setHeight] = useState(window.innerHeight)
 
   const close = (): void => {
     audioRef?.current?.pause()
     videoRef?.current?.pause()
     onClose()
   }
+
+  const updateHeight = () => setHeight(window.innerHeight)
 
   useEffect(() => {
     const catchRefHandleError = (): void => {
@@ -110,6 +116,12 @@ export const Player: React.FC<PlayerProps> = ({
       videoRef?.current?.play().catch(catchRefHandleError)
     }
   }, [open, audioRef, onError])
+
+  useEffect(() => {
+    window.addEventListener('resize', updateHeight)
+    return () => window.addEventListener('resize', updateHeight)
+  })
+
   return (
     <>
       <Modal open={open} onClose={close} onEscapeKeyDown={close} keepMounted>
@@ -118,7 +130,7 @@ export const Player: React.FC<PlayerProps> = ({
             <Close />
           </Icon>
           {open && (
-            <div className="main">
+            <div className="main" style={{ height: `${height}px` }}>
               {isVideo && (
                 <video
                   ref={videoRef}
@@ -152,7 +164,7 @@ export const Player: React.FC<PlayerProps> = ({
               )}
               {is3D && (
                 <div className="model3d">
-                  <Model src={renderer ?? ''} poster={poster} />
+                  <Model src={renderer ?? ''} />
                 </div>
               )}
             </div>
