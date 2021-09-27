@@ -15,7 +15,8 @@
   "scripts": {
     "dev": "craco start",
     "build": "craco build",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "start": "serve -s build"
   },
   "dependencies": {
     "@lay2/pw-core": "0.4.0-alpha.8",
@@ -28,7 +29,7 @@
     "@sentry/tracing": "^6.9.0",
     "@types/qrcode.react": "^1.0.1",
     "@zxing/library": "^0.18.5",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bowser": "^2.11.0",
     "byte-guide": "^1.0.5",
     "china-division": "^2.3.1",
@@ -38,6 +39,7 @@
     "dayjs": "1.10.4",
     "hox": "^1.1.3",
     "i18next": "^20.2.2",
+    "jotai": "^1.3.3",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.0",
     "react-better-tilt": "1.5.15",
@@ -50,6 +52,7 @@
     "react-query": "^3.13.4",
     "react-router-dom": "^5.2.0",
     "react-webcam": "^5.2.4",
+    "serve": "11.3.2",
     "styled-components": "^5.2.3",
     "swiper": "^6.8.0",
     "unstated-next": "^1.1.0",
@@ -63,7 +66,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.9",
     "@types/wx-js-sdk-dt": "^1.4.4",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
     "babel-plugin-styled-components": "^1.12.0",
     "eslint": "7",
     "eslint-config-standard-with-typescript": "^20.0.0",

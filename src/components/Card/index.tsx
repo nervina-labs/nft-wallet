@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { NFTToken, NftType, TransactionStatus } from '../../models'
@@ -201,7 +201,15 @@ export const Card: React.FC<CardProps> = ({
   const isIssuerBaned = token.is_issuer_banned
   const isBanned = isClassBanned || isIssuerBaned
   const [t] = useTranslation('translations')
-
+  const isPlayable = useMemo(() => {
+    if (isBanned) {
+      return false
+    }
+    return (
+      token.renderer_type === NftType.Audio ||
+      token.renderer_type === NftType.Video
+    )
+  }, [token.renderer_type, isBanned])
   return (
     <Container
       onClick={() => {
@@ -222,11 +230,8 @@ export const Card: React.FC<CardProps> = ({
         className="media"
         width={100}
         height={125}
-        hasCardBack={token.card_back_content_exist}
-        isPlayable={
-          token.renderer_type === NftType.Audio ||
-          token.renderer_type === NftType.Video
-        }
+        hasCardBack={isBanned ? false : token.card_back_content_exist}
+        isPlayable={isPlayable}
         tid={!isClass ? `${token.n_token_id}` : undefined}
       />
       <div className="content">

@@ -12,7 +12,7 @@ import { MainContainer } from '../../styles'
 import { AvatarType } from '../../models/user'
 import { LazyLoadImage } from '../../components/Image'
 import PeopleSrc from '../../assets/img/people.png'
-import { addLocaleToUrl, addTidToUrl } from '../../utils'
+import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 
 const Container = styled(MainContainer)`
@@ -88,10 +88,10 @@ export const ImagePreview: React.FC = () => {
 
   const [datauri, ext, fromCamera, tokenUuid] = useMemo(() => {
     const locale = i18n.language === 'en' ? 'en' : 'zh'
-    let datauri = location?.state?.datauri ?? ''
-    datauri = location.state.tid
-      ? addLocaleToUrl(addTidToUrl(datauri, location.state.tid), locale)
-      : datauri
+    const datauri = addParamsToUrl(location?.state?.datauri ?? '', {
+      locale,
+      ...(location.state.tid ? { tid: location.state.tid } : {}),
+    })
 
     return [
       datauri,

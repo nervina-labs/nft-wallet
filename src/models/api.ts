@@ -14,12 +14,26 @@ import {
 } from './issuer'
 import { Notifications } from './banner'
 import { ClaimResult } from './claim'
+import {
+  MyRedeemEvents,
+  RedeemDetailModel,
+  RedeemEvents,
+  RedeemListType,
+  RedeemParams,
+  RedeemResultResponse,
+  RewardDetailResponse,
+} from './redeem'
 import { WxSignConfig } from './wx'
 import { GetHolderByTokenClassUuidResponse } from './holder'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
   token_ckb_transaction_uuid: string
+}
+
+export interface UnsignedReddemTransaction {
+  unsigned_tx: RPC.RawTransaction
+  redemption_event_uuid: string
 }
 
 export interface NFTTransaction {
@@ -163,6 +177,27 @@ export interface NFTWalletAPI {
     page: number,
     sortType: ClassSortType
   ) => Promise<AxiosResponse<FollowClassList>>
+
+  getAllRedeemEvents: (
+    page: number,
+    type: RedeemListType
+  ) => Promise<AxiosResponse<RedeemEvents>>
+
+  getMyRedeemEvents: (
+    page: number,
+    type: RedeemListType
+  ) => Promise<AxiosResponse<MyRedeemEvents>>
+
+  getRedeemDetail: (id: string) => Promise<AxiosResponse<RedeemDetailModel>>
+
+  getRedeemTransaction: (
+    id: string,
+    isUnipass?: boolean
+  ) => Promise<NFTTransaction>
+
+  getRedeemPrize: (id: string) => Promise<AxiosResponse<RewardDetailResponse>>
+
+  redeem: (params: RedeemParams) => Promise<AxiosResponse<RedeemResultResponse>>
 
   getHolderByTokenClassUuid: (
     uuid: string,

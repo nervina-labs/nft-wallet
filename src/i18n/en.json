@@ -2,8 +2,10 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
+      "login": "Login",
       "actions": {
         "comfirm": "Confirm",
+        "cancel": "Cancel",
         "loading": "Loading",
         "pull-to-down": "No More NFT~",
         "pull-down-refresh": " Pull down to refresh",
@@ -329,7 +331,126 @@
       "like": "Like",
       "no-data": "No data",
       "more": "More",
-      "no-on-sale": "No nft on sale"
+      "no-on-sale": "No NFT on sale"
+    },
+    "exchange": {
+      "title": "Redeem Center",
+      "count": "{{count}}",
+      "redeemed": "Redeemed",
+      "nft-prize": "The prize includes all the following NFTs",
+      "blind-prize": "The prize randomly includes {{count}} NFT(s) below",
+      "othder-prize": "The organizer will give out the prize after you submit the redeem",
+      "redeem-time": "Time: ",
+      "type": {
+        "token": "NFT",
+        "blind_box": "NFT Mystery Box",
+        "custom": "Others"
+      },
+      "progress": "Progress",
+      "tabs": {
+        "all": "All",
+        "redeemable": "Redeemable"
+      },
+      "actions": {
+        "redeem": "Redeem",
+        "insufficient": "Cannot redeem"
+      },
+      "mine": {
+        "title": "My Prizes",
+        "all": "All",
+        "wait": "Pending"
+      },
+      "prize": {
+        "title": "Prize",
+        "get": "You get",
+        "receiver": {
+          "info": "Redeemer Info",
+          "address": "Redeemer Address"
+        },
+        "address": {
+          "name": "Name: ",
+          "phone": "Phone: ",
+          "address": "Address: "
+        },
+        "ckb": "Address: ",
+        "issuer": {
+          "comment": "Organizer's comment",
+          "company": "Express Company",
+          "sn": "Order number: ",
+          "time": "Packing time: "
+        }
+      },
+      "alert": {
+        "normal": "The NFT(s) participating in the activity will be still owned by redeemer but marked as redeemed on chain. Redeemed NFT cannot be involved in other redeem activities anymore.",
+      "destroy": "The NFT(s) participating in the activity will be destroyed and cannot be retrieved once destroyed.",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      },
+      "form": {
+        "address": {
+          "title": "Fill in the mailing address",
+          "name-label": "Name",
+          "name-placeholder": "Fill in the name",
+          "phone-label": "Phone",
+          "phone-placeholder": "Fill in the phone number",
+          "address-label": "Address",
+          "address-placeholder": "Fill in the address"
+        },
+        "email": {
+          "title": "Fill in the email",
+          "label": "Email",
+          "placeholder": "Fill in the email",
+          "error": "Invalid email"
+        },
+        "ckb": {
+          "title": "Fill in the CKB address",
+          "label": "CKB Address",
+          "placeholder": "Fill in the CKB address",
+          "fill": "Current address",
+          "error": "Invalid CKB address"
+        }
+      },
+      "exchanged": "Redeemed",
+      "issuer": "Organizer",
+      "issue-time": "Time: ",
+      "event": {
+        "title": "Activity Details",
+        "on-going": "Ongoing",
+        "closed": "Closed",
+        "end": "Ended",
+        "tabs": {
+          "price": "Prizes",
+          "requirement": "Rules"
+        },
+        "condition": "Only users who own the following NFTs can participate in the activity"
+      },
+      "condition": {
+        "nft": "NFT",
+        "needed": "Need to own",
+        "held": "Owned"
+      },
+      "warning": "The NFT(s) participating in the activity will be still owned by redeemer but marked as redeemed on chain. Redeemed NFT cannot be involved in other redeem activities anymore.",
+      "warning-destroyed": "The NFT(s) participating in the activity will be destroyed and cannot be retrieved once destroyed.",
+      "check": {
+        "price": "View prizes",
+        "comment": " View prizes and comments",
+        "wait": "• pending"
+      },
+      "empty": "No record",
+      "no-more": "No more",
+      "error": "Redeem failed, please check your network and redeem rules",
+      "result": {
+        "success": "Redeem Successfully",
+        "submited": "Summitted",
+        "time": "Submit time: ",
+        "fail": "Redeem failed",
+        "custom": "The activity organizer will give out prize based on the info you provided",
+        "check": "View Prizes",
+        "confirm": "Confirm",
+        "go-back": "Back to redeem center",
+        "error": "Please check your network and redeem rules",
+        "redeeming": "Redeeming"
+      }
     },
     "follow": {
       "follow": "Follow",
