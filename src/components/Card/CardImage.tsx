@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
-import { CardBack } from '../Cardback'
 import FallbackImg from '../../assets/svg/fallback.svg'
 import { addParamsToUrl, getImagePreviewUrl } from '../../utils'
 import { LazyLoadImage, LazyLoadImageVariant } from '../Image'
@@ -9,6 +8,8 @@ import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import i18n from 'i18next'
 import NFT3dSvg from '../../assets/svg/3D.svg'
+import CardBackPath from '../../assets/svg/card-back.svg'
+import { CardTags } from './CardTags'
 
 const CardImageContainer = styled.div`
   position: relative;
@@ -123,6 +124,17 @@ export const CardImage: React.FC<CardImageProps> = ({
     return loadOriginal ? dataSrc : getImagePreviewUrl(dataSrc)
   }, [dataSrc, loadOriginal])
 
+  const tags = useMemo(() => {
+    const icons = []
+    if (hasCardBack) {
+      icons.push(CardBackPath)
+    }
+    if (has3dIcon) {
+      icons.push(NFT3dSvg)
+    }
+    return icons
+  }, [hasCardBack, has3dIcon])
+
   return (
     <CardImageContainer className={className}>
       <LazyLoadImage
@@ -158,15 +170,7 @@ export const CardImage: React.FC<CardImageProps> = ({
           <PlayerSvg />
         </span>
       )}
-      {hasCardBack && (
-        <CardBack
-          style={{
-            borderTopRightRadius: '10px',
-          }}
-          tooltipPlacement="top-start"
-        />
-      )}
-      {has3dIcon && (
+      {has3dIcon && playerOr3dIconCenter && (
         <img
           className={classNames('icon3d', {
             center: playerOr3dIconCenter,
@@ -175,6 +179,7 @@ export const CardImage: React.FC<CardImageProps> = ({
           alt="3d-icon"
         />
       )}
+      {tags.length > 0 && !playerOr3dIconCenter && <CardTags icons={tags} />}
     </CardImageContainer>
   )
 }
