@@ -217,11 +217,8 @@ const Header: React.FC<{
       })}
     >
       {!enableFixed && <h3>{currentTagName}</h3>}
-      <Tabs
-        activeKey={tabsActiveKey}
-        className="filters"
-        tabCount={currentTagId === 'all' ? 3 : 2}
-      >
+
+      <Tabs activeKey={tabsActiveKey} className="filters">
         {currentTagId === 'all' ? (
           <Tab className="filter" onClick={goToRecommend}>
             {t('explore.recommended')}

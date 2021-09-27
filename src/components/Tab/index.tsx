@@ -57,13 +57,13 @@ export const TabsAffix: React.FC<TabsAffixProps> = (props) => {
 
 interface TabsProps extends HTMLAttributes<HTMLDivElement> {
   activeKey: number
-  tabCount?: number
 }
 
 export const Tabs: React.FC<TabsProps> = (props) => {
-  const { children, activeKey, tabCount } = props
+  const { children, activeKey } = props
   const tabsRef = useRef<HTMLDivElement>(null)
   const [activeBarTranslateX, setActiveBarTranslateX] = useState(0)
+  const tabCount = (children as []).filter((e) => e).length
   useEffect(() => {
     const childrenElements = Array.from(
       (tabsRef.current?.children ?? []) as HTMLDivElement[]
