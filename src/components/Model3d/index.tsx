@@ -15,7 +15,6 @@ const Model = (props: {
         shadow-intensity="1"
         camera-controls
         auto-rotate
-        ar
         loading="lazy"
         style={{
           width: '100%',
