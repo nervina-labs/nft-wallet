@@ -102,6 +102,7 @@ export const Card: React.FC<CardProps> = ({
         hasCardBack={hasCardBack}
         width={width}
         height={width}
+        has3dIcon={token.renderer_type === NftType._3D}
       />
       <div className={classNames('title', { oneline: oneLineName })}>
         {token.name}

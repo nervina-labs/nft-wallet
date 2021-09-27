@@ -85,6 +85,7 @@ export const CardDialog: React.FC<{
           }
           hasCardBack={nft.class_card_back_content_exist}
           tid={`${nft.n_token_id}`}
+          has3dIcon={nft.renderer_type === NftType._3D}
         />
 
         <div className="nft-name">{nft.name}</div>

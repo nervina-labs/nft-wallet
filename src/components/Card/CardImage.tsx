@@ -8,6 +8,7 @@ import { LazyLoadImage, LazyLoadImageVariant } from '../Image'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import i18n from 'i18next'
+import NFT3dSvg from '../../assets/svg/3D.svg'
 
 const CardImageContainer = styled.div`
   position: relative;
@@ -56,6 +57,17 @@ const CardImageContainer = styled.div`
   .MuiSkeleton-root {
     margin-right: 0 !important;
   }
+
+  .icon3d {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    width: 30px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.33);
+    backdrop-filter: blur(4px);
+    border-radius: 100%;
+  }
 `
 
 interface CardImageProps {
@@ -73,6 +85,7 @@ interface CardImageProps {
   hideFallBackText?: boolean
   variant?: LazyLoadImageVariant
   backup?: React.ReactNode
+  has3dIcon?: boolean
 }
 
 export const CardImage: React.FC<CardImageProps> = ({
@@ -89,6 +102,7 @@ export const CardImage: React.FC<CardImageProps> = ({
   hideFallBackText = true,
   variant,
   backup,
+  has3dIcon,
 }) => {
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(
     Boolean(isBanned)
@@ -152,6 +166,7 @@ export const CardImage: React.FC<CardImageProps> = ({
           tooltipPlacement="top-start"
         />
       )}
+      {has3dIcon && <img className="icon3d" src={NFT3dSvg} alt="3d-icon" />}
     </CardImageContainer>
   )
 }
