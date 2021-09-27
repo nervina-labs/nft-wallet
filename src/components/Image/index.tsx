@@ -67,7 +67,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
       setShouldUseBackup(true)
       setLoaded(true)
     }
-  }, [])
+  }, [backup])
 
   const ImgElement = (
     <img

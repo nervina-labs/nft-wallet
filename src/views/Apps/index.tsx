@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { HiddenBar } from '../../components/HiddenBar'
@@ -20,6 +20,7 @@ import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router-dom'
 import { useAccount } from '../../hooks/useAccount'
+import { useDidMount } from '../../hooks/useDidMount'
 
 const Container = styled(MainContainer)`
   padding-top: 20px;
@@ -179,9 +180,9 @@ export const Apps: React.FC = () => {
   const { pubkey, email } = useAccount()
   const history = useHistory()
   const { initWechat, isWechatInited } = useWechatLaunchWeapp()
-  useEffect(() => {
+  useDidMount(() => {
     initWechat().catch(Boolean)
-  }, [])
+  })
   const getAppUrl = useCallback(
     (baseUrl: string): string => {
       const url = `${baseUrl}`

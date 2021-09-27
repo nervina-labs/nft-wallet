@@ -21,14 +21,17 @@ export const useSnackbar = () => {
   const setIsShow = useUpdateAtom(isShowAtom)
   const setMsg = useUpdateAtom(msgAtom)
 
-  const snackbar = useCallback((message: React.ReactNode) => {
-    setIsShow(true)
-    setMsg(message)
-  }, [])
+  const snackbar = useCallback(
+    (message: React.ReactNode) => {
+      setIsShow(true)
+      setMsg(message)
+    },
+    [setIsShow, setMsg]
+  )
 
   const closeSnackbar = useCallback(() => {
     setIsShow(false)
-  }, [])
+  }, [setIsShow])
 
   return {
     snackbar,

@@ -34,6 +34,7 @@ import { StatusText } from './StatusText'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
+import { useDidMount } from '../../hooks/useDidMount'
 
 const CardBackIconContainer = styled.div`
   border-bottom-left-radius: 8px;
@@ -363,9 +364,9 @@ export const NFT: React.FC = () => {
   }, [data])
 
   const { initWechat, isWechatInited } = useWechatLaunchWeapp()
-  useEffect(() => {
+  useDidMount(() => {
     initWechat().catch(Boolean)
-  }, [])
+  })
 
   const { renderer, bgImgUrl } = useMemo(() => {
     const nftDetail = detail as NFTDetail

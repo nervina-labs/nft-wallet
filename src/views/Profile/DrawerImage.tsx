@@ -134,13 +134,14 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   const [activeIndex, setActiveIndex] = useState(-1)
   const [isSaving, setIsSaving] = useState(false)
 
-  const tokenList =
-    useMemo(() => {
-      return data?.pages?.reduce(
+  const tokenList = useMemo(() => {
+    return (
+      data?.pages?.reduce(
         (acc, page) => [...acc, ...(page?.token_list ?? [])],
         [] as NFTToken[]
-      )
-    }, [data]) ?? []
+      ) ?? []
+    )
+  }, [data])
 
   const onSave = useCallback(async () => {
     const token = tokenList[activeIndex]

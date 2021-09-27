@@ -10,14 +10,17 @@ const likeStatusAtom = atom<Record<string, boolean>>({})
 
 export const useLikeStatus = (): UseLikeStatus => {
   const [likeStatus, _setLikeStatus] = useAtom(likeStatusAtom)
-  const setLikeStatus = useCallback((uuid: string, like: boolean) => {
-    _setLikeStatus((status) => {
-      return {
-        ...status,
-        [uuid]: like,
-      }
-    })
-  }, [])
+  const setLikeStatus = useCallback(
+    (uuid: string, like: boolean) => {
+      _setLikeStatus((status) => {
+        return {
+          ...status,
+          [uuid]: like,
+        }
+      })
+    },
+    [_setLikeStatus]
+  )
 
   return {
     likeStatus,

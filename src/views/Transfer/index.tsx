@@ -193,7 +193,7 @@ export const Transfer: React.FC = () => {
     if (isDasAddress && dasPopoutVisibleTrigger.current) {
       dasPopoutVisibleTrigger.current(true)
     }
-  }, [isDasAddress, dasPopoutVisibleTrigger.current])
+  }, [isDasAddress])
 
   const stopTranfer = (isSuccess: boolean): void => {
     setIsSendingNFT(false)
