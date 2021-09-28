@@ -95,6 +95,7 @@ export const Player: React.FC<PlayerProps> = ({
   const audioRef = useRef<HTMLAudioElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [height, setHeight] = useState(window.innerHeight)
+  const [previewContainerOffset, setPreviewContainerOffset] = useState('')
 
   const close = (): void => {
     audioRef?.current?.pause()
@@ -118,6 +119,10 @@ export const Player: React.FC<PlayerProps> = ({
   }, [open, audioRef, onError])
 
   useEffect(() => {
+    setPreviewContainerOffset(open ? document.body.style.paddingRight : '')
+  }, [open])
+
+  useEffect(() => {
     window.addEventListener('resize', updateHeight)
     return () => window.addEventListener('resize', updateHeight)
   })
@@ -130,7 +135,13 @@ export const Player: React.FC<PlayerProps> = ({
             <Close />
           </Icon>
           {open && (
-            <div className="main" style={{ height: `${height}px` }}>
+            <div
+              className="main"
+              style={{
+                height: `${height}px`,
+                paddingRight: previewContainerOffset,
+              }}
+            >
               {isVideo && (
                 <video
                   ref={videoRef}
