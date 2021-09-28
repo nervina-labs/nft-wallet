@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
@@ -8,7 +8,7 @@ import Buypng from '../../assets/img/buy.png'
 import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
-import { NFTDetail, Query } from '../../models'
+import { NFTDetail, NftType, Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
@@ -27,6 +27,7 @@ import { Follow } from '../../components/Follow'
 import { useProfileModel } from '../../hooks/useProfile'
 
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
+import { ReactComponent as NFT3dSvg } from '../../assets/svg/3D.svg'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 import { Tab, Tabs } from '../../components/Tab'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
@@ -36,7 +37,16 @@ import { PosterType } from '../../components/Share/posters/poster.interface'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 
-const CardBackIconContainer = styled.div`
+const IconGroupContainer = styled.div`
+  width: 32px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+`
+
+const IconContainer = styled.div`
   border-bottom-left-radius: 8px;
   width: 32px;
   height: 32px;
@@ -44,22 +54,10 @@ const CardBackIconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  right: 8px;
-  top: 8px;
   background: rgba(0, 0, 0, 0.33);
   backdrop-filter: blur(4px);
+  margin-bottom: 12px;
 `
-
-const CardBackIcon: React.FC<{
-  onClick: (e: React.SyntheticEvent) => void
-}> = ({ onClick }) => {
-  return (
-    <CardBackIconContainer onClick={onClick}>
-      <CardBackSvg />
-    </CardBackIconContainer>
-  )
-}
 
 const Background = styled.div`
   position: fixed;
@@ -514,7 +512,18 @@ export const NFT: React.FC = () => {
           tiltRef={tiltRef}
           flipped={showCardBack}
         />
-        {hasCardBack ? <CardBackIcon onClick={cardBackOnClick} /> : null}
+        <IconGroupContainer>
+          {hasCardBack ? (
+            <IconContainer onClick={cardBackOnClick}>
+              <CardBackSvg />
+            </IconContainer>
+          ) : null}
+          {detail?.renderer_type === NftType._3D ? (
+            <IconContainer>
+              <NFT3dSvg />
+            </IconContainer>
+          ) : null}
+        </IconGroupContainer>
       </div>
       {detail == null ? null : (
         <>

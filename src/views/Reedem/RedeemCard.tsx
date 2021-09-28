@@ -18,7 +18,6 @@ import classNames from 'classnames'
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
-import { NftType } from '../../models'
 import { useSignRedeem } from '../../hooks/useRedeem'
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
@@ -250,9 +249,7 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
   const rewards = useMemo(() => {
     if (isCustomReward(item.reward_info)) {
       return item.reward_info.images.slice(0, 4).map((src, i) => {
-        return (
-          <Media isPlayable={false} hasCardBack={false} src={src} key={i} />
-        )
+        return <Media src={src} key={i} />
       })
     }
     const tokens = isBlindReward(item.reward_info)
@@ -261,14 +258,7 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
 
     return tokens.slice(0, 4).map((t, i) => {
       const isBaned = t.is_banned || t.is_class_banned || t.is_issuer_banned
-      return (
-        <Media
-          isPlayable={isBaned ? false : t.renderer_type !== NftType.Picture}
-          hasCardBack={isBaned ? false : t.card_back_content_exist}
-          src={isBaned ? '' : t.class_bg_image_url}
-          key={i}
-        />
-      )
+      return <Media src={isBaned ? '' : t.class_bg_image_url} key={i} />
     })
   }, [item.reward_info])
   return (
