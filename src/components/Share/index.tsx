@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { ReactComponent as CreatePosterIcon } from '../../assets/svg/create-poster.svg'
 import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-download.svg'
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { ReactComponent as ShareCopyLinkIcon } from '../../assets/svg/share-copy-link.svg'
@@ -103,13 +104,14 @@ const HandleBar = styled.div`
 const IconGroupContainer = styled.div`
   display: flex;
   height: 86px;
+  overflow-y: hidden;
+  overflow-x: auto;
 `
 
 const IconContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-right: 15px;
-  width: 56px;
   font-size: 13px;
   line-height: 30px;
   text-align: center;
@@ -129,6 +131,7 @@ const Icon = styled.div`
   height: 56px;
   background-color: #fff;
   border-radius: 6px;
+  margin: 0 auto;
   display: flex;
 
   svg,
@@ -181,9 +184,10 @@ export const Share: React.FC<ShareProps> = ({
     }
   }, [isDialogOpen])
 
+  const [isCreatedPoster, setIsCreatedPoster] = useState(false)
   const [el, setEl] = useState<HTMLDivElement | null>(null)
   const imgSrc = useHtml2Canvas(el, {
-    enable: isDialogOpen,
+    enable: isCreatedPoster,
   })
 
   return (
@@ -194,16 +198,20 @@ export const Share: React.FC<ShareProps> = ({
     >
       {isDialogOpen && (
         <>
-          {imgSrc ? (
-            <img
-              className="share-poster-image"
-              src={imgSrc}
-              alt="share-poster-image"
-            />
-          ) : (
-            <div className="share-poster-image-loading share-poster-image">
-              {t('common.share.creating-poster')}
-            </div>
+          {isCreatedPoster && (
+            <>
+              {imgSrc ? (
+                <img
+                  className="share-poster-image"
+                  src={imgSrc}
+                  alt="share-poster-image"
+                />
+              ) : (
+                <div className="share-poster-image-loading share-poster-image">
+                  {t('common.share.creating-poster')}
+                </div>
+              )}
+            </>
           )}
           {data && (
             <div style={{ opacity: 0 }}>
@@ -240,7 +248,16 @@ export const Share: React.FC<ShareProps> = ({
       >
         <HandleBar>{t('common.share.title')}</HandleBar>
         <IconGroupContainer>
-          {imgSrc && (
+          {!isCreatedPoster && (
+            <IconContainer onClick={() => setIsCreatedPoster(true)}>
+              <Icon>
+                <CreatePosterIcon />
+              </Icon>
+              {t('common.share.create-poster')}
+            </IconContainer>
+          )}
+
+          {imgSrc && isCreatedPoster && (
             <IconContainer>
               <a
                 href={imgSrc}
