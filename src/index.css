@@ -11,6 +11,7 @@ html,
 body {
     height: 100%;
     position: relative;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 code {
