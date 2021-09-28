@@ -75,6 +75,7 @@ const Container = styled(MainContainer)`
 
     .filters {
       width: auto;
+      padding-right: 10px;
 
       &.fixed {
         flex: 1;
@@ -84,6 +85,7 @@ const Container = styled(MainContainer)`
       .filter {
         color: #333333;
         font-size: 14px;
+        padding: 0 10px;
       }
     }
   }
