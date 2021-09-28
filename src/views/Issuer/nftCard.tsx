@@ -60,6 +60,7 @@ export const NftCard: React.FC<{
           token.renderer_type === NftType.Audio
         }
         hasCardBack={token.card_back_content_exist}
+        has3dIcon={token.renderer_type === NftType._3D}
       />
       <div className="issuer">
         <div className="nft-name">{token.name}</div>

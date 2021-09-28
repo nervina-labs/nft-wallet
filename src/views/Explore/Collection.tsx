@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { Gallery } from '../../components/Gallery'
 import { CardImage } from '../../components/Card/CardImage'
+import { NftType } from '../../models'
 
 interface CollectionProps {
   collection: SpecialAssets
@@ -73,8 +74,9 @@ const Item: React.FC<ItemProps> = ({ item }) => {
         width={50}
         height={50}
         isPlayable={isPlayable}
-        playerCenter
+        playerOr3dIconCenter
         hideFallBackText
+        has3dIcon={item.renderer_type === NftType._3D}
       />
       <div className="body">
         <div className="name">{item.name}</div>

@@ -1,13 +1,15 @@
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
-import { CardBack } from '../Cardback'
 import FallbackImg from '../../assets/svg/fallback.svg'
 import { addParamsToUrl, getImagePreviewUrl } from '../../utils'
 import { LazyLoadImage, LazyLoadImageVariant } from '../Image'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import i18n from 'i18next'
+import NFT3dSvg from '../../assets/svg/3D.svg'
+import CardBackPath from '../../assets/svg/card-back.svg'
+import { CardTags } from './CardTags'
 
 const CardImageContainer = styled.div`
   position: relative;
@@ -31,14 +33,6 @@ const CardImageContainer = styled.div`
       width: 20px;
       height: 20px;
     }
-
-    &.center {
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      bottom: unset;
-      right: unset;
-    }
   }
 
   .fallback {
@@ -56,6 +50,25 @@ const CardImageContainer = styled.div`
   .MuiSkeleton-root {
     margin-right: 0 !important;
   }
+
+  .icon3d {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    width: 30px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.33);
+    backdrop-filter: blur(4px);
+    border-radius: 100%;
+  }
+
+  .center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    bottom: unset;
+    right: unset;
+  }
 `
 
 interface CardImageProps {
@@ -69,10 +82,11 @@ interface CardImageProps {
   height?: number
   className?: string
   loadOriginal?: boolean
-  playerCenter?: boolean
+  playerOr3dIconCenter?: boolean
   hideFallBackText?: boolean
   variant?: LazyLoadImageVariant
   backup?: React.ReactNode
+  has3dIcon?: boolean
 }
 
 export const CardImage: React.FC<CardImageProps> = ({
@@ -85,10 +99,11 @@ export const CardImage: React.FC<CardImageProps> = ({
   height = 100,
   className,
   loadOriginal,
-  playerCenter,
+  playerOr3dIconCenter,
   hideFallBackText = true,
   variant,
   backup,
+  has3dIcon,
 }) => {
   const [isFallBackImgLoaded, setFallBackImgLoaded] = useState(
     Boolean(isBanned)
@@ -108,6 +123,17 @@ export const CardImage: React.FC<CardImageProps> = ({
   const previewSrc = useMemo(() => {
     return loadOriginal ? dataSrc : getImagePreviewUrl(dataSrc)
   }, [dataSrc, loadOriginal])
+
+  const tags = useMemo(() => {
+    const icons = []
+    if (hasCardBack) {
+      icons.push(CardBackPath)
+    }
+    if (has3dIcon) {
+      icons.push(NFT3dSvg)
+    }
+    return icons
+  }, [hasCardBack, has3dIcon])
 
   return (
     <CardImageContainer className={className}>
@@ -138,20 +164,22 @@ export const CardImage: React.FC<CardImageProps> = ({
       {isPlayable && (
         <span
           className={classNames('player', {
-            center: playerCenter,
+            center: playerOr3dIconCenter,
           })}
         >
           <PlayerSvg />
         </span>
       )}
-      {hasCardBack && (
-        <CardBack
-          style={{
-            borderTopRightRadius: '10px',
-          }}
-          tooltipPlacement="top-start"
+      {has3dIcon && playerOr3dIconCenter && (
+        <img
+          className={classNames('icon3d', {
+            center: playerOr3dIconCenter,
+          })}
+          src={NFT3dSvg}
+          alt="3d-icon"
         />
       )}
+      {tags.length > 0 && !playerOr3dIconCenter && <CardTags icons={tags} />}
     </CardImageContainer>
   )
 }
