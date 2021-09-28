@@ -19,6 +19,7 @@ const TabContainer = styled.div`
   text-align: center;
   color: #8e8e93;
   cursor: pointer;
+  padding: 0 5px;
   &.active {
     color: #000;
   }
@@ -73,7 +74,7 @@ export const Tabs: React.FC<TabsProps> = (props) => {
       const translateX = childrenElements
         .slice(0, activeKey)
         .reduce((acc, el) => acc + el.offsetWidth, 0)
-      setActiveBarTranslateX(translateX + Math.floor(width / 2) - 15)
+      setActiveBarTranslateX(translateX + (Math.floor(width / 2) - 15))
     }
   }, [activeKey, tabCount])
 

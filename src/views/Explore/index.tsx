@@ -74,10 +74,11 @@ const Container = styled(MainContainer)`
     }
 
     .filters {
-      width: 50%;
+      width: auto;
 
       &.fixed {
         flex: 1;
+        width: 100%;
       }
 
       .filter {
