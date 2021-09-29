@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import CreatePosterIconPath from '../../assets/svg/create-poster.svg'
+import CreatingPosterIconPath from '../../assets/svg/creating-poster.svg'
 import ShareDownloadIconPath from '../../assets/svg/share-download.svg'
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { ReactComponent as ShareCopyLinkIcon } from '../../assets/svg/share-copy-link.svg'
@@ -42,7 +43,7 @@ const ModelContentContainer = styled.div`
 
   .share-poster-image {
     max-width: 450px;
-    max-height: calc(100vh - 270px);
+    max-height: calc(100% - 270px);
     object-fit: contain;
     z-index: 9;
     position: absolute;
@@ -138,6 +139,19 @@ const Icon = styled.div`
     object-fit: cover;
     margin: auto;
   }
+
+  .icon-loading {
+    animation: icon-loading 1s infinite;
+  }
+
+  @keyframes icon-loading {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 `
 
 const Button = styled.button`
@@ -186,6 +200,30 @@ export const Share: React.FC<ShareProps> = ({
     }
     setIsCreatedPoster(true)
   }, [imgSrc, snackbar, t])
+
+  const createPosterIcon = useMemo(() => {
+    const createPosterIcon = isLoading
+      ? CreatingPosterIconPath
+      : CreatePosterIconPath
+    const src = imgSrc ? ShareDownloadIconPath : createPosterIcon
+    return (
+      <img
+        className={classNames({
+          'icon-loading': isLoading && src === CreatingPosterIconPath,
+        })}
+        src={src}
+        alt=""
+      />
+    )
+  }, [imgSrc, isLoading])
+  const createPosterText = useMemo(() => {
+    if (imgSrc) {
+      return t('common.share.download')
+    }
+    return isLoading
+      ? t('common.share.creating-poster')
+      : t('common.share.create-poster')
+  }, [imgSrc, isLoading, t])
 
   return (
     <ModelContentContainer
@@ -238,22 +276,8 @@ export const Share: React.FC<ShareProps> = ({
         <HandleBar>{t('common.share.title')}</HandleBar>
         <IconGroupContainer>
           <IconContainer onClick={downloadOrCreatePoster}>
-            <Icon>
-              <img
-                src={
-                  isCreatedPoster && imgSrc
-                    ? ShareDownloadIconPath
-                    : CreatePosterIconPath
-                }
-                alt="icon"
-              />
-            </Icon>
-            {imgSrc && t('common.share.download')}
-            {!imgSrc
-              ? isLoading
-                ? t('common.share.creating-poster')
-                : t('common.share.create-poster')
-              : null}
+            <Icon>{createPosterIcon}</Icon>
+            {createPosterText}
           </IconContainer>
 
           {navigator?.share !== undefined ? (

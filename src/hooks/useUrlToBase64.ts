@@ -18,7 +18,9 @@ export function useUrlToBase64<
   const { api } = useWalletModel()
   const fallbackImg = options?.fallbackImg ?? FallbackImgPath
   const toDataUrlFromApi = async (url?: string) => {
-    const previewUrl = options?.usePreviewUrl ? getImagePreviewUrl(url) : url
+    const previewUrl = options?.usePreviewUrl
+      ? getImagePreviewUrl(url, 150)
+      : url
     if (!previewUrl) {
       return fallbackImg
     }
