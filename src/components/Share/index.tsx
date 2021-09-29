@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import CreatePosterIconPath from '../../assets/svg/create-poster.svg'
 import ShareDownloadIconPath from '../../assets/svg/share-download.svg'
@@ -12,37 +12,17 @@ import { IS_ANDROID, IS_SUPPORT_DOWNLOAD, IS_WEXIN } from '../../constants'
 import { copyContent, download } from '../../utils'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useHtml2Canvas } from '../../hooks/useHtml2Canvas'
+import { Modal } from '@material-ui/core'
 
-const DialogContainer = styled.div`
+const ModelContentContainer = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-
-  .mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    z-index: 0;
-    transition: 0.2s;
-  }
-  z-index: 101;
-
-  &.hide {
-    pointer-events: none;
-  }
-
-  &.hide .mask {
-    opacity: 0;
-  }
 
   .share-poster-image {
     max-width: 450px;
-    max-height: calc(100% - 270px);
+    max-height: calc(100vh - 270px);
     object-fit: contain;
     z-index: 9;
     position: absolute;
@@ -50,11 +30,6 @@ const DialogContainer = styled.div`
     left: 50%;
     transform: translate(-50%, 0);
     animation: show-poster 0.2s;
-  }
-
-  .share-poster-image-loading {
-    color: #fff;
-    text-align: center;
   }
 
   @keyframes show-poster {
@@ -68,7 +43,7 @@ const DialogContainer = styled.div`
 `
 
 const ShareContainer = styled.div`
-  position: absolute;
+  position: fixed;
   width: 100%;
   max-width: 500px;
   left: 50%;
@@ -83,9 +58,16 @@ const ShareContainer = styled.div`
   backdrop-filter: blur(10px);
   z-index: 1;
   transition: 0.2s;
+  animation: show-container 0.2s;
 
-  &.hide {
-    transform: translateX(-50%) translateY(100%);
+  @keyframes show-container {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(100%);
+    }
+    to {
+      opacity: 1;
+    }
   }
 `
 
@@ -174,141 +156,126 @@ export const Share: React.FC<ShareProps> = ({
 }) => {
   const { t } = useTranslation('translations')
   const { snackbar } = useProfileModel()
-  useEffect(() => {
-    if (isDialogOpen) {
-      document.body.classList.add('fixed')
-    } else {
-      document.body.classList.remove('fixed')
-    }
-    return () => {
-      document.body.classList.remove('fixed')
-    }
-  }, [isDialogOpen])
-
   const [isCreatedPoster, setIsCreatedPoster] = useState(false)
   const [el, setEl] = useState<HTMLDivElement | null>(null)
   const { imgSrc, isLoading } = useHtml2Canvas(el, {
     enable: isCreatedPoster,
   })
+  const downloadOrCreatePoster = useCallback(() => {
+    if (imgSrc) {
+      if (!IS_SUPPORT_DOWNLOAD) {
+        snackbar(t('common.share.long-press-save'))
+      } else {
+        download(imgSrc, 'poster.png')
+      }
+      return
+    }
+    setIsCreatedPoster(true)
+  }, [imgSrc, snackbar, t])
 
   return (
-    <DialogContainer
-      className={classNames({
-        hide: !isDialogOpen,
-      })}
-    >
-      {isDialogOpen && (
-        <>
-          {isCreatedPoster && imgSrc && (
-            <img
-              className="share-poster-image"
-              src={imgSrc}
-              alt="share-poster-image"
-            />
-          )}
-          {data && (
-            <div style={{ opacity: 0 }}>
-              {type === PosterType.Nft ? (
-                <NftPoster
-                  data={data as any}
-                  onLoad={setEl}
-                  shareUrl={copyText}
-                />
-              ) : null}
-              {type === PosterType.Issuer ? (
-                <IssuerPoster
-                  data={data as any}
-                  onLoad={setEl}
-                  shareUrl={copyText}
-                />
-              ) : null}
-              {type === PosterType.Holder ? (
-                <HolderPoster
-                  data={data as any}
-                  onLoad={setEl}
-                  shareUrl={copyText}
-                />
-              ) : null}
-            </div>
-          )}
-        </>
-      )}
-      <div className="mask" onClick={closeDialog} />
-      <ShareContainer
-        className={classNames({
-          hide: !isDialogOpen,
-        })}
-      >
-        <HandleBar>{t('common.share.title')}</HandleBar>
-        <IconGroupContainer>
-          <IconContainer
-            onClick={() => {
-              if (imgSrc) {
-                if (!IS_SUPPORT_DOWNLOAD) {
-                  snackbar(t('common.share.long-press-save'))
-                } else {
-                  download(imgSrc, 'poster.png')
-                }
-                return
-              }
-              setIsCreatedPoster(true)
-            }}
-          >
-            <Icon>
+    <Modal open={isDialogOpen} onClose={closeDialog}>
+      <ModelContentContainer>
+        {isDialogOpen && (
+          <>
+            {isCreatedPoster && imgSrc && (
               <img
-                src={
-                  isCreatedPoster && imgSrc
-                    ? ShareDownloadIconPath
-                    : CreatePosterIconPath
-                }
-                alt="icon"
+                className="share-poster-image"
+                src={imgSrc}
+                alt="share-poster-image"
               />
-            </Icon>
-            {imgSrc && t('common.share.download')}
-            {!imgSrc
-              ? isLoading
-                ? t('common.share.creating-poster')
-                : t('common.share.create-poster')
-              : null}
-          </IconContainer>
-
-          {navigator?.share !== undefined ? (
-            <IconContainer
-              onClick={async () => {
-                await navigator.share({
-                  title: document.title,
-                  text: 'Share',
-                  url: copyText,
-                })
-              }}
-            >
+            )}
+            {data && (
+              <div style={{ opacity: 0 }}>
+                {type === PosterType.Nft ? (
+                  <NftPoster
+                    data={data as any}
+                    onLoad={setEl}
+                    shareUrl={copyText}
+                  />
+                ) : null}
+                {type === PosterType.Issuer ? (
+                  <IssuerPoster
+                    data={data as any}
+                    onLoad={setEl}
+                    shareUrl={copyText}
+                  />
+                ) : null}
+                {type === PosterType.Holder ? (
+                  <HolderPoster
+                    data={data as any}
+                    onLoad={setEl}
+                    shareUrl={copyText}
+                  />
+                ) : null}
+              </div>
+            )}
+          </>
+        )}
+        <ShareContainer
+          className={classNames({
+            hide: !isDialogOpen,
+          })}
+        >
+          <HandleBar>{t('common.share.title')}</HandleBar>
+          <IconGroupContainer>
+            <IconContainer onClick={downloadOrCreatePoster}>
               <Icon>
-                <ShareMoreIcon />
+                <img
+                  src={
+                    isCreatedPoster && imgSrc
+                      ? ShareDownloadIconPath
+                      : CreatePosterIconPath
+                  }
+                  alt="icon"
+                />
               </Icon>
-              {t('common.share.more')}
+              {imgSrc && t('common.share.download')}
+              {!imgSrc
+                ? isLoading
+                  ? t('common.share.creating-poster')
+                  : t('common.share.create-poster')
+                : null}
             </IconContainer>
-          ) : null}
 
-          {
-            <IconContainer
-              onClick={async () => {
-                const isAndroidWeChat = IS_WEXIN && IS_ANDROID
-                const content = isAndroidWeChat
-                  ? copyText.replace('https://', '').replace('http://', '')
-                  : copyText
-                await copyContent(content)
-                snackbar(t('common.share.copied'))
-              }}
-            >
-              <Icon>
-                <ShareCopyLinkIcon />
-              </Icon>
-              {t('common.share.copy-link')}
-            </IconContainer>
-          }
-        </IconGroupContainer>
-        <Button onClick={closeDialog}>{t('common.share.cancel')}</Button>
-      </ShareContainer>
-    </DialogContainer>
+            {navigator?.share !== undefined ? (
+              <IconContainer
+                onClick={async () => {
+                  await navigator.share({
+                    title: document.title,
+                    text: 'Share',
+                    url: copyText,
+                  })
+                }}
+              >
+                <Icon>
+                  <ShareMoreIcon />
+                </Icon>
+                {t('common.share.more')}
+              </IconContainer>
+            ) : null}
+
+            {
+              <IconContainer
+                onClick={async () => {
+                  const isAndroidWeChat = IS_WEXIN && IS_ANDROID
+                  const content = isAndroidWeChat
+                    ? copyText.replace('https://', '').replace('http://', '')
+                    : copyText
+                  await copyContent(content)
+                  snackbar(t('common.share.copied'))
+                }}
+              >
+                <Icon>
+                  <ShareCopyLinkIcon />
+                </Icon>
+                {t('common.share.copy-link')}
+              </IconContainer>
+            }
+          </IconGroupContainer>
+          <Button onClick={closeDialog}>{t('common.share.cancel')}</Button>
+        </ShareContainer>
+      </ModelContentContainer>
+    </Modal>
   )
 }
