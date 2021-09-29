@@ -316,3 +316,10 @@ export async function toDataUrl(
     }
   })
 }
+
+export function download(url: string, download: string) {
+  const a = document.createElement('a')
+  a.download = download
+  a.href = url
+  a.click()
+}
