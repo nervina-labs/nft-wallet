@@ -83,7 +83,7 @@ export const Shop: React.FC = () => {
   const history = useHistory()
   const [t] = useTranslation('translations')
   const qrcode = useRouteQuery('qrcode', '')
-  const qrcodeSrc = qrcode || defaultQrCode
+  const qrcodeSrc = decodeURIComponent(qrcode) || defaultQrCode
   return (
     <Container>
       <Appbar
