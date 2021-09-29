@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { IssuerInfo } from './info'
 import { NftCards } from './nftCards'
@@ -13,7 +13,7 @@ import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { useWalletModel } from '../../hooks/useWallet'
 import { useParams } from 'react-router'
-import { IssuerTokenClass } from '../../models/issuer'
+import { IssuerInfoResult, IssuerTokenClass } from '../../models/issuer'
 
 const IssuerContainer = styled.main`
   --max-width: 500px;
@@ -26,12 +26,51 @@ const IssuerContainer = styled.main`
   }
 `
 
-export const Issuer: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
+export const AppbarContainer: React.FC<{
+  issuerInfo?: IssuerInfoResult
+  tokenClasses?: IssuerTokenClass[]
+}> = ({ issuerInfo, tokenClasses }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
+  const closeShareDialog = useCallback(() => setIsShareDialogOpen(false), [])
+
+  const shareEl = useMemo(() => {
+    if (!issuerInfo) {
+      return null
+    }
+    return (
+      <Share
+        isDialogOpen={isShareDialogOpen}
+        closeDialog={closeShareDialog}
+        displayText={location.href}
+        copyText={location.href}
+        type={PosterType.Issuer}
+        data={{
+          issuerInfo: issuerInfo,
+          tokenClasses: tokenClasses ?? [],
+        }}
+      />
+    )
+  }, [closeShareDialog, isShareDialogOpen, issuerInfo, tokenClasses])
+
+  return (
+    <>
+      <Appbar
+        className="appbar"
+        title={t('issuer.title')}
+        left={<BackSvg onClick={() => history.goBack()} />}
+        right={<ShareSvg onClick={() => setIsShareDialogOpen(true)} />}
+      />
+      {shareEl}
+    </>
+  )
+}
+
+export const Issuer: React.FC = () => {
+  const { id } = useParams<{ id: string }>()
   const { api } = useWalletModel()
+  const history = useHistory()
 
   const issuerInfoQuery = useQuery([Query.Issuers, api, id], async () => {
     const { data } = await api.getIssuerInfo(id)
@@ -42,18 +81,10 @@ export const Issuer: React.FC = () => {
   if (issuerInfoQuery.error) {
     history.replace('/404')
   }
-  const closeShareDialog = useCallback(() => setIsShareDialogOpen(false), [])
-
   console.log('issuer render')
 
   return (
     <IssuerContainer>
-      <Appbar
-        className="appbar"
-        title={t('issuer.title')}
-        left={<BackSvg onClick={() => history.goBack()} />}
-        right={<ShareSvg onClick={() => setIsShareDialogOpen(true)} />}
-      />
       <div style={{ height: `${HEADER_HEIGHT}px` }} />
       <IssuerInfo
         data={issuerInfoQuery.data}
@@ -61,19 +92,10 @@ export const Issuer: React.FC = () => {
         refetch={issuerInfoQuery.refetch}
       />
       <NftCards id={id} onLoaded={setTokenClasses} />
-      {issuerInfoQuery.data && (
-        <Share
-          isDialogOpen={isShareDialogOpen}
-          closeDialog={closeShareDialog}
-          displayText={location.href}
-          copyText={location.href}
-          type={PosterType.Issuer}
-          data={{
-            issuerInfo: issuerInfoQuery.data,
-            tokenClasses: tokenClasses,
-          }}
-        />
-      )}
+      <AppbarContainer
+        tokenClasses={tokenClasses}
+        issuerInfo={issuerInfoQuery.data}
+      />
     </IssuerContainer>
   )
 }
