@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { IssuerInfo } from './info'
 import { NftCards } from './nftCards'
@@ -35,25 +35,6 @@ export const AppbarContainer: React.FC<{
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
   const closeShareDialog = useCallback(() => setIsShareDialogOpen(false), [])
 
-  const shareEl = useMemo(() => {
-    if (!issuerInfo) {
-      return null
-    }
-    return (
-      <Share
-        isDialogOpen={isShareDialogOpen}
-        closeDialog={closeShareDialog}
-        displayText={location.href}
-        copyText={location.href}
-        type={PosterType.Issuer}
-        data={{
-          issuerInfo: issuerInfo,
-          tokenClasses: tokenClasses ?? [],
-        }}
-      />
-    )
-  }, [closeShareDialog, isShareDialogOpen, issuerInfo, tokenClasses])
-
   return (
     <>
       <Appbar
@@ -62,7 +43,19 @@ export const AppbarContainer: React.FC<{
         left={<BackSvg onClick={() => history.goBack()} />}
         right={<ShareSvg onClick={() => setIsShareDialogOpen(true)} />}
       />
-      {shareEl}
+      {issuerInfo && (
+        <Share
+          isDialogOpen={isShareDialogOpen}
+          closeDialog={closeShareDialog}
+          displayText={location.href}
+          copyText={location.href}
+          type={PosterType.Issuer}
+          data={{
+            issuerInfo: issuerInfo,
+            tokenClasses: tokenClasses ?? [],
+          }}
+        />
+      )}
     </>
   )
 }
