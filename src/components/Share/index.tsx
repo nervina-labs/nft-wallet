@@ -112,7 +112,7 @@ const IconContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-right: 15px;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 30px;
   text-align: center;
   color: #666666;
@@ -127,8 +127,8 @@ const IconContainer = styled.div`
 `
 
 const Icon = styled.div`
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   background-color: #fff;
   border-radius: 6px;
   margin: 0 auto;
