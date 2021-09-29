@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { Media } from './Media'
 import { Limited } from '../../components/Limited'
 import { NormalRewardInfo } from '../../models/redeem'
-import { NftType } from '../../models'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
@@ -62,12 +61,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
         isBaned ? '#' : `${info.n_token_id != null ? '/nft' : '/class'}/${id}`
       }
     >
-      <Media
-        isPlayable={isBaned ? false : info.renderer_type !== NftType.Picture}
-        hasCardBack={isBaned ? false : info.card_back_content_exist}
-        src={isBaned ? '' : info.class_bg_image_url}
-        width={70}
-      />
+      <Media src={isBaned ? '' : info.class_bg_image_url} width={70} />
       <div className="content">
         <div className={classNames('name', { banned: isBaned })}>
           {isBaned ? t('common.baned.nft') : info.class_name}

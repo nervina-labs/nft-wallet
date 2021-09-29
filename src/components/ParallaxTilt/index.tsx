@@ -288,7 +288,7 @@ const Cardback: React.FC<CardbackProps> = ({
           <div
             className="content"
             dangerouslySetInnerHTML={{ __html: content }}
-          ></div>
+          />
         ) : (
           <>
             <div
@@ -338,7 +338,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   const enableImagePreview =
     type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
   const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
-  const enablePlayer = !enableImagePreview && isAudioOrVideo
+  const enablePlayer =
+    !enableImagePreview && (isAudioOrVideo || type === NftType._3D)
   const [
     photoPreviewToolbarAudioVisible,
     setPhotoPreviewToolbarAudioVisible,
@@ -564,7 +565,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
             <div
               className="card-back"
               dangerouslySetInnerHTML={{ __html: cardBackContent }}
-            ></div>
+            />
           ) : null}
         </CardbackPreviewContainer>
       </Dialog>
