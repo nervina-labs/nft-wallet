@@ -74,7 +74,6 @@ export const Issuer: React.FC = () => {
   if (issuerInfoQuery.error) {
     history.replace('/404')
   }
-  console.log('issuer render')
 
   return (
     <IssuerContainer>
