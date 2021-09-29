@@ -2,13 +2,9 @@ import styled from 'styled-components'
 import { LazyLoadImage } from '../../components/Image'
 import { getImagePreviewUrl } from '../../utils'
 import FallbackImg from '../../assets/svg/fallback.svg'
-import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
-import { CardBack } from '../../components/Cardback'
 
 export interface MediaProps {
   src: string
-  isPlayable: boolean
-  hasCardBack: boolean
   width?: number
 }
 
@@ -33,12 +29,7 @@ const MediaContainer = styled.div`
   }
 `
 
-export const Media: React.FC<MediaProps> = ({
-  src,
-  isPlayable,
-  hasCardBack,
-  width = 70,
-}) => {
+export const Media: React.FC<MediaProps> = ({ src, width = 70 }) => {
   return (
     <MediaContainer style={{ minWidth: `${width}px` }}>
       <LazyLoadImage
@@ -59,12 +50,6 @@ export const Media: React.FC<MediaProps> = ({
           />
         }
       />
-      {isPlayable ? (
-        <span className="player">
-          <PlayerSvg />
-        </span>
-      ) : null}
-      {hasCardBack ? <CardBack tooltipPlacement="top-start" /> : null}
     </MediaContainer>
   )
 }
