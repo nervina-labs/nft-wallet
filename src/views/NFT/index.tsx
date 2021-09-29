@@ -434,7 +434,9 @@ export const NFT: React.FC = () => {
     return (
       <div
         className="transfer"
-        onClick={() => history.push(`${RoutePath.Shop}?qrcode=${qrcode}`)}
+        onClick={() =>
+          history.push(`${RoutePath.Shop}?qrcode=${encodeURIComponent(qrcode)}`)
+        }
       >
         <BuySvg />
         <span>{t('shop.buy')}</span>

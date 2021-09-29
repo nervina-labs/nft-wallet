@@ -17,6 +17,7 @@ import { PhotoProvider } from 'react-photo-view'
 import { useTranslation } from 'react-i18next'
 import { useProfileModel } from '../../hooks/useProfile'
 import { Dialog } from '@material-ui/core'
+import { disableImagePreviewContext } from '../../utils/dom'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -457,6 +458,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
                 maskClassName="preview-mask"
                 onVisibleChange={(visible) => {
                   setPhotoPreviewToolbarAudioVisible(visible)
+                  requestAnimationFrame(() =>
+                    disableImagePreviewContext(visible)
+                  )
                   if (visible) {
                     setTimeout(() => {
                       photoPreviewToolbarAudioRef?.current?.play()
