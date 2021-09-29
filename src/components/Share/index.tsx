@@ -13,6 +13,7 @@ import { IS_ANDROID, IS_SUPPORT_DOWNLOAD, IS_WEXIN } from '../../constants'
 import { copyContent, download } from '../../utils'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useHtml2Canvas } from '../../hooks/useHtml2Canvas'
+import { useFixedBodyScroll } from '../../hooks/useFixedBodyScroll'
 
 const ModelContentContainer = styled.div`
   position: fixed;
@@ -75,7 +76,8 @@ const ShareContainer = styled.div`
   padding: 0 15px 80px;
   box-sizing: border-box;
   user-select: none;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
   z-index: 1;
   transition: 0.2s;
 
@@ -224,6 +226,8 @@ export const Share: React.FC<ShareProps> = ({
       ? t('common.share.creating-poster')
       : t('common.share.create-poster')
   }, [imgSrc, isLoading, t])
+
+  useFixedBodyScroll(isDialogOpen)
 
   return (
     <ModelContentContainer
