@@ -1,6 +1,6 @@
-import { useWalletModel } from '../../../hooks/useWallet'
-import FallbackImgPath from '../../../assets/img/fallback.png'
-import { getImagePreviewUrl, toDataUrl } from '../../../utils'
+import { useWalletModel } from './useWallet'
+import FallbackImgPath from '../assets/img/fallback.png'
+import { getImagePreviewUrl, toDataUrl } from '../utils'
 import { useQuery } from 'react-query'
 
 export function useUrlToBase64<

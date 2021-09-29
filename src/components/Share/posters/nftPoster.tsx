@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import BackgroundImagePath from '../../../assets/img/share-bg/share-nft@3x.png'
 import { NFTDetail, NftType } from '../../../models'
@@ -6,15 +6,18 @@ import PeopleImage from '../../../assets/img/people.png'
 import { Limited } from '../../Limited'
 import {
   BackgroundImage,
-  UserContainer,
   PosterContainer,
+  UserContainer,
 } from '../components/layout'
 import { NftPosterData, PosterProps } from './poster.interface'
 import { ShareAvatar } from '../components/avatar'
-import { useUrlToBase64, usePosterLoader, useTextEllipsis } from '../hooks'
-import { useQrcode } from '../hooks/useQrcode'
+import { usePosterLoader, useTextEllipsis } from '../hooks'
+import { useQrcode } from '../../../hooks/useQrcode'
 import PlayerPath from '../../../assets/img/player.png'
 import CardBackPath from '../../../assets/svg/card-back.svg'
+import { CardTags } from '../../Card/CardTags'
+import NFT3dSvg from '../../../assets/svg/3D.svg'
+import { useUrlToBase64 } from '../../../hooks/useUrlToBase64'
 
 const CardContainer = styled.div`
   position: absolute;
@@ -100,6 +103,16 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
   const hasPlayer =
     data.renderer_type === NftType.Video || data.renderer_type === NftType.Audio
   const hasCardBack = data.card_back_content_exist
+  const tags = useMemo(() => {
+    const icons = []
+    if (hasCardBack) {
+      icons.push(CardBackPath)
+    }
+    if (data.renderer_type === NftType._3D) {
+      icons.push(NFT3dSvg)
+    }
+    return icons
+  }, [hasCardBack, data.renderer_type])
 
   return (
     <PosterContainer ref={posterRef}>
@@ -121,11 +134,9 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
               className="img"
               crossOrigin="anonymous"
             />
+            <CardTags icons={tags} />
             {hasPlayer && (
               <img className="player" src={PlayerPath} alt="player" />
-            )}
-            {hasCardBack && (
-              <img className="card-back" src={CardBackPath} alt="CardBack" />
             )}
           </div>
           <div className="nft-name">{data.name}</div>

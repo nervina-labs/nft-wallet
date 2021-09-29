@@ -10,9 +10,10 @@ import { useTranslation } from 'react-i18next'
 import { Gallery } from '../components/gallery'
 import { ShareAvatar } from '../components/avatar'
 import PeopleImage from '../../../assets/img/people.png'
-import { useUrlToBase64, usePosterLoader, useTextEllipsis } from '../hooks'
-import { useQrcode } from '../hooks/useQrcode'
+import { usePosterLoader, useTextEllipsis } from '../hooks'
+import { useQrcode } from '../../../hooks/useQrcode'
 import { IssuerPosterData, PosterProps } from './poster.interface'
+import { useUrlToBase64 } from '../../../hooks/useUrlToBase64'
 
 const IssuerInfoContainer = styled.div`
   position: absolute;

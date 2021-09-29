@@ -11,8 +11,9 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { ShareAvatar } from '../components/avatar'
 import PeopleImage from '../../../assets/img/people.png'
-import { useUrlToBase64, usePosterLoader, useTextEllipsis } from '../hooks'
-import { useQrcode } from '../hooks/useQrcode'
+import { usePosterLoader, useTextEllipsis } from '../hooks'
+import { useQrcode } from '../../../hooks/useQrcode'
+import { useUrlToBase64 } from '../../../hooks/useUrlToBase64'
 
 const ContentContainer = styled.div`
   background-color: #fff;

@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import { NftPoster, IssuerPoster, HolderPoster } from './posters'
 import { Poster, PosterType } from './posters/poster.interface'
-import { useHtml2Canvas } from './hooks'
 import { IS_ANDROID, IS_WEXIN } from '../../constants'
 import { copyContent } from '../../utils'
 import { useProfileModel } from '../../hooks/useProfile'
+import { useHtml2Canvas } from '../../hooks/useHtml2Canvas'
 
 const DialogContainer = styled.div`
   position: fixed;
