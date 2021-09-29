@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-// import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { TokenClass } from '../../models/class-list'
 import { ClassSortType as SortType, Query } from '../../models'
@@ -23,6 +22,7 @@ import { Home } from './home'
 import { Card } from './card'
 import { useProfileModel } from '../../hooks/useProfile'
 import { Empty } from '../NFTs/empty'
+import { Tab, Tabs } from '../../components/Tab'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -74,33 +74,18 @@ const Container = styled(MainContainer)`
     }
 
     .filters {
-      margin-right: 15px;
-      font-size: 14px;
-      color: #333333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: auto;
+      padding-right: 10px;
 
       &.fixed {
         flex: 1;
+        width: 100%;
       }
 
       .filter {
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        justify-content: center;
-        align-items: center;
-        margin-right: 32px;
-
-        &.hide {
-          display: none;
-        }
-
-        &:last-child {
-          margin-right: 0;
-        }
+        color: #333333;
+        font-size: 14px;
+        padding: 0 10px;
       }
     }
   }
@@ -168,107 +153,88 @@ const Header: React.FC<{
   currentTagName?: string
   sortType: SortType
   currentTag: string
-}> = ({ currentTagId, sortType, currentTagName, currentTag }) => {
+  enableFixed?: boolean
+}> = ({ currentTagId, sortType, currentTagName, currentTag, enableFixed }) => {
   const history = useHistory()
   const [t] = useTranslation('translations')
-
-  const Filters: React.FC = () => {
-    const items = [
-      {
-        hide: currentTagId !== 'all',
-        value: SortType.Recommend,
-        label: 'explore.recommended',
-        fn() {
-          if (sortType === SortType.Recommend) {
-            return
-          }
-          history.push(RoutePath.Explore + '?tag=all')
-        },
-      },
-      {
-        hide: false,
-        value: SortType.Latest,
-        label: 'explore.latest',
-        fn() {
-          if (sortType === SortType.Latest) {
-            return
-          }
-          const o = new URLSearchParams(location.search)
-          if (currentTag === 'all') {
-            o.set('sort', 'latest')
-          } else {
-            o.delete('sort')
-          }
-          const s = decodeURIComponent(o.toString())
-          const target = `${RoutePath.Explore}${s.length === 0 ? '' : '?' + s}`
-          history.push(target)
-        },
-      },
-      {
-        hide: false,
-        value: SortType.Likes,
-        label: 'explore.most-liked',
-        fn() {
-          if (sortType === SortType.Likes) {
-            return
-          }
-          const o = new URLSearchParams(location.search)
-          o.set('sort', 'likes')
-          const target = `${RoutePath.Explore}?${decodeURIComponent(
-            o.toString()
-          )}`
-          history.push(target)
-        },
-      },
-    ] as const
-
-    return (
-      <div className="filters">
-        {items.map((item, i) => (
-          <div
-            key={i}
-            className={classNames('filter', {
-              active: sortType === item.value,
-              hide: item.hide,
-            })}
-            onClick={item.fn}
-          >
-            <span>{t(item.label)}</span>
-            {sortType === item.value && <span className="active-line" />}
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  const FixedHeader: React.FC = () => {
-    const [scrollY, setScrollY] = useState(window.scrollY)
-    useEffect(() => {
-      const fn = (): void => {
-        setScrollY(window.scrollY)
-      }
+  const [scrollY, setScrollY] = useState(window.scrollY)
+  useEffect(() => {
+    const fn = (): void => {
+      setScrollY(window.scrollY)
+    }
+    if (enableFixed) {
       window.addEventListener('scroll', fn)
-      return () => window.removeEventListener('scroll', fn)
-    })
-    return (
-      <div
-        className={classNames('header', 'fixed-header', {
-          hide: scrollY <= 72,
-        })}
-      >
-        <Filters />
-      </div>
-    )
-  }
+    }
+    return () => {
+      if (enableFixed) {
+        window.removeEventListener('scroll', fn)
+      }
+    }
+  })
 
+  const goToRecommend = useCallback(() => {
+    if (sortType === SortType.Recommend) {
+      return
+    }
+    history.push(RoutePath.Explore + '?tag=all')
+  }, [history, sortType])
+
+  const goToLatest = useCallback(() => {
+    if (sortType === SortType.Latest) {
+      return
+    }
+    const o = new URLSearchParams(location.search)
+    if (currentTag === 'all') {
+      o.set('sort', 'latest')
+    } else {
+      o.delete('sort')
+    }
+    const s = decodeURIComponent(o.toString())
+    const target = `${RoutePath.Explore}${s.length === 0 ? '' : '?' + s}`
+    history.push(target)
+  }, [currentTag, history, sortType])
+
+  const goToLikes = useCallback(() => {
+    if (sortType === SortType.Likes) {
+      return
+    }
+    const o = new URLSearchParams(location.search)
+    o.set('sort', 'likes')
+    const target = `${RoutePath.Explore}?${decodeURIComponent(o.toString())}`
+    history.push(target)
+  }, [history, sortType])
+
+  const tabsActiveKey = Math.max(
+    [
+      ...(currentTagId === 'all' ? [SortType.Recommend] : []),
+      SortType.Latest,
+      SortType.Likes,
+    ].findIndex((e) => e === sortType),
+    0
+  )
   return (
-    <>
-      <div className="header">
-        <h3>{currentTagName}</h3>
-        <Filters />
-      </div>
-      <FixedHeader />
-    </>
+    <div
+      className={classNames('header', {
+        hide: enableFixed && scrollY <= 72,
+        'fixed-header': enableFixed,
+      })}
+    >
+      {!enableFixed && <h3>{currentTagName}</h3>}
+
+      <Tabs activeKey={tabsActiveKey} className="filters">
+        {currentTagId === 'all' ? (
+          <Tab className="filter" onClick={goToRecommend}>
+            {t('explore.recommended')}
+          </Tab>
+        ) : null}
+        <Tab className="filter" onClick={goToLatest}>
+          {t('explore.latest')}
+        </Tab>
+        <Tab className="filter" onClick={goToLikes}>
+          {t('explore.most-liked')}
+        </Tab>
+      </Tabs>
+    </div>
   )
 }
 
@@ -519,6 +485,13 @@ export const Explore: React.FC = () => {
             currentTagId={currentTagId ?? ''}
             sortType={sortType}
             currentTagName={currentTagName}
+          />
+          <Header
+            currentTag={currentTag}
+            currentTagId={currentTagId ?? ''}
+            sortType={sortType}
+            currentTagName={currentTagName}
+            enableFixed={true}
           />
           <section className="content">
             {isRefetching ? <Loading /> : null}
