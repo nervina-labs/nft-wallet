@@ -70,4 +70,5 @@ export const DAS_INDEXER_URL =
 
 export const HOST = location.origin
 
-export const IS_SUPPORT_DOWNLOAD = 'download' in document.createElement('a')
+export const IS_SUPPORT_DOWNLOAD =
+  !IS_WEXIN && 'download' in document.createElement('a')

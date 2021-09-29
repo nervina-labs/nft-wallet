@@ -49,7 +49,7 @@ export const HolderPoster: React.FC<PosterProps<HolderPosterData>> = ({
 }) => {
   const [t] = useTranslation('translations')
   const posterRef = useRef<HTMLDivElement>(null)
-  const nickname = useTextEllipsis(data.userInfo.nickname, 100)
+  const [nickname] = useTextEllipsis(data.userInfo.nickname, 100)
   const nftImageUrls = useMemo(() => {
     return data.tokens.slice(0, 5).map((token) => token.class_bg_image_url)
   }, [data.tokens])

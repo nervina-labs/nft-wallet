@@ -25,9 +25,10 @@
         "more": "More",
         "title": "Share",
         "copy-link": "Copy Link",
-        "creating-poster":  "Creating Poster...",
+        "creating-poster":  "Creating",
         "copied": "Copied",
-        "collected-nft": "Collected NFT"
+        "collected-nft": "Collected NFT",
+        "long-press-save": "Long press the icon to save"
       },
       "limit": {
         "limit": "Limited",

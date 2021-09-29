@@ -7,12 +7,14 @@ export function useHtml2Canvas(
     deps?: any[]
     enable?: boolean
   }
-): string {
+) {
   const [imgSrc, setImgSrc] = useState('')
-  const scrollTop =
-    document.documentElement.scrollTop || document.body.scrollTop
+  const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
+    const scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop
     if (element && options?.enable !== false) {
+      setIsLoading(true)
       html2canvas(element, {
         useCORS: true,
         allowTaint: true,
@@ -27,7 +29,13 @@ export function useHtml2Canvas(
         .catch((error) => {
           console.error('oops, something went wrong!', error)
         })
+        .then(() => {
+          setIsLoading(false)
+        })
     }
   }, [element, options?.enable].concat(options?.deps ?? []))
-  return imgSrc
+  return {
+    imgSrc,
+    isLoading,
+  }
 }

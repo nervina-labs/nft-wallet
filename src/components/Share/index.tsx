@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { ReactComponent as CreatePosterIcon } from '../../assets/svg/create-poster.svg'
-import { ReactComponent as ShareDownloadIcon } from '../../assets/svg/share-download.svg'
+import CreatePosterIconPath from '../../assets/svg/create-poster.svg'
+import ShareDownloadIconPath from '../../assets/svg/share-download.svg'
 import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg'
 import { ReactComponent as ShareCopyLinkIcon } from '../../assets/svg/share-copy-link.svg'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import { NftPoster, IssuerPoster, HolderPoster } from './posters'
 import { Poster, PosterType } from './posters/poster.interface'
-import { IS_ANDROID, IS_WEXIN } from '../../constants'
-import { copyContent } from '../../utils'
+import { IS_ANDROID, IS_SUPPORT_DOWNLOAD, IS_WEXIN } from '../../constants'
+import { copyContent, download } from '../../utils'
 import { useProfileModel } from '../../hooks/useProfile'
 import { useHtml2Canvas } from '../../hooks/useHtml2Canvas'
 
@@ -120,6 +120,7 @@ const IconContainer = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  width: 70px;
   a {
     color: #666666;
     text-decoration: none;
@@ -186,7 +187,7 @@ export const Share: React.FC<ShareProps> = ({
 
   const [isCreatedPoster, setIsCreatedPoster] = useState(false)
   const [el, setEl] = useState<HTMLDivElement | null>(null)
-  const imgSrc = useHtml2Canvas(el, {
+  const { imgSrc, isLoading } = useHtml2Canvas(el, {
     enable: isCreatedPoster,
   })
 
@@ -198,20 +199,12 @@ export const Share: React.FC<ShareProps> = ({
     >
       {isDialogOpen && (
         <>
-          {isCreatedPoster && (
-            <>
-              {imgSrc ? (
-                <img
-                  className="share-poster-image"
-                  src={imgSrc}
-                  alt="share-poster-image"
-                />
-              ) : (
-                <div className="share-poster-image-loading share-poster-image">
-                  {t('common.share.creating-poster')}
-                </div>
-              )}
-            </>
+          {isCreatedPoster && imgSrc && (
+            <img
+              className="share-poster-image"
+              src={imgSrc}
+              alt="share-poster-image"
+            />
           )}
           {data && (
             <div style={{ opacity: 0 }}>
@@ -248,29 +241,36 @@ export const Share: React.FC<ShareProps> = ({
       >
         <HandleBar>{t('common.share.title')}</HandleBar>
         <IconGroupContainer>
-          {!isCreatedPoster && (
-            <IconContainer onClick={() => setIsCreatedPoster(true)}>
-              <Icon>
-                <CreatePosterIcon />
-              </Icon>
-              {t('common.share.create-poster')}
-            </IconContainer>
-          )}
-
-          {imgSrc && isCreatedPoster && (
-            <IconContainer>
-              <a
-                href={imgSrc}
-                download="poster.png"
-                style={{ textDecoration: 'none' }}
-              >
-                <Icon>
-                  <ShareDownloadIcon />
-                </Icon>
-                {t('common.share.download')}
-              </a>
-            </IconContainer>
-          )}
+          <IconContainer
+            onClick={() => {
+              if (imgSrc) {
+                if (!IS_SUPPORT_DOWNLOAD) {
+                  snackbar(t('common.share.long-press-save'))
+                } else {
+                  download(imgSrc, 'poster.png')
+                }
+                return
+              }
+              setIsCreatedPoster(true)
+            }}
+          >
+            <Icon>
+              <img
+                src={
+                  isCreatedPoster && imgSrc
+                    ? ShareDownloadIconPath
+                    : CreatePosterIconPath
+                }
+                alt="icon"
+              />
+            </Icon>
+            {imgSrc && t('common.share.download')}
+            {!imgSrc
+              ? isLoading
+                ? t('common.share.creating-poster')
+                : t('common.share.create-poster')
+              : null}
+          </IconContainer>
 
           {navigator?.share !== undefined ? (
             <IconContainer
