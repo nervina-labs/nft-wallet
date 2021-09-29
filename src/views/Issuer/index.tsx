@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { IssuerInfo } from './info'
 import { NftCards } from './nftCards'
@@ -42,6 +42,9 @@ export const Issuer: React.FC = () => {
   if (issuerInfoQuery.error) {
     history.replace('/404')
   }
+  const closeShareDialog = useCallback(() => setIsShareDialogOpen(false), [])
+
+  console.log('issuer render')
 
   return (
     <IssuerContainer>
@@ -61,7 +64,7 @@ export const Issuer: React.FC = () => {
       {issuerInfoQuery.data && (
         <Share
           isDialogOpen={isShareDialogOpen}
-          closeDialog={() => setIsShareDialogOpen(false)}
+          closeDialog={closeShareDialog}
           displayText={location.href}
           copyText={location.href}
           type={PosterType.Issuer}

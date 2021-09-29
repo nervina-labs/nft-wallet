@@ -170,11 +170,13 @@ export const Share: React.FC<ShareProps> = ({
       }
       return
     }
-    setIsCreatedPoster(true)
-  }, [imgSrc, snackbar, t])
+    if (!isCreatedPoster) {
+      setIsCreatedPoster(true)
+    }
+  }, [imgSrc, isCreatedPoster, snackbar, t])
 
   return (
-    <Modal open={isDialogOpen} onClose={closeDialog}>
+    <Modal open={isDialogOpen} onClose={closeDialog} keepMounted>
       <ModelContentContainer>
         {isDialogOpen && (
           <>
