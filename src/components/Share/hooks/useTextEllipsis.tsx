@@ -18,6 +18,7 @@ export function useTextEllipsis(
     const { fontSize, fontFamily } = bodyStyle
     return `${fontSize} ${fontFamily}`
   }, [options?.font])
+  text = text ?? ''
   const [content, setContent] = useState(text)
   const [cutIndex, setCutIndex] = useState(text.length)
   useEffect(() => {
