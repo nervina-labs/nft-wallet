@@ -105,7 +105,7 @@ export function useSetAccount() {
           : {
               ...prevAccount,
               ...account,
-              expireTime: dayjs().add(1, 'day').toISOString(),
+              expireTime: dayjs().add(7, 'day').toISOString(),
             }
       })
     },
