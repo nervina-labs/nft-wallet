@@ -12,15 +12,16 @@ const Model = (props: {
 }) => {
   const ref = useRef<any>()
   useEffect(() => {
-    if (props.onLoad && ref.current) {
-      ref.current.addEventListener('load', props.onLoad)
+    const modelViewerElement = ref.current
+    if (props.onLoad && modelViewerElement) {
+      modelViewerElement.addEventListener('load', props.onLoad)
     }
     return () => {
-      if (props.onLoad && ref.current) {
-        ref.current.removeEventListener('load', props.onLoad)
+      if (props.onLoad && modelViewerElement) {
+        modelViewerElement.removeEventListener('load', props.onLoad)
       }
     }
-  })
+  }, [props.onLoad])
 
   return (
     <>
