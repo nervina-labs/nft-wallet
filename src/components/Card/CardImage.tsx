@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as PlayerSvg } from '../../assets/svg/player.svg'
-import { CardBack } from '../Cardback'
+// import { CardBack } from '../Cardback'
 import FallbackImg from '../../assets/svg/fallback.svg'
 import { addParamsToUrl, getImagePreviewUrl } from '../../utils'
 import { LazyLoadImage, LazyLoadImageVariant } from '../Image'
@@ -143,14 +143,6 @@ export const CardImage: React.FC<CardImageProps> = ({
         >
           <PlayerSvg />
         </span>
-      )}
-      {hasCardBack && (
-        <CardBack
-          style={{
-            borderTopRightRadius: '10px',
-          }}
-          tooltipPlacement="top-start"
-        />
       )}
     </CardImageContainer>
   )

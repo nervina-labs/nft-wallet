@@ -7,8 +7,6 @@ import { useTranslation } from 'react-i18next'
 import Tooltip from '@material-ui/core/Tooltip'
 import classNames from 'classnames'
 import { VipSource } from '../../models/class-list'
-import { Link } from 'react-router-dom'
-import { RoutePath } from '../../routes'
 import PeopleSrc from '../../assets/img/people.png'
 import { getImagePreviewUrl } from '../../utils'
 
@@ -167,18 +165,7 @@ export const Creator: React.FC<CreatorProps> = ({
   return (
     <Container fontSize={fontSize} color={color} style={style}>
       {title ?? <span className="issuer">{t('common.creator')}</span>}
-      {uuid != null && !baned ? (
-        <Link
-          onClick={(e) => e.stopPropagation()}
-          style={{ textDecoration: 'none' }}
-          to={`${RoutePath.Issuer}/${uuid}`}
-          replace={replace}
-        >
-          {creator}
-        </Link>
-      ) : (
-        creator
-      )}
+      {creator}
     </Container>
   )
 }

@@ -105,7 +105,7 @@ export function useSetAccount() {
           : {
               ...prevAccount,
               ...account,
-              expireTime: dayjs().add(7, 'day').toISOString(),
+              expireTime: dayjs().add(1, 'day').toISOString(),
             }
       })
     },
@@ -133,6 +133,7 @@ export function useLogin() {
   const { walletType } = useAccount()
   const setAccount = useSetAccount()
   const [provider, setProvider] = useAtom(providerAtom)
+
   const web3WalletAddressOnChange = useCallback(
     (addr?: Address) => {
       if (walletType === WalletType.Unipass) {

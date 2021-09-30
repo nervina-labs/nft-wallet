@@ -3,6 +3,7 @@
     "common": {
       "beian": "浙ICP备2021006943号-3",
       "login": "登录",
+      "auth": "请重新打开本页面授权登录",
       "actions": {
         "comfirm": "确认",
         "cancel": "取消",

@@ -18,48 +18,15 @@ import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
 import { TokenClass, VipSource } from '../../models/class-list'
-import { Like } from '../../components/Like'
 import { useLikeStatus } from '../../hooks/useLikeStatus'
 import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
-import { Follow } from '../../components/Follow'
-import { useGetAndSetAuth } from '../../hooks/useProfile'
-
-import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
-import { Tab, Tabs } from '../../components/Tab'
-import { useRouteQuery } from '../../hooks/useRouteQuery'
-import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useDidMount } from '../../hooks/useDidMount'
-
-const CardBackIconContainer = styled.div`
-  border-bottom-left-radius: 8px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  background: rgba(0, 0, 0, 0.33);
-  backdrop-filter: blur(4px);
-`
-
-const CardBackIcon: React.FC<{
-  onClick: (e: React.SyntheticEvent) => void
-}> = ({ onClick }) => {
-  return (
-    <CardBackIconContainer onClick={onClick}>
-      <CardBackSvg />
-    </CardBackIconContainer>
-  )
-}
 
 const Background = styled.div`
   position: fixed;
@@ -231,27 +198,11 @@ const FooterContaienr = styled.footer`
   }
 `
 
-const TabsContainer = styled.div`
-  margin-top: 24px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-
-  .tabs {
-    transform: translateY(1px);
-  }
-
-  .tab {
-    font-size: 14px;
-  }
-`
-
 interface FooterProps {
   nft: NFTDetail | TokenClass
 }
 
 const Footer: React.FC<FooterProps> = ({ nft }) => {
-  const { id } = useParams<{ id: string }>()
-  const classUuid = isTokenClass(nft) ? id : nft.class_uuid
   return (
     <FooterContaienr>
       <Limited
@@ -261,7 +212,7 @@ const Footer: React.FC<FooterProps> = ({ nft }) => {
         fontSize={14}
         color="#999"
       />
-      <Like count={nft.class_likes} uuid={classUuid} liked={nft.class_liked} />
+      <span></span>
     </FooterContaienr>
   )
 }
@@ -289,19 +240,15 @@ export const NFT: React.FC = () => {
   const api = useAPI()
   const { address } = useAccount()
   const { isLogined } = useAccountStatus()
-  const getAuth = useGetAndSetAuth()
-
-  const isHolder = !!useRouteQuery<string>('holder', '')
 
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api, isLogined],
     async () => {
-      const auth = isLogined ? await getAuth() : undefined
       if (matchTokenClass?.isExact) {
-        const { data } = await api.getTokenClass(id, auth)
+        const { data } = await api.getTokenClass(id)
         return data
       }
-      const { data } = await api.getNFTDetail(id, auth)
+      const { data } = await api.getNFTDetail(id)
       return data
     },
     { enabled: id != null }
@@ -448,28 +395,8 @@ export const NFT: React.FC = () => {
   }, [qrcode, history, t, productID, isWechatInited])
 
   const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
-  const [showCardBack, setShowCardBack] = useState(false)
-  const hasCardBack = useMemo(() => {
-    return (
-      !!data?.card_back_content_exist || !!data?.class_card_back_content_exist
-    )
-  }, [data])
   const [disbaleTilt] = useState(false)
   const tiltRef = useRef<Tilt>(null)
-  const cardBackOnClick = useCallback(
-    (e: React.SyntheticEvent) => {
-      const autoResetEvent = new CustomEvent('autoreset')
-      // @ts-expect-error
-      tiltRef.current?.onMove(autoResetEvent)
-      tiltRef?.current?.reset()
-      if (hasCardBack) {
-        // disable Gyroscope
-      }
-      setShowCardBack((show) => !show)
-      // setDisableTile(false)
-    },
-    [hasCardBack]
-  )
 
   if (
     failureCount >= 3 ||
@@ -514,9 +441,7 @@ export const NFT: React.FC = () => {
             detail?.card_back_content ?? detail?.class_card_back_content
           }
           tiltRef={tiltRef}
-          flipped={showCardBack}
         />
-        {hasCardBack ? <CardBackIcon onClick={cardBackOnClick} /> : null}
       </div>
       {detail == null ? null : (
         <>
@@ -556,10 +481,6 @@ export const NFT: React.FC = () => {
                 replace={true}
                 useImageFallBack={true}
               />
-              <Follow
-                followed={detail?.issuer_info?.issuer_followed as boolean}
-                uuid={detail?.issuer_info?.uuid as string}
-              />
             </div>
             {verifyTitle ? (
               <div className="vip">
@@ -568,35 +489,10 @@ export const NFT: React.FC = () => {
                   : verifyTitle}
               </div>
             ) : null}
-            <TabsContainer>
-              <Tabs activeKey={isHolder ? 1 : 0} className="tabs">
-                <Tab
-                  className="tab"
-                  active={!isHolder}
-                  onClick={() => history.replace(history.location.pathname)}
-                >
-                  {t('nft.desc')}
-                </Tab>
-                <Tab
-                  className="tab"
-                  active={isHolder}
-                  onClick={() =>
-                    history.replace(history.location.pathname + '?holder=true')
-                  }
-                >
-                  {t('nft.holder')}
-                </Tab>
-              </Tabs>
-            </TabsContainer>
-
-            {!isHolder ? (
-              detail?.description ? (
-                <div className="desc">{detail?.description}</div>
-              ) : (
-                <StatusText>{t('nft.no-desc')}</StatusText>
-              )
+            {detail?.description ? (
+              <div className="desc">{detail?.description}</div>
             ) : (
-              <TokenHolderList id={(detail as NFTDetail).class_uuid ?? id} />
+              <StatusText>{t('nft.no-desc')}</StatusText>
             )}
           </section>
           <Footer nft={detail} />

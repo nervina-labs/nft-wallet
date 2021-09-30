@@ -33,7 +33,6 @@ import { AccountRecord } from 'das-sdk'
 import { Box, Container, DrawerContainer } from './styled'
 import { UnipassTransferNftState } from '../../models/unipass'
 import { DasSelector } from './dasSelector'
-import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { CardImage } from '../../components/Card/CardImage'
 import {
   useAccount,
@@ -322,12 +321,10 @@ export const Transfer: React.FC = () => {
     }
   }, [])
 
-  const getAuth = useGetAndSetAuth()
   const { data: remoteNftDetail, failureCount } = useQuery(
-    [Query.NFTDetail, id, api, getAuth],
+    [Query.NFTDetail, id, api],
     async () => {
-      const auth = await getAuth()
-      const { data } = await api.getNFTDetail(id, auth)
+      const { data } = await api.getNFTDetail(id)
       return data
     },
     { enabled: id != null && routerLocation.state?.nftDetail == null }
@@ -619,6 +616,6 @@ export const Transfer: React.FC = () => {
       </Drawer>
     </Container>
   ) : (
-    <Redirect to={RoutePath.Explore} />
+    <Redirect to={RoutePath.NFTs} />
   )
 }
