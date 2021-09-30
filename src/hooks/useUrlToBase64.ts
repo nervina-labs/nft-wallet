@@ -19,7 +19,7 @@ export function useUrlToBase64<
   const fallbackImg = options?.fallbackImg ?? FallbackImgPath
   const toDataUrlFromApi = async (url?: string) => {
     const previewUrl = options?.usePreviewUrl
-      ? getImagePreviewUrl(url, 150)
+      ? getImagePreviewUrl(url, 300)
       : url
     if (!previewUrl) {
       return fallbackImg

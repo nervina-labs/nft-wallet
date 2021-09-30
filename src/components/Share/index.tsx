@@ -7,7 +7,7 @@ import { ReactComponent as ShareMoreIcon } from '../../assets/svg/share-more.svg
 import { ReactComponent as ShareCopyLinkIcon } from '../../assets/svg/share-copy-link.svg'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
-import { NftPoster, IssuerPoster, HolderPoster } from './posters'
+import { HolderPoster, IssuerPoster, NftPoster } from './posters'
 import { Poster, PosterType } from './posters/poster.interface'
 import { IS_ANDROID, IS_SUPPORT_DOWNLOAD, IS_WEXIN } from '../../constants'
 import { copyContent, download } from '../../utils'
@@ -176,6 +176,33 @@ export type ShareProps = {
   copyText: string
 } & Partial<Poster>
 
+function createShareData(poster: Partial<Poster>): ShareData {
+  if (poster) {
+    if (poster.type === PosterType.Nft) {
+      return {
+        title: poster.data?.name,
+        text: poster.data?.description,
+      }
+    }
+    if (poster.type === PosterType.Issuer) {
+      return {
+        title: poster.data?.issuerInfo.name,
+        text: poster.data?.issuerInfo.description ?? document.title,
+      }
+    }
+    if (poster.type === PosterType.Holder) {
+      return {
+        title: poster.data?.userInfo.nickname,
+        text: poster.data?.userInfo.description,
+      }
+    }
+  }
+  return {
+    title: document.title,
+    text: document.title,
+  }
+}
+
 export const Share: React.FC<ShareProps> = ({
   isDialogOpen,
   closeDialog,
@@ -287,9 +314,13 @@ export const Share: React.FC<ShareProps> = ({
           {navigator?.share !== undefined ? (
             <IconContainer
               onClick={async () => {
+                // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+                const shareData = createShareData({
+                  type,
+                  data,
+                } as Partial<Poster>)
                 await navigator.share({
-                  title: document.title,
-                  text: 'Share',
+                  ...shareData,
                   url: copyText,
                 })
               }}
