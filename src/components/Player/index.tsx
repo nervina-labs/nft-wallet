@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { NftType } from '../../models'
 import styled from 'styled-components'
 import { Icon, Modal } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
 import Model from '../Model3d'
+import Model3dLoadingPath from '../../assets/svg/loading.svg'
 
 export interface PlayerProps {
   type: NftType
@@ -64,6 +65,26 @@ const PreviewContainer = styled.div`
     touch-action: none;
     backdrop-filter: blur(10px);
     background-color: rgba(0, 0, 0, 0);
+
+    .model3d-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -25px;
+      margin-left: -25px;
+      width: 50px;
+      height: 50px;
+      animation: model3d-loading 1.5s infinite linear;
+    }
+  }
+
+  @keyframes model3d-loading {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .close {
@@ -79,6 +100,30 @@ const PreviewContainer = styled.div`
     }
   }
 `
+
+const Model3dContainer: React.FC<{ renderer: string }> = ({ renderer }) => {
+  const [isLoading, setLoading] = useState(true)
+  useEffect(() => {
+    setLoading(true)
+  }, [renderer])
+
+  const onLoad = useCallback(() => {
+    setLoading(false)
+  }, [])
+
+  return (
+    <div className="model3d">
+      <Model src={renderer ?? ''} onLoad={onLoad} />
+      {isLoading && (
+        <img
+          className="model3d-loading"
+          src={Model3dLoadingPath}
+          alt="loading"
+        />
+      )}
+    </div>
+  )
+}
 
 export const Player: React.FC<PlayerProps> = ({
   type,
@@ -173,11 +218,7 @@ export const Player: React.FC<PlayerProps> = ({
                   />
                 </>
               )}
-              {is3D && (
-                <div className="model3d">
-                  <Model src={renderer ?? ''} />
-                </div>
-              )}
+              {is3D && renderer && <Model3dContainer renderer={renderer} />}
             </div>
           )}
         </PreviewContainer>

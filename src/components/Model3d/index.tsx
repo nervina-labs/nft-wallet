@@ -1,4 +1,5 @@
 import '@google/model-viewer'
+import { useEffect, useRef } from 'react'
 
 const Model = (props: {
   src: string
@@ -7,7 +8,20 @@ const Model = (props: {
   className?: string
   style?: React.CSSProperties
   onClick?: React.EventHandler<React.SyntheticEvent>
+  onLoad?: () => void
 }) => {
+  const ref = useRef<any>()
+  useEffect(() => {
+    if (props.onLoad && ref.current) {
+      ref.current.addEventListener('load', props.onLoad)
+    }
+    return () => {
+      if (props.onLoad && ref.current) {
+        ref.current.removeEventListener('load', props.onLoad)
+      }
+    }
+  })
+
   return (
     <>
       <model-viewer
@@ -20,6 +34,7 @@ const Model = (props: {
           width: '100%',
           height: '100%',
         }}
+        ref={ref}
       />
     </>
   )
