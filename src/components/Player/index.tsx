@@ -102,13 +102,13 @@ const PreviewContainer = styled.div`
 `
 
 const Model3dContainer: React.FC<{ renderer?: string }> = ({ renderer }) => {
-  const [isLoading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
-    setLoading(true)
+    setIsLoading(true)
   }, [renderer])
 
   const onLoad = useCallback(() => {
-    setLoading(false)
+    setIsLoading(false)
   }, [])
 
   return (
