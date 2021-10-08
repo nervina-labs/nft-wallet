@@ -9,6 +9,7 @@ const Model = (props: {
   style?: React.CSSProperties
   onClick?: React.EventHandler<React.SyntheticEvent>
   onLoad?: () => void
+  onError?: () => void
 }) => {
   const ref = useRef<any>()
   useEffect(() => {
@@ -22,6 +23,18 @@ const Model = (props: {
       }
     }
   }, [props.onLoad])
+
+  useEffect(() => {
+    const modelViewerElement = ref.current
+    if (props.onError && modelViewerElement) {
+      modelViewerElement.addEventListener('error', props.onError)
+    }
+    return () => {
+      if (props.onError && modelViewerElement) {
+        modelViewerElement.removeEventListener('error', props.onError)
+      }
+    }
+  }, [props.onError])
 
   return (
     <>
