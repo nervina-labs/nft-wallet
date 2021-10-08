@@ -69,9 +69,9 @@ export const UserContainer = styled.div`
   }
 
   .issuer-name {
-    margin-left: 10px;
-    line-height: var(--avatar-size);
-    height: var(--avatar-size);
+    margin: auto 0 auto 10px;
+    height: 15px;
+    line-height: 12px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
