@@ -101,7 +101,7 @@ const PreviewContainer = styled.div`
   }
 `
 
-const Model3dContainer: React.FC<{ renderer: string }> = ({ renderer }) => {
+const Model3dContainer: React.FC<{ renderer?: string }> = ({ renderer }) => {
   const [isLoading, setLoading] = useState(true)
   useEffect(() => {
     setLoading(true)
@@ -113,7 +113,7 @@ const Model3dContainer: React.FC<{ renderer: string }> = ({ renderer }) => {
 
   return (
     <div className="model3d">
-      <Model src={renderer ?? ''} onLoad={onLoad} />
+      {renderer ? <Model src={renderer} onLoad={onLoad} /> : null}
       {isLoading && (
         <img
           className="model3d-loading"
@@ -218,7 +218,7 @@ export const Player: React.FC<PlayerProps> = ({
                   />
                 </>
               )}
-              {is3D && renderer && <Model3dContainer renderer={renderer} />}
+              {is3D && <Model3dContainer renderer={renderer} />}
             </div>
           )}
         </PreviewContainer>
