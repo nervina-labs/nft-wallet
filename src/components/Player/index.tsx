@@ -106,6 +106,12 @@ const Model3dContainer: React.FC<{
   onError?: () => void
 }> = ({ renderer, onError }) => {
   const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    if (renderer) {
+      setIsLoading(true)
+    }
+  }, [renderer])
+
   const onLoad = useCallback(() => {
     setIsLoading(false)
   }, [])
