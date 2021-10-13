@@ -87,12 +87,14 @@ export const ImagePreview: React.FC = () => {
   const { setRemoteProfile } = useProfileModel()
 
   const [datauri, ext, fromCamera, tokenUuid] = useMemo(() => {
-    const locale = i18n.language === 'en' ? 'en' : 'zh'
     const datauri = addParamsToUrl(location?.state?.datauri ?? '', {
-      locale,
-      ...(location.state.tid ? { tid: location.state.tid } : {}),
+      ...(location.state.tid
+        ? {
+            tid: location.state.tid,
+            locale: i18n.language === 'en' ? 'en' : 'zh',
+          }
+        : {}),
     })
-
     return [
       datauri,
       location.state.ext,
