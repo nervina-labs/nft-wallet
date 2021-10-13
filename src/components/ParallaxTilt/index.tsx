@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useLayoutEffect,
+} from 'react'
 import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/svg/fallback.svg'
@@ -18,6 +24,7 @@ import { useTranslation } from 'react-i18next'
 import { useProfileModel } from '../../hooks/useProfile'
 import { Dialog } from '@material-ui/core'
 import { disableImagePreviewContext } from '../../utils/dom'
+import { downloadCardBackPDF } from '../../utils'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -243,7 +250,7 @@ const CardbackPreviewContainer = styled(CardbackContainer)`
     right: 10px;
     top: 10px;
   }
-  .card-back {
+  .full-card-back-content {
     margin: 20px;
     width: calc(100% - 40px);
     height: calc(100% - 40px);
@@ -268,6 +275,12 @@ const Cardback: React.FC<CardbackProps> = ({
     return `${h / 2}px`
   }, [width, height])
 
+  useLayoutEffect(() => {
+    if (content) {
+      downloadCardBackPDF('.card-back-content')
+    }
+  }, [content])
+
   return (
     <CardbackContainer
       style={{
@@ -287,7 +300,7 @@ const Cardback: React.FC<CardbackProps> = ({
       >
         {content ? (
           <div
-            className="content"
+            className="card-back-content"
             dangerouslySetInnerHTML={{ __html: content }}
           />
         ) : (
@@ -422,6 +435,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     }
     return isTiltEnable && enable
   }, [isTiltEnable, enable, flipped, isTouchDevice, hasCardCackContent])
+
   return (
     <>
       <Container
@@ -549,6 +563,11 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         onClose={closePreviewCardback}
         onEscapeKeyDown={closePreviewCardback}
         onBackdropClick={closePreviewCardback}
+        TransitionProps={{
+          onEntered: () => {
+            downloadCardBackPDF('.full-card-back-content')
+          },
+        }}
         PaperProps={{
           style: {
             width: '100%',
@@ -567,7 +586,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
           <CloseSvg className="close" onClick={closePreviewCardback} />
           {cardBackContent ? (
             <div
-              className="card-back"
+              className="full-card-back-content"
               dangerouslySetInnerHTML={{ __html: cardBackContent }}
             />
           ) : null}
