@@ -20,7 +20,8 @@ const Container = styled.button`
   color: white;
   height: 22px;
   font-size: 12px;
-  word-break: break-all;
+  word-break: keep-all;
+  white-space: 'nowrap';
   padding: 0 10px;
   transition: all 0.5s;
 
