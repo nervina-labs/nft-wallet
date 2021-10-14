@@ -1,3 +1,5 @@
+import { IS_IPHONE } from '../constants/env'
+
 export const disableImageContext = (e: any): boolean => {
   e?.preventDefault?.()
   e?.stopPropagation?.()
@@ -40,6 +42,9 @@ export async function downloadImage(
 }
 
 export const downloadCardBackPDF = (selector: string) => {
+  if (IS_IPHONE) {
+    return
+  }
   const container = document.querySelector(selector)
   const nodeList = container?.querySelectorAll('a')
   nodeList?.forEach?.((el) => {
