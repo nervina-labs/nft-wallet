@@ -1,4 +1,4 @@
-import { IS_IPHONE, IS_IMTOKEN } from '../constants/env'
+import { IS_IPHONE } from '../constants/env'
 import { RoutePath } from '../routes'
 
 export const disableImageContext = (e: any): boolean => {
@@ -43,7 +43,7 @@ export async function downloadImage(
 }
 
 export const downloadCardBackPDF = (selector: string) => {
-  if (IS_IPHONE || IS_IMTOKEN) {
+  if (IS_IPHONE) {
     return
   }
   const container = document.querySelector(selector)
