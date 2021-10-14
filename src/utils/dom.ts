@@ -1,4 +1,5 @@
 import { IS_IPHONE, IS_IMTOKEN } from '../constants/env'
+import { RoutePath } from '../routes'
 
 export const disableImageContext = (e: any): boolean => {
   e?.preventDefault?.()
@@ -51,12 +52,12 @@ export const downloadCardBackPDF = (selector: string) => {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     el.addEventListener('click', async (e) => {
       const target = e.currentTarget as any
-      if (target.href?.endsWith('.pdf')) {
-        e.stopPropagation()
-        if (target.download) {
-          e.preventDefault()
-          await downloadImage(target.href, target.download)
-        }
+      e.stopPropagation()
+      if (target.href?.endsWith('.pdf') && !target.download) {
+        e.preventDefault()
+        window.open(
+          `${RoutePath.PDFViewer}?url=${encodeURIComponent(target.href)}`
+        )
       }
     })
   })
