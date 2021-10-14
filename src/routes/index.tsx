@@ -45,6 +45,7 @@ import { WarningDialog } from '../components/WarningDialog'
 import { MyRedeem } from '../views/Reedem/My'
 import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
+import { PDFViewer } from '../views/PDFViewer'
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -80,6 +81,7 @@ export enum RoutePath {
   RedeemResult = '/redeem-result',
   Holder = '/holder',
   HolderAddress = '/holder/address',
+  PDFViewer = '/pdf-viewer',
 }
 
 export const RouterContext = React.createContext({
@@ -388,6 +390,12 @@ const routes: MibaoRouterProps[] = [
     key: 'Holder',
     path: RoutePath.Holder,
     params: '/:address',
+  },
+  {
+    component: PDFViewer,
+    exact: true,
+    key: 'PDFViewer',
+    path: RoutePath.PDFViewer,
   },
 ]
 
