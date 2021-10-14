@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf/dist/esm/entry.webpack'
 import styled from 'styled-components'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
@@ -48,6 +48,20 @@ export function PDFViewer() {
   function onDocumentLoadSuccess({ numPages }: any) {
     setNumPages(numPages)
   }
+
+  useEffect(() => {
+    const metaViewPort = document.querySelector("meta[name='viewport']")
+    metaViewPort?.setAttribute(
+      'content',
+      'width=device-width, initial-scale=1.0'
+    )
+    return () => {
+      metaViewPort?.setAttribute(
+        'content',
+        'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+      )
+    }
+  }, [])
 
   return (
     <Container>
