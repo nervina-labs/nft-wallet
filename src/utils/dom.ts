@@ -1,4 +1,4 @@
-import { IS_IPHONE } from '../constants/env'
+import { IS_IPHONE, IS_IMTOKEN } from '../constants/env'
 
 export const disableImageContext = (e: any): boolean => {
   e?.preventDefault?.()
@@ -42,7 +42,7 @@ export async function downloadImage(
 }
 
 export const downloadCardBackPDF = (selector: string) => {
-  if (IS_IPHONE) {
+  if (IS_IPHONE || IS_IMTOKEN) {
     return
   }
   const container = document.querySelector(selector)
