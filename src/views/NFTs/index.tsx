@@ -268,7 +268,7 @@ export const NFTs: React.FC = () => {
           data={{
             userInfo: user,
             tokens: data?.pages[0].token_list ?? [],
-            tokenLength: dataLength,
+            tokenLength: data?.pages[0].meta.total_count ?? 0,
           }}
         />
       )}
