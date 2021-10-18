@@ -17,10 +17,10 @@ import { ReactComponent as ProfileSvg } from '../../assets/svg/profile.svg'
 import { ReactComponent as TxSvg } from '../../assets/svg/tx-list.svg'
 import { ReactComponent as LangSvg } from '../../assets/svg/language.svg'
 import { ReactComponent as HelpSvg } from '../../assets/svg/help.svg'
-import { useWalletModel } from '../../hooks/useWallet'
 import { DrawerAction } from '../Profile/DrawerAction'
 import { LocalCache } from '../../cache'
 import { getHelpCenterUrl } from '../../data/help'
+import { useLogout } from '../../hooks/useAccount'
 
 const DrawerContainer = styled.div`
   background-color: white;
@@ -68,7 +68,7 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
   const [showAction, setShowAction] = useState(false)
   const history = useHistory()
   const { t, i18n } = useTranslation('translations')
-  const { logout } = useWalletModel()
+  const logout = useLogout()
 
   const drawerLeft = useMemo(() => {
     if (bodyWidth == null) {

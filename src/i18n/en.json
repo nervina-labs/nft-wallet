@@ -2,6 +2,7 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
+      "auth": "Please reopen this page to authorize",
       "login": "Login",
       "actions": {
         "comfirm": "Confirm",

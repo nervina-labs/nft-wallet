@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
-import { useWalletModel } from '../../hooks/useWallet'
 import { RoutePath } from '../../routes'
 import { DrawerAction } from './DrawerAction'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
@@ -13,8 +12,10 @@ import { ReactComponent as SelectedArrow } from '../../assets/svg/selected-arrow
 import styled from 'styled-components'
 import classNames from 'classnames'
 import { Empty } from '../NFTs/empty'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useSetServerProfile } from '../../hooks/useProfile'
 import { AvatarType } from '../../models/user'
+import { useErrorToast } from '../../hooks/useErrorToast'
+import { useAccount, useAPI } from '../../hooks/useAccount'
 
 export interface DrawerImageProps {
   showAvatarAction: boolean
@@ -89,15 +90,16 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   reloadProfile,
 }) => {
   const [t] = useTranslation('translations')
-  const { toast } = useWalletModel()
+  const toast = useErrorToast()
   const history = useHistory()
   const ITEM_LIMIT = 15
 
   const [openChooseTokenClassModal, setOpenChooseTokenClassModal] = useState(
     false
   )
-  const { api, address } = useWalletModel()
-  const { setRemoteProfile } = useProfileModel()
+  const api = useAPI()
+  const { address } = useAccount()
+  const setRemoteProfile = useSetServerProfile()
   const {
     data,
     status,
@@ -132,13 +134,14 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   const [activeIndex, setActiveIndex] = useState(-1)
   const [isSaving, setIsSaving] = useState(false)
 
-  const tokenList =
-    useMemo(() => {
-      return data?.pages?.reduce(
+  const tokenList = useMemo(() => {
+    return (
+      data?.pages?.reduce(
         (acc, page) => [...acc, ...(page?.token_list ?? [])],
         [] as NFTToken[]
-      )
-    }, [data]) ?? []
+      ) ?? []
+    )
+  }, [data])
 
   const onSave = useCallback(async () => {
     const token = tokenList[activeIndex]

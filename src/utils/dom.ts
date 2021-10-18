@@ -17,3 +17,7 @@ export const disableImagePreviewContext = (visible: boolean) => {
     }
   })
 }
+
+export function isVerticalScrollable(): boolean {
+  return document.body.scrollHeight > document.body.clientHeight
+}

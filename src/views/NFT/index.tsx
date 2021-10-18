@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
@@ -9,7 +9,6 @@ import { Redirect, useHistory, useParams, useRouteMatch } from 'react-router'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { NFTDetail, NftType, Query } from '../../models'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Limited } from '../../components/Limited'
 import { Creator } from '../../components/Creator'
 import { Share } from '../../components/Share'
@@ -20,12 +19,10 @@ import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
 import { TokenClass, VipSource } from '../../models/class-list'
 import { Like } from '../../components/Like'
-import { useLikeStatusModel } from '../../hooks/useLikeStatus'
+import { useLikeStatus } from '../../hooks/useLikeStatus'
 import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
 import { Follow } from '../../components/Follow'
-import { useProfileModel } from '../../hooks/useProfile'
-
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
 import { ReactComponent as NFT3dSvg } from '../../assets/svg/3D.svg'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
@@ -35,6 +32,8 @@ import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
+import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
+import { useDidMount } from '../../hooks/useDidMount'
 
 const IconGroupContainer = styled.div`
   width: 32px;
@@ -283,20 +282,20 @@ export const NFT: React.FC = () => {
   }, [width])
 
   const { id } = useParams<{ id: string }>()
-  const { api, address, isLogined } = useWalletModel()
-  const { getAuth } = useProfileModel()
+  const api = useAPI()
+  const { address } = useAccount()
+  const { isLogined } = useAccountStatus()
 
   const isHolder = !!useRouteQuery<string>('holder', '')
 
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api, isLogined],
     async () => {
-      const auth = isLogined ? await getAuth() : undefined
       if (matchTokenClass?.isExact) {
-        const { data } = await api.getTokenClass(id, auth)
+        const { data } = await api.getTokenClass(id)
         return data
       }
-      const { data } = await api.getNFTDetail(id, auth)
+      const { data } = await api.getNFTDetail(id)
       return data
     },
     { enabled: id != null }
@@ -338,7 +337,7 @@ export const NFT: React.FC = () => {
     )
   }, [address, detail])
 
-  const { setLikeStatus } = useLikeStatusModel()
+  const { setLikeStatus } = useLikeStatus()
 
   useEffect(() => {
     if (data == null) {
@@ -359,9 +358,9 @@ export const NFT: React.FC = () => {
   }, [data])
 
   const { initWechat, isWechatInited } = useWechatLaunchWeapp()
-  useEffect(() => {
+  useDidMount(() => {
     initWechat().catch(Boolean)
-  }, [])
+  })
 
   const { renderer, bgImgUrl } = useMemo(() => {
     const nftDetail = detail as NFTDetail

@@ -7,7 +7,6 @@ import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
 import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-success.svg'
-import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN } from '../../constants'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
@@ -22,6 +21,13 @@ import { UnipassConfig } from '../../utils'
 import { Query } from '../../models'
 import { useQuery } from 'react-query'
 import classNames from 'classnames'
+import {
+  useAccount,
+  useAccountStatus,
+  useAPI,
+  useLogin,
+  WalletType,
+} from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -161,7 +167,10 @@ export const Claim: React.FC = () => {
   const errorMsg = useMemo(() => {
     return t(`addresses.errors.${errorStatus}`)
   }, [errorStatus, t])
-  const { login, api, walletType, isLogined } = useWalletModel()
+  const { login } = useLogin()
+  const api = useAPI()
+  const { walletType } = useAccount()
+  const { isLogined } = useAccountStatus()
   const { id } = useParams<{ id: string }>()
   const history = useHistory()
   const [submitStatus, setSubmitStatus] = useState(

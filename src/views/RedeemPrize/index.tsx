@@ -8,13 +8,13 @@ import { Redirect, useHistory, useParams } from 'react-router'
 import { RoutePath } from '../../routes'
 import { useQuery } from 'react-query'
 import { Query } from '../../models'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Loading } from '../../components/Loading'
 import { RedeeemLabel } from '../Reedem/Label'
 import { Divider } from '@material-ui/core'
 import { Prize } from '../Reedem/Prize'
 import { formatTime } from '../../utils'
 import { isCustomReward } from '../../models/redeem'
+import { useAccount, useAPI } from '../../hooks/useAccount'
 
 const BoxContainer = styled.div`
   padding: 16px;
@@ -100,7 +100,8 @@ export const RedeemPrize: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const history = useHistory()
   const { id } = useParams<{ id: string }>()
-  const { api } = useWalletModel()
+  const api = useAPI()
+  const { address } = useAccount()
   const { isError, data } = useQuery(
     [Query.RedeemPrize, id, api],
     async () => {
@@ -115,8 +116,6 @@ export const RedeemPrize: React.FC = () => {
       retry: false,
     }
   )
-
-  const { address } = useWalletModel()
 
   const comment = useMemo(() => {
     if (isCustomReward(data?.record_info)) {

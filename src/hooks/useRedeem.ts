@@ -10,8 +10,13 @@ import {
 } from '../models/redeem'
 import { RoutePath } from '../routes'
 import { generateUnipassRedeemUrl, UnipassConfig } from '../utils'
-import { useProfileModel } from './useProfile'
-import { useWalletModel, WalletType } from './useWallet'
+import {
+  useAccount,
+  useAPI,
+  useSignTransaction,
+  WalletType,
+} from './useAccount'
+import { useSnackbar } from './useSnackbar'
 import { useWarning } from './useWarning'
 
 export interface onRedeemProps {
@@ -40,13 +45,15 @@ export interface TransferState {
 
 export const useSignRedeem = () => {
   const history = useHistory()
-  const { api, walletType, signTransaction, pubkey } = useWalletModel()
+  const api = useAPI()
+  const { walletType, pubkey } = useAccount()
+  const signTransaction = useSignTransaction()
   const reactLocation = useLocation<TransferState>()
   const warning = useWarning()
   const [t] = useTranslation('translations')
 
   const [isRedeeming, setIsRedeeming] = useAtom(isSigningAtom)
-  const { snackbar } = useProfileModel()
+  const { snackbar } = useSnackbar()
   const confirmRedeem = useCallback(
     async ({ customData, id, onConfirmError }: ConfirmRedeemProps) => {
       setIsRedeeming(true)
@@ -75,7 +82,7 @@ export const useSignRedeem = () => {
             url,
             url,
             pubkey,
-            signTx as any,
+            signTx,
             state
           )
           return
@@ -146,7 +153,7 @@ export const useSignRedeem = () => {
 }
 
 export const useSendRedeem = () => {
-  const { api } = useWalletModel()
+  const api = useAPI()
   const reactLocation = useLocation<TransferState>()
 
   const [isSending, setIsSending] = useAtom(isSendingAtom)

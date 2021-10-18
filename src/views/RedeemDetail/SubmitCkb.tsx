@@ -7,9 +7,9 @@ import styled from 'styled-components'
 import { Footer } from './Footer'
 import { CustomRewardType, RedeemStatus } from '../../models/redeem'
 import Alert from '@material-ui/lab/Alert'
-import { useWalletModel } from '../../hooks/useWallet'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { verifyCkbAddress } from '../../utils'
+import { useAccount } from '../../hooks/useAccount'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,12 +69,14 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
   id,
 }) => {
   const [t] = useTranslation('translations')
-  const { address } = useWalletModel()
+  const location = useLocation<FormState>()
+  const { address } = useAccount()
+  const routerState = location.state ?? { ckb: '' }
   const [formState, dispatch] = useReducer(
     (prevState: FormState, { key, value }: FormAction) => {
       return { ...prevState, [key]: value }
     },
-    { ckb: '' }
+    routerState
   )
   const classes = useStyles()
 
