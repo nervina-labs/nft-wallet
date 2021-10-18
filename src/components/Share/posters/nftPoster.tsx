@@ -18,6 +18,7 @@ import CardBackPath from '../../../assets/svg/card-back.svg'
 import { CardTags } from '../../Card/CardTags'
 import NFT3dSvg from '../../../assets/svg/3D.svg'
 import { useUrlToBase64 } from '../../../hooks/useUrlToBase64'
+import { ReactComponent as WeiboSvg } from '../../../assets/svg/weibo.svg'
 
 const CardContainer = styled.div`
   position: absolute;
@@ -123,7 +124,12 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
         style={{ top: '33px', left: '22px', position: 'absolute' }}
       >
         {avatarImageUrl && <ShareAvatar avatar={avatarImageUrl} size={35} />}
-        <div className="issuer-name">{issuerName}</div>
+        <div className="issuer-name">
+          {issuerName}
+          {data?.verified_info?.is_verified && (
+            <WeiboSvg className="issuer-verify" />
+          )}
+        </div>
       </UserContainer>
 
       <CardContainer>
@@ -145,7 +151,12 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
             {avatarImageUrl && (
               <ShareAvatar avatar={avatarImageUrl} size={18} />
             )}
-            <div className="issuer-name">{issuerName}</div>
+            <div className="issuer-name">
+              {issuerName}
+              {data?.verified_info?.is_verified && (
+                <WeiboSvg className="issuer-verify" />
+              )}
+            </div>
           </UserContainer>
           <Limited count={data.total} sn={(data as NFTDetail).n_token_id} />
         </Card>

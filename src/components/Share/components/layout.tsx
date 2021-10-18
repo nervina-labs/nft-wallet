@@ -78,4 +78,11 @@ export const UserContainer = styled.div`
     font-weight: 500;
     width: var(--width);
   }
+
+  .issuer-verify {
+    width: auto;
+    height: 12px;
+    vertical-align: middle;
+    margin: 0 5px;
+  }
 `
