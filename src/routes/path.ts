@@ -28,6 +28,7 @@ export enum RoutePath {
   RedeemResult = '/redeem-result',
   Holder = '/holder',
   HolderAddress = '/holder/address',
+  PDFViewer = '/pdf-viewer',
 }
 
 export enum ProfilePath {

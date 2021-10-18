@@ -23,6 +23,7 @@ import { MyRedeem } from '../views/Reedem/My'
 import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
+import { PDFViewer } from '../views/PDFViewer'
 
 interface MibaoRouterProps extends RouteProps {
   key: string
@@ -201,5 +202,11 @@ export const routes: MibaoRouterProps[] = [
     key: 'Holder',
     path: RoutePath.Holder,
     params: '/:address',
+  },
+  {
+    component: PDFViewer,
+    exact: true,
+    key: 'PDFViewer',
+    path: RoutePath.PDFViewer,
   },
 ]
