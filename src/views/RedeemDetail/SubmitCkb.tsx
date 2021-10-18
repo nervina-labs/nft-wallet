@@ -1,7 +1,6 @@
 import { makeStyles, InputAdornment } from '@material-ui/core'
 import React, { useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
 import { RedeemDrawer } from './Drawer'
 import { InputBaseFix } from '../Profile/InputMod'
 import styled from 'styled-components'
@@ -11,6 +10,7 @@ import Alert from '@material-ui/lab/Alert'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { verifyCkbAddress } from '../../utils'
 import { useAccount } from '../../hooks/useAccount'
+import { useLocation } from 'react-router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,7 +101,10 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
   return (
     <Container
       isDrawerOpen={open}
-      close={close}
+      close={() => {
+        dispatch({ key: 'ckb', value: '' })
+        close()
+      }}
       title={t('exchange.form.ckb.title')}
       isValid
     >

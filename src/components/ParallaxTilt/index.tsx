@@ -16,6 +16,7 @@ import { NftType } from '../../models'
 import { PhotoProvider } from 'react-photo-view'
 import { useTranslation } from 'react-i18next'
 import { Dialog } from '@material-ui/core'
+import { disableImagePreviewContext } from '../../utils/dom'
 import { useSnackbar } from '../../hooks/useSnackbar'
 
 export interface ParallaxTiltProps {
@@ -288,7 +289,7 @@ const Cardback: React.FC<CardbackProps> = ({
           <div
             className="content"
             dangerouslySetInnerHTML={{ __html: content }}
-          ></div>
+          />
         ) : (
           <>
             <div
@@ -338,7 +339,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   const enableImagePreview =
     type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
   const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
-  const enablePlayer = !enableImagePreview && isAudioOrVideo
+  const enablePlayer =
+    !enableImagePreview && (isAudioOrVideo || type === NftType._3D)
   const [
     photoPreviewToolbarAudioVisible,
     setPhotoPreviewToolbarAudioVisible,
@@ -456,6 +458,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
                 maskClassName="preview-mask"
                 onVisibleChange={(visible) => {
                   setPhotoPreviewToolbarAudioVisible(visible)
+                  requestAnimationFrame(() =>
+                    disableImagePreviewContext(visible)
+                  )
                   if (visible) {
                     setTimeout(() => {
                       photoPreviewToolbarAudioRef?.current?.play()
@@ -564,7 +569,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
             <div
               className="card-back"
               dangerouslySetInnerHTML={{ __html: cardBackContent }}
-            ></div>
+            />
           ) : null}
         </CardbackPreviewContainer>
       </Dialog>

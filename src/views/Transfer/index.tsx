@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Redirect, useHistory, useLocation, useParams } from 'react-router'
 import classnames from 'classnames'
 import { Appbar } from '../../components/Appbar'
-import { NFTDetail, Query } from '../../models'
+import { NFTDetail, NftType, Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
@@ -593,6 +593,7 @@ export const Transfer: React.FC = () => {
                 width={100}
                 height={100}
                 tid={`${nftDetail.n_token_id}`}
+                has3dIcon={nftDetail.renderer_type === NftType._3D}
               />
             </div>
             <div className="title">

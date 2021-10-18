@@ -16,6 +16,7 @@ export interface ListMeta {
 export enum NftType {
   Audio = 'audio',
   Video = 'video',
+  _3D = '3d',
   Picture = 'image',
 }
 
