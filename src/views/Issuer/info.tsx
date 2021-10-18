@@ -12,7 +12,6 @@ import VerifySvg from '../../assets/svg/weibo.svg'
 import { Skeleton } from '@material-ui/lab'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
-import { HEADER_HEIGHT } from '../../components/Appbar'
 import { copyFallback, ellipsisIssuerID, getImagePreviewUrl } from '../../utils'
 import { useHistory } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAccount'
@@ -26,8 +25,7 @@ const IssuerInfoContainer = styled.div`
   --desc-font-color: #999999;
   --desc-more-font-color: #666666;
   --verify-title-font-color: #000;
-  position: sticky;
-  top: ${HEADER_HEIGHT}px;
+  position: relative;
   padding: 24px 15px;
   z-index: 1;
 

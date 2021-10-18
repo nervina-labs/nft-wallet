@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core'
-import React, { useEffect, useMemo, useReducer } from 'react'
+import React, { useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
 import { RedeemDrawer } from './Drawer'
 import { InputBaseFix } from '../Profile/InputMod'
 import styled from 'styled-components'
@@ -65,22 +64,13 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
   id,
 }) => {
   const [t] = useTranslation('translations')
-  const location = useLocation<FormState>()
-  const routerState = location.state ?? { email: '' }
   const [formState, dispatch] = useReducer(
     (prevState: FormState, { key, value }: FormAction) => {
       return { ...prevState, [key]: value }
     },
-    routerState
+    { email: '' }
   )
   const classes = useStyles()
-
-  useEffect(() => {
-    if (!open) {
-      dispatch({ key: 'email', value: routerState.email ?? '' })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
 
   const { onRedeem, isRedeeming } = useSignRedeem()
 
@@ -102,7 +92,10 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
   return (
     <Container
       isDrawerOpen={open}
-      close={close}
+      close={() => {
+        dispatch({ key: 'email', value: '' })
+        close()
+      }}
       title={t('exchange.form.email.title')}
       isValid
     >

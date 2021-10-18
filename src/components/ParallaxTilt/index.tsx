@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useLayoutEffect,
+} from 'react'
 import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/svg/fallback.svg'
@@ -17,6 +23,7 @@ import { PhotoProvider } from 'react-photo-view'
 import { useTranslation } from 'react-i18next'
 import { Dialog } from '@material-ui/core'
 import { useSnackbar } from '../../hooks/useSnackbar'
+import { downloadCardBackPDF, disableImagePreviewContext } from '../../utils'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -242,7 +249,7 @@ const CardbackPreviewContainer = styled(CardbackContainer)`
     right: 10px;
     top: 10px;
   }
-  .card-back {
+  .full-card-back-content {
     margin: 20px;
     width: calc(100% - 40px);
     height: calc(100% - 40px);
@@ -267,6 +274,12 @@ const Cardback: React.FC<CardbackProps> = ({
     return `${h / 2}px`
   }, [width, height])
 
+  useLayoutEffect(() => {
+    if (content) {
+      downloadCardBackPDF('.card-back-content')
+    }
+  }, [content])
+
   return (
     <CardbackContainer
       style={{
@@ -286,9 +299,9 @@ const Cardback: React.FC<CardbackProps> = ({
       >
         {content ? (
           <div
-            className="content"
+            className="card-back-content"
             dangerouslySetInnerHTML={{ __html: content }}
-          ></div>
+          />
         ) : (
           <>
             <div
@@ -338,7 +351,8 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   const enableImagePreview =
     type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
   const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
-  const enablePlayer = !enableImagePreview && isAudioOrVideo
+  const enablePlayer =
+    !enableImagePreview && (isAudioOrVideo || type === NftType._3D)
   const [
     photoPreviewToolbarAudioVisible,
     setPhotoPreviewToolbarAudioVisible,
@@ -420,6 +434,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     }
     return isTiltEnable && enable
   }, [isTiltEnable, enable, flipped, isTouchDevice, hasCardCackContent])
+
   return (
     <>
       <Container
@@ -456,6 +471,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
                 maskClassName="preview-mask"
                 onVisibleChange={(visible) => {
                   setPhotoPreviewToolbarAudioVisible(visible)
+                  requestAnimationFrame(() =>
+                    disableImagePreviewContext(visible)
+                  )
                   if (visible) {
                     setTimeout(() => {
                       photoPreviewToolbarAudioRef?.current?.play()
@@ -544,6 +562,11 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
         onClose={closePreviewCardback}
         onEscapeKeyDown={closePreviewCardback}
         onBackdropClick={closePreviewCardback}
+        TransitionProps={{
+          onEntered: () => {
+            downloadCardBackPDF('.full-card-back-content')
+          },
+        }}
         PaperProps={{
           style: {
             width: '100%',
@@ -562,9 +585,9 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
           <CloseSvg className="close" onClick={closePreviewCardback} />
           {cardBackContent ? (
             <div
-              className="card-back"
+              className="full-card-back-content"
               dangerouslySetInnerHTML={{ __html: cardBackContent }}
-            ></div>
+            />
           ) : null}
         </CardbackPreviewContainer>
       </Dialog>

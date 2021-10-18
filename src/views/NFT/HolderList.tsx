@@ -86,6 +86,7 @@ export const TokenHolderList: React.FC<{
             address={item.holder_info.address}
             avatar={item.holder_info.avatar_url}
             avatarType={item.holder_info.avatar_type}
+            tid={item.n_token_id}
           />
           <div className="id">#{item.n_token_id}</div>
         </HolderItem>

@@ -1,6 +1,5 @@
 import styled from 'styled-components'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import classNames from 'classnames'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { useInfiniteQuery } from 'react-query'
 import { PRODUCT_STATUE_SET, ProductState, Query } from '../../models'
@@ -14,6 +13,7 @@ import { Loading } from '../../components/Loading'
 import { HEADER_HEIGHT } from '../../components/Appbar'
 import { IssuerTokenClass } from '../../models/issuer'
 import { useAPI } from '../../hooks/useAccount'
+import { Tab, Tabs } from '../../components/Tab'
 
 const ITEM_LIMIT = 20
 
@@ -25,13 +25,14 @@ const NftCardsContainer = styled.div`
   --filter-color: #8e8e93;
   --filter-font-color: #000;
   --header-height: 40px;
-  position: sticky;
-  top: ${HEADER_HEIGHT}px;
+  position: relative;
   min-height: calc(100vh - 200px);
   z-index: 10;
   background-color: var(--bg-color);
 
   .header {
+    position: sticky;
+    top: ${HEADER_HEIGHT}px;
     width: 100%;
     height: var(--header-height);
     line-height: var(--header-height);
@@ -42,53 +43,11 @@ const NftCardsContainer = styled.div`
     user-select: none;
     max-width: var(--max-width);
 
-    &.fixed {
-      width: 100%;
-      position: fixed;
-      top: ${HEADER_HEIGHT}px;
-    }
-
-    &.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
-  }
-
-  .filters {
-    width: 184px;
-    height: 100%;
-    display: flex;
-    margin: auto;
-    position: relative;
-    font-size: 15px;
-
-    .filter {
-      width: 80px;
-      text-align: center;
-      color: var(--filter-color);
-      cursor: pointer;
-
-      &.active {
-        font-weight: 500;
+    .filters {
+      width: 60%;
+      margin: auto;
+      .filter {
         color: var(--filter-font-color);
-      }
-    }
-
-    .active-bar {
-      bottom: 0;
-      left: 0;
-      position: absolute;
-      display: flex;
-      width: 80px;
-      height: 3px;
-      transition: 0.2s;
-      &:before {
-        content: ' ';
-        width: 30px;
-        height: 100%;
-        background-color: var(--active-color);
-        margin: auto;
-        border-radius: 10px;
       }
     }
   }
@@ -121,8 +80,6 @@ const NftCardsContainer = styled.div`
 `
 
 const Header: React.FC = () => {
-  const [headerFixed, setHeaderFixed] = useState(false)
-  const headerRef = useRef<HTMLDivElement>(null)
   const { replace, location } = useHistory()
   const [t] = useTranslation('translations')
   const productState = useRouteQuery<ProductState>(
@@ -132,78 +89,28 @@ const Header: React.FC = () => {
   const [index, setIndex] = useState(
     PRODUCT_STATUE_SET.findIndex((item) => item === productState) || 0
   )
-
-  const setHeaderFixedByHeaderRef = useCallback(() => {
-    const isFixed =
-      (headerRef?.current?.getClientRects()[0].top ?? 0) - HEADER_HEIGHT <= 0
-    if (isFixed !== headerFixed) {
-      setHeaderFixed(isFixed)
-    }
-  }, [headerRef, headerFixed])
-
-  useEffect(() => {
-    window.addEventListener('scroll', setHeaderFixedByHeaderRef)
-    return () => window.removeEventListener('scroll', setHeaderFixedByHeaderRef)
-  })
-
-  const filterEl = useMemo(() => {
-    const activeBarTranslateX = `${index * 100}%`
-    const filterList = [
-      {
-        active: productState === 'product_state',
-        path: location.pathname + '?productState=product_state',
-        label: t('issuer.created'),
-      },
-      {
-        active: productState === 'on_sale',
-        path: location.pathname + '?productState=on_sale',
-        label: t('issuer.selling'),
-      },
-    ]
-
-    return (
-      <nav className="filters">
-        {filterList.map((item, i) => (
-          <div
-            className={classNames('filter', {
-              active: item.active,
-            })}
-            onClick={() => {
-              replace(item.path)
-              setIndex(i)
-              setHeaderFixedByHeaderRef()
-            }}
-            key={`${i}`}
-          >
-            {item.label}
-          </div>
-        ))}
-        <div
-          className="active-bar"
-          style={{
-            transform: `translateX(${activeBarTranslateX})`,
-          }}
-        />
-      </nav>
-    )
-  }, [
-    index,
-    location.pathname,
-    productState,
-    replace,
-    setHeaderFixedByHeaderRef,
-    t,
-  ])
+  const updateSearchParams = (i: number, search: string) => {
+    replace(`${location.pathname}?${search}`)
+    setIndex(i)
+  }
 
   return (
-    <>
-      <header className="header" ref={headerRef}>
-        {filterEl}
-      </header>
-      <header className={classNames('header', 'fixed', { hide: !headerFixed })}>
-        {filterEl}
-      </header>
-    </>
+    <header className="header">
+      <Tabs activeKey={index} className="filters">
+        <Tab
+          className="filter"
+          onClick={() => updateSearchParams(0, 'productState=product_state')}
+        >
+          {t('issuer.created')}
+        </Tab>
+        <Tab
+          className="filter"
+          onClick={() => updateSearchParams(1, 'productState=on_sale')}
+        >
+          {t('issuer.selling')}
+        </Tab>
+      </Tabs>
+    </header>
   )
 }
 

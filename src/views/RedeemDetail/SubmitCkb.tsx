@@ -1,7 +1,6 @@
 import { makeStyles, InputAdornment } from '@material-ui/core'
 import React, { useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
 import { RedeemDrawer } from './Drawer'
 import { InputBaseFix } from '../Profile/InputMod'
 import styled from 'styled-components'
@@ -70,14 +69,12 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
   id,
 }) => {
   const [t] = useTranslation('translations')
-  const location = useLocation<FormState>()
   const { address } = useAccount()
-  const routerState = location.state ?? { ckb: '' }
   const [formState, dispatch] = useReducer(
     (prevState: FormState, { key, value }: FormAction) => {
       return { ...prevState, [key]: value }
     },
-    routerState
+    { ckb: '' }
   )
   const classes = useStyles()
 
@@ -101,7 +98,10 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
   return (
     <Container
       isDrawerOpen={open}
-      close={close}
+      close={() => {
+        dispatch({ key: 'ckb', value: '' })
+        close()
+      }}
       title={t('exchange.form.ckb.title')}
       isValid
     >

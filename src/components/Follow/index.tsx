@@ -19,10 +19,11 @@ const Container = styled.button`
   justify-content: center;
   align-items: center;
   color: white;
-  width: 70px;
-  min-width: 70px;
   height: 22px;
   font-size: 12px;
+  word-break: keep-all;
+  white-space: 'nowrap';
+  padding: 0 10px;
   transition: all 0.5s;
 
   &.followed {

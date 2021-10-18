@@ -24,6 +24,7 @@ const BoxContainer = styled.div`
   .comment {
     font-size: 12px;
     margin-top: 8px;
+    white-space: pre-line;
   }
   .header {
     display: flex;
