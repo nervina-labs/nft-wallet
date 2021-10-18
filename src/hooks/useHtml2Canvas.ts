@@ -10,6 +10,7 @@ export function useHtml2Canvas(
 ) {
   const [imgSrc, setImgSrc] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<any>()
   useEffect(() => {
     const scrollTop =
       document.documentElement.scrollTop || document.body.scrollTop
@@ -22,12 +23,14 @@ export function useHtml2Canvas(
         width: element.offsetWidth,
         x: 0,
         y: scrollTop,
+        scale: 3,
       })
         .then((canvas) => {
           setImgSrc(canvas.toDataURL('image/png'))
         })
-        .catch((error) => {
-          console.error('oops, something went wrong!', error)
+        .catch((err) => {
+          setError(err)
+          console.error('oops, something went wrong!', err)
         })
         .then(() => {
           setIsLoading(false)
@@ -37,5 +40,6 @@ export function useHtml2Canvas(
   return {
     imgSrc,
     isLoading,
+    error,
   }
 }
