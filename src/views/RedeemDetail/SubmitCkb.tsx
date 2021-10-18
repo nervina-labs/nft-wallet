@@ -10,6 +10,7 @@ import Alert from '@material-ui/lab/Alert'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { verifyCkbAddress } from '../../utils'
 import { useAccount } from '../../hooks/useAccount'
+import { useLocation } from 'react-router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
