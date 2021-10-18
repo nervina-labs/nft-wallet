@@ -83,6 +83,7 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
 }) => {
   const posterRef = useRef<HTMLDivElement>(null)
   const [issuerName] = useTextEllipsis(data.issuer_info?.name ?? '', 100)
+  const [nftName] = useTextEllipsis(data.name ?? '', 150)
   const { data: cardImageUrl, isLoading: cardImageLoading } = useUrlToBase64(
     data.bg_image_url,
     {
@@ -139,7 +140,7 @@ export const NftPoster: React.FC<PosterProps<NftPosterData>> = ({
               <img className="player" src={PlayerPath} alt="player" />
             )}
           </div>
-          <div className="nft-name">{data.name}</div>
+          <div className="nft-name">{nftName}</div>
           <UserContainer avatarSize={18} style={{ fontSize: '12px' }}>
             {avatarImageUrl && (
               <ShareAvatar avatar={avatarImageUrl} size={18} />
