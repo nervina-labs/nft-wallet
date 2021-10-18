@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 import { PhotoConsumer } from 'react-photo-view'
+import { disableImageContext } from '../../utils/dom'
 
 export type LazyLoadImageVariant = 'circle' | 'rect' | 'text'
 
@@ -21,12 +22,6 @@ export interface LazyLoadImageProps {
   onClick?: (e: React.SyntheticEvent<HTMLImageElement>) => void
   dataSrc?: string
   enablePreview?: boolean
-}
-
-const disableContext: React.MouseEventHandler = (e): boolean => {
-  e.preventDefault()
-  e.stopPropagation()
-  return false
 }
 
 export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
@@ -73,7 +68,7 @@ export const LazyLoadImage: React.FC<LazyLoadImageProps> = ({
     <img
       src={src === null ? '' : src}
       ref={imgRef}
-      onContextMenu={disableContextMenu ? disableContext : undefined}
+      onContextMenu={disableContextMenu ? disableImageContext : undefined}
       data-src={dataSrc}
       onClick={onClick}
       onLoad={onLoad}
