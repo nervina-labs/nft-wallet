@@ -8,6 +8,7 @@ declare namespace JSX {
     'camera-controls'?: boolean
     loading?: 'auto' | 'lazy' | 'eager'
     reveal?: 'auto' | 'interaction' | 'manual'
+    onLoad?: () => void
   }
 
   type ModelViewer = React.DetailedHTMLProps<ModelViewerProps, HTMLElement>
