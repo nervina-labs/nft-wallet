@@ -29,7 +29,9 @@ export function useTextEllipsis(
         break
       }
     }
-    setContent(text.substring(0, i) + (i === text.length ? '' : '…'))
+    setContent(
+      text ? text.substring(0, i) + (i === text.length ? '' : '…') : text
+    )
     setCutIndex(i)
   }, [text, width, font])
   return [content, cutIndex]
