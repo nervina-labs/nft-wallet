@@ -3,7 +3,7 @@ import Dialog, { DialogProps } from '@material-ui/core/Dialog'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useConfirmModel } from '../../hooks/useConfirm'
 
 const DialogContainer = styled(Dialog)`
   display: flex;
@@ -57,24 +57,19 @@ export const Comfirm: React.FC<DialogProps & ActionDialogProps> = (
 ) => {
   const style = useStyles()
   const { t } = useTranslation('translations')
-  const {
-    confirmContent,
-    onDialogClose,
-    onDialogConfirm,
-    showConfirmDialog,
-  } = useWalletModel()
+  const { content, onClose, onConfirm, isOpen } = useConfirmModel()
   return (
     <DialogContainer
       {...dialogProps}
       classes={{ paper: style.paper }}
-      open={showConfirmDialog}
+      open={isOpen}
     >
-      <section className="content">{confirmContent}</section>
+      <section className="content">{content}</section>
       <footer>
-        <div className="close" onClick={onDialogClose}>
+        <div className="close" onClick={onClose}>
           {t('profile.cancel')}
         </div>
-        <div className="comfirm" onClick={onDialogConfirm}>
+        <div className="comfirm" onClick={onConfirm}>
           {t('profile.comfirm')}
         </div>
       </footer>

@@ -186,7 +186,7 @@ const DasSelectorPopout: React.FC<DasSelectorPopoutProps> = ({
         clearTimeout(handle)
       }
     }
-  }, [data])
+  }, [data, handleSelect])
 
   const dom = (
     <DasSelectorPopoutContainer
@@ -290,6 +290,7 @@ export const DasSelector: React.FC<DasSelectorProps> = ({
       showPopout(popVisible)
     }
     dasPopoutVisibleTriggerRef.current = trigger
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPopout, data])
 
   const avatar = loading ? (

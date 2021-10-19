@@ -13,15 +13,15 @@ import { SetDesc } from './setDesc'
 import { SetBirthday } from './setBirthday'
 import { DrawerAction } from './DrawerAction'
 import { ProfilePath, RoutePath } from '../../routes'
-import { useWalletModel } from '../../hooks/useWallet'
 import { getRegionFromCode, SetRegion } from './SetRegion'
 import { useRouteMatch } from 'react-router-dom'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useSetServerProfile } from '../../hooks/useProfile'
 import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { Skeleton } from '@material-ui/lab'
 import { DrawerImage } from './DrawerImage'
 import { HolderAvatar } from '../../components/HolderAvatar'
+import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 
 const profileBg = ProfileBg
 
@@ -133,7 +133,9 @@ export const Profile: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const [showGenderAction, setShowGenderAction] = useState(false)
   const [showAvatarAction, setShowAvatarAction] = useState(false)
-  const { isLogined, address, api } = useWalletModel()
+  const api = useAPI()
+  const { isLogined } = useAccountStatus()
+  const { address } = useAccount()
   const matchRegion = useRouteMatch({
     path: ProfilePath.Regions,
     strict: false,
@@ -157,7 +159,7 @@ export const Profile: React.FC = () => {
     }
   )
 
-  const { setRemoteProfile } = useProfileModel()
+  const setRemoteProfile = useSetServerProfile()
   const qc = useQueryClient()
   const onSaveGender = useCallback(
     async (gender: string) => {

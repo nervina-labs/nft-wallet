@@ -13,10 +13,10 @@ import LogoutPng from '../../assets/img/logout.png'
 import { RoutePath } from '../../routes'
 import { Info } from '../Info'
 import { Transactions } from '../Transactions'
-import { useWalletModel } from '../../hooks/useWallet'
 import { MainContainer } from '../../styles'
 import { useTranslation } from 'react-i18next'
 import Bg from '../../assets/img/account-bg.png'
+import { useAccount, useAccountStatus, useLogout } from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -71,20 +71,20 @@ const Container = styled(MainContainer)`
 `
 
 export const InfoComponent: React.FC = () => {
-  const { address } = useWalletModel()
+  const { address } = useAccount()
   return <Info address={address} />
 }
 
 export const Account: React.FC = () => {
   const history = useHistory()
   const { t } = useTranslation('translations')
-  const { logout } = useWalletModel()
+  const logout = useLogout()
+  const { isLogined } = useAccountStatus()
   const matchInfo = useRouteMatch(RoutePath.Info)
   const matchAccount = useRouteMatch(RoutePath.Account)
   const isInfo = matchInfo?.isExact != null
   const isAccount = matchAccount?.isExact === true
 
-  const { isLogined } = useWalletModel()
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
   }

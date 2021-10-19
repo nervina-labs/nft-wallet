@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
 import { Card } from './card'
-import { useWalletModel } from '../../hooks/useWallet'
 import { Query } from '../../models'
 import { Collection } from './Collection'
 import { RecommendIssuser } from './Issuer'
 import { Skeleton } from '@material-ui/lab'
 import { Notifications } from './Notifications'
+import { useAPI } from '../../hooks/useAccount'
 
 const Container = styled.section`
   .header {
@@ -33,7 +33,7 @@ const Container = styled.section`
 
 export const Home: React.FC = () => {
   const [t] = useTranslation('translations')
-  const { api } = useWalletModel()
+  const api = useAPI()
   const { data: hotest, isLoading: isHotestLoading } = useQuery(
     [Query.Hotest, api],
     async () => {

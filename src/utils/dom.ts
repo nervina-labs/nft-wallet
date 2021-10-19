@@ -1,6 +1,10 @@
 import { IS_IPHONE } from '../constants/env'
 import { RoutePath } from '../routes'
 
+export function isVerticalScrollable(): boolean {
+  return document.body.scrollHeight > document.body.clientHeight
+}
+
 export const disableImageContext = (e: any): boolean => {
   e?.preventDefault?.()
   e?.stopPropagation?.()

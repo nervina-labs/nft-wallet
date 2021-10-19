@@ -21,10 +21,9 @@ import { Player } from '../Player'
 import { NftType } from '../../models'
 import { PhotoProvider } from 'react-photo-view'
 import { useTranslation } from 'react-i18next'
-import { useProfileModel } from '../../hooks/useProfile'
 import { Dialog } from '@material-ui/core'
-import { disableImagePreviewContext } from '../../utils/dom'
-import { downloadCardBackPDF } from '../../utils'
+import { useSnackbar } from '../../hooks/useSnackbar'
+import { downloadCardBackPDF, disableImagePreviewContext } from '../../utils'
 
 export interface ParallaxTiltProps {
   src: string | undefined
@@ -340,7 +339,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [])
   const [enableGyroscope, setEnableGyroscope] = useState(isTouchDevice)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
-  const { snackbar } = useProfileModel()
+  const { snackbar } = useSnackbar()
   const [t] = useTranslation('translations')
   const shouldReverseTilt = useMemo(() => {
     if (!isTouchDevice) {

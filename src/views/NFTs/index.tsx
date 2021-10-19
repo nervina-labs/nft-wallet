@@ -4,7 +4,6 @@ import { useInfiniteQuery, useQuery } from 'react-query'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Card } from '../../components/Card'
 import { HOST, IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
-import { useWalletModel } from '../../hooks/useWallet'
 import { NFTToken, Query, TransactionStatus } from '../../models'
 import { Empty } from './empty'
 import { Loading } from '../../components/Loading'
@@ -31,10 +30,13 @@ import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
 import { Tab, Tabs, TabsAffix } from '../../components/Tab'
+import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
-  const { api, isLogined, address: localAddress } = useWalletModel()
+  const api = useAPI()
+  const { isLogined } = useAccountStatus()
+  const { address: localAddress } = useAccount()
   const address = useMemo(
     () => (params.address ? params.address : localAddress),
     [localAddress, params.address]

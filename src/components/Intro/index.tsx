@@ -4,7 +4,7 @@ import Guide, { IStep } from 'byte-guide'
 import { useHistory } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { getHelpCenterUrl } from '../../data/help'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useAccount, useAPI } from '../../hooks/useAccount'
 
 export interface IntroProps {
   show: boolean
@@ -15,7 +15,8 @@ const GUIDE_STORAGE_KEY = 'GUIDE_STORAGE_KEY+'
 export const Intro: React.FC<IntroProps> = ({ show }) => {
   const { t, i18n } = useTranslation('translations')
   const [showArrow, setShowArrow] = useState(true)
-  const { address, api } = useWalletModel()
+  const api = useAPI()
+  const { address } = useAccount()
   const history = useHistory()
   const steps: IStep[] = useMemo(() => {
     return [
