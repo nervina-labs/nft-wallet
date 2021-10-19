@@ -15,5 +15,6 @@ module.exports = {
     '@typescript-eslint/prefer-nullish-coalescing': 0,
     '@typescript-eslint/no-floating-promises': 0,
     '@typescript-eslint/no-unnecessary-type-assertion': 0,
+    '@typescript-eslint/no-extraneous-class': 0,
   },
 }

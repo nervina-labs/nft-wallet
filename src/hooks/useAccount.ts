@@ -12,11 +12,13 @@ import { RoutePath } from '../routes'
 import { generateUnipassLoginUrl, generateUnipassSignUrl } from '../utils'
 import UnipassSigner from '../pw/UnipassSigner'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
+import { customWallet } from '../models/CustomWallet'
 
 export enum WalletType {
   Unipass = 'Unipass',
   Metamask = 'Metamask',
   WalletConnect = 'WalletConnect',
+  Custom = 'Custom',
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
@@ -133,6 +135,7 @@ export function useLogin() {
   const { walletType } = useAccount()
   const setAccount = useSetAccount()
   const [provider, setProvider] = useAtom(providerAtom)
+  const { isLogined } = useAccountStatus()
 
   const web3WalletAddressOnChange = useCallback(
     (addr?: Address) => {
@@ -181,6 +184,20 @@ export function useLogin() {
     return p
   }, [setAccount, web3WalletAddressOnChange, setProvider])
 
+  const loginCustom = useCallback(async () => {
+    const p = new UnipassProvider(UNIPASS_URL, setAccount)
+    setProvider(p)
+    if (isLogined) {
+      return p
+    }
+    const address = await customWallet.getAddress()
+    setAccount({
+      address,
+      walletType: WalletType.Custom,
+    })
+    return p
+  }, [setAccount, setProvider, isLogined])
+
   const login = useCallback(
     async (walletType: WalletType = WalletType.Unipass) => {
       provider?.close()
@@ -205,6 +222,7 @@ export function useLogin() {
   return {
     login,
     loginMetamask,
+    loginCustom,
   }
 }
 
@@ -242,6 +260,11 @@ export function useSignTransaction() {
     [provider, loginMetamask, setProvider]
   )
 
+  const signCustom = useCallback(async (tx: Transaction) => {
+    const signedTx = await customWallet.signTransaction(tx)
+    return signedTx
+  }, [])
+
   return useCallback(
     async (tx: Transaction) => {
       switch (walletType) {
@@ -251,11 +274,13 @@ export function useSignTransaction() {
           return await signMetamask(tx)
         case WalletType.WalletConnect:
           return await signMetamask(tx)
+        case WalletType.Custom:
+          return await signCustom(tx)
         default:
           return await signUnipass(tx)
       }
     },
-    [walletType, signUnipass, signMetamask]
+    [walletType, signUnipass, signMetamask, signCustom]
   )
 }
 

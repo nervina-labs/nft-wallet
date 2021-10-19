@@ -280,6 +280,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
 
     const tx = await rawTransactionToPWTransaction(data.unsigned_tx, isUnipass)
+
     return {
       tx,
       uuid: data.token_ckb_transaction_uuid,
@@ -324,7 +325,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     toAddress: string,
     sig?: string
   ): Promise<AxiosResponse<{ message: number }>> {
-    const rawTx = transformers.TransformTransaction(tx) as any
+    const rawTx = (typeof tx?.getSize === 'undefined'
+      ? tx
+      : transformers.TransformTransaction(tx)) as any
     if (sig) {
       const witnessArgs: WitnessArgs = {
         lock: sig,

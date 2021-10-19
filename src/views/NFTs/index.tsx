@@ -31,26 +31,18 @@ export const NFTs: React.FC = () => {
   )
   const isHolder = useMemo(() => Boolean(params.address), [params.address])
   const { t } = useTranslation('translations')
-  const { loginMetamask } = useLogin()
+  const { loginCustom } = useLogin()
   useScrollRestoration()
   const { isError: isLoginError, isLoading: isLoginLoading } = useQuery(
     ['login', address],
     async () => {
-      return await loginMetamask()
+      return await loginCustom()
     },
     {
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       staleTime: Infinity,
-    }
-  )
-
-  const { data: user, isLoading: isUserLoading } = useQuery(
-    [Query.Profile, address, api],
-    async () => await api.getProfile(address),
-    {
-      enabled: !!address,
     }
   )
 
@@ -108,12 +100,7 @@ export const NFTs: React.FC = () => {
 
   return (
     <Container id="main">
-      <Info
-        isLoading={isUserLoading}
-        user={user}
-        isHolder={isHolder}
-        address={address}
-      />
+      <Info isLoading={false} isHolder={isHolder} address={address} />
       <section className="list">
         <>
           {isLoginError ? <h4>{t('common.auth')}</h4> : null}
