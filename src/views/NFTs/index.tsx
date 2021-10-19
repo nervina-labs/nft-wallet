@@ -13,12 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { Container } from './styled'
 import { Info } from './info'
-import {
-  useAccount,
-  useAccountStatus,
-  useAPI,
-  useLogin,
-} from '../../hooks/useAccount'
+import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -31,20 +26,7 @@ export const NFTs: React.FC = () => {
   )
   const isHolder = useMemo(() => Boolean(params.address), [params.address])
   const { t } = useTranslation('translations')
-  const { loginMetamask } = useLogin()
   useScrollRestoration()
-  const { isError: isLoginError, isLoading: isLoginLoading } = useQuery(
-    ['login', address],
-    async () => {
-      return await loginMetamask()
-    },
-    {
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-    }
-  )
 
   const { data: user, isLoading: isUserLoading } = useQuery(
     [Query.Profile, address, api],
@@ -102,6 +84,10 @@ export const NFTs: React.FC = () => {
     )
   }, [data])
 
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
+
   if (params.address === localAddress && isLogined) {
     return <Redirect to={RoutePath.NFTs} />
   }
@@ -116,9 +102,8 @@ export const NFTs: React.FC = () => {
       />
       <section className="list">
         <>
-          {isLoginError ? <h4>{t('common.auth')}</h4> : null}
           {isRefetching ? <Loading /> : null}
-          {(data === undefined && status === 'loading') || isLoginLoading ? (
+          {data === undefined && status === 'loading' ? (
             <Loading />
           ) : (
             <InfiniteScroll

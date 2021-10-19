@@ -30,6 +30,7 @@ import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useDidMount } from '../../hooks/useDidMount'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
 
 const IconGroupContainer = styled.div`
   width: 32px;
@@ -266,7 +267,7 @@ export const NFT: React.FC = () => {
   const api = useAPI()
   const { address } = useAccount()
   const { isLogined } = useAccountStatus()
-
+  const getAuth = useGetAndSetAuth()
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api, isLogined],
     async () => {
@@ -274,7 +275,8 @@ export const NFT: React.FC = () => {
         const { data } = await api.getTokenClass(id)
         return data
       }
-      const { data } = await api.getNFTDetail(id)
+      const auth = await getAuth()
+      const { data } = await api.getNFTDetail(id, auth)
       return data
     },
     { enabled: id != null }
