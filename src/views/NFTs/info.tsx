@@ -24,9 +24,10 @@ const InfoContainer = styled.div`
 
   .btn {
     display: flex;
-    justify-content: flex-end;
-
+    align-content: center;
+    justify-content: space-between;
     button {
+      margin-left: 8px;
       margin-bottom: 8px;
       background: rgb(43, 69, 78) !important;
     }
@@ -115,6 +116,7 @@ export const Info: React.FC<{
         })}
       >
         <div className="btn">
+          <Addressbar address={address} isHolder={isHolder} />
           <Button
             onClick={() => {
               history.push(RoutePath.Transactions)
@@ -123,7 +125,6 @@ export const Info: React.FC<{
             {t('account.transactions')}
           </Button>
         </div>
-        <Addressbar address={address} isHolder={isHolder} />
       </div>
       <img className="bg-image" src={(Bg as unknown) as string} alt="Bg" />
       {isLoading && (
