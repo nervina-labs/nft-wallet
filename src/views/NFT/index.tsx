@@ -22,13 +22,9 @@ import { Like } from '../../components/Like'
 import { useLikeStatus } from '../../hooks/useLikeStatus'
 import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
-import { Follow } from '../../components/Follow'
 import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
 import { ReactComponent as NFT3dSvg } from '../../assets/svg/3D.svg'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
-import { Tab, Tabs } from '../../components/Tab'
-import { useRouteQuery } from '../../hooks/useRouteQuery'
-import { TokenHolderList } from './HolderList'
 import { StatusText } from './StatusText'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
@@ -226,21 +222,6 @@ const FooterContaienr = styled.footer`
     }
   }
 `
-
-const TabsContainer = styled.div`
-  margin-top: 24px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-
-  .tabs {
-    transform: translateY(1px);
-  }
-
-  .tab {
-    font-size: 14px;
-  }
-`
-
 interface FooterProps {
   nft: NFTDetail | TokenClass
 }
@@ -285,8 +266,6 @@ export const NFT: React.FC = () => {
   const api = useAPI()
   const { address } = useAccount()
   const { isLogined } = useAccountStatus()
-
-  const isHolder = !!useRouteQuery<string>('holder', '')
 
   const { data, failureCount } = useQuery(
     [Query.NFTDetail, id, api, isLogined],
@@ -563,10 +542,6 @@ export const NFT: React.FC = () => {
                 replace={true}
                 useImageFallBack={true}
               />
-              <Follow
-                followed={detail?.issuer_info?.issuer_followed as boolean}
-                uuid={detail?.issuer_info?.uuid as string}
-              />
             </div>
             {verifyTitle ? (
               <div className="vip">
@@ -575,35 +550,11 @@ export const NFT: React.FC = () => {
                   : verifyTitle}
               </div>
             ) : null}
-            <TabsContainer>
-              <Tabs activeKey={isHolder ? 1 : 0} className="tabs">
-                <Tab
-                  className="tab"
-                  active={!isHolder}
-                  onClick={() => history.replace(history.location.pathname)}
-                >
-                  {t('nft.desc')}
-                </Tab>
-                <Tab
-                  className="tab"
-                  active={isHolder}
-                  onClick={() =>
-                    history.replace(history.location.pathname + '?holder=true')
-                  }
-                >
-                  {t('nft.holder')}
-                </Tab>
-              </Tabs>
-            </TabsContainer>
 
-            {!isHolder ? (
-              detail?.description ? (
-                <div className="desc">{detail?.description}</div>
-              ) : (
-                <StatusText>{t('nft.no-desc')}</StatusText>
-              )
+            {detail?.description ? (
+              <div className="desc">{detail?.description}</div>
             ) : (
-              <TokenHolderList id={(detail as NFTDetail).class_uuid ?? id} />
+              <StatusText>{t('nft.no-desc')}</StatusText>
             )}
           </section>
           <Footer nft={detail} />
