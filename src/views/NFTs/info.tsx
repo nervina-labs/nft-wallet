@@ -5,6 +5,10 @@ import Bg from '../../assets/svg/home-bg.svg'
 import { UserResponse } from '../../models/user'
 import classNames from 'classnames'
 import { Skeleton } from '@material-ui/lab'
+import { Button } from '../../components/Button'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../../routes'
 
 const InfoContainer = styled.div`
   --padding: calc(20px) 20px 20px;
@@ -17,6 +21,16 @@ const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   transition: 100ms;
+
+  .btn {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-bottom: 8px;
+      background: rgb(43, 69, 78) !important;
+    }
+  }
 
   .info {
     position: relative;
@@ -91,6 +105,8 @@ export const Info: React.FC<{
   isHolder,
   address,
 }) => {
+  const [t] = useTranslation('translations')
+  const history = useHistory()
   return (
     <InfoContainer>
       <div
@@ -98,6 +114,15 @@ export const Info: React.FC<{
           hide: isLoading,
         })}
       >
+        <div className="btn">
+          <Button
+            onClick={() => {
+              history.push(RoutePath.Transactions)
+            }}
+          >
+            {t('account.transactions')}
+          </Button>
+        </div>
         <Addressbar address={address} isHolder={isHolder} />
       </div>
       <img className="bg-image" src={(Bg as unknown) as string} alt="Bg" />
