@@ -22,9 +22,10 @@ export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwar
         position="relative"
         justifyContent="space-between"
         bg={transparent ? undefined : '#fff'}
-        px={'20px'}
+        px="20px"
         className={className}
         ref={ref}
+        boxSizing="border-box"
       >
         {left}
         <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
