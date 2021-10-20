@@ -9,7 +9,7 @@ import {
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
-import LogoutPng from '../../assets/img/logout.png'
+import { ReactComponent as Logout } from '../../assets/svg/logout.svg'
 import { RoutePath } from '../../routes'
 import { Info } from '../Info'
 import { Transactions } from '../Transactions'
@@ -86,7 +86,7 @@ export const Account: React.FC = () => {
   const isAccount = matchAccount?.isExact === true
 
   if (!isLogined) {
-    return <Redirect to={RoutePath.Explore} />
+    return <Redirect to={RoutePath.Login} />
   }
   if (isAccount) {
     return <Redirect from={RoutePath.Account} exact to={RoutePath.Info} />
@@ -96,7 +96,7 @@ export const Account: React.FC = () => {
       <Appbar
         title={isInfo ? t('account.title') : t('account.transactions')}
         left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
-        right={<img src={LogoutPng} onClick={logout.bind(null, history)} />}
+        right={<Logout onClick={logout.bind(null, history)} />}
       />
       <section className="detail">
         <Switch>

@@ -8,7 +8,7 @@ import { Profile } from '../views/Profile'
 // import { ImagePreview } from '../views/Profile/ImagePreview'
 import { TakePhoto } from '../views/Profile/TakePhoto'
 // import { Explore } from '../views/Explore'
-// import { Help } from '../views/Help'
+import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
 // import { Apps } from '../views/Apps'
 // import { AddressCollector } from '../views/AddressCollector'
@@ -104,18 +104,18 @@ export const routes: MibaoRouterProps[] = [
   //   key: 'Shop',
   //   path: RoutePath.Shop,
   // },
-  // {
-  //   component: Help,
-  //   exact: false,
-  //   key: 'Help',
-  //   path: RoutePath.Help,
-  // },
-  // {
-  //   component: Help,
-  //   exact: false,
-  //   key: 'License',
-  //   path: RoutePath.License,
-  // },
+  {
+    component: Help,
+    exact: false,
+    key: 'Help',
+    path: RoutePath.Help,
+  },
+  {
+    component: Help,
+    exact: false,
+    key: 'License',
+    path: RoutePath.License,
+  },
   {
     component: Unipass,
     exact: false,

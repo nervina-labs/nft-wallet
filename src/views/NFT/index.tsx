@@ -18,7 +18,6 @@ import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { ParallaxTilt } from '../../components/ParallaxTilt'
 import { TokenClass, VipSource } from '../../models/class-list'
-import { Like } from '../../components/Like'
 import { useLikeStatus } from '../../hooks/useLikeStatus'
 import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
@@ -228,8 +227,6 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ nft }) => {
-  const { id } = useParams<{ id: string }>()
-  const classUuid = isTokenClass(nft) ? id : nft.class_uuid
   return (
     <FooterContaienr>
       <Limited
@@ -239,7 +236,7 @@ const Footer: React.FC<FooterProps> = ({ nft }) => {
         fontSize={14}
         color="#999"
       />
-      <Like count={nft.class_likes} uuid={classUuid} liked={nft.class_liked} />
+      <span />
     </FooterContaienr>
   )
 }
