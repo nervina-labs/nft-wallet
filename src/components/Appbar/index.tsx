@@ -2,7 +2,7 @@ import { Button, Center, Flex, Box } from '@mibao-ui/components'
 import React from 'react'
 import styled from 'styled-components'
 
-export interface AppbarProps {
+export interface AppbarProps extends React.RefAttributes<HTMLDivElement> {
   title: React.ReactNode
   left?: React.ReactNode
   right?: React.ReactNode
@@ -12,29 +12,27 @@ export interface AppbarProps {
 
 export const HEADER_HEIGHT = 50
 
-export const Appbar: React.FC<AppbarProps> = ({
-  title,
-  left,
-  right,
-  transparent,
-}) => {
-  return (
-    <Flex
-      maxW="500px"
-      w="100%"
-      position="relative"
-      justifyContent="space-between"
-      bg={transparent ? undefined : '#fff'}
-      px={'20px'}
-    >
-      {left}
-      <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
-        {title}
-      </Center>
-      {right}
-    </Flex>
-  )
-}
+export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwardRef(
+  ({ title, left, right, transparent }, ref) => {
+    return (
+      <Flex
+        maxW="500px"
+        w="100%"
+        position="relative"
+        justifyContent="space-between"
+        bg={transparent ? undefined : '#fff'}
+        px={'20px'}
+        ref={ref}
+      >
+        {left}
+        <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
+          {title}
+        </Center>
+        {right}
+      </Flex>
+    )
+  }
+)
 
 export const AppbarSticky: React.FC<{ top?: number }> = ({
   children,
