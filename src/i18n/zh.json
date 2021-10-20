@@ -8,7 +8,7 @@
         "comfirm": "确认",
         "cancel": "取消",
         "loading": "加载中",
-        "pull-to-down": "暂无更多秘宝~",
+        "pull-to-down": "暂无更多 NFT ~",
         "pull-down-refresh": " 下拉刷新",
         "release-refresh": " 下拉刷新"
       },
@@ -26,18 +26,18 @@
         "unlimit": "不限量"
       },
       "vip": {
-        "weibo": "微博认证: {{title}}",
+        "weibo": "{{title}}",
         "weibo-no-desc": "微博认证"
       },
       "baned": {
-        "nft": "该秘宝暂不予显示",
+        "nft": "该 NFT 暂不予显示",
         "issuer": "该创作者暂不予显示"
       },
       "colon": "：",
       "title": "秘宝账户",
-      "description": "随时随地查看并管理你的秘宝",
+      "description": "随时随地查看并管理你的 NFT",
       "img-lost": "图片失联",
-      "card-back": "该秘宝卡背设置有信息，仅持有人可见",
+      "card-back": "该 NFT 卡背设置有信息，仅持有人可见",
       "show-detail": "查看详情"
     },
     "login": {
@@ -53,22 +53,22 @@
         "refuse": "用户拒绝授权，请重新打开页面进行授权"
       },
       "desc-1": "随时随地查看",
-      "desc-2": "并管理你持有的秘宝"
+      "desc-2": "并管理你持有的 NFT"
     },
     "nfts": {
-      "title": "我的秘宝",
+      "title": "我的 NFT",
       "owned": "持有",
       "liked": "赞过",
       "status": {
         "comfirming": "确认中",
         "receiving": "接收中",
-        "tranferring": "转让中"
+        "tranferring": "赠予中"
       },
-      "no-data": "啊喔...尚未拥有任何秘宝",
-      "no-likes": "尚未赞过任何秘宝",
-      "link": "探索秘宝的广阔宇宙",
-      "welcome": "欢迎来到秘宝宇宙",
-      "hi": "Hi 秘宝收藏家",
+      "no-data": "啊喔...尚未拥有任何 NFT",
+      "no-likes": "尚未赞过任何 NFT",
+      "link": "探索 NFT 的广阔宇宙",
+      "welcome": "欢迎来到 NFT 宇宙",
+      "hi": "Hi  NFT 收藏家",
       "share": "分享"
     },
     "transfer": {
@@ -82,30 +82,30 @@
       "error": {
         "eth": "请输入正确的以太坊地址",
         "ckb": "请输入正确的 CKB 地址",
-        "self": "无法转让秘宝给自己",
+        "self": "无法赠予 NFT 给自己",
         "das": "请输入 DAS 地址并选择一个解析结果",
-        "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「秘宝账户」应用，方可查看收到的秘宝",
-        "short-address": "当前接收方地址不是在秘宝应用生成的地址，请提醒接收方，除秘宝应用外，目前仅 Neuron 钱包生成的地址支持接收秘宝。切勿使用交易所等其他应用生成的 CKB 地址",
+        "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「 NFT 账户」应用，方可查看收到的 NFT",
+        "short-address": "当前接收方地址不是在 NFT 应用生成的地址，请提醒接收方，除 NFT 应用外，目前仅 Neuron 钱包生成的地址支持接收 NFT 。切勿使用交易所等其他应用生成的 CKB 地址",
         "common": "请输入正确的 CKB 地址/以太坊地址/DAS 账户",
         "sign-fail": "签名失败，请重新签名",
         "tranfer-fail": "发送失败，请检查当前网络情况，重新发送",
         "no-camera": "没有找到摄像头",
-        "contract-address": "无法转让到以太坊合约地址",
+        "contract-address": "无法赠予到以太坊合约地址",
         "camera-auth": "没有摄像头权限，请刷新页面重新授权",
         "ios-webkit": "请升级操作系统至 iOS 14.3+，或使用 Safari 浏览器进行扫码"
       },
       "das": {
         "not-register": "当前 DAS 还未注册",
-        "empty": "当前 DAS 账户下未检测到可接收秘宝的地址",
+        "empty": "当前 DAS 账户下未检测到可接收 NFT 的地址",
         "single-result": "解析结果",
         "multi-result": "存在多个解析结果，请选择"
       },
-      "transfer": "转让",
+      "transfer": "赠予",
       "address": "接收方地址",
       "placeholder": "CKB 地址/以太坊地址/DAS 账户",
       "check": "请仔细检查输入的地址，",
-      "once-transfer": "一旦转让，将无法撤回",
-      "submitted": "已提交转让交易",
+      "once-transfer": "一旦赠予，将无法撤回",
+      "submitted": "已提交赠予交易",
       "tips": "提示: 链上确认可能需要半分钟时间",
       "comfirm": "确认",
       "signing": "签名中"
@@ -113,7 +113,7 @@
     "404": {
       "title": "页面丢失",
       "not-found": "您所寻找的页面不存在",
-      "back": "返回我的秘宝"
+      "back": "返回我的 NFT"
     },
     "transactions": {
       "no-data": "暂无更多记录...",
@@ -126,15 +126,15 @@
       }
     },
     "info": {
-      "title": "秘宝接收地址",
+      "title": "NFT 接收地址",
       "copy": "复制地址到剪贴板",
       "copied": "复制成功"
     },
     "nft": {
-      "title": "秘宝细节",
-      "transfer": "转让",
-      "desc": "秘宝简介",
-      "lock": "只有该秘宝的持有者才能解锁该内容",
+      "title": "NFT 细节",
+      "transfer": "赠予",
+      "desc": "NFT 简介",
+      "lock": "只有该 NFT 的持有者才能解锁该内容",
       "no-desc": "无简介",
       "no-holder": "无收藏者",
       "holder": "收藏者"
@@ -144,8 +144,8 @@
       "info": "基本信息",
       "transactions": "流转记录",
       "warning": "该地址仅用于接收 CKB 链上资产，切勿转入其他链上资产",
-      "qrcode": "扫描二维码，快速接收秘宝",
-      "address": "秘宝接收地址"
+      "qrcode": "扫描二维码，快速接收 NFT",
+      "address": "NFT 接收地址"
     },
     "holder": {
       "user-name-empty": "未设置昵称",
@@ -209,8 +209,8 @@
       "latest": "最新创作",
       "most-liked": "获赞最多",
       "recommended": "推荐",
-      "hotest": "最热秘宝",
-      "collections": "秘宝精选",
+      "hotest": "最热 NFT",
+      "collections": "NFT 精选",
       "issuers": "最受欢迎创作者",
       "home": "首页"
     },
@@ -230,11 +230,11 @@
     "guide": {
       "one": {
         "title": "1. 查看CKB地址",
-        "desc": "点击查看地址，发送方可通过您的 CKB 地址将秘宝发送给您"
+        "desc": "点击查看地址，发送方可通过您的 CKB 地址将 NFT 发送给您"
       },
       "two": {
-        "title": "2. 查看我的秘宝",
-        "desc": "在这里可以查看您本人持有的秘宝和您赞过的秘宝"
+        "title": "2. 查看我的 NFT",
+        "desc": "在这里可以查看您本人持有的 NFT 和您赞过的 NFT"
       },
       "three": {
         "title": "3. 查看更多信息和功能",
@@ -248,26 +248,26 @@
       "done": "开始使用"
     },
     "apps": {
-      "welcome": "欢迎开发者入驻，共建秘宝生态",
+      "welcome": "欢迎开发者入驻，共建 NFT 生态",
       "shop": {
-        "title": "秘宝店铺",
-        "desc": "购买数字收藏品就到秘宝店铺"
+        "title": "NFT 店铺",
+        "desc": "购买数字收藏品就到 NFT 店铺"
       },
       "red-envelope": {
         "title": "UniPass 红包",
-        "desc": "为朋友发送随机秘宝红包，没有账户也能收"
+        "desc": "为朋友发送随机 NFT 红包，没有账户也能收"
       },
       "ticket": {
         "title": "UniPass 门票",
-        "desc": "出示秘宝门票，彰显 VIP 身份，还能获得后续权益"
+        "desc": "出示 NFT 门票，彰显 VIP 身份，还能获得后续权益"
       },
       "dao": {
         "title": "秘·DAO",
-        "desc": "使用秘宝实现去中心化组织集体决策"
+        "desc": "使用 NFT 实现去中心化组织集体决策"
       },
       "exchange": {
         "title": "兑换",
-        "desc": "收集秘宝兑换其他商品或者限量版秘宝"
+        "desc": "收集 NFT 兑换其他商品或者限量版 NFT"
       },
       "exhibition": {
         "title": "虚拟展厅",
@@ -275,7 +275,7 @@
       },
       "vip": {
         "title": "VIP 社区",
-        "desc": "持有特殊秘宝才能访问的高质量社区"
+        "desc": "持有特殊 NFT 才能访问的高质量社区"
       }
     },
     "resource": {
@@ -291,7 +291,7 @@
       "submited": "地址已提交成功，感谢您的参与！",
       "duplicate": "地址已经提交，请勿重复提交",
       "continue": "您还可以继续操作",
-      "explore": "探索秘宝",
+      "explore": "探索 NFT",
       "select": "请选择一种提交方式（连接成功即自动提交)",
       "errors": {
         "not-support": "当前环境不支持连接以太坊",
@@ -301,27 +301,27 @@
     },
     "auth": {
       "title": "授权确认",
-      "content": "我们将请求一个针对秘宝地址的数字签名，从而保护您的隐私数据不会被泄露和篡改，如个人信息，点赞数据等。",
+      "content": "我们将请求一个针对 NFT 地址的数字签名，从而保护您的隐私数据不会被泄露和篡改，如个人信息，点赞数据等。",
       "ok": "继续"
     },
     "shop": {
-      "title": "秘宝店铺",
+      "title": "NFT 店铺",
       "scan": "微信扫一扫",
-      "desc": "进入秘宝店铺微信小程序",
+      "desc": "进入 NFT 店铺微信小程序",
       "save": "保存图片",
       "buy": "购买"
     },
     "claim": {
-      "tips": "您有一个秘宝待领取",
-      "login": "请先登录秘宝",
+      "tips": "您有一个 NFT 待领取",
+      "login": "请先登录 NFT",
       "last-step": "您离领取还差最后一步",
       "error": "领取码错误",
       "confirm": "确认领取",
       "continue": "您还可以继续操作",
       "success": "领取成功",
-      "claimed": "Opps～秘宝已被领走",
-      "go-home": "进入秘宝查看",
-      "go-explore": "发现更多秘宝",
+      "claimed": "Opps～ NFT 已被领走",
+      "go-home": "进入 NFT 查看",
+      "go-explore": "发现更多 NFT",
       "placeholder": "请输入领取密码"
     },
     "issuer": {
@@ -332,7 +332,7 @@
       "like": "获赞",
       "no-data": "无数据",
       "more": "更多",
-      "no-on-sale": "无在售秘宝"
+      "no-on-sale": "无在售 NFT"
     },
     "exchange": {
       "title": "兑换中心",
@@ -463,7 +463,7 @@
       "end": "已经拉到底啦~",
       "login": {
         "desc-1": "啊哦～您还未登录",
-        "desc-2": "请登录秘宝，查看您关注的精彩内容",
+        "desc-2": "请登录 NFT ，查看您关注的精彩内容",
         "login": "登录"
       },
       "no-data": "尚未关注任何创作者"
