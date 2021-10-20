@@ -1078,6 +1078,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@consenlabs-fe/webview@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@consenlabs-fe/webview/-/webview-0.1.0.tgz#9f781a28dcf5f076d64e7908089d063a2e3bb22d"
+  integrity sha512-HYzHCvMrL7OPLEJoKDxQqaRbkZLexYgXq4VKLu57QTN3QOFFWYHW3S2X0OSyCQFTgyGQi9prmof0p+8LuBEDSw==
+
 "@craco/craco@^6.1.1":
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/@craco/craco/-/craco-6.1.1.tgz#0233b28d6896b6560379f64b608d3c888874e9fa"

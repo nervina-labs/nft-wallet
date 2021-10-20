@@ -19,6 +19,7 @@
     "start": "serve -s build"
   },
   "dependencies": {
+    "@consenlabs-fe/webview": "^0.1.0",
     "@google/model-viewer": "^1.8.0",
     "@lay2/pw-core": "0.4.0-alpha.8",
     "@material-ui/core": "^4.11.3",
