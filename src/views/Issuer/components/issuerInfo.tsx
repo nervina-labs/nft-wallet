@@ -5,7 +5,7 @@ import { useParams } from 'react-router'
 
 export const IssuerInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const { data, isLoading, refetch, error } = useIssuerInfo(id)
+  const { data } = useIssuerInfo(id)
 
   return (
     <Flex>
