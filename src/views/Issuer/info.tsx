@@ -414,8 +414,6 @@ export const IssuerInfo: React.FC = () => {
         content={data?.verified_info?.verified_title}
       />
       <Description isLoading={isLoading} description={data?.description} />
-
-      <div className="bg" />
     </IssuerInfoContainer>
   )
 }
