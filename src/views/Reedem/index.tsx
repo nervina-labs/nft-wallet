@@ -10,7 +10,6 @@ import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { RoutePath } from '../../routes'
 import { useInfiniteQuery } from 'react-query'
 import { Query } from '../../models'
-import { useWalletModel } from '../../hooks/useWallet'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Loading } from '../../components/Loading'
@@ -19,6 +18,7 @@ import { Link } from 'react-router-dom'
 import { Tab, Tabs } from '../../components/Tab'
 import { SubmitInfo } from '../RedeemDetail/SubmitInfo'
 import { RedeemListType } from '../../models/redeem'
+import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 
 export const RedeemContainer = styled(MainContainer)`
   display: flex;
@@ -70,7 +70,9 @@ export const Redeem: React.FC = () => {
     [isRedeemable, history]
   )
 
-  const { address, api, isLogined } = useWalletModel()
+  const api = useAPI()
+  const { isLogined } = useAccountStatus()
+  const { address } = useAccount()
 
   const {
     data,

@@ -1,13 +1,22 @@
 import { useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { debounce } from '../utils'
-import { useWalletModel } from './useWallet'
+export interface ScrollPosition {
+  x: number
+  y: number
+}
+
+const scrollRestoration = new Map<string, ScrollPosition>()
+
+const setScrollScrollRestoration = (path: string, scroll: ScrollPosition) => {
+  scrollRestoration.set(path, scroll)
+}
+
+const getScrollScrollRestoration = (path: string) => {
+  return scrollRestoration.get(path)
+}
 
 export const useScrollRestoration = (): void => {
-  const {
-    setScrollScrollRestoration,
-    getScrollScrollRestoration,
-  } = useWalletModel()
   const location = useLocation()
   const history = useHistory()
 

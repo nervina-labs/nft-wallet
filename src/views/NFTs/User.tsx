@@ -11,8 +11,8 @@ import { HolderAvatar } from '../../components/HolderAvatar'
 import { PhotoProvider } from 'react-photo-view'
 import { useQuery } from 'react-query'
 import { Query } from '../../models'
-import { useWalletModel } from '../../hooks/useWallet'
 import { CardDialog } from '../../components/Card/CardDialog'
+import { useAccountStatus, useAPI } from '../../hooks/useAccount'
 
 const UserContainer = styled.div`
   display: flex;
@@ -152,7 +152,8 @@ export const User: React.FC<UserConfig> = ({
 
   const { i18n, t } = useTranslation('translations')
   const [showNftAvatarModal, setShowNftAvatarModal] = useState(false)
-  const { api, isLogined } = useWalletModel()
+  const api = useAPI()
+  const { isLogined } = useAccountStatus()
   const userInfo = useMemo(() => {
     const region = getRegionFromCode(user?.region, i18n.language as 'zh')
     return (

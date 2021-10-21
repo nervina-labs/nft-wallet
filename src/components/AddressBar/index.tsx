@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { ReactComponent as QrcodeSvg } from '../../assets/svg/qrcode.svg'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useSnackbar } from '../../hooks/useSnackbar'
 import { RoutePath } from '../../routes'
 import { copyFallback, truncateMiddle } from '../../utils'
 
@@ -50,7 +50,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
   isHolder,
 }) => {
   const history = useHistory()
-  const { snackbar } = useProfileModel()
+  const { snackbar } = useSnackbar()
   const [t] = useTranslation('translations')
   return (
     <Container className="address-bar">

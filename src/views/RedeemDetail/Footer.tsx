@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useAccountStatus } from '../../hooks/useAccount'
 import { RedeemStatus } from '../../models/redeem'
 import { RoutePath } from '../../routes'
 import { UnipassConfig } from '../../utils'
@@ -35,7 +35,7 @@ export const Footer: React.FC<FooterProps> = ({
   ...props
 }) => {
   const [t] = useTranslation('translations')
-  const { isLogined } = useWalletModel()
+  const { isLogined } = useAccountStatus()
   const history = useHistory()
   const location = useLocation()
   const text = useMemo(() => {

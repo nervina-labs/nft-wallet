@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { HiddenBar } from '../../components/HiddenBar'
@@ -15,11 +15,12 @@ import Vip from '../../assets/svg/vip2.svg'
 import { ReactComponent as ShopSvg } from '../../assets/svg/shop.svg'
 import ShopBg from '../../assets/svg/shop-bg.svg'
 import classNames from 'classnames'
-import { useWalletModel } from '../../hooks/useWallet'
 import { RED_ENVELOP_APP_URL, TICKET_APP_URL, WEAPP_ID } from '../../constants'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router-dom'
+import { useAccount } from '../../hooks/useAccount'
+import { useDidMount } from '../../hooks/useDidMount'
 
 const Container = styled(MainContainer)`
   padding-top: 20px;
@@ -176,12 +177,12 @@ export const Item: React.FC<ItemProps> = ({
 
 export const Apps: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
-  const { pubkey, email } = useWalletModel()
+  const { pubkey, email } = useAccount()
   const history = useHistory()
   const { initWechat, isWechatInited } = useWechatLaunchWeapp()
-  useEffect(() => {
+  useDidMount(() => {
     initWechat().catch(Boolean)
-  }, [])
+  })
   const getAppUrl = useCallback(
     (baseUrl: string): string => {
       const url = `${baseUrl}`
