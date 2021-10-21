@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useLayoutEffect,
+} from 'react'
 import Tilt from 'react-better-tilt'
 import { LazyLoadImage } from '../Image'
 import FallbackImg from '../../assets/svg/fallback.svg'
