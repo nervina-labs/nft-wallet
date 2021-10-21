@@ -4,16 +4,18 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { Redirect, useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
-import { useProfileModel } from '../../hooks/useProfile'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useSetServerProfile } from '../../hooks/useProfile'
 import { Query } from '../../models'
-import { RoutePath, useRoute } from '../../routes'
+import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { AvatarType } from '../../models/user'
 import { LazyLoadImage } from '../../components/Image'
 import PeopleSrc from '../../assets/img/people.png'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
+import { useConfirm } from '../../hooks/useConfirm'
+import { useErrorToast } from '../../hooks/useErrorToast'
+import { useRoute } from '../../hooks/useRoute'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -84,15 +86,17 @@ export const ImagePreview: React.FC = () => {
   const history = useHistory()
   const location = useLocation<HistoryData>()
   const [isSaving, setIsSaving] = useState(false)
-  const { setRemoteProfile } = useProfileModel()
+  const setRemoteProfile = useSetServerProfile()
 
   const [datauri, ext, fromCamera, tokenUuid] = useMemo(() => {
-    const locale = i18n.language === 'en' ? 'en' : 'zh'
     const datauri = addParamsToUrl(location?.state?.datauri ?? '', {
-      locale,
-      ...(location.state.tid ? { tid: location.state.tid } : {}),
+      ...(location.state.tid
+        ? {
+            tid: location.state.tid,
+            locale: i18n.language === 'en' ? 'en' : 'zh',
+          }
+        : {}),
     })
-
     return [
       datauri,
       location.state.ext,
@@ -100,7 +104,8 @@ export const ImagePreview: React.FC = () => {
       location.state.tokenUuid,
     ]
   }, [location.state])
-  const { confirm, toast } = useWalletModel()
+  const toast = useErrorToast()
+  const confirm = useConfirm()
 
   const isBlob = useMemo(() => datauri?.startsWith('blob:'), [datauri])
 

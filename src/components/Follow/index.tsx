@@ -4,9 +4,10 @@ import React, { useCallback, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { useFollowStatusModel } from '../../hooks/useFollowStatus'
-import { useProfileModel } from '../../hooks/useProfile'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useConfirm } from '../../hooks/useConfirm'
+import { useFollowStatus } from '../../hooks/useFollowStatus'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
+import { useAPI, useAccountStatus } from '../../hooks/useAccount'
 import { RoutePath } from '../../routes'
 
 const Container = styled.button`
@@ -20,7 +21,8 @@ const Container = styled.button`
   color: white;
   height: 22px;
   font-size: 12px;
-  word-break: break-all;
+  word-break: keep-all;
+  white-space: 'nowrap';
   padding: 0 10px;
   transition: all 0.5s;
 
@@ -47,9 +49,11 @@ export const Follow: React.FC<FollowProps> = ({
   afterToggle,
 }) => {
   const [t] = useTranslation('translations')
-  const { api, confirm, isLogined } = useWalletModel()
-  const { followStatus, setFollowStatus } = useFollowStatusModel()
-  const { getAuth } = useProfileModel()
+  const api = useAPI()
+  const { isLogined } = useAccountStatus()
+  const confirm = useConfirm()
+  const { followStatus, setFollowStatus } = useFollowStatus()
+  const getAuth = useGetAndSetAuth()
   const isFollow = useMemo(() => {
     return followStatus[uuid] ?? followed
   }, [followStatus, uuid, followed])

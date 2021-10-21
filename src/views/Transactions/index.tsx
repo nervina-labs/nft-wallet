@@ -2,7 +2,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useInfiniteQuery } from 'react-query'
-import { useWalletModel } from '../../hooks/useWallet'
 import {
   Query,
   TransactionDirection,
@@ -27,6 +26,7 @@ import { useTranslation } from 'react-i18next'
 import { LazyLoadImage } from '../../components/Image'
 import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
 import Tooltip from '@material-ui/core/Tooltip'
+import { useAPI } from '../../hooks/useAccount'
 
 const Container = styled.div`
   display: flex;
@@ -252,7 +252,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
 }
 
 export const Transactions: React.FC = () => {
-  const { api } = useWalletModel()
+  const api = useAPI()
   const { t } = useTranslation('translations')
   const {
     data,

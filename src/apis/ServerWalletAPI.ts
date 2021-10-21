@@ -7,9 +7,25 @@ import {
   NFTTransaction,
   NFTWalletAPI,
   ProductState,
+  SpecialCategories,
   Transaction,
   UnsignedTransaction,
 } from '../models'
+import {
+  Issuer,
+  IssuerInfo,
+  IssuerTokenClassResult,
+  FollowerResponse,
+  IssuersResponse,
+} from '../models/issuer'
+import { SpecialAssets } from '../models/special-assets'
+import { Notifications } from '../models/banner'
+import {
+  ClassList,
+  FollowClassList,
+  Tag,
+  TokenClass,
+} from '../models/class-list'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import {
   Transaction as PwTransaction,
@@ -20,12 +36,19 @@ import {
   normalizers,
 } from '@lay2/pw-core'
 import { rawTransactionToPWTransaction } from '../pw/toPwTransaction'
-import { ClassList, Tag, TokenClass } from '../models/class-list'
 import { Auth, User, UserResponse } from '../models/user'
-import { IssuerInfo, IssuerTokenClassResult } from '../models/issuer'
-import { RedeemParams, RedeemListType } from '../models/redeem'
 import { WxSignConfig } from '../models/wx'
 import { GetHolderByTokenClassUuidResponse } from '../models/holder'
+import {
+  MyRedeemEvents,
+  RedeemDetailModel,
+  RedeemEvents,
+  RedeemListType,
+  RedeemParams,
+  RedeemResultResponse,
+  RewardDetailResponse,
+} from '../models/redeem'
+import { ClaimResult } from '../models/claim'
 
 function randomid(length = 10): string {
   let result = ''
@@ -322,15 +345,17 @@ export class ServerWalletAPI implements NFTWalletAPI {
     return await this.axios.post('/token_ckb_transactions', data)
   }
 
-  async getSpecialAssets() {
+  async getSpecialAssets(): Promise<AxiosResponse<SpecialCategories>> {
     return await this.axios.get('/special_categories')
   }
 
-  async getCollectionDetail(uuid: string) {
+  async getCollectionDetail(
+    uuid: string
+  ): Promise<AxiosResponse<SpecialAssets>> {
     return await this.axios.get(`/special_categories/${uuid}`)
   }
 
-  async getRecommendIssuers() {
+  async getRecommendIssuers(): Promise<AxiosResponse<Issuer[]>> {
     return await this.axios.get('/recommended_issuers', {
       params: {
         address: this.address,
@@ -338,17 +363,20 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getRecommendClasses() {
+  async getRecommendClasses(): Promise<AxiosResponse<TokenClass[]>> {
     const params: Record<string, string> = {}
     if (this.address) {
       params.address = this.address
     }
-    return await this.axios.get('/recommended_classes', {
+    return await this.axios.get<TokenClass[]>('/recommended_classes', {
       params,
     })
   }
 
-  async getCollection(uuid: string, page: number) {
+  async getCollection(
+    uuid: string,
+    page: number
+  ): Promise<AxiosResponse<ClassList>> {
     const params: Record<string, string | number> = {
       page,
       limit: PER_ITEM_LIMIT,
@@ -356,29 +384,35 @@ export class ServerWalletAPI implements NFTWalletAPI {
     if (this.address) {
       params.address = this.address
     }
-    return await this.axios.get(`/special_categories/${uuid}/token_classes`, {
-      params: {
-        address: this.address,
-      },
-    })
+    return await this.axios.get<ClassList>(
+      `/special_categories/${uuid}/token_classes`,
+      {
+        params: {
+          address: this.address,
+        },
+      }
+    )
   }
 
-  async getNotifications() {
+  async getNotifications(): Promise<AxiosResponse<Notifications>> {
     return await this.axios.get('/notifications')
   }
 
-  async getClaimStatus(uuid: string) {
+  async getClaimStatus(uuid: string): Promise<AxiosResponse<ClaimResult>> {
     return await this.axios.get(`/token_claim_codes/${uuid}`)
   }
 
-  async claim(uuid: string) {
+  async claim(uuid: string): Promise<AxiosResponse<void>> {
     return await this.axios.post('/token_claim_codes', {
       to_address: this.address,
       code: uuid,
     })
   }
 
-  async toggleFollow(uuid: string, auth: Auth) {
+  async toggleFollow(
+    uuid: string,
+    auth: Auth
+  ): Promise<AxiosResponse<FollowerResponse>> {
     return await this.axios.put(
       `/issuers/${uuid}/toggle_follows/${this.address}`,
       {
@@ -397,7 +431,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     auth?: Auth
     page?: number
     limit?: number
-  }) {
+  }): Promise<AxiosResponse<IssuersResponse>> {
     const page = options?.page ?? 0
     const limit = options?.limit ?? PER_ITEM_LIMIT
     const params: Record<string, unknown> = {
@@ -421,7 +455,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     auth: Auth,
     page: number,
     sortType: ClassSortType
-  ) {
+  ): Promise<AxiosResponse<FollowClassList>> {
     const params: Record<string, unknown> = {
       page,
       limit: PER_ITEM_LIMIT,
@@ -437,7 +471,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getIssuerInfo(uuid: string) {
+  async getIssuerInfo(uuid: string): Promise<AxiosResponse<IssuerInfo>> {
     return await this.axios.get<IssuerInfo>(`/issuers/${uuid}`, {
       params: {
         address: this.address,
@@ -445,7 +479,10 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getAllRedeemEvents(page: number, type: RedeemListType) {
+  async getAllRedeemEvents(
+    page: number,
+    type: RedeemListType
+  ): Promise<AxiosResponse<RedeemEvents>> {
     const params: Record<string, unknown> = {
       page,
       limit: PER_ITEM_LIMIT,
@@ -459,7 +496,10 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getMyRedeemEvents(page: number, type: RedeemListType) {
+  async getMyRedeemEvents(
+    page: number,
+    type: RedeemListType
+  ): Promise<AxiosResponse<MyRedeemEvents>> {
     const params: Record<string, unknown> = {
       page,
       limit: PER_ITEM_LIMIT,
@@ -473,7 +513,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getRedeemDetail(uuid: string) {
+  async getRedeemDetail(
+    uuid: string
+  ): Promise<AxiosResponse<RedeemDetailModel>> {
     return await this.axios.get(`/redemption_events/${uuid}`, {
       params: {
         uuid,
@@ -482,7 +524,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     })
   }
 
-  async getRedeemPrize(uuid: string) {
+  async getRedeemPrize(
+    uuid: string
+  ): Promise<AxiosResponse<RewardDetailResponse>> {
     return await this.axios.get(`/redemption_records/${uuid}`)
   }
 
@@ -507,7 +551,12 @@ export class ServerWalletAPI implements NFTWalletAPI {
     }
   }
 
-  async redeem({ uuid, tx, customData, sig }: RedeemParams) {
+  async redeem({
+    uuid,
+    tx,
+    customData,
+    sig,
+  }: RedeemParams): Promise<AxiosResponse<RedeemResultResponse>> {
     const rawTx = transformers.TransformTransaction(tx) as any
     if (sig) {
       const witnessArgs: WitnessArgs = {
@@ -551,7 +600,9 @@ export class ServerWalletAPI implements NFTWalletAPI {
     )
   }
 
-  async getWechatSignature(config: WxSignConfig) {
+  async getWechatSignature(
+    config: WxSignConfig
+  ): Promise<AxiosResponse<{ signature: string }>> {
     return await this.axios.get(
       `/mini_program_signers?nonce_str=${
         config.nonce_str
@@ -565,7 +616,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       page?: number
       limit?: number
     }
-  ) {
+  ): Promise<AxiosResponse<GetHolderByTokenClassUuidResponse>> {
     const limit = options?.limit ?? 20
     const page = options?.page ?? 0
     return await this.axios.get<GetHolderByTokenClassUuidResponse>(

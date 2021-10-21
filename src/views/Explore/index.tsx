@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { MainContainer } from '../../styles'
 import { TokenClass } from '../../models/class-list'
 import { ClassSortType as SortType, Query } from '../../models'
-import { useWalletModel } from '../../hooks/useWallet'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import { Masonry } from '../../components/Masonry'
@@ -20,8 +19,9 @@ import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
 import { Home } from './home'
 import { Card } from './card'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { Empty } from '../NFTs/empty'
+import { useAPI } from '../../hooks/useAccount'
 import { Tab, Tabs } from '../../components/Tab'
 
 const Container = styled(MainContainer)`
@@ -347,8 +347,9 @@ export const Explore: React.FC = () => {
     return allTags.find((t) => t.routeName === currentTag)?.name
   }, [allTags, currentTag])
 
-  const { api } = useWalletModel()
-  const { getAuth, isAuthenticated } = useProfileModel()
+  const api = useAPI()
+  const { isAuthenticated } = useProfile()
+  const getAuth = useGetAndSetAuth()
   const {
     data,
     hasNextPage,

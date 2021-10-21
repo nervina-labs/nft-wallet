@@ -12,7 +12,7 @@ import PWCore, {
 } from '@lay2/pw-core'
 // import { unipassCache } from '../cache'
 import { IS_MAINNET, PW_CODE_HASH } from '../constants'
-import { UnipassAccount as Account, WalletType } from '../hooks/useWallet'
+import { UnipassAccount as Account, WalletType } from '../hooks/useAccount'
 
 type UP_ACT = 'UP-READY' | 'UP-LOGIN' | 'UP-SIGN' | 'UP-CLOSE'
 
