@@ -17,6 +17,7 @@ import styled from 'styled-components'
 const H4 = styled.h4`
   color: rgba(0, 0, 0, 0.6);
   text-align: center;
+  margin: 16px 0;
 `
 
 export interface InfiniteListProps<
