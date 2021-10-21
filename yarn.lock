@@ -2053,11 +2053,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/pdfjs-dist@*":
-  version "2.7.5"
-  resolved "https://registry.yarnpkg.com/@types/pdfjs-dist/-/pdfjs-dist-2.7.5.tgz#53fc13e30b6bd18acdb3617fb6332a43225e0ffa"
-  integrity sha512-QdKChstEcREV+imniONC3JvSSFOeYv0RL12QOpzSfTpGg7xRAZcJXpWdJEtuH6FAPXX5V+sp9i/sBHJ9bsU7JA==
-
 "@types/prettier@^2.0.0":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.2.3.tgz#ef65165aea2924c9359205bf748865b8881753c0"
@@ -2081,6 +2076,14 @@
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.3.tgz#7fdf37b8af9d6d40127137865bb3fff8871d7ee1"
   dependencies:
     "@types/react" "*"
+
+"@types/react-pdf@^5.0.7":
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/@types/react-pdf/-/react-pdf-5.0.8.tgz#872cf81a193f56aee2ede1351c8ff94b3e48b087"
+  integrity sha512-SClOJ0+9by7bxGaDILu5svo1yCI6aTJdSntOT+h9qWMc6SZlILMrMjyA7A6pMRNkLD0TAZwfk72awlDsZtCPSQ==
+  dependencies:
+    "@types/react" "*"
+    pdfjs-dist "^2.9.359"
 
 "@types/react-router-dom@^5.1.7":
   version "5.1.7"
@@ -8800,6 +8803,11 @@ pdfjs-dist@2.9.359:
   version "2.9.359"
   resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-2.9.359.tgz#e67bafebf20e50fc41f1a5c189155ad008ac4f81"
   integrity sha512-P2nYtkacdlZaNNwrBLw1ZyMm0oE2yY/5S/GDCAmMJ7U4+ciL/D0mrlEC/o4HZZc/LNE3w8lEVzBEyVgEQlPVKQ==
+
+pdfjs-dist@^2.9.359:
+  version "2.10.377"
+  resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-2.10.377.tgz#feadc9f31bf1790795994e54b18930974cf4970a"
+  integrity sha512-i0jRShtvgfsVQUNCoFYH4SVhPO3U0yhtiFLfZ0RR0B+68N+Vnwq+8B3cjWjLEwWGh8wg1XQ/sYMYKUlHn/Qpsw==
 
 performance-now@^2.1.0:
   version "2.1.0"
