@@ -1,48 +1,55 @@
-import { Button, Center, Flex, Box } from '@mibao-ui/components'
+import { Button, Center, Flex, Box, BoxProps } from '@mibao-ui/components'
 import React from 'react'
 import styled from 'styled-components'
 
 export interface AppbarProps extends React.RefAttributes<HTMLDivElement> {
-  title: React.ReactNode
+  title?: React.ReactNode
   left?: React.ReactNode
   right?: React.ReactNode
   back?: boolean
   transparent?: boolean
-  className?: string
+}
+
+export interface AppbarStickyProps extends BoxProps {
+  top?: number
+  zIndex?: number
 }
 
 export const HEADER_HEIGHT = 50
 
 export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwardRef(
-  ({ title, left, right, transparent, className }, ref) => {
+  ({ title, left, right, transparent }, ref) => {
     return (
       <Flex
         maxW="500px"
         w="100%"
+        h={`${HEADER_HEIGHT}px`}
         position="relative"
         justifyContent="space-between"
         bg={transparent ? undefined : '#fff'}
         px="20px"
-        className={className}
         ref={ref}
         boxSizing="border-box"
       >
         {left}
-        <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
-          {title}
-        </Center>
+        {title ? (
+          <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
+            {title}
+          </Center>
+        ) : null}
         {right}
       </Flex>
     )
   }
 )
 
-export const AppbarSticky: React.FC<{ top?: number }> = ({
+export const AppbarSticky: React.FC<AppbarStickyProps> = ({
   children,
   top = 0,
+  zIndex = 100,
 }) => {
   return (
-    <Box position="sticky" top={top} zIndex={100}>
+    <Box position="sticky" top={top} zIndex={zIndex}>
       {children}
     </Box>
   )

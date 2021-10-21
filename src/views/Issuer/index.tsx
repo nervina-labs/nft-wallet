@@ -27,7 +27,6 @@ export const Issuer: React.FC = () => {
     <IssuerContainer>
       <AppbarSticky>
         <Appbar
-          title={''}
           left={
             <AppbarButton>
               <BackSvg onClick={() => history.goBack()} />
