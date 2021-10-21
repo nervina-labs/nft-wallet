@@ -5,8 +5,8 @@ import { NftCards } from './nftCards'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
-import { useHistory } from 'react-router-dom'
 import { Share } from '../../components/Share'
+import { useHistoryBack } from '../../hooks/useHistoryBack'
 
 const IssuerContainer = styled.main`
   --max-width: 500px;
@@ -20,7 +20,7 @@ const IssuerContainer = styled.main`
 `
 
 export const Issuer: React.FC = () => {
-  const history = useHistory()
+  const goBack = useHistoryBack()
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
 
   return (
@@ -29,7 +29,7 @@ export const Issuer: React.FC = () => {
         <Appbar
           left={
             <AppbarButton>
-              <BackSvg onClick={() => history.goBack()} />
+              <BackSvg onClick={goBack} />
             </AppbarButton>
           }
           right={
