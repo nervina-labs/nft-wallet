@@ -12,10 +12,10 @@ const Container = styled.div`
   display: flex;
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  width: 100%;
   display: flex;
   background-color: white;
   overflow: hidden;
+  flex: 1;
   .address {
     flex: 1;
     margin-left: 16px;
@@ -61,7 +61,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
           snackbar(t('info.copied'))
         }}
       >
-        {truncateMiddle(address, 24, 12)}
+        {truncateMiddle(address, 12, 8)}
       </div>
       <div
         className="qrcode"

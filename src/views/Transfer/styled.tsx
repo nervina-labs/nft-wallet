@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import Bg from '../../assets/img/transfer-bg.png'
 import { MainContainer } from '../../styles'
 
 export const Container = styled(MainContainer)`
@@ -13,7 +12,7 @@ export const Container = styled(MainContainer)`
   section {
     &.main {
       flex: 1;
-      background: #ecf2f5 url(${Bg});
+      background: #ecf2f5;
       background-repeat: no-repeat;
       background-size: contain;
       background-position: bottom;

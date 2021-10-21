@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import i18n from 'i18next'
 import NFT3dSvg from '../../assets/svg/3D.svg'
-import CardBackPath from '../../assets/svg/card-back.svg'
+// import CardBackPath from '../../assets/svg/card-back.svg'
 import { CardTags } from './CardTags'
 
 const CardImageContainer = styled.div`
@@ -126,14 +126,14 @@ export const CardImage: React.FC<CardImageProps> = ({
 
   const tags = useMemo(() => {
     const icons = []
-    if (hasCardBack) {
-      icons.push(CardBackPath)
-    }
+    // if (hasCardBack) {
+    //   icons.push(CardBackPath)
+    // }
     if (has3dIcon) {
       icons.push(NFT3dSvg)
     }
     return icons
-  }, [hasCardBack, has3dIcon])
+  }, [has3dIcon])
 
   return (
     <CardImageContainer className={className}>
