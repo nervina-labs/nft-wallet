@@ -34,7 +34,7 @@ export interface InfiniteListProps<
     TQueryFnData,
     TQueryKey
   >
-  emptyElement: React.ReactNode
+  emptyElement?: React.ReactNode
   noMoreElement: React.ReactNode
   loader?: React.ReactNode
   pullDownToRefreshContent?: React.ReactNode
@@ -144,7 +144,9 @@ export function InfiniteList<
               <React.Fragment key={i}>{renderItems(group, i)}</React.Fragment>
             )
           })}
-          {status === 'success' && dataLength === 0 ? emptyElement : null}
+          {status === 'success' && dataLength === 0
+            ? emptyElement ?? <H4>{t('issuer.no-data')}</H4>
+            : null}
         </InfiniteScroll>
       )}
     </>
