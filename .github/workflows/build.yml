@@ -9,8 +9,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: increase memory limit
-        run: npx increase-memory-limit
       - name: Install dependency
         run: yarn
       - name: Lint

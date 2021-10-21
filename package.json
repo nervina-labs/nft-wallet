@@ -14,7 +14,7 @@
   },
   "scripts": {
     "dev": "craco start",
-    "build": "craco build",
+    "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 craco build",
     "lint": "eslint src",
     "start": "serve -s build"
   },
@@ -75,6 +75,7 @@
     "@types/wx-js-sdk-dt": "^1.4.4",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "babel-plugin-styled-components": "^1.12.0",
+    "cross-env": "^7.0.3",
     "eslint": "7",
     "eslint-config-standard-with-typescript": "^20.0.0",
     "eslint-plugin-import": "2",
