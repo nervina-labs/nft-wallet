@@ -22,7 +22,6 @@ import { Like } from '../../components/Like'
 import { useLikeStatus } from '../../hooks/useLikeStatus'
 import type Tilt from 'react-better-tilt'
 import 'react-photo-view/dist/index.css'
-import { ReactComponent as CardBackSvg } from '../../assets/svg/card-back.svg'
 import { ReactComponent as NFT3dSvg } from '../../assets/svg/3D.svg'
 import { useWechatLaunchWeapp } from '../../hooks/useWechat'
 import { StatusText } from './StatusText'
@@ -423,28 +422,8 @@ export const NFT: React.FC = () => {
   }, [qrcode, history, t, productID, isWechatInited])
 
   const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
-  const [showCardBack, setShowCardBack] = useState(false)
-  const hasCardBack = useMemo(() => {
-    return (
-      !!data?.card_back_content_exist || !!data?.class_card_back_content_exist
-    )
-  }, [data])
   const [disbaleTilt] = useState(false)
   const tiltRef = useRef<Tilt>(null)
-  const cardBackOnClick = useCallback(
-    (e: React.SyntheticEvent) => {
-      const autoResetEvent = new CustomEvent('autoreset')
-      // @ts-expect-error
-      tiltRef.current?.onMove(autoResetEvent)
-      tiltRef?.current?.reset()
-      if (hasCardBack) {
-        // disable Gyroscope
-      }
-      setShowCardBack((show) => !show)
-      // setDisableTile(false)
-    },
-    [hasCardBack]
-  )
 
   if (
     failureCount >= 3 ||
@@ -489,14 +468,8 @@ export const NFT: React.FC = () => {
             detail?.card_back_content ?? detail?.class_card_back_content
           }
           tiltRef={tiltRef}
-          flipped={showCardBack}
         />
         <IconGroupContainer>
-          {hasCardBack ? (
-            <IconContainer onClick={cardBackOnClick}>
-              <CardBackSvg />
-            </IconContainer>
-          ) : null}
           {detail?.renderer_type === NftType._3D ? (
             <IconContainer>
               <NFT3dSvg />
