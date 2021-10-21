@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import {
   useInfiniteQuery,
   QueryFunction,
@@ -12,7 +12,6 @@ import { Loading } from '../Loading'
 import { useTranslation } from 'react-i18next'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import styled from 'styled-components'
-// import { Heading } from '@mibao-ui/components'
 
 const H4 = styled.h4`
   color: rgba(0, 0, 0, 0.6);
@@ -38,6 +37,8 @@ export interface InfiniteListProps<
   emptyElement: React.ReactNode
   noMoreElement: React.ReactNode
   loader?: React.ReactNode
+  pullDownToRefreshContent?: React.ReactNode
+  releaseToRefreshContent?: React.ReactNode
   scrollThreshold?: string
   pullDownToRefreshThreshold?: number
   calcDataLength: (data?: InfiniteData<TData>) => number
@@ -61,6 +62,8 @@ export function InfiniteList<
   renderItems,
   onDataChange,
   loader,
+  pullDownToRefreshContent,
+  releaseToRefreshContent,
   scrollThreshold = '250px',
   pullDownToRefreshThreshold = 80,
   enableQuery,
@@ -92,7 +95,9 @@ export function InfiniteList<
     enabled: enableQuery,
   })
 
-  const dataLength = calcDataLength(data)
+  const dataLength = useMemo(() => {
+    return calcDataLength(data)
+  }, [data, calcDataLength])
 
   const [isRefetching, setIsRefetching] = useState(false)
 
@@ -117,11 +122,15 @@ export function InfiniteList<
           pullDownToRefresh={!IS_WEXIN}
           refreshFunction={refresh}
           pullDownToRefreshContent={
-            <H4>&#8595; {t('common.actions.pull-down-refresh')}</H4>
+            pullDownToRefreshContent ?? (
+              <H4>&#8595; {t('common.actions.pull-down-refresh')}</H4>
+            )
           }
           pullDownToRefreshThreshold={pullDownToRefreshThreshold}
           releaseToRefreshContent={
-            <H4>&#8593; {t('common.actions.release-refresh')}</H4>
+            releaseToRefreshContent ?? (
+              <H4>&#8593; {t('common.actions.release-refresh')}</H4>
+            )
           }
           dataLength={dataLength}
           next={fetchNextPage}
