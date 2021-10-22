@@ -70,15 +70,22 @@ export const IssuerInfo: React.FC = () => {
             >
               {data?.name}
             </Box>
-            <Box
-              textOverflow="ellipsis"
-              overflow="hidden"
-              fontSize="12px"
-              whiteSpace="nowrap"
-            >
-              {/* TODO: Add automatic width abbreviation */}
-              ID: {data?.issuer_id}
-            </Box>
+            <Flex fontSize="12px" whiteSpace="nowrap">
+              ID:
+              <Box w="50%" overflow="hidden" textOverflow="ellipsis" ml="6px">
+                {data?.issuer_id}
+              </Box>
+              <Box
+                w="50%"
+                overflow="hidden"
+                textOverflow="ellipsis"
+                style={{
+                  direction: 'rtl',
+                }}
+              >
+                {data?.issuer_id}
+              </Box>
+            </Flex>
           </SkeletonText>
         </Box>
         <Center w="80px">
