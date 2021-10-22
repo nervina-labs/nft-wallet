@@ -80,7 +80,8 @@ const AppbarButtonContainer = styled.span`
 export const AppbarButton: React.FC<{
   transparent?: boolean
   onClick?: () => void
-}> = ({ children, transparent, onClick }) => {
+  buttonProps?: ButtonProps
+}> = ({ children, transparent, onClick, ...buttonProps }) => {
   return (
     <Button
       onClick={onClick}
