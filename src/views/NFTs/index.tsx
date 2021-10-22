@@ -15,7 +15,6 @@ import { isVerticalScrollable } from '../../utils'
 import { Container } from './styled'
 import { Intro } from '../../components/Intro'
 import { IssuerList } from './IssuerList'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as SettingsSvg } from '../../assets/svg/settings.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Appbar, AppbarButton, HEADER_HEIGHT } from '../../components/Appbar'
@@ -23,6 +22,9 @@ import { Info } from './info'
 import { Tab, Tabs, TabsAffix } from '../../components/Tab'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { InfiniteList } from '../../components/InfiniteList'
+import { Share } from '../../components/Share'
+import { HOST } from '../../constants'
+import { DrawerMenu } from './DrawerMenu'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -87,7 +89,10 @@ export const NFTs: React.FC = () => {
   )
 
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
-
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const closeDrawer = () => setIsDrawerOpen(false)
+  const openDrawer = () => setIsDrawerOpen(true)
   const showGuide = useMemo(() => {
     if (isUserLoading) {
       return false
@@ -107,12 +112,14 @@ export const NFTs: React.FC = () => {
       <Appbar
         title={isHolder ? t('holder.title') : null}
         left={
-          <AppbarButton onClick={() => history.goBack()}>
-            {isHolder ? <BackSvg /> : <SettingsSvg />}
-          </AppbarButton>
+          !isHolder ? (
+            <AppbarButton onClick={openDrawer} className="setting">
+              <SettingsSvg />
+            </AppbarButton>
+          ) : undefined
         }
         right={
-          <AppbarButton transparent>
+          <AppbarButton transparent onClick={() => setIsShareDialogOpen(true)}>
             <ShareSvg />
           </AppbarButton>
         }
@@ -193,8 +200,15 @@ export const NFTs: React.FC = () => {
         <>
           <Intro show={showGuide} />
           <HiddenBar alwaysShow={alwayShowTabbar} />
+          <DrawerMenu close={closeDrawer} isDrawerOpen={isDrawerOpen} />
         </>
       )}
+      <Share
+        isDialogOpen={isShareDialogOpen}
+        closeDialog={() => setIsShareDialogOpen(false)}
+        displayText={HOST + location.pathname}
+        copyText={HOST + location.pathname}
+      />
     </Container>
   )
 }

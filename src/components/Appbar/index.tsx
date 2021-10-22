@@ -8,6 +8,8 @@ import {
 } from '@mibao-ui/components'
 import React from 'react'
 import styled from 'styled-components'
+import { useHistoryBack } from '../../hooks/useHistoryBack'
+import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 
 export interface AppbarProps extends React.RefAttributes<HTMLDivElement> {
   title?: React.ReactNode
@@ -30,6 +32,12 @@ export const HEADER_HEIGHT = 60
 
 export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwardRef(
   ({ title, left, right, transparent }, ref) => {
+    const back = useHistoryBack()
+    const leftEl = left ?? (
+      <AppbarButton onClick={() => back()}>
+        <BackSvg />
+      </AppbarButton>
+    )
     return (
       <Flex
         maxW="500px"
@@ -43,7 +51,7 @@ export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwar
         ref={ref}
         boxSizing="border-box"
       >
-        {left}
+        {leftEl}
         {title ? (
           <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
             {title}
@@ -77,11 +85,12 @@ const AppbarButtonContainer = styled.span`
   }
 `
 
-export const AppbarButton: React.FC<{
-  transparent?: boolean
-  onClick?: () => void
-  buttonProps?: ButtonProps
-}> = ({ children, transparent, onClick, ...buttonProps }) => {
+export const AppbarButton: React.FC<AppbarButtonProps> = ({
+  children,
+  transparent,
+  onClick,
+  ...buttonProps
+}) => {
   return (
     <Button
       onClick={onClick}

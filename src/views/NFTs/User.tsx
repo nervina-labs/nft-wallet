@@ -117,20 +117,14 @@ export enum ProfilePath {
 export interface GotoProfileProps {
   path: ProfilePath
   children: React.ReactNode
-  closeMenu: () => void
 }
 
-export const GotoProfile: React.FC<GotoProfileProps> = ({
-  children,
-  path,
-  closeMenu,
-}) => {
+export const GotoProfile: React.FC<GotoProfileProps> = ({ children, path }) => {
   const history = useHistory()
   return (
     <span
       style={{ cursor: 'pointer' }}
       onClick={() => {
-        closeMenu()
         history.push(path)
       }}
     >
@@ -217,7 +211,7 @@ export const User: React.FC<UserConfig> = ({
           ) : isHolder ?? !closeMenu ? (
             t('holder.user-name-empty')
           ) : (
-            <GotoProfile path={ProfilePath.Username} closeMenu={closeMenu}>
+            <GotoProfile path={ProfilePath.Username}>
               {t('profile.user-name.empty')}
             </GotoProfile>
           )}

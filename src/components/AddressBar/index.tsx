@@ -8,23 +8,22 @@ import { RoutePath } from '../../routes'
 import { copyFallback, truncateMiddle } from '../../utils'
 
 const Container = styled.div`
-  height: 33px;
+  height: 32px;
   display: flex;
-  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  width: 100%;
+  border-radius: 21px;
+  width: 180px;
   display: flex;
-  background-color: white;
+  background-color: #f6f8fa;
   overflow: hidden;
   .address {
     flex: 1;
     margin-left: 16px;
     display: flex;
     align-items: center;
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     color: black;
-    background-color: white;
+    background-color: #f6f8fa;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
   }
@@ -33,10 +32,9 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 65px;
-    background: #f9f5f2;
     cursor: pointer;
-    border-top-left-radius: 16px;
+    background-color: #f6f8fa;
+    margin-right: 16px;
   }
 `
 
@@ -61,7 +59,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
           snackbar(t('info.copied'))
         }}
       >
-        {truncateMiddle(address, 24, 12)}
+        {truncateMiddle(address, 8, 5)}
       </div>
       <div
         className="qrcode"
@@ -73,7 +71,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
           }
         }}
       >
-        <QrcodeSvg />
+        <QrcodeSvg fill="#5065E5" />
       </div>
     </Container>
   )

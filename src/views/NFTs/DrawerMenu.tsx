@@ -3,8 +3,6 @@ import React, { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useWidth } from '../../hooks/useWidth'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
-import { UserResponse } from '../../models/user'
-import { User } from './User'
 import List from '@material-ui/core/List'
 import Divider from '@material-ui/core/Divider'
 import ListItem from '@material-ui/core/ListItem'
@@ -53,15 +51,11 @@ export interface DrawerConfigProps {
   children?: React.ReactNode
   close: () => void
   isDrawerOpen: boolean
-  user?: UserResponse
-  setShowAvatarAction: (show: boolean) => void
 }
 
 export const DrawerMenu: React.FC<DrawerConfigProps> = ({
   close,
   isDrawerOpen,
-  user,
-  setShowAvatarAction,
 }) => {
   const bodyRef = useRef(document.body)
   const bodyWidth = useWidth(bodyRef)
@@ -138,13 +132,6 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
         disableEscapeKeyDown
       >
         <DrawerContainer>
-          <div className="user">
-            <User
-              user={user}
-              setShowAvatarAction={setShowAvatarAction}
-              closeMenu={close}
-            />
-          </div>
           <Divider />
           <List style={{ marginTop: '28px' }}>
             {list.map(({ text, icon, onClick }, index) => (
