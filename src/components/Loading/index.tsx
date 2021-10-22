@@ -1,22 +1,17 @@
-import { CircularProgress } from '@material-ui/core'
+import { Loading as L, Center, CenterProps } from '@mibao-ui/components'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
-const LoadingContainer = styled.h4`
-  text-align: center;
-  color: rgba(0, 0, 0, 0.6);
-  .loading {
-    margin-left: 10px;
-  }
-`
+export interface LoadingProps extends CenterProps {
+  desc?: string
+}
 
-export const Loading: React.FC<{ desc?: string }> = ({ desc }) => {
+export const Loading: React.FC<LoadingProps> = ({ desc, ...rest }) => {
   const { t } = useTranslation('translations')
   return (
-    <LoadingContainer>
+    <Center marginY="16px" {...rest}>
       {desc ?? t('common.actions.loading')}
-      <CircularProgress size="1em" className="loading" />
-    </LoadingContainer>
+      <L ml="10px" size="sm" />
+    </Center>
   )
 }

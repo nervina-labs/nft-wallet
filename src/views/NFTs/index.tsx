@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useInfiniteQuery, useQuery } from 'react-query'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import React, { useCallback, useMemo, useState } from 'react'
+import { useQuery } from 'react-query'
 import { Card } from '../../components/Card'
-import { HOST, IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
+import { HOST } from '../../constants'
 import { NFTToken, Query, TransactionStatus } from '../../models'
 import { Empty } from './empty'
-import { Loading } from '../../components/Loading'
 import { Redirect, useHistory, useParams } from 'react-router'
 import { RoutePath } from '../../routes'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share-new.svg'
@@ -31,6 +29,7 @@ import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
 import { Tab, Tabs, TabsAffix } from '../../components/Tab'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
+import { InfiniteList } from '../../components/InfiniteList'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -96,59 +95,12 @@ export const NFTs: React.FC = () => {
     [isLiked, api, address]
   )
 
-  const {
-    data,
-    status,
-    hasNextPage,
-    fetchNextPage,
-    refetch,
-  } = useInfiniteQuery(
-    [`${Query.NFTList}${isLiked.toString()}`, address, isLiked],
-    getRemoteData,
-    {
-      getNextPageParam: (lastPage) => {
-        if (lastPage?.meta == null) {
-          return undefined
-        }
-        const { meta } = lastPage
-        const current = meta.current_page
-        const total = meta.total_count
-        if (total <= current * PER_ITEM_LIMIT) {
-          return undefined
-        }
-        return meta.current_page + 1
-      },
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      enabled: !isFollow,
-    }
-  )
-
-  const [isRefetching, setIsRefetching] = useState(false)
-
-  const refresh = useCallback(async () => {
-    setIsRefetching(true)
-    await refetch()
-    setIsRefetching(false)
-  }, [refetch])
-
-  const dataLength = useMemo(() => {
-    return (
-      data?.pages.reduce((acc, token) => token.token_list.length + acc, 0) ?? 0
-    )
-  }, [data])
-
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
 
   const matchDesc = useRouteMatch(ProfilePath.Description)
   const matchUsername = useRouteMatch(ProfilePath.Username)
 
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
-
-  useEffect(() => {
-    setAlwaysShowTabbar(!isVerticalScrollable())
-  }, [data])
 
   const showGuide = useMemo(() => {
     if (isUserLoading) {
@@ -211,52 +163,40 @@ export const NFTs: React.FC = () => {
         {isFollow ? (
           <IssuerList isFollow={isFollow} address={address} />
         ) : (
-          <>
-            {isRefetching ? <Loading /> : null}
-            {data === undefined && status === 'loading' ? (
-              <Loading />
-            ) : (
-              <InfiniteScroll
-                pullDownToRefresh={!IS_WEXIN}
-                refreshFunction={refresh}
-                pullDownToRefreshContent={
-                  <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
-                }
-                pullDownToRefreshThreshold={80}
-                releaseToRefreshContent={
-                  <h4>&#8593; {t('common.actions.release-refresh')}</h4>
-                }
-                dataLength={dataLength}
-                next={fetchNextPage}
-                hasMore={hasNextPage === true}
-                scrollThreshold="250px"
-                loader={<Loading />}
-                endMessage={
-                  <h4 className="end">
-                    {dataLength <= 5 ? ' ' : t('common.actions.pull-to-down')}
-                  </h4>
-                }
-              >
-                {data?.pages?.map((group, i) => {
-                  return (
-                    <React.Fragment key={i}>
-                      {group.token_list.map((token, j: number) => (
-                        <Card
-                          className={i === 0 && j === 0 ? 'first' : ''}
-                          token={token}
-                          key={token.token_uuid || `${i}.${j}`}
-                          address={address}
-                          isClass={isLiked}
-                          showTokenId={!isLiked}
-                        />
-                      ))}
-                    </React.Fragment>
-                  )
-                })}
-                {status === 'success' && dataLength === 0 ? <Empty /> : null}
-              </InfiniteScroll>
-            )}
-          </>
+          <InfiniteList
+            queryFn={getRemoteData}
+            queryKey={[
+              `${Query.NFTList}${isLiked.toString()}`,
+              address,
+              isLiked,
+            ]}
+            enableQuery={!isFollow}
+            emptyElement={<Empty />}
+            noMoreElement={t('common.actions.pull-to-down')}
+            onDataChange={() => {
+              setAlwaysShowTabbar(!isVerticalScrollable())
+            }}
+            calcDataLength={(data) => {
+              return (
+                data?.pages.reduce(
+                  (acc, token) => token.token_list.length + acc,
+                  0
+                ) ?? 0
+              )
+            }}
+            renderItems={(group, i) => {
+              return group.token_list.map((token, j: number) => (
+                <Card
+                  className={i === 0 && j === 0 ? 'first' : ''}
+                  token={token}
+                  key={token.token_uuid || `${i}.${j}`}
+                  address={address}
+                  isClass={isLiked}
+                  showTokenId={!isLiked}
+                />
+              ))
+            }}
+          />
         )}
       </section>
       <Share
