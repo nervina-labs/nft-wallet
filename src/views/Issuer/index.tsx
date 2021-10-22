@@ -28,13 +28,16 @@ export const Issuer: React.FC = () => {
       <AppbarSticky>
         <Appbar
           left={
-            <AppbarButton>
-              <BackSvg onClick={goBack} />
+            <AppbarButton onClick={goBack}>
+              <BackSvg />
             </AppbarButton>
           }
           right={
-            <AppbarButton transparent>
-              <ShareSvg onClick={() => setIsShareDialogOpen(true)} />
+            <AppbarButton
+              transparent
+              onClick={() => setIsShareDialogOpen(true)}
+            >
+              <ShareSvg />
             </AppbarButton>
           }
         />
