@@ -1,9 +1,9 @@
-import { Drawer } from '@material-ui/core'
 import React, { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { useWidth } from '../../hooks/useWidth'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
+import { Drawer } from '@mibao-ui/components'
 
 export const Action = styled.div`
   display: flex;
@@ -66,22 +66,18 @@ export const DrawerAction: React.FC<DrawerConfigProps> = ({
 
   return (
     <Drawer
-      anchor="bottom"
-      open={isDrawerOpen}
-      onBackdropClick={close}
-      PaperProps={{
+      placement="bottom"
+      isOpen={isDrawerOpen}
+      hasOverlay
+      onClose={close}
+      contentProps={{
+        width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
         style: {
-          position: 'absolute',
-          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
           left: drawerLeft,
-          borderTopLeftRadius: '25px',
-          borderTopRightRadius: '25px',
+          bottom: '40px',
         },
+        borderRadius: '20px',
       }}
-      variant="temporary"
-      disableEnforceFocus
-      disableEscapeKeyDown
-      disableScrollLock={window.innerWidth >= 500}
     >
       <DrawerContainer>
         {actions.map((action) => {
@@ -94,12 +90,7 @@ export const DrawerAction: React.FC<DrawerConfigProps> = ({
             </Action>
           )
         })}
-        <Action
-          style={{ paddingBottom: '16px', marginTop: '10px' }}
-          onClick={close}
-        >
-          {t('profile.cancel')}
-        </Action>
+        <Action onClick={close}>{t('profile.cancel')}</Action>
       </DrawerContainer>
     </Drawer>
   )
