@@ -15,7 +15,7 @@ const InfoContainer = styled.div`
   top: 0;
   width: 100%;
   padding: var(--padding);
-  max-width: calc(100% - 40px);
+  max-width: calc(100%);
   display: flex;
   flex-direction: column;
   transition: 100ms;
@@ -39,9 +39,6 @@ const InfoContainer = styled.div`
     z-index: 0;
   }
 
-  @media (min-width: 500px) {
-    max-width: 460px;
-  }
   .loading {
     position: absolute;
     top: 0;
