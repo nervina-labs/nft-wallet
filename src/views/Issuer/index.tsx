@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { IssuerInfo } from './components/issuerInfo'
-import { NftCards } from './nftCards'
+import { NftCards } from './components/nftCards'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
