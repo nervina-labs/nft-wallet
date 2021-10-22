@@ -1,4 +1,11 @@
-import { Button, Center, Flex, Box, BoxProps } from '@mibao-ui/components'
+import {
+  Button,
+  Center,
+  Flex,
+  Box,
+  BoxProps,
+  ButtonProps,
+} from '@mibao-ui/components'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -7,6 +14,10 @@ export interface AppbarProps extends React.RefAttributes<HTMLDivElement> {
   left?: React.ReactNode
   right?: React.ReactNode
   back?: boolean
+  transparent?: boolean
+}
+
+export interface AppbarButtonProps extends ButtonProps {
   transparent?: boolean
 }
 
@@ -65,9 +76,11 @@ const AppbarButtonContainer = styled.span`
   }
 `
 
-export const AppbarButton: React.FC<{
-  transparent?: boolean
-}> = ({ children, transparent }) => {
+export const AppbarButton: React.FC<AppbarButtonProps> = ({
+  children,
+  transparent,
+  ...buttonProps
+}) => {
   return (
     <Button
       w={`${HEADER_HEIGHT}px`}
@@ -75,6 +88,7 @@ export const AppbarButton: React.FC<{
       borderRadius="100%"
       variant="link"
       bg={transparent ? undefined : '#f6f8fA'}
+      {...buttonProps}
     >
       <AppbarButtonContainer>{children}</AppbarButtonContainer>
     </Button>
