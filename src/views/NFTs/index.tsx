@@ -2,30 +2,23 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Card } from '../../components/Card'
-import { HOST } from '../../constants'
 import { NFTToken, Query, TransactionStatus } from '../../models'
 import { Empty } from './empty'
 import { Redirect, useHistory, useParams } from 'react-router'
 import { RoutePath } from '../../routes'
-import { ReactComponent as ShareSvg } from '../../assets/svg/share-new.svg'
-import { ReactComponent as ProfileSvg } from '../../assets/svg/menu.svg'
-import { Share } from '../../components/Share'
 import { useTranslation } from 'react-i18next'
 import { HiddenBar } from '../../components/HiddenBar'
-import { DrawerImage } from '../Profile/DrawerImage'
-import { useLocation, useRouteMatch } from 'react-router-dom'
-import { SetUsername } from '../Profile/SetUsername'
-import { SetDesc } from '../Profile/setDesc'
+import { useLocation } from 'react-router-dom'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { isVerticalScrollable } from '../../utils'
-import { ProfilePath } from './User'
 import { Container } from './styled'
-import { DrawerMenu } from './DrawerMenu'
 import { Intro } from '../../components/Intro'
 import { IssuerList } from './IssuerList'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
-import { Appbar, HEADER_HEIGHT } from '../../components/Appbar'
+import { ReactComponent as SettingsSvg } from '../../assets/svg/settings.svg'
+import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
+import { Appbar, AppbarButton, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
 import { Tab, Tabs, TabsAffix } from '../../components/Tab'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
@@ -43,8 +36,6 @@ export const NFTs: React.FC = () => {
   const isHolder = useMemo(() => Boolean(params.address), [params.address])
   const { t } = useTranslation('translations')
   const history = useHistory()
-  const [showAvatarAction, setShowAvatarAction] = useState(false)
-  const [showMenu, setShowMenu] = useState(false)
   useScrollRestoration()
   const { data: user, isLoading: isUserLoading } = useQuery(
     [Query.Profile, address, api],
@@ -95,11 +86,6 @@ export const NFTs: React.FC = () => {
     [isLiked, api, address]
   )
 
-  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
-
-  const matchDesc = useRouteMatch(ProfilePath.Description)
-  const matchUsername = useRouteMatch(ProfilePath.Username)
-
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
 
   const showGuide = useMemo(() => {
@@ -118,18 +104,22 @@ export const NFTs: React.FC = () => {
 
   return (
     <Container id="main">
-      {isHolder && (
-        <Appbar
-          title={t('holder.title')}
-          left={<BackSvg onClick={() => history.goBack()} />}
-          right={<ShareSvg onClick={() => setIsShareDialogOpen(true)} />}
-        />
-      )}
+      <Appbar
+        title={isHolder ? t('holder.title') : null}
+        left={
+          <AppbarButton onClick={() => history.goBack()}>
+            {isHolder ? <BackSvg /> : <SettingsSvg />}
+          </AppbarButton>
+        }
+        right={
+          <AppbarButton transparent>
+            <ShareSvg />
+          </AppbarButton>
+        }
+      />
       <Info
         isLoading={isUserLoading}
         user={user}
-        setShowAvatarAction={setShowAvatarAction}
-        closeMenu={() => setShowMenu(false)}
         isHolder={isHolder}
         address={address}
       />
@@ -199,41 +189,8 @@ export const NFTs: React.FC = () => {
           />
         )}
       </section>
-      <Share
-        displayText={HOST + `${RoutePath.Holder}/${address}`}
-        copyText={HOST + `${RoutePath.Holder}/${address}`}
-        closeDialog={() => setIsShareDialogOpen(false)}
-        isDialogOpen={isShareDialogOpen}
-      />
       {!isHolder && (
         <>
-          <div className="account" onClick={() => setShowMenu(true)}>
-            <ProfileSvg />
-          </div>
-          <div className="share" onClick={() => setIsShareDialogOpen(true)}>
-            <ShareSvg />
-            {t('nfts.share')}
-          </div>
-          <DrawerImage
-            showAvatarAction={showAvatarAction}
-            setShowAvatarAction={setShowAvatarAction}
-          />
-          <DrawerMenu
-            close={() => setShowMenu(false)}
-            isDrawerOpen={showMenu}
-            user={user}
-            setShowAvatarAction={setShowAvatarAction}
-          />
-          <SetUsername
-            username={user?.nickname}
-            open={!!matchUsername?.isExact}
-            close={() => history.goBack()}
-          />
-          <SetDesc
-            desc={user?.description}
-            open={!!matchDesc?.isExact}
-            close={() => history.goBack()}
-          />
           <Intro show={showGuide} />
           <HiddenBar alwaysShow={alwayShowTabbar} />
         </>

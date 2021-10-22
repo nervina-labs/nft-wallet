@@ -26,7 +26,7 @@ export interface AppbarStickyProps extends BoxProps {
   zIndex?: number
 }
 
-export const HEADER_HEIGHT = 50
+export const HEADER_HEIGHT = 60
 
 export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwardRef(
   ({ title, left, right, transparent }, ref) => {
@@ -37,6 +37,7 @@ export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwar
         h={`${HEADER_HEIGHT}px`}
         position="relative"
         justifyContent="space-between"
+        alignItems="center"
         bg={transparent ? undefined : '#fff'}
         px="20px"
         ref={ref}
@@ -76,15 +77,15 @@ const AppbarButtonContainer = styled.span`
   }
 `
 
-export const AppbarButton: React.FC<AppbarButtonProps> = ({
-  children,
-  transparent,
-  ...buttonProps
-}) => {
+export const AppbarButton: React.FC<{
+  transparent?: boolean
+  onClick?: () => void
+}> = ({ children, transparent, onClick }) => {
   return (
     <Button
-      w={`${HEADER_HEIGHT}px`}
-      h={`${HEADER_HEIGHT}px`}
+      onClick={onClick}
+      w={`${HEADER_HEIGHT - 20}px`}
+      height={`${HEADER_HEIGHT - 20}px`}
       borderRadius="100%"
       variant="link"
       bg={transparent ? undefined : '#f6f8fA'}

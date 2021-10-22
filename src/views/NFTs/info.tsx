@@ -1,9 +1,8 @@
 import styled from 'styled-components'
 import { HEADER_HEIGHT } from '../../components/Appbar'
 import React from 'react'
-import { GotoProfile, ProfilePath, User } from './User'
+import { GotoProfile, ProfilePath } from './User'
 import { Addressbar } from '../../components/AddressBar'
-import Bg from '../../assets/svg/home-bg.svg'
 import { UserResponse } from '../../models/user'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
@@ -110,17 +109,9 @@ export const Info: React.FC<{
           hide: isLoading,
         })}
       >
-        <User
-          user={user}
-          setShowAvatarAction={setShowAvatarAction}
-          closeMenu={closeMenu}
-          isHolder={isHolder}
-          enablePreview={true}
-        />
         <div className="desc">{description}</div>
         <Addressbar address={address} isHolder={isHolder} />
       </div>
-      <img className="bg-image" src={(Bg as unknown) as string} alt="Bg" />
       {isLoading && (
         <div className="loading">
           <div className="flex">
