@@ -116,8 +116,6 @@ export const Container = styled(MainContainer)`
   .list {
     user-select: none;
     flex: 1;
-    background: #f8fafd;
-    border-radius: 35px 35px 0 0;
     z-index: 2;
     position: relative;
     img {

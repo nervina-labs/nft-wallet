@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { Card } from '../../components/Card'
 import { NFTToken, Query, TransactionStatus } from '../../models'
 import { Empty } from './empty'
 import { Redirect, useHistory, useParams } from 'react-router'
@@ -25,6 +24,7 @@ import { InfiniteList } from '../../components/InfiniteList'
 import { Share } from '../../components/Share'
 import { HOST } from '../../constants'
 import { DrawerMenu } from './DrawerMenu'
+import { Card } from './card'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -184,12 +184,11 @@ export const NFTs: React.FC = () => {
             renderItems={(group, i) => {
               return group.token_list.map((token, j: number) => (
                 <Card
-                  className={i === 0 && j === 0 ? 'first' : ''}
                   token={token}
                   key={token.token_uuid || `${i}.${j}`}
                   address={address}
                   isClass={isLiked}
-                  showTokenId={!isLiked}
+                  showTokenID={!isLiked}
                 />
               ))
             }}
