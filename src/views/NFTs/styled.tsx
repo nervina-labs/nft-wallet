@@ -13,9 +13,10 @@ export const Container = styled(MainContainer)`
     color: rgba(0, 0, 0, 0.6);
   }
   .filters {
-    padding: 0 15px;
+    padding: 0 20px;
     background-color: #fff;
     z-index: 10;
+    margin-bottom: 20px;
   }
   .share {
     display: flex;
@@ -121,14 +122,6 @@ export const Container = styled(MainContainer)`
     img {
       -webkit-user-drag: none;
       -webkit-touch-callout: none;
-    }
-
-    .infinite-scroll-component {
-      > div {
-        &:nth-child(2) {
-          margin-top: 20px;
-        }
-      }
     }
   }
 `

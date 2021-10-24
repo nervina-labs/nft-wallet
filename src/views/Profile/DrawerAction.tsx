@@ -70,6 +70,7 @@ export const DrawerAction: React.FC<DrawerConfigProps> = ({
       isOpen={isDrawerOpen}
       hasOverlay
       onClose={close}
+      rounded="lg"
       contentProps={{
         width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
         style: {

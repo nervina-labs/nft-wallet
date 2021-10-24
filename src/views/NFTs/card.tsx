@@ -1,11 +1,12 @@
 import React from 'react'
 import { NFTToken, TransactionStatus } from '../../models'
 import { Box, NFTCard } from '@mibao-ui/components'
+import { Tag } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { RoutePath } from '../../routes'
 import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
-
+import { getNFTQueryParams } from '../../utils'
 export interface CardProps {
   token: NFTToken
   isClass: boolean
@@ -18,15 +19,16 @@ interface LabelProps {
   address: string
 }
 
-const LabelContainer = styled.div`
+const LabelContainer = styled(Tag)`
   font-size: 12px;
   line-height: 16px;
   border-radius: 22px;
   padding: 3px 8px;
-  white-space: nowrap;
+  color: white;
   position: absolute;
   top: 10px;
-  left: 10px;
+  left: 30px;
+  z-index: 3;
 `
 
 enum LabelStatus {
@@ -90,7 +92,7 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
   const color = statusMap[status]?.color
 
   return (
-    <LabelContainer style={{ color: color, borderColor: color }}>
+    <LabelContainer style={{ background: color }}>
       {statusMap[status]?.text}
     </LabelContainer>
   )
@@ -103,8 +105,12 @@ export const Card: React.FC<CardProps> = ({
   showTokenID,
 }) => {
   const { t, i18n } = useTranslation('translations')
-  const history = useHistory()
   const isBanned = token.is_issuer_banned || token.is_class_banned
+  const history = useHistory()
+  const href = isClass
+    ? `/class/${token.class_uuid}`
+    : `/nft/${token.token_uuid}`
+
   return (
     <Box position="relative" w="100%" mb="24px" px="20px">
       <Label address={address} nft={token} />
@@ -119,12 +125,17 @@ export const Card: React.FC<CardProps> = ({
         type={token.renderer_type}
         src={token.class_bg_image_url || ''}
         locale={i18n.language}
+        href={isBanned ? undefined : href}
+        srcQueryParams={getNFTQueryParams(token.n_token_id, i18n.language)}
         issuerProps={{
           name: token.issuer_name as string,
           src: token.issuer_avatar_url,
-          bannedText: t('common.baned.nft'),
+          bannedText: t('common.baned.issuer'),
+          href: `${RoutePath.Issuer}/${token.issuer_uuid as string}`,
+          isLinkExternal: false,
           onClick: (e) => {
             e.stopPropagation()
+            e.preventDefault()
             history.push(`${RoutePath.Issuer}/${token.issuer_uuid as string}`)
           },
         }}
@@ -133,17 +144,15 @@ export const Card: React.FC<CardProps> = ({
           limitedText: t('common.limit.limit'),
           unlimitedText: t('common.limit.unlimit'),
           serialNumber: showTokenID ? token.n_token_id : undefined,
-          whiteSpace: 'nowrap',
           ml: '4px',
         }}
         titleProps={{ noOfLines: 2 }}
-        onClick={() => {
-          if (isBanned) return
-          if (isClass) {
-            history.push(`/class/${token.class_uuid}`)
-          } else {
-            history.push(`/nft/${token.token_uuid}`)
+        onClick={(e) => {
+          e.preventDefault()
+          if (isBanned) {
+            return
           }
+          history.push(href)
         }}
       />
     </Box>

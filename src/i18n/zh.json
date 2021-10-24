@@ -459,7 +459,7 @@
       "confirm": "确认不再关注？",
       "follower": "粉丝：",
       "likes": "获赞：",
-      "count": "已关注 {{count}} 人",
+      "count": "• 已关注 {{count}} 人",
       "end": "已经拉到底啦~",
       "login": {
         "desc-1": "啊哦～您还未登录",

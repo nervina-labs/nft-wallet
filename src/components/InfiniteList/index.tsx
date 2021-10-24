@@ -43,7 +43,11 @@ export interface InfiniteListProps<
   pullDownToRefreshThreshold?: number
   calcDataLength: (data?: InfiniteData<TData>) => number
   onDataChange?: (data?: InfiniteData<TData>) => void
-  renderItems: (item: TData, index: number) => React.ReactNode
+  renderItems: (
+    item: TData,
+    index: number,
+    refetch?: () => Promise<void>
+  ) => React.ReactNode
   enableQuery?: boolean
 }
 
@@ -141,7 +145,9 @@ export function InfiniteList<
         >
           {data?.pages?.map((group, i) => {
             return (
-              <React.Fragment key={i}>{renderItems(group, i)}</React.Fragment>
+              <React.Fragment key={i}>
+                {renderItems(group, i, refresh)}
+              </React.Fragment>
             )
           })}
           {status === 'success' && dataLength === 0

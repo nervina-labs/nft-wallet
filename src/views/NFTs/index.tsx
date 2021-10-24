@@ -16,15 +16,15 @@ import { Intro } from '../../components/Intro'
 import { IssuerList } from './IssuerList'
 import { ReactComponent as SettingsSvg } from '../../assets/svg/settings.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import { Appbar, AppbarButton, HEADER_HEIGHT } from '../../components/Appbar'
+import { Appbar, AppbarButton } from '../../components/Appbar'
 import { Info } from './info'
-import { Tab, Tabs, TabsAffix } from '../../components/Tab'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { InfiniteList } from '../../components/InfiniteList'
 import { Share } from '../../components/Share'
 import { HOST } from '../../constants'
 import { DrawerMenu } from './DrawerMenu'
 import { Card } from './card'
+import { Tabs, Tab, TabList } from '@mibao-ui/components'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -110,7 +110,7 @@ export const NFTs: React.FC = () => {
   return (
     <Container id="main">
       <Appbar
-        title={isHolder ? t('holder.title') : null}
+        title={null}
         left={
           !isHolder ? (
             <AppbarButton onClick={openDrawer} className="setting">
@@ -131,19 +131,20 @@ export const NFTs: React.FC = () => {
         address={address}
       />
       <section className="list">
-        <TabsAffix top={isHolder ? HEADER_HEIGHT : 0} className="filters">
-          <Tabs activeKey={filterIndex}>
-            <Tab
-              onClick={() => history.replace(history.location.pathname)}
-              active={isOwned}
-            >
+        <Tabs
+          className="filters"
+          index={filterIndex}
+          align="space-between"
+          colorScheme="black"
+        >
+          <TabList>
+            <Tab onClick={() => history.replace(history.location.pathname)}>
               {t('nfts.owned')}
             </Tab>
             <Tab
               onClick={() =>
                 history.replace(history.location.pathname + '?liked=true')
               }
-              active={isLiked}
             >
               {t('nfts.liked')}
             </Tab>
@@ -151,12 +152,11 @@ export const NFTs: React.FC = () => {
               onClick={() =>
                 history.replace(history.location.pathname + '?follow=true')
               }
-              active={isFollow}
             >
               {t('follow.follow')}
             </Tab>
-          </Tabs>
-        </TabsAffix>
+          </TabList>
+        </Tabs>
         {isFollow ? (
           <IssuerList isFollow={isFollow} address={address} />
         ) : (
