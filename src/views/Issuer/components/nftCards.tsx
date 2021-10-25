@@ -6,6 +6,7 @@ import {
   TabPanel,
   TabPanels,
   Image,
+  AspectRatio,
 } from '@mibao-ui/components'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,7 +14,7 @@ import { useRouteQuery } from '../../../hooks/useRouteQuery'
 import { PRODUCT_STATUE_SET, ProductState, Query } from '../../../models'
 import { useHistory } from 'react-router-dom'
 import { Empty } from '../../NFTs/empty'
-import { InfiniteList } from '../../../components/InfiniteList'
+import { InfiniteListNext } from '../../../components/InfiniteListNext'
 import { useAPI } from '../../../hooks/useAccount'
 import { useParams } from 'react-router'
 
@@ -60,7 +61,7 @@ export const NftCards: React.FC = () => {
 
         <TabPanels>
           <TabPanel>
-            <InfiniteList
+            <InfiniteListNext
               queryFn={queryFn}
               queryKey={[Query.Issuers, api, id, productState]}
               enableQuery={true}
@@ -72,14 +73,21 @@ export const NftCards: React.FC = () => {
                   0
                 ) ?? 0
               }
+              columnCount={2}
               renderItems={(group, i) => {
                 return group.token_classes.map((token, j: number) => (
-                  <Image
-                    src={token.bg_image_url}
-                    w="100%"
-                    borderRadius="20px"
-                    my={10}
-                  />
+                  <AspectRatio
+                    ratio={i === 0 && j === 0 ? 1 : 9 / 16}
+                    key={`${i}-${j}`}
+                  >
+                    <Image
+                      src={token.bg_image_url}
+                      width="100%"
+                      height="calc(100% - 5px)"
+                      borderRadius="20px"
+                      resizeScale={300}
+                    />
+                  </AspectRatio>
                 ))
               }}
             />

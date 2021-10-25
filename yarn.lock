@@ -3051,6 +3051,18 @@
     "@typescript-eslint/types" "4.31.0"
     eslint-visitor-keys "^2.0.0"
 
+"@virtuoso.dev/react-urx@^0.2.5":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@virtuoso.dev/react-urx/-/react-urx-0.2.7.tgz#54a32d7dcade67d89b098514026700b63a04cdbb"
+  integrity sha512-iaJ/1vz7dkfpIxEjOpgOme8X6KkUsz16RoqpFHtqbKiQW1FI+1h7YbyTxhz5D9xmg/VZU9gHpXvPHTzdKIKa3Q==
+  dependencies:
+    "@virtuoso.dev/urx" "^0.2.7"
+
+"@virtuoso.dev/urx@^0.2.5", "@virtuoso.dev/urx@^0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@virtuoso.dev/urx/-/urx-0.2.7.tgz#080811a31b458819147f2875e7fe7fdefaef12dc"
+  integrity sha512-mv6V6Gzf1QnGUzb5Rwv5Eqs3DRX5R4nGIojVXtD+fAFnr2SAvpHNPMRNdAclvD/pcdiga6rTzUhFwq4FBC2MDw==
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.9.0.tgz"
@@ -10820,6 +10832,14 @@ react-transition-group@^4.4.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-virtuoso@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/react-virtuoso/-/react-virtuoso-2.2.4.tgz#465f637b685ec133653d902882587e7b1873e691"
+  integrity sha512-IxUaHyxntyxJtZ8Nxno5O+C8zHoS8abQ+onGLhrSSPNhRZYurweYpZySdj2FSuzrmzr6tVkMG6+pc4B96++7cg==
+  dependencies:
+    "@virtuoso.dev/react-urx" "^0.2.5"
+    "@virtuoso.dev/urx" "^0.2.5"
+
 react-webcam@^5.2.4:
   version "5.2.4"
   resolved "https://registry.npmjs.org/react-webcam/-/react-webcam-5.2.4.tgz"
@@ -11254,6 +11274,21 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   resolved "https://registry.npmjs.org/run-queue/-/run-queue-1.0.3.tgz"
   dependencies:
     aproba "^1.1.1"
+
+rxjs-hooks@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/rxjs-hooks/-/rxjs-hooks-0.7.0.tgz#01c00257afa3d602b28025f943ba613e9fa31e57"
+  integrity sha512-R7uSuiYkn5p0ig9dgdpiCyrRwoltTW70wtCNSalwxb+OWVuI1wkg3sYF/tLOtSXUm1n4eGwKkJgL65ICS3n/5A==
+  dependencies:
+    tslib "^2.1.0"
+    use-constant "^1.0.0"
+
+rxjs@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.4.0.tgz#a12a44d7eebf016f5ff2441b87f28c9a51cebc68"
+  integrity sha512-7SQDi7xeTMCJpqViXh8gL/lebcwlp3d831F05+9B44A4B0WfsEwUQHR64gsH1kvJ+Ep/J9K2+n1hVl1CsGN23w==
+  dependencies:
+    tslib "~2.1.0"
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
@@ -12393,6 +12428,11 @@ tslib@^2.1.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
+tslib@~2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.1.0.tgz#da60860f1c2ecaa5703ab7d39bc05b6bf988b97a"
+  integrity sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
+
 tsutils@^3.17.1, tsutils@^3.21.0:
   version "3.21.0"
   resolved "https://registry.npmjs.org/tsutils/-/tsutils-3.21.0.tgz"
@@ -12652,6 +12692,11 @@ use-callback-ref@^1.2.1, use-callback-ref@^1.2.3:
   version "1.2.5"
   resolved "https://registry.npmjs.org/use-callback-ref/-/use-callback-ref-1.2.5.tgz"
   integrity sha512-gN3vgMISAgacF7sqsLPByqoePooY3n2emTH59Ur5d/M8eg4WTWu1xp8i8DHjohftIyEx0S08RiYxbffr4j8Peg==
+
+use-constant@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/use-constant/-/use-constant-1.1.0.tgz#76d36a0edf16d4cc8565361f522b55da5f8f3f22"
+  integrity sha512-yrflEfv7Xv/W8WlYV6nwRH01K+2BpR4cWxuzY03yPRjYZuHixhGlvnJN5O2bRYrXGpJ4zy8QjFABGIQ2QXeBOA==
 
 use-sidecar@^1.0.1:
   version "1.0.5"
