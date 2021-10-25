@@ -110,7 +110,6 @@ export const NFTs: React.FC = () => {
   return (
     <Container id="main">
       <Appbar
-        title={null}
         left={
           !isHolder ? (
             <AppbarButton onClick={openDrawer} className="setting">

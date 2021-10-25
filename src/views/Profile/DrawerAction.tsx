@@ -84,7 +84,10 @@ export const DrawerAction: React.FC<DrawerConfigProps> = ({
         {actions.map((action) => {
           return (
             <Action
-              onClick={() => actionOnClick(action.value)}
+              onClick={() => {
+                close()
+                actionOnClick(action.value)
+              }}
               key={action.value}
             >
               {action.content}
