@@ -42,7 +42,7 @@ export const NftCards: React.FC = () => {
       })
       return data
     },
-    [api, productState]
+    [api, id, productState]
   )
 
   return (
