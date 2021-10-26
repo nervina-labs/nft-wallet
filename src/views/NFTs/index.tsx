@@ -16,7 +16,12 @@ import { Intro } from '../../components/Intro'
 import { IssuerList } from './IssuerList'
 import { ReactComponent as SettingsSvg } from '../../assets/svg/settings.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import { Appbar, AppbarButton } from '../../components/Appbar'
+import {
+  Appbar,
+  AppbarButton,
+  AppbarSticky,
+  HEADER_HEIGHT,
+} from '../../components/Appbar'
 import { Info } from './info'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { InfiniteList } from '../../components/InfiniteList'
@@ -107,22 +112,26 @@ export const NFTs: React.FC = () => {
     return <Redirect to={RoutePath.NFTs} />
   }
 
+  const appbar = (
+    <Appbar
+      left={
+        !isHolder ? (
+          <AppbarButton onClick={openDrawer} className="setting">
+            <SettingsSvg />
+          </AppbarButton>
+        ) : undefined
+      }
+      right={
+        <AppbarButton transparent onClick={() => setIsShareDialogOpen(true)}>
+          <ShareSvg />
+        </AppbarButton>
+      }
+    />
+  )
+
   return (
     <Container id="main">
-      <Appbar
-        left={
-          !isHolder ? (
-            <AppbarButton onClick={openDrawer} className="setting">
-              <SettingsSvg />
-            </AppbarButton>
-          ) : undefined
-        }
-        right={
-          <AppbarButton transparent onClick={() => setIsShareDialogOpen(true)}>
-            <ShareSvg />
-          </AppbarButton>
-        }
-      />
+      {isHolder ? <AppbarSticky>{appbar}</AppbarSticky> : appbar}
       <Info
         isLoading={isUserLoading}
         user={user}
@@ -130,32 +139,34 @@ export const NFTs: React.FC = () => {
         address={address}
       />
       <section className="list">
-        <Tabs
-          className="filters"
-          index={filterIndex}
-          align="space-between"
-          colorScheme="black"
-        >
-          <TabList>
-            <Tab onClick={() => history.replace(history.location.pathname)}>
-              {t('nfts.owned')}
-            </Tab>
-            <Tab
-              onClick={() =>
-                history.replace(history.location.pathname + '?liked=true')
-              }
-            >
-              {t('nfts.liked')}
-            </Tab>
-            <Tab
-              onClick={() =>
-                history.replace(history.location.pathname + '?follow=true')
-              }
-            >
-              {t('follow.follow')}
-            </Tab>
-          </TabList>
-        </Tabs>
+        <AppbarSticky top={!isHolder ? '0' : `${HEADER_HEIGHT}px`} mb="20px">
+          <Tabs
+            className="filters"
+            index={filterIndex}
+            align="space-between"
+            colorScheme="black"
+          >
+            <TabList>
+              <Tab onClick={() => history.replace(history.location.pathname)}>
+                {t('nfts.owned')}
+              </Tab>
+              <Tab
+                onClick={() =>
+                  history.replace(history.location.pathname + '?liked=true')
+                }
+              >
+                {t('nfts.liked')}
+              </Tab>
+              <Tab
+                onClick={() =>
+                  history.replace(history.location.pathname + '?follow=true')
+                }
+              >
+                {t('follow.follow')}
+              </Tab>
+            </TabList>
+          </Tabs>
+        </AppbarSticky>
         {isFollow ? (
           <IssuerList isFollow={isFollow} address={address} />
         ) : (

@@ -24,7 +24,7 @@ export interface AppbarButtonProps extends ButtonProps {
 }
 
 export interface AppbarStickyProps extends BoxProps {
-  top?: number
+  top?: number | string
   zIndex?: number
 }
 
@@ -67,9 +67,10 @@ export const AppbarSticky: React.FC<AppbarStickyProps> = ({
   children,
   top = 0,
   zIndex = 100,
+  ...rest
 }) => {
   return (
-    <Box position="sticky" top={top} zIndex={zIndex}>
+    <Box position="sticky" top={top} zIndex={zIndex} w="100%" {...rest}>
       {children}
     </Box>
   )

@@ -16,7 +16,6 @@ export const Container = styled(MainContainer)`
     padding: 0 20px;
     background-color: #fff;
     z-index: 10;
-    margin-bottom: 20px;
   }
   .share {
     display: flex;

@@ -72,7 +72,7 @@ export const Info: React.FC<{
       ) : (
         <>
           <Avatar
-            src={user?.avatar_url}
+            src={user?.avatar_url || ''}
             resizeScale={200}
             size="100px"
             type={user?.avatar_type}
