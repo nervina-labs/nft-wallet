@@ -36,7 +36,7 @@ export const NftCards: React.FC = () => {
     'productState',
     'product_state'
   )
-  const { replace, location } = useHistory()
+  const { replace, location, push } = useHistory()
   const api = useAPI()
   const [t] = useTranslation('translations')
   const [index, setIndex] = useState(
@@ -48,6 +48,12 @@ export const NftCards: React.FC = () => {
       setIndex(index)
     },
     [location.pathname, replace]
+  )
+  const gotoClass = useCallback(
+    (classId: string) => {
+      push(`/class/${classId}`)
+    },
+    [push]
   )
   const queryFn = useCallback(
     async ({ pageParam = 0 }) => {
@@ -93,6 +99,7 @@ export const NftCards: React.FC = () => {
                     <AspectRatio
                       ratio={i === 0 && j === 0 ? 1 : 9 / 12}
                       key={`${i}-${j}`}
+                      onClick={() => gotoClass(token.uuid)}
                     >
                       <Image
                         src={token.bg_image_url}
@@ -124,7 +131,7 @@ export const NftCards: React.FC = () => {
                 columnCount={1}
                 renderItems={(group, i) => {
                   return group.token_classes.map((token, j: number) => (
-                    <Box pb="25px">
+                    <Box pb="25px" onClick={() => gotoClass(token.uuid)}>
                       <Box
                         rounded="10%"
                         shadow="0 0 1px rgba(0, 0, 0, 0.1)"
