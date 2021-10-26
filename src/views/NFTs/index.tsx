@@ -139,14 +139,13 @@ export const NFTs: React.FC = () => {
         address={address}
       />
       <section className="list">
-        <AppbarSticky top={!isHolder ? '0' : `${HEADER_HEIGHT}px`} mb="20px">
-          <Tabs
-            className="filters"
-            index={filterIndex}
-            align="space-between"
-            colorScheme="black"
-          >
-            <TabList>
+        <AppbarSticky
+          top={!isHolder ? '0' : `${HEADER_HEIGHT}px`}
+          mb="20px"
+          className="filters"
+        >
+          <Tabs index={filterIndex} align="space-between" colorScheme="black">
+            <TabList px="20px">
               <Tab onClick={() => history.replace(history.location.pathname)}>
                 {t('nfts.owned')}
               </Tab>

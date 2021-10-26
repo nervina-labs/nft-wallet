@@ -13,7 +13,6 @@ export const Container = styled(MainContainer)`
     color: rgba(0, 0, 0, 0.6);
   }
   .filters {
-    padding: 0 20px;
     background-color: #fff;
     z-index: 10;
   }
