@@ -46,7 +46,6 @@ export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwar
         position="relative"
         templateColumns={'40px calc(100% - 80px) 40px'}
         bg={transparent ? undefined : '#fff'}
-        px="20px"
         ref={ref}
         boxSizing="border-box"
       >
@@ -96,7 +95,7 @@ export const AppbarButton: React.FC<AppbarButtonProps> = ({
       height={`${HEADER_HEIGHT - 20}px`}
       borderRadius="100%"
       variant="link"
-      my="auto"
+      m="auto"
       bg={transparent ? undefined : '#f6f8fA'}
       {...buttonProps}
     >
