@@ -4,6 +4,7 @@
   "typescript.inlayHints.parameterNames.enabled": "all",
   "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
   "cSpell.words": [
+    "Appbar",
     "mibao"
   ]
 }
