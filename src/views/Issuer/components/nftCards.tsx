@@ -124,28 +124,36 @@ export const NftCards: React.FC = () => {
                 columnCount={1}
                 renderItems={(group, i) => {
                   return group.token_classes.map((token, j: number) => (
-                    <Box pb={'25px'}>
-                      <NftImage
-                        type={token.renderer_type}
-                        hasCardBack={token.card_back_content_exist}
-                        src={token.bg_image_url}
-                      />
-                      <Box fontWeight="600" fontSize="16px" mt="14px">
-                        <LineClamp>{token.name}</LineClamp>
-                      </Box>
-                      <Flex justifyContent={'space-between'} mt={'10px'}>
-                        <Box fontWeight="500" fontSize="16px">
-                          ¥{499}
-                        </Box>
+                    <Box pb="25px">
+                      <Box
+                        rounded="10%"
+                        shadow="0 0 1px rgba(0, 0, 0, 0.1)"
+                        overflow="hidden"
+                      >
+                        <NftImage
+                          type={token.renderer_type}
+                          hasCardBack={token.card_back_content_exist}
+                          src={token.bg_image_url}
+                        />
+                        <Box p="15px">
+                          <Box fontWeight="600" fontSize="16px">
+                            <LineClamp>{token.name}</LineClamp>
+                          </Box>
+                          <Flex justifyContent={'space-between'} mt={'10px'}>
+                            <Box fontWeight="500" fontSize="16px">
+                              ¥{499}
+                            </Box>
 
-                        <Box>
-                          <Like
-                            count={String(token.class_likes)}
-                            liked={token.class_liked}
-                            uuid={token.uuid}
-                          />
+                            <Box>
+                              <Like
+                                count={String(token.class_likes)}
+                                liked={token.class_liked}
+                                uuid={token.uuid}
+                              />
+                            </Box>
+                          </Flex>
                         </Box>
-                      </Flex>
+                      </Box>
                     </Box>
                   ))
                 }}
