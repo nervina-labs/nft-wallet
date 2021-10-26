@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Grid } from '@mibao-ui/components'
 import {
   InfiniteData,
@@ -7,12 +7,12 @@ import {
   UseInfiniteQueryOptions,
   useInfiniteQuery,
 } from 'react-query'
-import { PER_ITEM_LIMIT } from '../../constants'
+import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import { Virtuoso } from 'react-virtuoso'
-import { useObservable } from 'rxjs-hooks'
-import { fromEvent, tap } from 'rxjs'
 import styled from 'styled-components'
 import { Loading } from '../Loading'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { useTranslation } from 'react-i18next'
 
 const Tips = styled.div`
   width: 100%;
@@ -75,13 +75,13 @@ export function InfiniteListNext<
   itemLimit = PER_ITEM_LIMIT,
   columnCount = 1,
 }: InfiniteListProps<TQueryFnData, TError, TData, TQueryKey>) {
+  const [t] = useTranslation('translations')
   const {
     data,
     status,
     hasNextPage,
     fetchNextPage,
-    isFetchingNextPage,
-    // refetch,
+    refetch,
   } = useInfiniteQuery(queryKey, queryFn, {
     getNextPageParam: (lastPage: any) => {
       if (lastPage?.meta == null) {
@@ -101,6 +101,7 @@ export function InfiniteListNext<
     ...queryOptions,
     enabled: enableQuery,
   })
+  const dataLength = useMemo(() => calcDataLength(data), [data, calcDataLength])
 
   const elements: React.ReactNode[] = useMemo(
     () => data?.pages.map((page, i) => renderItems(page, i)).flat() ?? [],
@@ -116,35 +117,54 @@ export function InfiniteListNext<
     [columnCount, elements]
   )
 
-  const listRef = useRef<HTMLDivElement>(null)
-
-  useObservable(() =>
-    fromEvent(window, 'scroll').pipe(
-      tap(() => {
-        if (!listRef.current || !hasNextPage || isFetchingNextPage) return
-        const scrollY = window.scrollY + document.body.offsetHeight
-        const listBottom =
-          listRef.current.offsetTop + listRef.current.offsetHeight
-        if (scrollY <= listBottom - 100) return
-        fetchNextPage()
-      })
-    )
-  )
+  const [isRefetching, setIsRefetching] = useState(false)
+  const refresh = useCallback(async () => {
+    setIsRefetching(true)
+    await refetch()
+    setIsRefetching(false)
+  }, [refetch])
 
   return (
     <>
-      <Grid templateColumns="repeat(2, 1fr)" gap="10px" ref={listRef}>
-        {columns.map((column) => (
-          <Virtuoso
-            useWindowScroll
-            data={column}
-            itemContent={(index) => column[index]}
-          />
-        ))}
-      </Grid>
-      <Tips hide={status !== 'loading' && !isFetchingNextPage}>
+      {isRefetching ? <Loading /> : null}
+      {data === undefined && status === 'loading' ? (
         <Loading />
-      </Tips>
+      ) : (
+        <InfiniteScroll
+          pullDownToRefresh={!IS_WEXIN}
+          refreshFunction={refresh}
+          pullDownToRefreshContent={
+            pullDownToRefreshContent ?? (
+              <Tips>&#8595; {t('common.actions.pull-down-refresh')}</Tips>
+            )
+          }
+          pullDownToRefreshThreshold={pullDownToRefreshThreshold}
+          releaseToRefreshContent={
+            releaseToRefreshContent ?? (
+              <Tips>&#8593; {t('common.actions.release-refresh')}</Tips>
+            )
+          }
+          dataLength={dataLength}
+          next={fetchNextPage}
+          hasMore={hasNextPage === true}
+          scrollThreshold={scrollThreshold}
+          loader={loader ?? <Loading />}
+          endMessage={<Tips>{dataLength <= 5 ? ' ' : noMoreElement}</Tips>}
+        >
+          <Grid templateColumns="repeat(2, 1fr)" gap="10px">
+            {columns.map((column) => (
+              <Virtuoso
+                useWindowScroll
+                data={column}
+                itemContent={(index) => column[index]}
+              />
+            ))}
+          </Grid>
+          {status === 'success' && dataLength === 0
+            ? emptyElement ?? <Tips>{t('issuer.no-data')}</Tips>
+            : null}
+        </InfiniteScroll>
+      )}
     </>
   )
 }
