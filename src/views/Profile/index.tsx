@@ -210,7 +210,7 @@ export const Profile: React.FC = () => {
             <CameraSvg className="cam" />
           </Center>
         </div>
-        <Stack spacing="12px" px="20px">
+        <Stack spacing="12px" px="20px" mb="90px">
           <Input
             label={t('profile.username')}
             placeholder={`${t('profile.input')}${t('profile.username')}`}
