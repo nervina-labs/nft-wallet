@@ -1,10 +1,10 @@
 import {
   Button,
   Center,
-  Flex,
   Box,
   BoxProps,
   ButtonProps,
+  Grid,
 } from '@mibao-ui/components'
 import React from 'react'
 import styled from 'styled-components'
@@ -31,26 +31,23 @@ export const HEADER_HEIGHT = 60
 export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwardRef(
   ({ title, left, right, transparent }, ref) => {
     return (
-      <Flex
+      <Grid
         maxW="500px"
         w="100%"
         h={`${HEADER_HEIGHT}px`}
         position="relative"
-        justifyContent="space-between"
-        alignItems="center"
+        templateColumns={'60px calc(100% - 120px) 60px'}
         bg={transparent ? undefined : '#fff'}
         px="20px"
         ref={ref}
         boxSizing="border-box"
       >
         {left}
-        {title ? (
-          <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
-            {title}
-          </Center>
-        ) : null}
+        <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
+          {title}
+        </Center>
         {right}
-      </Flex>
+      </Grid>
     )
   }
 )
@@ -89,6 +86,7 @@ export const AppbarButton: React.FC<{
       height={`${HEADER_HEIGHT - 20}px`}
       borderRadius="100%"
       variant="link"
+      my="auto"
       bg={transparent ? undefined : '#f6f8fA'}
       {...buttonProps}
     >
