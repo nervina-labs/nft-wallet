@@ -44,18 +44,17 @@ export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwar
         w="100%"
         h={`${HEADER_HEIGHT}px`}
         position="relative"
-        templateColumns={'60px calc(100% - 120px) 60px'}
+        templateColumns={'40px calc(100% - 80px) 40px'}
         bg={transparent ? undefined : '#fff'}
         px="20px"
         ref={ref}
         boxSizing="border-box"
       >
         {leftEl}
-        {title ? (
-          <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
-            {title}
-          </Center>
-        ) : null}
+        <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
+          {title}
+        </Center>
+        {right}
       </Grid>
     )
   }
