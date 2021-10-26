@@ -110,7 +110,6 @@ const Header = styled.header`
   .left {
     width: 50px;
     text-align: left;
-    margin-left: 25px;
     height: 30px;
     display: flex;
     align-items: center;
@@ -124,7 +123,6 @@ const Header = styled.header`
   }
   .right {
     text-align: right;
-    margin-right: 25px;
     font-size: 14px;
     line-height: 30px;
     width: 50px;
