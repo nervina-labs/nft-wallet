@@ -458,7 +458,7 @@
       "confirm": "Confirm to unfollow?",
       "follower": "Followers: ",
       "likes": "Likes: ",
-      "count": "Following {{count}} creators",
+      "count": "• Following {{count}} creators",
       "end": "The end~",
       "login": {
         "desc-1": "Opps~ please log in first",

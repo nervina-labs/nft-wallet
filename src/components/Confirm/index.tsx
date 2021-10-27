@@ -9,6 +9,7 @@ const DialogContainer = styled(Dialog)`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 13000 !important;
   .content {
     display: flex;
     justify-content: center;

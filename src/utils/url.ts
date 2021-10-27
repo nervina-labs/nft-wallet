@@ -5,6 +5,7 @@ import {
   OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
   OSS_IMG_PROCESS_QUERY_KEY_SCALE,
 } from '../constants'
+import i18n from '../i18n'
 
 function isSupportWebp(): boolean {
   // https://caniuse.com/?search=webp
@@ -69,4 +70,14 @@ export function getImagePreviewUrl<U extends string | undefined>(
     OSS_IMG_PROCESS_QUERY_KEY
   ] = `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webpParam}`
   return addParamsToUrl(url, params) as any
+}
+
+export const getNFTQueryParams = (tid?: number, locale = i18n.language) => {
+  if (typeof tid === 'number' || typeof tid === 'string') {
+    return {
+      tid,
+      locale,
+    }
+  }
+  return undefined
 }

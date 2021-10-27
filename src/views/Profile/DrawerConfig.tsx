@@ -1,4 +1,3 @@
-import { CircularProgress, Drawer } from '@material-ui/core'
 import React, { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
@@ -6,6 +5,9 @@ import styled from 'styled-components'
 import { useWidth } from '../../hooks/useWidth'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import classNames from 'classnames'
+import { Drawer, Loading } from '@mibao-ui/components'
+import { DrawerContentProps } from '@chakra-ui/modal'
+import { HEADER_HEIGHT } from '../../components/Appbar'
 
 const DrawerContainer = styled.div`
   height: 100%;
@@ -101,15 +103,13 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 78px;
+  height: 60px;
   background: white;
   color: #2c454c;
-  border-bottom: 1px solid #ccc;
 
   .left {
     width: 50px;
     text-align: left;
-    margin-left: 25px;
     height: 30px;
     display: flex;
     align-items: center;
@@ -123,7 +123,6 @@ const Header = styled.header`
   }
   .right {
     text-align: right;
-    margin-right: 25px;
     font-size: 14px;
     line-height: 30px;
     width: 50px;
@@ -152,6 +151,7 @@ export interface DrawerConfigProps {
   onClose?: () => void
   showSave?: boolean
   bg?: string
+  height?: string
 }
 
 export const DrawerConfig: React.FC<DrawerConfigProps> = ({
@@ -165,6 +165,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
   onClose,
   bg = 'white',
   showSave = true,
+  height,
 }) => {
   const [t] = useTranslation('translations')
   const bodyRef = useRef(document.body)
@@ -178,30 +179,33 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
     }
     return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
   }, [bodyWidth])
-  const height = useMemo(() => {
-    return window.innerHeight - 44
+  const fullHeight = useMemo(() => {
+    return window.innerHeight - HEADER_HEIGHT
   }, [])
+
+  const drawerContentProps: DrawerContentProps = {
+    width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
+    style: {
+      left: drawerLeft,
+    },
+    overflow: 'hidden',
+    height: height ?? fullHeight,
+  }
+
+  if (height) {
+    drawerContentProps.borderRadius = '20px'
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    drawerContentProps.style!.bottom = '40px'
+  }
 
   return (
     <Drawer
-      anchor="bottom"
-      open={isDrawerOpen}
-      onBackdropClick={close}
-      onClose={onClose}
-      PaperProps={{
-        style: {
-          position: 'absolute',
-          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
-          left: drawerLeft,
-          borderTopLeftRadius: '25px',
-          borderTopRightRadius: '25px',
-          height: `${height}px`,
-          overflow: 'hidden',
-        },
-      }}
-      disableEnforceFocus
-      disableEscapeKeyDown
-      disableScrollLock={window.innerWidth >= 500}
+      placement="bottom"
+      isOpen={isDrawerOpen}
+      onClose={close}
+      hasOverlay
+      rounded="lg"
+      contentProps={drawerContentProps}
     >
       <DrawerContainer bg={bg}>
         <Header>
@@ -218,7 +222,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
               onClick={isValid && !isSaving ? onSaving : undefined}
             >
               {isSaving ? (
-                <CircularProgress size="1em" className="loading" />
+                <Loading size="sm" className="loading" />
               ) : (
                 t('profile.save')
               )}

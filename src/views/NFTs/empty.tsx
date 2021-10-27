@@ -12,9 +12,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  img {
-    margin-top: 100px;
-  }
   .desc {
     margin-top: 30px;
     font-size: 15px;

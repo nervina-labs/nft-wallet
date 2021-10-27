@@ -1,52 +1,24 @@
-import { CircularProgress } from '@material-ui/core'
-import classNames from 'classnames'
 import React, { useCallback, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
-import styled from 'styled-components'
 import { useConfirm } from '../../hooks/useConfirm'
 import { useFollowStatus } from '../../hooks/useFollowStatus'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { useAPI, useAccountStatus } from '../../hooks/useAccount'
 import { RoutePath } from '../../routes'
-
-const Container = styled.button`
-  border-radius: 20px;
-  border: none;
-  background: #ff6e30;
-  border: 0.5px solid #ff5c00;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  height: 22px;
-  font-size: 12px;
-  word-break: keep-all;
-  white-space: 'nowrap';
-  padding: 0 10px;
-  transition: all 0.5s;
-
-  &.followed {
-    border: 0.5px solid #999999;
-    background: transparent;
-    color: #999999;
-  }
-
-  &.disabled {
-    pointer-events: none;
-  }
-`
-
+import { Button } from '@mibao-ui/components'
 export interface FollowProps {
   followed: boolean
   uuid: string
   afterToggle?: (params?: any) => Promise<any>
+  isPrimary?: boolean
 }
 
 export const Follow: React.FC<FollowProps> = ({
   followed,
   uuid,
   afterToggle,
+  isPrimary = false,
 }) => {
   const [t] = useTranslation('translations')
   const api = useAPI()
@@ -102,18 +74,19 @@ export const Follow: React.FC<FollowProps> = ({
   )
 
   return (
-    <Container
+    <Button
+      isLoading={isLoading}
+      size="sm"
+      colorScheme={isPrimary ? 'primary' : 'gray'}
+      variant={isPrimary && !isFollow ? 'solid' : 'outline'}
+      isDisabled={isLoading}
       onClick={toggleFollow}
-      className={classNames({ followed: isFollow, disabled: isLoading })}
-      disabled={isLoading}
+      fontWeight="normal"
+      borderRadius="10px"
+      px="16px"
+      color={isPrimary ? undefined : isFollow ? 'gray' : undefined}
     >
-      {isLoading ? (
-        <CircularProgress className="loading" size="1em" />
-      ) : !isFollow ? (
-        `+ ${t('follow.follow')}`
-      ) : (
-        t('follow.followed')
-      )}
-    </Container>
+      {!isFollow ? t('follow.follow') : t('follow.followed')}
+    </Button>
   )
 }
