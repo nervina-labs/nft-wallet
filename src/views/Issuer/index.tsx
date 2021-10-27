@@ -13,10 +13,6 @@ const IssuerContainer = styled.main`
   position: relative;
   max-width: var(--max-width);
   margin: 0 auto;
-
-  .appbar {
-    max-width: var(--max-width);
-  }
 `
 
 export const Issuer: React.FC = () => {
