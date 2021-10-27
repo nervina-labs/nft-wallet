@@ -1,5 +1,6 @@
 import { Box } from '@mibao-ui/components'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 const DescriptionContent = styled.div`
@@ -14,6 +15,7 @@ const DescriptionContent = styled.div`
 
 export const Description: React.FC<{ content: string }> = ({ content }) => {
   const [folded, setFolded] = useState(content.length > 100)
+  const { t } = useTranslation('translations')
 
   return (
     <Box
@@ -37,8 +39,9 @@ export const Description: React.FC<{ content: string }> = ({ content }) => {
           bg="white"
           color="gray.500"
           shadow="-10px 0 10px #fff"
+          pl="5px"
         >
-          ...更多
+          ... {t('issuer.more')}
         </Box>
       )}
     </Box>
