@@ -18,6 +18,7 @@ import WebsiteSvg from '../../../assets/svg/issuer-website.svg'
 import { atom, useAtom } from 'jotai'
 import { SocialMediaType } from '../../../models/issuer'
 import { Description } from './description'
+import { Address } from './address'
 
 export const TabCountInfo = atom({
   onSaleProductCount: 0,
@@ -79,7 +80,7 @@ export const IssuerInfo: React.FC = () => {
   return (
     <Stack py="22px" px="16px" spacing="16px">
       <Flex>
-        <Box w="76px">
+        <Box w="60px" mr="16px">
           <Avatar
             src={data?.avatar_url}
             isVerified={data?.verified_info?.is_verified}
@@ -88,13 +89,8 @@ export const IssuerInfo: React.FC = () => {
             border="3px solid var(--input-bg-color)"
           />
         </Box>
-        <Box w="calc(100% - 170px)" mr="16px">
-          <SkeletonText
-            isLoaded={!isLoading}
-            noOfLines={2}
-            spacing={4}
-            mt="10px"
-          >
+        <Box w="calc(100% - 76px - 76px)" mr="16px">
+          <SkeletonText isLoaded={!isLoading} noOfLines={3} spacing={2}>
             <Box
               textOverflow="ellipsis"
               overflow="hidden"
@@ -104,25 +100,19 @@ export const IssuerInfo: React.FC = () => {
             >
               {data?.name}
             </Box>
-            <Flex fontSize="12px" whiteSpace="nowrap">
-              ID:
-              <Box w="50%" overflow="hidden" textOverflow="ellipsis" ml="6px">
-                {data?.issuer_id}
-              </Box>
-              <Box
-                w="50%"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                style={{
-                  direction: 'rtl',
-                }}
-              >
-                {data?.issuer_id}
-              </Box>
-            </Flex>
+            {data?.issuer_id && <Address content={data?.issuer_id} />}
+            <Box
+              color="#777E90"
+              textOverflow="ellipsis"
+              overflow="hidden"
+              fontSize="12px"
+              whiteSpace="nowrap"
+            >
+              {data?.verified_info?.verified_title}
+            </Box>
           </SkeletonText>
         </Box>
-        <Center w="80px">
+        <Center>
           <Skeleton isLoaded={!isLoading} borderRadius="12px">
             <Follow
               followed={data?.issuer_followed === true}
