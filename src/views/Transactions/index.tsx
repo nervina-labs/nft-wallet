@@ -33,7 +33,6 @@ const Container = styled(MainContainer)`
 
   .list {
     flex: 1;
-    margin-top: 24px;
   }
   h4 {
     text-align: center;
