@@ -7,8 +7,7 @@ import {
   TabPanels,
   Image,
   AspectRatio,
-  NftImage,
-  Flex,
+  NFTCard,
 } from '@mibao-ui/components'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,16 +18,8 @@ import { Empty } from '../../NFTs/empty'
 import { InfiniteListNext } from '../../../components/InfiniteListNext'
 import { useAPI } from '../../../hooks/useAccount'
 import { useParams } from 'react-router'
-import { Like } from '../../../components/Like'
-import styled from 'styled-components'
-
-const LineClamp = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-`
+import { useAtom } from 'jotai'
+import { TabCountInfo } from './issuerInfo'
 
 export const NftCards: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -38,7 +29,7 @@ export const NftCards: React.FC = () => {
   )
   const { replace, location, push } = useHistory()
   const api = useAPI()
-  const [t] = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const [index, setIndex] = useState(
     PRODUCT_STATUE_SET.findIndex((item) => item === productState) || 0
   )
@@ -64,6 +55,7 @@ export const NftCards: React.FC = () => {
     },
     [api, id, productState]
   )
+  const [tabCountInfo] = useAtom(TabCountInfo)
 
   return (
     <Box w="full">
@@ -74,8 +66,12 @@ export const NftCards: React.FC = () => {
         onChange={onChange}
       >
         <TabList position={'sticky'} top={50} zIndex={99} bg={'white'}>
-          <Tab>{t('issuer.created')}</Tab>
-          <Tab>{t('issuer.selling')}</Tab>
+          <Tab>
+            {t('issuer.created')} {tabCountInfo.issuedClassCount}
+          </Tab>
+          <Tab>
+            {t('issuer.selling')} {tabCountInfo.onSaleProductCount}
+          </Tab>
         </TabList>
 
         <TabPanels>
@@ -101,13 +97,15 @@ export const NftCards: React.FC = () => {
                       key={`${i}-${j}`}
                       onClick={() => gotoClass(token.uuid)}
                     >
-                      <Image
-                        src={token.bg_image_url}
-                        width="100%"
-                        height="calc(100% - 5px)"
-                        rounded="20px"
-                        resizeScale={300}
-                      />
+                      <Box height="calc(100% - 10px)" py="5px">
+                        <Image
+                          src={token.bg_image_url}
+                          width="100%"
+                          height="100%"
+                          rounded="20px"
+                          resizeScale={300}
+                        />
+                      </Box>
                     </AspectRatio>
                   ))
                 }}
@@ -131,35 +129,27 @@ export const NftCards: React.FC = () => {
                 columnCount={1}
                 renderItems={(group, i) => {
                   return group.token_classes.map((token, j: number) => (
-                    <Box pb="25px" onClick={() => gotoClass(token.uuid)}>
+                    <Box pb="25px">
                       <Box
                         rounded="10%"
                         shadow="0 0 1px rgba(0, 0, 0, 0.1)"
                         overflow="hidden"
+                        p="10px"
+                        pb="20px"
                       >
-                        <NftImage
-                          type={token.renderer_type}
-                          hasCardBack={token.card_back_content_exist}
+                        <NFTCard
+                          hasCardback={token.card_back_content_exist}
+                          likeProps={{
+                            isLiked: token.class_liked,
+                            likeCount: token.class_likes,
+                          }}
+                          locale={i18n.language}
+                          price={`¥${token.price ?? 0}`}
                           src={token.bg_image_url}
+                          title={token.name}
+                          type={token.renderer_type}
+                          resizeScale={500}
                         />
-                        <Box p="15px">
-                          <Box fontWeight="600" fontSize="16px">
-                            <LineClamp>{token.name}</LineClamp>
-                          </Box>
-                          <Flex justifyContent={'space-between'} mt={'10px'}>
-                            <Box fontWeight="500" fontSize="16px">
-                              ¥{499}
-                            </Box>
-
-                            <Box>
-                              <Like
-                                count={String(token.class_likes)}
-                                liked={token.class_liked}
-                                uuid={token.uuid}
-                              />
-                            </Box>
-                          </Flex>
-                        </Box>
                       </Box>
                     </Box>
                   ))
