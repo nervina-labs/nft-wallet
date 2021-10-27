@@ -12,12 +12,7 @@ import dayjs from 'dayjs'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { ReactComponent as ExplorerSvg } from '../../assets/svg/explorer.svg'
 import { truncateMiddle } from '../../utils'
-import {
-  IS_IPHONE,
-  IS_WEXIN,
-  NFT_EXPLORER_URL,
-  PER_ITEM_LIMIT,
-} from '../../constants'
+import { IS_WEXIN, NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 import SendPng from '../../assets/img/send.png'
 import ReceivePng from '../../assets/img/receive.png'
@@ -28,12 +23,18 @@ import { ReactComponent as VipSvg } from '../../assets/svg/vip.svg'
 import Tooltip from '@material-ui/core/Tooltip'
 import { useAPI } from '../../hooks/useAccount'
 import { Flex, Text } from '@mibao-ui/components'
+import { MainContainer } from '../../styles'
+import { Appbar, AppbarSticky } from '../../components/Appbar'
 
-const Container = styled.div`
+const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 24px;
+
+  .list {
+    flex: 1;
+    margin-top: 24px;
+  }
   h4 {
     text-align: center;
     font-size: 14px;
@@ -47,6 +48,7 @@ const Container = styled.div`
     flex-direction: column;
     position: relative;
     top: 100px;
+    height: 100%;
 
     p {
       margin: 0;
@@ -318,62 +320,61 @@ export const Transactions: React.FC = () => {
   }, [data])
 
   return (
-    <Container
-      style={
-        IS_IPHONE
-          ? { position: 'fixed', width: '100%', maxWidth: '100%' }
-          : undefined
-      }
-    >
-      {isRefetching ? <Loading /> : null}
-      {status === 'loading' && data === undefined ? (
-        <Loading />
-      ) : (
-        <InfiniteScroll
-          dataLength={data!.pages.reduce(
-            (acc, tx) => tx.transaction_list.length + acc,
-            0
-          )}
-          pullDownToRefresh={!IS_WEXIN}
-          refreshFunction={refresh}
-          next={fetchNextPage}
-          hasMore={hasNextPage === true}
-          pullDownToRefreshContent={
-            <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
-          }
-          pullDownToRefreshThreshold={80}
-          releaseToRefreshContent={
-            <h4>&#8593; {t('common.actions.release-refresh')}</h4>
-          }
-          scrollThreshold="300px"
-          loader={<Loading />}
-          endMessage={
-            <h4>{dataLength <= 5 ? '' : t('transactions.no-data')}</h4>
-          }
-        >
-          {data?.pages?.map((group, i) => {
-            return (
-              <React.Fragment key={i}>
-                {group.transaction_list.map((tx, j) => {
-                  return (
-                    <ListItem
-                      tx={tx}
-                      key={tx.uuid ?? `${i}${j}`}
-                      className={i === 0 && j === 0 ? 'first' : ''}
-                    />
-                  )
-                })}
-              </React.Fragment>
-            )
-          })}
-          {status === 'success' && dataLength === 0 ? (
-            <div className="no-data">
-              <LazyLoadImage src={NoTxPng} width={224} height={120} />
-              <p>{t('transactions.no-data')}</p>
-            </div>
-          ) : null}
-        </InfiniteScroll>
-      )}
+    <Container>
+      <AppbarSticky>
+        <Appbar title={t('account.transactions')} />
+      </AppbarSticky>
+      <section className="list">
+        {isRefetching ? <Loading /> : null}
+        {status === 'loading' && data === undefined ? (
+          <Loading />
+        ) : (
+          <InfiniteScroll
+            dataLength={data!.pages.reduce(
+              (acc, tx) => tx.transaction_list.length + acc,
+              0
+            )}
+            pullDownToRefresh={!IS_WEXIN}
+            refreshFunction={refresh}
+            next={fetchNextPage}
+            hasMore={hasNextPage === true}
+            pullDownToRefreshContent={
+              <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
+            }
+            pullDownToRefreshThreshold={80}
+            releaseToRefreshContent={
+              <h4>&#8593; {t('common.actions.release-refresh')}</h4>
+            }
+            scrollThreshold="300px"
+            loader={<Loading />}
+            endMessage={
+              <h4>{dataLength <= 5 ? '' : t('transactions.no-data')}</h4>
+            }
+          >
+            {data?.pages?.map((group, i) => {
+              return (
+                <React.Fragment key={i}>
+                  {group.transaction_list.map((tx, j) => {
+                    return (
+                      <ListItem
+                        tx={tx}
+                        key={tx.uuid ?? `${i}${j}`}
+                        className={i === 0 && j === 0 ? 'first' : ''}
+                      />
+                    )
+                  })}
+                </React.Fragment>
+              )
+            })}
+            {status === 'success' && dataLength === 0 ? (
+              <div className="no-data">
+                <LazyLoadImage src={NoTxPng} width={224} height={120} />
+                <p>{t('transactions.no-data')}</p>
+              </div>
+            ) : null}
+          </InfiniteScroll>
+        )}
+      </section>
     </Container>
   )
 }
