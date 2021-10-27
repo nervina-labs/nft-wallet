@@ -7,7 +7,6 @@ import { MibaoProvider } from '@mibao-ui/components'
 import '@mibao-ui/components/mibao-ui.esm.css'
 
 IntryUrl.set(location.href.split('#')[0])
-
 const App: React.FC = () => {
   const queryClient = useMemo(() => {
     return new QueryClient()

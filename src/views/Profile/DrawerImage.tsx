@@ -7,15 +7,16 @@ import { DrawerConfig } from './DrawerConfig'
 import { useInfiniteQuery } from 'react-query'
 import { NFTToken, Query } from '../../models'
 import { Loading } from '../../components/Loading'
-import { Card } from '../../components/Card'
 import { ReactComponent as SelectedArrow } from '../../assets/svg/selected-arrow.svg'
 import styled from 'styled-components'
-import classNames from 'classnames'
 import { Empty } from '../NFTs/empty'
 import { useSetServerProfile } from '../../hooks/useProfile'
 import { AvatarType } from '../../models/user'
 import { useErrorToast } from '../../hooks/useErrorToast'
 import { useAccount, useAPI } from '../../hooks/useAccount'
+import { NFTCard, Box } from '@mibao-ui/components'
+import { getNFTQueryParams } from '../../utils'
+import { Masonry } from '../../components/Masonry'
 
 export interface DrawerImageProps {
   showAvatarAction: boolean
@@ -30,7 +31,6 @@ const InfiniteScrollContainer = styled.div`
   height: calc(100% - 79px);
   overflow-x: hidden;
   overflow-y: scroll;
-  padding: 15px 15px;
   box-sizing: border-box;
   user-select: none;
   h4 {
@@ -39,19 +39,13 @@ const InfiniteScrollContainer = styled.div`
   }
 `
 
-const CardContainer = styled.div`
-  box-sizing: content-box;
-  margin-bottom: 15px;
-  border: 1px solid rgba(0, 0, 0, 0);
+const CardContainer = styled(Box)`
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
   overflow: hidden;
-  position: relative;
-  border-radius: 12px;
-  cursor: pointer;
-
   .arrow {
-    opacity: 0;
-    --size: 36px;
-    border-top: var(--size) solid #ff5c00;
+    --size: 60px;
+    border-top: var(--size) solid #5065e5;
     border-right: var(--size) solid rgba(0, 0, 0, 0);
     border-bottom: var(--size) solid rgba(0, 0, 0, 0);
     border-left: var(--size) solid rgba(0, 0, 0, 0);
@@ -65,9 +59,16 @@ const CardContainer = styled.div`
       transform: scale(1.25);
       transform-origin: center;
       position: absolute;
-      top: -27px;
-      left: -15px;
+      top: 8px;
+      right: 8px;
     }
+  }
+
+  .selected {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 3;
   }
 
   &.active {
@@ -84,12 +85,14 @@ const CardContainer = styled.div`
   }
 `
 
+console.log(CardContainer)
+
 export const DrawerImage: React.FC<DrawerImageProps> = ({
   showAvatarAction,
   setShowAvatarAction,
   reloadProfile,
 }) => {
-  const [t] = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const toast = useErrorToast()
   const history = useHistory()
   const ITEM_LIMIT = 15
@@ -202,25 +205,62 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
           ref={infiniteScrollContainerRef}
           onScroll={async (e) => await infiniteScrollContainerScroll(e)}
         >
-          {tokenList.map((token, i) => (
-            <CardContainer
-              className={classNames({
-                active: i === activeIndex,
-              })}
-              onClick={() => setActiveIndex(i)}
-            >
-              <div className="arrow">
-                <SelectedArrow />
-              </div>
-              <Card
-                className="card"
-                token={token}
-                key={token.token_uuid || `${i}`}
-                address={address}
-                isClass={false}
-              />
-            </CardContainer>
-          ))}
+          <Masonry columns={2}>
+            {tokenList.map((token, i) => {
+              const isSelected = activeIndex === i
+              return (
+                <CardContainer position="relative" w="100%">
+                  {isSelected ? (
+                    <>
+                      <div className="arrow"></div>
+                      <SelectedArrow className="selected" />
+                    </>
+                  ) : null}
+                  <NFTCard
+                    w="100%"
+                    isIssuerBanned={token.is_issuer_banned}
+                    isNFTBanned={token.is_class_banned}
+                    hasCardback={token.card_back_content_exist}
+                    resizeScale={300}
+                    title={token.class_name}
+                    bannedText={t('common.baned.nft')}
+                    type={token.renderer_type}
+                    src={token.class_bg_image_url || ''}
+                    locale={i18n.language}
+                    srcQueryParams={getNFTQueryParams(
+                      token.n_token_id,
+                      i18n.language
+                    )}
+                    imageProps={{
+                      border: isSelected ? '4px solid #5065E5' : undefined,
+                    }}
+                    issuerProps={{
+                      name: token.issuer_name as string,
+                      src: token.issuer_avatar_url,
+                      bannedText: t('common.baned.issuer'),
+                      minW: '25px',
+                    }}
+                    limitProps={{
+                      count: token.class_total,
+                      limitedText: t('common.limit.limit'),
+                      unlimitedText: t('common.limit.unlimit'),
+                      serialNumber: token.n_token_id,
+                      ml: '4px',
+                    }}
+                    likeProps={{
+                      likeCount: (token as any).class_likes,
+                      isLiked: false,
+                    }}
+                    titleProps={{ noOfLines: 2 }}
+                    onClick={() => {
+                      setActiveIndex(i)
+                    }}
+                  />
+                </CardContainer>
+              )
+            })}
+          </Masonry>
+
           {((!data && status === 'loading') || isFetching) && <Loading />}
           {status === 'success' && tokenList.length === 0 ? <Empty /> : null}
           {!hasNextPage && !(status === 'loading') && !isFetching && (

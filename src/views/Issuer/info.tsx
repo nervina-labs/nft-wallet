@@ -399,6 +399,7 @@ export const IssuerInfo: React.FC = () => {
               followed={data.issuer_followed}
               uuid={id}
               afterToggle={refetch}
+              isPrimary
             />
           )}
         </div>

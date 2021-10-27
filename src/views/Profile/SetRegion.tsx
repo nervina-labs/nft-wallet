@@ -27,8 +27,8 @@ const Region = styled.div`
     font-size: 12px;
     line-height: 14px;
     color: #333333;
-    margin: 8px 0;
-    margin-left: 20px;
+    background-color: #f5f5f5;
+    padding: 8px 0;
   }
 `
 
@@ -278,14 +278,10 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
       close={onClose}
       title={t('profile.regions.edit')}
       isValid={!!value}
-      bg="#F5F5F5"
       onSaving={onSave}
       isSaving={isSaving}
     >
-      <Region>
-        <div className="label">{t('profile.regions.all')}</div>
-        {list}
-      </Region>
+      <Region>{list}</Region>
     </DrawerConfig>
   )
 }

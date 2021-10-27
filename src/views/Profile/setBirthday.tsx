@@ -120,6 +120,7 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
       isValid
       onSaving={onSave}
       isSaving={isSaving}
+      height="340px"
     >
       <div className="birthday">
         <Datepicker

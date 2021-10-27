@@ -8,6 +8,8 @@ import {
 } from '@mibao-ui/components'
 import React from 'react'
 import styled from 'styled-components'
+import { useHistoryBack } from '../../hooks/useHistoryBack'
+import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 
 export interface AppbarProps extends React.RefAttributes<HTMLDivElement> {
   title?: React.ReactNode
@@ -22,7 +24,7 @@ export interface AppbarButtonProps extends ButtonProps {
 }
 
 export interface AppbarStickyProps extends BoxProps {
-  top?: number
+  top?: number | string
   zIndex?: number
 }
 
@@ -30,6 +32,12 @@ export const HEADER_HEIGHT = 60
 
 export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwardRef(
   ({ title, left, right, transparent }, ref) => {
+    const back = useHistoryBack()
+    const leftEl = left ?? (
+      <AppbarButton onClick={() => back()}>
+        <BackSvg />
+      </AppbarButton>
+    )
     return (
       <Grid
         maxW="500px"
@@ -41,7 +49,7 @@ export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwar
         ref={ref}
         boxSizing="border-box"
       >
-        {left}
+        {leftEl}
         <Center h={`${HEADER_HEIGHT}px`} fontSize="18px">
           {title}
         </Center>
@@ -55,9 +63,10 @@ export const AppbarSticky: React.FC<AppbarStickyProps> = ({
   children,
   top = 0,
   zIndex = 100,
+  ...rest
 }) => {
   return (
-    <Box position="sticky" top={top} zIndex={zIndex}>
+    <Box position="sticky" top={top} zIndex={zIndex} w="100%" {...rest}>
       {children}
     </Box>
   )
@@ -73,11 +82,12 @@ const AppbarButtonContainer = styled.span`
   }
 `
 
-export const AppbarButton: React.FC<{
-  transparent?: boolean
-  onClick?: () => void
-  buttonProps?: ButtonProps
-}> = ({ children, transparent, onClick, ...buttonProps }) => {
+export const AppbarButton: React.FC<AppbarButtonProps> = ({
+  children,
+  transparent,
+  onClick,
+  ...buttonProps
+}) => {
   return (
     <Button
       onClick={onClick}

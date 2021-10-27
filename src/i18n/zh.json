@@ -160,7 +160,7 @@
       "description": "简介",
       "input": "请填写",
       "select": "请选择",
-      "choose-nft-avatar": "请选择NFT",
+      "choose-nft-avatar": "请选择秘宝",
       "user-name": {
         "edit": "修改昵称",
         "desc": "请输入 2-24 个字符",
@@ -185,7 +185,7 @@
       "avatar": {
         "camera": "拍照",
         "photo-lib": "图片库",
-        "nft": "选择 NFT 做头像"
+        "nft": "选择秘宝做头像"
       },
       "save": "保存",
       "cancel": "取消",
@@ -215,6 +215,7 @@
     },
     "menu": {
       "profile": "个人资料",
+      "order": "我的订单",
       "txs": "流转记录",
       "language": "语言设置",
       "help": "帮助支持",
@@ -337,8 +338,8 @@
       "title": "兑换中心",
       "count": "{{count}} 个",
       "redeemed": "已兑",
-      "nft-prize": "奖品包含下面所有 NFT",
-      "blind-prize": "奖品随机包含下面的 {{count}} 个 NFT",
+      "nft-prize": "奖品包含下面所有秘宝",
+      "blind-prize": "奖品随机包含下面的 {{count}} 个秘宝",
       "othder-prize": "发起人会在您提交兑换后根据您提供的接收信息进行承兑",
       "redeem-time": "兑换时间：",
       "type": {
@@ -422,15 +423,15 @@
           "price": "活动奖品",
           "requirement": "兑换条件"
         },
-        "condition": "同时持有以下 NFT 的用户才可参与兑换"
+        "condition": "同时持有以下秘宝的用户才可参与兑换"
       },
       "condition": {
         "nft": "NFT",
         "needed": "需持有",
         "held": "当前可兑换"
       },
-      "warning": "兑换不会销毁您持有的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他任何兑换活动。",
-      "warning-destroyed": "兑换将会销毁您参与兑换的 NFT ，该操作不可逆，一经销毁将无法找回",
+      "warning": "兑换不会销毁您持有的秘宝，但会对其进行标记，标记过的秘宝无法再次参与其他任何兑换活动。",
+      "warning-destroyed": "兑换将会销毁您参与兑换的秘宝 ，该操作不可逆，一经销毁将无法找回",
       "check": {
         "price": "查看奖品",
         "comment": "查看奖品和留言",
@@ -445,7 +446,7 @@
         "time": "提交时间：",
         "fail": "兑换失败",
         "custom": "活动发起人会根据您提供的接收信息进行承兑",
-        "check": "查看兑换的 NFT",
+        "check": "查看兑换的秘宝",
         "confirm": "确认",
         "go-back": "返回兑换中心",
         "error": "请检查当前网络情况或兑换条件",
@@ -458,7 +459,7 @@
       "confirm": "确认不再关注？",
       "follower": "粉丝：",
       "likes": "获赞：",
-      "count": "已关注 {{count}} 人",
+      "count": "• 已关注 {{count}} 人",
       "end": "已经拉到底啦~",
       "login": {
         "desc-1": "啊哦～您还未登录",

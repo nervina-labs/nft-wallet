@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { Card } from '../../components/Card'
 import { NFTToken, Query, TransactionStatus } from '../../models'
 import { Empty } from './empty'
 import { Redirect, useHistory, useParams } from 'react-router'
@@ -15,14 +14,22 @@ import { isVerticalScrollable } from '../../utils'
 import { Container } from './styled'
 import { Intro } from '../../components/Intro'
 import { IssuerList } from './IssuerList'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as SettingsSvg } from '../../assets/svg/settings.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import { Appbar, AppbarButton, HEADER_HEIGHT } from '../../components/Appbar'
+import {
+  Appbar,
+  AppbarButton,
+  AppbarSticky,
+  HEADER_HEIGHT,
+} from '../../components/Appbar'
 import { Info } from './info'
-import { Tab, Tabs, TabsAffix } from '../../components/Tab'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { InfiniteList } from '../../components/InfiniteList'
+import { Share } from '../../components/Share'
+import { HOST } from '../../constants'
+import { DrawerMenu } from './DrawerMenu'
+import { Card } from './card'
+import { Tabs, Tab, TabList } from '@mibao-ui/components'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -87,7 +94,10 @@ export const NFTs: React.FC = () => {
   )
 
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
-
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const closeDrawer = () => setIsDrawerOpen(false)
+  const openDrawer = () => setIsDrawerOpen(true)
   const showGuide = useMemo(() => {
     if (isUserLoading) {
       return false
@@ -102,21 +112,26 @@ export const NFTs: React.FC = () => {
     return <Redirect to={RoutePath.NFTs} />
   }
 
+  const appbar = (
+    <Appbar
+      left={
+        !isHolder ? (
+          <AppbarButton onClick={openDrawer} className="setting">
+            <SettingsSvg />
+          </AppbarButton>
+        ) : undefined
+      }
+      right={
+        <AppbarButton transparent onClick={() => setIsShareDialogOpen(true)}>
+          <ShareSvg />
+        </AppbarButton>
+      }
+    />
+  )
+
   return (
     <Container id="main">
-      <Appbar
-        title={isHolder ? t('holder.title') : null}
-        left={
-          <AppbarButton onClick={() => history.goBack()}>
-            {isHolder ? <BackSvg /> : <SettingsSvg />}
-          </AppbarButton>
-        }
-        right={
-          <AppbarButton transparent>
-            <ShareSvg />
-          </AppbarButton>
-        }
-      />
+      {isHolder ? <AppbarSticky>{appbar}</AppbarSticky> : appbar}
       <Info
         isLoading={isUserLoading}
         user={user}
@@ -124,32 +139,33 @@ export const NFTs: React.FC = () => {
         address={address}
       />
       <section className="list">
-        <TabsAffix top={isHolder ? HEADER_HEIGHT : 0} className="filters">
-          <Tabs activeKey={filterIndex}>
-            <Tab
-              onClick={() => history.replace(history.location.pathname)}
-              active={isOwned}
-            >
-              {t('nfts.owned')}
-            </Tab>
-            <Tab
-              onClick={() =>
-                history.replace(history.location.pathname + '?liked=true')
-              }
-              active={isLiked}
-            >
-              {t('nfts.liked')}
-            </Tab>
-            <Tab
-              onClick={() =>
-                history.replace(history.location.pathname + '?follow=true')
-              }
-              active={isFollow}
-            >
-              {t('follow.follow')}
-            </Tab>
+        <AppbarSticky
+          top={!isHolder ? '0' : `${HEADER_HEIGHT}px`}
+          mb="20px"
+          className="filters"
+        >
+          <Tabs index={filterIndex} align="space-between" colorScheme="black">
+            <TabList px="20px">
+              <Tab onClick={() => history.replace(history.location.pathname)}>
+                {t('nfts.owned')}
+              </Tab>
+              <Tab
+                onClick={() =>
+                  history.replace(history.location.pathname + '?liked=true')
+                }
+              >
+                {t('nfts.liked')}
+              </Tab>
+              <Tab
+                onClick={() =>
+                  history.replace(history.location.pathname + '?follow=true')
+                }
+              >
+                {t('follow.follow')}
+              </Tab>
+            </TabList>
           </Tabs>
-        </TabsAffix>
+        </AppbarSticky>
         {isFollow ? (
           <IssuerList isFollow={isFollow} address={address} />
         ) : (
@@ -177,12 +193,11 @@ export const NFTs: React.FC = () => {
             renderItems={(group, i) => {
               return group.token_list.map((token, j: number) => (
                 <Card
-                  className={i === 0 && j === 0 ? 'first' : ''}
                   token={token}
                   key={token.token_uuid || `${i}.${j}`}
                   address={address}
                   isClass={isLiked}
-                  showTokenId={!isLiked}
+                  showTokenID={!isLiked}
                 />
               ))
             }}
@@ -193,8 +208,15 @@ export const NFTs: React.FC = () => {
         <>
           <Intro show={showGuide} />
           <HiddenBar alwaysShow={alwayShowTabbar} />
+          <DrawerMenu close={closeDrawer} isDrawerOpen={isDrawerOpen} />
         </>
       )}
+      <Share
+        isDialogOpen={isShareDialogOpen}
+        closeDialog={() => setIsShareDialogOpen(false)}
+        displayText={HOST + location.pathname}
+        copyText={HOST + location.pathname}
+      />
     </Container>
   )
 }
