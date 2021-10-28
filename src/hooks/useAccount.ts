@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { usePrevious } from './usePrevious'
 import type { History } from 'history'
 import UnipassProvider from '../pw/UnipassProvider'
-import { UNIPASS_URL } from '../constants'
+import { IS_IMTOKEN, UNIPASS_URL } from '../constants'
 import { Web3Provider } from '../pw/Web3Provider'
 import { RoutePath } from '../routes'
 import { generateUnipassLoginUrl, generateUnipassSignUrl } from '../utils'
@@ -33,10 +33,9 @@ export interface UnipassAccount {
 
 const providerAtom = atom<Provider | null>(null)
 
-const accountAtom = atomWithStorage<UnipassAccount | null>(
-  UNIPASS_ACCOUNT_KEY,
-  null
-)
+const accountAtom = IS_IMTOKEN
+  ? atom<UnipassAccount | null>(null)
+  : atomWithStorage<UnipassAccount | null>(UNIPASS_ACCOUNT_KEY, null)
 
 export function useProvider() {
   return useAtomValue(providerAtom)
