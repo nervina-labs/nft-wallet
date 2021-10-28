@@ -6,7 +6,6 @@ import { Box, Center, Flex, Image } from '@mibao-ui/components'
 import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as CardbackSvg } from '../../../assets/svg/card-back.svg'
 import { useTranslation } from 'react-i18next'
-import { useScrollTriggerWithThreshold } from '../../../hooks/useScroll'
 
 const TiltContainer = styled(Tilt)`
   position: relative;
@@ -28,7 +27,6 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   detail,
 }) => {
   const { t } = useTranslation('translations')
-  const trigger = useScrollTriggerWithThreshold(60)
 
   return (
     <Box
@@ -37,8 +35,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       h="460px"
       w="100%"
       pt={`${HEADER_HEIGHT + 10}px`}
-      position={'sticky'}
-      top={'-400px'}
+      position="relative"
       overflow="hidden"
     >
       <TiltContainer
@@ -73,13 +70,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         />
       </Box>
 
-      <Center
-        position="absolute"
-        bottom="20px"
-        w="full"
-        opacity={trigger ? 0 : 1}
-        transition="0.2s"
-      >
+      <Center position="absolute" bottom="20px" w="full" transition="0.2s">
         <Center
           zIndex={2}
           position="relative"

@@ -15,7 +15,6 @@ const Container = styled.main`
   position: relative;
   max-width: var(--max-width);
   margin: 0 auto;
-  height: 2000px;
 `
 
 export const NFT: React.FC = () => {
