@@ -3,22 +3,30 @@ import {
   Box,
   Center,
   Flex,
+  Grid,
   Skeleton,
   SkeletonCircle,
   SkeletonText,
   Stack,
 } from '@mibao-ui/components'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router'
 import { useIssuerInfo } from '../hooks/useIssuerInfo'
 import { Follow } from '../../../components/Follow'
 import { formatCount } from '../../../utils'
 import { useTranslation } from 'react-i18next'
-import WebsiteSvg from '../../../assets/svg/issuer-website.svg'
 import { atom, useAtom } from 'jotai'
 import { SocialMediaType } from '../../../models/issuer'
 import { Description } from './description'
 import { Address } from './address'
+import WeiboSvg from '../../../assets/svg/issuer-weibo.svg'
+import BiliBiliSvg from '../../../assets/svg/issuer-bilibili.svg'
+import DouyinSvg from '../../../assets/svg/issuer-douyin.svg'
+import BehanceSvg from '../../../assets/svg/issuer-behance.svg'
+import GithubSvg from '../../../assets/svg/issuer-github.svg'
+import FacebookSvg from '../../../assets/svg/issuer-facebook.svg'
+import InstagramSvg from '../../../assets/svg/issuer-instagram.svg'
+import TwitterSvg from '../../../assets/svg/issuer-twitter.svg'
 
 export const TabCountInfo = atom({
   onSaleProductCount: 0,
@@ -26,14 +34,14 @@ export const TabCountInfo = atom({
 })
 
 const SocialMediaIconMap: { [key in SocialMediaType]: string } = {
-  weibo: WebsiteSvg,
-  bilibili: WebsiteSvg,
-  douyin: WebsiteSvg,
-  behance: WebsiteSvg,
-  github: WebsiteSvg,
-  facebook: WebsiteSvg,
-  instagram: WebsiteSvg,
-  twitter: WebsiteSvg,
+  weibo: WeiboSvg,
+  bilibili: BiliBiliSvg,
+  douyin: DouyinSvg,
+  behance: BehanceSvg,
+  github: GithubSvg,
+  facebook: FacebookSvg,
+  instagram: InstagramSvg,
+  twitter: TwitterSvg,
 }
 
 const FollowerWithLike: React.FC<{
@@ -67,6 +75,26 @@ export const IssuerInfo: React.FC = () => {
     window.location.href = url
   }, [])
   const [, setTabCountInfo] = useAtom(TabCountInfo)
+  const socialMediaIcons = useMemo(() => {
+    return data?.social_media?.map((media) => (
+      <Center
+        w="30px"
+        h="30px"
+        rounded="100%"
+        p="0"
+        bg="var(--input-bg-color)"
+        textAlign="center"
+        lineHeight="30px"
+        onClick={() => gotoMetaUrl(media.url)}
+      >
+        <img
+          src={SocialMediaIconMap[media.socia_type]}
+          alt="website"
+          width="15px"
+        />
+      </Center>
+    ))
+  }, [data?.social_media, gotoMetaUrl])
 
   useEffect(() => {
     if (data && !isLoading) {
@@ -79,8 +107,8 @@ export const IssuerInfo: React.FC = () => {
 
   return (
     <Stack py="22px" px="16px" spacing="16px">
-      <Flex>
-        <Box w="60px" mr="16px">
+      <Grid templateColumns="60px calc(100% - 76px - 80px) auto">
+        <Box w="60px">
           <Avatar
             src={data?.avatar_url}
             isVerified={data?.verified_info?.is_verified}
@@ -89,7 +117,7 @@ export const IssuerInfo: React.FC = () => {
             border="3px solid var(--input-bg-color)"
           />
         </Box>
-        <Box w="calc(100% - 76px - 76px)" mr="16px">
+        <Box mx="16px">
           <SkeletonText isLoaded={!isLoading} noOfLines={3} spacing={2}>
             <Box
               textOverflow="ellipsis"
@@ -112,8 +140,8 @@ export const IssuerInfo: React.FC = () => {
             </Box>
           </SkeletonText>
         </Box>
-        <Center>
-          <Skeleton isLoaded={!isLoading} borderRadius="12px">
+        <Flex justifyContent="flex-end">
+          <Skeleton isLoaded={!isLoading} borderRadius="12px" my="auto">
             <Follow
               followed={data?.issuer_followed === true}
               uuid={id}
@@ -121,8 +149,8 @@ export const IssuerInfo: React.FC = () => {
               isPrimary
             />
           </Skeleton>
-        </Center>
-      </Flex>
+        </Flex>
+      </Grid>
       <SkeletonText isLoaded={!isLoading} noOfLines={3} spacing={4}>
         {data?.description && <Description content={data?.description} />}
       </SkeletonText>
@@ -134,26 +162,10 @@ export const IssuerInfo: React.FC = () => {
       </Skeleton>
 
       <Stack align="center" direction="row" justify="center">
-        {data?.social_media?.map((media) => (
-          <SkeletonCircle size="30px" isLoaded={!isLoading}>
-            <Center
-              w="30px"
-              h="30px"
-              rounded="100%"
-              p="0"
-              bg="var(--input-bg-color)"
-              textAlign="center"
-              lineHeight="30px"
-              onClick={() => gotoMetaUrl(media.url)}
-            >
-              <img
-                src={SocialMediaIconMap[media.socia_type]}
-                alt="website"
-                width="15px"
-              />
-            </Center>
-          </SkeletonCircle>
-        ))}
+        {isLoading && !socialMediaIcons && (
+          <SkeletonCircle size="30px" isLoaded={!isLoading} />
+        )}
+        {socialMediaIcons}
       </Stack>
     </Stack>
   )
