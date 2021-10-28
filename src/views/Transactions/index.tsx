@@ -45,9 +45,7 @@ const Container = styled(MainContainer)`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    position: relative;
-    top: 100px;
-    height: 100%;
+    height: 300px;
 
     p {
       margin: 0;
