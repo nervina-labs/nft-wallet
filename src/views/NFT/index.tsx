@@ -8,6 +8,7 @@ import { Redirect, useParams } from 'react-router-dom'
 import { useNFTDetailApi } from './hooks/useNFTDetailApi'
 import { RoutePath } from '../../routes'
 import { Renderer } from './components/renderer'
+import { NftDetail } from './components/nftDetail'
 
 const Container = styled.main`
   --max-width: 500px;
@@ -20,7 +21,7 @@ const Container = styled.main`
 export const NFT: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const goBack = useHistoryBack()
-  const { detail, failureCount } = useNFTDetailApi(id)
+  const { detail, failureCount, isLoading, refetch } = useNFTDetailApi(id)
   const isNotFound =
     failureCount >= 3 || detail?.is_class_banned || detail?.is_issuer_banned
 
@@ -47,6 +48,7 @@ export const NFT: React.FC = () => {
       </AppbarSticky>
 
       <Renderer detail={detail} />
+      <NftDetail detail={detail} isLoading={isLoading} refetch={refetch} />
     </Container>
   )
 }

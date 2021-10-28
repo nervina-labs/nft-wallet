@@ -15,7 +15,7 @@ export function useNFTDetailApi(
   const getAuth = useGetAndSetAuth()
   const matchTokenClass = useRouteMatch(RoutePath.TokenClass)
 
-  const { data: detail, failureCount } = useQuery(
+  const { data: detail, failureCount, isLoading, refetch } = useQuery(
     [Query.NFTDetail, uuid, api, options?.isLogined],
     async () => {
       const auth = options?.isLogined ? await getAuth() : undefined
@@ -32,5 +32,7 @@ export function useNFTDetailApi(
   return {
     detail,
     failureCount,
+    isLoading,
+    refetch,
   }
 }
