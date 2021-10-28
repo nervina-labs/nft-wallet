@@ -135,7 +135,6 @@ export function useLogin() {
   const { walletType } = useAccount()
   const setAccount = useSetAccount()
   const [provider, setProvider] = useAtom(providerAtom)
-  const { isLogined } = useAccountStatus()
 
   const web3WalletAddressOnChange = useCallback(
     (addr?: Address) => {
@@ -187,16 +186,13 @@ export function useLogin() {
   const loginCustom = useCallback(async () => {
     const p = new UnipassProvider(UNIPASS_URL, setAccount)
     setProvider(p)
-    if (isLogined) {
-      return p
-    }
     const address = await customWallet.getAddress()
     setAccount({
       address,
       walletType: WalletType.Custom,
     })
     return p
-  }, [setAccount, setProvider, isLogined])
+  }, [setAccount, setProvider])
 
   const login = useCallback(
     async (walletType: WalletType = WalletType.Unipass) => {
