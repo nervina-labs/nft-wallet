@@ -23,6 +23,7 @@ import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { NftTxLogsList } from './nftTxLogList'
 import { HolderList } from './holdersList'
+import { HEADER_HEIGHT } from '../../../components/Appbar'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -65,8 +66,16 @@ const NftDetailTab: React.FC<{
       defaultIndex={tabIndex}
       onChange={onChangeTab}
       mt="20px"
+      position="relative"
     >
-      <Skeleton isLoaded={!isLoading} h="40px">
+      <Skeleton
+        isLoaded={!isLoading}
+        h="40px"
+        position="sticky"
+        top={`${HEADER_HEIGHT}px`}
+        bg="white"
+        zIndex={3}
+      >
         <TabList px="20px">
           <Tab>{t('nft.desc')}</Tab>
           <Tab>{t('nft.transaction-history')}</Tab>

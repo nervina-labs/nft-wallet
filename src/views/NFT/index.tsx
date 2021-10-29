@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
+import {
+  Appbar,
+  AppbarButton,
+  AppbarSticky,
+  HEADER_HEIGHT,
+} from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { useHistoryBack } from '../../hooks/useHistoryBack'
@@ -9,6 +14,9 @@ import { useNFTDetailApi } from './hooks/useNFTDetailApi'
 import { RoutePath } from '../../routes'
 import { Renderer } from './components/renderer'
 import { NftDetail } from './components/nftDetail'
+import { useObservable } from 'rxjs-hooks'
+import { fromEvent, tap } from 'rxjs'
+import { Box } from '@mibao-ui/components'
 
 const Container = styled.main`
   --max-width: 500px;
@@ -26,6 +34,17 @@ export const NFT: React.FC = () => {
   })
   const isNotFound =
     failureCount >= 3 || detail?.is_class_banned || detail?.is_issuer_banned
+  const [appbarBgOpacity, setAppbarBgOpacity] = useState(
+    Math.min(window.scrollY / 400, 1)
+  )
+
+  useObservable(() =>
+    fromEvent(window, 'scroll').pipe(
+      tap(() => {
+        setAppbarBgOpacity(Math.min(window.scrollY / 400, 1))
+      })
+    )
+  )
 
   if (isNotFound) {
     return <Redirect to={RoutePath.NotFound} />
@@ -46,7 +65,17 @@ export const NFT: React.FC = () => {
               <ShareSvg />
             </AppbarButton>
           }
-        ></Appbar>
+        />
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          bg="white"
+          h={`${HEADER_HEIGHT}px`}
+          w="full"
+          opacity={appbarBgOpacity}
+          zIndex={-1}
+        />
       </AppbarSticky>
 
       <Renderer detail={detail} />
