@@ -106,6 +106,6 @@ export const NftTxLogsList: React.FC<{
           </Box>
         ))
       }}
-    ></InfiniteList>
+    />
   )
 }

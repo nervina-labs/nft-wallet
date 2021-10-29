@@ -61,6 +61,6 @@ export const HolderList: React.FC<{
           </Grid>
         ))
       }}
-    ></InfiniteList>
+    />
   )
 }

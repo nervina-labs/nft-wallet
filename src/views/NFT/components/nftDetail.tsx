@@ -84,7 +84,7 @@ const NftDetailTab: React.FC<{
         <TabPanel p="20px" opacity={isLoading ? 0 : 1}>
           {tabIndex === 1 && <NftTxLogsList uuid={uuid} isClass={isClass} />}
         </TabPanel>
-        <TabPanel p="20px">
+        <TabPanel p="20px" opacity={isLoading ? 0 : 1}>
           {tabIndex === 2 && <HolderList uuid={uuid} />}
         </TabPanel>
       </TabPanels>
