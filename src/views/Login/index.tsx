@@ -4,16 +4,14 @@ import Logo from '../../assets/img/login.png'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { IS_IMTOKEN } from '../../constants'
-import Button from '@material-ui/core/Button'
-import { CircularProgress, FormControlLabel, Checkbox } from '@material-ui/core'
+import { CONTAINER_MAX_WIDTH, IS_IMTOKEN } from '../../constants'
+import { FormControlLabel, Checkbox } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
-import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { Redirect, useHistory, useLocation } from 'react-router'
+import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
 import { useTranslation, Trans } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
@@ -21,14 +19,28 @@ import { getLicenseUrl } from '../../data/license'
 import { UnipassConfig } from '../../utils'
 import { useSnackbar } from '../../hooks/useSnackbar'
 import { useAccountStatus, useLogin, WalletType } from '../../hooks/useAccount'
+import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
+import { Appbar, AppbarButton } from '../../components/Appbar'
+import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import AccountBg from '../../assets/img/account-bg.png'
+import {
+  Button,
+  ButtonProps,
+  Drawer,
+  useDisclosure,
+  Center,
+  Text,
+} from '@mibao-ui/components'
 
 const Container = styled(MainContainer)`
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
   background: white;
-  padding: 20px 0;
+  background: url(${AccountBg});
+  background-size: cover;
+  background-repeat: repeat-y;
+  height: 100%;
 
   .close {
     width: 24px;
@@ -125,19 +137,6 @@ const Container = styled(MainContainer)`
     }
   }
 
-  .question {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #232222;
-    font-size: 12px;
-    margin-top: 30px;
-    cursor: pointer;
-    svg {
-      margin-right: 4px;
-    }
-  }
-
   .license {
     .MuiFormControlLabel-label {
       font-size: 12px;
@@ -148,6 +147,8 @@ const Container = styled(MainContainer)`
   }
 
   .beian {
+    position: fixed;
+    bottom: 20px;
     display: flex;
     align-items: center;
     margin-top: 12px;
@@ -164,17 +165,25 @@ const Container = styled(MainContainer)`
   }
 `
 
-const Title = styled.h2`
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 28px;
-  color: #000000;
-  margin: 0;
-`
-
 enum ErrorMsg {
   NotSupport = 'not-support',
   Imtoken = 'refuse',
+}
+
+const LoginButton: React.FC<ButtonProps> = ({ children, ...rest }) => {
+  return (
+    <Button
+      colorScheme="primary"
+      fontWeight="normal"
+      w="280px"
+      variant="solid"
+      fontSize="16px"
+      mb="24px"
+      {...rest}
+    >
+      {children}
+    </Button>
+  )
 }
 
 export const Login: React.FC = () => {
@@ -194,6 +203,11 @@ export const Login: React.FC = () => {
   const errorMsg = useMemo(() => {
     return t(`login.errors.${errorStatus}`)
   }, [errorStatus, t])
+  const {
+    isOpen: isDrawerOpen,
+    onOpen: drawerOnOpen,
+    onClose: drawerOnClose,
+  } = useDisclosure()
 
   const containerRef = useRef(null)
   const containerWidth = useWidth(containerRef)
@@ -205,6 +219,18 @@ export const Login: React.FC = () => {
     // 100 = margin * 2
     return w - 100
   }, [containerWidth])
+
+  const bodyRef = useRef(document.body)
+  const bodyWidth = useWidth(bodyRef)
+  const drawerLeft = useMemo(() => {
+    if (bodyWidth == null) {
+      return 0
+    }
+    if (bodyWidth <= CONTAINER_MAX_WIDTH) {
+      return 0
+    }
+    return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
+  }, [bodyWidth])
 
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
@@ -224,10 +250,6 @@ export const Login: React.FC = () => {
   }
   const loginBtnOnClick = useCallback(
     async (walletType = WalletType.Unipass) => {
-      if (!isLicenseChecked) {
-        snackbar(t('license.warn'))
-        return
-      }
       setLoading(true, walletType)
       try {
         if (walletType === WalletType.Metamask) {
@@ -253,7 +275,7 @@ export const Login: React.FC = () => {
         }
       }
     },
-    [login, isLicenseChecked, snackbar, t, redirectUrl, history]
+    [login, redirectUrl, history]
   )
 
   if (isLogined && redirectUrl == null) {
@@ -262,21 +284,34 @@ export const Login: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
-      <div
-        className="close"
-        onClick={() => {
-          UnipassConfig.clear()
-          history.replace(RoutePath.Explore)
-        }}
-      >
-        <CloseSvg />
-      </div>
-      <div className="header">
-        <Title style={{ marginRight: '8px' }}>{t('login.title')}</Title>
-      </div>
+      <Appbar
+        transparent
+        left={
+          <AppbarButton
+            onClick={() => {
+              UnipassConfig.clear()
+              history.replace(RoutePath.Explore)
+            }}
+          >
+            <BackSvg />
+          </AppbarButton>
+        }
+        title={<FullLogo />}
+      />
       <div className="logo">
         <LazyLoadImage src={Logo} width={width} height={width * 1.091} />
       </div>
+      <LoginButton
+        onClick={() => {
+          if (!isLicenseChecked) {
+            snackbar(t('license.warn'))
+            return
+          }
+          drawerOnOpen()
+        }}
+      >
+        {t('common.login')}
+      </LoginButton>
       <ActionDialog
         icon={<FailSvg />}
         content={errorMsg}
@@ -284,55 +319,67 @@ export const Login: React.FC = () => {
         onConfrim={() => setIsErrorDialogOpen(false)}
         onBackdropClick={() => setIsErrorDialogOpen(false)}
       />
-      <div className="center">
-        <p className="desc">{t('login.desc-1')}</p>
-        <p className="desc">{t('login.desc-2')}</p>
-      </div>
-      <Button
-        className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
-        disabled={
-          isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-        }
-        onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
-      >
-        {t('login.connect.unipass')}&nbsp;
-        {isUnipassLogining ? (
-          <CircularProgress className="loading" size="1em" />
-        ) : null}
-      </Button>
-      <Button
-        className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}
-        disabled={
-          isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-        }
-        onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
-      >
-        {IS_IMTOKEN ? (
-          <>
-            {t('login.connect.connect')}
-            <ImtokenSvg className="imtoken" />
-          </>
-        ) : (
-          t('login.connect.metamask')
-        )}
-        &nbsp;
-        {isMetamaskLoging ? (
-          <CircularProgress className="loading" size="1em" />
-        ) : null}
-      </Button>
-      <div
-        className="question"
-        onClick={() => {
-          history.push(
-            `${RoutePath.Help}?url=${encodeURIComponent(
-              getHelpUnipassUrl(i18n.language)
-            )}`
-          )
+      <Drawer
+        placement="bottom"
+        isOpen={isDrawerOpen}
+        onClose={drawerOnClose}
+        hasOverlay
+        rounded="lg"
+        contentProps={{
+          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
+          style: {
+            left: drawerLeft,
+          },
+          overflow: 'hidden',
         }}
       >
-        <QuestionSvg />
-        <span>{t('help.question')}</span>
-      </div>
+        <Center flexDirection="column" my="24px">
+          <Text fontSize="16px" mb="32px">
+            {t('login.select')}
+          </Text>
+          <LoginButton
+            className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
+            isLoading={isUnipassLogining}
+            disabled={
+              isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+            }
+            onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+          >
+            {t('login.connect.unipass')}
+          </LoginButton>
+          <LoginButton
+            className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}
+            disabled={
+              isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+            }
+            isLoading={isMetamaskLoging}
+            onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+            variant="outline"
+          >
+            {IS_IMTOKEN ? (
+              <>
+                {t('login.connect.connect')}
+                <ImtokenSvg className="imtoken" />
+              </>
+            ) : (
+              t('login.connect.metamask')
+            )}
+          </LoginButton>
+          <Link
+            to={`${RoutePath.Help}?url=${encodeURIComponent(
+              getHelpUnipassUrl(i18n.language)
+            )}`}
+          >
+            <Center>
+              <QuestionSvg />
+              <Text fontSize="12px" ml="4px">
+                {t('help.question')}
+              </Text>
+            </Center>
+          </Link>
+        </Center>
+      </Drawer>
+
       <div className="license">
         <FormControlLabel
           control={
@@ -368,7 +415,7 @@ export const Login: React.FC = () => {
         />
       </div>
       {i18n.language !== 'en' ? (
-        <div className="beian">
+        <footer className="beian">
           <a
             href="https://beian.miit.gov.cn/"
             target="_blank"
@@ -376,7 +423,7 @@ export const Login: React.FC = () => {
           >
             {t('common.beian')}
           </a>
-        </div>
+        </footer>
       ) : null}
       {/* <Button
           disabled={

@@ -32,6 +32,7 @@ const Container = styled(MainContainer)`
     display: flex;
     justify-content: center;
     width: 100%;
+    max-width: 500px;
   }
 `
 
