@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query'
-import { useAPI } from '../../../hooks/useAccount'
+import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { Query } from '../../../models'
 
@@ -7,16 +7,16 @@ export function useNFTDetailApi(
   uuid: string,
   options?: {
     isClass?: boolean
-    isLogined?: boolean
   }
 ) {
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
+  const { isLogined } = useAccountStatus()
 
   const { data: detail, failureCount, isLoading, refetch } = useQuery(
-    [Query.NFTDetail, uuid, api, options?.isLogined],
+    [Query.NFTDetail, uuid, api, isLogined],
     async () => {
-      const auth = options?.isLogined ? await getAuth() : undefined
+      const auth = isLogined ? await getAuth() : undefined
       const { data } = options?.isClass
         ? await api.getTokenClass(uuid, auth)
         : await api.getNFTDetail(uuid, auth)

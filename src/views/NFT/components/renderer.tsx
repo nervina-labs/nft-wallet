@@ -27,7 +27,8 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   detail,
 }) => {
   const { t } = useTranslation('translations')
-
+  const hasCardBack =
+    detail?.card_back_content_exist || detail?.class_card_back_content_exist
   return (
     <Box
       mt={`-${HEADER_HEIGHT}px`}
@@ -70,20 +71,22 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         />
       </Box>
 
-      <Center position="absolute" bottom="20px" w="full" transition="0.2s">
-        <Center
-          zIndex={2}
-          position="relative"
-          color="white"
-          fontSize="12px"
-          bg="rgba(0, 0, 0, 0.4)"
-          rounded="8px"
-          pr="6px"
-        >
-          <CardbackSvg />
-          {t('nft.show-card-back')}
+      {hasCardBack ? (
+        <Center position="absolute" bottom="20px" w="full" transition="0.2s">
+          <Center
+            zIndex={2}
+            position="relative"
+            color="white"
+            fontSize="12px"
+            bg="rgba(0, 0, 0, 0.4)"
+            rounded="8px"
+            pr="6px"
+          >
+            <CardbackSvg />
+            {t('nft.show-card-back')}
+          </Center>
         </Center>
-      </Center>
+      ) : null}
     </Box>
   )
 }

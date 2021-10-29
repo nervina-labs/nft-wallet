@@ -16,7 +16,7 @@ import TransactionsArrowSvg from '../../../assets/svg/transactions-arrow.svg'
 import { Center, Image } from '@chakra-ui/react'
 
 const UserWithAddress: React.FC<{
-  avatar_url: string
+  avatar_url?: string | null
   avatar_type: AvatarType
   nickname: string
   address: string
@@ -28,7 +28,12 @@ const UserWithAddress: React.FC<{
 }) => {
   return (
     <Grid templateColumns="25px calc(100% - 25px - 8px)" h="30px">
-      <Avatar src={avatarUrl} type={avatarType} size="25px" />
+      <Avatar
+        src={avatarUrl === null ? '' : avatarUrl}
+        type={avatarType}
+        size="25px"
+        border="1px solid #f6f6f6"
+      />
       <Stack ml="8px" spacing="0" h="30px">
         {nickname ? (
           <>
