@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { NFT, NFTDetail } from './nft'
 import { ClassList, FollowClassList, Tag, TokenClass } from './class-list'
-import { Transaction } from './transactions'
+import { Transaction, TransactionLogResponse } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
@@ -206,4 +206,20 @@ export interface NFTWalletAPI {
       limit?: number
     }
   ) => Promise<AxiosResponse<GetHolderByTokenClassUuidResponse>>
+
+  getTokenClassTransactions: (
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) => Promise<AxiosResponse<TransactionLogResponse>>
+
+  getTokenTransactions: (
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) => Promise<AxiosResponse<TransactionLogResponse>>
 }

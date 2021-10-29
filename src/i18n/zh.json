@@ -132,7 +132,9 @@
     "nft": {
       "title": "秘宝细节",
       "transfer": "转让",
-      "desc": "秘宝简介",
+      "desc": "简介",
+      "transaction-history": "流转历史",
+      "tx_hash": "交易哈希",
       "lock": "只有该秘宝的持有者才能解锁该内容",
       "no-desc": "无简介",
       "no-holder": "无收藏者",
