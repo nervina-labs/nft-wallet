@@ -74,7 +74,7 @@ export const NftTxLogsList: React.FC<{
     <InfiniteList
       queryKey={[Query.NFTTransactions, api, isClass, uuid]}
       queryFn={queryFn}
-      noMoreElement={null}
+      noMoreElement={t('nft.no-more-transaction-history')}
       calcDataLength={(data) =>
         data?.pages.reduce((acc, page) => page.transactions.length + acc, 0) ??
         0

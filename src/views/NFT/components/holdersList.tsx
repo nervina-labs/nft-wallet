@@ -1,5 +1,6 @@
 import { Grid, Avatar, Box } from '@mibao-ui/components'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
 import { Query } from '../../../models'
@@ -7,6 +8,7 @@ import { Query } from '../../../models'
 export const HolderList: React.FC<{
   uuid: string
 }> = ({ uuid }) => {
+  const { t } = useTranslation('translations')
   const api = useAPI()
   const queryFn = useCallback(
     async ({ pageParam = 0 }) => {
@@ -22,7 +24,7 @@ export const HolderList: React.FC<{
     <InfiniteList
       queryKey={[Query.NftHolderList, api, uuid]}
       queryFn={queryFn}
-      noMoreElement={null}
+      noMoreElement={t('nft.no-more-holder')}
       calcDataLength={(data) =>
         data?.pages.reduce(
           (acc, page) => page.token_holder_list.length + acc,

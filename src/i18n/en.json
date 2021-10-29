@@ -139,7 +139,9 @@
       "no-desc": "No description",
       "no-holder": "No collector",
       "holder": "Collectors",
-      "show-card-back": "Show Cardback"
+      "show-card-back": "Show Cardback",
+      "no-more-holder": "No more collectors",
+      "no-more-transaction-history": "No more logs"
     },
     "account": {
       "title": "My Account",

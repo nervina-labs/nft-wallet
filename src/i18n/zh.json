@@ -139,7 +139,9 @@
       "no-desc": "无简介",
       "no-holder": "无收藏者",
       "holder": "收藏者",
-      "show-card-back": "翻转卡背"
+      "show-card-back": "翻转卡背",
+      "no-more-holder": "没有更多收藏者了",
+      "no-more-transaction-history": "没有更多记录了"
     },
     "account": {
       "title": "我的帐号",
