@@ -27,7 +27,7 @@ const UserWithAddress: React.FC<{
   address,
 }) => {
   return (
-    <Grid templateColumns="25px calc(100% - 25px - 8px)" h="30px">
+    <Grid templateColumns="25px calc(100% - 25px - 8px)" h="25px">
       <Avatar
         src={avatarUrl === null ? '' : avatarUrl}
         type={avatarType}
@@ -87,7 +87,7 @@ export const NftTxLogsList: React.FC<{
                 {formatTime(item.on_chain_timestamp, i18n.language)}
               </Box>
               <UserWithAddress {...item.sender_info} />
-              <Center w="25px" h="30px">
+              <Center w="25px" h="30px" mb="5px">
                 <Image src={TransactionsArrowSvg} alt="TransactionsArrowSvg" />
               </Center>
               <UserWithAddress {...item.holder_info} />
