@@ -6,7 +6,6 @@ import {
   TabPanel,
   TabPanels,
   Image,
-  AspectRatio,
   NFTCard,
 } from '@mibao-ui/components'
 import React, { useCallback, useState } from 'react'
@@ -92,21 +91,22 @@ export const NftCards: React.FC = () => {
                 columnCount={2}
                 renderItems={(group, i) => {
                   return group.token_classes.map((token, j: number) => (
-                    <AspectRatio
-                      ratio={i === 0 && j === 0 ? 1 : 9 / 12}
+                    <Box
+                      pb="10px"
                       key={`${i}-${j}`}
                       onClick={() => gotoClass(token.uuid)}
                     >
-                      <Box height="calc(100% - 10px)" py="5px">
-                        <Image
-                          src={token.bg_image_url}
-                          width="100%"
-                          height="100%"
-                          rounded="20px"
-                          resizeScale={300}
-                        />
-                      </Box>
-                    </AspectRatio>
+                      <Image
+                        src={token.bg_image_url}
+                        width="100%"
+                        height="100%"
+                        rounded="20px"
+                        resizeScale={300}
+                        containerProps={{
+                          ratio: i === 0 && j === 0 ? 1 : 9 / 12,
+                        }}
+                      />
+                    </Box>
                   ))
                 }}
               />
@@ -144,11 +144,14 @@ export const NftCards: React.FC = () => {
                             likeCount: token.class_likes,
                           }}
                           locale={i18n.language}
-                          price={`¥${token.price ?? 0}`}
+                          price={`¥${token.product_price as string}`}
                           src={token.bg_image_url}
                           title={token.name}
                           type={token.renderer_type}
                           resizeScale={500}
+                          imageProps={{
+                            webp: true,
+                          }}
                         />
                       </Box>
                     </Box>

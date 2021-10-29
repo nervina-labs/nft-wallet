@@ -150,7 +150,6 @@ export function InfiniteListNext<
           scrollThreshold={scrollThreshold}
           loader={loader ?? <Loading />}
           endMessage={<Tips>{dataLength <= 5 ? ' ' : noMoreElement}</Tips>}
-          style={{ overflow: 'visible' }}
         >
           <Grid templateColumns={`repeat(${columnCount}, 1fr)`} gap="10px">
             {columns.map((column) => (

@@ -74,5 +74,5 @@ export interface IssuerTokenClass {
   total: string
   card_back_content_exist: boolean
   uuid: string
-  price?: number
+  product_price: string
 }
