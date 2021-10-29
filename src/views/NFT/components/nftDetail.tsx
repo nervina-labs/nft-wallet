@@ -24,6 +24,7 @@ import { useHistory } from 'react-router-dom'
 import { NftTxLogsList } from './nftTxLogList'
 import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
+import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -134,7 +135,12 @@ export const NftDetail: React.FC<{
         mt="25px"
         px="20px"
       >
-        <Avatar src={avatarUrl} size="48px" border="3px solid #f6f6f6" />
+        <Avatar
+          src={avatarUrl}
+          size="48px"
+          border="3px solid #f6f6f6"
+          fallbackSrc={FallbackAvatarSrc}
+        />
         <SkeletonText
           isLoaded={!isLoading}
           noOfLines={2}

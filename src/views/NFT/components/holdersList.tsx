@@ -1,14 +1,17 @@
 import { Grid, Avatar, Box } from '@mibao-ui/components'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
 import { Query } from '../../../models'
+import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 
 export const HolderList: React.FC<{
   uuid: string
 }> = ({ uuid }) => {
   const { t } = useTranslation('translations')
+  const { push } = useHistory()
   const api = useAPI()
   const queryFn = useCallback(
     async ({ pageParam = 0 }) => {
@@ -33,7 +36,12 @@ export const HolderList: React.FC<{
       }
       renderItems={(items, index) => {
         return items.token_holder_list.map((item) => (
-          <Grid templateColumns="48px auto auto" h="60px" lineHeight="48px">
+          <Grid
+            templateColumns="48px auto auto"
+            h="60px"
+            lineHeight="48px"
+            onClick={() => push(`/holder/${item.holder_info.address}`)}
+          >
             <Avatar
               src={
                 item.holder_info.avatar_url === null
@@ -41,6 +49,7 @@ export const HolderList: React.FC<{
                   : item.holder_info.avatar_url
               }
               border="2px solid #f6f6f6"
+              fallbackSrc={FallbackAvatarSrc}
             />
             <Box
               ml="18px"
@@ -50,7 +59,9 @@ export const HolderList: React.FC<{
               textOverflow="ellipsis"
               overflow="hidden"
             >
-              {item.holder_info.nickname}
+              {item.holder_info.nickname
+                ? item.holder_info.nickname
+                : t('holder.user-name-empty')}
             </Box>
             <Box
               textAlign="right"

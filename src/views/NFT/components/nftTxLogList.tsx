@@ -14,6 +14,7 @@ import { Query } from '../../../models'
 import { ellipsisString, formatTime } from '../../../utils'
 import TransactionsArrowSvg from '../../../assets/svg/transactions-arrow.svg'
 import { Center, Image } from '@chakra-ui/react'
+import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 
 const UserWithAddress: React.FC<{
   avatar_url?: string | null
@@ -33,6 +34,7 @@ const UserWithAddress: React.FC<{
         type={avatarType}
         size="25px"
         border="1px solid #f6f6f6"
+        fallbackSrc={FallbackAvatarSrc}
       />
       <Stack ml="8px" spacing="0" h="30px">
         {nickname ? (
