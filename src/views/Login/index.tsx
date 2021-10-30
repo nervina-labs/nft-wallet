@@ -5,7 +5,6 @@ import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { CONTAINER_MAX_WIDTH, IS_IMTOKEN } from '../../constants'
-import { FormControlLabel, Checkbox } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
@@ -30,7 +29,9 @@ import {
   useDisclosure,
   Center,
   Text,
+  // Checkbox,
 } from '@mibao-ui/components'
+import { Checkbox } from '@chakra-ui/react'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -107,12 +108,6 @@ const Container = styled(MainContainer)`
       margin: 0 4px;
     }
 
-    svg {
-      g {
-        fill: white;
-      }
-    }
-
     &:disabled {
       color: rgb(214, 214, 214) !important;
       background-color: white !important;
@@ -138,12 +133,7 @@ const Container = styled(MainContainer)`
   }
 
   .license {
-    .MuiFormControlLabel-label {
-      font-size: 12px;
-    }
-    .MuiFormControlLabel-root {
-      margin: 0;
-    }
+    font-size: 12px;
   }
 
   .beian {
@@ -344,6 +334,7 @@ export const Login: React.FC = () => {
               isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
             }
             onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+            variant={IS_IMTOKEN ? 'outline' : 'solid'}
           >
             {t('login.connect.unipass')}
           </LoginButton>
@@ -354,7 +345,7 @@ export const Login: React.FC = () => {
             }
             isLoading={isMetamaskLoging}
             onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
-            variant="outline"
+            variant={!IS_IMTOKEN ? 'outline' : 'solid'}
           >
             {IS_IMTOKEN ? (
               <>
@@ -381,38 +372,32 @@ export const Login: React.FC = () => {
       </Drawer>
 
       <div className="license">
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isLicenseChecked}
-              onChange={() => setIsLicenseChecked(!isLicenseChecked)}
-              color="default"
-              name="license"
-              size="small"
-            />
-          }
-          label={
-            <Trans
-              ns="translations"
-              i18nKey="license.agree"
-              t={t}
-              components={{
-                a: (
-                  <span
-                    style={{ color: '#D8B340' }}
-                    onClick={() => {
-                      history.push(
-                        `${RoutePath.License}?url=${encodeURIComponent(
-                          getLicenseUrl(i18n.language)
-                        )}`
-                      )
-                    }}
-                  />
-                ),
-              }}
-            />
-          }
-        />
+        <Checkbox
+          isChecked={isLicenseChecked}
+          size="sm"
+          iconSize="12px"
+          onChange={() => setIsLicenseChecked(!isLicenseChecked)}
+        >
+          <Trans
+            ns="translations"
+            i18nKey="license.agree"
+            t={t}
+            components={{
+              a: (
+                <span
+                  style={{ color: '#5065E5' }}
+                  onClick={() => {
+                    history.push(
+                      `${RoutePath.License}?url=${encodeURIComponent(
+                        getLicenseUrl(i18n.language)
+                      )}`
+                    )
+                  }}
+                />
+              ),
+            }}
+          />
+        </Checkbox>
       </div>
       {i18n.language !== 'en' ? (
         <footer className="beian">

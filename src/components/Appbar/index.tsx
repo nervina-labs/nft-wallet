@@ -15,6 +15,7 @@ export interface AppbarProps extends React.RefAttributes<HTMLDivElement> {
   title?: React.ReactNode
   left?: React.ReactNode
   right?: React.ReactNode
+  onLeftClick?: () => void
   back?: boolean
   transparent?: boolean
 }
@@ -31,10 +32,10 @@ export interface AppbarStickyProps extends BoxProps {
 export const HEADER_HEIGHT = 60
 
 export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwardRef(
-  ({ title, left, right, transparent }, ref) => {
+  ({ title, left, right, transparent, onLeftClick }, ref) => {
     const back = useHistoryBack()
     const leftEl = left ?? (
-      <AppbarButton onClick={() => back()}>
+      <AppbarButton onClick={onLeftClick ?? (() => back())}>
         <BackSvg />
       </AppbarButton>
     )
