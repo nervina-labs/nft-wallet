@@ -55,7 +55,7 @@ export const NotFound: React.FC = () => {
             <img
               src={AccountPng}
               onClick={() => {
-                history.push(RoutePath.Info)
+                history.push(RoutePath.NFTs)
               }}
             />
           </AppbarButton>
