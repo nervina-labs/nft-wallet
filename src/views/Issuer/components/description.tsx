@@ -9,8 +9,14 @@ const DescriptionContent = styled.div`
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  user-select: text;
   ${(props: { folded?: boolean }) =>
-    props.folded ? '-webkit-line-clamp: 3;' : ''}
+    props.folded
+      ? `
+    -webkit-line-clamp: 3;  
+    cursor: pointer;
+    `
+      : ''}
 `
 
 export const Description: React.FC<{ content: string }> = ({ content }) => {
@@ -23,7 +29,6 @@ export const Description: React.FC<{ content: string }> = ({ content }) => {
       fontSize="13px"
       pt="8px"
       position="relative"
-      cursor="pointer"
       onClick={() => {
         if (folded) {
           setFolded(false)
@@ -40,6 +45,7 @@ export const Description: React.FC<{ content: string }> = ({ content }) => {
           color="gray.500"
           shadow="-10px 0 10px #fff"
           pl="5px"
+          cursor="pointer"
         >
           ... {t('issuer.more')}
         </Box>

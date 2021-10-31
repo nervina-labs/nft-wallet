@@ -132,32 +132,31 @@ export const NftCards: React.FC = () => {
                 columnCount={1}
                 renderItems={(group, i) => {
                   return group.token_classes.map((token, j: number) => (
-                    <Box pb="25px">
-                      <Box
-                        rounded="10%"
-                        shadow="0 0 1px rgba(0, 0, 0, 0.1)"
-                        overflow="hidden"
-                        p="10px"
-                        pb="20px"
-                      >
-                        <NFTCard
-                          hasCardback={token.card_back_content_exist}
-                          likeProps={{
-                            isLiked: token.class_liked,
-                            likeCount: token.class_likes,
-                          }}
-                          locale={i18n.language}
-                          price={`¥${token.product_price as string}`}
-                          src={token.bg_image_url}
-                          title={token.name}
-                          type={token.renderer_type}
-                          resizeScale={500}
-                          imageProps={{
-                            webp: true,
-                          }}
-                          onClick={() => gotoClass(token.uuid)}
-                        />
-                      </Box>
+                    <Box
+                      rounded="10%"
+                      shadow="0 0 1px rgba(0, 0, 0, 0.1)"
+                      overflow="hidden"
+                      p="10px"
+                      pb="20px"
+                      mb="25px"
+                    >
+                      <NFTCard
+                        hasCardback={token.card_back_content_exist}
+                        likeProps={{
+                          isLiked: token.class_liked,
+                          likeCount: token.class_likes,
+                        }}
+                        locale={i18n.language}
+                        price={`¥${token.product_price as string}`}
+                        src={token.bg_image_url}
+                        title={token.name}
+                        type={token.renderer_type}
+                        resizeScale={500}
+                        imageProps={{
+                          webp: true,
+                        }}
+                        onClick={() => gotoClass(token.uuid)}
+                      />
                     </Box>
                   ))
                 }}
