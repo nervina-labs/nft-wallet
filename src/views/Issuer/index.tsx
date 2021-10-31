@@ -7,12 +7,10 @@ import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
 import { Share } from '../../components/Share'
 import { useHistoryBack } from '../../hooks/useHistoryBack'
+import { MainContainer } from '../../styles'
 
-const IssuerContainer = styled.main`
-  --max-width: 500px;
+const IssuerContainer = styled(MainContainer)`
   position: relative;
-  max-width: var(--max-width);
-  margin: 0 auto;
 `
 
 export const Issuer: React.FC = () => {
