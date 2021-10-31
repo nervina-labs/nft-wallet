@@ -14,11 +14,11 @@ import { useRouteQuery } from '../../../hooks/useRouteQuery'
 import { PRODUCT_STATUE_SET, ProductState, Query } from '../../../models'
 import { useHistory } from 'react-router-dom'
 import { Empty } from '../../NFTs/empty'
-import { InfiniteListNext } from '../../../components/InfiniteListNext'
 import { useAPI } from '../../../hooks/useAccount'
 import { useParams } from 'react-router'
 import { useAtom } from 'jotai'
 import { TabCountInfo } from './issuerInfo'
+import { InfiniteList } from '../../../components/InfiniteList'
 
 export const NftCards: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -76,7 +76,7 @@ export const NftCards: React.FC = () => {
         <TabPanels>
           <TabPanel>
             {index === 0 ? (
-              <InfiniteListNext
+              <InfiniteList
                 enableQuery
                 queryFn={queryFn}
                 queryKey={[Query.Issuers, api, id, productState]}
@@ -97,7 +97,9 @@ export const NftCards: React.FC = () => {
                       onClick={() => gotoClass(token.uuid)}
                     >
                       <Image
-                        src={token.bg_image_url}
+                        src={
+                          token.bg_image_url === null ? '' : token.bg_image_url
+                        }
                         width="100%"
                         height="100%"
                         rounded="20px"
@@ -105,6 +107,7 @@ export const NftCards: React.FC = () => {
                         containerProps={{
                           ratio: i === 0 && j === 0 ? 1 : 9 / 12,
                         }}
+                        webp
                       />
                     </Box>
                   ))
@@ -114,7 +117,7 @@ export const NftCards: React.FC = () => {
           </TabPanel>
           <TabPanel>
             {index === 1 ? (
-              <InfiniteListNext
+              <InfiniteList
                 enableQuery
                 queryFn={queryFn}
                 queryKey={[Query.Issuers, api, id, productState]}
@@ -152,6 +155,7 @@ export const NftCards: React.FC = () => {
                           imageProps={{
                             webp: true,
                           }}
+                          onClick={() => gotoClass(token.uuid)}
                         />
                       </Box>
                     </Box>
