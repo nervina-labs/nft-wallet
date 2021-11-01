@@ -14,7 +14,7 @@ import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
 import { getLicenseUrl } from '../../data/license'
 import { UnipassConfig } from '../../utils'
-import { useSnackbar } from '../../hooks/useSnackbar'
+import { useToast } from '../../hooks/useToast'
 import { useAccountStatus, useLogin, WalletType } from '../../hooks/useAccount'
 import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
 import { Appbar, AppbarButton } from '../../components/Appbar'
@@ -167,7 +167,7 @@ export const Login: React.FC = () => {
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
   const [isLicenseChecked, setIsLicenseChecked] = useState(false)
-  const { snackbar } = useSnackbar()
+  const toast = useToast()
   const history = useHistory()
   const location = useLocation<{ redirect?: string }>()
   const redirectUrl = location?.state?.redirect
@@ -276,7 +276,7 @@ export const Login: React.FC = () => {
       <LoginButton
         onClick={() => {
           if (!isLicenseChecked) {
-            snackbar(t('license.warn'))
+            toast(t('license.warn'))
             return
           }
           drawerOnOpen()

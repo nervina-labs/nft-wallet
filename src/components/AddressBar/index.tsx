@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { ReactComponent as QrcodeSvg } from '../../assets/svg/qrcode.svg'
-import { useSnackbar } from '../../hooks/useSnackbar'
 import { RoutePath } from '../../routes'
 import { copyFallback, truncateMiddle } from '../../utils'
+import { useToast } from '../../hooks/useToast'
 
 const Container = styled.div`
   height: 32px;
@@ -48,7 +48,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
   isHolder,
 }) => {
   const history = useHistory()
-  const { snackbar } = useSnackbar()
+  const toast = useToast()
   const [t] = useTranslation('translations')
   return (
     <Container className="address-bar">
@@ -56,7 +56,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
         className="address"
         onClick={() => {
           copyFallback(address)
-          snackbar(t('info.copied'))
+          toast(t('info.copied'))
         }}
       >
         {truncateMiddle(address, 8, 5)}
