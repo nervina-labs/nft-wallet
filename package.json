@@ -59,6 +59,8 @@
     "react-query": "^3.13.4",
     "react-router-dom": "^5.2.0",
     "react-webcam": "^5.2.4",
+    "rxjs": "^7.4.0",
+    "rxjs-hooks": "^0.7.0",
     "serve": "11.3.2",
     "styled-components": "^5.2.3",
     "swiper": "^6.8.0",
