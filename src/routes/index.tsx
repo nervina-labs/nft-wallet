@@ -18,6 +18,7 @@ import { RoutePath } from './path'
 import { AccountChange } from './AccountChange'
 import { routes } from './routes'
 import { RouterProvider } from '../hooks/useRoute'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 export * from './path'
 
 export const Routers: React.FC = () => {
@@ -63,6 +64,7 @@ export const Routers: React.FC = () => {
             <ConfirmToast />
             <GlobalSnackbar />
             <Comfirm open disableBackdropClick />
+            <ConfirmDialog />
           </AccountChange>
         </RouterProvider>
       </BrowserRouter>

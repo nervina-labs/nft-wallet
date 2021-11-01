@@ -8,7 +8,7 @@ export enum RoutePath {
   NotFound = '/404',
   Transfer = '/transfer/:id',
   Info = '/account/info',
-  Transactions = '/account/tx',
+  Transactions = '/transactions',
   Profile = '/profile',
   ImagePreview = '/avatar/preview',
   TakePhoto = '/avatar/camera',

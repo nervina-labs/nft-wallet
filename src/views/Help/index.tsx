@@ -1,9 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { Appbar } from '../../components/Appbar'
+import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { MainContainer } from '../../styles'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { CircularProgress } from '@material-ui/core'
@@ -34,7 +32,6 @@ const Container = styled(MainContainer)`
 `
 
 export const Help: React.FC = () => {
-  const history = useHistory()
   const { t } = useTranslation('translations')
   const url = useRouteQuery('url', '')
   const [isLoaded, setIsLoaded] = useState(false)
@@ -52,11 +49,13 @@ export const Help: React.FC = () => {
 
   return (
     <Container>
-      <Appbar
-        title={matchHelpCenter?.isExact ? t('help.title') : t('license.title')}
-        left={<BackSvg onClick={() => history.goBack()} />}
-        right={<div />}
-      />
+      <AppbarSticky>
+        <Appbar
+          title={
+            matchHelpCenter?.isExact ? t('help.title') : t('license.title')
+          }
+        />
+      </AppbarSticky>
       <div className="main">
         {isLoaded ? null : <CircularProgress size="30px" />}
         <iframe

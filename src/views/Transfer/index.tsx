@@ -1,19 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  lazy,
+} from 'react'
 import { Redirect, useHistory, useLocation, useParams } from 'react-router'
 import classnames from 'classnames'
 import { Appbar } from '../../components/Appbar'
 import { NFTDetail, NftType, Query } from '../../models'
 import { RoutePath } from '../../routes'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
 import { ReactComponent as ErrorSvg } from '../../assets/svg/error.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
-import ArrowPng from '../../assets/img/arrow.png'
-import SuccessPng from '../../assets/img/success.png'
-import FailPng from '../../assets/img/fail.png'
 import InfoIcon from '@material-ui/icons/Info'
-import { Button } from '../../components/Button'
-import { Drawer, TextareaAutosize } from '@material-ui/core'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 import {
   verifyEthContractAddress,
   verifyCkbAddress,
@@ -21,8 +23,6 @@ import {
   verifyDasAddress,
   generateUnipassSignTxUrl,
 } from '../../utils'
-import { ActionDialog } from '../../components/ActionDialog'
-import { QrcodeScaner } from '../../components/QRcodeScaner'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
@@ -43,6 +43,15 @@ import {
   useSignTransaction,
   WalletType,
 } from '../../hooks/useAccount'
+import { Button, Drawer } from '@mibao-ui/components'
+import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { LoadableComponent } from '../../components/GlobalLoader'
+import type Scaner from '../../components/QRcodeScaner'
+
+const QrcodeScaner = lazy(
+  async () => await import('../../components/QRcodeScaner')
+)
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -118,10 +127,8 @@ export const Transfer: React.FC = () => {
   const hasSignature = !!routerLocation.state?.signature
   const [isDrawerOpen, setIsDrawerOpen] = useState(hasSignature ?? false)
   const [ckbAddress, setCkbAddress] = useState(prevState?.ckbAddress ?? '')
-  const [failedStatus, setFailedMessage] = useState(FailedMessage.TranferFail)
   const [isSendingNFT, setIsSendingNFT] = useState(false)
   const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isScaning, setIsScaning] = useState(false)
   // eslint-disable-next-line prettier/prettier
   const dasPopoutVisibleTrigger = useRef<(popoutVisible: boolean) => void>()
@@ -129,12 +136,17 @@ export const Transfer: React.FC = () => {
     selectedDasAccount,
     setSelectedDasAccount,
   ] = useState<AccountRecord | null>(null)
-  const qrcodeScanerRef = useRef<QrcodeScaner>(null)
+  const qrcodeScanerRef = useRef<Scaner>(null)
   const { t } = useTranslation('translations')
 
-  const failedMessage = useMemo(() => {
-    return t(`transfer.error.${failedStatus}`)
-  }, [t, failedStatus])
+  const buildFailedMessage = useCallback(
+    (msg?: FailedMessage) => {
+      return msg
+        ? t(`transfer.error.${msg}`)
+        : t('transfer.error.transfer-fail')
+    },
+    [t]
+  )
 
   useEffect(() => {
     if (
@@ -155,10 +167,6 @@ export const Transfer: React.FC = () => {
   const isEthAddress = useMemo(() => {
     return ckbAddressType === AddressVerifiedType.eth
   }, [ckbAddressType])
-
-  // const isSameAddress = useMemo(() => {
-  //   return ckbAddressType === AddressVerifiedType.self
-  // }, [ckbAddressType])
 
   const isDasAddress = useMemo(() => {
     return ckbAddressType === AddressVerifiedType.das
@@ -195,26 +203,51 @@ export const Transfer: React.FC = () => {
     }
   }, [isDasAddress])
 
-  const stopTranfer = (isSuccess: boolean): void => {
-    setIsSendingNFT(false)
-    setIsDrawerOpen(false)
-    if (isSuccess) {
-      setIsSendDialogSuccess(true)
-    } else {
-      setIsErrorDialogOpen(true)
-    }
-  }
+  const confirmDialog = useConfirmDialog()
+
+  const stopTranfer = useCallback(
+    (isSuccess: boolean, msg?: FailedMessage): void => {
+      setIsSendingNFT(false)
+      setIsDrawerOpen(false)
+      if (isSuccess) {
+        setIsSendDialogSuccess(true)
+        confirmDialog({
+          type: 'success',
+          title: t('transfer.submitted'),
+          description: t('transfer.tips'),
+          showCloseButton: false,
+          onConfirm: () => {
+            history.push(RoutePath.Transactions)
+          },
+        })
+      } else {
+        confirmDialog({
+          type: 'warning',
+          title: buildFailedMessage(msg),
+        })
+      }
+    },
+    [confirmDialog, buildFailedMessage, history, t]
+  )
   const transferOnClick = useCallback(async () => {
     if (isEthAddress || (isDasAddress && verifyEthAddress(finalUsedAddress))) {
       const isContract = await verifyEthContractAddress(finalUsedAddress)
       if (isContract) {
-        setFailedMessage(FailedMessage.ContractAddress)
-        setIsErrorDialogOpen(true)
+        confirmDialog({
+          type: 'warning',
+          title: buildFailedMessage(FailedMessage.ContractAddress),
+        })
         return
       }
     }
     setIsDrawerOpen(true)
-  }, [isEthAddress, finalUsedAddress, isDasAddress])
+  }, [
+    isEthAddress,
+    finalUsedAddress,
+    isDasAddress,
+    confirmDialog,
+    buildFailedMessage,
+  ])
   const { id } = useParams<{ id: string }>()
 
   const sendNFT = useCallback(async () => {
@@ -233,14 +266,12 @@ export const Transfer: React.FC = () => {
           walletType === WalletType.Unipass
         )
         .catch((err) => {
-          setFailedMessage(FailedMessage.TranferFail)
-          stopTranfer(false)
+          stopTranfer(false, FailedMessage.TranferFail)
           throw new Error(err)
         })
 
       const signTx = await signTransaction(tx).catch((err) => {
-        setFailedMessage(FailedMessage.SignFail)
-        stopTranfer(false)
+        stopTranfer(false, FailedMessage.SignFail)
         throw new Error(err)
       })
 
@@ -248,8 +279,7 @@ export const Transfer: React.FC = () => {
         const { signature } = routerLocation.state ?? {}
         if (signature) {
           await api.transfer(id, tx, sentAddress, signature).catch((err) => {
-            setFailedMessage(FailedMessage.TranferFail)
-            stopTranfer(false)
+            stopTranfer(false, FailedMessage.TranferFail)
             console.log(err)
             throw err
           })
@@ -264,8 +294,7 @@ export const Transfer: React.FC = () => {
       } else {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await api.transfer(id, signTx, sentAddress).catch((err) => {
-          setFailedMessage(FailedMessage.TranferFail)
-          stopTranfer(false)
+          stopTranfer(false, FailedMessage.TranferFail)
           console.log(err)
           throw err
         })
@@ -284,6 +313,7 @@ export const Transfer: React.FC = () => {
     walletType,
     routerLocation.state,
     pubkey,
+    stopTranfer,
   ])
 
   const closeDrawer = (): void => setIsDrawerOpen(false)
@@ -295,10 +325,12 @@ export const Transfer: React.FC = () => {
   const [hasVideoDevice, setHasVideoDevice] = useState(false)
   const startScan = useCallback(() => {
     if (!hasVideoDevice) {
-      setFailedMessage(
-        IS_IPHONE ? FailedMessage.IOSWebkit : FailedMessage.NoCamera
-      )
-      setIsErrorDialogOpen(true)
+      confirmDialog({
+        type: 'error',
+        title: buildFailedMessage(
+          IS_IPHONE ? FailedMessage.IOSWebkit : FailedMessage.NoCamera
+        ),
+      })
       return
     }
     if (hasPermission) {
@@ -307,7 +339,7 @@ export const Transfer: React.FC = () => {
     } else {
       alert(t('transfer.error.camera-auth'))
     }
-  }, [hasPermission, hasVideoDevice, t])
+  }, [hasPermission, hasVideoDevice, t, buildFailedMessage, confirmDialog])
 
   useEffect(() => {
     try {
@@ -442,7 +474,7 @@ export const Transfer: React.FC = () => {
     return c === ':' ? ': ' : c
   }, [t])
 
-  if (isInvalid) {
+  if (isInvalid && !isSendDialogSuccess) {
     return <Redirect to={RoutePath.NotFound} />
   }
 
@@ -450,32 +482,36 @@ export const Transfer: React.FC = () => {
     <Container ref={containerRef}>
       <Appbar
         title={t('transfer.transfer')}
-        left={<BackSvg onClick={() => history.goBack()} />}
         right={<div />}
         ref={appRef}
+        transparent
       />
-      <QrcodeScaner
-        ref={qrcodeScanerRef}
-        isDrawerOpen={isScaning}
-        onCancel={stopScan}
-        history={history}
-        width={containerWidth}
-        t={t}
-        onScanCkbAddress={(addr) => {
-          setCkbAddress(addr)
-          stopScan()
-        }}
-        onDecodeError={(e) => {
-          const msg = e.toString()
-          if (msg.includes('permission')) {
-            setHasPermission(false)
-          }
-          if (msg.includes('before any code')) {
-            return
-          }
-          stopScan()
-        }}
-      />
+      {isScaning ? (
+        <LoadableComponent>
+          <QrcodeScaner
+            ref={qrcodeScanerRef}
+            isDrawerOpen={isScaning}
+            onCancel={stopScan}
+            history={history}
+            width={containerWidth}
+            t={t}
+            onScanCkbAddress={(addr) => {
+              setCkbAddress(addr)
+              stopScan()
+            }}
+            onDecodeError={(e) => {
+              const msg = e.toString()
+              if (msg.includes('permission')) {
+                setHasPermission(false)
+              }
+              if (msg.includes('before any code')) {
+                return
+              }
+              stopScan()
+            }}
+          />
+        </LoadableComponent>
+      ) : null}
       <section className="main">
         <div className="boxes">
           <Box>
@@ -504,6 +540,10 @@ export const Transfer: React.FC = () => {
                 />
               </div>
             </div>
+            <div className="desc">
+              {t('transfer.check')}
+              {t('transfer.once-transfer')}
+            </div>
             <div
               className={`alert ${alertLevel}`}
               style={{
@@ -514,70 +554,37 @@ export const Transfer: React.FC = () => {
               {alertMsg}
             </div>
             <div className="action">
-              <div
-                className={`${!isAddressValid ? 'disabled' : ''} transfer`}
+              <Button
+                isDisabled={!isAddressValid}
+                w="118px"
+                fontSize="14px"
+                variant="solid"
+                colorScheme={'primary'}
+                borderRadius="20px"
+                color="white"
                 onClick={isAddressValid ? transferOnClick : undefined}
               >
-                <img src={ArrowPng} />
-              </div>
+                {t('nft.transfer')}
+              </Button>
             </div>
           </Box>
-          <Box
-            style={{
-              margin: '0 22px',
-              opacity: '.6',
-              top: '-210px',
-              zIndex: 2,
-            }}
-          ></Box>
-          <Box
-            style={{
-              margin: '0 29px',
-              opacity: '.3',
-              top: '-420px',
-              zIndex: 1,
-            }}
-          ></Box>
-        </div>
-        <div className="desc">
-          {t('transfer.check')}&nbsp;
-          {t('transfer.once-transfer')}
         </div>
       </section>
-      <ActionDialog
-        icon={<img src={SuccessPng} />}
-        content={t('transfer.tips')}
-        extra={
-          <p style={{ color: '#1FD345', fontSize: '13px' }}>
-            {t('transfer.submitted')}
-          </p>
-        }
-        open={isSendDialogSuccess}
-        onConfrim={() => {
-          setIsSendDialogSuccess(false)
-          history.push(RoutePath.Transactions)
-        }}
-      />
-      <ActionDialog
-        icon={<img src={FailPng} />}
-        content={failedMessage}
-        open={isErrorDialogOpen}
-        onConfrim={() => setIsErrorDialogOpen(false)}
-        onBackdropClick={() => setIsErrorDialogOpen(false)}
-      />
+      <footer className="footer">
+        <FullLogo />
+      </footer>
       <Drawer
-        anchor="bottom"
-        open={isDrawerOpen && !!nftDetail}
-        PaperProps={{
+        placement="bottom"
+        isOpen={isDrawerOpen && !!nftDetail}
+        onClose={() => setIsDrawerOpen(false)}
+        contentProps={{
+          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
           style: {
-            position: 'absolute',
-            width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
             left: drawerLeft,
-            borderRadius: '20px 20px 0px 0px',
           },
+          overflow: 'hidden',
         }}
-        disableEnforceFocus
-        disableEscapeKeyDown
+        rounded="lg"
       >
         {nftDetail !== undefined ? (
           <DrawerContainer>
@@ -607,10 +614,11 @@ export const Transfer: React.FC = () => {
             </p>
             <div className="center">
               <Button
-                type="primary"
+                variant="solid"
+                colorScheme="primary"
                 onClick={sendNFT}
-                disbaled={isSendingNFT}
                 isLoading={isSendingNFT}
+                size="sm"
               >
                 {isSendingNFT ? t('transfer.signing') : t('transfer.comfirm')}
               </Button>

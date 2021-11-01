@@ -7,7 +7,7 @@ import {
   Redirect,
 } from 'react-router'
 import styled from 'styled-components'
-import { Appbar } from '../../components/Appbar'
+import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import LogoutPng from '../../assets/img/logout.png'
 import { RoutePath } from '../../routes'
@@ -93,11 +93,17 @@ export const Account: React.FC = () => {
   }
   return (
     <Container>
-      <Appbar
-        title={isInfo ? t('account.title') : t('account.transactions')}
-        left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
-        right={<img src={LogoutPng} onClick={logout.bind(null, history)} />}
-      />
+      <AppbarSticky>
+        <Appbar
+          title={isInfo ? t('account.title') : t('account.transactions')}
+          left={
+            <AppbarButton onClick={() => history.push(RoutePath.NFTs)}>
+              <BackSvg />
+            </AppbarButton>
+          }
+          right={<img src={LogoutPng} onClick={logout.bind(null, history)} />}
+        />
+      </AppbarSticky>
       <section className="detail">
         <Switch>
           <Route component={InfoComponent} path={RoutePath.Info} exact />

@@ -10,29 +10,32 @@ import {
 } from '../../models'
 import dayjs from 'dayjs'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { ReactComponent as LinkSvg } from '../../assets/svg/link.svg'
+import { ReactComponent as ExplorerSvg } from '../../assets/svg/explorer.svg'
 import { truncateMiddle } from '../../utils'
-import {
-  IS_IPHONE,
-  IS_WEXIN,
-  NFT_EXPLORER_URL,
-  PER_ITEM_LIMIT,
-} from '../../constants'
+import { IS_WEXIN, NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 import SendPng from '../../assets/img/send.png'
 import ReceivePng from '../../assets/img/receive.png'
 import NoTxPng from '../../assets/img/no-tx.png'
 import { useTranslation } from 'react-i18next'
 import { LazyLoadImage } from '../../components/Image'
-import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
+import { ReactComponent as VipSvg } from '../../assets/svg/vip.svg'
 import Tooltip from '@material-ui/core/Tooltip'
 import { useAPI } from '../../hooks/useAccount'
+import { Flex, Text } from '@mibao-ui/components'
+import { MainContainer } from '../../styles'
+import { Appbar, AppbarSticky } from '../../components/Appbar'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../../routes'
 
-const Container = styled.div`
+const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 24px;
+
+  .list {
+    flex: 1;
+  }
   h4 {
     text-align: center;
     font-size: 14px;
@@ -44,8 +47,7 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    position: relative;
-    top: 100px;
+    height: 300px;
 
     p {
       margin: 0;
@@ -85,7 +87,6 @@ const ListItemContainer = styled.div`
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    font-weight: 600;
     font-size: 12px;
     line-height: 17px;
     color: #0e0e0e;
@@ -134,13 +135,13 @@ const ListItemContainer = styled.div`
     }
   }
   .link {
-    margin-left: 12px;
-    margin-right: 15px;
+    margin: 0 8px;
   }
 `
 
-const TIME_FORMAT_CN = 'YYYY-MM-DD, HH:mm:ss'
-const TIME_FORMAT_EN = 'MMM DD, YYYY HH:mm:ss'
+const DAY_FORMAT_CN = 'YYYY-MM-DD'
+const DAY_FORMAT_EN = 'MMM DD, YYYY'
+const TIME_FORMAT = 'HH:mm:ss'
 
 interface ListItemProps {
   tx: Tx
@@ -193,7 +194,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
         }`}</span>
         {tx?.verified_info?.is_verified && tx.issuer_uuid !== '' ? (
           <Tooltip title={vt} placement={'top'}>
-            <WeiboSvg className="vip" />
+            <VipSvg className="vip" />
           </Tooltip>
         ) : null}
       </>
@@ -210,6 +211,8 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
       tx.on_chain_timestamp != null
     )
   }, [tx.tx_state, tx.on_chain_timestamp])
+
+  const dayInst = dayjs(Number(tx.on_chain_timestamp + '000'))
   return (
     <ListItemContainer className={className}>
       <div className="icon">{icon}</div>
@@ -232,11 +235,19 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
           </span>
         ) : null}
         {tx.on_chain_timestamp != null ? (
-          <span className="time">
-            {dayjs(Number(tx.on_chain_timestamp + '000')).format(
-              i18n.language !== 'en' ? TIME_FORMAT_CN : TIME_FORMAT_EN
-            )}
-          </span>
+          <Flex
+            justifyContent="space-between"
+            flexDirection="column"
+            textAlign="right"
+            color="#999"
+          >
+            <Text>
+              {dayInst.format(
+                i18n.language !== 'en' ? DAY_FORMAT_CN : DAY_FORMAT_EN
+              )}
+            </Text>
+            <Text>{dayInst.format(TIME_FORMAT)}</Text>
+          </Flex>
         ) : null}
       </div>
       <Link
@@ -245,7 +256,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
         rel="noopener noreferrer"
         href={`${NFT_EXPLORER_URL}/transaction/${tx.uuid}`}
       >
-        <LinkSvg />
+        <ExplorerSvg />
       </Link>
     </ListItemContainer>
   )
@@ -307,63 +318,69 @@ export const Transactions: React.FC = () => {
     )
   }, [data])
 
+  const history = useHistory()
+
   return (
-    <Container
-      style={
-        IS_IPHONE
-          ? { position: 'fixed', width: '100%', maxWidth: '100%' }
-          : undefined
-      }
-    >
-      {isRefetching ? <Loading /> : null}
-      {status === 'loading' && data === undefined ? (
-        <Loading />
-      ) : (
-        <InfiniteScroll
-          dataLength={data!.pages.reduce(
-            (acc, tx) => tx.transaction_list.length + acc,
-            0
-          )}
-          pullDownToRefresh={!IS_WEXIN}
-          refreshFunction={refresh}
-          next={fetchNextPage}
-          hasMore={hasNextPage === true}
-          pullDownToRefreshContent={
-            <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
-          }
-          pullDownToRefreshThreshold={80}
-          releaseToRefreshContent={
-            <h4>&#8593; {t('common.actions.release-refresh')}</h4>
-          }
-          scrollThreshold="300px"
-          loader={<Loading />}
-          endMessage={
-            <h4>{dataLength <= 5 ? '' : t('transactions.no-data')}</h4>
-          }
-        >
-          {data?.pages?.map((group, i) => {
-            return (
-              <React.Fragment key={i}>
-                {group.transaction_list.map((tx, j) => {
-                  return (
-                    <ListItem
-                      tx={tx}
-                      key={tx.uuid ?? `${i}${j}`}
-                      className={i === 0 && j === 0 ? 'first' : ''}
-                    />
-                  )
-                })}
-              </React.Fragment>
-            )
-          })}
-          {status === 'success' && dataLength === 0 ? (
-            <div className="no-data">
-              <LazyLoadImage src={NoTxPng} width={224} height={120} />
-              <p>{t('transactions.no-data')}</p>
-            </div>
-          ) : null}
-        </InfiniteScroll>
-      )}
+    <Container>
+      <AppbarSticky>
+        <Appbar
+          onLeftClick={() => {
+            history.push(RoutePath.NFTs)
+          }}
+          title={t('account.transactions')}
+        />
+      </AppbarSticky>
+      <section className="list">
+        {isRefetching ? <Loading /> : null}
+        {status === 'loading' && data === undefined ? (
+          <Loading />
+        ) : (
+          <InfiniteScroll
+            dataLength={data!.pages.reduce(
+              (acc, tx) => tx.transaction_list.length + acc,
+              0
+            )}
+            pullDownToRefresh={!IS_WEXIN}
+            refreshFunction={refresh}
+            next={fetchNextPage}
+            hasMore={hasNextPage === true}
+            pullDownToRefreshContent={
+              <h4>&#8595; {t('common.actions.pull-down-refresh')}</h4>
+            }
+            pullDownToRefreshThreshold={80}
+            releaseToRefreshContent={
+              <h4>&#8593; {t('common.actions.release-refresh')}</h4>
+            }
+            scrollThreshold="300px"
+            loader={<Loading />}
+            endMessage={
+              <h4>{dataLength <= 5 ? '' : t('transactions.no-data')}</h4>
+            }
+          >
+            {data?.pages?.map((group, i) => {
+              return (
+                <React.Fragment key={i}>
+                  {group.transaction_list.map((tx, j) => {
+                    return (
+                      <ListItem
+                        tx={tx}
+                        key={tx.uuid ?? `${i}${j}`}
+                        className={i === 0 && j === 0 ? 'first' : ''}
+                      />
+                    )
+                  })}
+                </React.Fragment>
+              )
+            })}
+            {status === 'success' && dataLength === 0 ? (
+              <div className="no-data">
+                <LazyLoadImage src={NoTxPng} width={224} height={120} />
+                <p>{t('transactions.no-data')}</p>
+              </div>
+            ) : null}
+          </InfiniteScroll>
+        )}
+      </section>
     </Container>
   )
 }

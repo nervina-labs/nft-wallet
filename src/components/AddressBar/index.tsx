@@ -64,11 +64,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
       <div
         className="qrcode"
         onClick={() => {
-          if (isHolder) {
-            history.push(RoutePath.HolderAddress + '/' + address)
-          } else {
-            history.push(RoutePath.Info)
-          }
+          history.push(RoutePath.Account + '/' + address)
         }}
       >
         <QrcodeSvg fill="#5065E5" />
