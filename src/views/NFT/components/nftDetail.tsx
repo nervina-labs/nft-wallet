@@ -95,7 +95,9 @@ const NftDetailTab: React.FC<{
           {tabIndex === 1 && <NftTxLogsList uuid={uuid} isClass={isClass} />}
         </TabPanel>
         <TabPanel p="20px" opacity={isLoading ? 0 : 1}>
-          {tabIndex === 2 && <HolderList uuid={uuid} />}
+          {tabIndex === 2 && (
+            <HolderList uuid={(detail as NFTDetail)?.class_uuid ?? uuid} />
+          )}
         </TabPanel>
       </TabPanels>
     </Tabs>
@@ -109,6 +111,7 @@ export const NftDetail: React.FC<{
   isLoading: boolean
   refetch: (params?: any) => Promise<any>
 }> = ({ detail, isLoading, refetch, isClass, uuid }) => {
+  const { push } = useHistory()
   const isOwned =
     typeof detail?.card_back_content === 'string' ||
     typeof detail?.class_card_back_content === 'string'
@@ -117,10 +120,16 @@ export const NftDetail: React.FC<{
       ? ''
       : detail?.issuer_info?.avatar_url
 
+  const gotoIssuer = useCallback(() => {
+    if (detail?.issuer_info?.uuid) {
+      push(`/issuer/${detail?.issuer_info?.uuid}`)
+    }
+  }, [detail?.issuer_info?.uuid, push])
+
   return (
     <Box py="20px">
       <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={6} px="20px">
-        <Flex justifyContent={'space-between'}>
+        <Flex justifyContent="space-between">
           <NftDetailName>{detail?.name}</NftDetailName>
           {isOwned ? (
             <Center w="50px">
@@ -134,6 +143,8 @@ export const NftDetail: React.FC<{
         templateColumns="48px calc(100% - 48px - 100px) auto"
         mt="25px"
         px="20px"
+        onClick={gotoIssuer}
+        cursor="pointer"
       >
         <Avatar
           src={avatarUrl}

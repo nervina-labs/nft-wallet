@@ -6,11 +6,10 @@ import { useNFTDetailApi } from './hooks/useNFTDetailApi'
 import { RoutePath } from '../../routes'
 import { Renderer } from './components/renderer'
 import { NftDetail } from './components/nftDetail'
-const Container = styled.main`
-  --max-width: 500px;
+import { MainContainer } from '../../styles'
+
+const Container = styled(MainContainer)`
   position: relative;
-  max-width: var(--max-width);
-  margin: 0 auto;
 `
 
 export const NFT: React.FC = () => {

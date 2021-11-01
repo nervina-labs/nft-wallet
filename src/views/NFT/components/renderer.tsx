@@ -6,6 +6,7 @@ import { Box, Center, Flex, Image } from '@mibao-ui/components'
 import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as CardbackSvg } from '../../../assets/svg/card-back.svg'
 import { useTranslation } from 'react-i18next'
+import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 
 const TiltContainer = styled(Tilt)`
   position: relative;
@@ -54,6 +55,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             resizeScale={400}
             m="auto"
             webp
+            fallbackSrc={FallbackAvatarSrc}
           />
         </Flex>
       </TiltContainer>
@@ -68,11 +70,18 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           webp
           transform="translate(-5%, -5%)"
           filter="blur(50px) contrast(1.2)"
+          fallbackSrc={FallbackAvatarSrc}
         />
       </Box>
 
       {hasCardBack ? (
-        <Center position="absolute" bottom="20px" w="full" transition="0.2s">
+        <Center
+          position="absolute"
+          bottom="20px"
+          w="full"
+          transition="0.2s"
+          cursor="pointer"
+        >
           <Center
             zIndex={2}
             position="relative"

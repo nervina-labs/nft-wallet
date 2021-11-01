@@ -10,7 +10,7 @@ import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 export const HolderList: React.FC<{
   uuid: string
 }> = ({ uuid }) => {
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const { push } = useHistory()
   const api = useAPI()
   const queryFn = useCallback(
@@ -41,6 +41,7 @@ export const HolderList: React.FC<{
             h="60px"
             lineHeight="48px"
             onClick={() => push(`/holder/${item.holder_info.address}`)}
+            cursor="pointer"
           >
             <Avatar
               src={
@@ -50,6 +51,10 @@ export const HolderList: React.FC<{
               }
               border="2px solid #f6f6f6"
               fallbackSrc={FallbackAvatarSrc}
+              srcQueryParams={{
+                tid: item.n_token_id,
+                locale: i18n.language,
+              }}
             />
             <Box
               ml="18px"
