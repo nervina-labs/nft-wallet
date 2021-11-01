@@ -16,6 +16,7 @@ import { AccountChange } from './AccountChange'
 import { routes } from './routes'
 import { RouterProvider } from '../hooks/useRoute'
 import { ConfirmDialog } from '../components/ConfirmDialog'
+import { LoadableComponent } from '../components/GlobalLoader'
 export * from './path'
 
 export const Routers: React.FC = () => {
@@ -36,26 +37,28 @@ export const Routers: React.FC = () => {
       <BrowserRouter>
         <RouterProvider>
           <AccountChange>
-            <Switch>
-              {routes.map((route) => (
-                <Route
-                  {...route}
-                  key={route.key}
-                  path={`${route.path}${route.params ?? ''}`}
+            <LoadableComponent>
+              <Switch>
+                {routes.map((route) => (
+                  <Route
+                    {...route}
+                    key={route.key}
+                    path={`${route.path}${route.params ?? ''}`}
+                  />
+                ))}
+                <Redirect
+                  exact
+                  from={RoutePath.Launch}
+                  to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
                 />
-              ))}
-              <Redirect
-                exact
-                from={RoutePath.Launch}
-                to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
-              />
-              <Redirect
-                exact
-                from="/nfts"
-                to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
-              />
-              <Route component={NotFound} path="*" />
-            </Switch>
+                <Redirect
+                  exact
+                  from="/nfts"
+                  to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
+                />
+                <Route component={NotFound} path="*" />
+              </Switch>
+            </LoadableComponent>
             <WarningDialog />
             <GlobalSnackbar />
             <ConfirmDialog />

@@ -4,10 +4,10 @@ import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { MainContainer } from '../../styles'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
-import { CircularProgress } from '@material-ui/core'
 import classNames from 'classnames'
 import { useRouteMatch } from 'react-router-dom'
 import { RoutePath } from '../../routes'
+import { Loading } from '@mibao-ui/components'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -57,7 +57,7 @@ export const Help: React.FC = () => {
         />
       </AppbarSticky>
       <div className="main">
-        {isLoaded ? null : <CircularProgress size="30px" />}
+        {isLoaded ? null : <Loading size="lg" />}
         <iframe
           className={classNames({ hidden: !isLoaded })}
           src={src}

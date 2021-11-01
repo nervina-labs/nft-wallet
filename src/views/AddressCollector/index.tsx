@@ -8,8 +8,6 @@ import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN } from '../../constants'
 import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
-import { CircularProgress } from '@material-ui/core'
-import Button from '@material-ui/core/Button'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -27,6 +25,7 @@ import {
   WalletType,
 } from '../../hooks/useAccount'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { LoginButton } from '../../components/LoginButton'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -316,20 +315,19 @@ export const AddressCollector: React.FC = () => {
         <>
           <p className="desc">{desc[submitStatus]}</p>
           <p>{t('addresses.select')}</p>
-          <Button
-            className="connect recommend"
+          <LoginButton
+            isLoading={isUnipassLogining}
             disabled={isUnipassLogining || isMetamaskLoging}
             onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+            variant={IS_IMTOKEN ? 'outline' : 'solid'}
           >
-            {t('login.connect.unipass')}&nbsp;
-            {isUnipassLogining ? (
-              <CircularProgress className="loading" size="1em" />
-            ) : null}
-          </Button>
-          <Button
-            className={'metamask connect'}
+            {t('login.connect.unipass')}
+          </LoginButton>
+          <LoginButton
             disabled={isUnipassLogining || isMetamaskLoging}
+            isLoading={isMetamaskLoging}
             onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+            variant={!IS_IMTOKEN ? 'outline' : 'solid'}
           >
             {IS_IMTOKEN ? (
               <>
@@ -339,11 +337,7 @@ export const AddressCollector: React.FC = () => {
             ) : (
               t('login.connect.metamask')
             )}
-            &nbsp;
-            {isMetamaskLoging ? (
-              <CircularProgress className="loading" size="1em" />
-            ) : null}
-          </Button>
+          </LoginButton>
           <div
             className="question"
             onClick={() => {
@@ -364,14 +358,13 @@ export const AddressCollector: React.FC = () => {
       <>
         <p className="desc">{desc[submitStatus]}</p>
         <p>{t('addresses.continue')}</p>
-        <Button
-          className="connect recommend"
+        <LoginButton
           onClick={() => {
             history.push(RoutePath.Explore)
           }}
         >
           {t('addresses.explore')}
-        </Button>
+        </LoginButton>
       </>
     )
   }, [

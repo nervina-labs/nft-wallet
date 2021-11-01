@@ -20,9 +20,8 @@ import NoTxPng from '../../assets/img/no-tx.png'
 import { useTranslation } from 'react-i18next'
 import { LazyLoadImage } from '../../components/Image'
 import { ReactComponent as VipSvg } from '../../assets/svg/vip.svg'
-import Tooltip from '@material-ui/core/Tooltip'
 import { useAPI } from '../../hooks/useAccount'
-import { Flex, Text } from '@mibao-ui/components'
+import { Flex, Text, Tooltip } from '@mibao-ui/components'
 import { MainContainer } from '../../styles'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { useHistory } from 'react-router'
@@ -193,7 +192,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
             : truncateMiddle(tx.from_address, 5, 5)
         }`}</span>
         {tx?.verified_info?.is_verified && tx.issuer_uuid !== '' ? (
-          <Tooltip title={vt} placement={'top'}>
+          <Tooltip label={vt} placement="top">
             <VipSvg className="vip" />
           </Tooltip>
         ) : null}

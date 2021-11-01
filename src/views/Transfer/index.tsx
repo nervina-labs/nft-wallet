@@ -12,10 +12,8 @@ import { Appbar } from '../../components/Appbar'
 import { NFTDetail, NftType, Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
-import { ReactComponent as ErrorSvg } from '../../assets/svg/error.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
-import InfoIcon from '@material-ui/icons/Info'
-import TextareaAutosize from '@material-ui/core/TextareaAutosize'
+import TextareaAutosize from 'react-textarea-autosize'
 import {
   verifyEthContractAddress,
   verifyCkbAddress,
@@ -48,6 +46,7 @@ import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoadableComponent } from '../../components/GlobalLoader'
 import type Scaner from '../../components/QRcodeScaner'
+import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 
 const QrcodeScaner = lazy(
   async () => await import('../../components/QRcodeScaner')
@@ -522,7 +521,7 @@ export const Transfer: React.FC = () => {
                 placeholder={t('transfer.placeholder')}
                 value={ckbAddress}
                 onChange={textareaOnChange}
-                rowsMax={4}
+                maxRows={4}
                 onFocus={handleTextareaFocus}
               />
               <div
@@ -544,15 +543,21 @@ export const Transfer: React.FC = () => {
               {t('transfer.check')}
               {t('transfer.once-transfer')}
             </div>
-            <div
-              className={`alert ${alertLevel}`}
-              style={{
-                visibility: showAlert ? 'visible' : 'hidden',
-              }}
+            <Alert
+              style={{ visibility: showAlert ? 'visible' : 'hidden' }}
+              status={(alertLevel as any) || 'info'}
+              variant="subtle"
+              bg="white"
             >
-              {alertLevel === AlertLevel.info ? <InfoIcon /> : <ErrorSvg />}
-              {alertMsg}
-            </div>
+              <AlertIcon boxSize="12px" />
+              <AlertDescription
+                fontSize="10px"
+                lineHeight="normal"
+                color={alertLevel === 'error' ? '#d03a3a' : '#2196f3'}
+              >
+                {alertMsg}
+              </AlertDescription>
+            </Alert>
             <div className="action">
               <Button
                 isDisabled={!isAddressValid}

@@ -21,8 +21,6 @@ import { Appbar, AppbarButton } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import AccountBg from '../../assets/img/account-bg.png'
 import {
-  Button,
-  ButtonProps,
   Drawer,
   useDisclosure,
   Center,
@@ -31,6 +29,7 @@ import {
 } from '@mibao-ui/components'
 import { Checkbox } from '@chakra-ui/react'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { LoginButton } from '../../components/LoginButton'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -157,22 +156,6 @@ const Container = styled(MainContainer)`
 enum ErrorMsg {
   NotSupport = 'not-support',
   Imtoken = 'refuse',
-}
-
-const LoginButton: React.FC<ButtonProps> = ({ children, ...rest }) => {
-  return (
-    <Button
-      colorScheme="primary"
-      fontWeight="normal"
-      w="280px"
-      variant="solid"
-      fontSize="16px"
-      mb="24px"
-      {...rest}
-    >
-      {children}
-    </Button>
-  )
 }
 
 export const Login: React.FC = () => {

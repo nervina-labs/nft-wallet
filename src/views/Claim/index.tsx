@@ -8,8 +8,6 @@ import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-succes
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN } from '../../constants'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
-import { CircularProgress } from '@material-ui/core'
-import Button from '@material-ui/core/Button'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -27,6 +25,7 @@ import {
   WalletType,
 } from '../../hooks/useAccount'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { LoginButton } from '../../components/LoginButton'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -292,20 +291,19 @@ export const Claim: React.FC = () => {
         <>
           <p className="desc">{t('claim.tips')}</p>
           <p>{t('claim.login')}</p>
-          <Button
-            className="connect recommend"
+          <LoginButton
+            isLoading={isUnipassLogining}
             disabled={isUnipassLogining || isMetamaskLoging}
             onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+            variant={IS_IMTOKEN ? 'outline' : 'solid'}
           >
-            {t('login.connect.unipass')}&nbsp;
-            {isUnipassLogining ? (
-              <CircularProgress className="loading" size="1em" />
-            ) : null}
-          </Button>
-          <Button
-            className={'metamask connect'}
+            {t('login.connect.unipass')}
+          </LoginButton>
+          <LoginButton
             disabled={isUnipassLogining || isMetamaskLoging}
+            isLoading={isMetamaskLoging}
             onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+            variant={!IS_IMTOKEN ? 'outline' : 'solid'}
           >
             {IS_IMTOKEN ? (
               <>
@@ -315,11 +313,7 @@ export const Claim: React.FC = () => {
             ) : (
               t('login.connect.metamask')
             )}
-            &nbsp;
-            {isMetamaskLoging ? (
-              <CircularProgress className="loading" size="1em" />
-            ) : null}
-          </Button>
+          </LoginButton>
           <div
             className="question"
             onClick={() => {
@@ -351,16 +345,13 @@ export const Claim: React.FC = () => {
             }}
             value={code}
           />
-          <Button
-            className="connect recommend"
+          <LoginButton
             onClick={async () => await claim(code)}
             disabled={isClaiming || isClaimError}
+            isLoading={isClaiming}
           >
-            {t('claim.confirm')}&nbsp;
-            {isClaiming ? (
-              <CircularProgress className="loading" size="1em" />
-            ) : null}
-          </Button>
+            {t('claim.confirm')}
+          </LoginButton>
         </>
       )
     }
@@ -374,8 +365,7 @@ export const Claim: React.FC = () => {
         {submitStatus === SubmitStatus.Success ? (
           <p>{t('claim.continue')}</p>
         ) : null}
-        <Button
-          className="connect recommend"
+        <LoginButton
           onClick={() => {
             history.push(
               submitStatus === SubmitStatus.Success
@@ -389,7 +379,7 @@ export const Claim: React.FC = () => {
               submitStatus === SubmitStatus.Success ? 'go-home' : 'go-explore'
             }`
           )}
-        </Button>
+        </LoginButton>
       </>
     )
   }, [

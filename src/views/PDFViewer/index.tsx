@@ -40,7 +40,7 @@ const Container = styled.div`
   }
 `
 
-export function PDFViewer() {
+export default function PDFViewer() {
   pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
   const [numPages, setNumPages] = useState(null)
   const url = useRouteQuery('url', '')

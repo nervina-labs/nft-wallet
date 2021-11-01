@@ -22,8 +22,10 @@ import { MyRedeem } from '../views/Reedem/My'
 import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
-import { PDFViewer } from '../views/PDFViewer'
 import { Transactions } from '../views/Transactions'
+import { lazy } from 'react'
+
+const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
 interface MibaoRouterProps extends RouteProps {
   key: string
