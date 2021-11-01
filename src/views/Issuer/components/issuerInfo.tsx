@@ -27,6 +27,19 @@ import GithubSvg from '../../../assets/svg/issuer-github.svg'
 import FacebookSvg from '../../../assets/svg/issuer-facebook.svg'
 import InstagramSvg from '../../../assets/svg/issuer-instagram.svg'
 import TwitterSvg from '../../../assets/svg/issuer-twitter.svg'
+import styled from 'styled-components'
+
+const IssuerIcon = styled.div`
+  display: inline-block;
+  background-image: linear-gradient(
+    330deg,
+    rgb(205, 130, 15),
+    rgb(250, 190, 60)
+  );
+  color: white;
+  border-radius: 5px;
+  padding: 0 5px;
+`
 
 export const TabCountInfo = atom({
   onSaleProductCount: 0,
@@ -70,6 +83,7 @@ const FollowerWithLike: React.FC<{
 
 export const IssuerInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>()
+  const { t } = useTranslation('translations')
   const { data, refetch, isLoading } = useIssuerInfo(id)
   const gotoMetaUrl = useCallback((url: string) => {
     window.location.href = url
@@ -136,7 +150,12 @@ export const IssuerInfo: React.FC = () => {
               fontSize="12px"
               whiteSpace="nowrap"
             >
-              {data?.verified_info?.verified_title}
+              {data?.verified_info?.verified_title && (
+                <Box as="span" mr="6px">
+                  {data?.verified_info?.verified_title}
+                </Box>
+              )}
+              <IssuerIcon>{t('common.creator')}</IssuerIcon>
             </Box>
           </SkeletonText>
         </Box>

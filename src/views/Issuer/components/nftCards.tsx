@@ -115,7 +115,7 @@ export const NftCards: React.FC = () => {
               />
             ) : null}
           </TabPanel>
-          <TabPanel>
+          <TabPanel px="5px">
             {index === 1 ? (
               <InfiniteList
                 enableQuery
@@ -148,7 +148,9 @@ export const NftCards: React.FC = () => {
                         }}
                         locale={i18n.language}
                         price={`¥${token.product_price as string}`}
-                        src={token.bg_image_url}
+                        src={
+                          token.bg_image_url === null ? '' : token.bg_image_url
+                        }
                         title={token.name}
                         type={token.renderer_type}
                         resizeScale={500}
