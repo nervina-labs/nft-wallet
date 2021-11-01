@@ -25,6 +25,7 @@ import { NftTxLogsList } from './nftTxLogList'
 import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
+import { Limited } from '../../../components/Limited'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -35,10 +36,15 @@ const NftDetailName = styled.div`
   font-size: 18px;
   -webkit-line-clamp: 2;
   margin-right: 10px;
+  margin-bottom: 5px;
 `
 
 const TAB_PARAM_SET = ['desc', 'tx_logs', 'holders'] as const
 type TabParam = typeof TAB_PARAM_SET[number]
+
+function isTokenClass(data?: TokenClass | NFTDetail): data is TokenClass {
+  return !!data && !('tx_state' in data)
+}
 
 const NftDetailTab: React.FC<{
   detail?: NFTDetail | TokenClass
@@ -128,9 +134,18 @@ export const NftDetail: React.FC<{
 
   return (
     <Box py="20px">
-      <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={6} px="20px">
+      <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={2} px="20px">
         <Flex justifyContent="space-between">
-          <NftDetailName>{detail?.name}</NftDetailName>
+          <Box>
+            <NftDetailName>{detail?.name}</NftDetailName>
+            <Limited
+              count={detail?.total ?? 0}
+              bold={false}
+              sn={isTokenClass(detail) ? undefined : detail?.n_token_id}
+              fontSize={14}
+              color="#777E90"
+            />
+          </Box>
           {isOwned ? (
             <Center w="50px">
               <OwnedSealSvg />
