@@ -128,7 +128,7 @@ const ListItemContainer = styled.div`
       font-weight: bold;
       color: #fd821f;
     }
-    .comfirming {
+    .confirming {
       text-align: right;
       font-weight: bold;
       color: #779be3;
@@ -205,7 +205,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
 
   const Link = isBanned ? 'div' : 'a'
 
-  const isComfirming = useMemo(() => {
+  const isConfirming = useMemo(() => {
     return (
       tx.tx_state === TransactionStatus.Submitting &&
       tx.on_chain_timestamp != null
@@ -224,14 +224,14 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
       </div>
       <div
         className="status"
-        style={{ justifyContent: isComfirming ? 'space-between' : 'center' }}
+        style={{ justifyContent: isConfirming ? 'space-between' : 'center' }}
       >
         {tx.tx_state === TransactionStatus.Pending ? (
           <span className="waiting">{t('transactions.status.waiting')}</span>
         ) : null}
         {tx.tx_state === TransactionStatus.Submitting ? (
-          <span className="comfirming">
-            {t('transactions.status.comfirming')}
+          <span className="confirming">
+            {t('transactions.status.confirming')}
           </span>
         ) : null}
         {tx.on_chain_timestamp != null ? (

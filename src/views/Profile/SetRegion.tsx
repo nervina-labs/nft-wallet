@@ -12,7 +12,7 @@ import { useSetServerProfile } from '../../hooks/useProfile'
 import { useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { usePrevious } from '../../hooks/usePrevious'
-import { useConfirm } from '../../hooks/useConfirm'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 
 export interface SetUsernameProps {
   open: boolean
@@ -159,7 +159,7 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
   }, [value])
   const setRemoteProfile = useSetServerProfile()
   const prevValue = usePrevious(value)
-  const confirm = useConfirm()
+  const onConfirm = useConfirmDialog()
 
   useEffect(() => {
     if (!open) {
@@ -267,11 +267,16 @@ export const SetRegion: React.FC<SetUsernameProps> = ({
 
   const onClose = useCallback(() => {
     if (prevValue !== value) {
-      confirm(t('profile.save-edit'), onSave, close).catch(Boolean)
+      onConfirm({
+        type: 'text',
+        title: t('profile.save-edit'),
+        onConfirm: onSave,
+        onCancel: close,
+      })
     } else {
       close()
     }
-  }, [onSave, close, t, prevValue, value, confirm])
+  }, [prevValue, value, onConfirm, t, onSave, close])
   return (
     <DrawerConfig
       isDrawerOpen={open}
