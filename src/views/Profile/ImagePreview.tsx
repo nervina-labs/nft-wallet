@@ -1,4 +1,3 @@
-import { CircularProgress } from '@material-ui/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -16,6 +15,7 @@ import i18n from 'i18next'
 import { useConfirm } from '../../hooks/useConfirm'
 import { useErrorToast } from '../../hooks/useErrorToast'
 import { useRoute } from '../../hooks/useRoute'
+import { Loading } from '@mibao-ui/components'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -217,7 +217,7 @@ export const ImagePreview: React.FC = () => {
           </div>
         )}
         <div className="comfirm" onClick={onSave}>
-          {isSaving ? <CircularProgress size="1em" /> : t('profile.comfirm')}
+          {isSaving ? <Loading size="sm" /> : t('profile.comfirm')}
         </div>
       </footer>
     </Container>
