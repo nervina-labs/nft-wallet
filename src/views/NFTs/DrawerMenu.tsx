@@ -16,7 +16,7 @@ import { DrawerAction } from '../Profile/DrawerAction'
 import { LocalCache } from '../../cache'
 import { getHelpCenterUrl } from '../../data/help'
 import { useLogout } from '../../hooks/useAccount'
-import { Drawer, VStack, StackDivider, Text, Flex } from '@mibao-ui/components'
+import { Drawer, Stack, StackDivider, Text, Flex } from '@mibao-ui/components'
 
 const DrawerContainer = styled.div`
   background-color: white;
@@ -139,7 +139,7 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
         }}
       >
         <DrawerContainer>
-          <VStack
+          <Stack
             mt="50px"
             spacing="20px"
             divider={<StackDivider borderColor="gray.200" />}
@@ -162,7 +162,7 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
                 {disableArrow ? null : <ArrowSvg />}
               </Flex>
             ))}
-          </VStack>
+          </Stack>
         </DrawerContainer>
       </Drawer>
       <DrawerAction

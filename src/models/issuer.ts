@@ -27,6 +27,17 @@ export interface IssuersResponse {
   meta: ListMeta
 }
 
+export enum SocialMediaType {
+  Weibo = 'weibo',
+  Bilibili = 'bilibili',
+  Douyin = 'douyin',
+  Behance = 'behance',
+  Github = 'github',
+  Facebook = 'facebook',
+  Instagram = 'instagram',
+  Twitter = 'twitter',
+}
+
 export interface IssuerInfo extends VipInfo {
   avatar_url: string
   name: string
@@ -40,6 +51,12 @@ export interface IssuerInfo extends VipInfo {
   is_issuer_banned: boolean
   issuer_id: string
   uuid: string
+  on_sale_product_count: number
+  issued_class_count: number
+  social_media: Array<{
+    socia_type: SocialMediaType
+    url: string
+  }>
 }
 
 export interface IssuerTokenClassResult {
@@ -57,4 +74,5 @@ export interface IssuerTokenClass {
   total: string
   card_back_content_exist: boolean
   uuid: string
+  product_price: string
 }

@@ -85,8 +85,6 @@ const CardContainer = styled(Box)`
   }
 `
 
-console.log(CardContainer)
-
 export const DrawerImage: React.FC<DrawerImageProps> = ({
   showAvatarAction,
   setShowAvatarAction,

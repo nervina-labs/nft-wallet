@@ -1,22 +1,17 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { IssuerInfo } from './info'
-import { NftCards } from './nftCards'
+import { IssuerInfo } from './components/issuerInfo'
+import { NftCards } from './components/nftCards'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
 import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
 import { Share } from '../../components/Share'
 import { useHistoryBack } from '../../hooks/useHistoryBack'
+import { MainContainer } from '../../styles'
 
-const IssuerContainer = styled.main`
-  --max-width: 500px;
+const IssuerContainer = styled(MainContainer)`
   position: relative;
-  max-width: var(--max-width);
-  margin: 0 auto;
-
-  .appbar {
-    max-width: var(--max-width);
-  }
+  user-select: none;
 `
 
 export const Issuer: React.FC = () => {
@@ -28,13 +23,16 @@ export const Issuer: React.FC = () => {
       <AppbarSticky>
         <Appbar
           left={
-            <AppbarButton>
-              <BackSvg onClick={goBack} />
+            <AppbarButton onClick={goBack}>
+              <BackSvg />
             </AppbarButton>
           }
           right={
-            <AppbarButton transparent>
-              <ShareSvg onClick={() => setIsShareDialogOpen(true)} />
+            <AppbarButton
+              transparent
+              onClick={() => setIsShareDialogOpen(true)}
+            >
+              <ShareSvg />
             </AppbarButton>
           }
         />

@@ -41,6 +41,7 @@
     },
     "login": {
       "title": "秘宝账户",
+      "select": "选择您的登录方式",
       "connect": {
         "unipass": "连接 UniPass",
         "metamask": "连接以太坊环境",

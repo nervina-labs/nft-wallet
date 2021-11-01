@@ -1,5 +1,4 @@
 import { RouteProps } from 'react-router-dom'
-import { Account } from '../views/Account'
 import { Login } from '../views/Login'
 import { NFT } from '../views/NFT'
 import { NFTs } from '../views/NFTs'
@@ -24,6 +23,7 @@ import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
 import { PDFViewer } from '../views/PDFViewer'
+import { Transactions } from '../views/Transactions'
 
 interface MibaoRouterProps extends RouteProps {
   key: string
@@ -39,10 +39,17 @@ export const routes: MibaoRouterProps[] = [
     path: RoutePath.NFTs,
   },
   {
-    component: Account,
+    component: HolderAddress,
     exact: false,
     key: 'Account',
     path: RoutePath.Account,
+    params: '/:address',
+  },
+  {
+    component: Transactions,
+    exact: false,
+    key: 'Transactions',
+    path: RoutePath.Transactions,
   },
   {
     component: NFT,
@@ -188,13 +195,6 @@ export const routes: MibaoRouterProps[] = [
     key: 'Issuer',
     path: RoutePath.Issuer,
     params: '/:id',
-  },
-  {
-    component: HolderAddress,
-    exact: true,
-    key: 'HolderAddress',
-    path: RoutePath.HolderAddress,
-    params: '/:address',
   },
   {
     component: NFTs,

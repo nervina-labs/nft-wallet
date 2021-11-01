@@ -125,7 +125,7 @@ export const ItemContainer = styled.div`
     text-align: left;
     border-radius: 15px;
     width: 136px;
-    height: 71px;
+    height: 100px;
     padding: 10px 6px;
     position: absolute;
   }

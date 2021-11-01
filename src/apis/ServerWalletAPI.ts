@@ -586,7 +586,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       page?: number
     }
   ) {
-    const limit = options?.limit ?? 20
+    const limit = options?.limit ?? PER_ITEM_LIMIT
     const page = options?.page ?? 0
     return await this.axios.get<IssuerTokenClassResult>(
       `/issuers/${uuid}/token_classes`,

@@ -1,22 +1,25 @@
 import styled from 'styled-components'
-import Bg from '../../assets/img/transfer-bg.png'
+import Bg from '../../assets/img/transfer-bg.jpg'
 import { MainContainer } from '../../styles'
 
 export const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
-  background: #ecf2f5;
-  > header {
-    background: transparent;
-    box-shadow: none;
+  background: url(${Bg});
+  background-size: cover;
+  background-repeat: repeat-y;
+  height: 100vh;
+  .footer {
+    position: fixed;
+    bottom: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
   }
   section {
     &.main {
       flex: 1;
-      background: #ecf2f5 url(${Bg});
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-position: bottom;
     }
     .boxes {
       overflow: hidden;
@@ -93,17 +96,15 @@ export const Box = styled.div`
   flex-direction: column;
   position: relative;
   background: white;
-  border-radius: 20px;
-  margin: 0 15px;
-  margin-top: 80px;
-  margin-bottom: 40px;
-  padding: 0 40px;
+  border-radius: 22px;
+  margin: 50px 20px 50px 20px;
+  padding: 0 14px;
+  padding-top: 20px;
   z-index: 3;
   label {
-    font-size: 16px;
+    font-size: 18px;
     color: #0e0e0e;
-    font-weight: bold;
-    margin: 20px 0;
+    margin-bottom: 20px;
   }
   .form {
     border-radius: 30px;
@@ -113,7 +114,7 @@ export const Box = styled.div`
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 10px 20px;
+    padding: 18px 12px;
     .input {
       background: transparent;
       flex: 1;
@@ -127,16 +128,14 @@ export const Box = styled.div`
       box-shadow: none;
       resize: none;
       margin-right: 4px;
+      font-size: 14px;
     }
     &-extra {
       position: relative;
 
       .scan-btn {
+        margin-left: 4px;
         display: block;
-
-        path {
-          fill: #6e8ae6;
-        }
       }
 
       &.das {
@@ -152,28 +151,11 @@ export const Box = styled.div`
   .action {
     position: relative;
     z-index: 3;
-    top: 30px;
-    .transfer {
-      width: 66px;
-      height: 66px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      background: #fd5c31;
-      box-shadow: 11px 6px 9px 0px rgba(253, 92, 49, 0.19);
-      font-size: 20px;
-      border-radius: 50%;
-      color: white;
-      &.disabled {
-        background-color: #ddd;
-        color: #898989;
-        cursor: not-allowed;
-        box-shadow: none;
-      }
-      img {
-        width: 22px;
+    top: 20px;
+    button {
+      &:disabled {
+        opacity: 1;
+        background: #e6e8ec;
       }
     }
   }
