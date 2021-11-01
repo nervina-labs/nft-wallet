@@ -56,29 +56,23 @@ export const ConfirmDialog: React.FC = () => {
         {showCloseButton ? <ModalCloseButton /> : null}
         <ModalBody {...modalBodyProps}>
           {content ?? (
-            <>
-              <Alert
-                status={type}
-                variant="subtle"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-                textAlign="center"
-                bg="white"
-              >
-                <AlertIcon boxSize="70px" mr={0} />
-                <AlertTitle mt={4} mb={1} fontSize="16px" fontWeight="normal">
-                  {title}
-                </AlertTitle>
-                <AlertDescription
-                  maxWidth="sm"
-                  fontSize="14px"
-                  color="gray.500"
-                >
-                  {description}
-                </AlertDescription>
-              </Alert>
-            </>
+            <Alert
+              status={type}
+              variant="subtle"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              textAlign="center"
+              bg="white"
+            >
+              <AlertIcon boxSize="70px" mr={0} />
+              <AlertTitle mt={4} mb={1} fontSize="16px" fontWeight="normal">
+                {title}
+              </AlertTitle>
+              <AlertDescription maxWidth="sm" fontSize="14px" color="gray.500">
+                {description}
+              </AlertDescription>
+            </Alert>
           )}
         </ModalBody>
 
