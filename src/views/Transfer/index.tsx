@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  lazy,
+} from 'react'
 import { Redirect, useHistory, useLocation, useParams } from 'react-router'
 import classnames from 'classnames'
 import { Appbar } from '../../components/Appbar'
@@ -16,7 +23,6 @@ import {
   verifyDasAddress,
   generateUnipassSignTxUrl,
 } from '../../utils'
-import { QrcodeScaner } from '../../components/QRcodeScaner'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
@@ -40,6 +46,12 @@ import {
 import { Button, Drawer } from '@mibao-ui/components'
 import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { LoadableComponent } from '../../components/GlobalLoader'
+import type Scaner from '../../components/QRcodeScaner'
+
+const QrcodeScaner = lazy(
+  async () => await import('../../components/QRcodeScaner')
+)
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -124,7 +136,7 @@ export const Transfer: React.FC = () => {
     selectedDasAccount,
     setSelectedDasAccount,
   ] = useState<AccountRecord | null>(null)
-  const qrcodeScanerRef = useRef<QrcodeScaner>(null)
+  const qrcodeScanerRef = useRef<Scaner>(null)
   const { t } = useTranslation('translations')
 
   const buildFailedMessage = useCallback(
@@ -474,28 +486,32 @@ export const Transfer: React.FC = () => {
         ref={appRef}
         transparent
       />
-      <QrcodeScaner
-        ref={qrcodeScanerRef}
-        isDrawerOpen={isScaning}
-        onCancel={stopScan}
-        history={history}
-        width={containerWidth}
-        t={t}
-        onScanCkbAddress={(addr) => {
-          setCkbAddress(addr)
-          stopScan()
-        }}
-        onDecodeError={(e) => {
-          const msg = e.toString()
-          if (msg.includes('permission')) {
-            setHasPermission(false)
-          }
-          if (msg.includes('before any code')) {
-            return
-          }
-          stopScan()
-        }}
-      />
+      {isScaning ? (
+        <LoadableComponent>
+          <QrcodeScaner
+            ref={qrcodeScanerRef}
+            isDrawerOpen={isScaning}
+            onCancel={stopScan}
+            history={history}
+            width={containerWidth}
+            t={t}
+            onScanCkbAddress={(addr) => {
+              setCkbAddress(addr)
+              stopScan()
+            }}
+            onDecodeError={(e) => {
+              const msg = e.toString()
+              if (msg.includes('permission')) {
+                setHasPermission(false)
+              }
+              if (msg.includes('before any code')) {
+                return
+              }
+              stopScan()
+            }}
+          />
+        </LoadableComponent>
+      ) : null}
       <section className="main">
         <div className="boxes">
           <Box>

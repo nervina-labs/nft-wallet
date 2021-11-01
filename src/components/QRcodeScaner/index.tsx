@@ -98,7 +98,7 @@ export interface QrcodeScanerState {
 }
 
 // eslint-disable-next-line prettier/prettier
-export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScanerState> {
+export default class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScanerState> {
   private readonly videoRef = React.createRef<HTMLVideoElement>()
   private currentDeviceId: string | null = null
 
@@ -186,11 +186,14 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
     this.stopScan()
   }
 
+  componentDidMount(): void {
+    this.startScan()
+  }
+
   public stopScan(): void {
-    this.setState({ isScaning: false }, () => {
-      this.scaner?.reset()
-      this.scaner = null
-    })
+    this.scaner?.reset()
+    this.scaner = null
+    this.setState({ isScaning: false })
   }
 
   render(): React.ReactNode {
