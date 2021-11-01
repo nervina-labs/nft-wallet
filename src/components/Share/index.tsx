@@ -73,9 +73,7 @@ export const Share: React.FC<ShareProps> = ({
         displayText={t('common.share.copy')}
       />
       <div className="action">
-        <Button type="primary" onClick={closeDialog}>
-          {t('common.share.close')}
-        </Button>
+        <Button onClick={closeDialog}>{t('common.share.close')}</Button>
       </div>
     </DialogContainer>
   )

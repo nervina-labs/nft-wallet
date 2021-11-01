@@ -252,7 +252,7 @@ export default class QrcodeScaner extends React.Component<QrcodeScanerProps, Qrc
               <p className="warn">{t('transfer.scan.error')}</p>
               <p className="detect">{t('transfer.scan.detected')}</p>
               <p className="content">{nonCkbAddressResult}</p>
-              <Button type="primary" onClick={this.startScan.bind(this)}>
+              <Button onClick={async () => await this.startScan()}>
                 {t('transfer.scan.rescan')}
               </Button>
             </div>

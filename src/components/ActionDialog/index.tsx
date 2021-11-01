@@ -108,9 +108,7 @@ export const ActionDialog: React.FC<DialogProps & ActionDialogProps> = (
         {detail != null ? <p className="detail">{detail}</p> : null}
       </div>
       <div className="comfirm">
-        <Button onClick={onConfrim} type="primary">
-          {okText}
-        </Button>
+        <Button onClick={onConfrim}>{okText}</Button>
       </div>
     </DialogContainer>
   )
