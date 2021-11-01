@@ -3,11 +3,8 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
 import { NotFound } from '../views/NotFound'
 import i18n from '../i18n'
-import { Comfirm } from '../components/Confirm'
 import { WarningDialog } from '../components/WarningDialog'
-import { ErrorToastDialog } from '../components/ErrorToast'
 import { GlobalSnackbar } from '../components/GlobalSnackbar'
-import { ConfirmToast } from '../components/ConfirmToast'
 import {
   useAccount,
   useAccountStatus,
@@ -63,10 +60,7 @@ export const Routers: React.FC = () => {
               </Switch>
             </LoadableComponent>
             <WarningDialog />
-            <ErrorToastDialog />
-            <ConfirmToast />
             <GlobalSnackbar />
-            <Comfirm open disableBackdropClick />
             <ConfirmDialog />
           </AccountChange>
         </RouterProvider>

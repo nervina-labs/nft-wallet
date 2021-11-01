@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useCallback, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { ActionDialog } from '../../components/ActionDialog'
-import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
 import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
@@ -26,6 +24,7 @@ import {
   useProvider,
   WalletType,
 } from '../../hooks/useAccount'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 
 const Container = styled(MainContainer)`
@@ -141,12 +140,8 @@ export const AddressCollector: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(SubmitStatus.None)
-  const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const onConfirm = useConfirmDialog()
   const { t, i18n } = useTranslation('translations')
-  const errorMsg = useMemo(() => {
-    return t(`addresses.errors.${errorStatus}`)
-  }, [errorStatus, t])
 
   const { login } = useLogin()
   const api = useAPI()
@@ -189,8 +184,10 @@ export const AddressCollector: React.FC = () => {
         }
       } catch (error) {
         if (walletType === WalletType.Metamask) {
-          setErrorMsg(ErrorMsg.Imtoken)
-          setIsErrorDialogOpen(true)
+          onConfirm({
+            type: 'error',
+            title: t(`addresses.errors.${ErrorMsg.Imtoken}`),
+          })
         }
       }
       if (WalletType.Unipass === walletType && !isAuthenticated) {
@@ -212,13 +209,15 @@ export const AddressCollector: React.FC = () => {
         if (data?.code === 1091) {
           setSubmitStatus(SubmitStatus.Duplicate)
         } else {
-          setErrorMsg(ErrorMsg.SubmitFail)
-          setIsErrorDialogOpen(true)
+          onConfirm({
+            type: 'error',
+            title: t(`addresses.errors.${ErrorMsg.SubmitFail}`),
+          })
         }
       }
       setLoading(false, walletType)
     },
-    [api, id, getAuth, isAuthenticated]
+    [isAuthenticated, getAuth, id, onConfirm, t, api]
   )
 
   const loginBtnOnClick = useCallback(
@@ -235,8 +234,10 @@ export const AddressCollector: React.FC = () => {
         if (targetType === WalletType.Metamask) {
           const provider = await detectEthereumProvider()
           if (!provider) {
-            setErrorMsg(ErrorMsg.NotSupport)
-            setIsErrorDialogOpen(true)
+            onConfirm({
+              type: 'error',
+              title: t(`addresses.errors.${ErrorMsg.NotSupport}`),
+            })
             setLoading(false, targetType)
             return
           }
@@ -247,14 +248,16 @@ export const AddressCollector: React.FC = () => {
         console.log(error)
         setLoading(false, targetType)
         if (IS_IMTOKEN && targetType === WalletType.Metamask) {
-          setErrorMsg(ErrorMsg.Imtoken)
-          setIsErrorDialogOpen(true)
+          onConfirm({
+            type: 'error',
+            title: t(`addresses.errors.${ErrorMsg.Imtoken}`),
+          })
           setLoading(false, targetType)
         }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [login, walletType, id, isLogined]
+    [login, walletType, id, isLogined, t]
   )
 
   const { data: isAddressPackageExist, isError } = useQuery(
@@ -381,13 +384,6 @@ export const AddressCollector: React.FC = () => {
 
   return (
     <Container>
-      <ActionDialog
-        icon={<FailSvg />}
-        content={errorMsg}
-        open={isErrorDialogOpen}
-        onConfrim={() => setIsErrorDialogOpen(false)}
-        onBackdropClick={() => setIsErrorDialogOpen(false)}
-      />
       <div className="bg">{imgs[submitStatus]}</div>
       <div className="action">{actions}</div>
     </Container>

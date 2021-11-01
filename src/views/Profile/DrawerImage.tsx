@@ -12,11 +12,11 @@ import styled from 'styled-components'
 import { Empty } from '../NFTs/empty'
 import { useSetServerProfile } from '../../hooks/useProfile'
 import { AvatarType } from '../../models/user'
-import { useErrorToast } from '../../hooks/useErrorToast'
 import { useAccount, useAPI } from '../../hooks/useAccount'
 import { NFTCard, Box } from '@mibao-ui/components'
 import { getNFTQueryParams } from '../../utils'
 import { Masonry } from '../../components/Masonry'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 
 export interface DrawerImageProps {
   showAvatarAction: boolean
@@ -91,9 +91,10 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   reloadProfile,
 }) => {
   const { t, i18n } = useTranslation('translations')
-  const toast = useErrorToast()
+  const onConfirm = useConfirmDialog()
   const history = useHistory()
   const ITEM_LIMIT = 15
+  const uploadInputRef = useRef<HTMLInputElement>(null)
 
   const [openChooseTokenClassModal, setOpenChooseTokenClassModal] = useState(
     false
@@ -187,6 +188,36 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
 
   return (
     <>
+      <input
+        ref={uploadInputRef}
+        type="file"
+        id="upload"
+        accept={allowedTypes}
+        onChange={(e) => {
+          const [file] = e.target.files ?? []
+          const [, ext] = file == null ? [] : file?.type?.split('/')
+          if (!file) return
+          if (file.size >= 5242880) {
+            onConfirm({
+              type: 'error',
+              title: t('profile.size-limit'),
+            })
+            return
+          }
+          if (!allowedTypes.split(', ').includes(file.type)) {
+            onConfirm({
+              type: 'error',
+              title: t('profile.wrong-image-format'),
+            })
+            return
+          }
+          history.push(RoutePath.ImagePreview, {
+            datauri: URL.createObjectURL(file),
+            ext,
+          })
+        }}
+        style={{ display: 'none' }}
+      />
       <DrawerConfig
         isDrawerOpen={openChooseTokenClassModal}
         close={() => setOpenChooseTokenClassModal(false)}
@@ -290,34 +321,13 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
           { content: t('profile.avatar.camera'), value: 'camera' },
           {
             content: (
-              <label htmlFor="upload" className="label">
+              <Box
+                onClick={() => {
+                  uploadInputRef.current?.click()
+                }}
+              >
                 {t('profile.avatar.photo-lib')}
-                <input
-                  type="file"
-                  id="upload"
-                  accept={allowedTypes}
-                  onChange={(e) => {
-                    const [file] = e.target.files ?? []
-                    const [, ext] = file == null ? [] : file?.type?.split('/')
-                    if (file) {
-                      if (file.size >= 5242880) {
-                        toast(t('profile.size-limit'))
-                        return
-                      } else if (
-                        !allowedTypes.split(', ').includes(file.type)
-                      ) {
-                        toast(t('profile.wrong-image-format'))
-                        return
-                      }
-                      history.push(RoutePath.ImagePreview, {
-                        datauri: URL.createObjectURL(file),
-                        ext,
-                      })
-                    }
-                  }}
-                  style={{ display: 'none' }}
-                />
-              </label>
+              </Box>
             ),
             value: 'lib',
           },

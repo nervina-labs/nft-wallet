@@ -87,7 +87,7 @@ export const WarningDialog: React.FC = () => {
       </div>
       <div className="content">{content}</div>
       <Button isLoading={isLoading} onClick={onConfirm}>
-        {t('common.actions.comfirm')}
+        {t('common.actions.confirm')}
       </Button>
       <Button onClick={onClose} cancel>
         {t('common.actions.cancel')}

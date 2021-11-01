@@ -625,7 +625,7 @@ export const Transfer: React.FC = () => {
                 isLoading={isSendingNFT}
                 size="sm"
               >
-                {isSendingNFT ? t('transfer.signing') : t('transfer.comfirm')}
+                {isSendingNFT ? t('transfer.signing') : t('transfer.confirm')}
               </Button>
             </div>
           </DrawerContainer>

@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { ActionDialog } from '../../components/ActionDialog'
-import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
 import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
@@ -26,6 +24,7 @@ import {
   useLogin,
   WalletType,
 } from '../../hooks/useAccount'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 
 const Container = styled(MainContainer)`
@@ -160,12 +159,8 @@ enum ErrorMsg {
 export const Claim: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
-  const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const onConfirm = useConfirmDialog()
   const { t, i18n } = useTranslation('translations')
-  const errorMsg = useMemo(() => {
-    return t(`addresses.errors.${errorStatus}`)
-  }, [errorStatus, t])
   const { login } = useLogin()
   const api = useAPI()
   const { walletType } = useAccount()
@@ -202,8 +197,10 @@ export const Claim: React.FC = () => {
         if (targetType === WalletType.Metamask) {
           const provider = await detectEthereumProvider()
           if (!provider) {
-            setErrorMsg(ErrorMsg.NotSupport)
-            setIsErrorDialogOpen(true)
+            onConfirm({
+              type: 'error',
+              title: t(`addresses.errors.${ErrorMsg.NotSupport}`),
+            })
             setLoading(false, targetType)
             return
           }
@@ -217,8 +214,10 @@ export const Claim: React.FC = () => {
         console.log(error)
         setLoading(false, targetType)
         if (IS_IMTOKEN && targetType === WalletType.Metamask) {
-          setErrorMsg(ErrorMsg.Imtoken)
-          setIsErrorDialogOpen(true)
+          onConfirm({
+            type: 'error',
+            title: t(`addresses.errors.${ErrorMsg.Imtoken}`),
+          })
           setLoading(false, targetType)
         }
       }
@@ -403,13 +402,6 @@ export const Claim: React.FC = () => {
 
   return (
     <Container>
-      <ActionDialog
-        icon={<FailSvg />}
-        content={errorMsg}
-        open={isErrorDialogOpen}
-        onConfrim={() => setIsErrorDialogOpen(false)}
-        onBackdropClick={() => setIsErrorDialogOpen(false)}
-      />
       <div className="bg">{imgs[submitStatus]}</div>
       <div className="action">{actions}</div>
     </Container>

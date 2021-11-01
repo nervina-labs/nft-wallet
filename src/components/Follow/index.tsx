@@ -1,12 +1,13 @@
 import React, { useCallback, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
-import { useConfirm } from '../../hooks/useConfirm'
 import { useFollowStatus } from '../../hooks/useFollowStatus'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { useAPI, useAccountStatus } from '../../hooks/useAccount'
 import { RoutePath } from '../../routes'
 import { Button } from '@mibao-ui/components'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+
 export interface FollowProps {
   followed: boolean
   uuid: string
@@ -23,7 +24,7 @@ export const Follow: React.FC<FollowProps> = ({
   const [t] = useTranslation('translations')
   const api = useAPI()
   const { isLogined } = useAccountStatus()
-  const confirm = useConfirm()
+  const onConfirm = useConfirmDialog()
   const { followStatus, setFollowStatus } = useFollowStatus()
   const getAuth = useGetAndSetAuth()
   const isFollow = useMemo(() => {
@@ -52,14 +53,15 @@ export const Follow: React.FC<FollowProps> = ({
       }
       try {
         if (isFollow) {
-          await confirm(
-            t('follow.confirm'),
-            async () => {
+          await onConfirm({
+            type: 'text',
+            title: t('follow.confirm'),
+            async onConfirm() {
               setIsLoading(true)
               await toggle()
             },
-            () => {}
-          )
+            onCancel() {},
+          })
         } else {
           setIsLoading(true)
           await toggle()
@@ -70,7 +72,7 @@ export const Follow: React.FC<FollowProps> = ({
         setIsLoading(false)
       }
     },
-    [isFollow, confirm, toggle, t, history, isLogined]
+    [isLogined, history, isFollow, onConfirm, t, toggle]
   )
 
   return (

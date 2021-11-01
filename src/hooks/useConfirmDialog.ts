@@ -13,7 +13,7 @@ export interface PromiseObj {
 }
 
 export interface ConfirmDialogOptions {
-  type?: AlertStatus
+  type?: AlertStatus | 'text'
   title?: React.ReactNode
   description?: React.ReactNode
   content?: React.ReactNode
@@ -43,7 +43,7 @@ export const useConfirmDialogModel = () => {
   const [options, setOptions] = useAtom(optionsAtom)
   const [isLoading, setIsLoading] = useAtom(loadingAtom)
   const [{ fn: onClose }, setOnClose] = useAtom<PromiseObj>(onCloseAtom)
-  const [{ fn: onConfirm }, setOnConfrim] = useAtom<PromiseObj>(onConfirmAtom)
+  const [{ fn: onConfirm }, setOnConfirm] = useAtom<PromiseObj>(onConfirmAtom)
   const [{ fn: onCancel }, setOnCancel] = useAtom<PromiseObj>(onCancelAtom)
 
   return {
@@ -54,7 +54,7 @@ export const useConfirmDialogModel = () => {
     onClose,
     setOnClose,
     onConfirm,
-    setOnConfrim,
+    setOnConfirm,
     onCancel,
     setOnCancel,
     options,
@@ -73,7 +73,7 @@ export const useConfirmDialog = () => {
   const setIsOpen = useUpdateAtom(openAtom)
   const setIsLoading = useUpdateAtom(loadingAtom)
   const setOnClose = useUpdateAtom(onCloseAtom)
-  const setOnConfrim = useUpdateAtom(onConfirmAtom)
+  const setOnConfirm = useUpdateAtom(onConfirmAtom)
   const setOnCancel = useUpdateAtom(onCancelAtom)
   const confirm = useCallback(
     async ({
@@ -93,7 +93,7 @@ export const useConfirmDialog = () => {
             resolve()
           },
         })
-        setOnConfrim({
+        setOnConfirm({
           fn: async () => {
             setIsLoading(true)
             await onConfirm?.()
@@ -115,8 +115,14 @@ export const useConfirmDialog = () => {
         })
       })
     },
-    [setOptions, setIsOpen, setIsLoading, setOnClose, setOnConfrim, setOnCancel]
+    [setOptions, setIsOpen, setIsLoading, setOnClose, setOnConfirm, setOnCancel]
   )
 
   return confirm
+}
+
+export const useCloseConfirmDialog = () => {
+  const setIsOpen = useUpdateAtom(openAtom)
+  const onClose = useCallback(() => setIsOpen(false), [setIsOpen])
+  return onClose
 }
