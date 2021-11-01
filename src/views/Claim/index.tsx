@@ -10,7 +10,6 @@ import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-succes
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN } from '../../constants'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
-import { CircularProgress } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
@@ -298,10 +297,7 @@ export const Claim: React.FC = () => {
             disabled={isUnipassLogining || isMetamaskLoging}
             onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
           >
-            {t('login.connect.unipass')}&nbsp;
-            {isUnipassLogining ? (
-              <CircularProgress className="loading" size="1em" />
-            ) : null}
+            {t('login.connect.unipass')}
           </Button>
           <Button
             className={'metamask connect'}
@@ -316,10 +312,6 @@ export const Claim: React.FC = () => {
             ) : (
               t('login.connect.metamask')
             )}
-            &nbsp;
-            {isMetamaskLoging ? (
-              <CircularProgress className="loading" size="1em" />
-            ) : null}
           </Button>
           <div
             className="question"
@@ -357,10 +349,7 @@ export const Claim: React.FC = () => {
             onClick={async () => await claim(code)}
             disabled={isClaiming || isClaimError}
           >
-            {t('claim.confirm')}&nbsp;
-            {isClaiming ? (
-              <CircularProgress className="loading" size="1em" />
-            ) : null}
+            {t('claim.confirm')}
           </Button>
         </>
       )
