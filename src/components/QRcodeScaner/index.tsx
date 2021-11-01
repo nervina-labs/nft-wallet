@@ -4,19 +4,18 @@ import React from 'react'
 import { BrowserQRCodeReader, Result } from '@zxing/library/esm'
 import { TFunction } from 'react-i18next'
 import styled from 'styled-components'
-import { Drawer } from '@material-ui/core'
 import { History } from 'history'
 import {
   verifyCkbAddress,
   verifyEthAddress,
   verifyDasAddress,
 } from '../../utils'
-import Backpng from '../../assets/img/back-circle.png'
 import ScanError from '../../assets/img/scan-error.png'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
-import SwitchCam from '../../assets/img/switch-cam.png'
-import { Appbar } from '../Appbar'
+import { ReactComponent as SwitchCam } from '../../assets/svg/switch-cam.svg'
+import { Appbar, AppbarButton } from '../Appbar'
 import { Button } from '../Button'
+import { Drawer } from '@mibao-ui/components'
 
 const Container = styled.div`
   display: flex;
@@ -28,11 +27,6 @@ const Container = styled.div`
   video {
     max-width: 100%;
     margin-bottom: 20px;
-  }
-
-  > header {
-    background: transparent;
-    box-shadow: none;
   }
 
   p {
@@ -104,7 +98,7 @@ export interface QrcodeScanerState {
 }
 
 // eslint-disable-next-line prettier/prettier
-export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScanerState> {
+export default class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScanerState> {
   private readonly videoRef = React.createRef<HTMLVideoElement>()
   private currentDeviceId: string | null = null
 
@@ -192,32 +186,54 @@ export class QrcodeScaner extends React.Component<QrcodeScanerProps, QrcodeScane
     this.stopScan()
   }
 
+  componentDidMount(): void {
+    this.startScan()
+  }
+
   public stopScan(): void {
-    this.setState({ isScaning: false }, () => {
-      this.scaner?.reset()
-      this.scaner = null
-    })
+    this.scaner?.reset()
+    this.scaner = null
+    this.setState({ isScaning: false })
   }
 
   render(): React.ReactNode {
     const { nonAddressResult: nonCkbAddressResult, isScaning } = this.state
     const { onCancel, isDrawerOpen, width, t } = this.props
     return (
-      <Drawer open={isDrawerOpen}>
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={onCancel}
+        placement="left"
+        hasOverlay
+        contentProps={{
+          padding: 0,
+          width,
+          backgroundColor: isScaning ? '#000' : '#fff',
+        }}
+        bodyProps={{
+          padding: 0,
+          width,
+        }}
+      >
         <Container
           width={width}
           style={{ backgroundColor: isScaning ? '#000' : '#fff' }}
         >
           <Appbar
             left={
-              isScaning ? (
-                <img src={Backpng} onClick={onCancel} />
-              ) : (
-                <BackSvg onClick={onCancel} />
-              )
+              <AppbarButton onClick={onCancel}>
+                <BackSvg />
+              </AppbarButton>
             }
+            transparent
             title={nonCkbAddressResult === '' ? '' : t('transfer.scan.result')}
-            right={<img src={SwitchCam} onClick={this.toggle} />}
+            right={
+              isScaning ? (
+                <AppbarButton onClick={this.toggle}>
+                  <SwitchCam />
+                </AppbarButton>
+              ) : null
+            }
           />
           {isScaning ? (
             <>

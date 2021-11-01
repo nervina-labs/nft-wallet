@@ -25,6 +25,8 @@ import { useAPI } from '../../hooks/useAccount'
 import { Flex, Text } from '@mibao-ui/components'
 import { MainContainer } from '../../styles'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../../routes'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -316,10 +318,17 @@ export const Transactions: React.FC = () => {
     )
   }, [data])
 
+  const history = useHistory()
+
   return (
     <Container>
       <AppbarSticky>
-        <Appbar title={t('account.transactions')} />
+        <Appbar
+          onLeftClick={() => {
+            history.push(RoutePath.NFTs)
+          }}
+          title={t('account.transactions')}
+        />
       </AppbarSticky>
       <section className="list">
         {isRefetching ? <Loading /> : null}
