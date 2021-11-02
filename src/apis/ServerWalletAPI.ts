@@ -5,7 +5,6 @@ import {
   NFT,
   NFTDetail,
   NFTTransaction,
-  NFTWalletAPI,
   ProductState,
   SpecialCategories,
   Transaction,
@@ -49,6 +48,7 @@ import {
   RewardDetailResponse,
 } from '../models/redeem'
 import { ClaimResult } from '../models/claim'
+import { OrderState, PlaceOrderProps } from '../models/order'
 
 function randomid(length = 10): string {
   let result = ''
@@ -91,7 +91,7 @@ async function writeFormData(
   return formData
 }
 
-export class ServerWalletAPI implements NFTWalletAPI {
+export class ServerWalletAPI {
   private readonly address: string
   private readonly axios: AxiosInstance
 
@@ -628,5 +628,86 @@ export class ServerWalletAPI implements NFTWalletAPI {
         },
       }
     )
+  }
+
+  async submitOrder(auth: Auth): Promise<AxiosResponse<{ uuid: string }>> {
+    return await this.axios.post(
+      '/token_order_uuid',
+      {
+        auth,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+      }
+    )
+  }
+
+  async getOrders(page: number, orderState: OrderState, auth?: Auth) {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+      address: this.address,
+    }
+    if (orderState !== OrderState.All) {
+      params.state = orderState
+    }
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    return await this.axios.get('/token_orders', {
+      params,
+      headers,
+    })
+  }
+
+  async placeOrder(props: PlaceOrderProps) {
+    return await this.axios.post('/token_orders', {
+      token_order: props,
+    })
+  }
+
+  async getOrderDetail(uuid: string) {
+    return await this.axios.get(`/token_orders/${uuid}`, {
+      params: {
+        uuid,
+        address: this.address,
+      },
+    })
+  }
+
+  async continuePlaceOrder(uuid: string, auth: Auth) {
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    return await this.axios.put(
+      '/token_orders',
+      {
+        auth,
+        uuid,
+        address: this.address,
+      },
+      {
+        headers,
+      }
+    )
+  }
+
+  async deleteOrder(uuid: string, auth: Auth) {
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    return await this.axios.delete('/token_orders', {
+      data: {
+        auth,
+        uuid,
+        address: this.address,
+      },
+      headers,
+    })
   }
 }
