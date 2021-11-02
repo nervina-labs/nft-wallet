@@ -65,12 +65,12 @@ const UserWithAddress: React.FC<{
               {nickname}
             </Box>
             <Box fontSize="12px" color="#777E90" lineHeight="12px">
-              {ellipsisString(address, [7, 4])}
+              {ellipsisString(address, [5, 5])}
             </Box>
           </>
         ) : (
           <Box fontSize="14px" fontWeight="500" lineHeight="25px">
-            {ellipsisString(address, [7, 4])}
+            {ellipsisString(address, [5, 5])}
           </Box>
         )}
       </Stack>
@@ -122,7 +122,7 @@ export const NftTxLogsList: React.FC<{
                 colorScheme="primary"
                 fontWeight="300"
               >
-                {ellipsisString(item.tx_hash, [12, 8])}
+                {ellipsisString(item.tx_hash, [10, 10])}
               </Button>
             </Box>
           </Box>
