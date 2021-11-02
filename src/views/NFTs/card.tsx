@@ -33,7 +33,7 @@ const LabelContainer = styled(Tag)`
 
 enum LabelStatus {
   Receiving,
-  Comfirming,
+  Confirming,
   Tranferring,
   None,
 }
@@ -66,13 +66,13 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
   }
 
   if (nft.tx_state === TransactionStatus.Submitting) {
-    status = LabelStatus.Comfirming
+    status = LabelStatus.Confirming
   }
 
   const statusMap: Record<LabelStatus, LabelResult | null> = {
-    [LabelStatus.Comfirming]: {
+    [LabelStatus.Confirming]: {
       color: 'rgba(80, 101, 229, 0.6)',
-      text: t('nfts.status.comfirming'),
+      text: t('nfts.status.confirming'),
     },
     [LabelStatus.Receiving]: {
       color: 'rgba(255, 92, 0, 0.6)',

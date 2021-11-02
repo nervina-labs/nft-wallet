@@ -4,7 +4,7 @@
       "beian": "浙ICP备2021006943号-3",
       "login": "登录",
       "actions": {
-        "comfirm": "确认",
+        "confirm": "确认",
         "cancel": "取消",
         "loading": "加载中",
         "pull-to-down": "暂无更多秘宝~",
@@ -60,7 +60,7 @@
       "owned": "持有",
       "liked": "赞过",
       "status": {
-        "comfirming": "确认中",
+        "confirming": "确认中",
         "receiving": "接收中",
         "tranferring": "转让中"
       },
@@ -107,7 +107,7 @@
       "once-transfer": "一旦转让，将无法撤回",
       "submitted": "已提交转让交易",
       "tips": "提示: 链上确认可能需要半分钟时间",
-      "comfirm": "确认",
+      "confirm": "确认",
       "signing": "签名中"
     },
     "404": {
@@ -122,7 +122,7 @@
       "send-to": "发送至",
       "status": {
         "waiting": "等待中",
-        "comfirming": "确认中"
+        "confirming": "确认中"
       }
     },
     "info": {
@@ -197,7 +197,7 @@
       "cancel": "取消",
       "male": "男",
       "female": "女",
-      "comfirm": "确认",
+      "confirm": "确认",
       "reshot": "重拍",
       "success": "设置成功",
       "years": "{{year}} 岁",

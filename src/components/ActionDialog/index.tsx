@@ -50,7 +50,7 @@ const DialogContainer = styled(Dialog)`
       font-size: 12px;
     }
   }
-  .comfirm {
+  .confirm {
     display: flex;
     justify-content: center;
     margin-top: 32px;
@@ -63,7 +63,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 export interface ActionDialogProps {
-  onConfrim?: () => void
+  onConfirm?: () => void
   onClose?: () => void
   icon: React.ReactNode
   content: React.ReactNode
@@ -79,13 +79,13 @@ export const ActionDialog: React.FC<DialogProps & ActionDialogProps> = (
 ) => {
   const { t } = useTranslation('translations')
   const {
-    onConfrim,
+    onConfirm,
     icon,
     content,
     detail,
     onClose,
     extra,
-    okText = t('common.actions.comfirm'),
+    okText = t('common.actions.confirm'),
     showCloseIcon = true,
     ...dialogProps
   } = props
@@ -94,8 +94,8 @@ export const ActionDialog: React.FC<DialogProps & ActionDialogProps> = (
     <DialogContainer {...dialogProps} classes={{ paper: style.paper }}>
       {showCloseIcon ? (
         <div className="close">
-          <span></span>
-          <CloseSvg onClick={onClose ?? onConfrim} />
+          <span />
+          <CloseSvg onClick={onClose ?? onConfirm} />
         </div>
       ) : null}
       {props.dialogTitle ? (
@@ -107,10 +107,8 @@ export const ActionDialog: React.FC<DialogProps & ActionDialogProps> = (
         <p className="text">{content}</p>
         {detail != null ? <p className="detail">{detail}</p> : null}
       </div>
-      <div className="comfirm">
-        <Button onClick={onConfrim} type="primary">
-          {okText}
-        </Button>
+      <div className="confirm">
+        <Button onClick={onConfirm}>{okText}</Button>
       </div>
     </DialogContainer>
   )

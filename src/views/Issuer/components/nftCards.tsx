@@ -7,8 +7,9 @@ import {
   TabPanels,
   Image,
   NFTCard,
+  AspectRatio,
 } from '@mibao-ui/components'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuery } from '../../../hooks/useRouteQuery'
 import { PRODUCT_STATUE_SET, ProductState, Query } from '../../../models'
@@ -19,6 +20,8 @@ import { useParams } from 'react-router'
 import { useAtom } from 'jotai'
 import { TabCountInfo } from './issuerInfo'
 import { InfiniteList } from '../../../components/InfiniteList'
+import { isSupportWebp } from '../../../utils'
+import FallbackSrc from '../../../assets/svg/fallback.svg'
 
 export const NftCards: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -55,6 +58,7 @@ export const NftCards: React.FC = () => {
     [api, id, productState]
   )
   const [tabCountInfo] = useAtom(TabCountInfo)
+  const clientIsSupportWebp = useMemo(() => isSupportWebp(), [])
 
   return (
     <Box w="full">
@@ -91,10 +95,11 @@ export const NftCards: React.FC = () => {
                 columnCount={2}
                 renderItems={(group, i) => {
                   return group.token_classes.map((token, j: number) => (
-                    <Box
-                      pb="10px"
+                    <AspectRatio
                       key={`${i}-${j}`}
                       onClick={() => gotoClass(token.uuid)}
+                      ratio={i === 0 && j === 0 ? 1 : 9 / 12}
+                      mb="10px"
                     >
                       <Image
                         src={
@@ -104,12 +109,10 @@ export const NftCards: React.FC = () => {
                         height="100%"
                         rounded="20px"
                         resizeScale={300}
-                        containerProps={{
-                          ratio: i === 0 && j === 0 ? 1 : 9 / 12,
-                        }}
-                        webp
+                        webp={clientIsSupportWebp}
+                        fallbackSrc={FallbackSrc}
                       />
-                    </Box>
+                    </AspectRatio>
                   ))
                 }}
               />
@@ -155,7 +158,8 @@ export const NftCards: React.FC = () => {
                         type={token.renderer_type}
                         resizeScale={500}
                         imageProps={{
-                          webp: true,
+                          webp: clientIsSupportWebp,
+                          fallbackSrc: FallbackSrc,
                         }}
                         onClick={() => gotoClass(token.uuid)}
                       />

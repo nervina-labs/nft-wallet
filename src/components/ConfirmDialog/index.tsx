@@ -5,7 +5,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
-  ModalFooterButtonGroup,
   ModalOverlay,
   Button,
 } from '@mibao-ui/components'
@@ -14,6 +13,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  Stack,
 } from '@chakra-ui/react'
 import { useConfirmDialogModel } from '../../hooks/useConfirmDialog'
 import { noop } from '../../utils'
@@ -38,7 +38,7 @@ export const ConfirmDialog: React.FC = () => {
     modalBodyProps,
     modalContentProps,
     modalProps,
-    showCloseButton = true,
+    showCloseButton = type !== 'text',
   } = options
   const [t] = useTranslation('translations')
 
@@ -50,6 +50,7 @@ export const ConfirmDialog: React.FC = () => {
       {...modalProps}
       isOpen={isOpen}
       onClose={onClose}
+      isCentered
     >
       <ModalOverlay />
       <ModalContent borderRadius="24px" {...modalContentProps}>
@@ -57,7 +58,7 @@ export const ConfirmDialog: React.FC = () => {
         <ModalBody {...modalBodyProps}>
           {content ?? (
             <Alert
-              status={type}
+              status={type === 'text' ? undefined : type}
               variant="subtle"
               flexDirection="column"
               alignItems="center"
@@ -65,8 +66,10 @@ export const ConfirmDialog: React.FC = () => {
               textAlign="center"
               bg="white"
             >
-              <AlertIcon boxSize="70px" mr={0} />
-              <AlertTitle mt={4} mb={1} fontSize="16px" fontWeight="normal">
+              {type !== 'text' ? (
+                <AlertIcon boxSize="70px" mr={0} mb={4} />
+              ) : null}
+              <AlertTitle mb={1} mx={0} fontSize="17px" fontWeight="normal">
                 {title}
               </AlertTitle>
               <AlertDescription maxWidth="sm" fontSize="14px" color="gray.500">
@@ -77,7 +80,11 @@ export const ConfirmDialog: React.FC = () => {
         </ModalBody>
 
         <ModalFooter>
-          <ModalFooterButtonGroup>
+          <Stack
+            spacing={2}
+            w="full"
+            direction={type === 'text' ? 'row-reverse' : 'column'}
+          >
             <Button
               isFullWidth
               variant="solid"
@@ -85,7 +92,7 @@ export const ConfirmDialog: React.FC = () => {
               isLoading={isLoading}
               onClick={onConfirm}
             >
-              {okText ?? t('common.actions.comfirm')}
+              {okText ?? t('common.actions.confirm')}
             </Button>
 
             {onCancel !== noop ? (
@@ -93,7 +100,7 @@ export const ConfirmDialog: React.FC = () => {
                 {cancelText ?? t('common.actions.cancel')}
               </Button>
             ) : null}
-          </ModalFooterButtonGroup>
+          </Stack>
         </ModalFooter>
       </ModalContent>
     </Modal>

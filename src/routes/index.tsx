@@ -3,11 +3,8 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
 import { NotFound } from '../views/NotFound'
 import i18n from '../i18n'
-import { Comfirm } from '../components/Confirm'
 import { WarningDialog } from '../components/WarningDialog'
-import { ErrorToastDialog } from '../components/ErrorToast'
 import { GlobalSnackbar } from '../components/GlobalSnackbar'
-import { ConfirmToast } from '../components/ConfirmToast'
 import {
   useAccount,
   useAccountStatus,
@@ -19,6 +16,7 @@ import { AccountChange } from './AccountChange'
 import { routes } from './routes'
 import { RouterProvider } from '../hooks/useRoute'
 import { ConfirmDialog } from '../components/ConfirmDialog'
+import { LoadableComponent } from '../components/GlobalLoader'
 export * from './path'
 
 export const Routers: React.FC = () => {
@@ -39,31 +37,30 @@ export const Routers: React.FC = () => {
       <BrowserRouter>
         <RouterProvider>
           <AccountChange>
-            <Switch>
-              {routes.map((route) => (
-                <Route
-                  {...route}
-                  key={route.key}
-                  path={`${route.path}${route.params ?? ''}`}
+            <LoadableComponent>
+              <Switch>
+                {routes.map((route) => (
+                  <Route
+                    {...route}
+                    key={route.key}
+                    path={`${route.path}${route.params ?? ''}`}
+                  />
+                ))}
+                <Redirect
+                  exact
+                  from={RoutePath.Launch}
+                  to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
                 />
-              ))}
-              <Redirect
-                exact
-                from={RoutePath.Launch}
-                to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
-              />
-              <Redirect
-                exact
-                from="/nfts"
-                to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
-              />
-              <Route component={NotFound} path="*" />
-            </Switch>
+                <Redirect
+                  exact
+                  from="/nfts"
+                  to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
+                />
+                <Route component={NotFound} path="*" />
+              </Switch>
+            </LoadableComponent>
             <WarningDialog />
-            <ErrorToastDialog />
-            <ConfirmToast />
             <GlobalSnackbar />
-            <Comfirm open disableBackdropClick />
             <ConfirmDialog />
           </AccountChange>
         </RouterProvider>

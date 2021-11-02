@@ -20,9 +20,8 @@ import NoTxPng from '../../assets/img/no-tx.png'
 import { useTranslation } from 'react-i18next'
 import { LazyLoadImage } from '../../components/Image'
 import { ReactComponent as VipSvg } from '../../assets/svg/vip.svg'
-import Tooltip from '@material-ui/core/Tooltip'
 import { useAPI } from '../../hooks/useAccount'
-import { Flex, Text } from '@mibao-ui/components'
+import { Flex, Text, Tooltip } from '@mibao-ui/components'
 import { MainContainer } from '../../styles'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { useHistory } from 'react-router'
@@ -128,7 +127,7 @@ const ListItemContainer = styled.div`
       font-weight: bold;
       color: #fd821f;
     }
-    .comfirming {
+    .confirming {
       text-align: right;
       font-weight: bold;
       color: #779be3;
@@ -193,7 +192,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
             : truncateMiddle(tx.from_address, 5, 5)
         }`}</span>
         {tx?.verified_info?.is_verified && tx.issuer_uuid !== '' ? (
-          <Tooltip title={vt} placement={'top'}>
+          <Tooltip label={vt} placement="top">
             <VipSvg className="vip" />
           </Tooltip>
         ) : null}
@@ -205,7 +204,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
 
   const Link = isBanned ? 'div' : 'a'
 
-  const isComfirming = useMemo(() => {
+  const isConfirming = useMemo(() => {
     return (
       tx.tx_state === TransactionStatus.Submitting &&
       tx.on_chain_timestamp != null
@@ -224,14 +223,14 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
       </div>
       <div
         className="status"
-        style={{ justifyContent: isComfirming ? 'space-between' : 'center' }}
+        style={{ justifyContent: isConfirming ? 'space-between' : 'center' }}
       >
         {tx.tx_state === TransactionStatus.Pending ? (
           <span className="waiting">{t('transactions.status.waiting')}</span>
         ) : null}
         {tx.tx_state === TransactionStatus.Submitting ? (
-          <span className="comfirming">
-            {t('transactions.status.comfirming')}
+          <span className="confirming">
+            {t('transactions.status.confirming')}
           </span>
         ) : null}
         {tx.on_chain_timestamp != null ? (

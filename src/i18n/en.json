@@ -4,7 +4,7 @@
       "beian": "浙ICP备2021006943号-3",
       "login": "Login",
       "actions": {
-        "comfirm": "Confirm",
+        "confirm": "Confirm",
         "cancel": "Cancel",
         "loading": "Loading",
         "pull-to-down": "No More NFT~",
@@ -59,7 +59,7 @@
       "owned": "Owned",
       "liked": "Liked",
       "status": {
-        "comfirming": "Confirming",
+        "confirming": "Confirming",
         "receiving": "Receiving",
         "tranferring": "Transferring"
       },
@@ -106,7 +106,7 @@
       "once-transfer": "Once transferred, it cannot be withdrawn",
       "submitted": "Transfer transaction submitted",
       "tips": "On-chain confirmation may take 1-2 minutes",
-      "comfirm": "Confirm",
+      "confirm": "Confirm",
       "signing": "Signing"
     },
     "404": {
@@ -121,7 +121,7 @@
       "send-to": "Send to",
       "status": {
         "waiting": "Waiting",
-        "comfirming": "Confirming"
+        "confirming": "Confirming"
       }
     },
     "info": {
@@ -196,7 +196,7 @@
       "cancel": "Cancel",
       "male": "Male",
       "female": "Female",
-      "comfirm": "Confirm",
+      "confirm": "Confirm",
       "reshot": "Retake",
       "success": "Profile updated",
       "years": "{{year}} years old",

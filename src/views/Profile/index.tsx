@@ -14,13 +14,12 @@ import { useRouteMatch } from 'react-router-dom'
 import { useSetServerProfile } from '../../hooks/useProfile'
 import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
-import { Skeleton } from '@material-ui/lab'
 import { DrawerImage } from './DrawerImage'
 import { HolderAvatar } from '../../components/HolderAvatar'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { Input, Select } from './Input'
-import { Stack, Center, Button } from '@mibao-ui/components'
-import { useConfirm } from '../../hooks/useConfirm'
+import { Stack, Center, Button, Skeleton } from '@mibao-ui/components'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -154,7 +153,7 @@ export const Profile: React.FC = () => {
     )
   }, [user, formState])
 
-  const confirm = useConfirm()
+  const onConfirm = useConfirmDialog()
 
   const goBack = useCallback(() => {
     history.replace(RoutePath.NFTs)
@@ -163,18 +162,21 @@ export const Profile: React.FC = () => {
   const onGoBack = useCallback(async () => {
     if (isDataChanged && !isDisabled) {
       try {
-        await confirm(
-          t('profile.save-edit'),
-          async () => await onSubmit(false),
-          () => goBack()
-        )
+        await onConfirm({
+          type: 'text',
+          title: t('profile.save-edit'),
+          async onConfirm() {
+            await onSubmit(false)
+          },
+          onCancel: goBack,
+        })
       } catch {
         //
         return
       }
     }
     goBack()
-  }, [onSubmit, goBack, t, confirm, isDataChanged, isDisabled])
+  }, [isDataChanged, isDisabled, goBack, onConfirm, t, onSubmit])
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />

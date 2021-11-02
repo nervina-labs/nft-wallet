@@ -6,8 +6,6 @@ import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { CONTAINER_MAX_WIDTH, IS_IMTOKEN } from '../../constants'
 import { LazyLoadImage } from '../../components/Image'
-import { ActionDialog } from '../../components/ActionDialog'
-import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
@@ -23,8 +21,6 @@ import { Appbar, AppbarButton } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import AccountBg from '../../assets/img/account-bg.png'
 import {
-  Button,
-  ButtonProps,
   Drawer,
   useDisclosure,
   Center,
@@ -32,6 +28,8 @@ import {
   // Checkbox,
 } from '@mibao-ui/components'
 import { Checkbox } from '@chakra-ui/react'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { LoginButton } from '../../components/LoginButton'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -160,39 +158,19 @@ enum ErrorMsg {
   Imtoken = 'refuse',
 }
 
-const LoginButton: React.FC<ButtonProps> = ({ children, ...rest }) => {
-  return (
-    <Button
-      colorScheme="primary"
-      fontWeight="normal"
-      w="280px"
-      variant="solid"
-      fontSize="16px"
-      mb="24px"
-      {...rest}
-    >
-      {children}
-    </Button>
-  )
-}
-
 export const Login: React.FC = () => {
   const { login } = useLogin()
   const { isLogined } = useAccountStatus()
   const { t, i18n } = useTranslation('translations')
+  const onConfirm = useConfirmDialog()
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isLicenseChecked, setIsLicenseChecked] = useState(false)
-  const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
   const { snackbar } = useSnackbar()
   const history = useHistory()
   const location = useLocation<{ redirect?: string }>()
   const redirectUrl = location?.state?.redirect
-  const errorMsg = useMemo(() => {
-    return t(`login.errors.${errorStatus}`)
-  }, [errorStatus, t])
   const {
     isOpen: isDrawerOpen,
     onOpen: drawerOnOpen,
@@ -245,8 +223,10 @@ export const Login: React.FC = () => {
         if (walletType === WalletType.Metamask) {
           const provider = await detectEthereumProvider()
           if (!provider) {
-            setErrorMsg(ErrorMsg.NotSupport)
-            setIsErrorDialogOpen(true)
+            onConfirm({
+              type: 'error',
+              title: t(`login.errors.${ErrorMsg.NotSupport}`),
+            })
             setLoading(false, walletType)
             return
           }
@@ -259,13 +239,15 @@ export const Login: React.FC = () => {
       } catch (error) {
         setLoading(false, walletType)
         if (IS_IMTOKEN && walletType === WalletType.Metamask) {
-          setErrorMsg(ErrorMsg.Imtoken)
-          setIsErrorDialogOpen(true)
+          onConfirm({
+            type: 'error',
+            title: t(`login.errors.${ErrorMsg.Imtoken}`),
+          })
           setLoading(false, walletType)
         }
       }
     },
-    [login, redirectUrl, history]
+    [login, redirectUrl, onConfirm, t, history]
   )
 
   if (isLogined && redirectUrl == null) {
@@ -302,13 +284,6 @@ export const Login: React.FC = () => {
       >
         {t('common.login')}
       </LoginButton>
-      <ActionDialog
-        icon={<FailSvg />}
-        content={errorMsg}
-        open={isErrorDialogOpen}
-        onConfrim={() => setIsErrorDialogOpen(false)}
-        onBackdropClick={() => setIsErrorDialogOpen(false)}
-      />
       <Drawer
         placement="bottom"
         isOpen={isDrawerOpen}
@@ -410,17 +385,6 @@ export const Login: React.FC = () => {
           </a>
         </footer>
       ) : null}
-      {/* <Button
-          disabled={
-            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-          }
-          onClick={loginBtnOnClick.bind(null, WalletType.WalletConnect)}
-        >
-          {t('login.connect.wallet-connect')}&nbsp;
-          {isWalletConnectLoging ? (
-            <CircularProgress className="loading" size="1em" />
-          ) : null}
-        </Button> */}
     </Container>
   )
 }
