@@ -20,8 +20,54 @@ import { useParams } from 'react-router'
 import { useAtom } from 'jotai'
 import { TabCountInfo } from './issuerInfo'
 import { InfiniteList } from '../../../components/InfiniteList'
+import { useLike } from '../../../hooks/useLikeStatus'
+import { IssuerTokenClass } from '../../../models/issuer'
 import { isSupportWebp } from '../../../utils'
-import FallbackSrc from '../../../assets/svg/fallback.svg'
+import FALLBACK from '../../../assets/svg/fallback.svg'
+
+interface CardProps {
+  token: IssuerTokenClass
+  locale: string
+  gotoClass: (classId: string) => void
+}
+
+const Card: React.FC<CardProps> = ({ token, locale, gotoClass }) => {
+  const { likeCount, isLikeLoading, toggleLike, isLiked } = useLike({
+    count: token.class_likes,
+    liked: token.class_liked,
+    locale,
+    uuid: token.uuid,
+  })
+  const href = `/class/${token.uuid}`
+  return (
+    <Box overflow="hidden" mb="24px" px="20px">
+      <NFTCard
+        hasCardback={token.card_back_content_exist}
+        likeProps={{
+          isLiked,
+          likeCount,
+          isLoading: isLikeLoading,
+          onClick: toggleLike,
+        }}
+        href={href}
+        locale={locale}
+        price={`¥${token.product_price as string}`}
+        src={token.bg_image_url === null ? '' : token.bg_image_url}
+        title={token.name}
+        type={token.renderer_type}
+        titleProps={{ noOfLines: 2 }}
+        resizeScale={600}
+        imageProps={{
+          webp: isSupportWebp(),
+        }}
+        onClick={(e) => {
+          e.preventDefault()
+          gotoClass(token.uuid)
+        }}
+      />
+    </Box>
+  )
+}
 
 export const NftCards: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -110,7 +156,7 @@ export const NftCards: React.FC = () => {
                         rounded="20px"
                         resizeScale={300}
                         webp={clientIsSupportWebp}
-                        fallbackSrc={FallbackSrc}
+                        fallbackSrc={FALLBACK}
                       />
                     </AspectRatio>
                   ))
@@ -134,37 +180,16 @@ export const NftCards: React.FC = () => {
                 }
                 columnCount={1}
                 renderItems={(group, i) => {
-                  return group.token_classes.map((token, j: number) => (
-                    <Box
-                      rounded="10%"
-                      shadow="0 0 1px rgba(0, 0, 0, 0.1)"
-                      overflow="hidden"
-                      p="10px"
-                      pb="20px"
-                      mb="25px"
-                    >
-                      <NFTCard
-                        hasCardback={token.card_back_content_exist}
-                        likeProps={{
-                          isLiked: token.class_liked,
-                          likeCount: token.class_likes,
-                        }}
+                  return group.token_classes.map((token, j: number) => {
+                    return (
+                      <Card
+                        token={token}
+                        gotoClass={gotoClass}
                         locale={i18n.language}
-                        price={`¥${token.product_price as string}`}
-                        src={
-                          token.bg_image_url === null ? '' : token.bg_image_url
-                        }
-                        title={token.name}
-                        type={token.renderer_type}
-                        resizeScale={500}
-                        imageProps={{
-                          webp: clientIsSupportWebp,
-                          fallbackSrc: FallbackSrc,
-                        }}
-                        onClick={() => gotoClass(token.uuid)}
+                        key={token.uuid || `${i}+${j}`}
                       />
-                    </Box>
-                  ))
+                    )
+                  })
                 }}
               />
             ) : null}
