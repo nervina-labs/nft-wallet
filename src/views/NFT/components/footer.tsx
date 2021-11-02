@@ -36,6 +36,7 @@ export const Footer: React.FC<{
       h="60px"
       bg="white"
       px="20px"
+      mt="auto"
       borderTop="1px solid #e1e1e1"
       zIndex={5}
     >

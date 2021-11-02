@@ -11,6 +11,9 @@ import { Footer } from './components/footer'
 
 const Container = styled(MainContainer)`
   position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `
 
 export const NFT: React.FC = () => {
