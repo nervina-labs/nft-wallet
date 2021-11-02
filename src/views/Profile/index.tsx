@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useReducer, useMemo } from 'react'
+import React, {
+  useState,
+  useCallback,
+  useReducer,
+  useMemo,
+  useEffect,
+} from 'react'
 import { Redirect, useHistory } from 'react-router'
 import styled from 'styled-components'
 import { Appbar, AppbarButton } from '../../components/Appbar'
@@ -111,10 +117,10 @@ export const Profile: React.FC = () => {
       refetchOnWindowFocus: false,
       onSuccess(user) {
         dispatch({ key: 'birthday', value: user.birthday })
-        dispatch({ key: 'description', value: user.description })
+        dispatch({ key: 'description', value: user.description || '' })
         dispatch({ key: 'gender', value: user.gender })
         dispatch({ key: 'region', value: user.region })
-        dispatch({ key: 'nickname', value: user.nickname })
+        dispatch({ key: 'nickname', value: user.nickname || '' })
       },
     }
   )
@@ -178,6 +184,16 @@ export const Profile: React.FC = () => {
     goBack()
   }, [isDataChanged, isDisabled, goBack, onConfirm, t, onSubmit])
 
+  useEffect(() => {
+    const len = formState?.nickname?.length ?? 0
+    if (len < 2) {
+      setErrorMsg(t('profile.user-name.desc'))
+    } else {
+      // eslint-disable-next-line no-void
+      setErrorMsg(void 0)
+    }
+  }, [formState?.nickname, t])
+
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -221,12 +237,6 @@ export const Profile: React.FC = () => {
             onChange={(e) => {
               const value = e.target.value
               dispatch({ key: 'nickname', value })
-              if (value.length < 2) {
-                setErrorMsg(t('profile.user-name.desc'))
-              } else {
-                // eslint-disable-next-line no-void
-                setErrorMsg(void 0)
-              }
             }}
             max={24}
             errorMsg={errorMsg}
