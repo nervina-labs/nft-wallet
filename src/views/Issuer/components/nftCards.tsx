@@ -23,6 +23,7 @@ import { InfiniteList } from '../../../components/InfiniteList'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { IssuerTokenClass } from '../../../models/issuer'
 import { isSupportWebp } from '../../../utils'
+import FALLBACK from '../../../assets/svg/fallback.svg'
 
 interface CardProps {
   token: IssuerTokenClass
@@ -155,7 +156,7 @@ export const NftCards: React.FC = () => {
                         rounded="20px"
                         resizeScale={300}
                         webp={clientIsSupportWebp}
-                        fallbackSrc={FallbackSrc}
+                        fallbackSrc={FALLBACK}
                       />
                     </AspectRatio>
                   ))
