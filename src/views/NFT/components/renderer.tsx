@@ -5,6 +5,7 @@ import { HEADER_HEIGHT } from '../../../components/Appbar'
 import {
   Box,
   Center,
+  Flex,
   Image,
   Modal,
   ModalContent,
@@ -13,6 +14,7 @@ import {
 } from '@mibao-ui/components'
 import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as CardbackSvg } from '../../../assets/svg/card-back.svg'
+import { ReactComponent as LockSvg } from '../../../assets/svg/lock.svg'
 import { useTranslation } from 'react-i18next'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 import { useState } from 'react'
@@ -39,7 +41,12 @@ const TiltContainer = styled(Tilt)`
     transform-origin: center right;
     transition: transform 0.4s;
     .flip-card-img {
-      animation: flip-card-img-show 0.2s;
+      animation: flip-show 0.2s;
+    }
+    .flip-card-back {
+      animation: flip-hide 0.2s;
+      animation-fill-mode: forwards;
+      pointer-events: none;
     }
   }
 
@@ -47,13 +54,18 @@ const TiltContainer = styled(Tilt)`
     transform: translateX(-100%) rotateY(-180deg);
 
     .flip-card-img {
-      animation: flip-card-img-hide 0.2s;
+      animation: flip-hide 0.2s;
       animation-fill-mode: forwards;
       pointer-events: none;
     }
+
+    .flip-card-back {
+      animation: flip-show 0.2s;
+      pointer-events: unset;
+    }
   }
 
-  @keyframes flip-card-img-show {
+  @keyframes flip-show {
     0% {
       opacity: 0;
     }
@@ -68,7 +80,7 @@ const TiltContainer = styled(Tilt)`
     }
   }
 
-  @keyframes flip-card-img-hide {
+  @keyframes flip-hide {
     0% {
       opacity: 1;
     }
@@ -85,9 +97,10 @@ const TiltContainer = styled(Tilt)`
 `
 
 const CardBack: React.FC<{
-  content: string
+  content?: string
   clickable: boolean
 }> = ({ content, clickable = true }) => {
+  const { t } = useTranslation('translations')
   const {
     isOpen: isFullScreen,
     onOpen: onFullScreen,
@@ -97,6 +110,7 @@ const CardBack: React.FC<{
   return (
     <>
       <Box
+        className="flip-card-back"
         rounded="30px"
         position="absolute"
         top="0"
@@ -104,15 +118,56 @@ const CardBack: React.FC<{
         width="100%"
         height="100%"
         zIndex={2}
-        bg="rgba(255, 255, 255, 0.5)"
         transform="rotateY(180deg)"
-        overflow="auto"
-        p="10px"
-        dangerouslySetInnerHTML={{
-          __html: content,
-        }}
-        onClick={clickable ? onFullScreen : undefined}
-      />
+        bg="rgba(255, 255, 255, 0.5)"
+        backdropFilter="blur(20px)"
+        overflow="hidden"
+      >
+        {typeof content === 'string' ? (
+          <Box
+            rounded="30px"
+            overflow="auto"
+            w="full"
+            h="full"
+            p="10px"
+            dangerouslySetInnerHTML={{
+              __html: content,
+            }}
+            onClick={clickable ? onFullScreen : undefined}
+          />
+        ) : (
+          <Flex
+            width="100%"
+            height="100%"
+            position="relative"
+            direction="column"
+          >
+            <Center
+              bg="rgba(255, 255, 255, 0.2)"
+              m="auto"
+              w="90px"
+              h="90px"
+              rounded="full"
+            >
+              <LockSvg />
+            </Center>
+
+            <Box
+              bg="rgba(0, 0, 0, 0.3)"
+              h="48px"
+              lineHeight="48px"
+              color="white"
+              textAlign="center"
+              fontSize="14px"
+              whiteSpace="nowrap"
+              textOverflow="ellipsis"
+              overflow="hidden"
+            >
+              {t('nft.lock')}
+            </Box>
+          </Flex>
+        )}
+      </Box>
 
       <Modal isOpen={isFullScreen} onClose={unFullScreen}>
         <ModalOverlay />
@@ -122,6 +177,7 @@ const CardBack: React.FC<{
           rounded="30px"
           backdropFilter="blur(10px)"
           w="95%"
+          minH="70%"
         >
           <Center
             position="absolute"
@@ -129,8 +185,8 @@ const CardBack: React.FC<{
             rounded="full"
             top="20px"
             right="20px"
-            w="20px"
-            h="20px"
+            w="25px"
+            h="25px"
             onClick={unFullScreen}
             cursor="pointer"
           >
@@ -138,7 +194,7 @@ const CardBack: React.FC<{
           </Center>
           <Box
             dangerouslySetInnerHTML={{
-              __html: content,
+              __html: content as string,
             }}
           />
         </ModalContent>
@@ -154,6 +210,10 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const hasCardBack =
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   const [showCardBackContent, setShowCardBackContent] = useState(false)
+  const cardbackContent =
+    detail?.class_card_back_content ?? detail?.card_back_content
+  const hasCardback =
+    detail?.card_back_content_exist || detail?.class_card_back_content_exist
 
   return (
     <Box
@@ -177,7 +237,9 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           w="auto"
           h="auto"
           position="relative"
-          className={`flip-card ${showCardBackContent ? 'flipped' : ''}`}
+          className={`flip-card ${showCardBackContent ? 'flipped' : ''} ${
+            !cardbackContent ? 'keep-img' : ''
+          }`}
           opacity={!detail?.bg_image_url ? 0 : 1}
         >
           <Image
@@ -191,12 +253,12 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             zIndex={3}
             className="flip-card-img"
           />
-          <CardBack
-            clickable={showCardBackContent}
-            content={
-              detail?.class_card_back_content ?? detail?.card_back_content ?? ''
-            }
-          />
+          {hasCardback ? (
+            <CardBack
+              clickable={showCardBackContent}
+              content={cardbackContent}
+            />
+          ) : null}
         </Box>
       </TiltContainer>
 
