@@ -249,7 +249,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           }`}
           opacity={!detail?.bg_image_url ? 0 : 1}
         >
-          <Box position="relative">
+          <Box position="relative" className="flip-card-img">
             <Image
               maxH="300px"
               src={detail?.bg_image_url}
@@ -259,7 +259,6 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               webp={isSupportWebp()}
               fallbackSrc={FallbackAvatarSrc}
               zIndex={3}
-              className="flip-card-img"
             />
             <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
               <NftPlaySvg />
