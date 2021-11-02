@@ -3,12 +3,12 @@ import QRCode from 'qrcode.react'
 import { useTranslation } from 'react-i18next'
 import { Text, Center, Button } from '@mibao-ui/components'
 import { useClipboard } from '@chakra-ui/react'
-import { useSnackbar } from '../../hooks/useSnackbar'
+import { useToast } from '../../hooks/useToast'
 
 export const Info: React.FC<{ address: string }> = ({ address = '' }) => {
   const { t } = useTranslation('translations')
   const { onCopy } = useClipboard(address)
-  const { snackbar } = useSnackbar()
+  const toast = useToast()
 
   const qrCodeContent = useMemo(
     () => (
@@ -57,7 +57,7 @@ export const Info: React.FC<{ address: string }> = ({ address = '' }) => {
           mt="16px"
           onClick={() => {
             onCopy()
-            snackbar(t('info.copied'))
+            toast(t('info.copied'))
           }}
           size="sm"
           colorScheme="primary"

@@ -16,7 +16,7 @@ import {
   useSignTransaction,
   WalletType,
 } from './useAccount'
-import { useSnackbar } from './useSnackbar'
+import { useToast } from './useToast'
 import { useWarning } from './useWarning'
 
 export interface onRedeemProps {
@@ -53,7 +53,7 @@ export const useSignRedeem = () => {
   const [t] = useTranslation('translations')
 
   const [isRedeeming, setIsRedeeming] = useAtom(isSigningAtom)
-  const { snackbar } = useSnackbar()
+  const toast = useToast()
   const confirmRedeem = useCallback(
     async ({ customData, id, onConfirmError }: ConfirmRedeemProps) => {
       setIsRedeeming(true)
@@ -94,7 +94,7 @@ export const useSignRedeem = () => {
         }
       } catch (error) {
         setIsRedeeming(false)
-        snackbar(t('exchange.error'))
+        toast(t('exchange.error'))
         await onConfirmError?.()
       }
     },
@@ -106,7 +106,7 @@ export const useSignRedeem = () => {
       walletType,
       reactLocation.pathname,
       setIsRedeeming,
-      snackbar,
+      toast,
       t,
     ]
   )

@@ -52,7 +52,7 @@ const CardContainer = styled(Box)`
     position: absolute;
     top: 0;
     right: calc(0% - var(--size));
-    z-index: 2;
+    z-index: 10;
 
     svg,
     img {
@@ -68,7 +68,7 @@ const CardContainer = styled(Box)`
     position: absolute;
     top: 8px;
     right: 8px;
-    z-index: 3;
+    z-index: 10;
   }
 
   &.active {
@@ -267,7 +267,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
                       name: token.issuer_name as string,
                       src: token.issuer_avatar_url,
                       bannedText: t('common.baned.issuer'),
-                      minW: '25px',
+                      width: '25px',
                     }}
                     limitProps={{
                       count: token.class_total,

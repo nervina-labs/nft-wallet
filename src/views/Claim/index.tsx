@@ -75,7 +75,7 @@ const Container = styled(MainContainer)`
       margin: 12px 0;
       height: 46px;
       text-align: center;
-      min-width: 295px;
+      min-width: 280px;
       .error {
         border: 1px solid #ff0000;
       }

@@ -18,7 +18,7 @@ import { DrawerImage } from './DrawerImage'
 import { HolderAvatar } from '../../components/HolderAvatar'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { Input, Select } from './Input'
-import { Stack, Center, Button, Skeleton } from '@mibao-ui/components'
+import { Stack, Center, Button, SkeletonCircle } from '@mibao-ui/components'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 
 const Container = styled(MainContainer)`
@@ -200,7 +200,7 @@ export const Profile: React.FC = () => {
             onClick={() => setShowAvatarAction(true)}
           >
             {isFetching ? (
-              <Skeleton variant="circle" width={72} height={72} />
+              <SkeletonCircle size="72px" />
             ) : (
               <HolderAvatar
                 tid={user?.avatar_tid}
