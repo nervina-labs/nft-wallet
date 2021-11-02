@@ -139,6 +139,9 @@ export const Card: React.FC<CardProps> = ({
             history.push(`${RoutePath.Issuer}/${token.issuer_uuid as string}`)
           },
         }}
+        imageProps={{
+          webp: true,
+        }}
         limitProps={{
           count: token.class_total,
           limitedText: t('common.limit.limit'),
