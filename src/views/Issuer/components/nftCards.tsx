@@ -37,7 +37,7 @@ const Card: React.FC<CardProps> = ({ token, locale, gotoClass }) => {
   })
   const href = `/class/${token.uuid}`
   return (
-    <Box rounded="10%" overflow="hidden" mb="24px" px="20px">
+    <Box overflow="hidden" mb="24px" px="20px">
       <NFTCard
         hasCardback={token.card_back_content_exist}
         likeProps={{
