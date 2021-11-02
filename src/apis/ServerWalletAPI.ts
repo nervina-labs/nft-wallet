@@ -48,7 +48,12 @@ import {
   RewardDetailResponse,
 } from '../models/redeem'
 import { ClaimResult } from '../models/claim'
-import { OrderState, PlaceOrderProps } from '../models/order'
+import {
+  OrderDetail,
+  OrdersResponse,
+  OrderState,
+  PlaceOrderProps,
+} from '../models/order'
 
 function randomid(length = 10): string {
   let result = ''
@@ -644,13 +649,17 @@ export class ServerWalletAPI {
     )
   }
 
-  async getOrders(page: number, orderState: OrderState, auth?: Auth) {
+  async getOrders(
+    page: number,
+    auth: Auth,
+    orderState?: OrderState
+  ): Promise<AxiosResponse<OrdersResponse>> {
     const params: Record<string, unknown> = {
       page,
       limit: PER_ITEM_LIMIT,
       address: this.address,
     }
-    if (orderState !== OrderState.All) {
+    if (orderState) {
       params.state = orderState
     }
     const headers: { auth?: string } = {}
@@ -669,7 +678,7 @@ export class ServerWalletAPI {
     })
   }
 
-  async getOrderDetail(uuid: string) {
+  async getOrderDetail(uuid: string): Promise<AxiosResponse<OrderDetail>> {
     return await this.axios.get(`/token_orders/${uuid}`, {
       params: {
         uuid,
