@@ -22,7 +22,7 @@ import { NftType } from '../../models'
 import { PhotoProvider } from 'react-photo-view'
 import { useTranslation } from 'react-i18next'
 import { Dialog } from '@material-ui/core'
-import { useSnackbar } from '../../hooks/useSnackbar'
+import { useToast } from '../../hooks/useToast'
 import { downloadCardBackPDF, disableImagePreviewContext } from '../../utils'
 
 export interface ParallaxTiltProps {
@@ -339,7 +339,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }, [])
   const [enableGyroscope, setEnableGyroscope] = useState(isTouchDevice)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
-  const { snackbar } = useSnackbar()
+  const toast = useToast()
   const [t] = useTranslation('translations')
   const shouldReverseTilt = useMemo(() => {
     if (!isTouchDevice) {
@@ -394,7 +394,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
   }
   const onError = (): void => {
     if (isPlayerOpen) {
-      snackbar(t('resource.fail'))
+      toast(t('resource.fail'))
     }
     setIsPlayerOpen(false)
   }

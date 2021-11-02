@@ -85,7 +85,7 @@ const Container = styled(MainContainer)`
       }
       border: 1px solid #d2d2d2;
       border-radius: 25px;
-      width: 295px;
+      width: 280px;
       margin-left: 50px;
       margin-right: 50px;
       margin-top: 12px;

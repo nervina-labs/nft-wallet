@@ -10,7 +10,7 @@ import {
   useSignMessage,
   WalletType,
 } from './useAccount'
-import { useSnackbar } from './useSnackbar'
+import { useToast } from './useToast'
 
 export type Gender = 'male' | 'female'
 
@@ -110,15 +110,15 @@ export function useToggleLike() {
 export function useSetServerProfile() {
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
-  const { snackbar } = useSnackbar()
+  const toast = useToast()
 
   return useCallback(
     async (user: Partial<User>, options?: { ext?: string }) => {
       const auth = await getAuth()
       await api.setProfile(user, { auth, ext: options?.ext })
-      snackbar(i18n.t('profile.success', { ns: 'translations' }))
+      toast(i18n.t('profile.success', { ns: 'translations' }))
     },
-    [getAuth, api, snackbar]
+    [getAuth, api, toast]
   )
 }
 

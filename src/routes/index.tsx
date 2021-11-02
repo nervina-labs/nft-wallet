@@ -4,7 +4,6 @@ import { I18nextProvider } from 'react-i18next'
 import { NotFound } from '../views/NotFound'
 import i18n from '../i18n'
 import { WarningDialog } from '../components/WarningDialog'
-import { GlobalSnackbar } from '../components/GlobalSnackbar'
 import {
   useAccount,
   useAccountStatus,
@@ -60,7 +59,6 @@ export const Routers: React.FC = () => {
               </Switch>
             </LoadableComponent>
             <WarningDialog />
-            <GlobalSnackbar />
             <ConfirmDialog />
           </AccountChange>
         </RouterProvider>
