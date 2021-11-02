@@ -7,8 +7,9 @@ import {
   TabPanels,
   Image,
   NFTCard,
+  AspectRatio,
 } from '@mibao-ui/components'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuery } from '../../../hooks/useRouteQuery'
 import { PRODUCT_STATUE_SET, ProductState, Query } from '../../../models'
@@ -21,6 +22,7 @@ import { TabCountInfo } from './issuerInfo'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { IssuerTokenClass } from '../../../models/issuer'
+import { isSupportWebp } from '../../../utils'
 
 interface CardProps {
   token: IssuerTokenClass
@@ -55,7 +57,7 @@ const Card: React.FC<CardProps> = ({ token, locale, gotoClass }) => {
         titleProps={{ noOfLines: 2 }}
         resizeScale={600}
         imageProps={{
-          webp: true,
+          webp: isSupportWebp(),
         }}
         onClick={(e) => {
           e.preventDefault()
@@ -101,6 +103,7 @@ export const NftCards: React.FC = () => {
     [api, id, productState]
   )
   const [tabCountInfo] = useAtom(TabCountInfo)
+  const clientIsSupportWebp = useMemo(() => isSupportWebp(), [])
 
   return (
     <Box w="full">
@@ -137,10 +140,11 @@ export const NftCards: React.FC = () => {
                 columnCount={2}
                 renderItems={(group, i) => {
                   return group.token_classes.map((token, j: number) => (
-                    <Box
-                      pb="10px"
+                    <AspectRatio
                       key={`${i}-${j}`}
                       onClick={() => gotoClass(token.uuid)}
+                      ratio={i === 0 && j === 0 ? 1 : 9 / 12}
+                      mb="10px"
                     >
                       <Image
                         src={
@@ -150,12 +154,10 @@ export const NftCards: React.FC = () => {
                         height="100%"
                         rounded="20px"
                         resizeScale={300}
-                        containerProps={{
-                          ratio: i === 0 && j === 0 ? 1 : 9 / 12,
-                        }}
-                        webp
+                        webp={clientIsSupportWebp}
+                        fallbackSrc={FallbackSrc}
                       />
-                    </Box>
+                    </AspectRatio>
                   ))
                 }}
               />
