@@ -184,7 +184,13 @@ export const NftDetail: React.FC<{
           >
             {detail?.issuer_info?.name}
           </Box>
-          <Box fontSize="12px" color="#777E90">
+          <Box
+            fontSize="12px"
+            color="#777E90"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            overflow="hidden"
+          >
             {detail?.verified_info?.verified_title}
           </Box>
         </SkeletonText>

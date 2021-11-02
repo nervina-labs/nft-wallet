@@ -15,6 +15,7 @@ import {
 import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as CardbackSvg } from '../../../assets/svg/card-back.svg'
 import { ReactComponent as LockSvg } from '../../../assets/svg/lock.svg'
+import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
 import { useTranslation } from 'react-i18next'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 import { useState } from 'react'
@@ -220,7 +221,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
 
   return (
-    <Box
+    <Flex
       mt={`-${HEADER_HEIGHT}px`}
       bg="gray.200"
       h="460px"
@@ -228,6 +229,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       pt={`${HEADER_HEIGHT + 10}px`}
       position="relative"
       overflow="hidden"
+      pb="60px"
     >
       <TiltContainer
         adjustGyroscope
@@ -247,17 +249,22 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           }`}
           opacity={!detail?.bg_image_url ? 0 : 1}
         >
-          <Image
-            maxH="300px"
-            src={detail?.bg_image_url}
-            rounded="30px"
-            resizeScale={400}
-            m="auto"
-            webp={isSupportWebp()}
-            fallbackSrc={FallbackAvatarSrc}
-            zIndex={3}
-            className="flip-card-img"
-          />
+          <Box position="relative">
+            <Image
+              maxH="300px"
+              src={detail?.bg_image_url}
+              rounded="30px"
+              resizeScale={400}
+              m="auto"
+              webp={isSupportWebp()}
+              fallbackSrc={FallbackAvatarSrc}
+              zIndex={3}
+              className="flip-card-img"
+            />
+            <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
+              <NftPlaySvg />
+            </Box>
+          </Box>
           {hasCardback ? (
             <CardBack
               clickable={showCardBackContent}
@@ -300,6 +307,6 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           </Center>
         </Center>
       ) : null}
-    </Box>
+    </Flex>
   )
 }
