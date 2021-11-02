@@ -8,9 +8,10 @@ import { useHistory } from 'react-router-dom'
 import { useCallback } from 'react'
 
 export const Footer: React.FC<{
+  hidden?: boolean
   uuid: string
   detail?: NFTDetail | TokenClass
-}> = ({ detail, uuid }) => {
+}> = ({ detail, uuid, hidden }) => {
   const { t, i18n } = useTranslation('translations')
   const { push } = useHistory()
   const { likeCount, isLikeLoading, toggleLike, isLiked } = useLike({
@@ -30,6 +31,8 @@ export const Footer: React.FC<{
       templateColumns="calc(100% - 120px) 120px"
       position="sticky"
       bottom="0"
+      transform={`translateY(${hidden ? '60px' : '0'})`}
+      transition="transform 300ms"
       h="60px"
       bg="white"
       px="20px"

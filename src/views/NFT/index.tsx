@@ -38,7 +38,7 @@ export const NFT: React.FC = () => {
         refetch={refetch}
         isClass={matchTokenClass?.isExact}
       />
-      <Footer uuid={id} detail={detail} />
+      <Footer uuid={id} detail={detail} hidden={isLoading} />
     </Container>
   )
 }
