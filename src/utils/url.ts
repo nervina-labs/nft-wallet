@@ -7,7 +7,7 @@ import {
 } from '../constants'
 import i18n from '../i18n'
 
-function isSupportWebp(): boolean {
+export function isSupportWebp(): boolean {
   // https://caniuse.com/?search=webp
   // https://x5.tencent.com/guide/caniuse/index.html
   const supportedBrowsers = {
