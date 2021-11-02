@@ -92,7 +92,7 @@ const NftDetailTab: React.FC<{
       <TabPanels>
         <TabPanel p="20px">
           <SkeletonText isLoaded={!isLoading} spacing={4} noOfLines={3}>
-            <Box fontSize="14px" color="#777E90">
+            <Box fontSize="14px" color="#777E90" userSelect="text">
               {detail?.description ? detail?.description : t('nft.no-desc')}
             </Box>
           </SkeletonText>
@@ -158,7 +158,6 @@ export const NftDetail: React.FC<{
         templateColumns="48px calc(100% - 48px - 100px) auto"
         mt="25px"
         px="20px"
-        onClick={gotoIssuer}
         cursor="pointer"
       >
         <Avatar
@@ -166,6 +165,7 @@ export const NftDetail: React.FC<{
           size="48px"
           border="3px solid #f6f6f6"
           fallbackSrc={FallbackAvatarSrc}
+          onClick={gotoIssuer}
         />
         <SkeletonText
           isLoaded={!isLoading}
@@ -173,6 +173,7 @@ export const NftDetail: React.FC<{
           spacing={3}
           ml="18px"
           pt="4px"
+          onClick={gotoIssuer}
         >
           <Box
             fontSize="14px"

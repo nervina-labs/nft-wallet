@@ -14,6 +14,7 @@ const Container = styled(MainContainer)`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  user-select: none;
 `
 
 export const NFT: React.FC = () => {

@@ -20,6 +20,7 @@ import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 import { useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { isSupportWebp } from '../../../utils'
+import { useTilt } from '../hooks/useTilt'
 
 const TiltContainer = styled(Tilt)`
   position: relative;
@@ -122,6 +123,7 @@ const CardBack: React.FC<{
         bg="rgba(255, 255, 255, 0.5)"
         backdropFilter="blur(20px)"
         overflow="hidden"
+        userSelect="text"
       >
         {typeof content === 'string' ? (
           <Box
@@ -212,8 +214,10 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const [showCardBackContent, setShowCardBackContent] = useState(false)
   const cardbackContent =
     detail?.class_card_back_content ?? detail?.card_back_content
-  const hasCardback =
+  const hasCardback = Boolean(
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
+  )
+  const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
 
   return (
     <Box
@@ -226,11 +230,12 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       overflow="hidden"
     >
       <TiltContainer
-        tiltReverse
         adjustGyroscope
         gyroscope
+        tiltReverse={shouldReverseTilt}
         tiltEnable
         transitionSpeed={1000}
+        tiltAngleYInitial={tiltAngleYInitial}
       >
         <Box
           m="auto"
