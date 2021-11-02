@@ -7,6 +7,7 @@ import { RoutePath } from '../../routes'
 import { Renderer } from './components/renderer'
 import { NftDetail } from './components/nftDetail'
 import { MainContainer } from '../../styles'
+import { Footer } from './components/footer'
 
 const Container = styled(MainContainer)`
   position: relative;
@@ -37,6 +38,7 @@ export const NFT: React.FC = () => {
         refetch={refetch}
         isClass={matchTokenClass?.isExact}
       />
+      <Footer uuid={id} detail={detail} />
     </Container>
   )
 }
