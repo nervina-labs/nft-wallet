@@ -29,6 +29,12 @@ export enum RoutePath {
   Holder = '/holder',
   HolderAddress = '/holder/address',
   PDFViewer = '/pdf-viewer',
+  Orders = '/orders',
+  PlacedOrders = '/orders/placed',
+  PaidOrders = '/orders/paid',
+  DoneOrders = '/orders/done',
+  OrderDetail = '/order',
+  OrderSuccess = '/order-success',
 }
 
 export enum ProfilePath {

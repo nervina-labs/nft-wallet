@@ -672,10 +672,23 @@ export class ServerWalletAPI {
     })
   }
 
-  async placeOrder(props: PlaceOrderProps) {
-    return await this.axios.post('/token_orders', {
-      token_order: props,
-    })
+  async placeOrder(props: PlaceOrderProps, auth: Auth) {
+    const headers: { auth?: string } = {
+      auth: JSON.stringify(auth),
+    }
+    return await this.axios.post(
+      '/token_orders',
+      {
+        token_order: {
+          ...props,
+          callback_url: '',
+        },
+        auth,
+      },
+      {
+        headers,
+      }
+    )
   }
 
   async getOrderDetail(uuid: string): Promise<AxiosResponse<OrderDetail>> {
@@ -687,7 +700,7 @@ export class ServerWalletAPI {
     })
   }
 
-  async continuePlaceOrder(uuid: string, auth: Auth) {
+  async continuePlaceOrder(uuid: string, channel: string, auth: Auth) {
     const headers: { auth?: string } = {}
     if (auth) {
       headers.auth = JSON.stringify(auth)
@@ -697,6 +710,7 @@ export class ServerWalletAPI {
       {
         auth,
         uuid,
+        channel,
         address: this.address,
       },
       {

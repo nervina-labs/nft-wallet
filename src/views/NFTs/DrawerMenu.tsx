@@ -77,6 +77,7 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
       {
         text: t('menu.order'),
         icon: <OrderSvg />,
+        onClick: () => history.push(RoutePath.Orders),
       },
       {
         text: t('menu.profile'),

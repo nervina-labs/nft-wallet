@@ -1,0 +1,86 @@
+import React, { useMemo } from 'react'
+import { Order, OrderState } from '../../models/order'
+import { Box, Flex, Issuer, Text, NftImage } from '@mibao-ui/components'
+import { useTranslation } from 'react-i18next'
+import { RoutePath } from '../../routes'
+import { useHistory } from 'react-router'
+import { formatCurrency } from '../../utils'
+
+export interface OrderCardProps {
+  order: Order
+  isInList: boolean
+}
+
+export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
+  const [t] = useTranslation('translations')
+  const history = useHistory()
+  const state = order.state
+  const status = useMemo(() => {
+    const isClosed =
+      state === OrderState.Closed ||
+      state === OrderState.Expired ||
+      state === OrderState.Refunded
+    return (
+      <Text fontSize="12px" color={isClosed ? 'gray.500' : '#5065E5'}>
+        {t(`orders.state.${state ?? ''}`)}
+      </Text>
+    )
+  }, [t, state])
+  const issuerHref = `${RoutePath.Issuer}/${order.issuer_info?.uuid as string}`
+  const isNeededToPay = order.state === OrderState.OrderPlaced
+  const total = Number(order.product_price) * Number(order.product_count)
+  return (
+    <Box px="10px" py="12px" mb="20px" bg="white" borderRadius="22px">
+      <Flex justifyContent="space-between" alignItems="center">
+        <Issuer
+          src={order.issuer_info?.avatar_url}
+          name={order.issuer_info?.name as string}
+          color="black"
+          href={issuerHref}
+          size="25px"
+          onClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            history.push(issuerHref)
+          }}
+        />
+        {status}
+      </Flex>
+      <Flex my="20px">
+        <NftImage
+          resizeScale={200}
+          type={order.renderer_type}
+          src={order.product_image_url}
+          width="100px"
+          height="100px"
+          borderRadius="22px"
+        />
+        <Flex flex={1} ml="16px" flexDirection="column">
+          <Flex flex={1}>
+            <Text noOfLines={3} fontWeight={500} flex={1} fontSize="13px">
+              {order.product_name}
+            </Text>
+            <Flex ml="8px" flexDirection="column">
+              <Text textAlign="right" fontSize="12px" mb="12px">
+                {formatCurrency(order.product_price, order.currency)}
+              </Text>
+              <Text textAlign="right" fontSize="12px" color="gray.500">
+                &times;{order.product_count}
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex marginTop="auto" justifyContent="flex-end" fontSize="14px">
+            <Text fontWeight={500}>
+              {isNeededToPay
+                ? t('orders.needed-payment')
+                : t('orders.paid-payment')}
+            </Text>
+            <Text fontWeight={500} color="#f48538">
+              {formatCurrency(total, order.currency)}
+            </Text>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Box>
+  )
+}

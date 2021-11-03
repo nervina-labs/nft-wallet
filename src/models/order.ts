@@ -12,7 +12,7 @@ export enum OrderState {
 
 export interface PlaceOrderProps {
   product_uuid: string
-  product_count: string
+  product_count: number
   channel: string
   uuid: string
 }
@@ -28,6 +28,7 @@ export interface RawOrder {
   product_name?: string
   product_image_url?: string
   product_count?: string
+  product_price?: string
   order_amount_total?: string
   currency?: string
   state?: OrderState
@@ -36,7 +37,7 @@ export interface RawOrder {
 }
 
 export interface Order extends RawOrder, VipInfo {
-  issuerInfo?: IssuerInfo
+  issuer_info?: IssuerInfo
 }
 
 export interface OrdersResponse {
@@ -53,11 +54,11 @@ export interface OrderDetail {
   order_amount_total: string
   currency: string
   state: OrderState
-  created_at: string
+  created_at?: string
   product_price: string
-  paid_at: string
-  ckb_address: string
-  product_description: string
+  paid_at?: string
+  ckb_address?: string
+  product_description?: string
   renderer_type: NftType
   renderer: string
   issuer_info: IssuerInfo

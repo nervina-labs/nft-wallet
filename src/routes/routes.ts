@@ -24,6 +24,8 @@ import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
 import { Transactions } from '../views/Transactions'
 import { lazy } from 'react'
+import { Orders } from '../views/Orders'
+import { OrderSuccess } from '../views/OrderSuccess'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -210,5 +212,17 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'PDFViewer',
     path: RoutePath.PDFViewer,
+  },
+  {
+    component: Orders,
+    exact: false,
+    key: 'Orders',
+    path: RoutePath.Orders,
+  },
+  {
+    component: OrderSuccess,
+    exact: true,
+    key: 'OrderSuccess',
+    path: RoutePath.OrderSuccess,
   },
 ]

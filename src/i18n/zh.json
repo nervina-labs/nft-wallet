@@ -454,6 +454,32 @@
         "redeeming": "兑换中..."
       }
     },
+    "orders": {
+      "title": "订单列表",
+      "detail": "订单详情",
+      "tabs": {
+        "all": "全部",
+        "placed": "待付款",
+        "paid": "发送中",
+        "done": "已接受"
+      },
+      "no-data": "暂无订单",
+      "no-more": "没有更多订单了",
+      "state": {
+        "order_placed": "待付款",
+        "paid": "发送中",
+        "expired": "交易关闭",
+        "close": "交易关闭",
+        "done": "交易成功",
+        "refunded": "已退款"
+      },
+      "paid-payment": "实付：",
+      "needed-payment": "需付款：",
+      "success": "支付成功",
+      "send-soon": "秘宝将很快发送到您的账户地址上",
+      "be-patient": "请耐心等待",
+      "check": "点击查看我的订单"
+    },
     "follow": {
       "follow": "关注",
       "followed": "已关注",
