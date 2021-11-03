@@ -20,8 +20,9 @@ const Container = styled(MainContainer)`
 export const NFT: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const matchTokenClass = useRouteMatch(RoutePath.TokenClass)
+  const isClass = matchTokenClass?.isExact
   const { detail, failureCount, isLoading, refetch } = useNFTDetailApi(id, {
-    isClass: matchTokenClass?.isExact,
+    isClass,
   })
   const isNotFound =
     failureCount >= 3 || detail?.is_class_banned || detail?.is_issuer_banned
@@ -33,16 +34,15 @@ export const NFT: React.FC = () => {
   return (
     <Container>
       <Appbar />
-
       <Renderer detail={detail} />
       <NftDetail
         uuid={id}
         detail={detail}
         isLoading={isLoading}
         refetch={refetch}
-        isClass={matchTokenClass?.isExact}
+        isClass={isClass}
       />
-      <Footer uuid={id} detail={detail} hidden={isLoading} />
+      <Footer uuid={id} detail={detail} hidden={isLoading} isClass={isClass} />
     </Container>
   )
 }

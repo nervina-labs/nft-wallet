@@ -1,30 +1,88 @@
-import { Button, Grid, Like } from '@mibao-ui/components'
+import { Box, Button, Grid, Like } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { TokenClass } from '../../../models/class-list'
 import { NFTDetail } from '../../../models/nft'
 import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { useHistory } from 'react-router-dom'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+import { RoutePath } from '../../../routes'
+import { ReactComponent as BuySvg } from '../../../assets/svg/buy.svg'
+
+const TranferOrBuy: React.FC<{
+  uuid: string
+  detail?: NFTDetail | TokenClass
+  isClass?: boolean
+}> = ({ uuid, detail, isClass }) => {
+  const { t } = useTranslation('translations')
+  const { push } = useHistory()
+  const tranfer = useCallback(() => {
+    push(`/transfer/${uuid}`, {
+      nftDetail: detail,
+    })
+  }, [push, uuid, detail])
+  const qrcode = useMemo(() => {
+    return detail?.product_qr_code
+  }, [detail])
+
+  const ownCurrentToken =
+    typeof detail?.class_card_back_content !== 'undefined' ||
+    typeof detail?.card_back_content !== 'undefined'
+
+  if (isClass) {
+    if (!qrcode) {
+      return null
+    }
+
+    return (
+      <Button
+        colorScheme="primary"
+        variant="solid"
+        my="auto"
+        mr="0"
+        onClick={() =>
+          push(`${RoutePath.Shop}?qrcode=${encodeURIComponent(qrcode)}`)
+        }
+      >
+        <Box as="span" mr="10px">
+          {t('shop.buy')}
+        </Box>
+        <BuySvg />
+      </Button>
+    )
+  }
+
+  if (!ownCurrentToken) {
+    return null
+  }
+
+  return (
+    <Button
+      colorScheme="primary"
+      variant="solid"
+      my="auto"
+      mr="0"
+      onClick={tranfer}
+    >
+      {t('nft.transfer')}
+      <ArrowForwardIcon ml="5px" />
+    </Button>
+  )
+}
 
 export const Footer: React.FC<{
   hidden?: boolean
   uuid: string
   detail?: NFTDetail | TokenClass
-}> = ({ detail, uuid, hidden }) => {
-  const { t, i18n } = useTranslation('translations')
-  const { push } = useHistory()
+  isClass?: boolean
+}> = ({ detail, uuid, hidden, isClass }) => {
+  const { i18n } = useTranslation('translations')
   const { likeCount, isLikeLoading, toggleLike, isLiked } = useLike({
     count: Number(detail?.class_likes) ?? 0,
     liked: detail?.class_liked || false,
     locale: i18n.language,
     uuid: (detail as NFTDetail)?.class_uuid ?? uuid,
   })
-  const tranfer = useCallback(() => {
-    push(`/transfer/${uuid}`, {
-      nftDetail: detail,
-    })
-  }, [push, uuid, detail])
 
   return (
     <Grid
@@ -48,16 +106,7 @@ export const Footer: React.FC<{
         my="auto"
       />
 
-      <Button
-        colorScheme="primary"
-        variant="solid"
-        my="auto"
-        mr="0"
-        onClick={tranfer}
-      >
-        {t('nft.transfer')}
-        <ArrowForwardIcon ml="5px" />
-      </Button>
+      <TranferOrBuy uuid={uuid} detail={detail} isClass={isClass} />
     </Grid>
   )
 }
