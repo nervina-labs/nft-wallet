@@ -55,6 +55,7 @@ export interface InfiniteListProps<
   ) => React.ReactNode
   enableQuery?: boolean
   columnCount?: number
+  gap?: string
 }
 
 export function InfiniteList<
@@ -78,6 +79,7 @@ export function InfiniteList<
   pullDownToRefreshThreshold = 80,
   enableQuery,
   columnCount = 1,
+  gap = '10px',
 }: InfiniteListProps<TQueryFnData, TError, TData, TQueryKey>) {
   const [t] = useTranslation('translations')
   const {
@@ -164,9 +166,12 @@ export function InfiniteList<
           loader={loader ?? <Loading />}
           endMessage={<H4>{dataLength <= 5 ? ' ' : noMoreElement}</H4>}
         >
-          <Grid templateColumns={`repeat(${columnCount}, 1fr)`} gap="10px">
-            {columns.map((column) => (
-              <GridItem>{column}</GridItem>
+          <Grid
+            templateColumns={`repeat(${columnCount}, calc(calc(100% - ${gap}) / ${columnCount}))`}
+            gap={gap}
+          >
+            {columns.map((column, i) => (
+              <GridItem key={i}>{column}</GridItem>
             ))}
           </Grid>
           {status === 'success' && dataLength === 0

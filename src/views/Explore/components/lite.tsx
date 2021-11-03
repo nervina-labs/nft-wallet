@@ -3,7 +3,6 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
-import { useProfile } from '../../../hooks/useProfile'
 import { ClassSortType } from '../../../models'
 import { Query } from '../../../models/query'
 import { isSupportWebp } from '../../../utils'
@@ -22,14 +21,13 @@ export const Lite: React.FC = () => {
     },
     [api]
   )
-  const { isAuthenticated } = useProfile()
 
   return (
     <Box mt="25px" px="20px">
       <InfiniteList
         enableQuery
         queryFn={queryFn}
-        queryKey={[Query.Explore + 'all' + 'recommended', api, isAuthenticated]}
+        queryKey={[Query.Explore, 0, ClassSortType.Recommend, api]}
         emptyElement={null}
         noMoreElement={t('common.actions.pull-to-down')}
         calcDataLength={(data) =>

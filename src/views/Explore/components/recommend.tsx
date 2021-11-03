@@ -20,7 +20,7 @@ const Item: React.FC<SpecialAssets> = ({
   token_classes: tokenClasses,
 }) => {
   return (
-    <Flex w="90%" direction="column" shrink={0} pr="15px" maxW="305px">
+    <>
       <Flex h="105px" position="relative" justify="center" pb="15px">
         {tokenClasses.slice(0, 3).map((t, i) => (
           <AspectRatio
@@ -31,6 +31,7 @@ const Item: React.FC<SpecialAssets> = ({
             overflow="hidden"
             mt="auto"
             zIndex={i === 1 ? 2 : 1}
+            key={i}
           >
             <Image
               key={i}
@@ -109,7 +110,7 @@ const Item: React.FC<SpecialAssets> = ({
           </Grid>
         ))}
       </Box>
-    </Flex>
+    </>
   )
 }
 
@@ -132,7 +133,16 @@ export const Recommend: React.FC = () => {
     <Box overflowY="hidden" overflowX="auto">
       <Flex w="auto" p="20px">
         {data?.special_categories.map((specialAssets, i) => (
-          <Item {...specialAssets} key={i} />
+          <Flex
+            w="90%"
+            direction="column"
+            shrink={0}
+            pr="15px"
+            maxW="305px"
+            key={i}
+          >
+            <Item {...specialAssets} />
+          </Flex>
         ))}
       </Flex>
     </Box>
