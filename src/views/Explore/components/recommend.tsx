@@ -94,7 +94,15 @@ const Item: React.FC<SpecialAssets> = ({
                 {t.name}
               </Box>
               <Flex mt="auto">
-                <Avatar src={''} resizeScale={100} size="25px" />
+                <Avatar
+                  src={
+                    t.issuer_info.avatar_url === null
+                      ? ''
+                      : t.issuer_info.avatar_url
+                  }
+                  resizeScale={100}
+                  size="25px"
+                />
                 <Box
                   fontSize="12px"
                   textOverflow="ellipsis"
@@ -103,7 +111,7 @@ const Item: React.FC<SpecialAssets> = ({
                   w="calc(100% - 30px)"
                   lineHeight="25px"
                 >
-                  {t.issuer_name}
+                  {t.issuer_info.name}
                 </Box>
               </Flex>
             </Flex>

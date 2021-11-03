@@ -83,7 +83,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
         <Creator
           title=""
           baned={false}
-          name={item.issuer_name}
+          name={item.issuer_info.name}
           isVip={item?.verified_info?.is_verified}
           vipTitle={item?.verified_info?.verified_title}
           vipSource={item?.verified_info?.verified_source}
