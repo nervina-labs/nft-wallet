@@ -7,16 +7,17 @@ import { Tabs, Tab, TabList } from '@mibao-ui/components'
 import { RoutePath } from '../../routes'
 import { useHistory, useLocation, useRouteMatch } from 'react-router'
 import { OrderList, MatchRoute } from './OrderList'
+import { OrderDrawer } from '../../components/OrderDrawer'
 
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 100%;
   .list {
     flex: 1;
-    background: #eee;
+    background: #f7f7f7;
     padding: 24px 20px;
-    padding-top: 0;
+    padding-bottom: 0;
   }
 `
 
@@ -52,10 +53,18 @@ export const Orders: React.FC = () => {
   return (
     <Container>
       <AppbarSticky>
-        <Appbar title={t('orders.title')} />
+        <Appbar
+          title={t('orders.title')}
+          onLeftClick={() => history.replace(RoutePath.NFTs)}
+        />
       </AppbarSticky>
       <AppbarSticky top={`${HEADER_HEIGHT}px`}>
-        <Tabs index={matchRoute} align="space-between" colorScheme="black">
+        <Tabs
+          index={matchRoute}
+          align="space-between"
+          colorScheme="black"
+          bg="white"
+        >
           <TabList px="20px">
             <Tab onClick={go(RoutePath.Orders)}>{t('orders.tabs.all')}</Tab>
             <Tab onClick={go(RoutePath.PlacedOrders)}>
@@ -73,6 +82,7 @@ export const Orders: React.FC = () => {
       <section className="list">
         <OrderList route={matchRoute} />
       </section>
+      <OrderDrawer />
     </Container>
   )
 }

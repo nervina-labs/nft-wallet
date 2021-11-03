@@ -1,10 +1,19 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Order, OrderState } from '../../models/order'
-import { Box, Flex, Issuer, Text, NftImage } from '@mibao-ui/components'
+import {
+  Box,
+  Flex,
+  Issuer,
+  Text,
+  NftImage,
+  Button,
+  HStack,
+} from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router'
 import { formatCurrency } from '../../utils'
+import { useContinueOrder, useDeleteOrder } from '../../hooks/useOrder'
 
 export interface OrderCardProps {
   order: Order
@@ -29,9 +38,26 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
   const issuerHref = `${RoutePath.Issuer}/${order.issuer_info?.uuid as string}`
   const isNeededToPay = order.state === OrderState.OrderPlaced
   const total = Number(order.product_price) * Number(order.product_count)
+  const continueOrder = useContinueOrder()
+
+  const continuePayment = useCallback(() => {
+    continueOrder({
+      uuid: order.uuid as string,
+      count: Number(order.product_count),
+      currency: order.currency as string,
+      productId: order.uuid as string,
+      price: order.product_price as string,
+    })
+  }, [continueOrder, order])
+  const deleteOrder = useDeleteOrder()
+
   return (
     <Box px="10px" py="12px" mb="20px" bg="white" borderRadius="22px">
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
+        className="issuer"
+      >
         <Issuer
           src={order.issuer_info?.avatar_url}
           name={order.issuer_info?.name as string}
@@ -46,7 +72,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
         />
         {status}
       </Flex>
-      <Flex my="20px">
+      <Flex mt="20px" mb="10px" className="card">
         <NftImage
           resizeScale={200}
           type={order.renderer_type}
@@ -81,6 +107,34 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
           </Flex>
         </Flex>
       </Flex>
+      {isNeededToPay ? (
+        <Flex className="actions" justifyContent="flex-end">
+          <HStack>
+            <Button
+              size="xs"
+              px="16px"
+              py="4px"
+              fontWeight="normal"
+              onClick={async () =>
+                await deleteOrder(order.uuid as string, continuePayment)
+              }
+            >
+              {t('orders.actions.cancel')}
+            </Button>
+            <Button
+              size="xs"
+              px="16px"
+              py="4px"
+              fontWeight="normal"
+              colorScheme="primary"
+              variant="solid"
+              onClick={continuePayment}
+            >
+              {t('orders.actions.pay-and-hold')}
+            </Button>
+          </HStack>
+        </Flex>
+      ) : null}
     </Box>
   )
 }

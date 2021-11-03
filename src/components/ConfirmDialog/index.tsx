@@ -69,10 +69,15 @@ export const ConfirmDialog: React.FC = () => {
               {type !== 'text' ? (
                 <AlertIcon boxSize="70px" mr={0} mb={4} />
               ) : null}
-              <AlertTitle mb={1} mx={0} fontSize="17px" fontWeight="normal">
+              <AlertTitle mb={2} mx={0} fontSize="17px" fontWeight="normal">
                 {title}
               </AlertTitle>
-              <AlertDescription maxWidth="sm" fontSize="14px" color="gray.500">
+              <AlertDescription
+                maxWidth="sm"
+                fontSize="14px"
+                color="gray.500"
+                whiteSpace="pre-wrap"
+              >
                 {description}
               </AlertDescription>
             </Alert>
@@ -91,12 +96,13 @@ export const ConfirmDialog: React.FC = () => {
               colorScheme="primary"
               isLoading={isLoading}
               onClick={onConfirm}
+              fontWeight="normal"
             >
               {okText ?? t('common.actions.confirm')}
             </Button>
 
             {onCancel !== noop ? (
-              <Button isFullWidth onClick={onCancel}>
+              <Button isFullWidth onClick={onCancel} fontWeight="normal">
                 {cancelText ?? t('common.actions.cancel')}
               </Button>
             ) : null}

@@ -1,19 +1,27 @@
 import { atom } from 'jotai'
-import { useAtomCallback, useUpdateAtom } from 'jotai/utils'
+import {
+  useAtomCallback,
+  useAtomValue,
+  useUpdateAtom,
+  selectAtom,
+  useResetAtom,
+  atomWithReset,
+} from 'jotai/utils'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { NftType } from '../models'
 import { useAPI } from './useAccount'
+import { useConfirmDialog } from './useConfirmDialog'
 import { useGetAndSetAuth } from './useProfile'
 
 export interface CurrentOrder {
   price?: string
   currency?: string
   remain?: number
-  limit?: number
+  limit?: number | null
   type?: NftType
   name?: string
   coverUrl?: string
-  productId?: string
 }
 
 export enum PaymentChannel {
@@ -23,12 +31,113 @@ export enum PaymentChannel {
   Paypal = 'paypal',
 }
 
+export enum OrderStep {
+  Init = 0,
+  PaymentChannel = 1,
+  ConfirmOrder = 2,
+  Reselect = 3,
+}
+
+export interface PlaceOrderProps {
+  productId?: string
+  count?: number
+  uuid?: string
+  channel?: PaymentChannel
+}
+
 export const isDrawerOpenAtom = atom(false)
-export const currentOrderIdAtom = atom<string | null>(null)
-export const currentPayChannelAtom = atom<PaymentChannel>(
-  PaymentChannel.AlipayPC
-)
-export const currentOrderInfoAtom = atom<CurrentOrder>({})
+export const currentOrderInfoAtom = atomWithReset<CurrentOrder>({})
+export const orderStepAtom = atomWithReset<OrderStep>(OrderStep.Init)
+export const placeOrderPropsAtom = atomWithReset<PlaceOrderProps>({})
+
+export const useOrderStep = () => {
+  return useAtomValue(orderStepAtom)
+}
+
+export const useSetOrderStep = () => {
+  return useUpdateAtom(orderStepAtom)
+}
+
+const useSetProps = () => {
+  return useUpdateAtom(placeOrderPropsAtom)
+}
+
+export const useResetOrderState = () => {
+  const resetInfo = useResetAtom(currentOrderInfoAtom)
+  const resetStep = useResetAtom(orderStepAtom)
+  const resetProps = useResetAtom(placeOrderPropsAtom)
+
+  return () => {
+    resetInfo()
+    resetStep()
+    resetProps()
+  }
+}
+
+export const useSetProductId = () => {
+  const setProps = useSetProps()
+  return useCallback(
+    (productId: string) => {
+      setProps((p) => {
+        return {
+          ...p,
+          productId,
+        }
+      })
+    },
+    [setProps]
+  )
+}
+export const useSetProductCount = () => {
+  const setProps = useSetProps()
+  return useCallback(
+    (count: number) => {
+      setProps((p) => {
+        return {
+          ...p,
+          count,
+        }
+      })
+    },
+    [setProps]
+  )
+}
+
+export const useSetUUID = () => {
+  const setProps = useSetProps()
+  return useCallback(
+    (uuid: string) => {
+      setProps((p) => {
+        return {
+          ...p,
+          uuid,
+        }
+      })
+    },
+    [setProps]
+  )
+}
+
+const uuidAtom = selectAtom(placeOrderPropsAtom, (p) => p.uuid)
+
+export const useCurrentUUID = () => {
+  return useAtomValue(uuidAtom)
+}
+
+export const useSetChannel = () => {
+  const setProps = useSetProps()
+  return useCallback(
+    (channel: PaymentChannel) => {
+      setProps((p) => {
+        return {
+          ...p,
+          channel,
+        }
+      })
+    },
+    [setProps]
+  )
+}
 
 export const useOrderDrawer = () => {
   const setDrawerVisable = useUpdateAtom(isDrawerOpenAtom)
@@ -49,21 +158,14 @@ export const useOrderDrawer = () => {
 export const useSubmitOrder = () => {
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
-  const setCurrentId = useUpdateAtom(currentOrderIdAtom)
+  const setUUID = useSetUUID()
   return useCallback(async () => {
     const auth = await getAuth()
     const {
       data: { uuid },
     } = await api.submitOrder(auth)
-    setCurrentId(uuid)
-    return uuid
-  }, [api, setCurrentId, getAuth])
-}
-
-export interface PlaceOrderProps {
-  productId: string
-  count: number
-  uuid?: string
+    setUUID(uuid)
+  }, [api, setUUID, getAuth])
 }
 
 export const usePlaceOrder = () => {
@@ -71,14 +173,14 @@ export const usePlaceOrder = () => {
   const getAuth = useGetAndSetAuth()
   return useAtomCallback(
     useCallback(
-      async (get, _, { count, productId, uuid }: PlaceOrderProps) => {
+      async (get) => {
         const auth = await getAuth()
-        const channel = get(currentPayChannelAtom)
+        const { uuid, channel, productId, count } = get(placeOrderPropsAtom)
         const { data } = await api.placeOrder(
           {
             product_count: count,
             product_uuid: productId,
-            uuid: uuid || (get(currentOrderIdAtom) as string),
+            uuid,
             channel,
           },
           auth
@@ -101,5 +203,71 @@ export const usePlaceOrder = () => {
       },
       [api, getAuth]
     )
+  )
+}
+
+export const useDeleteOrder = () => {
+  const api = useAPI()
+  const getAuth = useGetAndSetAuth()
+  const confirmDialog = useConfirmDialog()
+  const [t] = useTranslation('translations')
+  return useCallback(
+    async (uuid: string, continueOrder: () => void) => {
+      confirmDialog({
+        type: 'warning',
+        title: t('orders.dialog.delete-title'),
+        description: t('orders.dialog.delete-desc'),
+        okText: t('orders.dialog.delete-confirm'),
+        cancelText: t('orders.dialog.delete-quit'),
+        onConfirm: () => {
+          requestAnimationFrame(() => continueOrder())
+        },
+        onCancel: async () => {
+          const auth = await getAuth()
+          await api.deleteOrder(uuid, auth)
+        },
+      })
+    },
+    [api, getAuth, confirmDialog, t]
+  )
+}
+
+export interface ContinueOrderProps {
+  uuid: string
+  price: string
+  count: number
+  currency: string
+  productId: string
+  channel?: PaymentChannel
+}
+
+export const useContinueOrder = () => {
+  const setDrawerVisable = useUpdateAtom(isDrawerOpenAtom)
+  const setProps = useSetProps()
+  const setOrderInfo = useUpdateAtom(currentOrderInfoAtom)
+  const setStep = useSetOrderStep()
+  return useCallback(
+    ({
+      uuid,
+      price,
+      count,
+      currency,
+      productId,
+      channel,
+    }: ContinueOrderProps) => {
+      setOrderInfo({
+        price,
+        currency,
+      })
+      setProps({
+        productId,
+        count,
+        uuid,
+        channel: channel || PaymentChannel.AlipayMobile,
+      })
+      setDrawerVisable(true)
+      setStep(OrderStep.ConfirmOrder)
+    },
+    [setOrderInfo, setProps, setDrawerVisable, setStep]
   )
 }

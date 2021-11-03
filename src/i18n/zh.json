@@ -452,6 +452,9 @@
         "go-back": "返回兑换中心",
         "error": "请检查当前网络情况或兑换条件",
         "redeeming": "兑换中..."
+      },
+      "dialog": {
+
       }
     },
     "orders": {
@@ -478,7 +481,40 @@
       "success": "支付成功",
       "send-soon": "秘宝将很快发送到您的账户地址上",
       "be-patient": "请耐心等待",
-      "check": "点击查看我的订单"
+      "check": "点击查看我的订单",
+      "drawer": {
+        "submit": "提交订单",
+        "confirm": "确认支付",
+        "limit": "每人限购数量为：{{limit}}",
+        "count": "购买数量：",
+        "remain": "剩余：{{remain}}",
+        "wechat": "微信支付",
+        "alipay": "支付宝支付",
+        "paypal": "PayPal 支付",
+        "select-title": "选择支付方式",
+        "confirm-title": "支付订单",
+        "select-more": "点击切换更多支付方式",
+        "channel": "支付方式",
+        "warning": "请在 20 分钟内完成支付，支付成功后系统将会自动发送秘宝到你的地址上。该过程可能会需要 2-3 分钟，请耐心等待。",
+        "place-order-error": "购买失败，请检查当前网络情况",
+        "submit-order-error": "创建订单失败，请检查当前网络情况"
+      },
+      "actions": {
+        "cancel": "取消支付",
+        "pay-and-hold": "付款并持有"
+      },
+      "dialog": {
+        "cancel-title": "确认放弃付款吗？",
+        "cancel-desc": "您的订单已提交成功\n请在 <b>20 分钟</b>内完成支付",
+        "cancel-confirm": "继续付款",
+        "cancel-quit": "暂时方式",
+        "delete-title": "确认取消订单吗？",
+        "delete-desc": "您的订单已提交成功\n取消订单将会失去持有秘宝的机会",
+        "delete-confirm": "我想支付并持有",
+        "delete-quit": "取消订单",
+        "contact": "订单问题请联系客服：",
+        "copy-email": "复制邮件地址"
+      }
     },
     "follow": {
       "follow": "关注",

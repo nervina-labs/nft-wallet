@@ -54,6 +54,7 @@ import {
   OrderState,
   PlaceOrderProps,
 } from '../models/order'
+import { RoutePath } from '../routes'
 
 function randomid(length = 10): string {
   let result = ''
@@ -99,6 +100,12 @@ async function writeFormData(
 export class ServerWalletAPI {
   private readonly address: string
   private readonly axios: AxiosInstance
+
+  private readonly orderCallbackURL = `${
+    process.env.NODE_ENV === 'development'
+      ? 'http://192.168.31.12:3000'
+      : location.origin
+  }${RoutePath.OrderSuccess}`
 
   constructor(address: string) {
     this.address = address
@@ -681,7 +688,7 @@ export class ServerWalletAPI {
       {
         token_order: {
           ...props,
-          callback_url: '',
+          callback_url: this.orderCallbackURL,
         },
         auth,
       },
@@ -712,6 +719,7 @@ export class ServerWalletAPI {
         uuid,
         channel,
         address: this.address,
+        callback_url: this.orderCallbackURL,
       },
       {
         headers,

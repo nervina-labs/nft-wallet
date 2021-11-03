@@ -11,10 +11,10 @@ export enum OrderState {
 }
 
 export interface PlaceOrderProps {
-  product_uuid: string
-  product_count: number
-  channel: string
-  uuid: string
+  product_uuid?: string
+  product_count?: number
+  channel?: string
+  uuid?: string
 }
 
 export interface IssuerInfo {

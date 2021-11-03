@@ -28,5 +28,10 @@ export const formatCount = (count: number, lang: string): number | string => {
 }
 
 export const formatCurrency = (n?: string | number, currency = '¥') => {
-  return n ? `${currency} ${n}` : ''
+  if (currency === 'cny') {
+    currency = '¥'
+  } else if (currency === 'usd') {
+    currency = '$'
+  }
+  return n ? `${currency} ${Number(n).toFixed(2)}` : ''
 }

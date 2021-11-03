@@ -173,8 +173,8 @@ export function InfiniteList<
           }
         >
           <Grid templateColumns={`repeat(${columnCount}, 1fr)`} gap="10px">
-            {columns.map((column) => (
-              <GridItem>{column}</GridItem>
+            {columns.map((column, i) => (
+              <GridItem key={i}>{column}</GridItem>
             ))}
           </Grid>
           {status === 'success' && dataLength === 0

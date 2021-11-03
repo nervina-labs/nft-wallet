@@ -46,6 +46,9 @@ export interface TokenClass extends VipInfo, ClassLikes, CardBack {
   renderer_type: NftType
   renderer: string
   product_on_sale_uuid: string
+  product_limit: null | number
+  product_count: number
+  product_price: string
 }
 
 export interface ClassList {
