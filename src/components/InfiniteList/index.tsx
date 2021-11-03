@@ -167,7 +167,11 @@ export function InfiniteList<
           endMessage={<H4>{dataLength <= 5 ? ' ' : noMoreElement}</H4>}
         >
           <Grid
-            templateColumns={`repeat(${columnCount}, calc(calc(100% - ${gap}) / ${columnCount}))`}
+            templateColumns={
+              columnCount === 1
+                ? '100%'
+                : `repeat(${columnCount}, calc(calc(100% - ${gap}) / ${columnCount}))`
+            }
             gap={gap}
           >
             {columns.map((column, i) => (

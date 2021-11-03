@@ -118,7 +118,6 @@ export const Explore: React.FC<{
         columnCount={2}
         gap="20px"
         renderItems={(group) => {
-          console.log(group.class_list)
           return group.class_list.map((token) => {
             return (
               <Box

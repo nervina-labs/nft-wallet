@@ -8,6 +8,7 @@ import {
 } from '@mibao-ui/components'
 import { Explore } from './explore'
 import { ClassSortType as SortType } from '../../models'
+import { Follow } from './follow'
 
 export const NftSortOrKindList: React.FC = () => {
   return (
@@ -39,7 +40,9 @@ export const NftSortOrKindList: React.FC = () => {
           <TabPanel px="0">
             <Explore sort={SortType.Recommend} />
           </TabPanel>
-          <TabPanel></TabPanel>
+          <TabPanel px="0">
+            <Follow sort={SortType.Recommend} />
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </Box>
