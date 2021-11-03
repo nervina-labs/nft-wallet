@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { TokenClass } from '../../../models/class-list'
 import { NFTDetail } from '../../../models/nft'
-import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { useHistory } from 'react-router-dom'
 import { useCallback, useMemo } from 'react'
 import { RoutePath } from '../../../routes'
 import { ReactComponent as BuySvg } from '../../../assets/svg/buy.svg'
+import { ReactComponent as TransferSvg } from '../../../assets/svg/transfer.svg'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -64,8 +64,10 @@ const TranferOrBuy: React.FC<{
       mr="0"
       onClick={tranfer}
     >
-      {t('nft.transfer')}
-      <ArrowForwardIcon ml="5px" />
+      <Box as="span" mr="10px">
+        {t('nft.transfer')}
+      </Box>
+      <TransferSvg />
     </Button>
   )
 }
