@@ -6,6 +6,7 @@ import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
 import { Query } from '../../../models'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
+import { isSupportWebp } from '../../../utils'
 
 export const HolderList: React.FC<{
   uuid: string
@@ -55,6 +56,8 @@ export const HolderList: React.FC<{
                 tid: item.n_token_id,
                 locale: i18n.language,
               }}
+              resizeScale={100}
+              webp={isSupportWebp()}
             />
             <Box
               ml="18px"

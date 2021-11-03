@@ -57,6 +57,7 @@ const UserWithAddress: React.FC<{
               }
             : undefined
         }
+        resizeScale={50}
       />
       <Stack ml="8px" spacing="0" h="30px">
         {nickname ? (
