@@ -219,6 +219,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   )
   const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
+  const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
 
   return (
     <Flex
@@ -247,12 +248,12 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           className={`flip-card ${showCardBackContent ? 'flipped' : ''} ${
             !cardbackContent ? 'keep-img' : ''
           }`}
-          opacity={!detail?.bg_image_url ? 0 : 1}
+          opacity={typeof detail?.bg_image_url === 'undefined' ? 0 : 1}
         >
           <Box position="relative" className="flip-card-img">
             <Image
               maxH="300px"
-              src={detail?.bg_image_url}
+              src={imgUrl}
               rounded="30px"
               resizeScale={400}
               m="auto"
@@ -275,7 +276,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
 
       <Box position="absolute" top={0} left={0} w="100%" h="100%" zIndex={0}>
         <Image
-          src={detail?.bg_image_url}
+          src={imgUrl}
           w="110%"
           h="110%"
           resizeScale={400}
