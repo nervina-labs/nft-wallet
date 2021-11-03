@@ -4,6 +4,7 @@ import {
   Center,
   Flex,
   Grid,
+  Limited,
   Skeleton,
   SkeletonText,
   Tab,
@@ -25,7 +26,6 @@ import { NftTxLogsList } from './nftTxLogList'
 import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
-import { Limited } from '../../../components/Limited'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -41,10 +41,6 @@ const NftDetailName = styled.div`
 
 const TAB_PARAM_SET = ['desc', 'tx_logs', 'holders'] as const
 type TabParam = typeof TAB_PARAM_SET[number]
-
-function isTokenClass(data?: TokenClass | NFTDetail): data is TokenClass {
-  return !!data && !('tx_state' in data)
-}
 
 const NftDetailTab: React.FC<{
   detail?: NFTDetail | TokenClass
@@ -117,6 +113,7 @@ export const NftDetail: React.FC<{
   isLoading: boolean
   refetch: (params?: any) => Promise<any>
 }> = ({ detail, isLoading, refetch, isClass, uuid }) => {
+  const { t, i18n } = useTranslation('translations')
   const { push } = useHistory()
   const isOwned =
     typeof detail?.card_back_content === 'string' ||
@@ -140,10 +137,9 @@ export const NftDetail: React.FC<{
             <NftDetailName>{detail?.name}</NftDetailName>
             <Limited
               count={detail?.total ?? 0}
-              bold={false}
-              sn={isTokenClass(detail) ? undefined : detail?.n_token_id}
-              fontSize={14}
-              color="#777E90"
+              limitedText={t('common.limit.limit')}
+              unlimitedText={t('common.limit.unlimit')}
+              locale={i18n.language}
             />
           </Box>
           {isOwned ? (
