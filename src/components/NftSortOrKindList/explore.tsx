@@ -24,7 +24,7 @@ export const Explore: React.FC<{
   sort: SortType
 }> = ({ sort }) => {
   const currentTag = useRouteQuery<string>('tag', '')
-  const { replace, location } = useHistory()
+  const { push, replace, location } = useHistory()
   const { t, i18n } = useTranslation('translations')
   const api = useAPI()
   const [tagIndex, setTagIndex] = useState(0)
@@ -118,9 +118,17 @@ export const Explore: React.FC<{
         columnCount={2}
         gap="20px"
         renderItems={(group) => {
+          console.log(group.class_list)
           return group.class_list.map((token) => {
             return (
-              <Box key={token.uuid} w="full" pb="20px">
+              <Box
+                key={token.uuid}
+                w="full"
+                pb="20px"
+                onClick={() => {
+                  push(`/class/${token.uuid}`)
+                }}
+              >
                 <NFTCard
                   issuerProps={{
                     name: token.issuer_info?.name ?? '',
@@ -129,6 +137,10 @@ export const Explore: React.FC<{
                         ? ''
                         : token.issuer_info?.avatar_url,
                     verifiedTitle: token.verified_info?.verified_title,
+                  }}
+                  likeProps={{
+                    likeCount: token.class_likes,
+                    isLiked: token.class_liked,
                   }}
                   locale={i18n.language}
                   src={token.bg_image_url === null ? '' : token.bg_image_url}

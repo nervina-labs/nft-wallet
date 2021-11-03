@@ -22,7 +22,7 @@ export interface VipInfo {
 }
 
 export interface ClassLikes {
-  class_likes: string
+  class_likes: number
   class_liked: boolean
 }
 
