@@ -27,6 +27,7 @@ export const InitOrder = () => {
 
   const info = useAtomValue(currentOrderInfoAtom)
 
+  const maxCount = Math.min(info.limit || Infinity, info.remain || Infinity)
   const {
     getInputProps,
     getIncrementButtonProps,
@@ -36,7 +37,7 @@ export const InitOrder = () => {
     step: 1,
     defaultValue: 1,
     min: 1,
-    max: Math.min(info.limit || Infinity, info.remain || Infinity),
+    max: maxCount,
     precision: 0,
   })
 
@@ -126,6 +127,7 @@ export const InitOrder = () => {
           onClick={onSumit}
           type="submit"
           isFullWidth
+          isDisabled={Number(value) > maxCount}
         >
           {t('orders.drawer.submit')}
         </Button>

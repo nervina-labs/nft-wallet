@@ -49,6 +49,7 @@ export interface TokenClass extends VipInfo, ClassLikes, CardBack {
   product_limit: null | number
   product_count: number
   product_price: string
+  product_price_currency: string
 }
 
 export interface ClassList {
