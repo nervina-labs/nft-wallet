@@ -132,11 +132,16 @@
     "nft": {
       "title": "NFT Details",
       "transfer": "Transfer",
-      "desc": "NFT description",
+      "desc": "Desc",
+      "transaction-history": "Tx Logs",
+      "tx_hash": "Tx Hash",
       "lock": "Include card back content which can only be revealed by the owner of this NFT",
       "no-desc": "No description",
       "no-holder": "No collector",
-      "holder": "Collectors"
+      "holder": "Collectors",
+      "show-card-back": "Show Cardback",
+      "no-more-holder": "No more collectors",
+      "no-more-transaction-history": "No more logs"
     },
     "account": {
       "title": "My Account",
