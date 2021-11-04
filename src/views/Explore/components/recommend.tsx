@@ -11,6 +11,9 @@ import { useAPI } from '../../../hooks/useAccount'
 import { Query } from '../../../models'
 import { SpecialAssets } from '../../../models/special-assets'
 import { ReactComponent as MoreSvg } from '../../../assets/svg/recommend-more.svg'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+import { useCallback } from 'react'
 
 const Item: React.FC<SpecialAssets> = ({
   name,
@@ -19,6 +22,12 @@ const Item: React.FC<SpecialAssets> = ({
   bg_color: bgColor,
   token_classes: tokenClasses,
 }) => {
+  const [t] = useTranslation('translations')
+  const { push } = useHistory()
+  const gotoCollection = useCallback(() => {
+    push(`/explore/collection/${uuid}`)
+  }, [push, uuid])
+
   return (
     <>
       <Flex h="105px" position="relative" justify="center" pb="15px">
@@ -48,7 +57,7 @@ const Item: React.FC<SpecialAssets> = ({
           zIndex={0}
           bottom="0"
           left={0}
-          bg="linear-gradient(360deg, #B4BDFF -16.67%, rgba(194, 201, 254, 0.24) 80.56%);"
+          bg={`linear-gradient(360deg, ${bgColor} -16.67%, rgba(194, 201, 254, 0.24) 80.56%)`}
           transform="perspective(50px) rotateX(60deg)"
           transformOrigin="bottom"
         />
@@ -64,9 +73,14 @@ const Item: React.FC<SpecialAssets> = ({
         <Flex justify="space-between" mb="15px">
           <Box fontSize="14px">{name}</Box>
 
-          <Flex fontSize="12px" color="#777E90" cursor="pointer">
+          <Flex
+            fontSize="12px"
+            color="#777E90"
+            cursor="pointer"
+            onClick={gotoCollection}
+          >
             <Box mt="auto" mr="5px">
-              更多
+              {t('explore.more')}
             </Box>
             <Box my="auto">
               <MoreSvg />
