@@ -124,7 +124,7 @@ export const Ranking: React.FC = () => {
       <Box
         px="20px"
         bg="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 10%)"
-        minH="716px"
+        minH="462px"
         mt="auto"
       >
         {data?.token_classes

@@ -107,7 +107,7 @@ export const Appbar: React.FC<{ title: string }> = ({ title }) => {
 }
 
 export const Collection: React.FC = () => {
-  const { t, i18n } = useTranslation('translations')
+  const { i18n } = useTranslation('translations')
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const { data } = useQuery(
@@ -152,7 +152,7 @@ export const Collection: React.FC = () => {
       <Box
         px="20px"
         bg="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 10%)"
-        minH="716px"
+        minH="462px"
         mt="auto"
       >
         <InfiniteList
@@ -160,7 +160,7 @@ export const Collection: React.FC = () => {
           queryFn={queryFn}
           queryKey={[Query.Collection, api, id]}
           emptyElement={null}
-          noMoreElement={t('common.actions.pull-to-down')}
+          noMoreElement={null}
           calcDataLength={(data) =>
             data?.pages.reduce(
               (acc, token) => token.class_list.length + acc,
@@ -173,8 +173,8 @@ export const Collection: React.FC = () => {
           renderItems={(group, i) => {
             const classList =
               i === 0
-                ? group.class_list
-                : group.class_list.slice(3, group.class_list.length)
+                ? group.class_list.slice(3, group.class_list.length)
+                : group.class_list
             return classList.map((token, j: number) => (
               <Link to={`/class/${token.uuid}`} key={`${i}-${j}`}>
                 <Flex mb="16px">
