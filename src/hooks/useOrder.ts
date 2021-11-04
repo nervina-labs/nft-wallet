@@ -179,8 +179,6 @@ export const usePlaceOrder = () => {
       async (get) => {
         const auth = await getAuth()
         const { uuid, channel, productId, count } = get(placeOrderPropsAtom)
-        // eslint-disable-next-line no-debugger
-        debugger
         const { data } = await (productId
           ? api.placeOrder(
               {

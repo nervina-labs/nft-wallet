@@ -514,6 +514,14 @@
         "delete-quit": "取消订单",
         "contact": "订单问题请联系客服：",
         "copy-email": "复制邮件地址"
+      },
+      "info": {
+        "title": "订单信息",
+        "address": "接收地址：",
+        "uuid": "订单号：",
+        "created_at": "下单时间：",
+        "paid_at": "支付时间：",
+        "send-at": "发送时间："
       }
     },
     "follow": {

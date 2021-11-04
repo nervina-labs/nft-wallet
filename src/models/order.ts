@@ -57,6 +57,7 @@ export interface OrderDetail {
   created_at?: string
   product_price: string
   paid_at?: string
+  send_at?: string
   ckb_address?: string
   product_description?: string
   renderer_type: NftType

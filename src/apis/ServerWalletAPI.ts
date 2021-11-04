@@ -698,12 +698,18 @@ export class ServerWalletAPI {
     )
   }
 
-  async getOrderDetail(uuid: string): Promise<AxiosResponse<OrderDetail>> {
+  async getOrderDetail(
+    uuid: string,
+    auth: Auth
+  ): Promise<AxiosResponse<{ token_order: OrderDetail }>> {
+    const headers: { auth?: string } = {}
+    headers.auth = JSON.stringify(auth)
     return await this.axios.get(`/token_orders/${uuid}`, {
       params: {
         uuid,
         address: this.address,
       },
+      headers,
     })
   }
 

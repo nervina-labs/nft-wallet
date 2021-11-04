@@ -25,6 +25,9 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
   const history = useHistory()
   const state = order.state
   const status = useMemo(() => {
+    if (!isInList) {
+      return null
+    }
     const isClosed =
       state === OrderState.Closed ||
       state === OrderState.Expired ||
@@ -34,9 +37,9 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
         {t(`orders.state.${state ?? ''}`)}
       </Text>
     )
-  }, [t, state])
+  }, [t, state, isInList])
   const issuerHref = `${RoutePath.Issuer}/${order.issuer_info?.uuid as string}`
-  const isNeededToPay = order.state === OrderState.OrderPlaced
+  const isNeededToPay = order.state === OrderState.OrderPlaced && isInList
   const total = Number(order.product_price) * Number(order.product_count)
   const continueOrder = useContinueOrder()
 
@@ -51,7 +54,23 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
   const deleteOrder = useDeleteOrder()
 
   return (
-    <Box px="10px" py="12px" mb="20px" bg="white" borderRadius="22px">
+    <Box
+      px="10px"
+      py="12px"
+      mb="20px"
+      bg="white"
+      borderRadius="22px"
+      cursor={isInList ? 'pointer' : undefined}
+      onClick={() => {
+        if (!order.uuid) {
+          return
+        }
+        if (!isInList) {
+          return
+        }
+        history.push(`${RoutePath.OrderDetail}/${order.uuid}`)
+      }}
+    >
       <Flex
         justifyContent="space-between"
         alignItems="center"
