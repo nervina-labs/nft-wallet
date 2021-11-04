@@ -1,3 +1,4 @@
+import { AvatarType } from './user'
 import { VipInfo } from './class-list'
 import { ListMeta } from './nft'
 
@@ -30,4 +31,32 @@ export interface Tx extends VipInfo {
 export interface Transaction {
   meta: ListMeta
   transaction_list: Tx[]
+}
+
+export interface TransactionLog {
+  tx_hash: string
+  on_chain_timestamp: string
+  tx_type: string
+  issuer_uuid: string
+  issuer_avatar_url: string
+  issuer_name: string
+  sender_info: {
+    address: string
+    avatar_url: string
+    avatar_type: AvatarType
+    nickname: string
+  }
+  holder_info: {
+    address: string
+    avatar_url: string
+    avatar_type: AvatarType
+    nickname: string
+    avatar_token_uuid: string
+    avatar_tid: number
+  }
+}
+
+export interface TransactionLogResponse {
+  meta: ListMeta
+  transactions: TransactionLog[]
 }
