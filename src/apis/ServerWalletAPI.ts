@@ -713,15 +713,18 @@ export class ServerWalletAPI {
       headers.auth = JSON.stringify(auth)
     }
     return await this.axios.put(
-      '/token_orders',
+      `/token_orders/${uuid}`,
       {
-        auth,
-        uuid,
         channel,
         address: this.address,
         callback_url: this.orderCallbackURL,
       },
       {
+        params: {
+          channel,
+          address: this.address,
+          callback_url: this.orderCallbackURL,
+        },
         headers,
       }
     )
@@ -732,12 +735,7 @@ export class ServerWalletAPI {
     if (auth) {
       headers.auth = JSON.stringify(auth)
     }
-    return await this.axios.delete('/token_orders', {
-      data: {
-        auth,
-        uuid,
-        address: this.address,
-      },
+    return await this.axios.delete(`/token_orders/${uuid}`, {
       headers,
     })
   }

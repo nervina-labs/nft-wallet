@@ -44,7 +44,7 @@ export const Reselect = () => {
       <Stack mt="32px" spacing="30px">
         <Item
           channel={
-            IS_WEXIN ? PaymentChannel.WechatMobile : PaymentChannel.WechatMobile
+            IS_WEXIN ? PaymentChannel.WechatPub : PaymentChannel.WechatMobile
           }
         />
         <Item

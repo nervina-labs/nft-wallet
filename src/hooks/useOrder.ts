@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import { atom } from 'jotai'
 import {
   useAtomCallback,
@@ -9,7 +10,8 @@ import {
 } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NftType } from '../models'
+import { useQueryClient } from 'react-query'
+import { NftType, Query } from '../models'
 import { useAPI } from './useAccount'
 import { useConfirmDialog } from './useConfirmDialog'
 import { useGetAndSetAuth } from './useProfile'
@@ -28,6 +30,7 @@ export enum PaymentChannel {
   AlipayPC = 'alipay_pc_direct',
   AlipayMobile = 'alipay_wap',
   WechatMobile = 'wx_wap',
+  WechatPub = 'wx_pub',
   Paypal = 'paypal',
 }
 
@@ -176,15 +179,19 @@ export const usePlaceOrder = () => {
       async (get) => {
         const auth = await getAuth()
         const { uuid, channel, productId, count } = get(placeOrderPropsAtom)
-        const { data } = await api.placeOrder(
-          {
-            product_count: count,
-            product_uuid: productId,
-            uuid,
-            channel,
-          },
-          auth
-        )
+        // eslint-disable-next-line no-debugger
+        debugger
+        const { data } = await (productId
+          ? api.placeOrder(
+              {
+                product_count: count,
+                product_uuid: productId,
+                uuid,
+                channel,
+              },
+              auth
+            )
+          : api.continuePlaceOrder(uuid as string, channel as string, auth))
         // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
         // @ts-ignore
         const pingxx = await import('pingpp-js')
@@ -211,6 +218,7 @@ export const useDeleteOrder = () => {
   const getAuth = useGetAndSetAuth()
   const confirmDialog = useConfirmDialog()
   const [t] = useTranslation('translations')
+  const qc = useQueryClient()
   return useCallback(
     async (uuid: string, continueOrder: () => void) => {
       confirmDialog({
@@ -225,10 +233,11 @@ export const useDeleteOrder = () => {
         onCancel: async () => {
           const auth = await getAuth()
           await api.deleteOrder(uuid, auth)
+          qc.refetchQueries(Query.OrderList)
         },
       })
     },
-    [api, getAuth, confirmDialog, t]
+    [api, getAuth, confirmDialog, t, qc]
   )
 }
 
@@ -237,7 +246,6 @@ export interface ContinueOrderProps {
   price: string
   count: number
   currency: string
-  productId: string
   channel?: PaymentChannel
 }
 
@@ -247,20 +255,12 @@ export const useContinueOrder = () => {
   const setOrderInfo = useUpdateAtom(currentOrderInfoAtom)
   const setStep = useSetOrderStep()
   return useCallback(
-    ({
-      uuid,
-      price,
-      count,
-      currency,
-      productId,
-      channel,
-    }: ContinueOrderProps) => {
+    ({ uuid, price, count, currency, channel }: ContinueOrderProps) => {
       setOrderInfo({
         price,
         currency,
       })
       setProps({
-        productId,
         count,
         uuid,
         channel: channel || PaymentChannel.AlipayMobile,

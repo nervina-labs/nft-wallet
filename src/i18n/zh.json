@@ -495,7 +495,7 @@
         "confirm-title": "支付订单",
         "select-more": "点击切换更多支付方式",
         "channel": "支付方式",
-        "warning": "请在 20 分钟内完成支付，支付成功后系统将会自动发送秘宝到你的地址上。该过程可能会需要 2-3 分钟，请耐心等待。",
+        "warning": "请在 5 分钟内完成支付，支付成功后系统将会自动发送秘宝到你的地址上。该过程可能会需要 2-3 分钟，请耐心等待。",
         "place-order-error": "购买失败，请检查当前网络情况",
         "submit-order-error": "创建订单失败，请检查当前网络情况"
       },
@@ -505,9 +505,9 @@
       },
       "dialog": {
         "cancel-title": "确认放弃付款吗？",
-        "cancel-desc": "您的订单已提交成功\n请在 <b>20 分钟</b>内完成支付",
+        "cancel-desc": "您的订单已提交成功\n请在 <b>5 分钟</b>内完成支付",
         "cancel-confirm": "继续付款",
-        "cancel-quit": "暂时方式",
+        "cancel-quit": "暂时放弃",
         "delete-title": "确认取消订单吗？",
         "delete-desc": "您的订单已提交成功\n取消订单将会失去持有秘宝的机会",
         "delete-confirm": "我想支付并持有",

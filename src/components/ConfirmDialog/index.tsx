@@ -27,6 +27,7 @@ export const ConfirmDialog: React.FC = () => {
     onClose,
     onConfirm,
     onCancel,
+    isCancelLoading,
   } = useConfirmDialogModel()
   const {
     type = 'success',
@@ -102,7 +103,12 @@ export const ConfirmDialog: React.FC = () => {
             </Button>
 
             {onCancel !== noop ? (
-              <Button isFullWidth onClick={onCancel} fontWeight="normal">
+              <Button
+                isFullWidth
+                onClick={onCancel}
+                fontWeight="normal"
+                isLoading={isCancelLoading}
+              >
                 {cancelText ?? t('common.actions.cancel')}
               </Button>
             ) : null}

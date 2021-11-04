@@ -15,6 +15,9 @@ import { SelectPayment } from './SelectPayment'
 import { ConfirmPayment } from './ConfirmPayment'
 import { useAtom } from 'jotai'
 import { Reselect } from './Reselect'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { Trans, useTranslation } from 'react-i18next'
+import { noop } from '../../utils'
 
 const DrawerContainer = styled.div`
   display: flex;
@@ -56,14 +59,40 @@ export const OrderDrawer: React.FC = () => {
 
   const [isOpen, setOpen] = useAtom(isDrawerOpenAtom)
   const resetOrder = useResetOrderState()
+  const confirmDialog = useConfirmDialog()
+  const [t] = useTranslation('translations')
   return (
     <Drawer
       placement="bottom"
       isOpen={isOpen}
       hasOverlay
       onClose={() => {
-        resetOrder()
-        setOpen(false)
+        if (step > 1) {
+          confirmDialog({
+            type: 'warning',
+            title: t('orders.dialog.cancel-title'),
+            description: (
+              <Trans
+                ns="translations"
+                i18nKey="orders.dialog.cancel-desc"
+                t={t}
+                components={{
+                  b: <b style={{ color: '#5065E5', fontWeight: 'normal' }}></b>,
+                }}
+              />
+            ),
+            okText: t('orders.dialog.cancel-confirm'),
+            cancelText: t('orders.dialog.cancel-quit'),
+            onConfirm: noop,
+            onCancel() {
+              resetOrder()
+              setOpen(false)
+            },
+          })
+        } else {
+          resetOrder()
+          setOpen(false)
+        }
       }}
       rounded="lg"
       autoFocus={false}

@@ -36,6 +36,13 @@ import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useDidMount } from '../../hooks/useDidMount'
+import {
+  currentOrderInfoAtom,
+  useOrderDrawer,
+  useSetProductId,
+} from '../../hooks/useOrder'
+import { OrderDrawer } from '../../components/OrderDrawer'
+import { useUpdateAtom } from 'jotai/utils'
 
 const IconGroupContainer = styled.div`
   width: 32px;
@@ -357,10 +364,6 @@ export const NFT: React.FC = () => {
     return window.innerHeight
   }, [])
 
-  const qrcode = useMemo(() => {
-    return data?.product_qr_code
-  }, [data])
-
   const { initWechat, isWechatInited } = useWechatLaunchWeapp()
   useDidMount(() => {
     initWechat().catch(Boolean)
@@ -387,8 +390,26 @@ export const NFT: React.FC = () => {
     return ret
   }, [detail])
 
+  const { openOrderDrawer } = useOrderDrawer()
+  const setProductId = useSetProductId()
+  const setProductInfo = useUpdateAtom(currentOrderInfoAtom)
+  const buy = useCallback(async () => {
+    if (detail?.product_on_sale_uuid) {
+      setProductId(detail?.product_on_sale_uuid)
+      setProductInfo({
+        type: detail.renderer_type,
+        coverUrl: detail.bg_image_url,
+        price: detail.product_price,
+        remain: detail.product_count,
+        limit: detail.product_limit,
+        name: detail.name,
+      })
+      openOrderDrawer()
+    }
+  }, [openOrderDrawer, detail, setProductId, setProductInfo])
+
   const buyButton = useMemo(() => {
-    if (!qrcode) {
+    if (!productID) {
       return null
     }
 
@@ -435,17 +456,12 @@ export const NFT: React.FC = () => {
       )
     }
     return (
-      <div
-        className="transfer"
-        onClick={() =>
-          history.push(`${RoutePath.Shop}?qrcode=${encodeURIComponent(qrcode)}`)
-        }
-      >
+      <div className="transfer" onClick={buy}>
         <BuySvg />
         <span>{t('shop.buy')}</span>
       </div>
     )
-  }, [qrcode, history, t, productID, isWechatInited])
+  }, [t, productID, isWechatInited, buy])
 
   const innerHeight = IS_MAC_SAFARI ? cachedInnerHeight : window.innerHeight
   const [showCardBack, setShowCardBack] = useState(false)
@@ -619,6 +635,7 @@ export const NFT: React.FC = () => {
         displayText={HOST + history.location.pathname}
         copyText={HOST + history.location.pathname}
       />
+      <OrderDrawer />
     </Container>
   )
 }

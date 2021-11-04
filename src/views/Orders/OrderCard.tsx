@@ -45,7 +45,6 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
       uuid: order.uuid as string,
       count: Number(order.product_count),
       currency: order.currency as string,
-      productId: order.uuid as string,
       price: order.product_price as string,
     })
   }, [continueOrder, order])
