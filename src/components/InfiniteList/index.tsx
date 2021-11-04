@@ -57,6 +57,44 @@ export interface InfiniteListProps<
   columnCount?: number
 }
 
+interface GridsProps<TQueryFnData = unknown, TData = TQueryFnData> {
+  data: InfiniteData<TData> | undefined
+  renderItems: (
+    item: TData,
+    index: number,
+    refetch?: () => Promise<void>
+  ) => React.ReactNode
+  columnCount: number
+}
+
+function Grids<TQueryFnData = unknown, TData = TQueryFnData>({
+  data,
+  renderItems,
+  columnCount,
+}: GridsProps<TQueryFnData, TData>) {
+  const elements: React.ReactNode[] = useMemo(
+    () => data?.pages.map((page, i) => renderItems(page, i)).flat() ?? [],
+    [data?.pages, renderItems]
+  )
+
+  const columns: React.ReactNode[][] = useMemo(
+    () =>
+      elements.reduce<React.ReactNode[][]>((acc, child, i) => {
+        acc[i % columnCount] = [...acc[i % columnCount], child]
+        return acc
+      }, new Array(columnCount).fill([])) ?? [],
+    [columnCount, elements]
+  )
+
+  return (
+    <Grid templateColumns={`repeat(${columnCount}, 1fr)`} gap="10px">
+      {columns.map((column, i) => (
+        <GridItem key={i}>{column}</GridItem>
+      ))}
+    </Grid>
+  )
+}
+
 export function InfiniteList<
   TQueryFnData = unknown,
   TError = unknown,
@@ -110,20 +148,6 @@ export function InfiniteList<
     return calcDataLength(data)
   }, [data, calcDataLength])
 
-  const elements: React.ReactNode[] = useMemo(
-    () => data?.pages.map((page, i) => renderItems(page, i)).flat() ?? [],
-    [data?.pages, renderItems]
-  )
-
-  const columns: React.ReactNode[][] = useMemo(
-    () =>
-      elements.reduce<React.ReactNode[][]>((acc, child, i) => {
-        acc[i % columnCount] = [...acc[i % columnCount], child]
-        return acc
-      }, new Array(columnCount).fill([])) ?? [],
-    [columnCount, elements]
-  )
-
   const [isRefetching, setIsRefetching] = useState(false)
 
   const refresh = useCallback(async () => {
@@ -164,11 +188,19 @@ export function InfiniteList<
           loader={loader ?? <Loading />}
           endMessage={<H4>{dataLength <= 5 ? ' ' : noMoreElement}</H4>}
         >
-          <Grid templateColumns={`repeat(${columnCount}, 1fr)`} gap="10px">
-            {columns.map((column) => (
-              <GridItem>{column}</GridItem>
-            ))}
-          </Grid>
+          {columnCount === 1 ? (
+            data?.pages?.map((group, i) => {
+              return (
+                <React.Fragment key={i}>{renderItems(group, i)}</React.Fragment>
+              )
+            })
+          ) : (
+            <Grids
+              renderItems={renderItems}
+              columnCount={columnCount}
+              data={data}
+            />
+          )}
           {status === 'success' && dataLength === 0
             ? emptyElement ?? <H4>{t('issuer.no-data')}</H4>
             : null}
