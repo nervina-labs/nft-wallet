@@ -21,6 +21,7 @@ export enum RoutePath {
   AddressCollector = '/addresses',
   Claim = '/claim',
   Collection = '/explore/collection',
+  RankingList = '/explore/ranking',
   Issuer = '/issuer',
   Redeem = '/redeem',
   MyRedeem = '/redemption',

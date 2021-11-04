@@ -24,6 +24,7 @@ import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
 import { Transactions } from '../views/Transactions'
 import { lazy } from 'react'
+import { Ranking } from '../views/Ranking'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -156,6 +157,13 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Collection',
     path: RoutePath.Collection,
+    params: '/:id',
+  },
+  {
+    component: Ranking,
+    exact: true,
+    key: 'Ranking',
+    path: RoutePath.RankingList,
     params: '/:id',
   },
   {
