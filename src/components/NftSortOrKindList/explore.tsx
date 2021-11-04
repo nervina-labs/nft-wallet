@@ -5,9 +5,19 @@ import { useHistory } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAccount'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { Query, ClassSortType as SortType } from '../../models'
-import { TabProps } from '@chakra-ui/react'
+import { Flex, TabProps } from '@chakra-ui/react'
 import { InfiniteList } from '../InfiniteList'
-import { NFTCard, Box, Tab, TabList, Tabs } from '@mibao-ui/components'
+import {
+  Box,
+  Tab,
+  TabList,
+  Tabs,
+  NftImage,
+  Issuer,
+  Like,
+} from '@mibao-ui/components'
+import { TokenClass } from '../../models/class-list'
+import { useLike } from '../../hooks/useLikeStatus'
 
 const tabProps: TabProps = {
   py: '4px',
@@ -20,11 +30,73 @@ const tabProps: TabProps = {
   },
 }
 
+const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
+  const { i18n } = useTranslation('translations')
+  const { push } = useHistory()
+  const gotoClass = useCallback(() => {
+    push(`/class/${token.uuid}`)
+  }, [push, token.uuid])
+  const gotoIssuer = useCallback(() => {
+    if (token.issuer_info?.uuid) {
+      push(`/issuer/${token.issuer_info?.uuid}`)
+    }
+  }, [push, token.issuer_info?.uuid])
+  const { likeCount, isLikeLoading, toggleLike, isLiked } = useLike({
+    count: token.class_likes,
+    liked: token.class_liked,
+    locale: i18n.language,
+    uuid: token.uuid,
+  })
+
+  return (
+    <Box key={token.uuid} w="full" pb="20px">
+      <NftImage
+        src={token.bg_image_url === null ? '' : token.bg_image_url}
+        type={token.renderer_type}
+        hasCardBack={token.card_back_content_exist}
+        onClick={gotoClass}
+      />
+      <Box
+        fontSize="16px"
+        fontWeight="600"
+        onClick={gotoClass}
+        mt="15px"
+        mb="10px"
+        textOverflow="ellipsis"
+        overflow="hidden"
+        whiteSpace="nowrap"
+      >
+        {token.name}
+      </Box>
+      <Flex justify="space-between">
+        <Issuer
+          name={token.issuer_info?.name ?? ''}
+          src={
+            token.issuer_info?.avatar_url === null
+              ? ''
+              : token.issuer_info?.avatar_url
+          }
+          verifiedTitle={token.verified_info?.verified_title}
+          size="25px"
+          onClick={gotoIssuer}
+          mr="5px"
+        />
+        <Like
+          likeCount={likeCount}
+          isLiked={isLiked}
+          isLoading={isLikeLoading}
+          onClick={toggleLike}
+        />
+      </Flex>
+    </Box>
+  )
+}
+
 export const Explore: React.FC<{
   sort: SortType
 }> = ({ sort }) => {
   const currentTag = useRouteQuery<string>('tag', '')
-  const { push, replace, location } = useHistory()
+  const { replace, location } = useHistory()
   const { t, i18n } = useTranslation('translations')
   const api = useAPI()
   const [tagIndex, setTagIndex] = useState(0)
@@ -119,37 +191,7 @@ export const Explore: React.FC<{
         gap="20px"
         renderItems={(group) => {
           return group.class_list.map((token) => {
-            return (
-              <Box
-                key={token.uuid}
-                w="full"
-                pb="20px"
-                onClick={() => {
-                  push(`/class/${token.uuid}`)
-                }}
-              >
-                <NFTCard
-                  issuerProps={{
-                    name: token.issuer_info?.name ?? '',
-                    src:
-                      token.issuer_info?.avatar_url === null
-                        ? ''
-                        : token.issuer_info?.avatar_url,
-                    verifiedTitle: token.verified_info?.verified_title,
-                  }}
-                  likeProps={{
-                    likeCount: token.class_likes,
-                    isLiked: token.class_liked,
-                  }}
-                  locale={i18n.language}
-                  src={token.bg_image_url === null ? '' : token.bg_image_url}
-                  title={token.name}
-                  type={token.renderer_type}
-                  hasCardback={token.card_back_content_exist}
-                  w="full"
-                />
-              </Box>
-            )
+            return <Card token={token} />
           })
         }}
       />
