@@ -191,7 +191,9 @@ export function InfiniteList<
           {columnCount === 1 ? (
             data?.pages?.map((group, i) => {
               return (
-                <React.Fragment key={i}>{renderItems(group, i)}</React.Fragment>
+                <React.Fragment key={i}>
+                  {renderItems(group, i, refresh)}
+                </React.Fragment>
               )
             })
           ) : (
