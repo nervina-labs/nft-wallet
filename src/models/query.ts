@@ -2,6 +2,7 @@ export enum Query {
   DetectAddress = 'detect-address',
   Transactions = 'transactions',
   NFTDetail = 'nft-detail',
+  NFTTransactions = 'nft-transactions',
   NFTList = 'nft-list',
   Transfer = 'transfer',
   Explore = 'explore',

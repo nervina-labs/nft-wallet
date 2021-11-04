@@ -9,6 +9,7 @@ import {
   ProductState,
   SpecialCategories,
   Transaction,
+  TransactionLogResponse,
   UnsignedTransaction,
 } from '../models'
 import {
@@ -617,10 +618,50 @@ export class ServerWalletAPI implements NFTWalletAPI {
       limit?: number
     }
   ): Promise<AxiosResponse<GetHolderByTokenClassUuidResponse>> {
-    const limit = options?.limit ?? 20
+    const limit = options?.limit ?? PER_ITEM_LIMIT
     const page = options?.page ?? 0
     return await this.axios.get<GetHolderByTokenClassUuidResponse>(
       `/token_classes/${uuid}/holders`,
+      {
+        params: {
+          limit,
+          page,
+        },
+      }
+    )
+  }
+
+  async getTokenClassTransactions(
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ): Promise<AxiosResponse<TransactionLogResponse>> {
+    const limit = options?.limit ?? PER_ITEM_LIMIT
+    const page = options?.page ?? 0
+    return await this.axios.get<TransactionLogResponse>(
+      `/token_classes/${uuid}/token_ckb_transactions`,
+      {
+        params: {
+          limit,
+          page,
+        },
+      }
+    )
+  }
+
+  async getTokenTransactions(
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ): Promise<AxiosResponse<TransactionLogResponse>> {
+    const limit = options?.limit ?? PER_ITEM_LIMIT
+    const page = options?.page ?? 0
+    return await this.axios.get<TransactionLogResponse>(
+      `/tokens/${uuid}/token_ckb_transactions`,
       {
         params: {
           limit,
