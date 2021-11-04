@@ -1,12 +1,21 @@
 import { useCallback } from 'react'
 import { useAPI } from '../../hooks/useAccount'
-import { useGetAndSetAuth } from '../../hooks/useProfile'
+import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { InfiniteList } from '../InfiniteList'
 import { Query, ClassSortType as SortType } from '../../models'
-import { Box, Flex, Issuer, Limited, NFTCard } from '@mibao-ui/components'
+import {
+  Box,
+  Flex,
+  Issuer,
+  Limited,
+  NFTCard,
+  Center,
+  Button,
+} from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { TokenClass } from '../../models/class-list'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import { ReactComponent as EmptySvg } from '../../assets/svg/follow-empty.svg'
 
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { t, i18n } = useTranslation('translations')
@@ -49,7 +58,6 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           limitedText={t('common.limit.limit')}
           unlimitedText={t('common.limit.unlimit')}
           my="auto"
-          display="block"
         />
       </Flex>
     </Box>
@@ -60,6 +68,7 @@ export const Follow: React.FC<{
   sort: SortType
 }> = ({ sort }) => {
   const { t } = useTranslation('translations')
+  const { isAuthenticated } = useProfile()
   const getAuth = useGetAndSetAuth()
   const api = useAPI()
   const queryFn = useCallback(
@@ -73,6 +82,27 @@ export const Follow: React.FC<{
     },
     [api, getAuth, sort]
   )
+
+  if (!isAuthenticated) {
+    return (
+      <Center>
+        <Box textAlign="center">
+          <EmptySvg />
+          <Box color="#777E90" fontSize="14px">
+            {t('follow.login.desc-1')}
+          </Box>
+          <Box color="#777E90" fontSize="14px">
+            {t('follow.login.desc-2')}
+          </Box>
+          <Link to="/login">
+            <Button variant="outline" mt="10px" isFullWidth>
+              {t('follow.login.login')}
+            </Button>
+          </Link>
+        </Box>
+      </Center>
+    )
+  }
 
   return (
     <InfiniteList
