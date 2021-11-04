@@ -76,7 +76,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
               ? ''
               : token.issuer_info?.avatar_url
           }
-          verifiedTitle={token.verified_info?.verified_title}
+          isVerified={token.verified_info?.is_verified}
           size="25px"
           onClick={gotoIssuer}
           mr="5px"
