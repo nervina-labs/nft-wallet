@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useDisclosure } from '@chakra-ui/react'
 import {
   AppbarSticky,
@@ -7,17 +8,20 @@ import {
 import { useHistoryBack } from '../../../hooks/useHistoryBack'
 import { ReactComponent as BackSvg } from '../../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../../assets/svg/share.svg'
-import { UserResponse } from '../../../models/user'
+import { AvatarType, UserResponse } from '../../../models/user'
 import { PosterType, Share } from '../../../components/Share/next'
 import { DrawerMenu } from '../DrawerMenu'
 import { ReactComponent as SettingsSvg } from '../../../assets/svg/settings.svg'
 import { useShareListInfo } from '../hooks/useShareListInfo'
+import { useTranslation } from 'react-i18next'
+import { addParamsToUrl } from '../../../utils'
 
 export const Appbar: React.FC<{
   user?: UserResponse
   isHolder?: boolean
   address?: string
 }> = ({ user, isHolder, address }) => {
+  const { i18n } = useTranslation('translations')
   const goBack = useHistoryBack()
   const {
     isOpen: isOpenShare,
@@ -30,6 +34,13 @@ export const Appbar: React.FC<{
     onClose: closeDrawer,
   } = useDisclosure()
   const [shareListInfo] = useShareListInfo()
+  const shareAvatarUrl =
+    user?.avatar_type === AvatarType.Token && user?.avatar_url
+      ? addParamsToUrl(user?.avatar_url, {
+        tid: `${user?.avatar_tid ?? ''}`,
+        locale: i18n.language,
+      })
+      : user?.avatar_url
 
   return (
     <>
@@ -62,10 +73,11 @@ export const Appbar: React.FC<{
             type: PosterType.Holder,
             data: {
               username: user.nickname,
-              avatarUrl: user.avatar_url,
+              avatarUrl: shareAvatarUrl ?? '',
               collectionCount: shareListInfo.len,
               desc: user.description,
               coverImage: shareListInfo.firstImageUrl,
+              isNftAvatar: user.avatar_type === AvatarType.Token,
             },
           }}
         />

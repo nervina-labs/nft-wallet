@@ -7,18 +7,20 @@ import { Footer } from '../footer'
 import { useUrlToBase64 } from '../../../../hooks/useUrlToBase64'
 import { useTranslation } from 'react-i18next'
 import { useTextEllipsis } from '../../hooks/useTextEllipsis'
-
+import NftAvatarPath from '../../../../assets/share/icons/nft-avatar-diamonds.png'
 export interface HolderProps {
   username: string
   avatarUrl: string
   collectionCount: number
   desc: string
   coverImage: string
+  isNftAvatar?: boolean
 }
 
 export const Holder: React.FC<HolderProps & PosterProps> = ({
   username,
   avatarUrl,
+  isNftAvatar,
   collectionCount,
   shareUrl,
   desc,
@@ -68,13 +70,26 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
         px="20px"
         direction="column"
       >
-        <Image
-          src={issuerAvatarUrl}
-          w="50px"
-          h="50px"
-          rounded="100%"
-          objectFit="cover"
-        />
+        <Box position="relative" w="50px" h="50px">
+          <Image
+            src={issuerAvatarUrl}
+            w="50px"
+            h="50px"
+            rounded="100%"
+            objectFit="cover"
+            border={isNftAvatar ? '2px solid #fabe3c' : ''}
+          />
+          {isNftAvatar && (
+            <Image
+              src={NftAvatarPath}
+              w="20px"
+              h="20px"
+              top="-5px"
+              right="-5px"
+              position="absolute"
+            />
+          )}
+        </Box>
         <Box fontSize="14px" fontWeight="500" mt="10px">
           {issuerName}
         </Box>
