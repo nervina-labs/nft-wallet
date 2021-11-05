@@ -13,16 +13,20 @@ import { formatCurrency } from '../../utils'
 import { Payment } from './Payment'
 import { ReactComponent as NextStepSvg } from '../../assets/svg/next-step.svg'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../../routes'
 
 export const ConfirmPayment = () => {
   const [t] = useTranslation('translations')
   const [isSubmiting, setIsSubmitting] = useState(false)
   const placeOrder = usePlaceOrder()
   const confirmDialog = useConfirmDialog()
+  const hisotry = useHistory()
   const onSumit = useCallback(async () => {
     setIsSubmitting(true)
     try {
       await placeOrder()
+      hisotry.push(RoutePath.OrderSuccess)
     } catch (error) {
       confirmDialog({
         type: 'error',
@@ -31,7 +35,7 @@ export const ConfirmPayment = () => {
     } finally {
       setIsSubmitting(false)
     }
-  }, [placeOrder, confirmDialog, t])
+  }, [placeOrder, confirmDialog, t, hisotry])
   const order = useAtomValue(currentOrderInfoAtom)
   const orderProps = useAtomValue(placeOrderPropsAtom)
   const [prime, decimal] = useMemo(() => {

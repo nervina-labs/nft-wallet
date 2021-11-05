@@ -529,7 +529,7 @@
         "created_at": "下单时间：",
         "paid_at": "支付时间：",
         "send-at": "发送时间：",
-        "done_timestamp": "接受时间："
+        "done_timestamp": "接收时间："
       }
     },
     "follow": {

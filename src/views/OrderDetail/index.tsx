@@ -81,6 +81,7 @@ const Row: React.FC<RowProps> = ({ label, children }) => {
 
 interface JumbotronProps {
   order: Order
+  id: string
 }
 
 const getMinAndSec = (dueTime: Dayjs) => {
@@ -90,13 +91,17 @@ const getMinAndSec = (dueTime: Dayjs) => {
   return [m, s]
 }
 
-const Countdown: React.FC<{ time: string }> = ({ time }) => {
+interface CountdownProps {
+  time: string
+  id: string
+}
+
+const Countdown: React.FC<CountdownProps> = ({ time, id }) => {
   const dueTime = useMemo(() => {
     return dayjs(time).add(5, 'minute')
   }, [time])
 
   const [[minutes, seconds], setRemain] = useState(getMinAndSec(dueTime))
-
   useEffect(() => {
     const interval = setInterval(() => {
       setRemain(getMinAndSec(dueTime))
@@ -108,6 +113,10 @@ const Countdown: React.FC<{ time: string }> = ({ time }) => {
 
   const [t] = useTranslation('translations')
 
+  if (minutes === 0 && seconds === 0) {
+    return null
+  }
+
   return (
     <Text fontSize="12px" color="#FF5C00">
       {t('orders.countdown', { minutes, seconds })}
@@ -115,7 +124,7 @@ const Countdown: React.FC<{ time: string }> = ({ time }) => {
   )
 }
 
-const Jumbotron: React.FC<JumbotronProps> = ({ order }) => {
+const Jumbotron: React.FC<JumbotronProps> = ({ order, id }) => {
   const state = order.state
   const [t] = useTranslation('translations')
   const icon = useMemo(() => {
@@ -136,7 +145,7 @@ const Jumbotron: React.FC<JumbotronProps> = ({ order }) => {
       {icon}
       <Text mt="8px">{t(`orders.state.${state ?? ''}`)}</Text>
       {order.state === OrderState.OrderPlaced ? (
-        <Countdown time={order.created_at as string} />
+        <Countdown time={order.created_at as string} id={id} />
       ) : null}
     </Center>
   )
@@ -182,7 +191,7 @@ export const OrderDetail: React.FC = () => {
       </AppbarSticky>
       {order ? (
         <section className="main">
-          <Jumbotron order={order} />
+          <Jumbotron order={order} id={id} />
           <Box marginX="20px">
             <OrderCard isInList={false} order={order} />
           </Box>
@@ -217,19 +226,14 @@ export const OrderDetail: React.FC = () => {
                     {formatTime(order?.created_at, i18n.language, true)}
                   </Row>
                 ) : null}
-                {order?.paid_at ? (
+                {order?.paid_timestamp ? (
                   <Row label={t('orders.info.paid_at')}>
-                    {formatTime(order?.paid_at, i18n.language, true)}
-                  </Row>
-                ) : null}
-                {order?.send_at ? (
-                  <Row label={t('orders.info.send-at')}>
-                    {formatTime(order?.send_at, i18n.language, true)}
+                    {formatTime(order?.paid_timestamp, i18n.language)}
                   </Row>
                 ) : null}
                 {order?.done_timestamp ? (
-                  <Row label={t('orders.info.send-at')}>
-                    {formatTime(order?.done_timestamp, i18n.language, true)}
+                  <Row label={t('orders.info.done_timestamp')}>
+                    {formatTime(order?.done_timestamp, i18n.language)}
                   </Row>
                 ) : null}
               </Tbody>

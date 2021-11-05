@@ -9,10 +9,15 @@ import { ReactComponent as BuySvg } from '../../../assets/svg/buy.svg'
 import { ReactComponent as TransferSvg } from '../../../assets/svg/transfer.svg'
 import {
   currentOrderInfoAtom,
+  isWechatAuthedAtom,
   useOrderDrawer,
   useSetProductId,
 } from '../../../hooks/useOrder'
 import { useUpdateAtom } from 'jotai/utils'
+import { useAPI } from '../../../hooks/useAccount'
+import { useGetAndSetAuth } from '../../../hooks/useProfile'
+import { useAtom } from 'jotai'
+import { IS_WEXIN } from '../../../constants'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -35,9 +40,21 @@ const TranferOrBuy: React.FC<{
   const setProductId = useSetProductId()
 
   const setProductInfo = useUpdateAtom(currentOrderInfoAtom)
+  const api = useAPI()
+  const getAuth = useGetAndSetAuth()
+  const [isWechatAuthed, setIsWechatAuthed] = useAtom(isWechatAuthedAtom)
 
-  const orderOnClick = useCallback(() => {
+  const orderOnClick = useCallback(async () => {
     if (!detail?.product_on_sale_uuid) {
+      return
+    }
+    if (!isWechatAuthed && IS_WEXIN) {
+      const auth = await getAuth()
+      const {
+        data: { oauth_url: authUrl },
+      } = await api.getWechatOauthUrl(auth)
+      setIsWechatAuthed(true)
+      location.href = authUrl
       return
     }
     setProductId(detail?.product_on_sale_uuid)
@@ -52,7 +69,16 @@ const TranferOrBuy: React.FC<{
       hasCardback: detail?.card_back_content_exist,
     })
     openOrderDrawer()
-  }, [detail, setProductId, setProductInfo, openOrderDrawer])
+  }, [
+    detail,
+    setProductId,
+    setProductInfo,
+    openOrderDrawer,
+    api,
+    getAuth,
+    isWechatAuthed,
+    setIsWechatAuthed,
+  ])
 
   const isSoldout = Number(detail?.product_count) === 0
 

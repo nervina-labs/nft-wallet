@@ -58,7 +58,7 @@ export interface OrderDetail {
   state: OrderState
   created_at?: string
   product_price: string
-  paid_at?: string
+  paid_timestamp?: string
   send_at?: string
   ckb_address?: string
   product_description?: string

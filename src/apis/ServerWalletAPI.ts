@@ -786,4 +786,15 @@ export class ServerWalletAPI {
       }
     )
   }
+
+  async getWechatOauthUrl(auth: Auth) {
+    return await this.axios.get<{ oauth_url: string }>('/wechat_auths', {
+      params: {
+        mibao_url: location.href,
+      },
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+    })
+  }
 }

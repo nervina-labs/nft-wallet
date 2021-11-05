@@ -7,6 +7,7 @@ import {
   selectAtom,
   useResetAtom,
   atomWithReset,
+  atomWithStorage,
 } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -53,6 +54,7 @@ export const isDrawerOpenAtom = atom(false)
 export const currentOrderInfoAtom = atomWithReset<CurrentOrder>({})
 export const orderStepAtom = atomWithReset<OrderStep>(OrderStep.Init)
 export const placeOrderPropsAtom = atomWithReset<PlaceOrderProps>({})
+export const isWechatAuthedAtom = atomWithStorage('mibao_wechat_auth', false)
 
 export const useOrderStep = () => {
   return useAtomValue(orderStepAtom)
