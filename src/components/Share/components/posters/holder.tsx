@@ -1,0 +1,91 @@
+import { Box, Flex, Image } from '@chakra-ui/react'
+import { useRef } from 'react'
+import UserBgPath from '../../../../assets/share/bg/user.png'
+import { usePosterLoader } from '../../hooks/usePosterLoader'
+import { PosterProps } from '../../poster.interface'
+import { Footer } from '../footer'
+import { useUrlToBase64 } from '../../../../hooks/useUrlToBase64'
+import { useTranslation } from 'react-i18next'
+import { useTextEllipsis } from '../../hooks/useTextEllipsis'
+
+export interface HolderProps {
+  username: string
+  avatarUrl: string
+  collectionCount: number
+  desc: string
+  coverImage: string
+}
+
+export const Holder: React.FC<HolderProps & PosterProps> = ({
+  username,
+  avatarUrl,
+  collectionCount,
+  shareUrl,
+  desc,
+  coverImage,
+  onLoaded,
+}) => {
+  const { t } = useTranslation('translations')
+  const ref = useRef<HTMLDivElement>(null)
+  const { data: coverImageUrl, isLoading: coverImageLoading } = useUrlToBase64(
+    coverImage ?? ''
+  )
+  const { data: issuerAvatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
+    avatarUrl ?? ''
+  )
+  usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)
+  const [issuerName] = useTextEllipsis(username, 300)
+  const [descEllipsis] = useTextEllipsis(desc ?? '', 900)
+
+  return (
+    <Box position="relative" w="340px" h="490px" ref={ref}>
+      <Image
+        src={coverImageUrl}
+        w="full"
+        h="auto"
+        left="0"
+        top="0"
+        position="absolute"
+        zIndex={0}
+      />
+      <Image
+        src={UserBgPath}
+        w="full"
+        h="auto"
+        left="0"
+        bottom="0"
+        position="absolute"
+        zIndex={0}
+      />
+      <Flex
+        position="absolute"
+        zIndex={1}
+        left="0"
+        bottom="0"
+        w="full"
+        h="308px"
+        py="15px"
+        px="20px"
+        direction="column"
+      >
+        <Image
+          src={issuerAvatarUrl}
+          w="50px"
+          h="50px"
+          rounded="100%"
+          objectFit="cover"
+        />
+        <Box fontSize="14px" fontWeight="500" mt="10px">
+          {issuerName}
+        </Box>
+        <Box mt="5px" fontSize="12px" fontWeight="200">
+          {t('common.share.poster.collected')}: {collectionCount}
+        </Box>
+        <Box fontSize="12px" mt="5px">
+          {descEllipsis}
+        </Box>
+        {shareUrl && <Footer url={shareUrl} />}
+      </Flex>
+    </Box>
+  )
+}

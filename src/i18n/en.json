@@ -29,7 +29,8 @@
         },
         "poster": {
           "desc-1": "Scanning QR code",
-          "desc-2": "Enjoy the digital collection"
+          "desc-2": "Enjoy the digital collection",
+          "collected": "Collected"
         }
       },
       "limit": {

@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next'
 import { downloadImage } from '../../utils'
 import { useToast } from '../../hooks/useToast'
 import { Issuer, IssuerProps } from './components/posters/issuer'
+import { Holder, HolderProps } from './components/posters/holder'
 
 enum PosterState {
   None,
@@ -31,6 +32,7 @@ enum PosterState {
 export enum PosterType {
   Nft = 'nft',
   Issuer = 'issuer',
+  Holder = 'holder',
 }
 
 export interface NftPoster {
@@ -43,11 +45,16 @@ export interface IssuerPoster {
   data: IssuerProps
 }
 
+export interface HolderPoster {
+  type: PosterType.Holder
+  data: HolderProps
+}
+
 export interface ShareProps {
   isOpen: boolean
   onClose: () => void
   shareUrl: string
-  poster?: NftPoster | IssuerPoster
+  poster?: NftPoster | IssuerPoster | HolderPoster
 }
 
 export const Share: React.FC<ShareProps> = ({
@@ -142,6 +149,9 @@ export const Share: React.FC<ShareProps> = ({
             )}
             {poster.type === PosterType.Issuer && (
               <Issuer {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
+            )}
+            {poster.type === PosterType.Holder && (
+              <Holder {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
             )}
           </Box>
         ) : null}

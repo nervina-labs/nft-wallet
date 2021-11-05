@@ -14,22 +14,16 @@ import { isVerticalScrollable } from '../../utils'
 import { Container } from './styled'
 import { Intro } from '../../components/Intro'
 import { IssuerList } from './IssuerList'
-import { ReactComponent as SettingsSvg } from '../../assets/svg/settings.svg'
-import { ReactComponent as ShareSvg } from '../../assets/svg/share.svg'
-import {
-  Appbar,
-  AppbarButton,
-  AppbarSticky,
-  HEADER_HEIGHT,
-} from '../../components/Appbar'
+import { AppbarSticky, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { InfiniteList } from '../../components/InfiniteList'
 import { Share } from '../../components/Share'
 import { HOST } from '../../constants'
-import { DrawerMenu } from './DrawerMenu'
 import { Card } from './card'
 import { Tabs, Tab, TabList } from '@mibao-ui/components'
+import { Appbar } from './components/appbar'
+import { useShareListInfo } from './hooks/useShareListInfo'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -95,15 +89,14 @@ export const NFTs: React.FC = () => {
 
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const closeDrawer = () => setIsDrawerOpen(false)
-  const openDrawer = () => setIsDrawerOpen(true)
   const showGuide = useMemo(() => {
     if (isUserLoading) {
       return false
     }
     return !user?.guide_finished
   }, [user, isUserLoading])
+
+  const [, setShareListInfo] = useShareListInfo()
 
   if (!isLogined && !isHolder) {
     return <Redirect to={RoutePath.Explore} />
@@ -112,26 +105,9 @@ export const NFTs: React.FC = () => {
     return <Redirect to={RoutePath.NFTs} />
   }
 
-  const appbar = (
-    <Appbar
-      left={
-        !isHolder ? (
-          <AppbarButton onClick={openDrawer} className="setting">
-            <SettingsSvg />
-          </AppbarButton>
-        ) : undefined
-      }
-      right={
-        <AppbarButton transparent onClick={() => setIsShareDialogOpen(true)}>
-          <ShareSvg />
-        </AppbarButton>
-      }
-    />
-  )
-
   return (
     <Container id="main">
-      {isHolder ? <AppbarSticky>{appbar}</AppbarSticky> : appbar}
+      <Appbar isHolder={isHolder} user={user} address={address} />
       <Info
         isLoading={isUserLoading}
         user={user}
@@ -179,8 +155,13 @@ export const NFTs: React.FC = () => {
             enableQuery={!isFollow}
             emptyElement={<Empty />}
             noMoreElement={t('common.actions.pull-to-down')}
-            onDataChange={() => {
+            onDataChange={(group) => {
               setAlwaysShowTabbar(!isVerticalScrollable())
+              setShareListInfo({
+                len: group?.pages[0].meta.total_count ?? 0,
+                firstImageUrl:
+                  group?.pages[0].token_list[0].class_bg_image_url ?? '',
+              })
             }}
             calcDataLength={(data) => {
               return (
@@ -208,7 +189,6 @@ export const NFTs: React.FC = () => {
         <>
           <Intro show={showGuide} />
           <HiddenBar alwaysShow={alwayShowTabbar} />
-          <DrawerMenu close={closeDrawer} isDrawerOpen={isDrawerOpen} />
         </>
       )}
       <Share

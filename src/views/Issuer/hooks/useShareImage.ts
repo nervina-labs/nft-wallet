@@ -7,9 +7,11 @@ export function useShareImage() {
   const [s, setS] = useAtom(shareImageAtom)
   const setShareImageAtom = useCallback(
     (img: string) => {
-      setS(img)
+      if (!s) {
+        setS(img)
+      }
     },
-    [setS]
+    [s, setS]
   )
 
   return [s, setShareImageAtom] as const
