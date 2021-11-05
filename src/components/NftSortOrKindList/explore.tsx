@@ -50,7 +50,6 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
     uuid: token.uuid,
   })
 
-  console.log(token)
   return (
     <Box key={token.uuid} w="full" pb="20px">
       <NftImage
