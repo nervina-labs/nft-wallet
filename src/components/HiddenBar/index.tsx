@@ -109,7 +109,7 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
   const [isHide, setIsHide] = useState(false)
   useObservable(() =>
     fromEvent(window, 'scroll').pipe(
-      throttleTime(500),
+      throttleTime(200),
       scan((acc) => [acc[1], window.scrollY], [window.scrollY, window.scrollY]),
       tap(([prev, curr]) => {
         if (!alwaysShow) {
