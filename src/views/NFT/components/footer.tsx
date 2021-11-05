@@ -49,14 +49,15 @@ const TranferOrBuy: React.FC<{
       limit: detail?.product_limit,
       name: detail?.name,
       currency: detail?.product_price_currency,
+      hasCardback: detail?.card_back_content_exist,
     })
     openOrderDrawer()
   }, [detail, setProductId, setProductInfo, openOrderDrawer])
 
   const isSoldout = Number(detail?.product_count) === 0
 
-  if (isClass && detail?.product_on_sale_uuid) {
-    return (
+  if (isClass) {
+    return detail?.product_on_sale_uuid ? (
       <Button
         colorScheme="primary"
         variant="solid"
@@ -72,7 +73,7 @@ const TranferOrBuy: React.FC<{
         </Box>
         <BuySvg />
       </Button>
-    )
+    ) : null
   }
 
   if (!ownCurrentToken) {

@@ -34,6 +34,8 @@ export interface RawOrder {
   state?: OrderState
   renderer_type?: NftType
   renderer?: string
+  token_class_uuid?: string
+  card_back_content_exist?: boolean
 }
 
 export interface Order extends RawOrder, VipInfo {
@@ -64,4 +66,6 @@ export interface OrderDetail {
   renderer: string
   issuer_info: IssuerInfo
   token_class_uuid: string
+  done_timestamp?: string
+  card_back_content_exist?: boolean
 }

@@ -24,6 +24,7 @@ export interface CurrentOrder {
   type?: NftType
   name?: string
   coverUrl?: string
+  hasCardback?: boolean
 }
 
 export enum PaymentChannel {

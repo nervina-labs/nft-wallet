@@ -53,6 +53,12 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
   }, [continueOrder, order])
   const deleteOrder = useDeleteOrder()
 
+  const gotoClassDetail = useCallback(() => {
+    if (order.token_class_uuid) {
+      history.push(`/class/${order.token_class_uuid}`)
+    }
+  }, [history, order])
+
   return (
     <Box
       px="10px"
@@ -95,9 +101,12 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
           resizeScale={200}
           type={order.renderer_type}
           src={order.product_image_url}
+          hasCardBack={order.card_back_content_exist}
           width="100px"
           height="100px"
           borderRadius="22px"
+          cursor={order.token_class_uuid ? 'pointer' : undefined}
+          onClick={gotoClassDetail}
         />
         <Flex flex={1} ml="16px" flexDirection="column">
           <Flex flex={1}>

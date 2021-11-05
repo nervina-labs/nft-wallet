@@ -112,7 +112,6 @@ export const NFTs: React.FC = () => {
     return <Redirect to={RoutePath.NFTs} />
   }
 
-  console.log(alwayShowTabbar)
   const appbar = (
     <Appbar
       left={
@@ -181,8 +180,6 @@ export const NFTs: React.FC = () => {
             emptyElement={<Empty />}
             noMoreElement={t('common.actions.pull-to-down')}
             onDataChange={() => {
-              // eslint-disable-next-line no-debugger
-              console.log(isVerticalScrollable())
               setAlwaysShowTabbar(!isVerticalScrollable())
             }}
             calcDataLength={(data) => {

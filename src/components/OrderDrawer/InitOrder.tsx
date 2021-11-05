@@ -60,6 +60,7 @@ export const InitOrder = () => {
             width="120px"
             height="120px"
             borderRadius="22px"
+            hasCardBack={info.hasCardback}
           />
           <Stack direction="column" justifyContent="space-between" ml="16px">
             <Box flex={1}>

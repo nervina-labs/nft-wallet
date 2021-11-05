@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
@@ -8,9 +8,9 @@ import {
   Text,
   HStack,
   Button,
-  Loading,
   Box,
   Heading,
+  Copyzone,
 } from '@mibao-ui/components'
 import { useParams } from 'react-router'
 import { OrderDrawer } from '../../components/OrderDrawer'
@@ -27,6 +27,8 @@ import { OrderCard } from '../Orders/OrderCard'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { Table, Tbody, Tr, Td } from '@chakra-ui/react'
 import { formatTime } from '../../utils'
+import dayjs, { Dayjs } from 'dayjs'
+import { Loading } from '../../components/Loading'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -39,11 +41,12 @@ const Container = styled(MainContainer)`
 
   .footer {
     position: fixed;
-    bottom: 20px;
+    bottom: 0;
     background: white;
     justify-content: center;
     width: 100%;
     max-width: 500px;
+    padding: 20px 10px;
   }
 `
 
@@ -80,6 +83,38 @@ interface JumbotronProps {
   order: Order
 }
 
+const getMinAndSec = (dueTime: Dayjs) => {
+  const remainSec = dueTime.diff(dayjs(), 'seconds')
+  const m = Math.floor(remainSec / 60)
+  const s = remainSec % 60
+  return [m, s]
+}
+
+const Countdown: React.FC<{ time: string }> = ({ time }) => {
+  const dueTime = useMemo(() => {
+    return dayjs(time).add(5, 'minute')
+  }, [time])
+
+  const [[minutes, seconds], setRemain] = useState(getMinAndSec(dueTime))
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRemain(getMinAndSec(dueTime))
+    }, 1000)
+
+    return () => clearInterval(interval)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const [t] = useTranslation('translations')
+
+  return (
+    <Text fontSize="12px" color="#FF5C00">
+      {t('orders.countdown', { minutes, seconds })}
+    </Text>
+  )
+}
+
 const Jumbotron: React.FC<JumbotronProps> = ({ order }) => {
   const state = order.state
   const [t] = useTranslation('translations')
@@ -100,6 +135,9 @@ const Jumbotron: React.FC<JumbotronProps> = ({ order }) => {
     <Center py="35px" bg="white" mb="20px" flexDirection="column">
       {icon}
       <Text mt="8px">{t(`orders.state.${state ?? ''}`)}</Text>
+      {order.state === OrderState.OrderPlaced ? (
+        <Countdown time={order.created_at as string} />
+      ) : null}
     </Center>
   )
 }
@@ -163,7 +201,12 @@ export const OrderDetail: React.FC = () => {
               <Tbody>
                 {order?.ckb_address ? (
                   <Row label={t('orders.info.address')}>
-                    {order?.ckb_address}
+                    <Copyzone
+                      value={order?.ckb_address}
+                      containerProps={{ fontSize: '16px' }}
+                    >
+                      {order?.ckb_address}
+                    </Copyzone>
                   </Row>
                 ) : null}
                 {order?.uuid ? (
@@ -182,6 +225,11 @@ export const OrderDetail: React.FC = () => {
                 {order?.send_at ? (
                   <Row label={t('orders.info.send-at')}>
                     {formatTime(order?.send_at, i18n.language, true)}
+                  </Row>
+                ) : null}
+                {order?.done_timestamp ? (
+                  <Row label={t('orders.info.send-at')}>
+                    {formatTime(order?.done_timestamp, i18n.language, true)}
                   </Row>
                 ) : null}
               </Tbody>
@@ -213,9 +261,7 @@ export const OrderDetail: React.FC = () => {
           ) : null}
         </section>
       ) : (
-        <Center>
-          <Loading size="lg" />
-        </Center>
+        <Loading />
       )}
       <OrderDrawer />
     </Container>
