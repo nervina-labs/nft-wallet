@@ -9,10 +9,12 @@ import { ReactComponent as BackSvg } from '../../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../../assets/svg/share.svg'
 import { useObservable } from 'rxjs-hooks'
 import { fromEvent, tap, merge } from 'rxjs'
-import { Box } from '@mibao-ui/components'
+import { Box, useDisclosure } from '@mibao-ui/components'
 import { useHistoryBack } from '../../../hooks/useHistoryBack'
+import { Share } from '../../../components/Share/next'
 
 export const Appbar: React.FC = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const goBack = useHistoryBack()
   const [appbarBgOpacity, setAppbarBgOpacity] = useState(
     Math.min(window.scrollY / 400, 1)
@@ -25,30 +27,33 @@ export const Appbar: React.FC = () => {
   )
 
   return (
-    <AppbarSticky>
-      <RowAppbar
-        transparent
-        left={
-          <AppbarButton onClick={goBack}>
-            <BackSvg />
-          </AppbarButton>
-        }
-        right={
-          <AppbarButton transparent>
-            <ShareSvg />
-          </AppbarButton>
-        }
-      />
-      <Box
-        position="absolute"
-        top="0"
-        left="0"
-        bg="white"
-        h={`${HEADER_HEIGHT}px`}
-        w="full"
-        opacity={appbarBgOpacity}
-        zIndex={-1}
-      />
-    </AppbarSticky>
+    <>
+      <AppbarSticky>
+        <RowAppbar
+          transparent
+          left={
+            <AppbarButton onClick={goBack}>
+              <BackSvg />
+            </AppbarButton>
+          }
+          right={
+            <AppbarButton transparent onClick={onOpen}>
+              <ShareSvg />
+            </AppbarButton>
+          }
+        />
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          bg="white"
+          h={`${HEADER_HEIGHT}px`}
+          w="full"
+          opacity={appbarBgOpacity}
+          zIndex={-1}
+        />
+      </AppbarSticky>
+      <Share isOpen={isOpen} onClose={onClose} />
+    </>
   )
 }
