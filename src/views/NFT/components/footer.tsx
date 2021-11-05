@@ -14,10 +14,12 @@ import {
   useSetProductId,
 } from '../../../hooks/useOrder'
 import { useUpdateAtom } from 'jotai/utils'
-import { useAPI } from '../../../hooks/useAccount'
+import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useAtom } from 'jotai'
 import { IS_WEXIN } from '../../../constants'
+import { RoutePath } from '../../../routes'
+import { UnipassConfig } from '../../../utils'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -43,10 +45,15 @@ const TranferOrBuy: React.FC<{
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
   const [isWechatAuthed, setIsWechatAuthed] = useAtom(isWechatAuthedAtom)
-
+  const { isLogined } = useAccountStatus()
+  const history = useHistory()
   const orderOnClick = useCallback(async () => {
     if (!detail?.product_on_sale_uuid) {
       return
+    }
+    if (!isLogined) {
+      UnipassConfig.setRedirectUri(location.pathname)
+      history.push(RoutePath.Login)
     }
     if (!isWechatAuthed && IS_WEXIN) {
       const auth = await getAuth()
@@ -78,6 +85,8 @@ const TranferOrBuy: React.FC<{
     getAuth,
     isWechatAuthed,
     setIsWechatAuthed,
+    history,
+    isLogined,
   ])
 
   const isSoldout = Number(detail?.product_count) === 0
