@@ -2,6 +2,7 @@ import { Flex, Image, Box } from '@mibao-ui/components'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { RankBorderBox, RankIcon } from '../../components/RankIcon'
+import { isSupportWebp } from '../../utils'
 
 export const RankTop: React.FC<{
   bgImageUrl: string
@@ -24,6 +25,8 @@ export const RankTop: React.FC<{
             w={size}
             h={size}
             rounded="20%"
+            resizeScale={100}
+            webp={isSupportWebp()}
             src={bgImageUrl === null ? '' : bgImageUrl}
           />
         </RankBorderBox>

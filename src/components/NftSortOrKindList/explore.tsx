@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAccount'
-import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { Query, ClassSortType as SortType } from '../../models'
 import { TabProps } from '@chakra-ui/react'
 import { InfiniteList } from '../InfiniteList'
@@ -111,11 +111,12 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
 export const Explore: React.FC<{
   sort: SortType
 }> = ({ sort }) => {
-  const currentTag = useRouteQuery<string>('tag', '')
-  const { replace, location } = useHistory()
   const { t, i18n } = useTranslation('translations')
   const api = useAPI()
-  const [tagIndex, setTagIndex] = useState(0)
+  const [currentTag, setCurrentTag] = useRouteQuerySearch<string>(
+    'tag',
+    'recommend'
+  )
   const { data: tags, isLoading } = useQuery(
     Query.Tags,
     async () => {
@@ -128,6 +129,13 @@ export const Explore: React.FC<{
       refetchOnMount: false,
     }
   )
+  const tagIndex = useMemo(() => {
+    if (!tags) {
+      return 0
+    }
+    const index = tags.findIndex((t) => t.name === currentTag)
+    return index === -1 ? 0 : index + 1
+  }, [currentTag, tags])
   const queryFn = useCallback(
     async ({ pageParam = 1 }) => {
       if (tags) {
@@ -151,23 +159,11 @@ export const Explore: React.FC<{
     },
     [api, sort, tagIndex, tags]
   )
-  useEffect(() => {
-    const findIndex = tags?.findIndex((tag) => tag.name === currentTag) ?? -1
-    setTagIndex(findIndex === -1 ? 0 : findIndex + 1)
-  }, [tags, currentTag])
-
   const onChangeTabIndex = useCallback(
     (i: number) => {
-      setTagIndex(i)
-      if (tags) {
-        replace(
-          i === 0
-            ? `${location.pathname}?tag=recommend`
-            : `${location.pathname}?tag=${tags[i - 1]?.name}`
-        )
-      }
+      setCurrentTag(i === 0 ? 'recommend' : tags?.[i - 1]?.name ?? 'recommend')
     },
-    [location.pathname, replace, tags]
+    [setCurrentTag, tags]
   )
 
   if (isLoading || !tags) {
@@ -181,9 +177,11 @@ export const Explore: React.FC<{
         index={tagIndex}
         onChange={onChangeTabIndex}
         mb="15px"
+        zIndex={2}
+        position="relative"
       >
         <TabList borderBottom="none" overflow="auto">
-          <Tab {...tabProps}>推荐</Tab>
+          <Tab {...tabProps}>{t('explore.recommended')}</Tab>
           {tags?.map((tag) => (
             <Tab {...tabProps} key={tag.name}>
               {tag.locales[i18n.language]}
@@ -205,9 +203,9 @@ export const Explore: React.FC<{
         }
         columnCount={2}
         gap="20px"
-        renderItems={(group) => {
-          return group.class_list.map((token) => {
-            return <Card token={token} />
+        renderItems={(group, i) => {
+          return group.class_list.map((token, j) => {
+            return <Card token={token} key={`${i}-${j}`} />
           })
         }}
       />

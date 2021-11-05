@@ -15,6 +15,7 @@ import { ReactComponent as MoreSvg } from '../../../assets/svg/recommend-more.sv
 import { useTranslation } from 'react-i18next'
 import { Link, useHistory } from 'react-router-dom'
 import { useCallback } from 'react'
+import { isSupportWebp } from '../../../utils'
 
 const Item: React.FC<SpecialAssets> = ({
   locales,
@@ -44,6 +45,8 @@ const Item: React.FC<SpecialAssets> = ({
             src={t.bg_image_url === null ? '' : t.bg_image_url}
             w="full"
             h="full"
+            resizeScale={100}
+            webp={isSupportWebp()}
             containerProps={{
               w: i === 1 ? '90px' : '70px',
               h: i === 1 ? '90px' : '70px',
@@ -104,6 +107,8 @@ const Item: React.FC<SpecialAssets> = ({
                   }
                   w="full"
                   h="full"
+                  resizeScale={100}
+                  webp={isSupportWebp()}
                   rounded="10px"
                 />
               </AspectRatio>

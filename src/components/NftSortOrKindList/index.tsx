@@ -1,53 +1,80 @@
-import {
-  Box,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from '@mibao-ui/components'
+import { Box, Tab, TabList, Tabs } from '@mibao-ui/components'
 import { Explore } from './explore'
 import { ClassSortType as SortType } from '../../models'
 import { Follow } from './follow'
-import { useState } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 
 export const NftSortOrKindList: React.FC = () => {
-  const sortKinds = [
-    {
-      value: SortType.OnSale,
-      label: '在售',
-    },
-    {
-      value: SortType.Latest,
-      label: '最新创作',
-    },
-    {
-      value: SortType.Likes,
-      label: '最热',
-    },
-  ]
-  const types = [
-    {
-      label: '探索',
-    },
-    {
-      label: '关注',
-    },
-  ]
-  const [sortIndex, setSortIndex] = useState(0)
-  const [typeIndex, setTypeIndex] = useState(0)
+  const { t } = useTranslation('translations')
+  const [listType, setListType] = useRouteQuerySearch<'metaverse' | 'follow'>(
+    'type',
+    'metaverse'
+  )
+  const [sort, setSort] = useRouteQuerySearch<SortType>('sort', SortType.OnSale)
+  const sortKinds: Array<{
+    value: SortType
+    label: string
+  }> = useMemo(
+    () => [
+      {
+        value: SortType.OnSale,
+        label: t('explore.on-sale'),
+      },
+      {
+        value: SortType.Latest,
+        label: t('explore.latest'),
+      },
+      {
+        value: SortType.Likes,
+        label: t('explore.latest'),
+      },
+    ],
+    [t]
+  )
+  const types = useMemo(
+    () =>
+      [
+        {
+          value: 'metaverse',
+          label: t('explore.metaverse'),
+        },
+        {
+          value: 'follow',
+          label: t('explore.follow'),
+        },
+      ] as const,
+    [t]
+  )
+  const onChangeSortIndex = useCallback(
+    (i: number) => setSort(sortKinds[i ?? 0].value),
+    [setSort, sortKinds]
+  )
+  const onChangeTypeIndex = useCallback(
+    (i: number) => setListType(types[i ?? 0].value),
+    [setListType, types]
+  )
+  const sortIndex = useMemo(() => {
+    const index = sortKinds.findIndex((s) => s.value === sort)
+    return index === -1 ? 0 : index
+  }, [sort, sortKinds])
+  const typeIndex = useMemo(() => {
+    const index = types.findIndex((t) => t.value === listType)
+    return index === -1 ? 0 : index
+  }, [listType, types])
 
   return (
-    <Box mt="10px" userSelect="none" position="relative">
+    <Box mt="10px" userSelect="none" position="relative" minHeight="628px">
       <Tabs
         variant="solid-rounded"
         position="absolute"
         right="0"
         top="8px"
         size="sm"
-        zIndex={1}
+        zIndex={2}
         index={sortIndex}
-        onChange={setSortIndex}
+        onChange={onChangeSortIndex}
       >
         <TabList>
           {sortKinds.map((sort, i) => (
@@ -57,6 +84,7 @@ export const NftSortOrKindList: React.FC = () => {
               px="8px"
               rounded="6px"
               whiteSpace="nowrap"
+              fontSize="12px"
               _selected={{
                 bg: '#f6f6f6',
                 color: '#5065E5',
@@ -68,10 +96,16 @@ export const NftSortOrKindList: React.FC = () => {
         </TabList>
       </Tabs>
 
-      <Tabs colorScheme="black" index={typeIndex} onChange={setTypeIndex}>
+      <Tabs
+        colorScheme="black"
+        onChange={onChangeTypeIndex}
+        mb="20px"
+        index={typeIndex}
+      >
         <TabList borderBottom="none">
-          {types.map((type) => (
+          {types.map((type, i) => (
             <Tab
+              key={i}
               fontWeight="200"
               fontSize="24px"
               px="0"
@@ -83,19 +117,9 @@ export const NftSortOrKindList: React.FC = () => {
             </Tab>
           ))}
         </TabList>
-        <TabPanels>
-          <TabPanel px="0">
-            {typeIndex === 0 && (
-              <Explore sort={sortKinds[sortIndex ?? 0].value} />
-            )}
-          </TabPanel>
-          <TabPanel px="0">
-            {typeIndex === 1 && (
-              <Follow sort={sortKinds[sortIndex ?? 0].value} />
-            )}
-          </TabPanel>
-        </TabPanels>
       </Tabs>
+      {listType === 'metaverse' && <Explore sort={sort} />}
+      {listType === 'follow' && <Follow sort={sort} />}
     </Box>
   )
 }

@@ -8,6 +8,7 @@ import { ReactComponent as MoreSvg } from '../../../assets/svg/recommend-more.sv
 import { RankIcon } from '../../../components/RankIcon'
 import { Link, useHistory } from 'react-router-dom'
 import { useCallback } from 'react'
+import { isSupportWebp } from '../../../utils'
 
 const Item: React.FC<RankingItem> = ({
   name,
@@ -55,6 +56,8 @@ const Item: React.FC<RankingItem> = ({
                 w="50px"
                 h="50px"
                 rounded="10px"
+                resizeScale={100}
+                webp={isSupportWebp()}
               />
               <Box
                 whiteSpace="nowrap"
