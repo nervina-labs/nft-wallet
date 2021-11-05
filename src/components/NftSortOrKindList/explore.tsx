@@ -50,6 +50,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
     uuid: token.uuid,
   })
 
+  console.log(token)
   return (
     <Box key={token.uuid} w="full" pb="20px">
       <NftImage
@@ -104,6 +105,11 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           onClick={toggleLike}
         />
       </Grid>
+      {token.product_price && (
+        <Box fontWeight="500" fontSize="12px" mt="7px">
+          {token.product_price}
+        </Box>
+      )}
     </Box>
   )
 }

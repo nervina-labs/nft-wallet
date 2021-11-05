@@ -77,6 +77,11 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           my="auto"
         />
       </Grid>
+      {token.product_price && (
+        <Box fontWeight="500" fontSize="12px" mt="7px">
+          {token.product_price}
+        </Box>
+      )}
     </Box>
   )
 }

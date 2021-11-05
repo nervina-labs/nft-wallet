@@ -4,7 +4,7 @@ import { NftSortOrKindList } from '../../components/NftSortOrKindList'
 
 export const ExploreAll: React.FC = () => {
   return (
-    <MainContainer>
+    <MainContainer px="20px">
       <NftSortOrKindList />
       <HiddenBar />
     </MainContainer>

@@ -201,12 +201,17 @@ export class ServerWalletAPI implements NFTWalletAPI {
       page,
       limit: PER_ITEM_LIMIT,
     }
+
     if (sortType === ClassSortType.Likes) {
       params.sort = 'likes'
       params.order = 'desc'
     }
     if (sortType === ClassSortType.Recommend) {
       params.sort = 'recommended'
+      params.order = 'desc'
+    }
+    if (sortType === ClassSortType.OnSale) {
+      params.sort = sortType
       params.order = 'desc'
     }
     if (this.address) {
