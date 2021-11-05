@@ -20,6 +20,7 @@
         "copy": "Click to copy the link and share to social media",
         "close": "Close",
         "copied": "Copied",
+        "cancel": "Cancel",
         "icons": {
           "copy": "Copy Link",
           "download": "Downloads",

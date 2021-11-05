@@ -20,6 +20,7 @@
         "copy": "点击复制链接并分享至社交媒体",
         "close": "关闭",
         "copied": "复制成功",
+        "cancel": "取消",
         "icons": {
           "copy": "复制链接",
           "download": "下载",

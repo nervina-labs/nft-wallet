@@ -229,7 +229,7 @@ export const Share: React.FC<ShareProps> = ({
             mx="20px"
             w="calc(100% - 40px)"
           >
-            取消
+            {t('common.share.cancel')}
           </Button>
         </Flex>
       </DrawerContent>
