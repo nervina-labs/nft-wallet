@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAccount'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { Query, ClassSortType as SortType } from '../../models'
-import { Flex, TabProps } from '@chakra-ui/react'
+import { TabProps } from '@chakra-ui/react'
 import { InfiniteList } from '../InfiniteList'
 import {
   Box,
@@ -13,11 +13,13 @@ import {
   TabList,
   Tabs,
   NftImage,
-  Issuer,
   Like,
+  Grid,
+  Avatar,
 } from '@mibao-ui/components'
 import { TokenClass } from '../../models/class-list'
 import { useLike } from '../../hooks/useLikeStatus'
+import { isSupportWebp } from '../../utils'
 
 const tabProps: TabProps = {
   py: '4px',
@@ -55,6 +57,8 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
         type={token.renderer_type}
         hasCardBack={token.card_back_content_exist}
         onClick={gotoClass}
+        resizeScale={300}
+        webp={isSupportWebp()}
       />
       <Box
         fontSize="16px"
@@ -68,26 +72,38 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
       >
         {token.name}
       </Box>
-      <Flex justify="space-between">
-        <Issuer
-          name={token.issuer_info?.name ?? ''}
+      <Grid
+        templateColumns="25px calc(100% - 25px - 40px) 35px"
+        onClick={gotoIssuer}
+      >
+        <Avatar
           src={
             token.issuer_info?.avatar_url === null
               ? ''
               : token.issuer_info?.avatar_url
           }
+          resizeScale={50}
+          webp={isSupportWebp()}
           isVerified={token.verified_info?.is_verified}
-          size="25px"
-          onClick={gotoIssuer}
-          mr="5px"
         />
+        <Box
+          fontSize="12px"
+          fontWeight="300"
+          lineHeight="25px"
+          whiteSpace="nowrap"
+          textOverflow="ellipsis"
+          overflow="hidden"
+          px="5px"
+        >
+          {token.issuer_info?.name}
+        </Box>
         <Like
           likeCount={likeCount}
           isLiked={isLiked}
           isLoading={isLikeLoading}
           onClick={toggleLike}
         />
-      </Flex>
+      </Grid>
     </Box>
   )
 }

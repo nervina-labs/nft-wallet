@@ -27,6 +27,7 @@ const Item: React.FC<SpecialAssets> = ({
   const gotoCollection = useCallback(() => {
     push(`/explore/collection/${uuid}`)
   }, [push, uuid])
+
   return (
     <>
       <Flex
@@ -112,32 +113,35 @@ const Item: React.FC<SpecialAssets> = ({
                   textOverflow="ellipsis"
                   whiteSpace="nowrap"
                   overflow="hidden"
+                  mb="auto"
                 >
                   {tokenClass.name}
                 </Box>
-                <Flex mt="auto">
-                  <Avatar
-                    src={
-                      tokenClass.issuer_info.avatar_url === null
-                        ? ''
-                        : tokenClass.issuer_info.avatar_url
-                    }
-                    isVerified={tokenClass?.verified_info?.is_verified}
-                    resizeScale={100}
-                    size="25px"
-                  />
-                  <Box
-                    fontSize="12px"
-                    textOverflow="ellipsis"
-                    whiteSpace="nowrap"
-                    overflow="hidden"
-                    w="calc(100% - 30px)"
-                    lineHeight="25px"
-                    ml="5px"
-                  >
-                    {tokenClass.issuer_info.name}
-                  </Box>
-                </Flex>
+                <Link to={`/issuer/${tokenClass.issuer_info.uuid}`}>
+                  <Flex>
+                    <Avatar
+                      src={
+                        tokenClass.issuer_info.avatar_url === null
+                          ? ''
+                          : tokenClass.issuer_info.avatar_url
+                      }
+                      isVerified={tokenClass?.verified_info?.is_verified}
+                      resizeScale={100}
+                      size="25px"
+                    />
+                    <Box
+                      fontSize="12px"
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                      overflow="hidden"
+                      w="calc(100% - 30px)"
+                      lineHeight="25px"
+                      ml="5px"
+                    >
+                      {tokenClass.issuer_info.name}
+                    </Box>
+                  </Flex>
+                </Link>
               </Flex>
             </Grid>
           </Link>

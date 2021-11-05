@@ -5,17 +5,18 @@ import { InfiniteList } from '../InfiniteList'
 import { Query, ClassSortType as SortType } from '../../models'
 import {
   Box,
-  Flex,
-  Issuer,
   Limited,
   NFTCard,
   Center,
   Button,
+  Grid,
+  Avatar,
 } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { TokenClass } from '../../models/class-list'
 import { Link, useHistory } from 'react-router-dom'
 import { ReactComponent as EmptySvg } from '../../assets/svg/follow-empty.svg'
+import { isSupportWebp } from '../../utils'
 
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { t, i18n } = useTranslation('translations')
@@ -38,28 +39,44 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
         type={token.renderer_type}
         hasCardback={token.card_back_content_exist}
         w="full"
+        resizeScale={500}
+        imageProps={{
+          webp: isSupportWebp(),
+        }}
         onClick={gotoClass}
       />
-      <Flex justify="space-between">
-        <Issuer
-          name={token.issuer_info?.name ?? ''}
+      <Grid
+        templateColumns="25px calc(100% - 25px - 40px) 35px"
+        onClick={gotoIssuer}
+      >
+        <Avatar
           src={
             token.issuer_info?.avatar_url === null
               ? ''
               : token.issuer_info?.avatar_url
           }
+          resizeScale={50}
+          webp={isSupportWebp()}
           isVerified={token.verified_info?.is_verified}
-          size="25px"
-          onClick={gotoIssuer}
-          mr="5px"
         />
+        <Box
+          fontSize="12px"
+          fontWeight="300"
+          lineHeight="25px"
+          whiteSpace="nowrap"
+          textOverflow="ellipsis"
+          overflow="hidden"
+          px="5px"
+        >
+          {token.issuer_info?.name}
+        </Box>
         <Limited
           count={0}
           limitedText={t('common.limit.limit')}
           unlimitedText={t('common.limit.unlimit')}
           my="auto"
         />
-      </Flex>
+      </Grid>
     </Box>
   )
 }
