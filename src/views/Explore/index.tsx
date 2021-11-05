@@ -4,6 +4,7 @@ import { Lite } from './components/lite'
 import { useState } from 'react'
 import { MainContainer } from '../../styles'
 import { Pro } from './components/pro'
+import { HiddenBar } from '../../components/HiddenBar'
 
 export const Explore: React.FC = () => {
   const [isLite, setIsLite] = useState(false)
@@ -37,6 +38,7 @@ export const Explore: React.FC = () => {
       </Flex>
 
       {isLite ? <Lite /> : <Pro />}
+      <HiddenBar />
     </MainContainer>
   )
 }
