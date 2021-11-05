@@ -87,9 +87,11 @@ export const NftSortOrKindList: React.FC<{
               rounded="6px"
               whiteSpace="nowrap"
               fontSize="12px"
+              fontWeight="normal"
               _selected={{
                 bg: '#f6f6f6',
                 color: '#5065E5',
+                fontWeight: 'bold',
               }}
             >
               {sort.label}
@@ -109,11 +111,11 @@ export const NftSortOrKindList: React.FC<{
           {types.map((type, i) => (
             <Tab
               key={i}
-              fontWeight="200"
               fontSize="24px"
               px="0"
               py="0"
               mr="15px"
+              fontWeight="normal"
               _selected={{ fontWeight: '500' }}
             >
               {type.label}

@@ -79,7 +79,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
       </Grid>
       {token.product_price && (
         <Box fontWeight="500" fontSize="12px" mt="7px">
-          {token.product_price}
+          ¥{token.product_price}
         </Box>
       )}
     </Box>

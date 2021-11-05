@@ -27,8 +27,10 @@ const tabProps: TabProps = {
   rounded: '6px',
   mr: '22px',
   whiteSpace: 'nowrap',
+  fontWeight: 'normal',
   _selected: {
     bg: '#f6f6f6',
+    fontWeight: 'bold',
   },
 }
 
@@ -62,7 +64,6 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
       />
       <Box
         fontSize="16px"
-        fontWeight="600"
         onClick={gotoClass}
         mt="15px"
         mb="10px"
@@ -106,7 +107,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
       </Grid>
       {token.product_price && (
         <Box fontWeight="500" fontSize="12px" mt="7px">
-          {token.product_price}
+          ¥{token.product_price}
         </Box>
       )}
     </Box>
