@@ -2,10 +2,12 @@ import { Flex } from '@mibao-ui/components'
 import { Box, Image } from '@chakra-ui/react'
 import Logo from '../../../assets/share/logo.png'
 import QRCode from 'qrcode.react'
+import { useTranslation } from 'react-i18next'
 
 export const Footer: React.FC<{
   url: string
 }> = ({ url }) => {
+  const { t } = useTranslation('translations')
   return (
     <Flex justify="space-between" mt="auto">
       <Image src={Logo} w="40px" h="40px" />
@@ -18,8 +20,8 @@ export const Footer: React.FC<{
         my="auto"
         lineHeight="17px"
       >
-        <Box color="#777E90">长按识别二维码</Box>
-        一起欣赏这份数字藏品
+        <Box color="#777E90">{t('common.share.poster.desc-1')}</Box>
+        {t('common.share.poster.desc-2')}
       </Box>
       <QRCode
         value={url}

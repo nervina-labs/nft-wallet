@@ -7,15 +7,19 @@ import {
   DrawerOverlay,
   Flex,
   Image,
+  useClipboard,
 } from '@chakra-ui/react'
 import CopyLinkPath from '../../assets/share/icons/copy-link.svg'
 import CreatePosterPath from '../../assets/share/icons/create-poster.svg'
 import LoadingPath from '../../assets/share/icons/loading.svg'
 import DownloadPath from '../../assets/share/icons/download.svg'
 import MorePath from '../../assets/share/icons/more.svg'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Nft, NftProps } from './components/posters/nft'
 import { useHtml2Canvas } from '../../hooks/useHtml2Canvas'
+import { useTranslation } from 'react-i18next'
+import { downloadImage } from '../../utils'
+import { useToast } from '../../hooks/useToast'
 
 enum PosterState {
   None,
@@ -43,28 +47,8 @@ export const Share: React.FC<ShareProps> = ({
   shareUrl,
   poster,
 }) => {
+  const { t } = useTranslation('translations')
   const [posterState, setPosterState] = useState(PosterState.None)
-  const { posterIcon, posterText, posterAction } = useMemo(() => {
-    if (posterState === PosterState.None) {
-      return {
-        posterIcon: CreatePosterPath,
-        posterText: '生成分享图',
-        posterAction: () => setPosterState(PosterState.Creating),
-      }
-    }
-    if (posterState === PosterState.Creating) {
-      return {
-        posterIcon: LoadingPath,
-        posterText: '生成中',
-        posterAction: undefined,
-      }
-    }
-    return {
-      posterIcon: DownloadPath,
-      posterText: '下载',
-      posterAction: undefined,
-    }
-  }, [posterState])
   const [el, setEl] = useState<HTMLDivElement | null>(null)
   const { imgSrc } = useHtml2Canvas(el, {
     enable: posterState === PosterState.Creating,
@@ -78,38 +62,79 @@ export const Share: React.FC<ShareProps> = ({
     poster &&
     poster.type === PosterType.Nft &&
     posterState === PosterState.Creating
-
+  const toast = useToast()
+  const { onCopy } = useClipboard(shareUrl)
+  const onDownload = useCallback(() => {
+    downloadImage(imgSrc, 'poster.png')
+  }, [imgSrc])
+  const onCopyShareUrl = useCallback(() => {
+    onCopy()
+    toast(t('common.share.copied'))
+  }, [onCopy, t, toast])
+  const onShare = useCallback(() => {
+    if (!navigator?.share) return
+    navigator.share({
+      url: shareUrl,
+    })
+  }, [shareUrl])
+  const { posterIcon, posterText, posterAction } = useMemo(() => {
+    if (posterState === PosterState.None) {
+      return {
+        posterIcon: CreatePosterPath,
+        posterText: t('common.share.icons.create-poster'),
+        posterAction: () => setPosterState(PosterState.Creating),
+      }
+    }
+    if (posterState === PosterState.Creating) {
+      return {
+        posterIcon: LoadingPath,
+        posterText: t('common.share.icons.creating'),
+        posterAction: undefined,
+      }
+    }
+    return {
+      posterIcon: DownloadPath,
+      posterText: t('common.share.icons.download'),
+      posterAction: onDownload,
+    }
+  }, [onDownload, posterState, t])
   const items = useMemo(
-    () => [
-      {
-        icon: posterIcon,
-        text: posterText,
-        action: posterAction,
-      },
-      {
-        icon: CopyLinkPath,
-        text: '复制',
-        action: undefined,
-      },
-      {
-        icon: MorePath,
-        text: '更多',
-        action: undefined,
-      },
-    ],
-    [posterAction, posterIcon, posterText]
+    () =>
+      [
+        {
+          icon: posterIcon,
+          text: posterText,
+          action: posterAction,
+        },
+        {
+          icon: CopyLinkPath,
+          text: t('common.share.icons.copy'),
+          action: onCopyShareUrl,
+        },
+      ].concat(
+        navigator?.share !== undefined
+          ? [
+              {
+                icon: MorePath,
+                text: t('common.share.icons.more'),
+                action: onShare,
+              },
+            ]
+          : []
+      ),
+    [onCopyShareUrl, onShare, posterAction, posterIcon, posterText, t]
   )
 
   return (
     <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay />
-      {showPosterEl ? (
-        <Box position="fixed" top="0" left="0" opacity="0">
-          <Nft {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
-        </Box>
-      ) : null}
-
       <DrawerContent bg="rgba(0, 0, 0, 0)" maxH="unset" h="100%">
+        {showPosterEl ? (
+          <Box position="fixed" top="0" left="0" opacity="0">
+            <Nft {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
+          </Box>
+        ) : null}
+
         {imgSrc ? (
           <Image
             src={imgSrc}
@@ -140,10 +165,12 @@ export const Share: React.FC<ShareProps> = ({
             {items.map((item, i) => (
               <Flex
                 direction="column"
-                ml="20px"
+                ml="10px"
                 minW="56px"
                 key={i}
                 onClick={item.action}
+                w="80px"
+                cursor="pointer"
               >
                 <Image
                   w="56px"
@@ -152,6 +179,7 @@ export const Share: React.FC<ShareProps> = ({
                   rounded="8px"
                   p="12px"
                   src={item.icon}
+                  mx="auto"
                 />
                 <Box
                   fontSize="12px"

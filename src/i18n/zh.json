@@ -18,7 +18,19 @@
       },
       "share": {
         "copy": "点击复制链接并分享至社交媒体",
-        "close": "关闭"
+        "close": "关闭",
+        "copied": "复制成功",
+        "icons": {
+          "copy": "复制链接",
+          "download": "下载",
+          "more": "更多",
+          "create-poster": "生成分享图",
+          "creating": "生成中"
+        },
+        "poster": {
+          "desc-1": "长按识别二维码",
+          "desc-2": "一起欣赏这份数字藏品"
+        }
       },
       "limit": {
         "limit": "限量",

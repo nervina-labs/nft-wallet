@@ -18,7 +18,19 @@
       },
       "share": {
         "copy": "Click to copy the link and share to social media",
-        "close": "Close"
+        "close": "Close",
+        "copied": "Copied",
+        "icons": {
+          "copy": "Copy Link",
+          "download": "Downloads",
+          "more": "More",
+          "create-poster": "Create Poster",
+          "creating": "Creating"
+        },
+        "poster": {
+          "desc-1": "Scanning QR code",
+          "desc-2": "Enjoy the digital collection"
+        }
       },
       "limit": {
         "limit": "Limited",
