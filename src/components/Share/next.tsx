@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from '@mibao-ui/components'
 import {
   Box,
@@ -65,7 +66,9 @@ export const Share: React.FC<ShareProps> = ({
     }
   }, [posterState])
   const [el, setEl] = useState<HTMLDivElement | null>(null)
-  const { imgSrc } = useHtml2Canvas(el)
+  const { imgSrc } = useHtml2Canvas(el, {
+    enable: posterState === PosterState.Creating,
+  })
   useEffect(() => {
     if (imgSrc) {
       setPosterState(PosterState.Created)
@@ -101,7 +104,7 @@ export const Share: React.FC<ShareProps> = ({
     <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay />
       {showPosterEl ? (
-        <Box position="fixed" top="0" left="0" opacity="0" pointerEvents="none">
+        <Box position="fixed" top="0" left="0" opacity="0">
           <Nft {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
         </Box>
       ) : null}
@@ -116,7 +119,6 @@ export const Share: React.FC<ShareProps> = ({
             transform="translateX(-50%)"
             h="calc(100% - 231px)"
             maxW="500px"
-            maxWidth="100%"
             objectFit="contain"
             zIndex={'calc(var(--chakra-zIndices-modal) + 1)'}
             p="20px"

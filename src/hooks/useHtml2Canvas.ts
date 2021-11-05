@@ -10,6 +10,7 @@ export function useHtml2Canvas(
   const [imgSrc, setImgSrc] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<any>()
+
   useEffect(() => {
     const scrollTop =
       document.documentElement.scrollTop || document.body.scrollTop
