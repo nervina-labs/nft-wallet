@@ -12,11 +12,12 @@ import { RoutePath } from '../../routes'
 import { useAPI } from '../../hooks/useAccount'
 import { Issuer as RawIssuer, Text } from '@mibao-ui/components'
 import { InfiniteList } from '../../components/InfiniteList'
-import { useHistory } from 'react-router'
+import { useHistory, useRouteMatch } from 'react-router'
 
 interface IssuerProps {
   issuer: IIssuer
   afterToggle?: (params: any) => Promise<any>
+  isHome: boolean
 }
 
 const IssuerContainer = styled.div`
@@ -33,11 +34,12 @@ const IssuerContainer = styled.div`
   }
 `
 
-const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
+const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle, isHome }) => {
   const isBanned = issuer.is_banned || issuer.is_issuer_banned
   const [t] = useTranslation('translations')
   const history = useHistory()
   const href = `${RoutePath.Issuer}/${issuer.uuid}`
+
   return (
     <IssuerContainer>
       <RawIssuer
@@ -58,11 +60,13 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle }) => {
           history.push(href)
         }}
       />
-      <Follow
-        uuid={issuer.uuid}
-        followed={issuer.issuer_followed}
-        afterToggle={afterToggle}
-      />
+      {isHome ? (
+        <Follow
+          uuid={issuer.uuid}
+          followed={issuer.issuer_followed}
+          afterToggle={afterToggle}
+        />
+      ) : null}
     </IssuerContainer>
   )
 }
@@ -90,6 +94,9 @@ export const IssuerList: React.FC<IssuerListProps> = ({
     },
     [api, address]
   )
+
+  const matchHome = useRouteMatch(RoutePath.NFTs)
+  const isHome = !!matchHome?.isExact
 
   const [count, setCount] = useState<number>()
 
@@ -121,6 +128,7 @@ export const IssuerList: React.FC<IssuerListProps> = ({
               issuer={issuer}
               key={issuer.issuer_id || `${i}.${j}`}
               afterToggle={refetch}
+              isHome={isHome}
             />
           ))
         }}

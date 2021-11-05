@@ -12,16 +12,12 @@ import { Loading } from '../Loading'
 import { useTranslation } from 'react-i18next'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import styled from 'styled-components'
-import { Grid } from '@mibao-ui/components'
+import { Box, Grid } from '@mibao-ui/components'
 
 const H4 = styled.h4`
   color: rgba(0, 0, 0, 0.6);
   text-align: center;
   margin: 16px 0;
-`
-
-const GridItem = styled.div`
-  content-visibility: auto;
 `
 
 export interface InfiniteListProps<
@@ -55,6 +51,50 @@ export interface InfiniteListProps<
   ) => React.ReactNode
   enableQuery?: boolean
   columnCount?: number
+  gap?: string
+}
+
+interface GridsProps<TQueryFnData = unknown, TData = TQueryFnData> {
+  data: InfiniteData<TData> | undefined
+  renderItems: (
+    item: TData,
+    index: number,
+    refetch?: () => Promise<void>
+  ) => React.ReactNode
+  columnCount: number
+  gap?: string
+}
+
+function Grids<TQueryFnData = unknown, TData = TQueryFnData>({
+  data,
+  renderItems,
+  columnCount,
+  gap = '10px',
+}: GridsProps<TQueryFnData, TData>) {
+  const elements: React.ReactNode[] = useMemo(
+    () => data?.pages.map((page, i) => renderItems(page, i)).flat() ?? [],
+    [data?.pages, renderItems]
+  )
+
+  const columns: React.ReactNode[][] = useMemo(
+    () =>
+      elements.reduce<React.ReactNode[][]>((acc, child, i) => {
+        acc[i % columnCount] = [...acc[i % columnCount], child]
+        return acc
+      }, new Array(columnCount).fill([])) ?? [],
+    [columnCount, elements]
+  )
+
+  return (
+    <Grid
+      templateColumns={`repeat(${columnCount}, calc(calc(100% - ${gap}) / ${columnCount}))`}
+      gap={gap}
+    >
+      {columns.map((column, i) => (
+        <Box key={i}>{column}</Box>
+      ))}
+    </Grid>
+  )
 }
 
 export function InfiniteList<
@@ -78,6 +118,7 @@ export function InfiniteList<
   pullDownToRefreshThreshold = 80,
   enableQuery,
   columnCount = 1,
+  gap = '10px',
 }: InfiniteListProps<TQueryFnData, TError, TData, TQueryKey>) {
   const [t] = useTranslation('translations')
   const {
@@ -109,20 +150,6 @@ export function InfiniteList<
   const dataLength = useMemo(() => {
     return calcDataLength(data)
   }, [data, calcDataLength])
-
-  const elements: React.ReactNode[] = useMemo(
-    () => data?.pages.map((page, i) => renderItems(page, i)).flat() ?? [],
-    [data?.pages, renderItems]
-  )
-
-  const columns: React.ReactNode[][] = useMemo(
-    () =>
-      elements.reduce<React.ReactNode[][]>((acc, child, i) => {
-        acc[i % columnCount] = [...acc[i % columnCount], child]
-        return acc
-      }, new Array(columnCount).fill([])) ?? [],
-    [columnCount, elements]
-  )
 
   const [isRefetching, setIsRefetching] = useState(false)
 
@@ -164,11 +191,22 @@ export function InfiniteList<
           loader={loader ?? <Loading />}
           endMessage={<H4>{dataLength <= 5 ? ' ' : noMoreElement}</H4>}
         >
-          <Grid templateColumns={`repeat(${columnCount}, 1fr)`} gap="10px">
-            {columns.map((column) => (
-              <GridItem>{column}</GridItem>
-            ))}
-          </Grid>
+          {columnCount === 1 ? (
+            data?.pages?.map((group, i) => {
+              return (
+                <React.Fragment key={i}>
+                  {renderItems(group, i, refresh)}
+                </React.Fragment>
+              )
+            })
+          ) : (
+            <Grids
+              renderItems={renderItems}
+              columnCount={columnCount}
+              data={data}
+              gap={gap}
+            />
+          )}
           {status === 'success' && dataLength === 0
             ? emptyElement ?? <H4>{t('issuer.no-data')}</H4>
             : null}

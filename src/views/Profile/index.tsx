@@ -21,11 +21,11 @@ import { useSetServerProfile } from '../../hooks/useProfile'
 import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { DrawerImage } from './DrawerImage'
-import { HolderAvatar } from '../../components/HolderAvatar'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { Input, Select } from './Input'
-import { Stack, Center, Button, SkeletonCircle } from '@mibao-ui/components'
+import { Stack, Center, Button, Avatar } from '@mibao-ui/components'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { getNFTQueryParams } from '../../utils'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -35,28 +35,10 @@ const Container = styled(MainContainer)`
   .main {
     flex: 1;
 
-    .avatar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      -webkit-tap-highlight-color: transparent;
-
-      margin-top: 25px;
-      margin-bottom: 25px;
-      flex-direction: column;
-      cursor: pointer;
-
-      img {
-        display: block;
-        width: 72px;
-        height: 72px;
-      }
-
-      .cam {
-        position: relative;
-        top: -10px;
-        z-index: 10;
-      }
+    .cam {
+      position: relative;
+      top: -10px;
+      z-index: 10;
     }
   }
 
@@ -106,7 +88,7 @@ export const Profile: React.FC = () => {
     {}
   )
 
-  const { data: user, isFetching, refetch } = useQuery(
+  const { data: user, refetch } = useQuery(
     [Query.Profile, address],
     async () => {
       const profile = await api.getProfile()
@@ -210,24 +192,17 @@ export const Profile: React.FC = () => {
         right={<div />}
       />
       <section className="main">
-        <div className="avatar">
-          <Center
-            flexDirection="column"
+        <Center flexDirection="column" my="24px">
+          <Avatar
+            src={user?.avatar_url || ''}
+            type={user?.avatar_type}
+            resizeScale={200}
+            size="72px"
             onClick={() => setShowAvatarAction(true)}
-          >
-            {isFetching ? (
-              <SkeletonCircle size="72px" />
-            ) : (
-              <HolderAvatar
-                tid={user?.avatar_tid}
-                avatar={user?.avatar_url}
-                avatarType={user?.avatar_type}
-                size={72}
-              />
-            )}
-            <CameraSvg className="cam" />
-          </Center>
-        </div>
+            srcQueryParams={getNFTQueryParams(user?.avatar_tid, i18n.language)}
+          />
+          <CameraSvg className="cam" />
+        </Center>
         <Stack spacing="12px" px="20px" mb="90px">
           <Input
             label={t('profile.username')}
