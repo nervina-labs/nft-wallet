@@ -4,8 +4,9 @@ import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import { useAPI } from '../../../hooks/useAccount'
 import { Query } from '../../../models'
-import styled from 'styled-components'
-import { Skeleton } from '@mibao-ui/components'
+import { Image, Grid, Skeleton, GridItem } from '@mibao-ui/components'
+import styled from '@emotion/styled'
+import { useCallback } from 'react'
 
 const Container = styled.div`
   .swiper {
@@ -37,6 +38,13 @@ export const Banner: React.FC = () => {
       refetchOnMount: false,
     }
   )
+  const gotoLink = useCallback((link: string) => {
+    return () => {
+      if (link) {
+        window.location.href = link
+      }
+    }
+  }, [])
 
   const banners = data?.['Notification::Banner']
 
@@ -64,11 +72,71 @@ export const Banner: React.FC = () => {
                 }}
                 rel="noopener noreferrer"
                 href={banner.link}
-              ></a>
+              />
             </SwiperSlide>
           ))}
         </Swiper>
       </Skeleton>
+
+      <Grid
+        templateColumns="repeat(2, 1fr)"
+        h="190px"
+        w="full"
+        py="10px"
+        px="20px"
+        gap="10px"
+      >
+        {data?.['Notification::News']?.[0] ? (
+          <GridItem
+            rowSpan={2}
+            colSpan={1}
+            overflow="hidden"
+            rounded="22px"
+            roundedBottomRight="0"
+            onClick={gotoLink(data['Notification::News'][0].link)}
+          >
+            <Image
+              src={data['Notification::News'][0].content}
+              w="full"
+              h="full"
+            />
+          </GridItem>
+        ) : null}
+
+        {data?.['Notification::Interview']?.[0] ? (
+          <GridItem
+            rowSpan={1}
+            colSpan={1}
+            overflow="hidden"
+            rounded="22px"
+            roundedTopLeft="0"
+            onClick={gotoLink(data['Notification::Interview'][0].link)}
+          >
+            <Image
+              src={data['Notification::Interview'][0].content}
+              w="full"
+              h="full"
+            />
+          </GridItem>
+        ) : null}
+
+        {data?.['Notification::Activity']?.[0] ? (
+          <GridItem
+            rowSpan={1}
+            colSpan={1}
+            overflow="hidden"
+            rounded="22px"
+            roundedBottomLeft="0"
+            onClick={gotoLink(data['Notification::Activity'][0]?.link)}
+          >
+            <Image
+              src={data['Notification::Activity'][0].content}
+              w="full"
+              h="full"
+            />
+          </GridItem>
+        ) : null}
+      </Grid>
     </Container>
   )
 }
