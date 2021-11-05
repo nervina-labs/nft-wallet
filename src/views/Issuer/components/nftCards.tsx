@@ -24,6 +24,7 @@ import { useLike } from '../../../hooks/useLikeStatus'
 import { IssuerTokenClass } from '../../../models/issuer'
 import { isSupportWebp } from '../../../utils'
 import FALLBACK from '../../../assets/svg/fallback.svg'
+import { useShareImage } from '../hooks/useShareImage'
 
 interface CardProps {
   token: IssuerTokenClass
@@ -105,6 +106,7 @@ export const NftCards: React.FC = () => {
   )
   const [tabCountInfo] = useAtom(TabCountInfo)
   const clientIsSupportWebp = useMemo(() => isSupportWebp(), [])
+  const [, setShareImage] = useShareImage()
 
   return (
     <Box w="full">
@@ -139,6 +141,11 @@ export const NftCards: React.FC = () => {
                   ) ?? 0
                 }
                 columnCount={2}
+                onDataChange={(group) => {
+                  setShareImage(
+                    group?.pages[0].token_classes[0].bg_image_url ?? ''
+                  )
+                }}
                 renderItems={(group, i) => {
                   return group.token_classes.map((token, j: number) => (
                     <AspectRatio

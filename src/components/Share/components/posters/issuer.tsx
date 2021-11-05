@@ -1,0 +1,117 @@
+import { Box, Flex, Image } from '@chakra-ui/react'
+import { useRef } from 'react'
+import UserBgPath from '../../../../assets/share/bg/user.png'
+import { usePosterLoader } from '../../hooks/usePosterLoader'
+import { PosterProps } from '../../poster.interface'
+import { Footer } from '../footer'
+import AvatarVerifiedPath from '../../../../assets/share/icons/avatar-verified.png'
+import { useUrlToBase64 } from '../../../../hooks/useUrlToBase64'
+import { useTranslation } from 'react-i18next'
+import { useTextEllipsis } from '../../hooks/useTextEllipsis'
+
+export interface IssuerProps {
+  username: string
+  avatarUrl: string
+  isVerified?: boolean
+  verifiedTitle?: string
+  desc: string
+  follow: string | number
+  like: string | number
+  coverImage: string
+}
+
+export const Issuer: React.FC<IssuerProps & PosterProps> = ({
+  isVerified,
+  verifiedTitle,
+  username,
+  avatarUrl,
+  shareUrl,
+  follow,
+  like,
+  desc,
+  coverImage,
+  onLoaded,
+}) => {
+  const { t } = useTranslation('translations')
+  const ref = useRef<HTMLDivElement>(null)
+  const { data: coverImageUrl, isLoading: coverImageLoading } = useUrlToBase64(
+    coverImage ?? ''
+  )
+  const { data: issuerAvatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
+    avatarUrl ?? ''
+  )
+  usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)
+  const [issuerName] = useTextEllipsis(username, 300)
+  const [verifiedTitleEllipsis] = useTextEllipsis(verifiedTitle ?? '', 300)
+  const [descEllipsis] = useTextEllipsis(desc ?? '', 900)
+
+  return (
+    <Box position="relative" w="340px" h="490px" ref={ref}>
+      <Image
+        src={coverImageUrl}
+        w="full"
+        h="auto"
+        left="0"
+        top="0"
+        position="absolute"
+        zIndex={0}
+      />
+      <Image
+        src={UserBgPath}
+        w="full"
+        h="auto"
+        left="0"
+        bottom="0"
+        position="absolute"
+        zIndex={0}
+      />
+      <Flex
+        position="absolute"
+        zIndex={1}
+        left="0"
+        bottom="0"
+        w="full"
+        h="308px"
+        py="15px"
+        px="20px"
+        direction="column"
+      >
+        <Box position="relative" w="50px" h="50px">
+          <Image
+            src={issuerAvatarUrl}
+            w="50px"
+            h="50px"
+            rounded="100%"
+            objectFit="cover"
+          />
+          {isVerified && (
+            <Image
+              src={AvatarVerifiedPath}
+              w="10px"
+              h="10px"
+              bottom="0"
+              right="0"
+              position="absolute"
+            />
+          )}
+        </Box>
+        <Box fontSize="14px" fontWeight="500" mt="5px">
+          {issuerName}
+        </Box>
+        <Box mt="5px" fontSize="12px" color="#777E90">
+          {verifiedTitleEllipsis}
+        </Box>
+        <Box mt="15px" fontSize="12px" fontWeight="200">
+          <Box as="span" mr="5px">
+            {t('issuer.follower')}: {follow}
+          </Box>
+          {t('issuer.like')}: {like}
+        </Box>
+        <Box fontSize="12px" mt="10px">
+          {descEllipsis}
+        </Box>
+        {shareUrl && <Footer url={shareUrl} />}
+      </Flex>
+    </Box>
+  )
+}

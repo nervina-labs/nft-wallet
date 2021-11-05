@@ -20,6 +20,7 @@ import { useHtml2Canvas } from '../../hooks/useHtml2Canvas'
 import { useTranslation } from 'react-i18next'
 import { downloadImage } from '../../utils'
 import { useToast } from '../../hooks/useToast'
+import { Issuer, IssuerProps } from './components/posters/issuer'
 
 enum PosterState {
   None,
@@ -29,16 +30,24 @@ enum PosterState {
 
 export enum PosterType {
   Nft = 'nft',
+  Issuer = 'issuer',
+}
+
+export interface NftPoster {
+  type: PosterType.Nft
+  data: NftProps
+}
+
+export interface IssuerPoster {
+  type: PosterType.Issuer
+  data: IssuerProps
 }
 
 export interface ShareProps {
   isOpen: boolean
   onClose: () => void
   shareUrl: string
-  poster?: {
-    type: PosterType.Nft
-    data: NftProps
-  }
+  poster?: NftPoster | IssuerPoster
 }
 
 export const Share: React.FC<ShareProps> = ({
@@ -58,10 +67,6 @@ export const Share: React.FC<ShareProps> = ({
       setPosterState(PosterState.Created)
     }
   }, [imgSrc])
-  const showPosterEl =
-    poster &&
-    poster.type === PosterType.Nft &&
-    posterState === PosterState.Creating
   const toast = useToast()
   const { onCopy } = useClipboard(shareUrl)
   const onDownload = useCallback(() => {
@@ -124,6 +129,7 @@ export const Share: React.FC<ShareProps> = ({
       ),
     [onCopyShareUrl, onShare, posterAction, posterIcon, posterText, t]
   )
+  const showPosterEl = poster && posterState === PosterState.Creating
 
   return (
     <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
@@ -131,7 +137,12 @@ export const Share: React.FC<ShareProps> = ({
       <DrawerContent bg="rgba(0, 0, 0, 0)" maxH="unset" h="100%">
         {showPosterEl ? (
           <Box position="fixed" top="0" left="0" opacity="0">
-            <Nft {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
+            {poster.type === PosterType.Nft && (
+              <Nft {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
+            )}
+            {poster.type === PosterType.Issuer && (
+              <Issuer {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
+            )}
           </Box>
         ) : null}
 

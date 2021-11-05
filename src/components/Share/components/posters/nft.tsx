@@ -8,6 +8,7 @@ import { useUrlToBase64 } from '../../../../hooks/useUrlToBase64'
 import { PosterProps } from '../../poster.interface'
 import { useRef } from 'react'
 import { usePosterLoader } from '../../hooks/usePosterLoader'
+import { useTextEllipsis } from '../../hooks/useTextEllipsis'
 
 export interface NftProps {
   bgImgUrl: string
@@ -38,6 +39,8 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
   const { data: avatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
     issuer.avatarUrl ?? ''
   )
+  const [nftName] = useTextEllipsis(name, 150)
+  const [issuerName] = useTextEllipsis(issuer.name, 240)
   const ref = useRef<HTMLDivElement>(null)
   usePosterLoader(ref.current, onLoaded, bgImageUrlLoading || avatarUrlLoading)
 
@@ -66,7 +69,7 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
           />
           <Flex justify="space-between" mt="16px">
             <Box fontWeight="600" fontSize="16px">
-              {name}
+              {nftName}
             </Box>
             <Limited
               count={limited.count}
@@ -85,14 +88,16 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
                 rounded="100%"
                 objectFit="cover"
               />
-              <Image
-                src={AvatarVerifiedPath}
-                w="10px"
-                h="10px"
-                bottom="0"
-                right="0"
-                position="absolute"
-              />
+              {issuer.isVerified && (
+                <Image
+                  src={AvatarVerifiedPath}
+                  w="10px"
+                  h="10px"
+                  bottom="0"
+                  right="0"
+                  position="absolute"
+                />
+              )}
             </Box>
             <Box
               color="#777E90"
@@ -103,7 +108,7 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
               lineHeight="25px"
               ml="10px"
             >
-              {issuer.name}
+              {issuerName}
             </Box>
           </Flex>
         </Box>
