@@ -1,7 +1,7 @@
 import { Box, Limited } from '@mibao-ui/components'
 import { Flex, Image } from '@chakra-ui/react'
 import NftBgPath from '../../../../assets/share/bg/nft.png'
-import AvatarVerifiedPath from '../../../../assets/share/icons/avatar-verified.svg'
+import AvatarVerifiedPath from '../../../../assets/share/icons/avatar-verified.png'
 import { useTranslation } from 'react-i18next'
 import { Footer } from '../footer'
 import { useUrlToBase64 } from '../../../../hooks/useUrlToBase64'
@@ -57,7 +57,13 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
         direction="column"
       >
         <Box bg="white" w="full" rounded="10%" p="20px">
-          <Image src={bgImageUrl} rounded="10%" w="260px" h="260px" />
+          <Image
+            src={bgImageUrl}
+            rounded="10%"
+            w="260px"
+            h="260px"
+            objectFit="cover"
+          />
           <Flex justify="space-between" mt="16px">
             <Box fontWeight="600" fontSize="16px">
               {name}

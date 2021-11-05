@@ -1,6 +1,6 @@
 import { Flex } from '@mibao-ui/components'
 import { Box, Image } from '@chakra-ui/react'
-import Logo from '../../../assets/share/logo.svg'
+import Logo from '../../../assets/share/logo.png'
 import QRCode from 'qrcode.react'
 
 export const Footer: React.FC<{
@@ -8,7 +8,7 @@ export const Footer: React.FC<{
 }> = ({ url }) => {
   return (
     <Flex justify="space-between" mt="auto">
-      <Image src={Logo} />
+      <Image src={Logo} w="40px" h="40px" />
 
       <Box
         fontSize="12px"
