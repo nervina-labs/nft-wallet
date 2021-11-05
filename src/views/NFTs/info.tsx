@@ -20,6 +20,7 @@ const InfoContainer = styled(Center)`
   padding-top: 0;
   flex-direction: row;
   text-align: center;
+  margin-top: 8px;
 `
 
 export const Info: React.FC<{
@@ -84,6 +85,7 @@ export const Info: React.FC<{
             fontSize="16px"
             fontWeight="bold"
             isTruncated
+            w="100%"
           >
             {userName}
           </Heading>
@@ -93,6 +95,7 @@ export const Info: React.FC<{
             color="#777E90"
             fontSize="12px"
             whiteSpace="pre-wrap"
+            w="100%"
           >
             {description}
           </Text>
