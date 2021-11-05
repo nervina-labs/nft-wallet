@@ -670,4 +670,13 @@ export class ServerWalletAPI implements NFTWalletAPI {
       }
     )
   }
+
+  async getUrlBase64(url: string) {
+    return await this.axios.get<{ result: string }>('/image_forwardings', {
+      params: {
+        url,
+        type: 'base64',
+      },
+    })
+  }
 }

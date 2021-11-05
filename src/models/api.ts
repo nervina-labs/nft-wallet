@@ -222,4 +222,6 @@ export interface NFTWalletAPI {
       limit?: number
     }
   ) => Promise<AxiosResponse<TransactionLogResponse>>
+
+  getUrlBase64: (url: string) => Promise<AxiosResponse<{ result: string }>>
 }

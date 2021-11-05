@@ -136,6 +136,7 @@ export const NftDetail: React.FC<{
           <Box>
             <NftDetailName>{detail?.name}</NftDetailName>
             <Limited
+              serialNumber={(detail as NFTDetail)?.n_token_id}
               count={detail?.total ?? 0}
               limitedText={t('common.limit.limit')}
               unlimitedText={t('common.limit.unlimit')}

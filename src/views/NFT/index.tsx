@@ -33,7 +33,7 @@ export const NFT: React.FC = () => {
 
   return (
     <Container>
-      <Appbar />
+      <Appbar detail={detail} />
       <Renderer detail={detail} />
       <NftDetail
         uuid={id}
