@@ -25,6 +25,7 @@ import { RoutePath } from './path'
 import { Transactions } from '../views/Transactions'
 import { lazy } from 'react'
 import { Ranking } from '../views/Ranking'
+import { ExploreAll } from '../views/ExploreAll'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -108,6 +109,12 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Explore',
     path: RoutePath.Explore,
+  },
+  {
+    component: ExploreAll,
+    exact: true,
+    key: 'ExploreAll',
+    path: RoutePath.ExploreAll,
   },
   {
     component: Shop,

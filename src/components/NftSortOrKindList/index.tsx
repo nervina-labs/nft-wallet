@@ -6,7 +6,9 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 
-export const NftSortOrKindList: React.FC = () => {
+export const NftSortOrKindList: React.FC<{
+  noTypeLine?: boolean
+}> = ({ noTypeLine: hiddenTypeLine }) => {
   const { t } = useTranslation('translations')
   const [listType, setListType] = useRouteQuerySearch<'metaverse' | 'follow'>(
     'type',
@@ -97,6 +99,7 @@ export const NftSortOrKindList: React.FC = () => {
       </Tabs>
 
       <Tabs
+        variant={hiddenTypeLine ? 'unstyled' : 'line'}
         colorScheme="black"
         onChange={onChangeTypeIndex}
         mb="20px"

@@ -69,6 +69,7 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
 }) => {
   const { isLogined } = useAccountStatus()
   const matchExplore = useRouteMatch(RoutePath.Explore)
+  const matchExploreAll = useRouteMatch(RoutePath.ExploreAll)
   const matchNFTs = useRouteMatch({
     path: RoutePath.NFTs,
     exact: true,
@@ -82,9 +83,9 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
         path: RoutePath.Explore,
       },
       {
-        routeMatch: matchExplore?.isExact,
+        routeMatch: matchExploreAll?.isExact,
         icon: <HiddenBarKindsSvg />,
-        path: RoutePath.Explore,
+        path: RoutePath.ExploreAll,
       },
       {
         routeMatch: matchNFTs?.isExact,
@@ -97,7 +98,13 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
         path: RoutePath.Apps,
       },
     ],
-    [isLogined, matchApps?.isExact, matchExplore?.isExact, matchNFTs?.isExact]
+    [
+      isLogined,
+      matchApps?.isExact,
+      matchExplore?.isExact,
+      matchExploreAll?.isExact,
+      matchNFTs?.isExact,
+    ]
   )
   const [isHide, setIsHide] = useState(false)
   useObservable(() =>

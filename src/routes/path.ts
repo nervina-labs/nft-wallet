@@ -13,6 +13,7 @@ export enum RoutePath {
   ImagePreview = '/avatar/preview',
   TakePhoto = '/avatar/camera',
   Explore = '/explore',
+  ExploreAll = '/explore/all',
   Help = '/help',
   Unipass = '/unipass',
   Apps = '/apps',
