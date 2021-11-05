@@ -12,16 +12,12 @@ import { Loading } from '../Loading'
 import { useTranslation } from 'react-i18next'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import styled from 'styled-components'
-import { Grid } from '@mibao-ui/components'
+import { Box, Grid } from '@mibao-ui/components'
 
 const H4 = styled.h4`
   color: rgba(0, 0, 0, 0.6);
   text-align: center;
   margin: 16px 0;
-`
-
-const GridItem = styled.div`
-  content-visibility: auto;
 `
 
 export interface InfiniteListProps<
@@ -175,7 +171,7 @@ export function InfiniteList<
             gap={gap}
           >
             {columns.map((column, i) => (
-              <GridItem key={i}>{column}</GridItem>
+              <Box key={i}>{column}</Box>
             ))}
           </Grid>
           {status === 'success' && dataLength === 0
