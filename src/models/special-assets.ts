@@ -1,12 +1,17 @@
 import { VipInfo } from './class-list'
-import { CardBack } from './nft'
+import { Follower } from './issuer'
+import { CardBack, NftType } from './nft'
 
 export interface SpecialAssetsToken extends VipInfo, CardBack {
   bg_image_url: string
-  issuer_name: string
+  issuer_info: {
+    name: string
+    uuid: string
+    avatar_url: string
+  } & Follower
   name: string
   uuid: string
-  renderer_type: string
+  renderer_type: NftType
   renderer: string
 }
 

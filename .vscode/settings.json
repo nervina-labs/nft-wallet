@@ -4,16 +4,18 @@
   "typescript.inlayHints.parameterNames.enabled": "all",
   "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
   "cSpell.words": [
-    "Cardback",
-    "Logined",
     "Appbar",
     "behance",
     "beian",
     "bilibili",
+    "Cardback",
     "chakra",
     "douyin",
+    "Logined",
     "mibao",
     "socia",
+    "Swiper",
+    "Webp",
     "weibo"
   ]
 }

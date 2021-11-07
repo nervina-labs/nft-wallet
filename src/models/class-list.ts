@@ -22,7 +22,7 @@ export interface VipInfo {
 }
 
 export interface ClassLikes {
-  class_likes: string
+  class_likes: number
   class_liked: boolean
 }
 
@@ -48,8 +48,8 @@ export interface TokenClass extends VipInfo, ClassLikes, CardBack {
   product_on_sale_uuid: string
   product_limit: null | number
   product_count: number
-  product_price: string
   product_price_currency: string
+  product_price?: string
 }
 
 export interface ClassList {

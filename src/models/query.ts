@@ -25,4 +25,5 @@ export enum Query {
   NftHolderList = 'nft-holder-list',
   OrderList = 'order-list',
   OrderDetail = 'OrderDetail',
+  RankingList = 'RankingList',
 }
