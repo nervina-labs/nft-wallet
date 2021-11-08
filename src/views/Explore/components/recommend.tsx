@@ -39,25 +39,27 @@ const Item: React.FC<SpecialAssets> = ({
         onClick={gotoCollection}
         cursor="pointer"
       >
-        {tokenClasses.slice(0, 3).map((t, i) => (
-          <Image
-            key={i}
-            src={t.bg_image_url === null ? '' : t.bg_image_url}
-            w="full"
-            h="full"
-            resizeScale={100}
-            webp={isSupportWebp()}
-            containerProps={{
-              w: i === 1 ? '90px' : '70px',
-              h: i === 1 ? '90px' : '70px',
-              shadow: '0px 6px 10px rgba(0, 0, 0, 0.2)',
-              rounded: '22px',
-              overflow: 'hidden',
-              mt: 'auto',
-              zIndex: i === 1 ? 2 : 1,
-            }}
-          />
-        ))}
+        {[1, 0, 2]
+          .map((i) => tokenClasses[i])
+          .map((t, i) => (
+            <Image
+              key={i}
+              src={t.bg_image_url === null ? '' : t.bg_image_url}
+              w="full"
+              h="full"
+              resizeScale={100}
+              webp={isSupportWebp()}
+              containerProps={{
+                w: i === 1 ? '90px' : '70px',
+                h: i === 1 ? '90px' : '70px',
+                shadow: '0px 6px 10px rgba(0, 0, 0, 0.2)',
+                rounded: '22px',
+                overflow: 'hidden',
+                mt: 'auto',
+                zIndex: i === 1 ? 2 : 1,
+              }}
+            />
+          ))}
         <Box
           position="absolute"
           w="full"
