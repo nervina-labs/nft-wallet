@@ -10,6 +10,13 @@ import { Link, useHistory } from 'react-router-dom'
 import { useCallback } from 'react'
 import { isSupportWebp } from '../../../utils'
 
+const RANKING_EMOJI_MAP: { [key in string]: string } = {
+  hot_sale_issuer: '🏆',
+  hot_sale_token_class: '🏆',
+  popular_issuer: '🔥',
+  popular_token_class: '🔥',
+}
+
 const Item: React.FC<RankingItem> = ({
   name,
   locales,
@@ -32,7 +39,9 @@ const Item: React.FC<RankingItem> = ({
         cursor="pointer"
         onClick={gotoRanking}
       >
-        <Box>{locales?.[i18n.language]}</Box>
+        <Box>
+          {RANKING_EMOJI_MAP[name] ?? ''} {locales?.[i18n.language]}
+        </Box>
         <Flex fontSize="12px" color="#777E90">
           <Box my="auto" mr="5px">
             {t('explore.more')}
