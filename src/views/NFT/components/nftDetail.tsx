@@ -27,6 +27,7 @@ import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 import { isSupportWebp } from '../../../utils'
+import { Tag, TagLabel } from '@chakra-ui/react'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -133,23 +134,30 @@ export const NftDetail: React.FC<{
   return (
     <Box py="20px">
       <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={2} px="20px">
-        <Flex justifyContent="space-between">
-          <Box>
+        <Grid templateColumns="calc(100% - 50px) 50px">
+          <Box pr="10px">
             <NftDetailName>{detail?.name}</NftDetailName>
-            <Limited
-              count={detail?.total ?? 0}
-              serialNumber={(detail as NFTDetail)?.n_token_id}
-              limitedText={t('common.limit.limit')}
-              unlimitedText={t('common.limit.unlimit')}
-              locale={i18n.language}
-            />
+            <Flex lineHeight="20px">
+              <Limited
+                count={detail?.total ?? 0}
+                serialNumber={(detail as NFTDetail)?.n_token_id}
+                limitedText={t('common.limit.limit')}
+                unlimitedText={t('common.limit.unlimit')}
+                locale={i18n.language}
+              />
+              {detail?.is_redeemed ? (
+                <Tag variant="outline" size="sm" colorScheme="green" ml="15px">
+                  <TagLabel>{t('exchange.redeemed')}</TagLabel>
+                </Tag>
+              ) : null}
+            </Flex>
           </Box>
           {isOwned ? (
             <Center w="50px">
               <OwnedSealSvg />
             </Center>
           ) : null}
-        </Flex>
+        </Grid>
       </SkeletonText>
 
       <Grid
