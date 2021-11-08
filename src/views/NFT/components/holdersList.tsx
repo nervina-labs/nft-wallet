@@ -35,14 +35,16 @@ export const HolderList: React.FC<{
           0
         ) ?? 0
       }
-      renderItems={(items, index) => {
-        return items.token_holder_list.map((item) => (
+      renderItems={(items, i) => {
+        return items.token_holder_list.map((item, j) => (
           <Grid
+            key={`${i}-${j}`}
             templateColumns="48px auto auto"
-            h="60px"
+            h="48px"
             lineHeight="48px"
             onClick={() => push(`/holder/${item.holder_info.address}`)}
             cursor="pointer"
+            mb="12px"
           >
             <Avatar
               src={
@@ -50,6 +52,7 @@ export const HolderList: React.FC<{
                   ? ''
                   : item.holder_info.avatar_url
               }
+              type={item.holder_info.avatar_type}
               border="2px solid #f6f6f6"
               fallbackSrc={FallbackAvatarSrc}
               srcQueryParams={{
