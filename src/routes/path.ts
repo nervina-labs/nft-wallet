@@ -18,7 +18,6 @@ export enum RoutePath {
   Unipass = '/unipass',
   Apps = '/apps',
   License = '/license',
-  Shop = '/shop',
   AddressCollector = '/addresses',
   Claim = '/claim',
   Collection = '/explore/collection',

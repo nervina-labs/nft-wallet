@@ -14,7 +14,6 @@ import { AddressCollector } from '../views/AddressCollector'
 import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
-import { Shop } from '../views/Shop'
 import { Redeem } from '../views/Reedem'
 import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
@@ -118,12 +117,6 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'ExploreAll',
     path: RoutePath.ExploreAll,
-  },
-  {
-    component: Shop,
-    exact: true,
-    key: 'Shop',
-    path: RoutePath.Shop,
   },
   {
     component: Help,
