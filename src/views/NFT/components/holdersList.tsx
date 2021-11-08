@@ -40,11 +40,12 @@ export const HolderList: React.FC<{
           <Grid
             key={`${i}-${j}`}
             templateColumns="48px auto auto"
-            h="48px"
+            h="60px"
             lineHeight="48px"
             onClick={() => push(`/holder/${item.holder_info.address}`)}
             cursor="pointer"
-            mb="12px"
+            pt="12px"
+            px="20px"
           >
             <Avatar
               src={

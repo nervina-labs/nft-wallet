@@ -98,7 +98,7 @@ const NftDetailTab: React.FC<{
         <TabPanel p="20px" opacity={isLoading ? 0 : 1}>
           {tabIndex === 1 && <NftTxLogsList uuid={uuid} isClass={isClass} />}
         </TabPanel>
-        <TabPanel p="20px" opacity={isLoading ? 0 : 1}>
+        <TabPanel p="0" pt="8px" opacity={isLoading ? 0 : 1}>
           {tabIndex === 2 && (
             <HolderList uuid={(detail as NFTDetail)?.class_uuid ?? uuid} />
           )}
@@ -134,7 +134,7 @@ export const NftDetail: React.FC<{
   return (
     <Box py="20px">
       <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={2} px="20px">
-        <Grid templateColumns="calc(100% - 50px) 50px">
+        <Flex justify="space-between">
           <Box pr="10px">
             <NftDetailName>{detail?.name}</NftDetailName>
             <Flex lineHeight="20px">
@@ -157,7 +157,7 @@ export const NftDetail: React.FC<{
               <OwnedSealSvg />
             </Center>
           ) : null}
-        </Grid>
+        </Flex>
       </SkeletonText>
 
       <Grid
