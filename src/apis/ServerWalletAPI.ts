@@ -50,6 +50,7 @@ import {
   RewardDetailResponse,
 } from '../models/redeem'
 import { ClaimResult } from '../models/claim'
+import { RankingListResponse } from '../models/rank'
 
 function randomid(length = 10): string {
   let result = ''
@@ -200,12 +201,17 @@ export class ServerWalletAPI implements NFTWalletAPI {
       page,
       limit: PER_ITEM_LIMIT,
     }
+
     if (sortType === ClassSortType.Likes) {
       params.sort = 'likes'
       params.order = 'desc'
     }
     if (sortType === ClassSortType.Recommend) {
       params.sort = 'recommended'
+      params.order = 'desc'
+    }
+    if (sortType === ClassSortType.OnSale) {
+      params.sort = sortType
       params.order = 'desc'
     }
     if (this.address) {
@@ -668,6 +674,17 @@ export class ServerWalletAPI implements NFTWalletAPI {
           page,
         },
       }
+    )
+  }
+
+  async getRankingList<
+    O extends {
+      uuid?: string
+    }
+  >(options?: O): Promise<AxiosResponse<RankingListResponse<O>>> {
+    const uuid = options?.uuid
+    return await this.axios.get<RankingListResponse<O>>(
+      '/ranking_lists' + (uuid ? `/${uuid}` : '')
     )
   }
 

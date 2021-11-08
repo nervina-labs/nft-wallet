@@ -25,6 +25,7 @@ import {
 } from './redeem'
 import { WxSignConfig } from './wx'
 import { GetHolderByTokenClassUuidResponse } from './holder'
+import { RankingListResponse } from './rank'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -45,6 +46,7 @@ export enum ClassSortType {
   Recommend = 'recommended',
   Latest = 'latest',
   Likes = 'likes',
+  OnSale = 'on_sale',
 }
 
 export interface SpecialCategories {
@@ -224,4 +226,12 @@ export interface NFTWalletAPI {
   ) => Promise<AxiosResponse<TransactionLogResponse>>
 
   getUrlBase64: (url: string) => Promise<AxiosResponse<{ result: string }>>
+
+  getRankingList: <
+    O extends {
+      uuid?: string
+    }
+  >(
+    options?: O
+  ) => Promise<AxiosResponse<RankingListResponse<O>>>
 }
