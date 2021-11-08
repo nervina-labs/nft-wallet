@@ -6,7 +6,7 @@ import { Transfer } from '../views/Transfer'
 import { Profile } from '../views/Profile'
 import { ImagePreview } from '../views/Profile/ImagePreview'
 import { TakePhoto } from '../views/Profile/TakePhoto'
-import { Explore } from '../views/Explore'
+import { Explore } from '../views/Explore/index'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
 import { Apps } from '../views/Apps'
@@ -24,6 +24,8 @@ import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
 import { Transactions } from '../views/Transactions'
 import { lazy } from 'react'
+import { Ranking } from '../views/Ranking'
+import { ExploreAll } from '../views/ExploreAll'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -109,6 +111,12 @@ export const routes: MibaoRouterProps[] = [
     path: RoutePath.Explore,
   },
   {
+    component: ExploreAll,
+    exact: true,
+    key: 'ExploreAll',
+    path: RoutePath.ExploreAll,
+  },
+  {
     component: Shop,
     exact: true,
     key: 'Shop',
@@ -156,6 +164,13 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Collection',
     path: RoutePath.Collection,
+    params: '/:id',
+  },
+  {
+    component: Ranking,
+    exact: true,
+    key: 'Ranking',
+    path: RoutePath.RankingList,
     params: '/:id',
   },
   {

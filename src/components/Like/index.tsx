@@ -32,7 +32,7 @@ const Container = styled.div`
 `
 
 export interface LikeProps {
-  count: string
+  count: number
   liked: boolean
   uuid: string
   likeble?: boolean
