@@ -463,9 +463,6 @@
         "go-back": "返回兑换中心",
         "error": "请检查当前网络情况或兑换条件",
         "redeeming": "兑换中..."
-      },
-      "dialog": {
-
       }
     },
     "orders": {
@@ -527,7 +524,8 @@
         "delete-confirm": "我想支付并持有",
         "delete-quit": "取消订单",
         "contact": "订单问题请联系客服：",
-        "copy-email": "复制邮件地址"
+        "copy-email": "复制邮件地址",
+        "copy-email-address": "复制邮件地址"
       },
       "info": {
         "title": "订单信息",

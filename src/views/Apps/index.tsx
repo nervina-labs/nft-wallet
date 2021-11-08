@@ -22,7 +22,7 @@ import { useAccount } from '../../hooks/useAccount'
 const Container = styled(MainContainer)`
   padding-top: 20px;
   max-width: 500px;
-  min-height: calc(100% - 20px);
+  min-height: 100%;
   background: #fafafa;
   .welcome {
     width: 343px;

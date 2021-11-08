@@ -29,6 +29,7 @@ import { Table, Tbody, Tr, Td } from '@chakra-ui/react'
 import { formatTime } from '../../utils'
 import dayjs, { Dayjs } from 'dayjs'
 import { Loading } from '../../components/Loading'
+import { Contact } from '../../components/Contact'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -268,6 +269,7 @@ export const OrderDetail: React.FC = () => {
         <Loading />
       )}
       <OrderDrawer />
+      <Contact />
     </Container>
   )
 }

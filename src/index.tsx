@@ -4,10 +4,7 @@ import App from './App'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 
-import Vconsole from 'vconsole'
-
 import './index.css'
-console.log(new Vconsole())
 
 const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN
 

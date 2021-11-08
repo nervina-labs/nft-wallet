@@ -8,6 +8,7 @@ import { RoutePath } from '../../routes'
 import { useHistory, useLocation, useRouteMatch } from 'react-router'
 import { OrderList, MatchRoute } from './OrderList'
 import { OrderDrawer } from '../../components/OrderDrawer'
+import { Contact } from '../../components/Contact'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -83,6 +84,7 @@ export const Orders: React.FC = () => {
         <OrderList route={matchRoute} />
       </section>
       <OrderDrawer />
+      <Contact />
     </Container>
   )
 }
