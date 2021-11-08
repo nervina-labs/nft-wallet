@@ -31,6 +31,7 @@ const tabProps: TabProps = {
   _selected: {
     bg: '#f6f6f6',
     fontWeight: 'bold',
+    color: 'var(--chakra-colors-black)',
   },
 }
 
@@ -53,7 +54,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   })
 
   return (
-    <Box key={token.uuid} w="full" pb="20px">
+    <Box w="full" pb="20px">
       <NftImage
         src={token.bg_image_url === null ? '' : token.bg_image_url}
         type={token.renderer_type}

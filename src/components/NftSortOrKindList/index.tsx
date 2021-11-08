@@ -1,8 +1,8 @@
-import { Box, Tab, TabList, Tabs } from '@mibao-ui/components'
+import { Box, Select, Tab, TabList, Tabs } from '@mibao-ui/components'
 import { Explore } from './explore'
 import { ClassSortType as SortType } from '../../models'
 import { Follow } from './follow'
-import { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 
@@ -30,7 +30,7 @@ export const NftSortOrKindList: React.FC<{
       },
       {
         value: SortType.Likes,
-        label: t('explore.latest'),
+        label: t('explore.most-liked'),
       },
     ],
     [t]
@@ -49,18 +49,16 @@ export const NftSortOrKindList: React.FC<{
       ] as const,
     [t]
   )
-  const onChangeSortIndex = useCallback(
-    (i: number) => setSort(sortKinds[i ?? 0].value),
-    [setSort, sortKinds]
-  )
   const onChangeTypeIndex = useCallback(
     (i: number) => setListType(types[i ?? 0].value),
     [setListType, types]
   )
-  const sortIndex = useMemo(() => {
-    const index = sortKinds.findIndex((s) => s.value === sort)
-    return index === -1 ? 0 : index
-  }, [sort, sortKinds])
+  const onChangeSort = useCallback(
+    (e: React.SyntheticEvent<HTMLInputElement | HTMLSelectElement>) => {
+      setSort(e.currentTarget.value as SortType)
+    },
+    [setSort]
+  )
   const typeIndex = useMemo(() => {
     const index = types.findIndex((t) => t.value === listType)
     return index === -1 ? 0 : index
@@ -68,37 +66,26 @@ export const NftSortOrKindList: React.FC<{
 
   return (
     <Box mt="10px" userSelect="none" position="relative" minHeight="628px">
-      <Tabs
-        variant="solid-rounded"
+      <Select
+        onChange={onChangeSort}
+        variant="filled"
         position="absolute"
         right="0"
-        top="8px"
-        size="sm"
+        top="6px"
+        w="96px"
         zIndex={2}
-        index={sortIndex}
-        onChange={onChangeSortIndex}
+        size="xs"
+        rounded="6px"
+        fontSize="13px"
+        bg="#F6F6F6"
+        value={sort}
       >
-        <TabList>
-          {sortKinds.map((sort, i) => (
-            <Tab
-              key={i}
-              py="4px"
-              px="8px"
-              rounded="6px"
-              whiteSpace="nowrap"
-              fontSize="12px"
-              fontWeight="normal"
-              _selected={{
-                bg: '#f6f6f6',
-                color: '#5065E5',
-                fontWeight: 'bold',
-              }}
-            >
-              {sort.label}
-            </Tab>
-          ))}
-        </TabList>
-      </Tabs>
+        {sortKinds.map((sort, i) => (
+          <option value={sort.value} key={i}>
+            {sort.label}
+          </option>
+        ))}
+      </Select>
 
       <Tabs
         variant={hiddenTypeLine ? 'unstyled' : 'line'}
