@@ -12,6 +12,7 @@ import {
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
+import { IS_WEXIN } from '../constants'
 import { NftType, Query } from '../models'
 import { useAPI } from './useAccount'
 import { useConfirmDialog } from './useConfirmDialog'
@@ -196,13 +197,16 @@ export const usePlaceOrder = () => {
         // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
         // @ts-ignore
         const pingxx = await import('pingpp-js')
+        if (channel === PaymentChannel.AlipayMobile && IS_WEXIN) {
+          pingxx.setAPURL(`${location.origin}/alipay.htm`)
+        }
         return await new Promise<void>((resolve, reject) => {
           pingxx.createPayment(data, function (result: string, err: any) {
             if (result === 'success') {
               resolve()
             } else if (result === 'fail') {
               reject(err)
-            } else if (result === 'reject') {
+            } else if (result === 'reject' || result === 'cancel') {
               reject(new Error('reject'))
             }
             reject(new Error('unknown'))
@@ -221,7 +225,12 @@ export const useDeleteOrder = () => {
   const [t] = useTranslation('translations')
   const qc = useQueryClient()
   return useCallback(
-    async (uuid: string, continueOrder: () => void) => {
+    async (
+      uuid: string,
+      continueOrder: (
+        e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+      ) => void
+    ) => {
       confirmDialog({
         type: 'warning',
         title: t('orders.dialog.delete-title'),

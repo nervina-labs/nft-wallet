@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Redirect } from 'react-router'
 import { InfiniteList, ListDesciption } from '../../components/InfiniteList'
-import { useAccount, useAPI } from '../../hooks/useAccount'
+import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { Query } from '../../models'
 import { OrderState } from '../../models/order'
+import { RoutePath } from '../../routes'
 import { OrderCard } from './OrderCard'
 
 export enum MatchRoute {
@@ -38,6 +40,11 @@ export const OrderList: React.FC<OrderListProps> = ({ route }) => {
     [api, route, getAuth]
   )
   const { address } = useAccount()
+  const { isLogined } = useAccountStatus()
+
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
   return (
     <InfiniteList
       queryFn={getRemoteData}

@@ -43,14 +43,19 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
   const total = Number(order.product_price) * Number(order.product_count)
   const continueOrder = useContinueOrder()
 
-  const continuePayment = useCallback(() => {
-    continueOrder({
-      uuid: order.uuid as string,
-      count: Number(order.product_count),
-      currency: order.currency as string,
-      price: order.product_price as string,
-    })
-  }, [continueOrder, order])
+  const continuePayment = useCallback(
+    (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e?.preventDefault?.()
+      e?.stopPropagation?.()
+      continueOrder({
+        uuid: order.uuid as string,
+        count: Number(order.product_count),
+        currency: order.currency as string,
+        price: order.product_price as string,
+      })
+    },
+    [continueOrder, order]
+  )
   const deleteOrder = useDeleteOrder()
 
   const gotoClassDetail = useCallback(() => {
@@ -142,9 +147,11 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
               px="16px"
               py="4px"
               fontWeight="normal"
-              onClick={async () =>
+              onClick={async (e) => {
+                e.stopPropagation()
+                e.preventDefault()
                 await deleteOrder(order.uuid as string, continuePayment)
-              }
+              }}
             >
               {t('orders.actions.cancel')}
             </Button>

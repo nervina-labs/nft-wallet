@@ -7,6 +7,7 @@ import {
   placeOrderPropsAtom,
   usePlaceOrder,
   useSetOrderStep,
+  useSetProductId,
 } from '../../hooks/useOrder'
 import { useAtomValue } from 'jotai/utils'
 import { formatCurrency } from '../../utils'
@@ -22,20 +23,31 @@ export const ConfirmPayment = () => {
   const placeOrder = usePlaceOrder()
   const confirmDialog = useConfirmDialog()
   const hisotry = useHistory()
+  const setProductId = useSetProductId()
   const onSumit = useCallback(async () => {
     setIsSubmitting(true)
     try {
       await placeOrder()
       hisotry.push(RoutePath.OrderSuccess)
-    } catch (error) {
-      confirmDialog({
-        type: 'error',
-        title: t('orders.drawer.place-order-error'),
-      })
+    } catch (error: any) {
+      console.log(error)
+      if (error?.message?.includes?.('reject')) {
+        await confirmDialog({
+          type: 'warning',
+          title: t('orders.drawer.reject-payment-error'),
+          okText: t('orders.drawer.continue-payment'),
+        })
+        setProductId('')
+      } else {
+        confirmDialog({
+          type: 'error',
+          title: t('orders.drawer.place-order-error'),
+        })
+      }
     } finally {
       setIsSubmitting(false)
     }
-  }, [placeOrder, confirmDialog, t, hisotry])
+  }, [placeOrder, confirmDialog, t, hisotry, setProductId])
   const order = useAtomValue(currentOrderInfoAtom)
   const orderProps = useAtomValue(placeOrderPropsAtom)
   const [prime, decimal] = useMemo(() => {

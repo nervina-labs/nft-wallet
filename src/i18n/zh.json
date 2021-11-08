@@ -509,7 +509,9 @@
         "channel": "支付方式",
         "warning": "请在 5 分钟内完成支付，支付成功后系统将会自动发送秘宝到你的地址上。该过程可能会需要 2-3 分钟，请耐心等待。",
         "place-order-error": "购买失败，请检查当前网络情况",
-        "submit-order-error": "创建订单失败，请检查当前网络情况"
+        "submit-order-error": "创建订单失败，请检查当前网络情况",
+        "reject-payment-error": "用户拒绝支付，请重新支付",
+        "continue-payment": "继续支付"
       },
       "actions": {
         "cancel": "取消支付",

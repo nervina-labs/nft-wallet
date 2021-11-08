@@ -55,6 +55,7 @@ export const Routers: React.FC = () => {
                   from="/nfts"
                   to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
                 />
+                <Route path="/alipay.htm" />
                 <Route component={NotFound} path="*" />
               </Switch>
             </LoadableComponent>

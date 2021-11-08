@@ -70,14 +70,14 @@ export const SelectPayment = () => {
       <Stack mt="32px" spacing="30px">
         <Item
           channel={
-            IS_WEXIN ? PaymentChannel.WechatPub : PaymentChannel.WechatMobile
+            BOWSER_BROWSER.getPlatformType() === 'desktop'
+              ? PaymentChannel.AlipayPC
+              : PaymentChannel.AlipayMobile
           }
         />
         <Item
           channel={
-            BOWSER_BROWSER.getPlatformType() === 'desktop'
-              ? PaymentChannel.AlipayPC
-              : PaymentChannel.AlipayMobile
+            IS_WEXIN ? PaymentChannel.WechatPub : PaymentChannel.WechatMobile
           }
         />
         <Item channel={PaymentChannel.Paypal} />
