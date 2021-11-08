@@ -10,6 +10,7 @@ import {
   Modal,
   ModalContent,
   ModalOverlay,
+  Preview,
   useDisclosure,
 } from '@mibao-ui/components'
 import { TokenClass } from '../../../models/class-list'
@@ -18,10 +19,12 @@ import { ReactComponent as LockSvg } from '../../../assets/svg/lock.svg'
 import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
 import { useTranslation } from 'react-i18next'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { isSupportWebp } from '../../../utils'
 import { useTilt } from '../hooks/useTilt'
+import { ThreeDPreviewWhitLoading } from '../../../components/ThreeDPreview'
+import { useToast } from '../../../hooks/useToast'
 
 const TiltContainer = styled(Tilt)`
   position: relative;
@@ -48,7 +51,6 @@ const TiltContainer = styled(Tilt)`
     .flip-card-back {
       animation: flip-hide 0.2s;
       animation-fill-mode: forwards;
-      pointer-events: none;
     }
   }
 
@@ -58,12 +60,10 @@ const TiltContainer = styled(Tilt)`
     .flip-card-img {
       animation: flip-hide 0.2s;
       animation-fill-mode: forwards;
-      pointer-events: none;
     }
 
     .flip-card-back {
       animation: flip-show 0.2s;
-      pointer-events: unset;
     }
   }
 
@@ -125,6 +125,7 @@ const CardBack: React.FC<{
         backdropFilter="blur(20px)"
         overflow="hidden"
         userSelect="text"
+        pointerEvents={clickable ? undefined : 'none'}
       >
         {typeof content === 'string' ? (
           <Box
@@ -220,6 +221,16 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   )
   const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
+  const {
+    isOpen: isOpenPreview,
+    onOpen: onOpenPreview,
+    onClose: onClosePreview,
+  } = useDisclosure()
+  const toast = useToast()
+  const onRendererError = useCallback(() => {
+    toast(t('resource.fail'))
+    onClosePreview()
+  }, [onClosePreview, t, toast])
 
   return (
     <Flex
@@ -239,6 +250,12 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         tiltEnable
         transitionSpeed={1000}
         tiltAngleYInitial={tiltAngleYInitial}
+        onClick={(e) => {
+          if (!showCardBackContent) {
+            onOpenPreview()
+          }
+          e.stopPropagation()
+        }}
       >
         <Box
           m="auto"
@@ -273,6 +290,22 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           ) : null}
         </Box>
       </TiltContainer>
+      {detail && (
+        <Preview
+          bgImgUrl={imgUrl}
+          renderer={detail.renderer}
+          isOpen={isOpenPreview}
+          onClose={onClosePreview}
+          render3D={(renderer) => (
+            <ThreeDPreviewWhitLoading
+              src={renderer}
+              onError={onRendererError}
+            />
+          )}
+          type={detail?.renderer_type}
+          onError={onRendererError}
+        />
+      )}
 
       <Box position="absolute" top={0} left={0} w="100%" h="100%" zIndex={0}>
         <Image

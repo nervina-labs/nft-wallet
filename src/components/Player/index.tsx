@@ -3,7 +3,7 @@ import { NftType } from '../../models'
 import styled from 'styled-components'
 import { Icon, Modal } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
-import Model from '../Model3d'
+import { ThreeDPreview } from '../ThreeDPreview'
 import Model3dLoadingPath from '../../assets/svg/loading.svg'
 
 export interface PlayerProps {
@@ -117,7 +117,7 @@ const Model3dContainer: React.FC<{
   return (
     <div className="model3d">
       {renderer ? (
-        <Model src={renderer} onLoad={onLoad} onError={onError} />
+        <ThreeDPreview src={renderer} onLoad={onLoad} onError={onError} />
       ) : null}
       {isLoading && (
         <img
