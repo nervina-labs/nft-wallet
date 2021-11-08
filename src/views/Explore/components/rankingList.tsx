@@ -82,6 +82,8 @@ const Item: React.FC<RankingItem> = ({
                 size="50px"
                 isVerified={issuer.verified_info?.is_verified}
                 border="2px solid #f6f6f6"
+                webp={isSupportWebp()}
+                resizeScale={150}
               />
               <Flex direction="column" mx="10px">
                 <Box

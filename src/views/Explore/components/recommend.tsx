@@ -131,7 +131,8 @@ const Item: React.FC<SpecialAssets> = ({
                           : tokenClass.issuer_info.avatar_url
                       }
                       isVerified={tokenClass?.verified_info?.is_verified}
-                      resizeScale={100}
+                      resizeScale={150}
+                      webp={isSupportWebp()}
                       size="25px"
                     />
                     <Box
