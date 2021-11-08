@@ -1,4 +1,4 @@
-import { NFTDetail } from '../../../models'
+import { NFTDetail, NftType } from '../../../models'
 import Tilt from 'react-better-tilt'
 import styled from 'styled-components'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
@@ -17,9 +17,10 @@ import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as CardbackSvg } from '../../../assets/svg/card-back.svg'
 import { ReactComponent as LockSvg } from '../../../assets/svg/lock.svg'
 import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
+import { ReactComponent as ThreeDSvg } from '../../../assets/svg/3D.svg'
 import { useTranslation } from 'react-i18next'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
-import { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { isSupportWebp } from '../../../utils'
 import { useTilt } from '../hooks/useTilt'
@@ -231,6 +232,18 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     toast(t('resource.fail'))
     onClosePreview()
   }, [onClosePreview, t, toast])
+  const hasPlayIcon =
+    detail?.renderer_type === NftType.Audio ||
+    detail?.renderer_type === NftType.Video
+  const onPreview = useCallback(
+    (e) => {
+      if (!showCardBackContent) {
+        onOpenPreview()
+      }
+      e.stopPropagation()
+    },
+    [onOpenPreview, showCardBackContent]
+  )
 
   return (
     <Flex
@@ -250,12 +263,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         tiltEnable
         transitionSpeed={1000}
         tiltAngleYInitial={tiltAngleYInitial}
-        onClick={(e) => {
-          if (!showCardBackContent) {
-            onOpenPreview()
-          }
-          e.stopPropagation()
-        }}
+        onClick={onPreview}
       >
         <Box
           m="auto"
@@ -278,9 +286,26 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               fallbackSrc={FallbackAvatarSrc}
               zIndex={3}
             />
-            <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
-              <NftPlaySvg />
-            </Box>
+            {hasPlayIcon ? (
+              <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
+                <NftPlaySvg />
+              </Box>
+            ) : null}
+            {detail?.renderer_type === NftType.ThreeD ? (
+              <Center
+                position="absolute"
+                bottom="10px"
+                right="10px"
+                zIndex={4}
+                rounded="100%"
+                w="25px"
+                h="25px"
+                border="1px solid var(--chakra-colors-gray-200)"
+                bg="linear-gradient(180deg, rgba(35, 38, 47, 0.5) 0%, rgba(35, 38, 47, 0) 100%)"
+              >
+                <ThreeDSvg />
+              </Center>
+            ) : null}
           </Box>
           {hasCardback ? (
             <CardBack

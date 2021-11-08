@@ -352,7 +352,7 @@ export const ParallaxTilt: React.FC<ParallaxTiltProps> = ({
     type === NftType.Picture || (Boolean(src) && type === NftType.Audio)
   const isAudioOrVideo = type === NftType.Audio || type === NftType.Video
   const enablePlayer =
-    !enableImagePreview && (isAudioOrVideo || type === NftType._3D)
+    !enableImagePreview && (isAudioOrVideo || type === NftType.ThreeD)
   const [
     photoPreviewToolbarAudioVisible,
     setPhotoPreviewToolbarAudioVisible,

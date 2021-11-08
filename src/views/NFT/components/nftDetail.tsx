@@ -26,6 +26,7 @@ import { NftTxLogsList } from './nftTxLogList'
 import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
+import { isSupportWebp } from '../../../utils'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -116,8 +117,8 @@ export const NftDetail: React.FC<{
   const { t, i18n } = useTranslation('translations')
   const { push } = useHistory()
   const isOwned =
-    typeof detail?.card_back_content === 'string' ||
-    typeof detail?.class_card_back_content === 'string'
+    typeof detail?.card_back_content !== 'undefined' ||
+    typeof detail?.class_card_back_content !== 'undefined'
   const avatarUrl =
     detail?.issuer_info?.avatar_url === null
       ? ''
@@ -137,6 +138,7 @@ export const NftDetail: React.FC<{
             <NftDetailName>{detail?.name}</NftDetailName>
             <Limited
               count={detail?.total ?? 0}
+              serialNumber={(detail as NFTDetail)?.n_token_id}
               limitedText={t('common.limit.limit')}
               unlimitedText={t('common.limit.unlimit')}
               locale={i18n.language}
@@ -162,6 +164,9 @@ export const NftDetail: React.FC<{
           border="3px solid #f6f6f6"
           fallbackSrc={FallbackAvatarSrc}
           onClick={gotoIssuer}
+          isVerified={detail?.verified_info?.is_verified}
+          webp={isSupportWebp()}
+          resizeScale={100}
         />
         <SkeletonText
           isLoaded={!isLoading}

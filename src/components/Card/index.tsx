@@ -233,7 +233,7 @@ export const Card: React.FC<CardProps> = ({
         hasCardBack={isBanned ? false : token.card_back_content_exist}
         isPlayable={isPlayable}
         tid={!isClass ? `${token.n_token_id}` : undefined}
-        has3dIcon={token.renderer_type === NftType._3D}
+        has3dIcon={token.renderer_type === NftType.ThreeD}
       />
       <div className="content">
         <div className="title">

@@ -140,7 +140,7 @@ export const Player: React.FC<PlayerProps> = ({
 }) => {
   const isVideo = type === NftType.Video
   const isAudio = type === NftType.Audio
-  const is3D = type === NftType._3D
+  const is3D = type === NftType.ThreeD
   const [noPoster, setNoPoster] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
