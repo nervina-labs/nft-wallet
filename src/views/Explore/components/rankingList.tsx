@@ -159,6 +159,7 @@ export const RankingList: React.FC = () => {
                 direction="column"
                 shrink={0}
                 pr="15px"
+                mr="15px"
                 maxW="305px"
                 key={i}
               >
