@@ -268,6 +268,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
                       src: token.issuer_avatar_url,
                       bannedText: t('common.baned.issuer'),
                       width: '25px',
+                      isVerified: token.verified_info?.is_verified,
                     }}
                     limitProps={{
                       count: token.class_total,
