@@ -46,7 +46,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
         onClick={gotoClass}
       />
       <Grid
-        templateColumns="25px calc(100% - 25px - 40px) 35px"
+        templateColumns="25px calc(100% - 30px - 50px) 40px"
         onClick={gotoIssuer}
       >
         <Avatar
@@ -66,7 +66,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           whiteSpace="nowrap"
           textOverflow="ellipsis"
           overflow="hidden"
-          px="5px"
+          px="10px"
         >
           {token.issuer_info?.name}
         </Box>
@@ -75,6 +75,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           limitedText={t('common.limit.limit')}
           unlimitedText={t('common.limit.unlimit')}
           my="auto"
+          whiteSpace="nowrap"
         />
       </Grid>
       {token.product_price && (
@@ -140,9 +141,9 @@ export const Follow: React.FC<{
         ) ?? 0
       }
       columnCount={1}
-      renderItems={(group) => {
-        return group.class_list.map((token) => {
-          return <Card token={token} />
+      renderItems={(group, i) => {
+        return group.class_list.map((token, j) => {
+          return <Card token={token} key={`${i}-${j}`} />
         })
       }}
     />

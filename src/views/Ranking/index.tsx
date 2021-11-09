@@ -151,6 +151,7 @@ export const Ranking: React.FC = () => {
                   textOverflow="ellipsis"
                   overflow="hidden"
                   whiteSpace="nowrap"
+                  fontSize="14px"
                 >
                   {token.name}
                 </Box>
