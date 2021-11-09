@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
@@ -177,7 +178,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
     if (bodyWidth <= CONTAINER_MAX_WIDTH) {
       return 0
     }
-    return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
+    return (bodyWidth - CONTAINER_MAX_WIDTH) / 2
   }, [bodyWidth])
   const fullHeight = useMemo(() => {
     return window.innerHeight - HEADER_HEIGHT
@@ -186,7 +187,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
   const drawerContentProps: DrawerContentProps = {
     width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
     style: {
-      left: drawerLeft,
+      left: `${drawerLeft}px`,
     },
     overflow: 'hidden',
     height: height ?? fullHeight,
@@ -194,8 +195,11 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
 
   if (height) {
     drawerContentProps.borderRadius = '20px'
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    drawerContentProps.style!.left = `${drawerLeft + 20}px`
     drawerContentProps.style!.bottom = '40px'
+    drawerContentProps.style!.maxWidth = `calc(${
+      drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH + 'px'}`
+    } - 40px)`
   }
 
   return (
