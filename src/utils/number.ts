@@ -12,6 +12,10 @@ export function roundDown(n: number, decimals = 1): number {
 
 const MILLION = 1e6
 
+export function isUnlimited(n: number | string) {
+  return n === '0' || n === 0
+}
+
 export const formatCount = (count: number, lang: string): number | string => {
   if (lang === 'zh') {
     if (count >= MILLION) {

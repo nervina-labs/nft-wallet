@@ -9,12 +9,12 @@ import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { AvatarType } from '../../models/user'
 import { LazyLoadImage } from '../../components/Image'
-import PeopleSrc from '../../assets/img/people.png'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
 import { useRoute } from '../../hooks/useRoute'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { Loading } from '@mibao-ui/components'
+import Fallback from '../../assets/svg/fallback.svg'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -22,6 +22,7 @@ const Container = styled(MainContainer)`
   padding: 0;
   position: relative;
   max-width: 500px;
+  width: 100% !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -214,7 +215,7 @@ export const ImagePreview: React.FC = () => {
           src={datauri}
           width={imageWidth}
           height={imageWidth}
-          backup={<img src={PeopleSrc} />}
+          backup={<img src={Fallback} />}
         />
         <div className="circle" />
       </div>

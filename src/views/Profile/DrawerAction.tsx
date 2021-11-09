@@ -61,7 +61,7 @@ export const DrawerAction: React.FC<DrawerConfigProps> = ({
     if (bodyWidth <= CONTAINER_MAX_WIDTH) {
       return 0
     }
-    return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
+    return (bodyWidth - CONTAINER_MAX_WIDTH) / 2
   }, [bodyWidth])
 
   return (
@@ -72,10 +72,12 @@ export const DrawerAction: React.FC<DrawerConfigProps> = ({
       onClose={close}
       rounded="lg"
       contentProps={{
-        width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
         style: {
-          left: drawerLeft,
+          left: `${drawerLeft + 20}px`,
           bottom: '40px',
+          maxWidth: `calc(${
+            drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH + 'px'}`
+          } - 40px)`,
         },
         borderRadius: '20px',
       }}
