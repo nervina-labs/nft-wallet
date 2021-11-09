@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
 import { Query, TransactionLog } from '../../../models'
-import { ellipsisString, formatTime } from '../../../utils'
+import { ellipsisString, formatTime, isSupportWebp } from '../../../utils'
 import TransactionsArrowSvg from '../../../assets/svg/transactions-arrow.svg'
 import { Center, Image, useClipboard } from '@chakra-ui/react'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
@@ -19,18 +19,12 @@ import { useHistory } from 'react-router-dom'
 import { useToast } from '../../../hooks/useToast'
 
 const UserWithAddress: React.FC<{
-  avatar_url?: string | null
-  avatar_tid?: number | null
-  avatar_type: AvatarType
+  avatarUrl?: string | null
+  avatarTid?: number | null
+  avatarType?: AvatarType
   nickname: string
   address: string
-}> = ({
-  avatar_url: avatarUrl,
-  avatar_type: avatarType,
-  avatar_tid: avatarTid,
-  nickname,
-  address,
-}) => {
+}> = ({ avatarUrl, avatarTid, avatarType = 'image', nickname, address }) => {
   const { i18n } = useTranslation('translations')
   const { push } = useHistory()
   const goToHolder = useCallback(() => push(`/holder/${address}`), [
@@ -59,12 +53,20 @@ const UserWithAddress: React.FC<{
               }
             : undefined
         }
-        resizeScale={50}
+        webp={isSupportWebp()}
+        resizeScale={100}
       />
       <Stack ml="8px" spacing="0" h="30px">
         {nickname ? (
           <>
-            <Box fontSize="14px" fontWeight="500" lineHeight="14px">
+            <Box
+              fontSize="13px"
+              fontWeight="500"
+              lineHeight="13px"
+              whiteSpace="nowrap"
+              textOverflow="ellipsis"
+              overflow="hidden"
+            >
               {nickname}
             </Box>
             <Box fontSize="12px" color="#777E90" lineHeight="12px">
@@ -89,18 +91,38 @@ const NftTxLog: React.FC<{ log: TransactionLog }> = ({ log }) => {
     if (hasCopied) return
     toast(t('info.copied'))
     onCopy()
-  }, [hasCopied, onCopy])
+  }, [hasCopied, onCopy, t, toast])
+  const senderInfo =
+    log.tx_type === 'issue'
+      ? {
+          avatarUrl: log.issuer_avatar_url,
+          nickname: log.issuer_name,
+          address: log.issuer_uuid,
+        }
+      : {
+          avatarUrl: log.sender_info.avatar_url,
+          avatarType: log.sender_info.avatar_type,
+          avatarTid: log.sender_info.avatar_tid,
+          nickname: log.sender_info.nickname,
+          address: log.sender_info.address,
+        }
 
   return (
     <Box bg="#f6f6f6" p="20px" rounded="22px" mb="10px">
       <Box color="#777E90" fontSize="12px" mb="15px">
         {formatTime(log.on_chain_timestamp, i18n.language)}
       </Box>
-      <UserWithAddress {...log.sender_info} />
+      <UserWithAddress {...senderInfo} />
       <Center w="25px" h="30px" mb="5px">
         <Image src={TransactionsArrowSvg} alt="TransactionsArrowSvg" />
       </Center>
-      <UserWithAddress {...log.holder_info} />
+      <UserWithAddress
+        avatarType={log.holder_info.avatar_type}
+        avatarUrl={log.holder_info.avatar_url}
+        avatarTid={log.holder_info.avatar_tid}
+        nickname={log.holder_info.nickname}
+        address={log.holder_info.address}
+      />
       <Box color="#777E90" fontSize="12px" mt="15px">
         {t('nft.tx_hash')}:{' '}
         <Button
