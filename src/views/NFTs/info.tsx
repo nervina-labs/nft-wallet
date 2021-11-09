@@ -134,12 +134,14 @@ export const Info: React.FC<{
           <Preview
             isOpen={isPreviewOpen}
             onClose={onPreviewClose}
-            renderer={addParamsToUrl(
-              user?.avatar_url as string,
-              Object.create(
-                getNFTQueryParams(user?.avatar_tid, i18n.language) || {}
-              )
-            )}
+            renderer={
+              addParamsToUrl(
+                user?.avatar_url as string,
+                Object.create(
+                  getNFTQueryParams(user?.avatar_tid, i18n.language) || {}
+                )
+              ) || '1'
+            }
             type={user?.avatar_type === AvatarType.Token ? 'three_d' : 'image'}
             render3D={(renderer) => {
               return (

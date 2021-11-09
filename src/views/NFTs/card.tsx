@@ -131,8 +131,6 @@ export const Card: React.FC<CardProps> = ({
           name: token.issuer_name as string,
           src: token.issuer_avatar_url,
           bannedText: t('common.baned.issuer'),
-          href: `${RoutePath.Issuer}/${token.issuer_uuid as string}`,
-          isLinkExternal: false,
           size: '25px',
           isVerified: token.verified_info?.is_verified,
           onClick: (e) => {
