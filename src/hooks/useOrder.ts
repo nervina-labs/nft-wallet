@@ -178,6 +178,7 @@ export const useSubmitOrder = () => {
 export const usePlaceOrder = () => {
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
+  const { closeOrderDrawer } = useOrderDrawer()
   return useAtomCallback(
     useCallback(
       async (get) => {
@@ -203,6 +204,7 @@ export const usePlaceOrder = () => {
         return await new Promise<void>((resolve, reject) => {
           pingxx.createPayment(data, function (result: string, err: any) {
             if (result === 'success') {
+              closeOrderDrawer()
               resolve()
             } else if (result === 'fail') {
               reject(err)

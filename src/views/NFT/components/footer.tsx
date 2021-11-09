@@ -69,7 +69,6 @@ const TranferOrBuy: React.FC<{
       UnipassConfig.setRedirectUri(location.pathname)
       history.push(RoutePath.Login)
     }
-    console.log(!user?.open_id, user?.open_id)
     if (!user?.open_id && IS_WEXIN) {
       const auth = await getAuth()
       const {
