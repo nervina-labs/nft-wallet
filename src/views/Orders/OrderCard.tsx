@@ -136,7 +136,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
             </Text>
             <Text fontWeight={500} color="#f48538">
               {formatCurrency(
-                order.state === OrderState.Closed ? 0 : total,
+                order.state === OrderState.Expired ? '0' : total,
                 order.currency
               )}
             </Text>
