@@ -122,7 +122,7 @@ const CardBack: React.FC<{
         height="100%"
         zIndex={2}
         transform="rotateY(180deg)"
-        bg="rgba(255, 255, 255, 0.5)"
+        bg="rgba(255, 255, 255, 0.2)"
         backdropFilter="blur(20px)"
         overflow="hidden"
         userSelect="text"
@@ -318,7 +318,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           ) : null}
         </Box>
       </TiltContainer>
-      {detail && (
+      {detail && isOpenPreview ? (
         <Preview
           bgImgUrl={imgUrl}
           renderer={detail.renderer}
@@ -333,7 +333,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           type={detail?.renderer_type}
           onError={onRendererError}
         />
-      )}
+      ) : null}
 
       <Box position="absolute" top={0} left={0} w="100%" h="100%" zIndex={0}>
         <Image
