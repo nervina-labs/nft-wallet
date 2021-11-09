@@ -175,10 +175,16 @@ export const Share: React.FC<ShareProps> = ({
             <Image
               src={imgSrc}
               m="auto"
-              h="100%"
+              h="auto"
               w="auto"
               maxW="100%"
               objectFit="contain"
+              rounded="20px"
+              containerProps={{
+                w: '100%',
+                h: '100%',
+                display: 'flex',
+              }}
             />
           </Center>
         ) : null}
