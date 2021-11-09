@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
-import { I18nextProvider } from 'react-i18next'
 import { NotFound } from '../views/NotFound'
-import i18n from '../i18n'
 import { WarningDialog } from '../components/WarningDialog'
 import {
   useAccount,
@@ -16,6 +14,10 @@ import { routes } from './routes'
 import { RouterProvider } from '../hooks/useRoute'
 import { ConfirmDialog } from '../components/ConfirmDialog'
 import { LoadableComponent } from '../components/GlobalLoader'
+import { MibaoProvider, mibaoTheme } from '@mibao-ui/components'
+import { extendTheme } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import NFTFallbackImg from '../assets/img/nft-fallback.png'
 export * from './path'
 
 export const Routers: React.FC = () => {
@@ -31,8 +33,29 @@ export const Routers: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const [t] = useTranslation('translations')
+
+  const theme = useMemo(() => {
+    return extendTheme(mibaoTheme, {
+      locales: {
+        issuer: {
+          banned: t('common.baned.issuer'),
+        },
+        nft: {
+          banned: t('common.baned.nft'),
+          cardBackTooltips: t('common.card-back'),
+          limited: t('common.limit.limit'),
+          unlimited: t('common.limit.unlimit'),
+        },
+      },
+      fallbacks: {
+        nft: NFTFallbackImg,
+      },
+    })
+  }, [t])
+
   return (
-    <I18nextProvider i18n={i18n}>
+    <MibaoProvider theme={theme}>
       <BrowserRouter>
         <RouterProvider>
           <AccountChange>
@@ -63,6 +86,6 @@ export const Routers: React.FC = () => {
           </AccountChange>
         </RouterProvider>
       </BrowserRouter>
-    </I18nextProvider>
+    </MibaoProvider>
   )
 }
