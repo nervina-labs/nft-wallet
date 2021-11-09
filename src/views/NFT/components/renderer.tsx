@@ -19,7 +19,7 @@ import { ReactComponent as LockSvg } from '../../../assets/svg/lock.svg'
 import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
 import { ReactComponent as ThreeDSvg } from '../../../assets/svg/3D.svg'
 import { useTranslation } from 'react-i18next'
-import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
+import FALLBACK_SRC from '../../../assets/img/nft-fallback.png'
 import React, { useCallback, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { isSupportWebp } from '../../../utils'
@@ -221,7 +221,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   )
   const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
-  const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
+  const [imgLoaded, setImgLoaded] = useState(false)
   const {
     isOpen: isOpenPreview,
     onOpen: onOpenPreview,
@@ -232,9 +232,6 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     toast(t('resource.fail'))
     onClosePreview()
   }, [onClosePreview, t, toast])
-  const hasPlayIcon =
-    detail?.renderer_type === NftType.Audio ||
-    detail?.renderer_type === NftType.Video
   const onPreview = useCallback(
     (e) => {
       if (!showCardBackContent) {
@@ -244,6 +241,11 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     },
     [onOpenPreview, showCardBackContent]
   )
+  const hasPlayIcon =
+    (detail?.renderer_type === NftType.Audio ||
+      detail?.renderer_type === NftType.Video) &&
+    imgLoaded
+  const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
 
   return (
     <Flex
@@ -283,15 +285,16 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               resizeScale={400}
               m="auto"
               webp={isSupportWebp()}
-              fallbackSrc={FallbackAvatarSrc}
+              fallbackSrc={FALLBACK_SRC}
               zIndex={3}
+              onLoad={() => setImgLoaded(true)}
             />
             {hasPlayIcon ? (
               <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
                 <NftPlaySvg />
               </Box>
             ) : null}
-            {detail?.renderer_type === NftType.ThreeD ? (
+            {detail?.renderer_type === NftType.ThreeD && imgLoaded ? (
               <Center
                 position="absolute"
                 bottom="10px"
@@ -342,7 +345,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           webp
           transform="translate(-5%, -5%)"
           filter="blur(50px) contrast(1.2)"
-          fallbackSrc={FallbackAvatarSrc}
+          fallbackSrc={FALLBACK_SRC}
         />
       </Box>
 
