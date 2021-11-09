@@ -31,6 +31,7 @@ const tabProps: TabProps = {
   _selected: {
     bg: '#f6f6f6',
     fontWeight: 'bold',
+    color: 'var(--chakra-colors-black)',
   },
 }
 
@@ -53,7 +54,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   })
 
   return (
-    <Box key={token.uuid} w="full" pb="20px">
+    <Box w="full" pb="20px">
       <NftImage
         src={token.bg_image_url === null ? '' : token.bg_image_url}
         type={token.renderer_type}
@@ -74,7 +75,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
         {token.name}
       </Box>
       <Grid
-        templateColumns="25px calc(100% - 25px - 40px) 35px"
+        templateColumns="25px calc(100% - 30px - 50px) 40px"
         onClick={gotoIssuer}
       >
         <Avatar
@@ -94,7 +95,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           whiteSpace="nowrap"
           textOverflow="ellipsis"
           overflow="hidden"
-          px="5px"
+          px="10px"
         >
           {token.issuer_info?.name}
         </Box>
@@ -103,6 +104,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           isLiked={isLiked}
           isLoading={isLikeLoading}
           onClick={toggleLike}
+          whiteSpace="nowrap"
         />
       </Grid>
       {token.product_price && (
@@ -119,10 +121,7 @@ export const Explore: React.FC<{
 }> = ({ sort }) => {
   const { t, i18n } = useTranslation('translations')
   const api = useAPI()
-  const [currentTag, setCurrentTag] = useRouteQuerySearch<string>(
-    'tag',
-    'recommend'
-  )
+  const [currentTag, setCurrentTag] = useRouteQuerySearch<string>('tag', 'all')
   const { data: tags, isLoading } = useQuery(
     Query.Tags,
     async () => {
@@ -139,35 +138,23 @@ export const Explore: React.FC<{
     if (!tags) {
       return 0
     }
-    const index = tags.findIndex((t) => t.name === currentTag)
+    const index = tags.findIndex((t) => t.uuid === currentTag)
     return index === -1 ? 0 : index + 1
   }, [currentTag, tags])
   const queryFn = useCallback(
     async ({ pageParam = 1 }) => {
-      if (tags) {
-        const currentTagId = tagIndex === 0 ? 'all' : tags[tagIndex - 1].uuid
-        if (currentTagId) {
-          const { data } = await api.getClassListByTagId(
-            currentTagId,
-            pageParam,
-            sort
-          )
-          return data
-        }
-      }
-      return {
-        meta: {
-          current_page: 0,
-          total_count: 0,
-        },
-        class_list: [],
-      }
+      const { data } = await api.getClassListByTagId(
+        currentTag,
+        pageParam,
+        sort
+      )
+      return data
     },
-    [api, sort, tagIndex, tags]
+    [api, currentTag, sort]
   )
   const onChangeTabIndex = useCallback(
     (i: number) => {
-      setCurrentTag(i === 0 ? 'recommend' : tags?.[i - 1]?.name ?? 'recommend')
+      setCurrentTag(i === 0 ? 'all' : tags?.[i - 1]?.uuid ?? 'all')
     },
     [setCurrentTag, tags]
   )
@@ -198,7 +185,7 @@ export const Explore: React.FC<{
       <InfiniteList
         enableQuery
         queryFn={queryFn}
-        queryKey={[Query.Explore, tagIndex, sort, api]}
+        queryKey={[Query.Explore, currentTag, sort]}
         emptyElement={null}
         noMoreElement={t('common.actions.pull-to-down')}
         calcDataLength={(data) =>

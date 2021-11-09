@@ -54,7 +54,7 @@ export interface IssuerInfo extends VipInfo {
   on_sale_product_count: number
   issued_class_count: number
   social_media: Array<{
-    socia_type: SocialMediaType
+    social_type: SocialMediaType
     url: string
   }>
 }

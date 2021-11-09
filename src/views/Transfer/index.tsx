@@ -608,7 +608,7 @@ export const Transfer: React.FC = () => {
                 width={100}
                 height={100}
                 tid={`${nftDetail.n_token_id}`}
-                has3dIcon={nftDetail.renderer_type === NftType._3D}
+                has3dIcon={nftDetail.renderer_type === NftType.ThreeD}
               />
             </div>
             <div className="title">

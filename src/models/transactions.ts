@@ -43,6 +43,8 @@ export interface TransactionLog {
   sender_info: {
     address: string
     avatar_url: string
+    avatar_tid: number
+    avatar_token_uuid: string
     avatar_type: AvatarType
     nickname: string
   }

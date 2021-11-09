@@ -341,7 +341,8 @@
       "like": "Like",
       "no-data": "No data",
       "more": "More",
-      "no-on-sale": "No NFT on sale"
+      "sale-empty": "Ahhh ~ No NFT on sale",
+      "empty": "Ahhh ~ The issuer haven't created NFT yet"
     },
     "exchange": {
       "title": "Redeem Center",
