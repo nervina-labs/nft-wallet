@@ -7,7 +7,7 @@ export function useHtml2Canvas(
     enable?: boolean
   }
 ) {
-  const [imgSrc, setImgSrc] = useState('')
+  const [imgSrc, setImgSrc] = useState<string | undefined>()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<any>()
 

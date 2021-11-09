@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Button } from '@mibao-ui/components'
+import { Button, Image } from '@mibao-ui/components'
 import {
   Box,
+  Center,
   Drawer,
   DrawerContent,
   DrawerOverlay,
   Flex,
-  Image,
+  Image as RowImage,
   useClipboard,
 } from '@chakra-ui/react'
 import CopyLinkPath from '../../assets/share/icons/copy-link.svg'
@@ -77,7 +77,9 @@ export const Share: React.FC<ShareProps> = ({
   const toast = useToast()
   const { onCopy } = useClipboard(shareUrl)
   const onDownload = useCallback(() => {
-    downloadImage(imgSrc, 'poster.png')
+    if (imgSrc) {
+      downloadImage(imgSrc, 'poster.png')
+    }
   }, [imgSrc])
   const onCopyShareUrl = useCallback(() => {
     onCopy()
@@ -137,6 +139,8 @@ export const Share: React.FC<ShareProps> = ({
     [onCopyShareUrl, onShare, posterAction, posterIcon, posterText, t]
   )
   const showPosterEl = poster && posterState === PosterState.Creating
+  const showPoster =
+    posterState === PosterState.Creating || posterState === PosterState.Created
 
   return (
     <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
@@ -156,19 +160,27 @@ export const Share: React.FC<ShareProps> = ({
           </Box>
         ) : null}
 
-        {imgSrc ? (
-          <Image
-            src={imgSrc}
+        {showPoster ? (
+          <Center
             position="absolute"
             bottom="211px"
+            maxW="500px"
             left="50%"
             transform="translateX(-50%)"
             h="calc(100% - 231px)"
-            maxW="500px"
-            objectFit="contain"
             zIndex={'calc(var(--chakra-zIndices-modal) + 1)'}
             p="20px"
-          />
+            w="100%"
+          >
+            <Image
+              src={imgSrc}
+              m="auto"
+              h="100%"
+              w="auto"
+              maxW="100%"
+              objectFit="contain"
+            />
+          </Center>
         ) : null}
 
         <Flex
@@ -193,7 +205,7 @@ export const Share: React.FC<ShareProps> = ({
                 w="80px"
                 cursor="pointer"
               >
-                <Image
+                <RowImage
                   w="56px"
                   h="56px"
                   bg="white"
