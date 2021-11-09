@@ -1,4 +1,3 @@
-import { InputAdornment, makeStyles } from '@material-ui/core'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -7,27 +6,9 @@ import { usePrevious } from '../../hooks/usePrevious'
 import { useSetServerProfile } from '../../hooks/useProfile'
 import { Query } from '../../models'
 import { DrawerConfig } from './DrawerConfig'
-import { InputBaseFix } from './InputMod'
 import { useRoute } from '../../hooks/useRoute'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: 400,
-  },
-  input: {
-    flex: 1,
-    width: '100%',
-    background: '#FBFBFC',
-    border: '1px solid #EAEAEA',
-    borderRadius: '8px',
-    padding: '11px 16px',
-    fontSize: '14px',
-  },
-}))
+import { Input } from './Input'
 
 export interface SetUsernameProps {
   open: boolean
@@ -50,7 +31,6 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
 
   const prevValue = usePrevious(value)
   const confirm = useConfirmDialog()
-  const classes = useStyles()
 
   const [isSaving, setIsSaving] = useState(false)
   const history = useHistory()
@@ -103,20 +83,14 @@ export const SetUsername: React.FC<SetUsernameProps> = ({
       onSaving={onSave}
     >
       <div className="username">
-        <InputBaseFix
-          className={classes.input}
-          placeholder={t('profile.user-name.placeholder')}
-          type="text"
+        <Input
+          placeholder={`${t('profile.input')}${t('profile.username')}`}
           value={value}
-          formatter={(v: string) => v.trim().slice(0, 24)}
-          onChange={(e: any) => setValue(e.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              <span className="adornment">{`${len}/24`}</span>
-            </InputAdornment>
-          }
+          formatter={(v: string) => v.slice(0, 24)}
+          onChange={(e) => setValue(e.target.value)}
+          max={24}
+          errorMsg={t('profile.user-name.desc')}
         />
-        <div className="desc">{t('profile.user-name.desc')}</div>
       </div>
     </DrawerConfig>
   )
