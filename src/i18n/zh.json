@@ -343,7 +343,8 @@
       "like": "获赞",
       "no-data": "无数据",
       "more": "更多",
-      "no-on-sale": "无在售秘宝"
+      "sale-empty": "啊哦～暂无售卖的作品",
+      "empty": "啊哦～暂未创作秘宝"
     },
     "exchange": {
       "title": "兑换中心",

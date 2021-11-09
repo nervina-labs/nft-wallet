@@ -11,19 +11,17 @@ import {
 } from '@mibao-ui/components'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useRouteQuery } from '../../../hooks/useRouteQuery'
+import { useRouteQuerySearch } from '../../../hooks/useRouteQuery'
 import { PRODUCT_STATUE_SET, ProductState, Query } from '../../../models'
 import { useHistory } from 'react-router-dom'
-import { Empty } from '../../NFTs/empty'
 import { useAPI } from '../../../hooks/useAccount'
 import { useParams } from 'react-router'
-import { useAtom } from 'jotai'
-import { TabCountInfo } from './issuerInfo'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { IssuerTokenClass } from '../../../models/issuer'
 import { isSupportWebp } from '../../../utils'
 import FALLBACK from '../../../assets/svg/fallback.svg'
+import { Empty } from './empty'
 
 interface CardProps {
   token: IssuerTokenClass
@@ -71,11 +69,11 @@ const Card: React.FC<CardProps> = ({ token, locale, gotoClass }) => {
 
 export const NftCards: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const productState = useRouteQuery<ProductState>(
+  const [productState, setProductState] = useRouteQuerySearch<ProductState>(
     'productState',
     'product_state'
   )
-  const { replace, location, push } = useHistory()
+  const { push } = useHistory()
   const api = useAPI()
   const { t, i18n } = useTranslation('translations')
   const [index, setIndex] = useState(
@@ -83,10 +81,10 @@ export const NftCards: React.FC = () => {
   )
   const onChange = useCallback(
     (index) => {
-      replace(`${location.pathname}?productState=${PRODUCT_STATUE_SET[index]}`)
+      setProductState(PRODUCT_STATUE_SET[index])
       setIndex(index)
     },
-    [location.pathname, replace]
+    [setProductState]
   )
   const gotoClass = useCallback(
     (classId: string) => {
@@ -103,7 +101,6 @@ export const NftCards: React.FC = () => {
     },
     [api, id, productState]
   )
-  const [tabCountInfo] = useAtom(TabCountInfo)
   const clientIsSupportWebp = useMemo(() => isSupportWebp(), [])
 
   return (
@@ -115,12 +112,8 @@ export const NftCards: React.FC = () => {
         onChange={onChange}
       >
         <TabList position={'sticky'} top={50} zIndex={99} bg={'white'}>
-          <Tab>
-            {t('issuer.created')} {tabCountInfo.issuedClassCount}
-          </Tab>
-          <Tab>
-            {t('issuer.selling')} {tabCountInfo.onSaleProductCount}
-          </Tab>
+          <Tab>{t('issuer.created')}</Tab>
+          <Tab>{t('issuer.selling')}</Tab>
         </TabList>
 
         <TabPanels>
@@ -170,7 +163,7 @@ export const NftCards: React.FC = () => {
                 enableQuery
                 queryFn={queryFn}
                 queryKey={[Query.Issuers, api, id, productState]}
-                emptyElement={<Empty />}
+                emptyElement={<Empty type="on_sale" />}
                 noMoreElement={t('common.actions.pull-to-down')}
                 calcDataLength={(data) =>
                   data?.pages.reduce(
