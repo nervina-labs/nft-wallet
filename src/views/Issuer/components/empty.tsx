@@ -8,7 +8,6 @@ export const Empty: React.FC<{
   type?: ProductState
 }> = ({ type }) => {
   const { t } = useTranslation('translations')
-  console.log(type)
   return (
     <Box>
       <Image
