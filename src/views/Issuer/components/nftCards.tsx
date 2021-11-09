@@ -17,8 +17,6 @@ import { useHistory } from 'react-router-dom'
 import { Empty } from '../../NFTs/empty'
 import { useAPI } from '../../../hooks/useAccount'
 import { useParams } from 'react-router'
-import { useAtom } from 'jotai'
-import { TabCountInfo } from './issuerInfo'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { IssuerTokenClass } from '../../../models/issuer'
@@ -103,7 +101,6 @@ export const NftCards: React.FC = () => {
     },
     [api, id, productState]
   )
-  const [tabCountInfo] = useAtom(TabCountInfo)
   const clientIsSupportWebp = useMemo(() => isSupportWebp(), [])
 
   return (
@@ -115,12 +112,8 @@ export const NftCards: React.FC = () => {
         onChange={onChange}
       >
         <TabList position={'sticky'} top={50} zIndex={99} bg={'white'}>
-          <Tab>
-            {t('issuer.created')} {tabCountInfo.issuedClassCount}
-          </Tab>
-          <Tab>
-            {t('issuer.selling')} {tabCountInfo.onSaleProductCount}
-          </Tab>
+          <Tab>{t('issuer.created')}</Tab>
+          <Tab>{t('issuer.selling')}</Tab>
         </TabList>
 
         <TabPanels>
