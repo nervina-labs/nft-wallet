@@ -133,6 +133,8 @@ export const Card: React.FC<CardProps> = ({
           bannedText: t('common.baned.issuer'),
           href: `${RoutePath.Issuer}/${token.issuer_uuid as string}`,
           isLinkExternal: false,
+          size: '25px',
+          isVerified: token.verified_info?.is_verified,
           onClick: (e) => {
             e.stopPropagation()
             e.preventDefault()

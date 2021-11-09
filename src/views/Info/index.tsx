@@ -70,9 +70,6 @@ export const Info: React.FC<{ address: string }> = ({ address = '' }) => {
           {t('info.copy')}
         </Button>
       </Center>
-      <Text color="#FF5C00" fontSize="12px" mt="10px" textAlign="center">
-        {t('account.warning')}
-      </Text>
     </>
   )
 }

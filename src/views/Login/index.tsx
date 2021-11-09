@@ -274,6 +274,7 @@ export const Login: React.FC = () => {
         <LazyLoadImage src={Logo} width={width} height={width * 1.091} />
       </div>
       <LoginButton
+        mt="25%"
         onClick={() => {
           if (!isLicenseChecked) {
             toast(t('license.warn'))
