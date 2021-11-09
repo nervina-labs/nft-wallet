@@ -35,12 +35,16 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
 }) => {
   const { t, i18n } = useTranslation('translations')
   const { data: bgImageUrl, isLoading: bgImageUrlLoading } = useUrlToBase64(
-    bgImgUrl
+    bgImgUrl,
+    {
+      usePreviewUrl: 500,
+    }
   )
   const { data: avatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
     issuer.avatarUrl ?? '',
     {
       fallbackImg: FallbackAvatarPath,
+      usePreviewUrl: 100,
     }
   )
   const [nftName] = useTextEllipsis(name, 150)
@@ -91,6 +95,7 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
                 h="25px"
                 rounded="100%"
                 objectFit="cover"
+                border="2px solid #f6f6f6"
               />
               {issuer.isVerified && (
                 <Image

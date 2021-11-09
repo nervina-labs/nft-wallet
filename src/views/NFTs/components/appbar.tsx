@@ -21,7 +21,7 @@ export const Appbar: React.FC<{
   isHolder?: boolean
   address?: string
 }> = ({ user, isHolder, address }) => {
-  const { i18n } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const goBack = useHistoryBack()
   const {
     isOpen: isOpenShare,
@@ -72,7 +72,7 @@ export const Appbar: React.FC<{
           poster={{
             type: PosterType.Holder,
             data: {
-              username: user.nickname,
+              username: user.nickname ?? t('holder.user-name-empty'),
               avatarUrl: shareAvatarUrl ?? '',
               collectionCount: shareListInfo.len,
               desc: user.description,

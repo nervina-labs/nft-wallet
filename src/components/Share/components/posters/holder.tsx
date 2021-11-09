@@ -32,12 +32,18 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
   const { t } = useTranslation('translations')
   const ref = useRef<HTMLDivElement>(null)
   const { data: coverImageUrl, isLoading: coverImageLoading } = useUrlToBase64(
-    coverImage ?? ''
+    coverImage ?? '',
+    {
+      usePreviewUrl: 500,
+    }
   )
-  const {
-    data: issuerAvatarUrl,
-    isLoading: avatarUrlLoading,
-  } = useUrlToBase64(avatarUrl ?? '', { fallbackImg: FallbackAvatarPath })
+  const { data: issuerAvatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
+    avatarUrl ?? '',
+    {
+      fallbackImg: FallbackAvatarPath,
+      usePreviewUrl: 100,
+    }
+  )
   usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)
   const [issuerName] = useTextEllipsis(username, 300)
   const [descEllipsis] = useTextEllipsis(desc ?? '', 900)
@@ -80,7 +86,7 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
             h="50px"
             rounded="100%"
             objectFit="cover"
-            border={isNftAvatar ? '2px solid #fabe3c' : ''}
+            border={isNftAvatar ? '2px solid #fabe3c' : '2px solid #f6f6f6'}
           />
           {isNftAvatar && (
             <Image

@@ -160,7 +160,7 @@ export const NFTs: React.FC = () => {
               setShareListInfo({
                 len: group?.pages[0].meta.total_count ?? 0,
                 firstImageUrl:
-                  group?.pages[0].token_list[0].class_bg_image_url ?? '',
+                  group?.pages?.[0].token_list?.[0]?.class_bg_image_url ?? '',
               })
             }}
             calcDataLength={(data) => {

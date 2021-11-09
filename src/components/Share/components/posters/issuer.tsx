@@ -43,12 +43,18 @@ export const Issuer: React.FC<IssuerProps & PosterProps> = ({
   const { t, i18n } = useTranslation('translations')
   const ref = useRef<HTMLDivElement>(null)
   const { data: coverImageUrl, isLoading: coverImageLoading } = useUrlToBase64(
-    coverImage ?? ''
+    coverImage,
+    {
+      usePreviewUrl: 500,
+    }
   )
-  const {
-    data: issuerAvatarUrl,
-    isLoading: avatarUrlLoading,
-  } = useUrlToBase64(avatarUrl ?? '', { fallbackImg: FallbackAvatarPath })
+  const { data: issuerAvatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
+    avatarUrl,
+    {
+      fallbackImg: FallbackAvatarPath,
+      usePreviewUrl: 100,
+    }
+  )
   usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)
   const [issuerName] = useTextEllipsis(username, 300)
   const [verifiedTitleEllipsis] = useTextEllipsis(verifiedTitle ?? '', 300)
@@ -92,6 +98,7 @@ export const Issuer: React.FC<IssuerProps & PosterProps> = ({
             h="50px"
             rounded="100%"
             objectFit="cover"
+            border="2px solid #f6f6f6"
           />
           {isVerified && (
             <Image

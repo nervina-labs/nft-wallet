@@ -143,7 +143,7 @@ export const NftCards: React.FC = () => {
                 columnCount={2}
                 onDataChange={(group) => {
                   setShareImage(
-                    group?.pages[0].token_classes[0].bg_image_url ?? ''
+                    group?.pages?.[0]?.token_classes?.[0]?.bg_image_url ?? ''
                   )
                 }}
                 renderItems={(group, i) => {
