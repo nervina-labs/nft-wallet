@@ -30,3 +30,12 @@ export const formatCount = (count: number, lang: string): number | string => {
   }
   return count >= 1000 ? `${roundDown(count / 1000)}k` : count
 }
+
+export const formatCurrency = (n?: string | number, currency = '¥') => {
+  if (currency === 'cny') {
+    currency = '¥'
+  } else if (currency === 'usd') {
+    currency = '$'
+  }
+  return n ? `${currency} ${Number(n).toFixed(2)}` : ''
+}

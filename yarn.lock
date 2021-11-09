@@ -9641,6 +9641,11 @@ pify@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/pify/-/pify-4.0.1.tgz"
 
+pingpp-js@^2.2.22:
+  version "2.2.22"
+  resolved "https://registry.yarnpkg.com/pingpp-js/-/pingpp-js-2.2.22.tgz#1dc4c7a1438a2b4c5d325a27502bd9272913fdb8"
+  integrity sha512-O2WekxbGnJqD9rGIIlMucPkrE7bMdNd4dYCBZtlDM1pxPM0bCIksiamOKGGy6pYUVunuBAXkesV3cwfyw6YDLQ==
+
 pinkie-promise@^2.0.0:
   version "2.0.1"
   resolved "https://registry.npmjs.org/pinkie-promise/-/pinkie-promise-2.0.1.tgz"

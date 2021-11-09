@@ -23,5 +23,7 @@ export enum Query {
   Claim = 'Claim',
   FollowedIssuers = 'FollowedIssuers',
   NftHolderList = 'nft-holder-list',
+  OrderList = 'order-list',
+  OrderDetail = 'OrderDetail',
   RankingList = 'RankingList',
 }

@@ -23,6 +23,7 @@ const allowWithoutAuthList = new Set([
   RoutePath.RedeemResult,
   RoutePath.MyRedeem,
   RoutePath.Login,
+  RoutePath.TokenClass,
 ])
 
 const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
