@@ -24,7 +24,7 @@ import React, { useCallback, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { isSupportWebp } from '../../../utils'
 import { useTilt } from '../hooks/useTilt'
-import { ThreeDPreviewWhitLoading } from '../../../components/ThreeDPreview'
+import { ThreeDPreviewWithLoading } from '../../../components/ThreeDPreview'
 import { useToast } from '../../../hooks/useToast'
 
 const TiltContainer = styled(Tilt)`
@@ -322,7 +322,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           isOpen={isOpenPreview}
           onClose={onClosePreview}
           render3D={(renderer) => (
-            <ThreeDPreviewWhitLoading
+            <ThreeDPreviewWithLoading
               src={renderer}
               onError={onRendererError}
             />
