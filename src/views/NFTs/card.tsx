@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { RoutePath } from '../../routes'
 import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
-import { getNFTQueryParams } from '../../utils'
+import { getNFTQueryParams, isSupportWebp } from '../../utils'
 export interface CardProps {
   token: NFTToken
   isClass: boolean
@@ -142,7 +142,7 @@ export const Card: React.FC<CardProps> = ({
           },
         }}
         imageProps={{
-          webp: true,
+          webp: isSupportWebp(),
         }}
         limitProps={{
           count: token.class_total,
