@@ -9,17 +9,17 @@ import { ReactComponent as BuySvg } from '../../../assets/svg/buy.svg'
 import { ReactComponent as TransferSvg } from '../../../assets/svg/transfer.svg'
 import {
   currentOrderInfoAtom,
-  isWechatAuthedAtom,
   useOrderDrawer,
   useSetProductId,
 } from '../../../hooks/useOrder'
 import { useUpdateAtom } from 'jotai/utils'
 import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
-import { useAtom } from 'jotai'
 import { IS_WEXIN } from '../../../constants'
 import { RoutePath } from '../../../routes'
 import { UnipassConfig } from '../../../utils'
+import { Query } from '../../../models'
+import { useQuery } from 'react-query'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -44,9 +44,23 @@ const TranferOrBuy: React.FC<{
   const setProductInfo = useUpdateAtom(currentOrderInfoAtom)
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
-  const [isWechatAuthed, setIsWechatAuthed] = useAtom(isWechatAuthedAtom)
   const { isLogined } = useAccountStatus()
   const history = useHistory()
+
+  const { data: user } = useQuery(
+    [Query.Tags, api],
+    async () => {
+      const data = await api.getProfile()
+      return data
+    },
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      enabled: IS_WEXIN,
+    }
+  )
+
   const orderOnClick = useCallback(async () => {
     if (!detail?.product_on_sale_uuid) {
       return
@@ -55,12 +69,12 @@ const TranferOrBuy: React.FC<{
       UnipassConfig.setRedirectUri(location.pathname)
       history.push(RoutePath.Login)
     }
-    if (!isWechatAuthed && IS_WEXIN) {
+    console.log(!user?.open_id, user?.open_id)
+    if (!user?.open_id && IS_WEXIN) {
       const auth = await getAuth()
       const {
         data: { oauth_url: authUrl },
       } = await api.getWechatOauthUrl(auth)
-      setIsWechatAuthed(true)
       location.href = authUrl
       return
     }
@@ -83,10 +97,9 @@ const TranferOrBuy: React.FC<{
     openOrderDrawer,
     api,
     getAuth,
-    isWechatAuthed,
-    setIsWechatAuthed,
     history,
     isLogined,
+    user,
   ])
 
   const isSoldout = Number(detail?.product_count) === 0

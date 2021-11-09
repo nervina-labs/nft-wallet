@@ -184,7 +184,8 @@ export const OrderDetail: React.FC = () => {
     })
   }, [continueOrder, order])
   const deleteOrder = useDeleteOrder()
-
+  const isGettingNFT =
+    order?.state === OrderState.Done || order?.state === OrderState.Paid
   return (
     <Container>
       <AppbarSticky>
@@ -209,7 +210,7 @@ export const OrderDetail: React.FC = () => {
             </Heading>
             <Table variant="unstyled">
               <Tbody>
-                {order?.ckb_address ? (
+                {order?.ckb_address && isGettingNFT ? (
                   <Row label={t('orders.info.address')}>
                     <Copyzone
                       value={order?.ckb_address}
@@ -220,7 +221,14 @@ export const OrderDetail: React.FC = () => {
                   </Row>
                 ) : null}
                 {order?.uuid ? (
-                  <Row label={t('orders.info.uuid')}>{order?.uuid}</Row>
+                  <Row label={t('orders.info.uuid')}>
+                    <Copyzone
+                      value={order?.uuid}
+                      containerProps={{ fontSize: '16px' }}
+                    >
+                      {order?.uuid}
+                    </Copyzone>
+                  </Row>
                 ) : null}
                 {order?.created_at ? (
                   <Row label={t('orders.info.created_at')}>

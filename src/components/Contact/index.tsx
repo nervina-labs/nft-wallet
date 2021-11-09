@@ -7,6 +7,7 @@ import { CONTACT_ADDRESS, CONTAINER_MAX_WIDTH } from '../../constants'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { useTranslation } from 'react-i18next'
 import * as clipboard from 'clipboard-polyfill/text'
+import { useToast } from '../../hooks/useToast'
 
 const Container = styled(Center)`
   background: linear-gradient(
@@ -38,6 +39,7 @@ export const Contact: React.FC = () => {
 
   const confirmDialog = useConfirmDialog()
   const [t] = useTranslation('translations')
+  const toast = useToast()
 
   return (
     <Container
@@ -58,6 +60,7 @@ export const Contact: React.FC = () => {
           okText: t('orders.dialog.copy-email-address'),
           onConfirm() {
             clipboard.writeText(CONTACT_ADDRESS)
+            toast(t('info.copied'))
           },
         })
       }}

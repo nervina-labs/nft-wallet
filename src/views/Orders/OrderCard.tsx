@@ -98,15 +98,16 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
             e.preventDefault()
             history.push(issuerHref)
           }}
+          isVerified={order.verified_info?.is_verified}
         />
         {status}
       </Flex>
       <Flex mt="20px" mb="10px" className="card">
         <NftImage
           resizeScale={200}
-          type={order.renderer_type}
+          type={isInList ? 'image' : order.renderer_type}
           src={order.product_image_url}
-          hasCardBack={order.card_back_content_exist}
+          hasCardBack={isInList ? false : order.card_back_content_exist}
           width="100px"
           height="100px"
           borderRadius="22px"
@@ -134,7 +135,10 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
                 : t('orders.paid-payment')}
             </Text>
             <Text fontWeight={500} color="#f48538">
-              {formatCurrency(total, order.currency)}
+              {formatCurrency(
+                order.state === OrderState.Closed ? 0 : total,
+                order.currency
+              )}
             </Text>
           </Flex>
         </Flex>

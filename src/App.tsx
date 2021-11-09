@@ -5,6 +5,9 @@ import { Provider as JotaiProvider } from 'jotai'
 import { IntryUrl } from './hooks/useWechat'
 import { MibaoProvider } from '@mibao-ui/components'
 import '@mibao-ui/components/mibao-ui.esm.css'
+import Vconsole from 'vconsole'
+
+console.log(new Vconsole())
 
 IntryUrl.set(location.href.split('#')[0])
 const App: React.FC = () => {
