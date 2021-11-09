@@ -8,6 +8,8 @@ import { useUrlToBase64 } from '../../../../hooks/useUrlToBase64'
 import { useTranslation } from 'react-i18next'
 import { useTextEllipsis } from '../../hooks/useTextEllipsis'
 import NftAvatarPath from '../../../../assets/share/icons/nft-avatar-diamonds.png'
+import FallbackAvatarPath from '../../../../assets/img/fallback.png'
+
 export interface HolderProps {
   username: string
   avatarUrl: string
@@ -32,9 +34,10 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
   const { data: coverImageUrl, isLoading: coverImageLoading } = useUrlToBase64(
     coverImage ?? ''
   )
-  const { data: issuerAvatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
-    avatarUrl ?? ''
-  )
+  const {
+    data: issuerAvatarUrl,
+    isLoading: avatarUrlLoading,
+  } = useUrlToBase64(avatarUrl ?? '', { fallbackImg: FallbackAvatarPath })
   usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)
   const [issuerName] = useTextEllipsis(username, 300)
   const [descEllipsis] = useTextEllipsis(desc ?? '', 900)

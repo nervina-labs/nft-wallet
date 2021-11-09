@@ -1,4 +1,4 @@
-import FallbackImgPath from '../assets/img/fallback.png'
+import FallbackImgPath from '../assets/img/nft-fallback.png'
 import { getImagePreviewUrl, toDataUrl } from '../utils'
 import { useQuery } from 'react-query'
 import { useAPI } from './useAccount'

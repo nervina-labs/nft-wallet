@@ -9,6 +9,7 @@ import { PosterProps } from '../../poster.interface'
 import { useRef } from 'react'
 import { usePosterLoader } from '../../hooks/usePosterLoader'
 import { useTextEllipsis } from '../../hooks/useTextEllipsis'
+import FallbackAvatarPath from '../../../../assets/img/fallback.png'
 
 export interface NftProps {
   bgImgUrl: string
@@ -37,7 +38,10 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
     bgImgUrl
   )
   const { data: avatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
-    issuer.avatarUrl ?? ''
+    issuer.avatarUrl ?? '',
+    {
+      fallbackImg: FallbackAvatarPath,
+    }
   )
   const [nftName] = useTextEllipsis(name, 150)
   const [issuerName] = useTextEllipsis(issuer.name, 240)
