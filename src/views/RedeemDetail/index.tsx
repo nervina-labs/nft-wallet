@@ -2,12 +2,11 @@ import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Redirect, useHistory, useParams } from 'react-router'
 import styled from 'styled-components'
-import { Appbar } from '../../components/Appbar'
+import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { Loading } from '../../components/Loading'
 import { Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { useTranslation } from 'react-i18next'
 import { formatTime } from '../../utils'
 import { Divider } from '@material-ui/core'
@@ -232,19 +231,17 @@ export const RedeemDetail: React.FC = () => {
 
   return (
     <Container>
-      <Appbar
-        title={t('exchange.event.title')}
-        left={
-          <BackSvg
-            onClick={() =>
-              history.replace(
-                from === location.pathname ? RoutePath.Redeem : from
-              )
-            }
-          />
-        }
-        right={<></>}
-      />
+      <AppbarSticky>
+        <Appbar
+          title={t('exchange.event.title')}
+          onLeftClick={() =>
+            history.replace(
+              from === location.pathname ? RoutePath.Redeem : from
+            )
+          }
+          right={<></>}
+        />
+      </AppbarSticky>
       <main>
         {data == null ? (
           <Loading />

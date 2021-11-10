@@ -1,6 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { Appbar } from '../../components/Appbar'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import {
+  Appbar,
+  AppbarButton,
+  AppbarSticky,
+  HEADER_HEIGHT,
+} from '../../components/Appbar'
 import { ReactComponent as MyExchangeSvg } from '../../assets/svg/my-exchange.svg'
 import styled from 'styled-components'
 import { MainContainer } from '../../styles'
@@ -15,42 +19,24 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { Loading } from '../../components/Loading'
 import { ReedemCard } from './RedeemCard'
 import { Link } from 'react-router-dom'
-import { Tab, Tabs } from '../../components/Tab'
 import { SubmitInfo } from '../RedeemDetail/SubmitInfo'
 import { RedeemListType } from '../../models/redeem'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
+import { Tab, TabList, Tabs } from '@mibao-ui/components'
 
 export const RedeemContainer = styled(MainContainer)`
   display: flex;
   flex-direction: column;
+  min-height: 100%;
 
   background: #f6f6f6;
   h4 {
     text-align: center;
     color: rgba(0, 0, 0, 0.6);
   }
-  .tabs {
-    background: white;
-    display: flex;
-    justify-content: center;
-    position: fixed;
-    width: 100%;
-    max-width: 500px;
-    top: 44px;
-    background: #fff;
-    z-index: 2;
-    > nav {
-      background: white;
-      width: 60%;
-      .tab {
-        font-size: 14px;
-      }
-    }
-  }
 
   .list {
     flex: 1;
-    margin-top: 40px;
   }
 `
 
@@ -123,37 +109,39 @@ export const Redeem: React.FC = () => {
 
   return (
     <RedeemContainer>
-      <Appbar
-        title={t('exchange.title')}
-        left={<BackSvg onClick={() => history.replace(RoutePath.Apps)} />}
-        right={
-          isLogined ? (
-            <Link to={RoutePath.MyRedeem}>
-              <MyExchangeSvg />
-            </Link>
-          ) : (
-            <div />
-          )
-        }
-      />
-      <div className="tabs">
-        <Tabs activeKey={isRedeemable ? 1 : 0}>
-          <Tab
-            className="tab"
-            active={!isRedeemable}
-            onClick={() => tabOnClick('all')}
-          >
-            {t('exchange.tabs.all')}
-          </Tab>
-          <Tab
-            className="tab"
-            active={isRedeemable}
-            onClick={() => tabOnClick('redeemable')}
-          >
-            {t('exchange.tabs.redeemable')}
-          </Tab>
+      <AppbarSticky>
+        <Appbar
+          title={t('exchange.title')}
+          onLeftClick={() => history.replace(RoutePath.Apps)}
+          right={
+            isLogined ? (
+              <AppbarButton>
+                <Link to={RoutePath.MyRedeem}>
+                  <MyExchangeSvg />
+                </Link>
+              </AppbarButton>
+            ) : (
+              <div />
+            )
+          }
+        />
+      </AppbarSticky>
+      <AppbarSticky top={`${HEADER_HEIGHT}px`} bg="white">
+        <Tabs
+          index={isRedeemable ? 1 : 0}
+          colorScheme="black"
+          align="space-around"
+        >
+          <TabList px="20px">
+            <Tab onClick={() => tabOnClick('all')}>
+              {t('exchange.tabs.all')}
+            </Tab>
+            <Tab onClick={() => tabOnClick('redeemable')}>
+              {t('exchange.tabs.redeemable')}
+            </Tab>
+          </TabList>
         </Tabs>
-      </div>
+      </AppbarSticky>
       <section className="list">
         {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (
