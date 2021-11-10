@@ -9,6 +9,16 @@ import { useTranslation } from 'react-i18next'
 import { useTextEllipsis } from '../../hooks/useTextEllipsis'
 import NftAvatarPath from '../../../../assets/share/icons/nft-avatar-diamonds.png'
 import FallbackAvatarPath from '../../../../assets/img/fallback.png'
+import styled from '@emotion/styled'
+
+export const DescContainer = styled(Box)`
+  -webkit-line-clamp: 5;
+  font-size: 12px;
+  margin-top: 5px;
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
 
 export interface HolderProps {
   username: string
@@ -105,9 +115,7 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
         <Box mt="5px" fontSize="12px" fontWeight="200">
           {t('common.share.poster.collected')}: {collectionCount}
         </Box>
-        <Box fontSize="12px" mt="5px" whiteSpace="pre-wrap">
-          {descEllipsis}
-        </Box>
+        <DescContainer>{descEllipsis}</DescContainer>
         {shareUrl && (
           <Footer url={shareUrl} text={t('common.share.poster.desc-holder')} />
         )}

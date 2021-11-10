@@ -22,6 +22,21 @@ import { downloadImage } from '../../utils'
 import { useToast } from '../../hooks/useToast'
 import { Issuer, IssuerProps } from './components/posters/issuer'
 import { Holder, HolderProps } from './components/posters/holder'
+import styled from '@emotion/styled'
+
+const IconContainer = styled(RowImage)`
+  &.loading {
+    animation: loading 1.5s infinite linear;
+  }
+  @keyframes loading {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`
 
 enum PosterState {
   None,
@@ -119,11 +134,13 @@ export const Share: React.FC<ShareProps> = ({
           icon: posterIcon,
           text: posterText,
           action: posterAction,
+          id: 'poster',
         },
         {
           icon: CopyLinkPath,
           text: t('common.share.icons.copy'),
           action: onCopyShareUrl,
+          id: 'copy-link',
         },
       ].concat(
         navigator?.share !== undefined
@@ -132,13 +149,14 @@ export const Share: React.FC<ShareProps> = ({
                 icon: MorePath,
                 text: t('common.share.icons.more'),
                 action: onShare,
+                id: 'more',
               },
             ]
           : []
       ),
     [onCopyShareUrl, onShare, posterAction, posterIcon, posterText, t]
   )
-  const showPosterEl = poster && posterState === PosterState.Creating
+  const creatingPoster = poster && posterState === PosterState.Creating
   const showPoster =
     posterState === PosterState.Creating || posterState === PosterState.Created
 
@@ -146,110 +164,130 @@ export const Share: React.FC<ShareProps> = ({
     <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay />
       <DrawerContent bg="rgba(0, 0, 0, 0)" maxH="unset" h="100%">
-        {showPosterEl ? (
-          <Box position="fixed" top="0" left="0" opacity="0">
-            {poster.type === PosterType.Nft && (
-              <Nft {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
-            )}
-            {poster.type === PosterType.Issuer && (
-              <Issuer {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
-            )}
-            {poster.type === PosterType.Holder && (
-              <Holder {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
-            )}
-          </Box>
-        ) : null}
+        {isOpen ? (
+          <>
+            {creatingPoster ? (
+              <Box position="fixed" top="0" left="0" opacity="0">
+                {poster.type === PosterType.Nft && (
+                  <Nft {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
+                )}
+                {poster.type === PosterType.Issuer && (
+                  <Issuer
+                    {...poster.data}
+                    shareUrl={shareUrl}
+                    onLoaded={setEl}
+                  />
+                )}
+                {poster.type === PosterType.Holder && (
+                  <Holder
+                    {...poster.data}
+                    shareUrl={shareUrl}
+                    onLoaded={setEl}
+                  />
+                )}
+              </Box>
+            ) : null}
 
-        {showPoster ? (
-          <Center
-            position="absolute"
-            bottom="211px"
-            maxW="500px"
-            left="50%"
-            transform="translateX(-50%)"
-            h="calc(100% - 231px)"
-            zIndex={'calc(var(--chakra-zIndices-modal) + 1)'}
-            p="20px"
-            w="100%"
-          >
-            <Image
-              src={imgSrc}
-              m="auto"
-              h="auto"
-              w="auto"
-              maxW="100%"
-              objectFit="contain"
-              rounded="20px"
-              containerProps={{
-                w: '100%',
-                h: '100%',
-                display: 'flex',
-              }}
-            />
-          </Center>
-        ) : null}
-
-        <Flex
-          bg="rgba(255, 255, 255, 0.7)"
-          backdropFilter="blur(15px)"
-          w="full"
-          maxW="500px"
-          mx="auto"
-          rounded="22px 22px 0 0"
-          py="30px"
-          direction="column"
-          mt="auto"
-        >
-          <Flex overflowX="auto" overflowY="hidden" shrink={0}>
-            {items.map((item, i) => (
-              <Flex
-                direction="column"
-                ml="10px"
-                minW="56px"
-                key={i}
-                onClick={item.action}
-                w="80px"
-                cursor="pointer"
+            {showPoster ? (
+              <Center
+                position="absolute"
+                bottom="211px"
+                maxW="500px"
+                left="50%"
+                transform="translateX(-50%)"
+                h="calc(100% - 231px)"
+                zIndex={'calc(var(--chakra-zIndices-modal) + 1)'}
+                p="20px"
+                w="100%"
               >
-                <RowImage
-                  w="56px"
-                  h="56px"
-                  bg="white"
-                  rounded="8px"
-                  p="12px"
-                  src={item.icon}
-                  mx="auto"
+                <Image
+                  src={imgSrc}
+                  m="auto"
+                  h="auto"
+                  w="auto"
+                  maxW="100%"
+                  objectFit="contain"
+                  rounded="20px"
+                  containerProps={{
+                    w: '100%',
+                    h: '100%',
+                    display: 'flex',
+                  }}
                 />
-                <Box
-                  fontSize="12px"
-                  whiteSpace="nowrap"
-                  color="#777E90"
-                  mt="8px"
-                  textAlign="center"
-                >
-                  {item.text}
-                </Box>
-              </Flex>
-            ))}
-          </Flex>
+              </Center>
+            ) : null}
 
-          <Button
-            isFullWidth
-            mt="25px"
-            variant="solid"
-            size="lg"
-            bg="white"
-            rounded="44px"
-            h="44px"
-            fontSize="18px"
-            fontWeight="normal"
-            onClick={onClose}
-            mx="20px"
-            w="calc(100% - 40px)"
-          >
-            {t('common.share.cancel')}
-          </Button>
-        </Flex>
+            <Flex
+              bg="rgba(255, 255, 255, 0.7)"
+              backdropFilter="blur(15px)"
+              w="full"
+              maxW="500px"
+              mx="auto"
+              rounded="22px 22px 0 0"
+              py="30px"
+              direction="column"
+              mt="auto"
+            >
+              <Flex overflowX="auto" overflowY="hidden" shrink={0}>
+                {items.map((item, i) => (
+                  <Flex
+                    direction="column"
+                    ml="10px"
+                    minW="56px"
+                    key={i}
+                    onClick={item.action}
+                    w="80px"
+                    cursor="pointer"
+                  >
+                    <Center
+                      w="56px"
+                      h="56px"
+                      bg="white"
+                      rounded="8px"
+                      p="12px"
+                      mx="auto"
+                    >
+                      <IconContainer
+                        src={item.icon}
+                        className={
+                          item.id === 'poster' && creatingPoster
+                            ? 'loading'
+                            : ''
+                        }
+                      />
+                    </Center>
+                    <Box
+                      fontSize="12px"
+                      whiteSpace="nowrap"
+                      color="#777E90"
+                      mt="8px"
+                      textAlign="center"
+                    >
+                      {item.text}
+                    </Box>
+                  </Flex>
+                ))}
+              </Flex>
+
+              <Button
+                isFullWidth
+                mt="25px"
+                variant="solid"
+                size="lg"
+                bg="white"
+                rounded="44px"
+                h="44px"
+                fontSize="18px"
+                fontWeight="normal"
+                onClick={onClose}
+                mx="20px"
+                w="calc(100% - 40px)"
+              >
+                {t('common.share.cancel')}
+              </Button>
+            </Flex>
+          </>
+        ) : null}
       </DrawerContent>
     </Drawer>
   )
