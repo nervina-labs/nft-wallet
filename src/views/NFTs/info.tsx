@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import React from 'react'
 import { Addressbar } from '../../components/AddressBar'
-import { UserResponse } from '../../models/user'
+import { AvatarType, UserResponse } from '../../models/user'
 import { useTranslation } from 'react-i18next'
 import {
   Center,
@@ -10,10 +10,18 @@ import {
   Text,
   Skeleton,
   SkeletonCircle,
+  Preview,
+  useDisclosure,
+  NFTCard,
+  Box,
+  Button,
 } from '@mibao-ui/components'
-import { getNFTQueryParams } from '../../utils'
+import { addParamsToUrl, getNFTQueryParams, isSupportWebp } from '../../utils'
 import { RoutePath } from '../../routes'
 import { Link } from 'react-router-dom'
+import { Query } from '../../models'
+import { useAPI } from '../../hooks/useAccount'
+import { useQuery } from 'react-query'
 
 const InfoContainer = styled(Center)`
   padding: 24px;
@@ -61,6 +69,28 @@ export const Info: React.FC<{
     )
   }, [t, user, isHolder])
 
+  const {
+    isOpen: isPreviewOpen,
+    onClose: onPreviewClose,
+    onOpen: onPreviewOpen,
+  } = useDisclosure()
+
+  const api = useAPI()
+
+  const { data: nft } = useQuery(
+    [Query.NFTDetail, user?.avatar_token_uuid, api],
+    async () => {
+      const id = user?.avatar_token_uuid as string
+      const { data } = await api.getNFTDetail(id)
+      return data
+    },
+    {
+      enabled:
+        user?.avatar_type === AvatarType.Token &&
+        Boolean(user?.avatar_token_uuid),
+    }
+  )
+
   return (
     <InfoContainer flexDirection="column">
       {isLoading ? (
@@ -78,6 +108,7 @@ export const Info: React.FC<{
             size="100px"
             type={user?.avatar_type}
             srcQueryParams={getNFTQueryParams(user?.avatar_tid, i18n.language)}
+            onClick={onPreviewOpen}
           />
           <Heading
             mt="8px"
@@ -100,6 +131,74 @@ export const Info: React.FC<{
             {description}
           </Text>
           <Addressbar address={address} isHolder={isHolder} />
+          <Preview
+            isOpen={isPreviewOpen}
+            onClose={onPreviewClose}
+            renderer="1"
+            bgImgUrl={
+              addParamsToUrl(
+                user?.avatar_url as string,
+                Object.create(
+                  getNFTQueryParams(user?.avatar_tid, i18n.language) || {}
+                )
+              ) || '1'
+            }
+            type={user?.avatar_type === AvatarType.Token ? 'three_d' : 'image'}
+            render3D={(renderer) => {
+              return (
+                <Center w="100%" height="100%">
+                  <Box w="300px">
+                    <NFTCard
+                      w="100%"
+                      borderRadius="22px"
+                      bg="white"
+                      p="16px"
+                      isIssuerBanned={nft?.is_issuer_banned}
+                      isNFTBanned={nft?.is_class_banned}
+                      hasCardback={nft?.card_back_content_exist}
+                      resizeScale={600}
+                      title={nft?.name}
+                      bannedText={t('common.baned.nft')}
+                      type={nft?.renderer_type}
+                      src={nft?.bg_image_url || ''}
+                      locale={i18n.language}
+                      imageProps={{
+                        webp: isSupportWebp(),
+                      }}
+                      issuerProps={{
+                        name: nft?.issuer_info?.name as string,
+                        src: nft?.issuer_info?.avatar_url,
+                        bannedText: t('common.baned.issuer'),
+                        size: '25px',
+                        isVerified: nft?.verified_info?.is_verified,
+                      }}
+                      limitProps={{
+                        count: nft?.total as string,
+                        limitedText: t('common.limit.limit'),
+                        unlimitedText: t('common.limit.unlimit'),
+                        serialNumber: nft?.n_token_id,
+                        ml: '4px',
+                      }}
+                      likeProps={{
+                        likeCount: nft?.class_likes as number,
+                        isLiked: nft?.class_liked as boolean,
+                      }}
+                    />
+                    <Link to={`/nft/${user?.avatar_token_uuid as string}`}>
+                      <Button
+                        isFullWidth
+                        variant="solid"
+                        colorScheme="primary"
+                        mt="20px"
+                      >
+                        {t('common.show-detail')}
+                      </Button>
+                    </Link>
+                  </Box>
+                </Center>
+              )
+            }}
+          />
         </>
       )}
     </InfoContainer>

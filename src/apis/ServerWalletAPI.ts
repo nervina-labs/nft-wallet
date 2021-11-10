@@ -5,7 +5,6 @@ import {
   NFT,
   NFTDetail,
   NFTTransaction,
-  NFTWalletAPI,
   ProductState,
   SpecialCategories,
   Transaction,
@@ -50,6 +49,13 @@ import {
   RewardDetailResponse,
 } from '../models/redeem'
 import { ClaimResult } from '../models/claim'
+import {
+  OrderDetail,
+  OrdersResponse,
+  OrderState,
+  PlaceOrderProps,
+} from '../models/order'
+import { RoutePath } from '../routes'
 import { RankingListResponse } from '../models/rank'
 
 function randomid(length = 10): string {
@@ -93,9 +99,11 @@ async function writeFormData(
   return formData
 }
 
-export class ServerWalletAPI implements NFTWalletAPI {
+export class ServerWalletAPI {
   private readonly address: string
   private readonly axios: AxiosInstance
+
+  private readonly orderCallbackURL = `${location.origin}${RoutePath.OrderSuccess}`
 
   constructor(address: string) {
     this.address = address
@@ -643,6 +651,62 @@ export class ServerWalletAPI implements NFTWalletAPI {
     )
   }
 
+  async submitOrder(auth: Auth): Promise<AxiosResponse<{ uuid: string }>> {
+    return await this.axios.post(
+      '/token_order_uuid',
+      {
+        auth,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+      }
+    )
+  }
+
+  async getOrders(
+    page: number,
+    auth: Auth,
+    orderState?: OrderState
+  ): Promise<AxiosResponse<OrdersResponse>> {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+      address: this.address,
+    }
+    if (orderState) {
+      params.state = orderState
+    }
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    return await this.axios.get('/token_orders', {
+      params,
+      headers,
+    })
+  }
+
+  async placeOrder(props: PlaceOrderProps, auth: Auth) {
+    const headers: { auth?: string } = {
+      auth: JSON.stringify(auth),
+    }
+    return await this.axios.post(
+      '/token_orders',
+      {
+        token_order: {
+          ...props,
+          callback_url: this.orderCallbackURL,
+        },
+        auth,
+      },
+      {
+        headers,
+      }
+    )
+  }
+
   async getTokenClassTransactions(
     uuid: string,
     options?: {
@@ -663,6 +727,54 @@ export class ServerWalletAPI implements NFTWalletAPI {
     )
   }
 
+  async getOrderDetail(
+    uuid: string,
+    auth: Auth
+  ): Promise<AxiosResponse<{ token_order: OrderDetail }>> {
+    const headers: { auth?: string } = {}
+    headers.auth = JSON.stringify(auth)
+    return await this.axios.get(`/token_orders/${uuid}`, {
+      params: {
+        uuid,
+        address: this.address,
+      },
+      headers,
+    })
+  }
+
+  async continuePlaceOrder(uuid: string, channel: string, auth: Auth) {
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    return await this.axios.put(
+      `/token_orders/${uuid}`,
+      {
+        channel,
+        address: this.address,
+        callback_url: this.orderCallbackURL,
+      },
+      {
+        params: {
+          channel,
+          address: this.address,
+          callback_url: this.orderCallbackURL,
+        },
+        headers,
+      }
+    )
+  }
+
+  async deleteOrder(uuid: string, auth: Auth) {
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    return await this.axios.delete(`/token_orders/${uuid}`, {
+      headers,
+    })
+  }
+
   async getTokenTransactions(
     uuid: string,
     options?: {
@@ -681,6 +793,17 @@ export class ServerWalletAPI implements NFTWalletAPI {
         },
       }
     )
+  }
+
+  async getWechatOauthUrl(auth: Auth) {
+    return await this.axios.get<{ oauth_url: string }>('/wechat_auths', {
+      params: {
+        mibao_url: location.href,
+      },
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+    })
   }
 
   async getRankingList<

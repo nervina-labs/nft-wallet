@@ -66,7 +66,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           whiteSpace="nowrap"
           textOverflow="ellipsis"
           overflow="hidden"
-          px="5px"
+          px="10px"
         >
           {token.issuer_info?.name}
         </Box>
@@ -141,9 +141,9 @@ export const Follow: React.FC<{
         ) ?? 0
       }
       columnCount={1}
-      renderItems={(group) => {
-        return group.class_list.map((token) => {
-          return <Card token={token} />
+      renderItems={(group, i) => {
+        return group.class_list.map((token, j) => {
+          return <Card token={token} key={`${i}-${j}`} />
         })
       }}
     />

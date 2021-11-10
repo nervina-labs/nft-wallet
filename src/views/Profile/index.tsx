@@ -1,15 +1,8 @@
-import React, {
-  useState,
-  useCallback,
-  useReducer,
-  useMemo,
-  useEffect,
-} from 'react'
+import React, { useState } from 'react'
 import { Redirect, useHistory } from 'react-router'
 import styled from 'styled-components'
-import { Appbar, AppbarButton } from '../../components/Appbar'
+import { Appbar } from '../../components/Appbar'
 import { MainContainer } from '../../styles'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as CameraSvg } from '../../assets/svg/camera-avatar.svg'
 import { useTranslation } from 'react-i18next'
 import { SetBirthday } from './setBirthday'
@@ -22,10 +15,12 @@ import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { DrawerImage } from './DrawerImage'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
-import { Input, Select } from './Input'
-import { Stack, Center, Button, Avatar } from '@mibao-ui/components'
-import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { Select } from './Input'
+import { Stack, Center, Avatar } from '@mibao-ui/components'
 import { getNFTQueryParams } from '../../utils'
+import { SetDesc } from './setDesc'
+import { SetUsername } from './setUserName'
+import { useToast } from '../../hooks/useToast'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -81,12 +76,8 @@ export const Profile: React.FC = () => {
     strict: true,
   })
 
-  const [formState, dispatch] = useReducer(
-    (prevState: FormState, { key, value }: FormAction) => {
-      return { ...prevState, [key]: value }
-    },
-    {}
-  )
+  const matchDesc = useRouteMatch(ProfilePath.Description)
+  const matchUsername = useRouteMatch(ProfilePath.Username)
 
   const { data: user, refetch } = useQuery(
     [Query.Profile, address],
@@ -97,84 +88,13 @@ export const Profile: React.FC = () => {
     {
       enabled: !!address,
       refetchOnWindowFocus: false,
-      onSuccess(user) {
-        dispatch({ key: 'birthday', value: user.birthday })
-        dispatch({ key: 'description', value: user.description || '' })
-        dispatch({ key: 'gender', value: user.gender })
-        dispatch({ key: 'region', value: user.region })
-        dispatch({ key: 'nickname', value: user.nickname || '' })
-      },
     }
   )
 
   const setRemoteProfile = useSetServerProfile()
-  const [errorMsg, setErrorMsg] = useState<string>()
-  const [isSending, setIsSending] = useState(false)
-  const isDisabled = typeof errorMsg === 'string'
   const qc = useQueryClient()
-  const onSubmit = useCallback(
-    async (shouldRefetch = true) => {
-      setIsSending(true)
-      try {
-        await setRemoteProfile(formState)
-      } catch (error) {
-        //
-        alert('set profile failed')
-      } finally {
-        setIsSending(false)
-        setShowGenderAction(false)
-        if (shouldRefetch) {
-          await qc.refetchQueries(Query.Profile)
-        }
-      }
-    },
-    [setRemoteProfile, formState, qc]
-  )
 
-  const isDataChanged = useMemo(() => {
-    return (
-      formState.birthday !== user?.birthday ||
-      formState.description !== user?.description ||
-      formState.gender !== user?.gender ||
-      formState.nickname !== user?.nickname ||
-      formState.region !== user?.region
-    )
-  }, [user, formState])
-
-  const onConfirm = useConfirmDialog()
-
-  const goBack = useCallback(() => {
-    history.replace(RoutePath.NFTs)
-  }, [history])
-
-  const onGoBack = useCallback(async () => {
-    if (isDataChanged && !isDisabled) {
-      try {
-        await onConfirm({
-          type: 'text',
-          title: t('profile.save-edit'),
-          async onConfirm() {
-            await onSubmit(false)
-          },
-          onCancel: goBack,
-        })
-      } catch {
-        //
-        return
-      }
-    }
-    goBack()
-  }, [isDataChanged, isDisabled, goBack, onConfirm, t, onSubmit])
-
-  useEffect(() => {
-    const len = formState?.nickname?.length ?? 0
-    if (len < 2) {
-      setErrorMsg(t('profile.user-name.desc'))
-    } else {
-      // eslint-disable-next-line no-void
-      setErrorMsg(void 0)
-    }
-  }, [formState?.nickname, t])
+  const toast = useToast()
 
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
@@ -182,15 +102,7 @@ export const Profile: React.FC = () => {
 
   return (
     <Container>
-      <Appbar
-        title={t('profile.title')}
-        left={
-          <AppbarButton onClick={onGoBack}>
-            <BackSvg />
-          </AppbarButton>
-        }
-        right={<div />}
-      />
+      <Appbar title={t('profile.title')} right={<div />} />
       <section className="main">
         <Center flexDirection="column" my="24px">
           <Avatar
@@ -204,65 +116,55 @@ export const Profile: React.FC = () => {
           <CameraSvg className="cam" />
         </Center>
         <Stack spacing="12px" px="20px" mb="90px">
-          <Input
+          <Select
             label={t('profile.username')}
+            value={user?.nickname}
             placeholder={`${t('profile.input')}${t('profile.username')}`}
-            value={formState.nickname}
-            formatter={(v: string) => v.trim().slice(0, 24)}
-            onChange={(e) => {
-              const value = e.target.value
-              dispatch({ key: 'nickname', value })
+            onClick={() => {
+              history.push(ProfilePath.Username)
             }}
-            max={24}
-            errorMsg={errorMsg}
           />
           <Select
             label={t('profile.gender')}
-            value={
-              formState.gender ? t(`profile.${formState.gender}`) : undefined
-            }
+            value={user?.gender ? t(`profile.${user?.gender}`) : undefined}
             onClick={() => {
               setShowGenderAction(true)
             }}
           />
           <Select
             label={t('profile.birthday')}
-            value={formState.birthday}
+            value={user?.birthday}
             onClick={() => history.push(ProfilePath.Birthday)}
           />
           <Select
             label={t('profile.region')}
-            value={
-              getRegionFromCode(formState.region, i18n.language) || undefined
-            }
+            value={getRegionFromCode(user?.region, i18n.language) || undefined}
             onClick={() => history.push(ProfilePath.Regions)}
           />
-          <Input
+          <Select
             label={t('profile.description')}
-            placeholder={`${t('profile.input')}${t('profile.description')}`}
-            value={formState.description}
-            formatter={(v: string) => v.slice(0, 100)}
-            onChange={(e) =>
-              dispatch({ key: 'description', value: e.target.value })
+            value={
+              Number(user?.description?.length) > 20
+                ? user?.description.slice(0, 20) + '...'
+                : user?.description
             }
-            isTextarea
-            max={100}
+            placeholder={`${t('profile.input')}${t('profile.description')}`}
+            onClick={() => {
+              history.push(ProfilePath.Description)
+            }}
           />
         </Stack>
       </section>
-      <footer className="footer">
-        <Button
-          colorScheme="primary"
-          variant="solid"
-          onClick={onSubmit}
-          type="submit"
-          isFullWidth
-          isLoading={isSending}
-          isDisabled={isDisabled}
-        >
-          {t('profile.save')}
-        </Button>
-      </footer>
+      <SetUsername
+        username={user?.nickname}
+        open={!!matchUsername?.isExact}
+        close={() => history.goBack()}
+      />
+      <SetDesc
+        desc={user?.description}
+        open={!!matchDesc?.isExact}
+        close={() => history.goBack()}
+      />
       <SetBirthday
         open={!!matchBirthday?.isExact}
         close={() => history.goBack()}
@@ -282,9 +184,13 @@ export const Profile: React.FC = () => {
           { content: t('profile.male'), value: 'male' },
           { content: t('profile.female'), value: 'female' },
         ]}
-        actionOnClick={(value) => {
-          dispatch({ key: 'gender', value })
+        actionOnClick={async (value) => {
+          await setRemoteProfile({
+            gender: value,
+          })
           setShowGenderAction(false)
+          toast(t('profile.success'))
+          await qc.refetchQueries(Query.Profile)
         }}
       />
       <DrawerImage

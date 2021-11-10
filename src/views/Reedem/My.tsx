@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { Appbar } from '../../components/Appbar'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import { Appbar, AppbarSticky, HEADER_HEIGHT } from '../../components/Appbar'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
@@ -11,10 +10,10 @@ import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Loading } from '../../components/Loading'
 import { ReedemCard } from './RedeemCard'
-import { Tab, Tabs } from '../../components/Tab'
 import { RedeemContainer } from '.'
 import { RedeemListType } from '../../models/redeem'
 import { useAccount, useAPI } from '../../hooks/useAccount'
+import { Tab, TabList, Tabs } from '@mibao-ui/components'
 
 export const MyRedeem: React.FC = () => {
   const { t } = useTranslation('translations')
@@ -93,29 +92,24 @@ export const MyRedeem: React.FC = () => {
 
   return (
     <RedeemContainer>
-      <Appbar
-        title={t('exchange.mine.title')}
-        left={<BackSvg onClick={() => history.replace(RoutePath.Redeem)} />}
-        right={<div />}
-      />
-      <div className="tabs">
-        <Tabs activeKey={isWait ? 1 : 0}>
-          <Tab
-            className="tab"
-            active={!isWait}
-            onClick={() => tabOnClick('all')}
-          >
-            {t('exchange.mine.all')}
-          </Tab>
-          <Tab
-            className="tab"
-            active={isWait}
-            onClick={() => tabOnClick('wait')}
-          >
-            {t('exchange.mine.wait')}
-          </Tab>
+      <AppbarSticky>
+        <Appbar
+          title={t('exchange.mine.title')}
+          onLeftClick={() => history.replace(RoutePath.Redeem)}
+        />
+      </AppbarSticky>
+      <AppbarSticky top={`${HEADER_HEIGHT}px`} bg="white">
+        <Tabs index={isWait ? 1 : 0} colorScheme="black" align="space-around">
+          <TabList px="20px">
+            <Tab onClick={() => tabOnClick('all')}>
+              {t('exchange.mine.all')}
+            </Tab>
+            <Tab onClick={() => tabOnClick('wait')}>
+              {t('exchange.mine.wait')}
+            </Tab>
+          </TabList>
         </Tabs>
-      </div>
+      </AppbarSticky>
       <section className="list">
         {isRefetching ? <Loading /> : null}
         {data === undefined && status === 'loading' ? (

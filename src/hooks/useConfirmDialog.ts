@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import type { ModalProps, ModalBodyProps } from '@mibao-ui/components'
-import { atom, useAtom } from 'jotai'
-import { useUpdateAtom } from 'jotai/utils'
+import { atom } from 'jotai'
+import { selectAtom, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
 import { noop } from '../utils'
 import type { ModalContentProps, AlertStatus } from '@chakra-ui/react'
@@ -34,31 +34,32 @@ export interface ConfirmDialogProps extends ConfirmDialogOptions {
 const optionsAtom = atom<ConfirmDialogOptions>({})
 const openAtom = atom(false)
 const loadingAtom = atom(false)
-const onCloseAtom = atom<PromiseObj>({ fn: noop })
-const onConfirmAtom = atom<PromiseObj>({ fn: noop })
-const onCancelAtom = atom<PromiseObj>({ fn: noop })
+const onCloseObjAtom = atom<PromiseObj>({ fn: noop })
+const onConfirmObjAtom = atom<PromiseObj>({ fn: noop })
+const onCancelObjlAtom = atom<PromiseObj>({ fn: noop })
+const fnSelector = (a: PromiseObj) => a.fn
+const onCloseAtom = selectAtom(onCloseObjAtom, fnSelector)
+const onConfirmAtom = selectAtom(onConfirmObjAtom, fnSelector)
+const onCancelAtom = selectAtom(onCancelObjlAtom, fnSelector)
+const cancelLoadingAtom = atom(false)
 
 export const useConfirmDialogModel = () => {
-  const [isOpen, setIsOpen] = useAtom(openAtom)
-  const [options, setOptions] = useAtom(optionsAtom)
-  const [isLoading, setIsLoading] = useAtom(loadingAtom)
-  const [{ fn: onClose }, setOnClose] = useAtom<PromiseObj>(onCloseAtom)
-  const [{ fn: onConfirm }, setOnConfirm] = useAtom<PromiseObj>(onConfirmAtom)
-  const [{ fn: onCancel }, setOnCancel] = useAtom<PromiseObj>(onCancelAtom)
+  const isOpen = useAtomValue(openAtom)
+  const options = useAtomValue(optionsAtom)
+  const isLoading = useAtomValue(loadingAtom)
+  const onClose = useAtomValue(onCloseAtom)
+  const onConfirm = useAtomValue(onConfirmAtom)
+  const onCancel = useAtomValue(onCancelAtom)
+  const isCancelLoading = useAtomValue(cancelLoadingAtom)
 
   return {
     isOpen,
-    setIsOpen,
     isLoading,
-    setIsLoading,
     onClose,
-    setOnClose,
     onConfirm,
-    setOnConfirm,
     onCancel,
-    setOnCancel,
     options,
-    setOptions,
+    isCancelLoading,
   }
 }
 
@@ -72,9 +73,10 @@ export const useConfirmDialog = () => {
   const setOptions = useUpdateAtom(optionsAtom)
   const setIsOpen = useUpdateAtom(openAtom)
   const setIsLoading = useUpdateAtom(loadingAtom)
-  const setOnClose = useUpdateAtom(onCloseAtom)
-  const setOnConfirm = useUpdateAtom(onConfirmAtom)
-  const setOnCancel = useUpdateAtom(onCancelAtom)
+  const setOnClose = useUpdateAtom(onCloseObjAtom)
+  const setOnConfirm = useUpdateAtom(onConfirmObjAtom)
+  const setOnCancel = useUpdateAtom(onCancelObjlAtom)
+  const setCancelLoading = useUpdateAtom(cancelLoadingAtom)
   const confirm = useCallback(
     async ({
       onCancel,
@@ -105,9 +107,9 @@ export const useConfirmDialog = () => {
         setOnCancel({
           fn: onCancel
             ? async () => {
-                setIsLoading(true)
+                setCancelLoading(true)
                 await onCancel?.()
-                setIsLoading(false)
+                setCancelLoading(false)
                 setIsOpen(false)
                 resolve()
               }
@@ -115,7 +117,15 @@ export const useConfirmDialog = () => {
         })
       })
     },
-    [setOptions, setIsOpen, setIsLoading, setOnClose, setOnConfirm, setOnCancel]
+    [
+      setOptions,
+      setIsOpen,
+      setIsLoading,
+      setOnClose,
+      setOnConfirm,
+      setOnCancel,
+      setCancelLoading,
+    ]
   )
 
   return confirm

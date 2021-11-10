@@ -5,12 +5,12 @@ import {
   Textarea,
 } from '@chakra-ui/react'
 import { Flex, Text, TextProps, FlexProps } from '@mibao-ui/components'
-import { ReactComponent as SelectedArrow } from '../../assets/svg/drop-down.svg'
+import { ReactComponent as SelectedArrow } from '../../assets/svg/right-arrow.svg'
 
 export interface InputProps extends RawInputProps, InputBaseFixProps {
-  label: string
+  label?: string
   value?: string
-  max: number
+  max?: number
   errorMsg?: string
 }
 
@@ -117,7 +117,9 @@ export const Input: React.FC<InputProps> = ({
   ...rest
 }) => {
   const len = useMemo(() => {
-    if (value.length >= max) return max
+    if (max) {
+      if (value.length >= max) return max
+    }
     return value.length
   }, [value, max])
 
@@ -129,7 +131,7 @@ export const Input: React.FC<InputProps> = ({
         bg="#F6F6F6"
         borderRadius="10px"
       >
-        <Label mb="6px">{label}</Label>
+        {label ? <Label mb="6px">{label}</Label> : null}
         <InputFix
           label={label}
           focusBorderColor="transparent"
@@ -145,7 +147,9 @@ export const Input: React.FC<InputProps> = ({
         <Text color="gray.500" fontSize="12px">
           {errorMsg}
         </Text>
-        <Text color="gray.500" fontSize="12px">{`${len}/${max}`}</Text>
+        {max ? (
+          <Text color="gray.500" fontSize="12px">{`${len}/${max}`}</Text>
+        ) : null}
       </Flex>
     </>
   )
@@ -168,8 +172,8 @@ export const Select: React.FC<SelectProps> = ({ label, value, ...rest }) => {
       {...rest}
     >
       <Label>{label}</Label>
-      <Flex flexDirection="row">
-        <Text fontSize="14px" mr="8px">
+      <Flex flexDirection="row" alignItems="center">
+        <Text fontSize="14px" mr="12px">
           {value}
         </Text>
         <SelectedArrow />

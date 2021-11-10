@@ -14,7 +14,6 @@ import { AddressCollector } from '../views/AddressCollector'
 import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
-import { Shop } from '../views/Shop'
 import { Redeem } from '../views/Reedem'
 import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
@@ -24,6 +23,9 @@ import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
 import { Transactions } from '../views/Transactions'
 import { lazy } from 'react'
+import { Orders } from '../views/Orders'
+import { OrderSuccess } from '../views/OrderSuccess'
+import { OrderDetail } from '../views/OrderDetail'
 import { Ranking } from '../views/Ranking'
 import { ExploreAll } from '../views/ExploreAll'
 
@@ -115,12 +117,6 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'ExploreAll',
     path: RoutePath.ExploreAll,
-  },
-  {
-    component: Shop,
-    exact: true,
-    key: 'Shop',
-    path: RoutePath.Shop,
   },
   {
     component: Help,
@@ -225,5 +221,24 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'PDFViewer',
     path: RoutePath.PDFViewer,
+  },
+  {
+    component: Orders,
+    exact: false,
+    key: 'Orders',
+    path: RoutePath.Orders,
+  },
+  {
+    component: OrderSuccess,
+    exact: true,
+    key: 'OrderSuccess',
+    path: RoutePath.OrderSuccess,
+  },
+  {
+    component: OrderDetail,
+    exact: false,
+    key: 'OrderDetail',
+    path: RoutePath.OrderDetail,
+    params: '/:id',
   },
 ]

@@ -3,6 +3,7 @@ import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
+import { UnipassConfig } from '../utils'
 import {
   useAccount,
   useAPI,
@@ -71,6 +72,7 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
   return useCallback(async () => {
     let signature = profile?.[address]?.auth
     if (!signature) {
+      UnipassConfig.setRedirectUri(location.pathname + location.search)
       signature = await signMessage(address)
       // we don't need set unipass profile auth in here
       if (signature.includes('N/A') || walletType === WalletType.Unipass) {

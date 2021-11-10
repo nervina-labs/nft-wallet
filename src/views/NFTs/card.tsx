@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { RoutePath } from '../../routes'
 import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
-import { getNFTQueryParams } from '../../utils'
+import { getNFTQueryParams, isSupportWebp } from '../../utils'
 export interface CardProps {
   token: NFTToken
   isClass: boolean
@@ -131,8 +131,8 @@ export const Card: React.FC<CardProps> = ({
           name: token.issuer_name as string,
           src: token.issuer_avatar_url,
           bannedText: t('common.baned.issuer'),
-          href: `${RoutePath.Issuer}/${token.issuer_uuid as string}`,
-          isLinkExternal: false,
+          size: '25px',
+          isVerified: token.verified_info?.is_verified,
           onClick: (e) => {
             e.stopPropagation()
             e.preventDefault()
@@ -140,7 +140,7 @@ export const Card: React.FC<CardProps> = ({
           },
         }}
         imageProps={{
-          webp: true,
+          webp: isSupportWebp(),
         }}
         limitProps={{
           count: token.class_total,

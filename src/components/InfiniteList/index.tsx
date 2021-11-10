@@ -14,7 +14,7 @@ import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import styled from 'styled-components'
 import { Box, Grid } from '@mibao-ui/components'
 
-const H4 = styled.h4`
+export const ListDesciption = styled.h4`
   color: rgba(0, 0, 0, 0.6);
   text-align: center;
   margin: 16px 0;
@@ -175,13 +175,17 @@ export function InfiniteList<
           refreshFunction={refresh}
           pullDownToRefreshContent={
             pullDownToRefreshContent ?? (
-              <H4>&#8595; {t('common.actions.pull-down-refresh')}</H4>
+              <ListDesciption>
+                &#8595; {t('common.actions.pull-down-refresh')}
+              </ListDesciption>
             )
           }
           pullDownToRefreshThreshold={pullDownToRefreshThreshold}
           releaseToRefreshContent={
             releaseToRefreshContent ?? (
-              <H4>&#8593; {t('common.actions.release-refresh')}</H4>
+              <ListDesciption>
+                &#8593; {t('common.actions.release-refresh')}
+              </ListDesciption>
             )
           }
           dataLength={dataLength}
@@ -189,7 +193,11 @@ export function InfiniteList<
           hasMore={hasNextPage === true}
           scrollThreshold={scrollThreshold}
           loader={loader ?? <Loading />}
-          endMessage={<H4>{dataLength <= 5 ? ' ' : noMoreElement}</H4>}
+          endMessage={
+            <ListDesciption>
+              {dataLength <= 5 ? ' ' : noMoreElement}
+            </ListDesciption>
+          }
         >
           {columnCount === 1 ? (
             data?.pages?.map((group, i) => {
@@ -208,7 +216,9 @@ export function InfiniteList<
             />
           )}
           {status === 'success' && dataLength === 0
-            ? emptyElement ?? <H4>{t('issuer.no-data')}</H4>
+            ? emptyElement ?? (
+                <ListDesciption>{t('issuer.no-data')}</ListDesciption>
+              )
             : null}
         </InfiniteScroll>
       )}

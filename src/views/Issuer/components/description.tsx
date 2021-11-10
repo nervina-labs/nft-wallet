@@ -10,6 +10,7 @@ const DescriptionContent = styled.div`
   display: -webkit-box;
   -webkit-box-orient: vertical;
   user-select: text;
+  white-space: pre-wrap;
   ${(props: { folded?: boolean }) =>
     props.folded
       ? `

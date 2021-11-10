@@ -3,23 +3,26 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
-import { ClassSortType } from '../../../models'
-import { Query } from '../../../models/query'
+import { Query, ClassSortType as SortType } from '../../../models'
 import { isSupportWebp } from '../../../utils'
 import FALLBACK from '../../../assets/svg/fallback.svg'
-
-const uuid = 'all'
-const sortType = ClassSortType.Recommend
+import { useRouteQuerySearch } from '../../../hooks/useRouteQuery'
 
 export const Lite: React.FC = () => {
   const { t } = useTranslation('translations')
   const api = useAPI()
+  const [currentTag] = useRouteQuerySearch<string>('tag', 'all')
+  const [sort] = useRouteQuerySearch<SortType>('sort', SortType.OnSale)
   const queryFn = useCallback(
     async ({ pageParam = 0 }) => {
-      const { data } = await api.getClassListByTagId(uuid, pageParam, sortType)
+      const { data } = await api.getClassListByTagId(
+        currentTag,
+        pageParam,
+        sort
+      )
       return data
     },
-    [api]
+    [api, currentTag, sort]
   )
 
   return (
@@ -27,7 +30,7 @@ export const Lite: React.FC = () => {
       <InfiniteList
         enableQuery
         queryFn={queryFn}
-        queryKey={[Query.Explore, 0, ClassSortType.Recommend, api]}
+        queryKey={[Query.Explore, currentTag, sort]}
         emptyElement={null}
         noMoreElement={t('common.actions.pull-to-down')}
         calcDataLength={(data) =>

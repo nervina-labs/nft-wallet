@@ -1,32 +1,13 @@
-import { makeStyles } from '@material-ui/core'
 import React, { useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RedeemDrawer } from './Drawer'
-import { InputBaseFix } from '../Profile/InputMod'
 import styled from 'styled-components'
 import { Footer } from './Footer'
 import { CustomRewardType, RedeemStatus } from '../../models/redeem'
-import Alert from '@material-ui/lab/Alert'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { verifyEmail } from '../../utils'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: 400,
-  },
-  input: {
-    flex: 1,
-    width: '100%',
-    background: '#FBFBFC',
-    border: '1px solid #EAEAEA',
-    borderRadius: '8px',
-    padding: '11px 16px',
-    fontSize: '14px',
-  },
-}))
+import { Alert } from '../../components/Alert'
+import { Input } from '../Profile/Input'
 
 export interface SubmitAddressProps {
   open: boolean
@@ -70,7 +51,6 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
     },
     { email: '' }
   )
-  const classes = useStyles()
 
   const { onRedeem, isRedeeming } = useSignRedeem()
 
@@ -101,8 +81,7 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
     >
       <div className="container">
         <div className="label">{t('exchange.form.email.label')}</div>
-        <InputBaseFix
-          className={classes.input}
+        <Input
           placeholder={t('exchange.form.email.placeholder')}
           type="email"
           value={formState.email}
@@ -116,13 +95,14 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
         >
           {t('exchange.form.email.error')}
         </div>
-        <Alert severity="error">
+        <Alert mt="10px">
           {t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`)}
         </Alert>
       </div>
       <Footer
         status={status}
         isReedemable
+        isInDialog
         isLoading={isRedeeming}
         willDestroyed={willDestroyed}
         onClick={() => {

@@ -39,4 +39,5 @@ export interface UserResponse {
   guide_finished: boolean
   description: string
   avatar_tid?: number
+  open_id?: string
 }
