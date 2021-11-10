@@ -10,13 +10,12 @@ import { Loading } from '../../components/Loading'
 import { ReactComponent as SelectedArrow } from '../../assets/svg/selected-arrow.svg'
 import styled from 'styled-components'
 import { Empty } from '../NFTs/empty'
-import { useSetServerProfile } from '../../hooks/useProfile'
-import { AvatarType } from '../../models/user'
 import { useAccount, useAPI } from '../../hooks/useAccount'
-import { NFTCard, Box } from '@mibao-ui/components'
-import { getNFTQueryParams } from '../../utils'
+import { NFTCard, Box, Flex, Text } from '@mibao-ui/components'
+import { formatCount, getNFTQueryParams, isUnlimited } from '../../utils'
 import { Masonry } from '../../components/Masonry'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import Fallback from '../../assets/svg/fallback.svg'
 
 export interface DrawerImageProps {
   showAvatarAction: boolean
@@ -101,7 +100,6 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   )
   const api = useAPI()
   const { address } = useAccount()
-  const setRemoteProfile = useSetServerProfile()
   const {
     data,
     status,
@@ -134,7 +132,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
     }
   )
   const [activeIndex, setActiveIndex] = useState(-1)
-  const [isSaving, setIsSaving] = useState(false)
+  const [isSaving] = useState(false)
 
   const tokenList = useMemo(() => {
     return (
@@ -147,34 +145,12 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
 
   const onSave = useCallback(async () => {
     const token = tokenList[activeIndex]
-    if (!token) return
-    if (!token.class_bg_image_url && token.token_uuid) {
-      setIsSaving(true)
-      await setRemoteProfile({
-        avatar_token_uuid: token.token_uuid,
-        avatar_type: AvatarType.Token,
-      })
-      setOpenChooseTokenClassModal(false)
-      setShowAvatarAction(false)
-      if (reloadProfile) {
-        reloadProfile()
-      }
-      setIsSaving(false)
-      return
-    }
     history.push(RoutePath.ImagePreview, {
-      datauri: token.class_bg_image_url,
+      datauri: token.class_bg_image_url || '',
       tokenUuid: token.token_uuid,
       tid: `${token.n_token_id}`,
     })
-  }, [
-    activeIndex,
-    history,
-    reloadProfile,
-    setRemoteProfile,
-    setShowAvatarAction,
-    tokenList,
-  ])
+  }, [activeIndex, history, tokenList])
 
   const infiniteScrollContainerRef = useRef<HTMLDivElement>(null)
   const infiniteScrollContainerScroll = async (
@@ -238,7 +214,11 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
             {tokenList.map((token, i) => {
               const isSelected = activeIndex === i
               return (
-                <CardContainer position="relative" w="100%">
+                <CardContainer
+                  position="relative"
+                  w="100%"
+                  key={token.token_uuid}
+                >
                   {isSelected ? (
                     <>
                       <div className="arrow"></div>
@@ -249,11 +229,10 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
                     w="100%"
                     isIssuerBanned={token.is_issuer_banned}
                     isNFTBanned={token.is_class_banned}
-                    hasCardback={token.card_back_content_exist}
                     resizeScale={300}
                     title={token.class_name}
                     bannedText={t('common.baned.nft')}
-                    type={token.renderer_type}
+                    type="image"
                     src={token.class_bg_image_url || ''}
                     locale={i18n.language}
                     srcQueryParams={getNFTQueryParams(
@@ -262,29 +241,35 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
                     )}
                     imageProps={{
                       border: isSelected ? '4px solid #5065E5' : undefined,
+                      fallbackSrc: Fallback,
                     }}
                     issuerProps={{
                       name: token.issuer_name as string,
                       src: token.issuer_avatar_url,
                       bannedText: t('common.baned.issuer'),
                       width: '25px',
-                    }}
-                    limitProps={{
-                      count: token.class_total,
-                      limitedText: t('common.limit.limit'),
-                      unlimitedText: t('common.limit.unlimit'),
-                      serialNumber: token.n_token_id,
-                      ml: '4px',
-                    }}
-                    likeProps={{
-                      likeCount: (token as any).class_likes,
-                      isLiked: false,
+                      isVerified: token.verified_info?.is_verified,
                     }}
                     titleProps={{ noOfLines: 2 }}
                     onClick={() => {
                       setActiveIndex(i)
                     }}
                   />
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    fontSize="12px"
+                  >
+                    <Text color="gray.500">
+                      {isUnlimited(token.class_total)
+                        ? t('common.limit.unlimit')
+                        : `${t('common.limit.limit')} ${formatCount(
+                            Number(token.class_total),
+                            i18n.language
+                          )}`}
+                    </Text>
+                    <Text color="gray.500">#{`${token.n_token_id}`}</Text>
+                  </Flex>
                 </CardContainer>
               )
             })}

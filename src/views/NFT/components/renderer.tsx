@@ -1,4 +1,4 @@
-import { NFTDetail } from '../../../models'
+import { NFTDetail, NftType } from '../../../models'
 import Tilt from 'react-better-tilt'
 import styled from 'styled-components'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
@@ -10,18 +10,22 @@ import {
   Modal,
   ModalContent,
   ModalOverlay,
+  Preview,
   useDisclosure,
 } from '@mibao-ui/components'
 import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as CardbackSvg } from '../../../assets/svg/card-back.svg'
 import { ReactComponent as LockSvg } from '../../../assets/svg/lock.svg'
 import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
+import { ReactComponent as ThreeDSvg } from '../../../assets/svg/3D.svg'
 import { useTranslation } from 'react-i18next'
-import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
-import { useState } from 'react'
+import FALLBACK_SRC from '../../../assets/img/nft-fallback.png'
+import React, { useCallback, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { isSupportWebp } from '../../../utils'
 import { useTilt } from '../hooks/useTilt'
+import { ThreeDPreviewWithLoading } from '../../../components/ThreeDPreview'
+import { useToast } from '../../../hooks/useToast'
 
 const TiltContainer = styled(Tilt)`
   position: relative;
@@ -48,7 +52,6 @@ const TiltContainer = styled(Tilt)`
     .flip-card-back {
       animation: flip-hide 0.2s;
       animation-fill-mode: forwards;
-      pointer-events: none;
     }
   }
 
@@ -58,12 +61,10 @@ const TiltContainer = styled(Tilt)`
     .flip-card-img {
       animation: flip-hide 0.2s;
       animation-fill-mode: forwards;
-      pointer-events: none;
     }
 
     .flip-card-back {
       animation: flip-show 0.2s;
-      pointer-events: unset;
     }
   }
 
@@ -121,10 +122,11 @@ const CardBack: React.FC<{
         height="100%"
         zIndex={2}
         transform="rotateY(180deg)"
-        bg="rgba(255, 255, 255, 0.5)"
+        bg="rgba(255, 255, 255, 0.2)"
         backdropFilter="blur(20px)"
         overflow="hidden"
         userSelect="text"
+        pointerEvents={clickable ? undefined : 'none'}
       >
         {typeof content === 'string' ? (
           <Box
@@ -209,7 +211,7 @@ const CardBack: React.FC<{
 export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   detail,
 }) => {
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const hasCardBack =
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   const [showCardBackContent, setShowCardBackContent] = useState(false)
@@ -219,7 +221,32 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   )
   const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
+  const [imgLoaded, setImgLoaded] = useState(false)
+  const {
+    isOpen: isOpenPreview,
+    onOpen: onOpenPreview,
+    onClose: onClosePreview,
+  } = useDisclosure()
+  const toast = useToast()
+  const onRendererError = useCallback(() => {
+    toast(t('resource.fail'))
+    onClosePreview()
+  }, [onClosePreview, t, toast])
+  const onPreview = useCallback(
+    (e) => {
+      if (!showCardBackContent) {
+        onOpenPreview()
+      }
+      e.stopPropagation()
+    },
+    [onOpenPreview, showCardBackContent]
+  )
+  const hasPlayIcon =
+    (detail?.renderer_type === NftType.Audio ||
+      detail?.renderer_type === NftType.Video) &&
+    imgLoaded
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
+  const tid = (detail as NFTDetail)?.n_token_id
 
   return (
     <Flex
@@ -239,6 +266,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         tiltEnable
         transitionSpeed={1000}
         tiltAngleYInitial={tiltAngleYInitial}
+        onClick={onPreview}
       >
         <Box
           m="auto"
@@ -258,12 +286,31 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               resizeScale={400}
               m="auto"
               webp={isSupportWebp()}
-              fallbackSrc={FallbackAvatarSrc}
+              fallbackSrc={FALLBACK_SRC}
               zIndex={3}
+              onLoad={() => setImgLoaded(true)}
+              srcQueryParams={tid ? { tid, locale: i18n.language } : {}}
             />
-            <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
-              <NftPlaySvg />
-            </Box>
+            {hasPlayIcon ? (
+              <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
+                <NftPlaySvg />
+              </Box>
+            ) : null}
+            {detail?.renderer_type === NftType.ThreeD && imgLoaded ? (
+              <Center
+                position="absolute"
+                bottom="10px"
+                right="10px"
+                zIndex={4}
+                rounded="100%"
+                w="25px"
+                h="25px"
+                border="1px solid var(--chakra-colors-gray-200)"
+                bg="linear-gradient(180deg, rgba(35, 38, 47, 0.5) 0%, rgba(35, 38, 47, 0) 100%)"
+              >
+                <ThreeDSvg />
+              </Center>
+            ) : null}
           </Box>
           {hasCardback ? (
             <CardBack
@@ -273,6 +320,22 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           ) : null}
         </Box>
       </TiltContainer>
+      {detail && isOpenPreview ? (
+        <Preview
+          bgImgUrl={imgUrl}
+          renderer={detail.renderer}
+          isOpen={isOpenPreview}
+          onClose={onClosePreview}
+          render3D={(renderer) => (
+            <ThreeDPreviewWithLoading
+              src={renderer}
+              onError={onRendererError}
+            />
+          )}
+          type={detail?.renderer_type}
+          onError={onRendererError}
+        />
+      ) : null}
 
       <Box position="absolute" top={0} left={0} w="100%" h="100%" zIndex={0}>
         <Image
@@ -284,7 +347,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           webp
           transform="translate(-5%, -5%)"
           filter="blur(50px) contrast(1.2)"
-          fallbackSrc={FallbackAvatarSrc}
+          fallbackSrc={FALLBACK_SRC}
         />
       </Box>
 

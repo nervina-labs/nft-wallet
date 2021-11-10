@@ -8,6 +8,7 @@ import { Renderer } from './components/renderer'
 import { NftDetail } from './components/nftDetail'
 import { MainContainer } from '../../styles'
 import { Footer } from './components/footer'
+import { OrderDrawer } from '../../components/OrderDrawer'
 
 const Container = styled(MainContainer)`
   position: relative;
@@ -43,6 +44,7 @@ export const NFT: React.FC = () => {
         isClass={isClass}
       />
       <Footer uuid={id} detail={detail} hidden={isLoading} isClass={isClass} />
+      <OrderDrawer />
     </Container>
   )
 }

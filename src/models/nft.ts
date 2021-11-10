@@ -16,7 +16,7 @@ export interface ListMeta {
 export enum NftType {
   Audio = 'audio',
   Video = 'video',
-  _3D = '3d',
+  ThreeD = 'three_d',
   Picture = 'image',
 }
 
@@ -70,4 +70,8 @@ export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
   renderer: string
   uuid: string
   product_on_sale_uuid?: string
+  product_limit: null | number
+  product_count: number
+  product_price: string
+  product_price_currency: string
 }

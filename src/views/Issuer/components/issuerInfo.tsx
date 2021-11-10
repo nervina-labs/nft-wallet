@@ -9,13 +9,12 @@ import {
   SkeletonText,
   Stack,
 } from '@mibao-ui/components'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router'
 import { useIssuerInfo } from '../hooks/useIssuerInfo'
 import { Follow } from '../../../components/Follow'
 import { formatCount } from '../../../utils'
 import { useTranslation } from 'react-i18next'
-import { atom, useAtom } from 'jotai'
 import { SocialMediaType } from '../../../models/issuer'
 import { Description } from './description'
 import { Address } from './address'
@@ -28,6 +27,8 @@ import FacebookSvg from '../../../assets/svg/issuer-facebook.svg'
 import InstagramSvg from '../../../assets/svg/issuer-instagram.svg'
 import TwitterSvg from '../../../assets/svg/issuer-twitter.svg'
 import styled from 'styled-components'
+import { Redirect } from 'react-router-dom'
+import { RoutePath } from '../../../routes'
 
 const IssuerIcon = styled.div`
   display: inline-block;
@@ -40,11 +41,6 @@ const IssuerIcon = styled.div`
   border-radius: 5px;
   padding: 0 5px;
 `
-
-export const TabCountInfo = atom({
-  onSaleProductCount: 0,
-  issuedClassCount: 0,
-})
 
 const SocialMediaIconMap: { [key in SocialMediaType]: string } = {
   weibo: WeiboSvg,
@@ -84,11 +80,10 @@ const FollowerWithLike: React.FC<{
 export const IssuerInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { t } = useTranslation('translations')
-  const { data, refetch, isLoading } = useIssuerInfo(id)
+  const { data, refetch, isLoading, error, failureCount } = useIssuerInfo(id)
   const gotoMetaUrl = useCallback((url: string) => {
     window.location.href = url
   }, [])
-  const [, setTabCountInfo] = useAtom(TabCountInfo)
   const socialMediaIcons = useMemo(() => {
     return data?.social_media?.map((media) => (
       <Center
@@ -102,22 +97,17 @@ export const IssuerInfo: React.FC = () => {
         onClick={() => gotoMetaUrl(media.url)}
       >
         <img
-          src={SocialMediaIconMap[media.socia_type]}
-          alt="website"
+          src={SocialMediaIconMap[media.social_type]}
+          alt={media.social_type}
           width="15px"
         />
       </Center>
     ))
   }, [data?.social_media, gotoMetaUrl])
 
-  useEffect(() => {
-    if (data && !isLoading) {
-      setTabCountInfo({
-        onSaleProductCount: data.on_sale_product_count ?? 0,
-        issuedClassCount: data.issued_class_count ?? 0,
-      })
-    }
-  }, [data, isLoading, setTabCountInfo])
+  if (error && failureCount >= 3) {
+    return <Redirect to={RoutePath.NotFound} />
+  }
 
   return (
     <Stack py="22px" px="16px" spacing="16px">
@@ -150,12 +140,12 @@ export const IssuerInfo: React.FC = () => {
               fontSize="12px"
               whiteSpace="nowrap"
             >
+              <IssuerIcon>{t('common.creator')}</IssuerIcon>
               {data?.verified_info?.verified_title && (
-                <Box as="span" mr="6px">
+                <Box as="span" ml="6px">
                   {data?.verified_info?.verified_title}
                 </Box>
               )}
-              <IssuerIcon>{t('common.creator')}</IssuerIcon>
             </Box>
           </SkeletonText>
         </Box>
@@ -171,7 +161,7 @@ export const IssuerInfo: React.FC = () => {
         </Flex>
       </Grid>
       <SkeletonText isLoaded={!isLoading} noOfLines={3} spacing={4}>
-        {data?.description && <Description content={data?.description} />}
+        {data?.description ? <Description content={data?.description} /> : null}
       </SkeletonText>
       <Skeleton isLoaded={!isLoading} borderRadius="22px">
         <FollowerWithLike

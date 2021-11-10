@@ -1,10 +1,26 @@
-import { Box, Tab, TabList, Tabs } from '@mibao-ui/components'
+import {
+  Box,
+  Button,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Tab,
+  TabList,
+  Tabs,
+} from '@mibao-ui/components'
 import { Explore } from './explore'
 import { ClassSortType as SortType } from '../../models'
 import { Follow } from './follow'
-import { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
+import { ReactComponent as MenuArrowSvg } from '../../assets/svg/menu-arrow.svg'
+
+interface SortWithLabel {
+  value: SortType
+  label: string
+}
 
 export const NftSortOrKindList: React.FC<{
   noTypeLine?: boolean
@@ -14,11 +30,7 @@ export const NftSortOrKindList: React.FC<{
     'type',
     'metaverse'
   )
-  const [sort, setSort] = useRouteQuerySearch<SortType>('sort', SortType.OnSale)
-  const sortKinds: Array<{
-    value: SortType
-    label: string
-  }> = useMemo(
+  const sortKinds: SortWithLabel[] = useMemo(
     () => [
       {
         value: SortType.OnSale,
@@ -30,7 +42,7 @@ export const NftSortOrKindList: React.FC<{
       },
       {
         value: SortType.Likes,
-        label: t('explore.latest'),
+        label: t('explore.most-liked'),
       },
     ],
     [t]
@@ -49,18 +61,21 @@ export const NftSortOrKindList: React.FC<{
       ] as const,
     [t]
   )
-  const onChangeSortIndex = useCallback(
-    (i: number) => setSort(sortKinds[i ?? 0].value),
-    [setSort, sortKinds]
+  const [sort, setSort] = useRouteQuerySearch<SortType>('sort', SortType.OnSale)
+  const [sortLabel, setSortLabel] = useState<string>(
+    sortKinds.find((s) => s.value === sort)?.label ?? sortKinds[0].label
   )
   const onChangeTypeIndex = useCallback(
     (i: number) => setListType(types[i ?? 0].value),
     [setListType, types]
   )
-  const sortIndex = useMemo(() => {
-    const index = sortKinds.findIndex((s) => s.value === sort)
-    return index === -1 ? 0 : index
-  }, [sort, sortKinds])
+  const onChangeSort = useCallback(
+    (s: SortWithLabel) => {
+      setSort(s.value)
+      setSortLabel(s.label)
+    },
+    [setSort]
+  )
   const typeIndex = useMemo(() => {
     const index = types.findIndex((t) => t.value === listType)
     return index === -1 ? 0 : index
@@ -68,37 +83,49 @@ export const NftSortOrKindList: React.FC<{
 
   return (
     <Box mt="10px" userSelect="none" position="relative" minHeight="628px">
-      <Tabs
-        variant="solid-rounded"
-        position="absolute"
-        right="0"
-        top="8px"
-        size="sm"
-        zIndex={2}
-        index={sortIndex}
-        onChange={onChangeSortIndex}
-      >
-        <TabList>
-          {sortKinds.map((sort, i) => (
-            <Tab
-              key={i}
-              py="4px"
-              px="8px"
-              rounded="6px"
-              whiteSpace="nowrap"
-              fontSize="12px"
-              fontWeight="normal"
-              _selected={{
-                bg: '#f6f6f6',
-                color: '#5065E5',
-                fontWeight: 'bold',
-              }}
+      <Box position="absolute" right="0" top="4px" zIndex={3}>
+        <Menu matchWidth offset={[100, 0]}>
+          <MenuButton
+            as={Button}
+            h="25px"
+            lineHeight="25px"
+            bg="#F6F6F6"
+            fontSize="13px"
+            rightIcon={<MenuArrowSvg />}
+            px="10px"
+          >
+            {sortLabel}
+          </MenuButton>
+          <Box
+            right="6px"
+            w="84px"
+            h="40px"
+            position="absolute"
+            top="calc(100% + 8px)"
+          >
+            <MenuList
+              minW="90px"
+              border="none"
+              shadow="0px 1px 8px rgba(0, 0, 0, 0.08)"
             >
-              {sort.label}
-            </Tab>
-          ))}
-        </TabList>
-      </Tabs>
+              {sortKinds.map((sort, i) => (
+                <MenuItem
+                  _hover={{ bg: 'rgba(0, 0, 0, 0)' }}
+                  _focus={{ bg: 'rgba(0, 0, 0, 0)' }}
+                  value={sort.value}
+                  key={i}
+                  onClick={() => onChangeSort(sort)}
+                  whiteSpace="nowrap"
+                  fontSize="13px"
+                  lineHeight="24px"
+                >
+                  {sort.label}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Box>
+        </Menu>
+      </Box>
 
       <Tabs
         variant={hiddenTypeLine ? 'unstyled' : 'line'}

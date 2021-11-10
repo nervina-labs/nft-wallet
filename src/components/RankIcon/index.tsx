@@ -4,21 +4,21 @@ import { ReactComponent as TrophySvg } from '../../assets/svg/trophy.svg'
 
 const RANK_COLORS = [
   `linear-gradient(
-    60deg,
+    300deg,
     #ffc635,
-    #ba9455,
+    rgb(205, 130, 15),
     #ffc635,
-    #ba9455
+    rgb(205, 130, 15)
   )`,
   `linear-gradient(
-    60deg,
+    300deg,
     #ececec,
     #c9c9c9,
     #ececec,
     #c9c9c9
     )`,
   `linear-gradient(
-    60deg,
+    300deg,
     #d58e64,
     #eca378,
     #d58e64,

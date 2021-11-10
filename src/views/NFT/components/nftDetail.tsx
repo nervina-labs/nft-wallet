@@ -26,6 +26,8 @@ import { NftTxLogsList } from './nftTxLogList'
 import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
+import { isSupportWebp } from '../../../utils'
+import { Tag, TagLabel } from '@chakra-ui/react'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -96,7 +98,7 @@ const NftDetailTab: React.FC<{
         <TabPanel p="20px" opacity={isLoading ? 0 : 1}>
           {tabIndex === 1 && <NftTxLogsList uuid={uuid} isClass={isClass} />}
         </TabPanel>
-        <TabPanel p="20px" opacity={isLoading ? 0 : 1}>
+        <TabPanel p="0" pt="8px" opacity={isLoading ? 0 : 1}>
           {tabIndex === 2 && (
             <HolderList uuid={(detail as NFTDetail)?.class_uuid ?? uuid} />
           )}
@@ -116,8 +118,8 @@ export const NftDetail: React.FC<{
   const { t, i18n } = useTranslation('translations')
   const { push } = useHistory()
   const isOwned =
-    typeof detail?.card_back_content === 'string' ||
-    typeof detail?.class_card_back_content === 'string'
+    typeof detail?.card_back_content !== 'undefined' ||
+    typeof detail?.class_card_back_content !== 'undefined'
   const avatarUrl =
     detail?.issuer_info?.avatar_url === null
       ? ''
@@ -132,16 +134,23 @@ export const NftDetail: React.FC<{
   return (
     <Box py="20px">
       <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={2} px="20px">
-        <Flex justifyContent="space-between">
-          <Box>
+        <Flex justify="space-between">
+          <Box pr="10px">
             <NftDetailName>{detail?.name}</NftDetailName>
-            <Limited
-              serialNumber={(detail as NFTDetail)?.n_token_id}
-              count={detail?.total ?? 0}
-              limitedText={t('common.limit.limit')}
-              unlimitedText={t('common.limit.unlimit')}
-              locale={i18n.language}
-            />
+            <Flex lineHeight="20px">
+              <Limited
+                count={detail?.total ?? 0}
+                serialNumber={(detail as NFTDetail)?.n_token_id}
+                limitedText={t('common.limit.limit')}
+                unlimitedText={t('common.limit.unlimit')}
+                locale={i18n.language}
+              />
+              {detail?.is_redeemed ? (
+                <Tag variant="outline" size="sm" colorScheme="green" ml="15px">
+                  <TagLabel>{t('exchange.redeemed')}</TagLabel>
+                </Tag>
+              ) : null}
+            </Flex>
           </Box>
           {isOwned ? (
             <Center w="50px">
@@ -163,6 +172,9 @@ export const NftDetail: React.FC<{
           border="3px solid #f6f6f6"
           fallbackSrc={FallbackAvatarSrc}
           onClick={gotoIssuer}
+          isVerified={detail?.verified_info?.is_verified}
+          webp={isSupportWebp()}
+          resizeScale={100}
         />
         <SkeletonText
           isLoaded={!isLoading}
