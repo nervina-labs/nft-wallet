@@ -692,6 +692,7 @@ export class ServerWalletAPI {
         token_order: {
           ...props,
           callback_url: this.orderCallbackURL,
+          cancel_url: location.href,
         },
         auth,
       },
@@ -747,12 +748,14 @@ export class ServerWalletAPI {
         channel,
         address: this.address,
         callback_url: this.orderCallbackURL,
+        cancel_url: location.href,
       },
       {
         params: {
           channel,
           address: this.address,
           callback_url: this.orderCallbackURL,
+          cancel_url: location.href,
         },
         headers,
       }
