@@ -31,7 +31,7 @@ export const RankTop: React.FC<{
           />
         </RankBorderBox>
         <Box
-          fontSize="14px"
+          fontSize={rank === 0 ? '14px' : '12px'}
           w="full"
           textOverflow="ellipsis"
           overflow="hidden"
