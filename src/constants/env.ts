@@ -2,6 +2,7 @@ import * as Bowser from 'bowser'
 type ChainType = 'mainnet' | 'testnet'
 
 export const BOWSER_BROWSER = Bowser.getParser(window.navigator.userAgent)
+export const IS_DESKTOP = BOWSER_BROWSER.getPlatformType() === 'desktop'
 
 export const SERVER_URL =
   process.env.REACT_APP_SERVER_URL ??
