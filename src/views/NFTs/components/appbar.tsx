@@ -9,12 +9,16 @@ import { useHistoryBack } from '../../../hooks/useHistoryBack'
 import { ReactComponent as BackSvg } from '../../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../../assets/svg/share.svg'
 import { AvatarType, UserResponse } from '../../../models/user'
-import { PosterType, Share } from '../../../components/Share/next'
+import { PosterType } from '../../../components/Share/share.interface'
 import { DrawerMenu } from '../DrawerMenu'
 import { ReactComponent as SettingsSvg } from '../../../assets/svg/settings.svg'
 import { useShareListInfo } from '../hooks/useShareListInfo'
 import { useTranslation } from 'react-i18next'
 import { addParamsToUrl } from '../../../utils'
+import { lazy } from 'react'
+import { LoadableComponent } from '../../../components/GlobalLoader'
+
+const Share = lazy(async () => await import('../../../components/Share'))
 
 export const Appbar: React.FC<{
   user?: UserResponse
@@ -62,26 +66,28 @@ export const Appbar: React.FC<{
         />
       </AppbarSticky>
       <DrawerMenu close={closeDrawer} isDrawerOpen={isDrawerOpen} />
-      {user && (
-        <Share
-          isOpen={isOpenShare}
-          onClose={onCloseShare}
-          shareUrl={`https://${window.location.pathname}/holder/${
-            address ?? ''
-          }`}
-          poster={{
-            type: PosterType.Holder,
-            data: {
-              username: user.nickname ?? t('holder.user-name-empty'),
-              avatarUrl: shareAvatarUrl ?? '',
-              collectionCount: shareListInfo.len,
-              desc: user.description,
-              coverImage: shareListInfo.firstImageUrl,
-              isNftAvatar: user.avatar_type === AvatarType.Token,
-            },
-          }}
-        />
-      )}
+      {user ? (
+        <LoadableComponent>
+          <Share
+            isOpen={isOpenShare}
+            onClose={onCloseShare}
+            shareUrl={`https://${window.location.pathname}/holder/${
+              address ?? ''
+            }`}
+            poster={{
+              type: PosterType.Holder,
+              data: {
+                username: user.nickname ?? t('holder.user-name-empty'),
+                avatarUrl: shareAvatarUrl ?? '',
+                collectionCount: shareListInfo.len,
+                desc: user.description,
+                coverImage: shareListInfo.firstImageUrl,
+                isNftAvatar: user.avatar_type === AvatarType.Token,
+              },
+            }}
+          />
+        </LoadableComponent>
+      ) : null}
     </>
   )
 }

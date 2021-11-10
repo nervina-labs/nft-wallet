@@ -5,7 +5,7 @@ import AvatarVerifiedPath from '../../../../assets/share/icons/avatar-verified.p
 import { useTranslation } from 'react-i18next'
 import { Footer } from '../footer'
 import { useUrlToBase64 } from '../../../../hooks/useUrlToBase64'
-import { PosterProps } from '../../poster.interface'
+import { PosterProps } from '../../share.interface'
 import { useRef } from 'react'
 import { usePosterLoader } from '../../hooks/usePosterLoader'
 import { useTextEllipsis } from '../../hooks/useTextEllipsis'

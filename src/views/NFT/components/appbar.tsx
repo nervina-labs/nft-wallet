@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, useState } from 'react'
 import {
   Appbar as RowAppbar,
   AppbarButton,
@@ -11,9 +11,12 @@ import { useObservable } from 'rxjs-hooks'
 import { fromEvent, tap, merge } from 'rxjs'
 import { Box, useDisclosure } from '@mibao-ui/components'
 import { useHistoryBack } from '../../../hooks/useHistoryBack'
-import { PosterType, Share } from '../../../components/Share/next'
+import { PosterType } from '../../../components/Share/share.interface'
 import { NFTDetail } from '../../../models'
 import { TokenClass } from '../../../models/class-list'
+import { LoadableComponent } from '../../../components/GlobalLoader'
+
+const Share = lazy(async () => await import('../../../components/Share'))
 
 export const Appbar: React.FC<{
   detail?: NFTDetail | TokenClass
@@ -57,27 +60,29 @@ export const Appbar: React.FC<{
           zIndex={-1}
         />
       </AppbarSticky>
-      <Share
-        isOpen={isOpen}
-        onClose={onClose}
-        shareUrl={window.location.href}
-        poster={{
-          type: PosterType.Nft,
-          data: {
-            bgImgUrl: detail?.bg_image_url ?? '',
-            name: detail?.name ?? '',
-            limited: {
-              count: Number(detail?.total) ?? 0,
-              serialNumber: (detail as NFTDetail)?.n_token_id,
+      <LoadableComponent>
+        <Share
+          isOpen={isOpen}
+          onClose={onClose}
+          shareUrl={window.location.href}
+          poster={{
+            type: PosterType.Nft,
+            data: {
+              bgImgUrl: detail?.bg_image_url ?? '',
+              name: detail?.name ?? '',
+              limited: {
+                count: Number(detail?.total) ?? 0,
+                serialNumber: (detail as NFTDetail)?.n_token_id,
+              },
+              issuer: {
+                name: detail?.issuer_info?.name ?? '',
+                avatarUrl: detail?.issuer_info?.avatar_url ?? '',
+                isVerified: detail?.verified_info?.is_verified === true,
+              },
             },
-            issuer: {
-              name: detail?.issuer_info?.name ?? '',
-              avatarUrl: detail?.issuer_info?.avatar_url ?? '',
-              isVerified: detail?.verified_info?.is_verified === true,
-            },
-          },
-        }}
-      />
+          }}
+        />
+      </LoadableComponent>
     </>
   )
 }

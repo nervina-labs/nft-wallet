@@ -18,8 +18,6 @@ import { AppbarSticky, HEADER_HEIGHT } from '../../components/Appbar'
 import { Info } from './info'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { InfiniteList } from '../../components/InfiniteList'
-import { Share } from '../../components/Share'
-import { HOST } from '../../constants'
 import { Card } from './card'
 import { Tabs, Tab, TabList } from '@mibao-ui/components'
 import { Appbar } from './components/appbar'
@@ -88,7 +86,6 @@ export const NFTs: React.FC = () => {
   )
 
   const [alwayShowTabbar, setAlwaysShowTabbar] = useState(false)
-  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
   const showGuide = useMemo(() => {
     if (isUserLoading) {
       return false
@@ -191,12 +188,6 @@ export const NFTs: React.FC = () => {
           <HiddenBar alwaysShow={alwayShowTabbar} />
         </>
       )}
-      <Share
-        isDialogOpen={isShareDialogOpen}
-        closeDialog={() => setIsShareDialogOpen(false)}
-        displayText={HOST + location.pathname}
-        copyText={HOST + location.pathname}
-      />
     </Container>
   )
 }
