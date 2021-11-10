@@ -20,12 +20,16 @@ import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
 import { ReactComponent as ThreeDSvg } from '../../../assets/svg/3D.svg'
 import { useTranslation } from 'react-i18next'
 import FALLBACK_SRC from '../../../assets/img/nft-fallback.png'
-import React, { useCallback, useState } from 'react'
+import React, { lazy, useCallback, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { isSupportWebp } from '../../../utils'
 import { useTilt } from '../hooks/useTilt'
-import { ThreeDPreviewWithLoading } from '../../../components/ThreeDPreview'
 import { useToast } from '../../../hooks/useToast'
+import { LoadableComponent } from '../../../components/GlobalLoader'
+
+const ThreeDPreview = lazy(
+  async () => await import('../../../components/ThreeDPreview')
+)
 
 const TiltContainer = styled(Tilt)`
   position: relative;
@@ -320,18 +324,19 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           ) : null}
         </Box>
       </TiltContainer>
-      {detail && isOpenPreview ? (
+      {detail ? (
         <Preview
           bgImgUrl={imgUrl}
           renderer={detail.renderer}
           isOpen={isOpenPreview}
           onClose={onClosePreview}
-          render3D={(renderer) => (
-            <ThreeDPreviewWithLoading
-              src={renderer}
-              onError={onRendererError}
-            />
-          )}
+          render3D={(renderer) =>
+            isOpenPreview ? (
+              <LoadableComponent>
+                <ThreeDPreview src={renderer} onError={onRendererError} />
+              </LoadableComponent>
+            ) : null
+          }
           type={detail?.renderer_type}
           onError={onRendererError}
         />
