@@ -17,40 +17,22 @@ import {
   RedeemStatus,
   UserRedeemState,
 } from '../../models/redeem'
-import { Creator } from '../../components/Creator'
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
-import LinearProgress from '@material-ui/core/LinearProgress'
 import { Prize } from '../Reedem/Prize'
 import { Condition } from './Condition'
-import Alert from '@material-ui/lab/Alert'
 import { Footer } from './Footer'
 import { Tab, Tabs } from '../../components/Tab'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { SubmitInfo } from './SubmitInfo'
 import { useAPI } from '../../hooks/useAccount'
 import { useRoute } from '../../hooks/useRoute'
-
-const BorderLinearProgress = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      height: 8,
-      borderRadius: 5,
-    },
-    colorPrimary: {
-      backgroundColor:
-        theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
-    },
-    bar: {
-      borderRadius: 5,
-      backgroundColor: '#45B26B',
-    },
-  })
-)(LinearProgress)
+import { Issuer, Progress, Box } from '@mibao-ui/components'
+import { Alert } from '../../components/Alert'
 
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   background: #f6f6f6;
+  min-height: 100%;
   main {
     .MuiAlert-root {
       font-size: 12px;
@@ -252,15 +234,14 @@ export const RedeemDetail: React.FC = () => {
                 <div className={classNames('status', { closed: isClosed })}>
                   {status}
                 </div>
-                <BorderLinearProgress
-                  variant="determinate"
+                <Progress
                   value={
                     isDone
                       ? 100
                       : (data?.progress.claimed / data?.progress.total) * 100
                   }
-                  style={{ flex: 1, marginBottom: '6px' }}
-                  className={classNames({ closed: isClosed })}
+                  colorScheme={isClosed ? 'gray' : 'orange'}
+                  mb="8px"
                 />
                 <div className={classNames('progress', { closed: isClosed })}>
                   <span>{t('exchange.progress')}</span>
@@ -279,21 +260,28 @@ export const RedeemDetail: React.FC = () => {
             <div className="title">{data.name}</div>
             <div className="desc">{data.description}</div>
             <div className="issue">
-              <Creator
-                title=""
-                baned={data?.issuer_info?.is_issuer_banned}
-                url={data.issuer_info.avatar_url}
+              <Issuer
+                isBanned={data?.issuer_info?.is_issuer_banned}
+                src={data.issuer_info.avatar_url}
                 name={data.issuer_info?.name}
-                uuid={data.issuer_info?.issuer_id ?? data.issuer_info?.uuid}
-                vipAlignRight={false}
-                color="#333333"
-                isVip={
+                isVerified={
                   data?.issuer_info?.is_issuer_banned
                     ? false
                     : data?.verified_info?.is_verified
                 }
-                vipTitle={data?.verified_info?.verified_title}
-                vipSource={data?.verified_info?.verified_source}
+                href={`${RoutePath.Issuer}/${
+                  data.issuer_info?.issuer_id ?? data.issuer_info?.uuid
+                }`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  history.push(
+                    `${RoutePath.Issuer}/${
+                      data.issuer_info?.issuer_id ?? data.issuer_info?.uuid
+                    }`
+                  )
+                }}
+                size="25px"
               />
               <div className="issuer">{t('exchange.issuer')}</div>
             </div>
@@ -321,13 +309,15 @@ export const RedeemDetail: React.FC = () => {
             ) : (
               <Condition detail={data} />
             )}
-            <Alert severity="error">
-              {t(
-                `exchange.warning${
-                  data?.rule_info?.will_destroyed ? '-destroyed' : ''
-                }`
-              )}
-            </Alert>
+            <Box px="20px" mb="80px" mt="8px">
+              <Alert borderRadius="8px">
+                {t(
+                  `exchange.warning${
+                    data?.rule_info?.will_destroyed ? '-destroyed' : ''
+                  }`
+                )}
+              </Alert>
+            </Box>
             <CustomFooter data={data} />
             <SubmitInfo data={data} />
           </>

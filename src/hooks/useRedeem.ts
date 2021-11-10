@@ -9,15 +9,15 @@ import {
   RedeemEventItem,
 } from '../models/redeem'
 import { RoutePath } from '../routes'
-import { generateUnipassRedeemUrl, UnipassConfig } from '../utils'
+import { generateUnipassRedeemUrl, noop, UnipassConfig } from '../utils'
 import {
   useAccount,
   useAPI,
   useSignTransaction,
   WalletType,
 } from './useAccount'
+import { useConfirmDialog } from './useConfirmDialog'
 import { useToast } from './useToast'
-import { useWarning } from './useWarning'
 
 export interface onRedeemProps {
   deliverType?: CustomRewardType
@@ -49,7 +49,7 @@ export const useSignRedeem = () => {
   const { walletType, pubkey } = useAccount()
   const signTransaction = useSignTransaction()
   const reactLocation = useLocation<TransferState>()
-  const warning = useWarning()
+  const confirmDialog = useConfirmDialog()
   const [t] = useTranslation('translations')
 
   const [isRedeeming, setIsRedeeming] = useAtom(isSigningAtom)
@@ -131,18 +131,20 @@ export const useSignRedeem = () => {
           item
         )
       } else {
-        warning(
-          t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`),
-          async function () {
+        confirmDialog({
+          type: 'warning',
+          title: t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`),
+          onConfirm: async () => {
             await confirmRedeem({
               id,
               customData,
             })
-          }
-        )
+          },
+          onCancel: noop,
+        })
       }
     },
-    [confirmRedeem, t, warning, reactLocation, history]
+    [confirmRedeem, t, confirmDialog, reactLocation, history]
   )
 
   return {

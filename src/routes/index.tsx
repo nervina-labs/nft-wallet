@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import { NotFound } from '../views/NotFound'
-import { WarningDialog } from '../components/WarningDialog'
 import {
   useAccount,
   useAccountStatus,
@@ -82,7 +81,6 @@ export const Routers: React.FC = () => {
                 <Route component={NotFound} path="*" />
               </Switch>
             </LoadableComponent>
-            <WarningDialog />
             <ConfirmDialog />
           </AccountChange>
         </RouterProvider>

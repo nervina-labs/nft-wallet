@@ -134,7 +134,8 @@ export const Info: React.FC<{
           <Preview
             isOpen={isPreviewOpen}
             onClose={onPreviewClose}
-            renderer={
+            renderer="1"
+            bgImgUrl={
               addParamsToUrl(
                 user?.avatar_url as string,
                 Object.create(
