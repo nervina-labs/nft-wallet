@@ -17,6 +17,7 @@ import { TokenClass } from '../../models/class-list'
 import { Link, useHistory } from 'react-router-dom'
 import { ReactComponent as EmptySvg } from '../../assets/svg/follow-empty.svg'
 import { isSupportWebp } from '../../utils'
+import { RoutePath } from '../../routes'
 
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { t, i18n } = useTranslation('translations')
@@ -132,7 +133,16 @@ export const Follow: React.FC<{
       enableQuery
       queryFn={queryFn}
       queryKey={[Query.Explore, sort, api]}
-      emptyElement={null}
+      emptyElement={
+        <Box textAlign="center" minH="600px">
+          <Box color="#777E90" mb="16px" mt="300px">
+            {t('follow.no-data')}
+          </Box>
+          <Link to={RoutePath.Explore} style={{ textDecoration: 'underline' }}>
+            {t('follow.let-s-go-to-explore')}
+          </Link>
+        </Box>
+      }
       noMoreElement={t('common.actions.pull-to-down')}
       calcDataLength={(data) =>
         data?.pages.reduce(

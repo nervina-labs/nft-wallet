@@ -476,7 +476,8 @@
         "desc-2": "Log in and view your following content",
         "login": "Log In"
       },
-      "no-data": "You haven't followed any creators"
+      "no-data": "You haven't followed any creators",
+      "let-s-go-to-explore": "Let's go to explore"
     }
   }
 }
