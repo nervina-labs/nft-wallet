@@ -46,7 +46,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
         onClick={gotoClass}
       />
       <Grid
-        templateColumns="25px calc(100% - 25px - 40px) 35px"
+        templateColumns="25px calc(100% - 25px - 65px) 60px"
         onClick={gotoIssuer}
       >
         <Avatar
@@ -71,10 +71,11 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           {token.issuer_info?.name}
         </Box>
         <Limited
-          count={0}
+          count={token.total}
           limitedText={t('common.limit.limit')}
           unlimitedText={t('common.limit.unlimit')}
           my="auto"
+          textAlign="right"
         />
       </Grid>
       {token.product_price && (

@@ -467,8 +467,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
       page,
       limit: PER_ITEM_LIMIT,
     }
+    if (sortType === ClassSortType.OnSale) {
+      params.sort = ClassSortType.OnSale
+    }
+    if (sortType === ClassSortType.Latest) {
+      params.sort = ClassSortType.Latest
+    }
     if (sortType === ClassSortType.Likes) {
-      params.sort = 'likes'
+      params.sort = ClassSortType.Likes
     }
     return await this.axios.get(`/followed_token_classes/${this.address}`, {
       headers: {
