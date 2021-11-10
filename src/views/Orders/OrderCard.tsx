@@ -40,7 +40,6 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
   }, [t, state, isInList])
   const issuerHref = `${RoutePath.Issuer}/${order.issuer_info?.uuid as string}`
   const isNeededToPay = order.state === OrderState.OrderPlaced && isInList
-  const total = Number(order.product_price) * Number(order.product_count)
   const continueOrder = useContinueOrder()
 
   const continuePayment = useCallback(
@@ -121,7 +120,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
             </Text>
             <Flex ml="8px" flexDirection="column">
               <Text textAlign="right" fontSize="12px" mb="12px">
-                {formatCurrency(order.product_price, order.currency)}
+                {formatCurrency(order.product_price)}
               </Text>
               <Text textAlign="right" fontSize="12px" color="gray.500">
                 &times;{order.product_count}
@@ -136,7 +135,9 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
             </Text>
             <Text fontWeight={500} color="#f48538">
               {formatCurrency(
-                order.state === OrderState.Expired ? '0' : total,
+                order.state === OrderState.Expired
+                  ? '0'
+                  : order.order_amount_total,
                 order.currency
               )}
             </Text>
