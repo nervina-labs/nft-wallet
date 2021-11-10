@@ -30,7 +30,9 @@
         },
         "poster": {
           "desc-1": "Scanning QR code",
-          "desc-2": "Enjoy the digital collection",
+          "desc-nft": "Enjoy the digital collection",
+          "desc-holder": "Watch the NFT collector I found",
+          "desc-issuer": "Enjoy the works of the creator of the NFT",
           "collected": "Collected"
         }
       },

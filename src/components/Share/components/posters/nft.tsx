@@ -122,7 +122,9 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
           </Flex>
         </Box>
 
-        {shareUrl && <Footer url={shareUrl} />}
+        {shareUrl && (
+          <Footer url={shareUrl} text={t('common.share.poster.desc-nft')} />
+        )}
       </Flex>
     </Box>
   )

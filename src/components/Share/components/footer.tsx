@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next'
 
 export const Footer: React.FC<{
   url: string
-}> = ({ url }) => {
+  text?: string
+}> = ({ text, url }) => {
   const { t } = useTranslation('translations')
   return (
     <Flex justify="space-between" mt="auto">
@@ -21,7 +22,7 @@ export const Footer: React.FC<{
         lineHeight="17px"
       >
         <Box color="#777E90">{t('common.share.poster.desc-1')}</Box>
-        {t('common.share.poster.desc-2')}
+        {text ?? t('common.share.poster.desc-nft')}
       </Box>
       <QRCode
         value={url}

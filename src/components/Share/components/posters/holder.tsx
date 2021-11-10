@@ -105,10 +105,12 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
         <Box mt="5px" fontSize="12px" fontWeight="200">
           {t('common.share.poster.collected')}: {collectionCount}
         </Box>
-        <Box fontSize="12px" mt="5px">
+        <Box fontSize="12px" mt="5px" whiteSpace="pre-wrap">
           {descEllipsis}
         </Box>
-        {shareUrl && <Footer url={shareUrl} />}
+        {shareUrl && (
+          <Footer url={shareUrl} text={t('common.share.poster.desc-holder')} />
+        )}
       </Flex>
     </Box>
   )
