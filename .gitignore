@@ -7,3 +7,4 @@ build
 .env.prod
 .env.zmc
 yarn-error.log
+*.orig
