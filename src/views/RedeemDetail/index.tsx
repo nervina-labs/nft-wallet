@@ -2,15 +2,13 @@ import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Redirect, useHistory, useParams } from 'react-router'
 import styled from 'styled-components'
-import { Appbar } from '../../components/Appbar'
+import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { Loading } from '../../components/Loading'
 import { Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { useTranslation } from 'react-i18next'
 import { formatTime } from '../../utils'
-import { Divider } from '@material-ui/core'
 import classNames from 'classnames'
 import {
   isCustomReward,
@@ -18,40 +16,29 @@ import {
   RedeemStatus,
   UserRedeemState,
 } from '../../models/redeem'
-import { Creator } from '../../components/Creator'
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
-import LinearProgress from '@material-ui/core/LinearProgress'
 import { Prize } from '../Reedem/Prize'
 import { Condition } from './Condition'
-import Alert from '@material-ui/lab/Alert'
 import { Footer } from './Footer'
-import { Tab, Tabs } from '../../components/Tab'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { SubmitInfo } from './SubmitInfo'
 import { useAPI } from '../../hooks/useAccount'
 import { useRoute } from '../../hooks/useRoute'
-
-const BorderLinearProgress = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      height: 8,
-      borderRadius: 5,
-    },
-    colorPrimary: {
-      backgroundColor:
-        theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
-    },
-    bar: {
-      borderRadius: 5,
-      backgroundColor: '#45B26B',
-    },
-  })
-)(LinearProgress)
+import {
+  Issuer,
+  Progress,
+  Box,
+  Divider,
+  Tab,
+  TabList,
+  Tabs,
+} from '@mibao-ui/components'
+import { Alert } from '../../components/Alert'
 
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   background: #f6f6f6;
+  min-height: 100%;
   main {
     .MuiAlert-root {
       font-size: 12px;
@@ -232,19 +219,17 @@ export const RedeemDetail: React.FC = () => {
 
   return (
     <Container>
-      <Appbar
-        title={t('exchange.event.title')}
-        left={
-          <BackSvg
-            onClick={() =>
-              history.replace(
-                from === location.pathname ? RoutePath.Redeem : from
-              )
-            }
-          />
-        }
-        right={<></>}
-      />
+      <AppbarSticky>
+        <Appbar
+          title={t('exchange.event.title')}
+          onLeftClick={() =>
+            history.replace(
+              from === location.pathname ? RoutePath.Redeem : from
+            )
+          }
+          right={<></>}
+        />
+      </AppbarSticky>
       <main>
         {data == null ? (
           <Loading />
@@ -255,15 +240,14 @@ export const RedeemDetail: React.FC = () => {
                 <div className={classNames('status', { closed: isClosed })}>
                   {status}
                 </div>
-                <BorderLinearProgress
-                  variant="determinate"
+                <Progress
                   value={
                     isDone
                       ? 100
                       : (data?.progress.claimed / data?.progress.total) * 100
                   }
-                  style={{ flex: 1, marginBottom: '6px' }}
-                  className={classNames({ closed: isClosed })}
+                  colorScheme={isClosed ? 'gray' : 'orange'}
+                  mb="8px"
                 />
                 <div className={classNames('progress', { closed: isClosed })}>
                   <span>{t('exchange.progress')}</span>
@@ -278,59 +262,63 @@ export const RedeemDetail: React.FC = () => {
               {t('exchange.issue-time')}
               {formatTime(data.start_timestamp, i18n.language)}
             </div>
-            <Divider />
+            <Divider size="1px" />
             <div className="title">{data.name}</div>
             <div className="desc">{data.description}</div>
             <div className="issue">
-              <Creator
-                title=""
-                baned={data?.issuer_info?.is_issuer_banned}
-                url={data.issuer_info.avatar_url}
+              <Issuer
+                isBanned={data?.issuer_info?.is_issuer_banned}
+                src={data.issuer_info.avatar_url}
                 name={data.issuer_info?.name}
-                uuid={data.issuer_info?.issuer_id ?? data.issuer_info?.uuid}
-                vipAlignRight={false}
-                color="#333333"
-                isVip={
+                isVerified={
                   data?.issuer_info?.is_issuer_banned
                     ? false
                     : data?.verified_info?.is_verified
                 }
-                vipTitle={data?.verified_info?.verified_title}
-                vipSource={data?.verified_info?.verified_source}
+                href={`${RoutePath.Issuer}/${
+                  data.issuer_info?.issuer_id ?? data.issuer_info?.uuid
+                }`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  history.push(
+                    `${RoutePath.Issuer}/${
+                      data.issuer_info?.issuer_id ?? data.issuer_info?.uuid
+                    }`
+                  )
+                }}
+                size="25px"
               />
               <div className="issuer">{t('exchange.issuer')}</div>
             </div>
-            <Tabs activeKey={showPrize ? 0 : 1}>
-              <Tab
-                active={showPrize}
-                onClick={() => setShowPrice(true)}
-                className="tab"
-              >
-                {t('exchange.event.tabs.price')}
-              </Tab>
-              <Tab
-                active={!showPrize}
-                onClick={() => setShowPrice(false)}
-                className="tab"
-              >
-                {t('exchange.event.tabs.requirement')}
-              </Tab>
+            <Tabs
+              index={showPrize ? 0 : 1}
+              colorScheme="black"
+              align="space-around"
+            >
+              <TabList px="20px">
+                <Tab onClick={() => setShowPrice(true)}>
+                  {t('exchange.event.tabs.price')}
+                </Tab>
+                <Tab onClick={() => setShowPrice(false)}>
+                  {t('exchange.event.tabs.requirement')}
+                </Tab>
+              </TabList>
             </Tabs>
-            <Divider
-              style={{ position: 'relative', top: '5px', margin: '0 20px' }}
-            />
             {showPrize ? (
               <Prize prizes={data.reward_info} type={data.reward_type} />
             ) : (
               <Condition detail={data} />
             )}
-            <Alert severity="error">
-              {t(
-                `exchange.warning${
-                  data?.rule_info?.will_destroyed ? '-destroyed' : ''
-                }`
-              )}
-            </Alert>
+            <Box px="20px" mb="80px" mt="8px">
+              <Alert borderRadius="8px">
+                {t(
+                  `exchange.warning${
+                    data?.rule_info?.will_destroyed ? '-destroyed' : ''
+                  }`
+                )}
+              </Alert>
+            </Box>
             <CustomFooter data={data} />
             <SubmitInfo data={data} />
           </>

@@ -13,10 +13,6 @@ import { HEADER_HEIGHT } from '../../components/Appbar'
 const DrawerContainer = styled.div`
   height: 100%;
   background-color: ${(props: { bg: string }) => props.bg};
-  .username {
-    margin: 0 20px;
-    margin-top: 38px;
-  }
   .container {
     margin: 0 20px;
     margin-top: 10px;
@@ -59,11 +55,9 @@ const DrawerContainer = styled.div`
   }
 
   .desc {
-    margin-top: 10px;
     font-size: 12px;
     line-height: 24px;
     color: #999;
-    margin-left: 16px;
   }
 
   .birthday {

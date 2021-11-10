@@ -103,11 +103,7 @@ export class ServerWalletAPI {
   private readonly address: string
   private readonly axios: AxiosInstance
 
-  private readonly orderCallbackURL = `${
-    process.env.NODE_ENV === 'development'
-      ? 'http://192.168.31.12:3000'
-      : location.origin
-  }${RoutePath.OrderSuccess}`
+  private readonly orderCallbackURL = `${location.origin}${RoutePath.OrderSuccess}`
 
   constructor(address: string) {
     this.address = address

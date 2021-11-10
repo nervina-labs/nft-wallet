@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import '@google/model-viewer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ReactComponent as ThreeDLoadingSvg } from '../../assets/svg/loading.svg'
-import { LoadableComponent } from '../GlobalLoader'
 
 interface ThreeDPreviewProps {
   src: string
@@ -42,7 +41,7 @@ const ThreeDPreviewContainer = styled(Box)`
   }
 `
 
-export const ThreeDPreview: React.FC<ThreeDPreviewProps> = ({
+const ThreeDPreview: React.FC<ThreeDPreviewProps> = ({
   onLoad,
   onError,
   ...props
@@ -88,7 +87,7 @@ export const ThreeDPreview: React.FC<ThreeDPreviewProps> = ({
   )
 }
 
-export const ThreeDPreviewWithLoading: React.FC<{
+const ThreeDPreviewWithLoading: React.FC<{
   src: string
   onError?: () => void
   loader?: string
@@ -103,15 +102,15 @@ export const ThreeDPreviewWithLoading: React.FC<{
   }, [])
 
   return (
-    <LoadableComponent>
-      <ThreeDPreviewContainer>
-        {src ? (
-          <ThreeDPreview src={src} onLoad={onLoad} onError={onError} />
-        ) : null}
-        {isLoading
-          ? loader ?? <ThreeDLoadingSvg className="three-d-loading" />
-          : null}
-      </ThreeDPreviewContainer>
-    </LoadableComponent>
+    <ThreeDPreviewContainer>
+      {src ? (
+        <ThreeDPreview src={src} onLoad={onLoad} onError={onError} />
+      ) : null}
+      {isLoading
+        ? loader ?? <ThreeDLoadingSvg className="three-d-loading" />
+        : null}
+    </ThreeDPreviewContainer>
   )
 }
+
+export default ThreeDPreviewWithLoading
