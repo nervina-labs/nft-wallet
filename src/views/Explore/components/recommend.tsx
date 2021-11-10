@@ -13,8 +13,7 @@ import { Query } from '../../../models'
 import { SpecialAssets } from '../../../models/special-assets'
 import { ReactComponent as MoreSvg } from '../../../assets/svg/recommend-more.svg'
 import { useTranslation } from 'react-i18next'
-import { Link, useHistory } from 'react-router-dom'
-import { useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 import { isSupportWebp } from '../../../utils'
 
 const Item: React.FC<SpecialAssets> = ({
@@ -24,21 +23,9 @@ const Item: React.FC<SpecialAssets> = ({
   token_classes: tokenClasses,
 }) => {
   const { t, i18n } = useTranslation('translations')
-  const { push } = useHistory()
-  const gotoCollection = useCallback(() => {
-    push(`/explore/collection/${uuid}`)
-  }, [push, uuid])
-
   return (
     <>
-      <Flex
-        h="105px"
-        position="relative"
-        justify="center"
-        pb="15px"
-        onClick={gotoCollection}
-        cursor="pointer"
-      >
+      <Flex h="105px" position="relative" justify="center" pb="15px">
         {[1, 0, 2]
           .map((i) => tokenClasses[i])
           .map((t, i) => (
@@ -82,12 +69,7 @@ const Item: React.FC<SpecialAssets> = ({
       >
         <Flex justify="space-between" mb="15px">
           <Box fontSize="14px">{locales?.[i18n.language]}</Box>
-          <Flex
-            fontSize="12px"
-            color="#777E90"
-            cursor="pointer"
-            onClick={gotoCollection}
-          >
+          <Flex fontSize="12px" color="#777E90">
             <Box mt="auto" mr="5px">
               {t('explore.more')}
             </Box>
@@ -98,61 +80,57 @@ const Item: React.FC<SpecialAssets> = ({
         </Flex>
 
         {tokenClasses.map((tokenClass, i) => (
-          <Link to={`/class/${tokenClass.uuid}`} key={i}>
-            <Grid mb="10px" templateColumns="auto 70%">
-              <AspectRatio ratio={1 / 1}>
-                <Image
+          <Grid mb="10px" templateColumns="auto 70%" key={i}>
+            <AspectRatio ratio={1 / 1}>
+              <Image
+                src={
+                  tokenClass.bg_image_url === null
+                    ? ''
+                    : tokenClass.bg_image_url
+                }
+                w="full"
+                h="full"
+                resizeScale={100}
+                webp={isSupportWebp()}
+                rounded="10px"
+              />
+            </AspectRatio>
+            <Flex direction="column" py="5px" pl="10px">
+              <Box
+                fontSize="14px"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                mb="auto"
+              >
+                {tokenClass.name}
+              </Box>
+              <Flex>
+                <Avatar
                   src={
-                    tokenClass.bg_image_url === null
+                    tokenClass.issuer_info.avatar_url === null
                       ? ''
-                      : tokenClass.bg_image_url
+                      : tokenClass.issuer_info.avatar_url
                   }
-                  w="full"
-                  h="full"
-                  resizeScale={100}
+                  isVerified={tokenClass?.verified_info?.is_verified}
+                  resizeScale={150}
                   webp={isSupportWebp()}
-                  rounded="10px"
+                  size="25px"
                 />
-              </AspectRatio>
-              <Flex direction="column" py="5px" pl="10px">
                 <Box
-                  fontSize="14px"
+                  fontSize="12px"
                   textOverflow="ellipsis"
                   whiteSpace="nowrap"
                   overflow="hidden"
-                  mb="auto"
+                  w="calc(100% - 30px)"
+                  lineHeight="25px"
+                  ml="5px"
                 >
-                  {tokenClass.name}
+                  {tokenClass.issuer_info.name}
                 </Box>
-                <Link to={`/issuer/${tokenClass.issuer_info.uuid}`}>
-                  <Flex>
-                    <Avatar
-                      src={
-                        tokenClass.issuer_info.avatar_url === null
-                          ? ''
-                          : tokenClass.issuer_info.avatar_url
-                      }
-                      isVerified={tokenClass?.verified_info?.is_verified}
-                      resizeScale={150}
-                      webp={isSupportWebp()}
-                      size="25px"
-                    />
-                    <Box
-                      fontSize="12px"
-                      textOverflow="ellipsis"
-                      whiteSpace="nowrap"
-                      overflow="hidden"
-                      w="calc(100% - 30px)"
-                      lineHeight="25px"
-                      ml="5px"
-                    >
-                      {tokenClass.issuer_info.name}
-                    </Box>
-                  </Flex>
-                </Link>
               </Flex>
-            </Grid>
-          </Link>
+            </Flex>
+          </Grid>
         ))}
       </Box>
     </>
@@ -173,6 +151,7 @@ export const Recommend: React.FC = () => {
       refetchOnMount: false,
     }
   )
+  const { push } = useHistory()
 
   return (
     <Box overflowY="hidden" overflowX={isLoading ? 'hidden' : 'auto'}>
@@ -201,6 +180,10 @@ export const Recommend: React.FC = () => {
                 pr="15px"
                 maxW="305px"
                 key={i}
+                onClick={() =>
+                  push(`/explore/collection/${specialAssets.uuid}`)
+                }
+                cursor="pointer"
               >
                 <Item {...specialAssets} />
               </Flex>
