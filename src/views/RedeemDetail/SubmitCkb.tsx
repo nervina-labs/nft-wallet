@@ -1,33 +1,15 @@
-import { makeStyles, InputAdornment } from '@material-ui/core'
 import React, { useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RedeemDrawer } from './Drawer'
-import { InputBaseFix } from '../Profile/InputMod'
 import styled from 'styled-components'
 import { Footer } from './Footer'
 import { CustomRewardType, RedeemStatus } from '../../models/redeem'
-import Alert from '@material-ui/lab/Alert'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { verifyCkbAddress } from '../../utils'
 import { useAccount } from '../../hooks/useAccount'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: 400,
-  },
-  input: {
-    flex: 1,
-    width: '100%',
-    background: '#FBFBFC',
-    border: '1px solid #EAEAEA',
-    borderRadius: '8px',
-    padding: '11px 16px',
-    fontSize: '14px',
-  },
-}))
+import { Alert } from '../../components/Alert'
+import { Input } from '../Profile/Input'
+import { Button, Flex } from '@mibao-ui/components'
 
 export interface SubmitAddressProps {
   open: boolean
@@ -76,7 +58,6 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
     },
     { ckb: '' }
   )
-  const classes = useStyles()
 
   const { onRedeem, isRedeeming } = useSignRedeem()
 
@@ -107,38 +88,36 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
     >
       <div className="container">
         <div className="label">{t('exchange.form.ckb.label')}</div>
-        <InputBaseFix
-          className={classes.input}
+        <Input
           placeholder={t('exchange.form.ckb.placeholder')}
           type="text"
           value={formState.ckb}
-          multiline
-          rows={6}
+          isTextarea
           onChange={(e: any) => dispatch({ key: 'ckb', value: e.target.value })}
-          endAdornment={
-            <InputAdornment position="end" className="adornment-container">
-              <span
-                className="adornment"
-                onClick={() => dispatch({ key: 'ckb', value: address })}
-              >
-                {t('exchange.form.ckb.fill')}
-              </span>
-            </InputAdornment>
-          }
         />
-        <div
-          className="alert"
-          style={{ visibility: showAlert ? 'visible' : 'hidden' }}
-        >
-          {t('exchange.form.ckb.error')}
-        </div>
-        <Alert severity="error">
+        <Flex justifyContent="space-between" alignItems="center">
+          <div
+            className="alert"
+            style={{ visibility: showAlert ? 'visible' : 'hidden', margin: 0 }}
+          >
+            {t('exchange.form.ckb.error')}
+          </div>
+          <Button
+            className="adornment"
+            size="xs"
+            onClick={() => dispatch({ key: 'ckb', value: address })}
+          >
+            {t('exchange.form.ckb.fill')}
+          </Button>
+        </Flex>
+        <Alert mt="10px">
           {t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`)}
         </Alert>
       </div>
       <Footer
         status={status}
         isReedemable
+        isInDialog
         willDestroyed={willDestroyed}
         isLoading={isRedeeming}
         onClick={() =>

@@ -1,20 +1,19 @@
 import React, { useMemo } from 'react'
-import { Appbar } from '../../components/Appbar'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import { Appbar, AppbarSticky } from '../../components/Appbar'
 import styled from 'styled-components'
 import { MainContainer } from '../../styles'
 import { useTranslation } from 'react-i18next'
-import { Redirect, useHistory, useParams } from 'react-router'
+import { Redirect, useParams } from 'react-router'
 import { RoutePath } from '../../routes'
 import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { Loading } from '../../components/Loading'
 import { RedeeemLabel } from '../Reedem/Label'
-import { Divider } from '@material-ui/core'
 import { Prize } from '../Reedem/Prize'
 import { formatTime } from '../../utils'
 import { isCustomReward } from '../../models/redeem'
 import { useAccount, useAPI } from '../../hooks/useAccount'
+import { Divider } from '@chakra-ui/react'
 
 const BoxContainer = styled.div`
   padding: 16px;
@@ -84,6 +83,7 @@ const Row: React.FC<RowProps> = ({ label, children }) => {
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
+  min-height: 100%;
 
   background: #f6f6f6;
   h4 {
@@ -98,7 +98,6 @@ const Container = styled(MainContainer)`
 
 export const RedeemPrize: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
-  const history = useHistory()
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const { address } = useAccount()
@@ -132,13 +131,12 @@ export const RedeemPrize: React.FC = () => {
   if (isError) {
     return <Redirect to={RoutePath.NotFound} />
   }
+
   return (
     <Container>
-      <Appbar
-        title={t('exchange.prize.title')}
-        left={<BackSvg onClick={() => history.goBack()} />}
-        right={<div />}
-      />
+      <AppbarSticky>
+        <Appbar title={t('exchange.prize.title')} />
+      </AppbarSticky>
       <main>
         {data == null ? (
           <Loading />

@@ -36,6 +36,7 @@ export const RedeemContainer = styled(MainContainer)`
   }
 
   .list {
+    padding: 20px 0;
     flex: 1;
   }
 `
