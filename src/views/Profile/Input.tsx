@@ -10,7 +10,7 @@ import { ReactComponent as SelectedArrow } from '../../assets/svg/right-arrow.sv
 export interface InputProps extends RawInputProps, InputBaseFixProps {
   label?: string
   value?: string
-  max: number
+  max?: number
   errorMsg?: string
 }
 
@@ -117,7 +117,9 @@ export const Input: React.FC<InputProps> = ({
   ...rest
 }) => {
   const len = useMemo(() => {
-    if (value.length >= max) return max
+    if (max) {
+      if (value.length >= max) return max
+    }
     return value.length
   }, [value, max])
 
@@ -145,7 +147,9 @@ export const Input: React.FC<InputProps> = ({
         <Text color="gray.500" fontSize="12px">
           {errorMsg}
         </Text>
-        <Text color="gray.500" fontSize="12px">{`${len}/${max}`}</Text>
+        {max ? (
+          <Text color="gray.500" fontSize="12px">{`${len}/${max}`}</Text>
+        ) : null}
       </Flex>
     </>
   )

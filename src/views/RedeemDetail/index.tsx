@@ -9,7 +9,6 @@ import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { useTranslation } from 'react-i18next'
 import { formatTime } from '../../utils'
-import { Divider } from '@material-ui/core'
 import classNames from 'classnames'
 import {
   isCustomReward,
@@ -20,12 +19,19 @@ import {
 import { Prize } from '../Reedem/Prize'
 import { Condition } from './Condition'
 import { Footer } from './Footer'
-import { Tab, Tabs } from '../../components/Tab'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { SubmitInfo } from './SubmitInfo'
 import { useAPI } from '../../hooks/useAccount'
 import { useRoute } from '../../hooks/useRoute'
-import { Issuer, Progress, Box } from '@mibao-ui/components'
+import {
+  Issuer,
+  Progress,
+  Box,
+  Divider,
+  Tab,
+  TabList,
+  Tabs,
+} from '@mibao-ui/components'
 import { Alert } from '../../components/Alert'
 
 const Container = styled(MainContainer)`
@@ -256,7 +262,7 @@ export const RedeemDetail: React.FC = () => {
               {t('exchange.issue-time')}
               {formatTime(data.start_timestamp, i18n.language)}
             </div>
-            <Divider />
+            <Divider size="1px" />
             <div className="title">{data.name}</div>
             <div className="desc">{data.description}</div>
             <div className="issue">
@@ -285,25 +291,20 @@ export const RedeemDetail: React.FC = () => {
               />
               <div className="issuer">{t('exchange.issuer')}</div>
             </div>
-            <Tabs activeKey={showPrize ? 0 : 1}>
-              <Tab
-                active={showPrize}
-                onClick={() => setShowPrice(true)}
-                className="tab"
-              >
-                {t('exchange.event.tabs.price')}
-              </Tab>
-              <Tab
-                active={!showPrize}
-                onClick={() => setShowPrice(false)}
-                className="tab"
-              >
-                {t('exchange.event.tabs.requirement')}
-              </Tab>
+            <Tabs
+              index={showPrize ? 0 : 1}
+              colorScheme="black"
+              align="space-around"
+            >
+              <TabList px="20px">
+                <Tab onClick={() => setShowPrice(true)}>
+                  {t('exchange.event.tabs.price')}
+                </Tab>
+                <Tab onClick={() => setShowPrice(false)}>
+                  {t('exchange.event.tabs.requirement')}
+                </Tab>
+              </TabList>
             </Tabs>
-            <Divider
-              style={{ position: 'relative', top: '5px', margin: '0 20px' }}
-            />
             {showPrize ? (
               <Prize prizes={data.reward_info} type={data.reward_type} />
             ) : (

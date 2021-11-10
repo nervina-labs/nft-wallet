@@ -9,14 +9,13 @@ import {
   RedeemStatus,
   UserRedeemState,
 } from '../../models/redeem'
-import { Divider } from '@material-ui/core'
 import { RedeeemLabel } from './Label'
 import classNames from 'classnames'
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
 import { useSignRedeem } from '../../hooks/useRedeem'
-import { Issuer, Progress as RawProgress } from '@mibao-ui/components'
+import { Issuer, Progress as RawProgress, Divider } from '@mibao-ui/components'
 
 const Container = styled.div`
   box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);

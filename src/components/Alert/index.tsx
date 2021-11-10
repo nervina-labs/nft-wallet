@@ -7,7 +7,7 @@ export const Alert: React.FC<AlertProps> = ({
   ...rest
 }) => {
   return (
-    <RawAlert status={status} fontSize="12px" {...rest}>
+    <RawAlert status={status} fontSize="12px" borderRadius="8px" {...rest}>
       <AlertIcon />
       {children}
     </RawAlert>
