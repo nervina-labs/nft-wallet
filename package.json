@@ -16,7 +16,7 @@
     "dev": "craco start",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 craco build",
     "lint": "eslint src",
-    "start": "serve -s build",
+    "start": "serve -s dist",
     "analyze": "cross-env ANALYZE_BUNDLE=true NODE_OPTIONS=--max_old_space_size=8192 craco build"
   },
   "dependencies": {
