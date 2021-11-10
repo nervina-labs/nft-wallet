@@ -24,20 +24,33 @@ const UserWithAddress: React.FC<{
   avatarType?: AvatarType
   nickname: string
   address: string
-}> = ({ avatarUrl, avatarTid, avatarType = 'image', nickname, address }) => {
+  isIssuer?: boolean
+  isVerified?: boolean
+}> = ({
+  avatarUrl,
+  avatarTid,
+  avatarType = 'image',
+  nickname,
+  address,
+  isIssuer,
+  isVerified,
+}) => {
   const { i18n } = useTranslation('translations')
   const { push } = useHistory()
-  const goToHolder = useCallback(() => push(`/holder/${address}`), [
-    address,
-    push,
-  ])
+  const goToHolderOrIssuer = useCallback(() => {
+    if (isIssuer) {
+      push(`/issuer/${address}`)
+      return
+    }
+    push(`/holder/${address}`)
+  }, [address, isIssuer, push])
 
   return (
     <Grid
       templateColumns="25px calc(100% - 25px - 8px)"
       h="25px"
       cursor="pointer"
-      onClick={goToHolder}
+      onClick={goToHolderOrIssuer}
     >
       <Avatar
         src={avatarUrl === null ? '' : avatarUrl}
@@ -45,6 +58,7 @@ const UserWithAddress: React.FC<{
         size="25px"
         border="1px solid #f6f6f6"
         fallbackSrc={FallbackAvatarSrc}
+        isVerified={isVerified}
         srcQueryParams={
           avatarTid
             ? {
@@ -98,6 +112,7 @@ const NftTxLog: React.FC<{ log: TransactionLog }> = ({ log }) => {
           avatarUrl: log.issuer_avatar_url,
           nickname: log.issuer_name,
           address: log.issuer_uuid,
+          isIssuer: true,
         }
       : {
           avatarUrl: log.sender_info.avatar_url,
