@@ -27,6 +27,8 @@ import FacebookSvg from '../../../assets/svg/issuer-facebook.svg'
 import InstagramSvg from '../../../assets/svg/issuer-instagram.svg'
 import TwitterSvg from '../../../assets/svg/issuer-twitter.svg'
 import styled from 'styled-components'
+import { Redirect } from 'react-router-dom'
+import { RoutePath } from '../../../routes'
 
 const IssuerIcon = styled.div`
   display: inline-block;
@@ -78,7 +80,7 @@ const FollowerWithLike: React.FC<{
 export const IssuerInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { t } = useTranslation('translations')
-  const { data, refetch, isLoading } = useIssuerInfo(id)
+  const { data, refetch, isLoading, error, failureCount } = useIssuerInfo(id)
   const gotoMetaUrl = useCallback((url: string) => {
     window.location.href = url
   }, [])
@@ -102,6 +104,10 @@ export const IssuerInfo: React.FC = () => {
       </Center>
     ))
   }, [data?.social_media, gotoMetaUrl])
+
+  if (error && failureCount >= 3) {
+    return <Redirect to={RoutePath.NotFound} />
+  }
 
   return (
     <Stack py="22px" px="16px" spacing="16px">

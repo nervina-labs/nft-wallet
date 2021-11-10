@@ -2,7 +2,7 @@ import { Avatar, Box, Flex, Grid, Image } from '@mibao-ui/components'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Redirect, useParams } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAccount'
 import { Query } from '../../models'
 import { Appbar, BgAnimation, Container, RankNumber } from '../Collection'
@@ -10,12 +10,13 @@ import FALLBACK from '../../assets/svg/fallback.svg'
 import { isSupportWebp } from '../../utils'
 import { RankBorderBox } from '../../components/RankIcon'
 import { RankTop } from '../Collection/ranktop'
+import { RoutePath } from '../../routes'
 
 export const Ranking: React.FC = () => {
   const { i18n } = useTranslation('translations')
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
-  const { data } = useQuery(
+  const { data, error, failureCount } = useQuery(
     [Query.RankingList, id],
     async () => {
       const { data } = await api.getRankingList({ uuid: id })
@@ -33,6 +34,10 @@ export const Ranking: React.FC = () => {
   const issuers = useMemo(() => {
     return data?.issuers?.slice(0, 3)
   }, [data])
+
+  if (error && failureCount >= 3) {
+    return <Redirect to={RoutePath.NotFound} />
+  }
 
   return (
     <Container>

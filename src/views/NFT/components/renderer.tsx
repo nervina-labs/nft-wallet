@@ -211,7 +211,7 @@ const CardBack: React.FC<{
 export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   detail,
 }) => {
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const hasCardBack =
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   const [showCardBackContent, setShowCardBackContent] = useState(false)
@@ -246,6 +246,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       detail?.renderer_type === NftType.Video) &&
     imgLoaded
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
+  const tid = (detail as NFTDetail)?.n_token_id
 
   return (
     <Flex
@@ -288,6 +289,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               fallbackSrc={FALLBACK_SRC}
               zIndex={3}
               onLoad={() => setImgLoaded(true)}
+              srcQueryParams={tid ? { tid, locale: i18n.language } : {}}
             />
             {hasPlayIcon ? (
               <Box position="absolute" bottom="10px" right="10px" zIndex={4}>

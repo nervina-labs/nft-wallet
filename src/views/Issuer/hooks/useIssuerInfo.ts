@@ -11,7 +11,7 @@ export function useIssuerInfo(
 ) {
   const api = useAPI()
   const { replace } = useHistory()
-  const { data, isLoading, refetch, error } = useQuery(
+  const { data, isLoading, refetch, error, failureCount } = useQuery(
     [Query.Issuers, api, issuerId],
     async () => {
       const { data } = await api.getIssuerInfo(issuerId)
@@ -27,5 +27,6 @@ export function useIssuerInfo(
     isLoading,
     refetch,
     error,
+    failureCount,
   }
 }

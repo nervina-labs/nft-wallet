@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Redirect, useParams } from 'react-router-dom'
 import { Query } from '../../models'
 import { TokenClass } from '../../models/class-list'
 import { isSupportWebp } from '../../utils'
@@ -19,6 +19,7 @@ import FALLBACK from '../../assets/svg/fallback.svg'
 import { useHistoryBack } from '../../hooks/useHistoryBack'
 import styled from 'styled-components'
 import { RankTop } from './ranktop'
+import { RoutePath } from '../../routes'
 
 export const Container = styled(MainContainer)`
   background: linear-gradient(192.04deg, #e5eff5 44.62%, #ffecde 100%);
@@ -110,7 +111,7 @@ export const Collection: React.FC = () => {
   const { i18n } = useTranslation('translations')
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
-  const { data } = useQuery(
+  const { data, failureCount, error } = useQuery(
     [Query.CollectionDetail, api, id],
     async () => {
       const { data } = await api.getCollectionDetail(id)
@@ -130,6 +131,10 @@ export const Collection: React.FC = () => {
     [api, id]
   )
   const [topTokenClass, setTopTokenClass] = useState<TokenClass[] | undefined>()
+
+  if (error && failureCount >= 3) {
+    return <Redirect to={RoutePath.NotFound} />
+  }
 
   return (
     <Container>
