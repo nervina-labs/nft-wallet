@@ -63,13 +63,9 @@ export const NftList: React.FC<{
 
   return (
     <section className="list">
-      <AppbarSticky
-        top={!isHolder ? '0' : `${HEADER_HEIGHT}px`}
-        mb="20px"
-        className="filters"
-      >
+      <AppbarSticky top={!isHolder ? '0' : `${HEADER_HEIGHT}px`} mb="20px">
         <Tabs index={filterIndex} align="space-between" colorScheme="black">
-          <TabList px="20px">
+          <TabList px="20px" className="filters">
             <Tab onClick={() => setListType('owned')}>{t('nfts.owned')}</Tab>
             <Tab onClick={() => setListType('liked')}>{t('nfts.liked')}</Tab>
             <Tab onClick={() => setListType('follow')}>
