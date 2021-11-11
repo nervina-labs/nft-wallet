@@ -104,9 +104,9 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
       <Flex mt="20px" mb="10px" className="card">
         <NftImage
           resizeScale={200}
-          type={isInList ? 'image' : order.renderer_type}
+          type="image"
           src={order.product_image_url}
-          hasCardBack={isInList ? false : order.card_back_content_exist}
+          hasCardBack={false}
           width="100px"
           height="100px"
           borderRadius="22px"

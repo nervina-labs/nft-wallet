@@ -1,11 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
-import Logo from '../../assets/img/login.png'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { CONTAINER_MAX_WIDTH, IS_IMTOKEN } from '../../constants'
-import { LazyLoadImage } from '../../components/Image'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
@@ -25,11 +23,18 @@ import {
   useDisclosure,
   Center,
   Text,
-  // Checkbox,
+  Stack,
+  Flex,
+  Heading,
 } from '@mibao-ui/components'
 import { Checkbox } from '@chakra-ui/react'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
+import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js'
+import { Autoplay } from 'swiper'
+import Slide1 from '../../assets/img/login/slide-1.png'
+import Slide2 from '../../assets/img/login/slide-2.png'
+import Slide3 from '../../assets/img/login/slide-3.png'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -39,7 +44,7 @@ const Container = styled(MainContainer)`
   background: url(${AccountBg});
   background-size: cover;
   background-repeat: repeat-y;
-  height: 100%;
+  min-height: 100%;
 
   .close {
     width: 24px;
@@ -82,8 +87,8 @@ const Container = styled(MainContainer)`
   .logo {
     margin-top: 15px;
     margin-bottom: 15px;
-    margin-left: 50px;
-    margin-right: 50px;
+    max-width: 100%;
+    padding: 0 24px;
   }
 
   .desc {
@@ -178,15 +183,6 @@ export const Login: React.FC = () => {
   } = useDisclosure()
 
   const containerRef = useRef(null)
-  const containerWidth = useWidth(containerRef)
-  const width = useMemo(() => {
-    const w = containerWidth ?? 0
-    if (w === 0) {
-      return 0
-    }
-    // 100 = margin * 2
-    return w - 100
-  }, [containerWidth])
 
   const bodyRef = useRef(document.body)
   const bodyWidth = useWidth(bodyRef)
@@ -250,6 +246,24 @@ export const Login: React.FC = () => {
     [login, redirectUrl, onConfirm, t, history]
   )
 
+  const slides = [
+    {
+      src: Slide1,
+      desc1: '',
+      desc2: '',
+    },
+    {
+      src: Slide2,
+      desc1: '',
+      desc2: '',
+    },
+    {
+      src: Slide3,
+      desc1: '',
+      desc2: '',
+    },
+  ]
+
   if (isLogined && redirectUrl == null) {
     return <Redirect to={RoutePath.NFTs} />
   }
@@ -271,13 +285,45 @@ export const Login: React.FC = () => {
         title={<FullLogo />}
       />
       <div className="logo">
-        <LazyLoadImage src={Logo} width={width} height={width * 1.091} />
+        <Swiper
+          modules={[Autoplay]}
+          navigation={false}
+          className="swiper"
+          pagination={{ clickable: true }}
+          loop
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+        >
+          {slides?.map((slide, i) => (
+            <SwiperSlide key={i}>
+              <Stack direction="column">
+                <img src={slide.src} />
+                <Flex flexDirection="column" fontSize="24px" px="30px">
+                  <Heading textAlign="left" fontSize="28px">
+                    {t(`login.slides.${i + 1}.line-1`)}
+                  </Heading>
+                  <Heading textAlign="right" color="#5065e5" fontSize="28px">
+                    {t(`login.slides.${i + 1}.line-2`)}
+                  </Heading>
+                </Flex>
+              </Stack>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
       <LoginButton
         mt="25%"
         onClick={() => {
           if (!isLicenseChecked) {
-            toast(t('license.warn'))
+            toast(t('license.warn'), {
+              textProps: {
+                fontSize: '12px',
+                px: '20px',
+                py: '5px',
+              },
+            })
             return
           }
           drawerOnOpen()

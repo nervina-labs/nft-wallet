@@ -17,6 +17,7 @@ import { TokenClass } from '../../models/class-list'
 import { Link, useHistory } from 'react-router-dom'
 import { ReactComponent as EmptySvg } from '../../assets/svg/follow-empty.svg'
 import { isSupportWebp } from '../../utils'
+import { RoutePath } from '../../routes'
 
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { t, i18n } = useTranslation('translations')
@@ -46,7 +47,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
         onClick={gotoClass}
       />
       <Grid
-        templateColumns="25px calc(100% - 30px - 50px) 40px"
+        templateColumns="25px calc(100% - 25px - 65px) 60px"
         onClick={gotoIssuer}
       >
         <Avatar
@@ -71,11 +72,11 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           {token.issuer_info?.name}
         </Box>
         <Limited
-          count={0}
+          count={token.total}
           limitedText={t('common.limit.limit')}
           unlimitedText={t('common.limit.unlimit')}
           my="auto"
-          whiteSpace="nowrap"
+          textAlign="right"
         />
       </Grid>
       {token.product_price && (
@@ -109,7 +110,7 @@ export const Follow: React.FC<{
   if (!isAuthenticated) {
     return (
       <Center>
-        <Box textAlign="center">
+        <Box textAlign="center" mt="100px">
           <EmptySvg />
           <Box color="#777E90" fontSize="14px">
             {t('follow.login.desc-1')}
@@ -132,7 +133,16 @@ export const Follow: React.FC<{
       enableQuery
       queryFn={queryFn}
       queryKey={[Query.Explore, sort, api]}
-      emptyElement={null}
+      emptyElement={
+        <Box textAlign="center" minH="600px">
+          <Box color="#777E90" mb="16px" mt="300px">
+            {t('follow.no-data')}
+          </Box>
+          <Link to={RoutePath.Explore} style={{ textDecoration: 'underline' }}>
+            {t('follow.let-s-go-to-explore')}
+          </Link>
+        </Box>
+      }
       noMoreElement={t('common.actions.pull-to-down')}
       calcDataLength={(data) =>
         data?.pages.reduce(

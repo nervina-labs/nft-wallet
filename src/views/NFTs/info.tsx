@@ -17,7 +17,7 @@ import {
   Button,
 } from '@mibao-ui/components'
 import { addParamsToUrl, getNFTQueryParams, isSupportWebp } from '../../utils'
-import { RoutePath } from '../../routes'
+import { ProfilePath } from '../../routes'
 import { Link } from 'react-router-dom'
 import { Query } from '../../models'
 import { useAPI } from '../../hooks/useAccount'
@@ -54,7 +54,7 @@ export const Info: React.FC<{
     return isHolder ? (
       t('holder.desc')
     ) : (
-      <Link to={RoutePath.Profile}>{t('profile.desc.empty')}</Link>
+      <Link to={ProfilePath.Description}>{t('profile.desc.empty')}</Link>
     )
   }, [user?.description, isHolder, t])
 
@@ -65,7 +65,7 @@ export const Info: React.FC<{
     return isHolder ? (
       t('holder.user-name-empty')
     ) : (
-      <Link to={RoutePath.Profile}>{t('profile.user-name.empty')}</Link>
+      <Link to={ProfilePath.Username}>{t('profile.user-name.empty')}</Link>
     )
   }, [t, user, isHolder])
 
@@ -108,7 +108,11 @@ export const Info: React.FC<{
             size="100px"
             type={user?.avatar_type}
             srcQueryParams={getNFTQueryParams(user?.avatar_tid, i18n.language)}
-            onClick={onPreviewOpen}
+            onClick={() => {
+              if (user?.avatar_type === AvatarType.Token || user?.avatar_url) {
+                onPreviewOpen()
+              }
+            }}
           />
           <Heading
             mt="8px"
@@ -135,14 +139,12 @@ export const Info: React.FC<{
             isOpen={isPreviewOpen}
             onClose={onPreviewClose}
             renderer="1"
-            bgImgUrl={
-              addParamsToUrl(
-                user?.avatar_url as string,
-                Object.create(
-                  getNFTQueryParams(user?.avatar_tid, i18n.language) || {}
-                )
-              ) || '1'
-            }
+            bgImgUrl={addParamsToUrl(
+              user?.avatar_url as string,
+              Object.create(
+                getNFTQueryParams(user?.avatar_tid, i18n.language) || {}
+              )
+            )}
             type={user?.avatar_type === AvatarType.Token ? 'three_d' : 'image'}
             render3D={(renderer) => {
               return (

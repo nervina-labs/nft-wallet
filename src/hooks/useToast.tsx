@@ -1,15 +1,20 @@
 import React, { useCallback } from 'react'
 import { useToast as useChakraToast, UseToastOptions } from '@chakra-ui/react'
-import { Center, Text } from '@mibao-ui/components'
+import { Center, Text, TextProps } from '@mibao-ui/components'
+
+export interface ToastOptions extends UseToastOptions {
+  textProps?: TextProps
+}
 
 export const useToast = () => {
   const toast = useChakraToast()
   return useCallback(
-    (message: React.ReactNode, options?: UseToastOptions) => {
+    (message: React.ReactNode, options?: ToastOptions) => {
       toast.closeAll()
+      const { textProps, ...rest } = options ?? {}
       toast({
         duration: 1500,
-        ...options,
+        ...rest,
         render: () => (
           <Center position="relative" bottom={`${window.innerHeight / 2}px`}>
             <Text
@@ -19,6 +24,7 @@ export const useToast = () => {
               fontSize="16px"
               color="white"
               bg="rgba(51, 51, 51, 0.7)"
+              {...textProps}
             >
               {message}
             </Text>

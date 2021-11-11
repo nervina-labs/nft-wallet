@@ -16,10 +16,9 @@ import { IS_WEXIN, NFT_EXPLORER_URL, PER_ITEM_LIMIT } from '../../constants'
 import { Loading } from '../../components/Loading'
 import SendPng from '../../assets/img/send.png'
 import ReceivePng from '../../assets/img/receive.png'
-import NoTxPng from '../../assets/img/no-tx.png'
 import { useTranslation } from 'react-i18next'
-import { LazyLoadImage } from '../../components/Image'
 import { ReactComponent as VipSvg } from '../../assets/svg/vip.svg'
+import { ReactComponent as NoDataSvg } from '../../assets/svg/no-records.svg'
 import { useAPI } from '../../hooks/useAccount'
 import { Flex, Text, Tooltip } from '@mibao-ui/components'
 import { MainContainer } from '../../styles'
@@ -47,13 +46,6 @@ const Container = styled(MainContainer)`
     align-items: center;
     flex-direction: column;
     height: 300px;
-
-    p {
-      margin: 0;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #0e0e0e;
-    }
   }
 `
 
@@ -373,8 +365,10 @@ export const Transactions: React.FC = () => {
             })}
             {status === 'success' && dataLength === 0 ? (
               <div className="no-data">
-                <LazyLoadImage src={NoTxPng} width={224} height={120} />
-                <p>{t('transactions.no-data')}</p>
+                <NoDataSvg />
+                <Text color="gray.500" fontSize="14px">
+                  {t('transactions.no-data')}
+                </Text>
               </div>
             ) : null}
           </InfiniteScroll>

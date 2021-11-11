@@ -87,7 +87,7 @@ const NftDetailTab: React.FC<{
           <Tab>{t('nft.holder')}</Tab>
         </TabList>
       </Skeleton>
-      <TabPanels>
+      <TabPanels minH="200px">
         <TabPanel p="20px">
           <SkeletonText isLoaded={!isLoading} spacing={4} noOfLines={3}>
             <Box fontSize="14px" color="#777E90" userSelect="text">

@@ -1,7 +1,6 @@
 import { useQuery } from 'react-query'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/swiper.min.css'
-import 'swiper/components/pagination/pagination.min.css'
+import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js'
+import { Autoplay } from 'swiper'
 import { useAPI } from '../../../hooks/useAccount'
 import { Query } from '../../../models'
 import { Image, Grid, Skeleton, GridItem } from '@mibao-ui/components'
@@ -52,6 +51,7 @@ export const Banner: React.FC = () => {
     <Container>
       <Skeleton isLoaded={!isLoading} w="full">
         <Swiper
+          modules={[Autoplay]}
           navigation={false}
           className="swiper"
           pagination={{ clickable: true }}
