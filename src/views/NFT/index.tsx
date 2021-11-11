@@ -10,6 +10,7 @@ import { MainContainer } from '../../styles'
 import { Footer } from './components/footer'
 import { OrderDrawer } from '../../components/OrderDrawer'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
+import { useFirstOpenScrollToTop } from '../../hooks/useFirstOpenScrollToTop'
 
 const Container = styled(MainContainer)`
   position: relative;
@@ -27,6 +28,7 @@ export const NFT: React.FC = () => {
     isClass,
   })
   useScrollRestoration()
+  useFirstOpenScrollToTop()
   const isNotFound =
     failureCount >= 3 || detail?.is_class_banned || detail?.is_issuer_banned
 
