@@ -12,7 +12,7 @@ import {
 import { Explore } from './explore'
 import { ClassSortType as SortType } from '../../models'
 import { Follow } from './follow'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { ReactComponent as MenuArrowSvg } from '../../assets/svg/menu-arrow.svg'
@@ -24,7 +24,9 @@ interface SortWithLabel {
 
 export const NftSortOrKindList: React.FC<{
   noTypeLine?: boolean
-}> = ({ noTypeLine: hiddenTypeLine }) => {
+  isFirstOpenScrollToTop?: boolean
+}> = ({ noTypeLine: hiddenTypeLine, isFirstOpenScrollToTop }) => {
+  const [isFirstOpen, setIsFirstOpen] = useState(true)
   const { t } = useTranslation('translations')
   const [listType, setListType] = useRouteQuerySearch<'metaverse' | 'follow'>(
     'type',
@@ -80,6 +82,12 @@ export const NftSortOrKindList: React.FC<{
     const index = types.findIndex((t) => t.value === listType)
     return index === -1 ? 0 : index
   }, [listType, types])
+  useEffect(() => {
+    if (isFirstOpenScrollToTop && isFirstOpen) {
+      window.scroll(0, 0)
+      setIsFirstOpen(false)
+    }
+  }, [isFirstOpen, isFirstOpenScrollToTop])
 
   return (
     <Box mt="10px" userSelect="none" position="relative" minHeight="628px">

@@ -8,6 +8,7 @@ import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
 import { Share } from '../../components/Share'
 import { useHistoryBack } from '../../hooks/useHistoryBack'
 import { MainContainer } from '../../styles'
+import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 
 const IssuerContainer = styled(MainContainer)`
   position: relative;
@@ -17,6 +18,7 @@ const IssuerContainer = styled(MainContainer)`
 export const Issuer: React.FC = () => {
   const goBack = useHistoryBack()
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
+  useScrollRestoration()
 
   return (
     <IssuerContainer>

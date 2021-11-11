@@ -3,7 +3,7 @@ import { ReactComponent as MySvg } from '../../assets/svg/my.svg'
 import { ReactComponent as ExploreSvg } from '../../assets/svg/explore.svg'
 import { ReactComponent as AppsSvg } from '../../assets/svg/apps.svg'
 import { ReactComponent as HiddenBarKindsSvg } from '../../assets/svg/hidden-bar-kinds.svg'
-import { useRouteMatch } from 'react-router'
+import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import { useAccountStatus } from '../../hooks/useAccount'
 import { Stack } from '@mibao-ui/components'
@@ -123,12 +123,19 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
       setIsHide(false)
     }
   }, [alwaysShow])
+  const { location } = useHistory()
 
   return (
     <Container spacing="50px" direction="row" className={isHide ? 'hide' : ''}>
       {items.map((item, i) => (
         <Link
-          to={item.path}
+          to={{
+            pathname: item.path,
+            search:
+              matchExplore?.isExact || matchExploreAll?.isExact
+                ? location.search
+                : undefined,
+          }}
           className={`item ${item.routeMatch ? 'active' : ''}`}
           key={i}
         >
