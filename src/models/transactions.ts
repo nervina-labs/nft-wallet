@@ -33,7 +33,7 @@ export interface Transaction {
   transaction_list: Tx[]
 }
 
-export interface TransactionLog {
+export interface TransactionLog extends VipInfo {
   tx_hash: string
   on_chain_timestamp: string
   tx_type: string

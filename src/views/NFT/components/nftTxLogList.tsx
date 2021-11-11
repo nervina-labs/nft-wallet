@@ -113,6 +113,7 @@ const NftTxLog: React.FC<{ log: TransactionLog }> = ({ log }) => {
           nickname: log.issuer_name,
           address: log.issuer_uuid,
           isIssuer: true,
+          isVerified: log.verified_info?.is_verified,
         }
       : {
           avatarUrl: log.sender_info.avatar_url,
