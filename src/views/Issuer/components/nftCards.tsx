@@ -22,6 +22,7 @@ import { IssuerTokenClass } from '../../../models/issuer'
 import { isSupportWebp } from '../../../utils'
 import FALLBACK from '../../../assets/svg/fallback.svg'
 import { Empty } from './empty'
+import { HEADER_HEIGHT } from '../../../components/Appbar'
 
 interface CardProps {
   token: IssuerTokenClass
@@ -111,11 +112,15 @@ export const NftCards: React.FC = () => {
         defaultIndex={index}
         onChange={onChange}
       >
-        <TabList position={'sticky'} top={50} zIndex={99} bg={'white'}>
+        <TabList
+          position="sticky"
+          top={`${HEADER_HEIGHT}px`}
+          zIndex={99}
+          bg={'white'}
+        >
           <Tab>{t('issuer.created')}</Tab>
           <Tab>{t('issuer.selling')}</Tab>
         </TabList>
-
         <TabPanels>
           <TabPanel>
             {index === 0 ? (

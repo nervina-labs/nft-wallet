@@ -196,6 +196,7 @@ export const Share: React.FC<ShareProps> = ({
                   h="auto"
                   w="auto"
                   maxW="100%"
+                  maxH="100%"
                   objectFit="contain"
                   rounded="20px"
                   containerProps={{

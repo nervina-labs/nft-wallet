@@ -4,7 +4,7 @@ import { Empty } from '../empty'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuerySearch } from '../../../hooks/useRouteQuery'
 import { IssuerList } from '../IssuerList'
-import { AppbarSticky, HEADER_HEIGHT } from '../../../components/Appbar'
+import { HEADER_HEIGHT } from '../../../components/Appbar'
 import { useAPI } from '../../../hooks/useAccount'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { Card } from '../card'
@@ -61,87 +61,85 @@ export const NftList: React.FC<{
 
   return (
     <section className="list">
-      <AppbarSticky top={!isHolder ? '0' : `${HEADER_HEIGHT}px`} mb="20px">
-        <Tabs index={filterIndex} align="space-between" colorScheme="black">
-          <TabList px="20px" className="filters">
-            <Tab onClick={() => setListType('owned')}>{t('nfts.owned')}</Tab>
-            <Tab onClick={() => setListType('liked')}>{t('nfts.liked')}</Tab>
-            <Tab onClick={() => setListType('follow')}>
-              {t('follow.follow')}
-            </Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel p={0} pt="20px">
-              {listType === 'owned' ? (
-                <InfiniteList
-                  queryFn={getOwnedData}
-                  queryKey={[Query.NFTList, address, listType]}
-                  enableQuery
-                  emptyElement={<Empty />}
-                  noMoreElement={t('common.actions.pull-to-down')}
-                  calcDataLength={(data) => {
-                    return (
-                      data?.pages.reduce(
-                        (acc, token) => token.token_list.length + acc,
-                        0
-                      ) ?? 0
-                    )
-                  }}
-                  renderItems={(group, i) => {
-                    return group.token_list.map((token, j: number) => (
-                      <Card
-                        token={token}
-                        key={token.token_uuid || `${i}.${j}`}
-                        address={address}
-                        isClass={false}
-                        showTokenID
-                      />
-                    ))
-                  }}
-                />
-              ) : null}
-            </TabPanel>
-            <TabPanel p={0} pt="20px">
-              {listType === 'liked' ? (
-                <InfiniteList
-                  queryFn={getLikeData}
-                  queryKey={[Query.NFTList, address, listType]}
-                  enableQuery
-                  emptyElement={<Empty />}
-                  noMoreElement={t('common.actions.pull-to-down')}
-                  calcDataLength={(data) => {
-                    return (
-                      data?.pages.reduce(
-                        (acc, token) => token.token_list.length + acc,
-                        0
-                      ) ?? 0
-                    )
-                  }}
-                  renderItems={(group, i) => {
-                    return group.token_list.map((token, j: number) => (
-                      <Card
-                        token={token}
-                        key={token.token_uuid || `${i}.${j}`}
-                        address={address}
-                        isClass
-                        showTokenID={false}
-                      />
-                    ))
-                  }}
-                />
-              ) : null}
-            </TabPanel>
-            <TabPanel p={0} pt="20px">
-              {listType === 'follow' ? (
-                <IssuerList
-                  isFollow={listType === 'follow'}
-                  address={address}
-                />
-              ) : null}
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </AppbarSticky>
+      <Tabs index={filterIndex} align="space-between" colorScheme="black">
+        <TabList
+          px="20px"
+          className="filters"
+          top={!isHolder ? '0' : `${HEADER_HEIGHT}px`}
+          position="sticky"
+        >
+          <Tab onClick={() => setListType('owned')}>{t('nfts.owned')}</Tab>
+          <Tab onClick={() => setListType('liked')}>{t('nfts.liked')}</Tab>
+          <Tab onClick={() => setListType('follow')}>{t('follow.follow')}</Tab>
+        </TabList>
+        <TabPanels pt="20px">
+          <TabPanel p={0}>
+            {listType === 'owned' ? (
+              <InfiniteList
+                queryFn={getOwnedData}
+                queryKey={[Query.NFTList, address, listType]}
+                enableQuery
+                emptyElement={<Empty />}
+                noMoreElement={t('common.actions.pull-to-down')}
+                calcDataLength={(data) => {
+                  return (
+                    data?.pages.reduce(
+                      (acc, token) => token.token_list.length + acc,
+                      0
+                    ) ?? 0
+                  )
+                }}
+                renderItems={(group, i) => {
+                  return group.token_list.map((token, j: number) => (
+                    <Card
+                      token={token}
+                      key={token.token_uuid || `${i}.${j}`}
+                      address={address}
+                      isClass={false}
+                      showTokenID
+                    />
+                  ))
+                }}
+              />
+            ) : null}
+          </TabPanel>
+          <TabPanel p={0}>
+            {listType === 'liked' ? (
+              <InfiniteList
+                queryFn={getLikeData}
+                queryKey={[Query.NFTList, address, listType]}
+                enableQuery
+                emptyElement={<Empty />}
+                noMoreElement={t('common.actions.pull-to-down')}
+                calcDataLength={(data) => {
+                  return (
+                    data?.pages.reduce(
+                      (acc, token) => token.token_list.length + acc,
+                      0
+                    ) ?? 0
+                  )
+                }}
+                renderItems={(group, i) => {
+                  return group.token_list.map((token, j: number) => (
+                    <Card
+                      token={token}
+                      key={token.token_uuid || `${i}.${j}`}
+                      address={address}
+                      isClass
+                      showTokenID={false}
+                    />
+                  ))
+                }}
+              />
+            ) : null}
+          </TabPanel>
+          <TabPanel p={0}>
+            {listType === 'follow' ? (
+              <IssuerList isFollow={listType === 'follow'} address={address} />
+            ) : null}
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </section>
   )
 }

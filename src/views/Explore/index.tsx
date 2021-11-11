@@ -1,5 +1,5 @@
 import { Box, Flex } from '@mibao-ui/components'
-import { Switch } from '@chakra-ui/react'
+import { Switch, Image as RowImage } from '@chakra-ui/react'
 import { Lite } from './components/lite'
 import { useCallback } from 'react'
 import { MainContainer } from '../../styles'
@@ -7,6 +7,7 @@ import { Pro } from './components/pro'
 import { HiddenBar } from '../../components/HiddenBar'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
+import LogoPath from '../../assets/svg/explore-logo.svg'
 
 export const Explore: React.FC = () => {
   const [mode, setMode] = useRouteQuerySearch<'pro' | 'lite'>('mode', 'pro')
@@ -18,15 +19,7 @@ export const Explore: React.FC = () => {
   return (
     <MainContainer>
       <Flex justify="space-between" pt="8px" pb="14px" h="50px" px="20px">
-        <Box
-          fontSize="24px"
-          fontWeight="600"
-          h="21px"
-          lineHeight="21px"
-          mt="auto"
-        >
-          mibao
-        </Box>
+        <RowImage src={LogoPath} h="21px" w="auto" my="auto" />
 
         <Flex mt="auto">
           <Box as="span" mr="10px" fontSize="14px" fontWeight="600">
