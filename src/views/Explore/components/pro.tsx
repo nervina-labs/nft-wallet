@@ -19,7 +19,7 @@ export const Pro: React.FC = () => {
       </Box>
       <RankingList />
       <Box mt="10px" px="20px">
-        <NftSortOrKindList noTypeLine />
+        <NftSortOrKindList noTypeLine isFirstOpenScrollToTop={false} />
       </Box>
     </Box>
   )
