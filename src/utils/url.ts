@@ -1,5 +1,6 @@
 import {
   BOWSER_BROWSER,
+  IS_WEBKIT,
   OSS_IMG_HOSTS,
   OSS_IMG_PROCESS_QUERY_KEY,
   OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
@@ -8,6 +9,9 @@ import {
 import i18n from '../i18n'
 
 export function isSupportWebp(): boolean {
+  if (IS_WEBKIT) {
+    return false
+  }
   // https://caniuse.com/?search=webp
   // https://x5.tencent.com/guide/caniuse/index.html
   const supportedBrowsers = {
