@@ -33,4 +33,5 @@ export interface ShareProps {
   onClose: () => void
   shareUrl: string
   poster?: NftPoster | IssuerPoster | HolderPoster
+  reloadByRoute?: boolean
 }

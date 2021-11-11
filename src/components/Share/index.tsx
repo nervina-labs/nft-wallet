@@ -24,6 +24,7 @@ import { Issuer } from './components/posters/issuer'
 import { Holder } from './components/posters/holder'
 import styled from '@emotion/styled'
 import { PosterType, ShareProps } from './share.interface'
+import { useHistory } from 'react-router-dom'
 
 const IconContainer = styled(RowImage)`
   &.loading {
@@ -50,11 +51,12 @@ export const Share: React.FC<ShareProps> = ({
   onClose,
   shareUrl,
   poster,
+  reloadByRoute,
 }) => {
   const { t } = useTranslation('translations')
   const [posterState, setPosterState] = useState(PosterState.None)
   const [el, setEl] = useState<HTMLDivElement | null>(null)
-  const { imgSrc } = useHtml2Canvas(el, {
+  const { imgSrc, reload } = useHtml2Canvas(el, {
     enable: posterState === PosterState.Creating,
   })
   useEffect(() => {
@@ -132,6 +134,21 @@ export const Share: React.FC<ShareProps> = ({
   const creatingPoster = poster && posterState === PosterState.Creating
   const showPoster =
     posterState === PosterState.Creating || posterState === PosterState.Created
+  const { location } = useHistory()
+
+  const reloadKey = useMemo(() => {
+    if (!reloadByRoute) {
+      return ''
+    }
+    return location.pathname + location.search
+  }, [location.pathname, location.search, reloadByRoute])
+
+  useEffect(() => {
+    setPosterState(PosterState.None)
+    reload()
+    setEl(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reloadKey])
 
   return (
     <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>

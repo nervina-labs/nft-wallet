@@ -27,6 +27,7 @@ export interface HolderProps {
   desc: string
   coverImage: string
   isNftAvatar?: boolean
+  isHolder?: boolean
 }
 
 export const Holder: React.FC<HolderProps & PosterProps> = ({
@@ -37,6 +38,7 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
   shareUrl,
   desc,
   coverImage,
+  isHolder,
   onLoaded,
 }) => {
   const { t } = useTranslation('translations')
@@ -117,7 +119,14 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
         </Box>
         <DescContainer>{descEllipsis}</DescContainer>
         {shareUrl && (
-          <Footer url={shareUrl} text={t('common.share.poster.desc-holder')} />
+          <Footer
+            url={shareUrl}
+            text={
+              isHolder
+                ? t('common.share.poster.desc-holder')
+                : t('common.share.poster.desc-my')
+            }
+          />
         )}
       </Flex>
     </Box>
