@@ -301,10 +301,10 @@ export const Login: React.FC = () => {
               <Stack direction="column">
                 <img src={slide.src} />
                 <Flex flexDirection="column" fontSize="24px" px="30px">
-                  <Heading textAlign="left" fontSize="28px">
+                  <Heading textAlign="left" size="lg">
                     {t(`login.slides.${i + 1}.line-1`)}
                   </Heading>
-                  <Heading textAlign="right" color="#5065e5" fontSize="28px">
+                  <Heading textAlign="right" color="#5065e5" size="lg">
                     {t(`login.slides.${i + 1}.line-2`)}
                   </Heading>
                 </Flex>
@@ -314,7 +314,7 @@ export const Login: React.FC = () => {
         </Swiper>
       </div>
       <LoginButton
-        mt="25%"
+        mt="15%"
         onClick={() => {
           if (!isLicenseChecked) {
             toast(t('license.warn'), {
