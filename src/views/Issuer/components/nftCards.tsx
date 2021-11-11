@@ -112,7 +112,12 @@ export const NftCards: React.FC = () => {
         defaultIndex={index}
         onChange={onChange}
       >
-        <TabList position="sticky" top={HEADER_HEIGHT} zIndex={99} bg={'white'}>
+        <TabList
+          position="sticky"
+          top={`${HEADER_HEIGHT}px`}
+          zIndex={99}
+          bg={'white'}
+        >
           <Tab>{t('issuer.created')}</Tab>
           <Tab>{t('issuer.selling')}</Tab>
         </TabList>
