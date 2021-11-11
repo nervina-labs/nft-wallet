@@ -5,7 +5,7 @@ import {
   verifyEthAddress,
   Web3ModalProvider as OriginPWWeb3ModalProvider,
 } from '@lay2/pw-core'
-import { IS_MAINNET } from '../constants'
+import { IS_MAINNET, IS_TOKEN_POCKET } from '../constants'
 
 const noop: OnAddressChangedCallback = () => {}
 
@@ -54,7 +54,7 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
     return new Promise((resolve, reject) => {
       const from = this.address.addressString
 
-      if (typeof window.ethereum !== 'undefined') {
+      if (typeof window.ethereum !== 'undefined' && !IS_TOKEN_POCKET) {
         ;(window.ethereum as any)
           .request({ method: 'personal_sign', params: [from, message] })
           .then((result: string) => {
@@ -70,10 +70,10 @@ export class Web3Provider extends OriginPWWeb3ModalProvider {
             if (err) {
               reject(err)
             }
-            if (result.error) {
+            if (result?.error) {
               reject(result.error)
             }
-            resolve(result.result)
+            resolve(result?.result)
           }
         )
       } else {

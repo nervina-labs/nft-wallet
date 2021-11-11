@@ -10,6 +10,8 @@ body {
 html,
 body {
     height: 100%;
+    position: relative;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 code {
@@ -18,4 +20,23 @@ code {
 }
 .root {
   height: 100%;
+}
+.preview-mask {
+  background-color: rgba(0, 0, 0, 0.5)!important;
+}
+.PhotoView-PhotoSlider__BannerWrap {
+  background-color: rgba(0, 0, 0, 0);
+}
+.PhotoView-PhotoSlider__Counter {
+  opacity: 0;
+}
+
+model-viewer {
+  --poster-color: rgba(0 , 0, 0, 0);
+  --poster-image: rgba(0 , 0, 0, 0);
+}
+
+:root {
+  --input-bg-color: #f6f6f6;
+  --secondary-font-color: #777e90;
 }

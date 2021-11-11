@@ -1,36 +1,56 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  lazy,
+} from 'react'
 import { Redirect, useHistory, useLocation, useParams } from 'react-router'
+import classnames from 'classnames'
 import { Appbar } from '../../components/Appbar'
-import { NFTDetail, Query } from '../../models'
+import { NFTDetail, NftType, Query } from '../../models'
 import { RoutePath } from '../../routes'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
-import { ReactComponent as ErrorSvg } from '../../assets/svg/error.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
-import ArrowPng from '../../assets/img/arrow.png'
-import SuccessPng from '../../assets/img/success.png'
-import FailPng from '../../assets/img/fail.png'
-import InfoIcon from '@material-ui/icons/Info'
-import { Button } from '../../components/Button'
-import { Drawer, TextareaAutosize } from '@material-ui/core'
-import { LazyLoadImage } from '../../components/Image'
+import TextareaAutosize from 'react-textarea-autosize'
 import {
   verifyEthContractAddress,
   verifyCkbAddress,
   verifyEthAddress,
+  verifyDasAddress,
   generateUnipassSignTxUrl,
 } from '../../utils'
-import { ActionDialog } from '../../components/ActionDialog'
-import { useWalletModel, WalletType } from '../../hooks/useWallet'
-import { QrcodeScaner } from '../../components/QRcodeScaner.tsx'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
 import UnipassProvider from '../../pw/UnipassProvider'
 import { Address, AddressType } from '@lay2/pw-core'
 import { useTranslation } from 'react-i18next'
+import { AccountRecord } from 'das-sdk'
 import { Box, Container, DrawerContainer } from './styled'
 import { UnipassTransferNftState } from '../../models/unipass'
+import { DasSelector } from './dasSelector'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
+import { CardImage } from '../../components/Card/CardImage'
+import {
+  useAccount,
+  useAccountStatus,
+  useAPI,
+  useProvider,
+  useSignTransaction,
+  WalletType,
+} from '../../hooks/useAccount'
+import { Button, Drawer } from '@mibao-ui/components'
+import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { LoadableComponent } from '../../components/GlobalLoader'
+import type Scaner from '../../components/QRcodeScaner'
+import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
+
+const QrcodeScaner = lazy(
+  async () => await import('../../components/QRcodeScaner')
+)
 
 export enum FailedMessage {
   SignFail = 'sign-fail',
@@ -46,37 +66,86 @@ export interface TransferState {
   prevState?: UnipassTransferNftState
 }
 
+enum AlertLevel {
+  info = 'info',
+  error = 'error',
+}
+
+enum AddressVerifiedType {
+  empty = 'empty',
+  self = 'self',
+  unsupported = 'unsupported',
+  ckb = 'ckb',
+  eth = 'eth',
+  das = 'das',
+}
+
+function verifyAddress(address: string, self?: string): AddressVerifiedType {
+  // empty
+  if (address === '' || address === null || address === undefined) {
+    return AddressVerifiedType.empty
+  }
+  // self
+  if (self === address) {
+    return AddressVerifiedType.self
+  }
+  // ckb
+  if (verifyCkbAddress(address)) {
+    if (IS_MAINNET && address.startsWith('ckt')) {
+      return AddressVerifiedType.unsupported
+    }
+    if (!IS_MAINNET && address.startsWith('ckb')) {
+      return AddressVerifiedType.unsupported
+    }
+    return AddressVerifiedType.ckb
+  }
+  // eth
+  if (verifyEthAddress(address)) {
+    const eth2ckbAddress = new Address(address, AddressType.eth).toCKBAddress()
+    if (self === eth2ckbAddress) {
+      return AddressVerifiedType.self
+    }
+    return AddressVerifiedType.eth
+  }
+  // das
+  if (verifyDasAddress(address)) {
+    return AddressVerifiedType.das
+  }
+  return AddressVerifiedType.unsupported
+}
+
 export const Transfer: React.FC = () => {
   const routerLocation = useLocation<TransferState>()
   const history = useHistory()
-  const {
-    signTransaction,
-    api,
-    isLogined,
-    address,
-    prevAddress,
-    provider,
-    walletType,
-    pubkey,
-  } = useWalletModel()
+  const signTransaction = useSignTransaction()
+  const api = useAPI()
+  const { isLogined, prevAddress } = useAccountStatus()
+  const { address, walletType, pubkey } = useAccount()
+  const provider = useProvider()
   const prevState = routerLocation.state?.prevState
   const hasSignature = !!routerLocation.state?.signature
   const [isDrawerOpen, setIsDrawerOpen] = useState(hasSignature ?? false)
   const [ckbAddress, setCkbAddress] = useState(prevState?.ckbAddress ?? '')
-  const [failedStatus, setFailedMessage] = useState(FailedMessage.TranferFail)
   const [isSendingNFT, setIsSendingNFT] = useState(false)
-  const [isAddressValid, setIsAddressValid] = useState(
-    !!routerLocation.state?.prevState ?? false
-  )
   const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isScaning, setIsScaning] = useState(false)
-  const qrcodeScanerRef = useRef<QrcodeScaner>(null)
+  // eslint-disable-next-line prettier/prettier
+  const dasPopoutVisibleTrigger = useRef<(popoutVisible: boolean) => void>()
+  const [
+    selectedDasAccount,
+    setSelectedDasAccount,
+  ] = useState<AccountRecord | null>(null)
+  const qrcodeScanerRef = useRef<Scaner>(null)
   const { t } = useTranslation('translations')
 
-  const failedMessage = useMemo(() => {
-    return t(`transfer.error.${failedStatus}`)
-  }, [t, failedStatus])
+  const buildFailedMessage = useCallback(
+    (msg?: FailedMessage) => {
+      return msg
+        ? t(`transfer.error.${msg}`)
+        : t('transfer.error.transfer-fail')
+    },
+    [t]
+  )
 
   useEffect(() => {
     if (
@@ -90,80 +159,104 @@ export const Transfer: React.FC = () => {
     }
   }, [prevAddress, address, provider, history])
 
+  const ckbAddressType = useMemo(() => {
+    return verifyAddress(ckbAddress, address)
+  }, [ckbAddress, address])
+
   const isEthAddress = useMemo(() => {
-    return verifyEthAddress(ckbAddress)
-  }, [ckbAddress])
+    return ckbAddressType === AddressVerifiedType.eth
+  }, [ckbAddressType])
 
-  const isSameAddress = useMemo(() => {
-    if (isEthAddress) {
-      return new Address(ckbAddress, AddressType.eth).toCKBAddress() === address
+  const isDasAddress = useMemo(() => {
+    return ckbAddressType === AddressVerifiedType.das
+  }, [ckbAddressType])
+
+  const finalUsedAddress = useMemo(() => {
+    if (isDasAddress && selectedDasAccount) {
+      return selectedDasAccount.value
     }
-    return address !== '' && address === ckbAddress
-  }, [address, ckbAddress, isEthAddress])
+    return ckbAddress
+  }, [ckbAddress, isDasAddress, selectedDasAccount])
 
-  const inputOnChange = useCallback(
-    (val: string) => {
-      let isValidAddress = verifyCkbAddress(val)
-      let isSameAddress = val !== '' && address === val
-      const isEthAddress = verifyEthAddress(val)
-      if (isEthAddress) {
-        isSameAddress =
-          new Address(val, AddressType.eth).toCKBAddress() === address
-      }
-      if (isSameAddress) {
-        isValidAddress = false
-      }
-      if (IS_MAINNET && val.startsWith('ckt')) {
-        isValidAddress = false
-      }
-      if (!IS_MAINNET && val.startsWith('ckb')) {
-        isValidAddress = false
-      }
-      if (isEthAddress && !isSameAddress) {
-        isValidAddress = true
-      }
-      setIsAddressValid(isValidAddress)
-      setCkbAddress(val)
-    },
-    [address]
-  )
+  const finalUsedAddressType = useMemo(() => {
+    if (isDasAddress && selectedDasAccount) {
+      return verifyAddress(selectedDasAccount.value, address)
+    }
+    return ckbAddressType
+  }, [isDasAddress, selectedDasAccount, ckbAddressType, address])
 
   const textareaOnChange = useCallback(
     async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const val = e.target.value
-      inputOnChange(val)
+      let val = e.target.value
+      if (verifyDasAddress(val)) {
+        val = val.toLowerCase()
+      }
+      setCkbAddress(val)
     },
-    [inputOnChange]
+    [setCkbAddress]
   )
 
-  const stopTranfer = (isSuccess: boolean): void => {
-    setIsSendingNFT(false)
-    setIsDrawerOpen(false)
-    if (isSuccess) {
-      setIsSendDialogSuccess(true)
-    } else {
-      setIsErrorDialogOpen(true)
+  const handleTextareaFocus = useCallback(() => {
+    if (isDasAddress && dasPopoutVisibleTrigger.current) {
+      dasPopoutVisibleTrigger.current(true)
     }
-  }
+  }, [isDasAddress])
+
+  const confirmDialog = useConfirmDialog()
+
+  const stopTranfer = useCallback(
+    (isSuccess: boolean, msg?: FailedMessage): void => {
+      setIsSendingNFT(false)
+      setIsDrawerOpen(false)
+      if (isSuccess) {
+        setIsSendDialogSuccess(true)
+        confirmDialog({
+          type: 'success',
+          title: t('transfer.submitted'),
+          description: t('transfer.tips'),
+          showCloseButton: false,
+          onConfirm: () => {
+            history.push(RoutePath.Transactions)
+          },
+        })
+      } else {
+        confirmDialog({
+          type: 'warning',
+          title: buildFailedMessage(msg),
+        })
+      }
+    },
+    [confirmDialog, buildFailedMessage, history, t]
+  )
   const transferOnClick = useCallback(async () => {
-    if (isEthAddress) {
-      const isContract = await verifyEthContractAddress(ckbAddress)
+    if (isEthAddress || (isDasAddress && verifyEthAddress(finalUsedAddress))) {
+      const isContract = await verifyEthContractAddress(finalUsedAddress)
       if (isContract) {
-        setFailedMessage(FailedMessage.ContractAddress)
-        setIsErrorDialogOpen(true)
+        confirmDialog({
+          type: 'warning',
+          title: buildFailedMessage(FailedMessage.ContractAddress),
+        })
         return
       }
     }
     setIsDrawerOpen(true)
-  }, [isEthAddress, ckbAddress])
+  }, [
+    isEthAddress,
+    finalUsedAddress,
+    isDasAddress,
+    confirmDialog,
+    buildFailedMessage,
+  ])
   const { id } = useParams<{ id: string }>()
 
   const sendNFT = useCallback(async () => {
     setIsSendingNFT(true)
     try {
+      const isFinalUsedAddressTypeEth =
+        finalUsedAddressType === AddressVerifiedType.eth
       const sentAddress = new Address(
-        ckbAddress,
-        isEthAddress ? AddressType.eth : AddressType.ckb
+        finalUsedAddress,
+        isFinalUsedAddressTypeEth ? AddressType.eth : AddressType.ckb
       ).toCKBAddress()
       const { tx } = await api
         .getTransferNftTransaction(
@@ -172,14 +265,12 @@ export const Transfer: React.FC = () => {
           walletType === WalletType.Unipass
         )
         .catch((err) => {
-          setFailedMessage(FailedMessage.TranferFail)
-          stopTranfer(false)
+          stopTranfer(false, FailedMessage.TranferFail)
           throw new Error(err)
         })
 
       const signTx = await signTransaction(tx).catch((err) => {
-        setFailedMessage(FailedMessage.SignFail)
-        stopTranfer(false)
+        stopTranfer(false, FailedMessage.SignFail)
         throw new Error(err)
       })
 
@@ -187,27 +278,22 @@ export const Transfer: React.FC = () => {
         const { signature } = routerLocation.state ?? {}
         if (signature) {
           await api.transfer(id, tx, sentAddress, signature).catch((err) => {
-            setFailedMessage(FailedMessage.TranferFail)
-            stopTranfer(false)
+            stopTranfer(false, FailedMessage.TranferFail)
             console.log(err)
             throw err
           })
         } else {
           const url = `${location.origin}${RoutePath.Unipass}`
-          location.href = generateUnipassSignTxUrl(
-            url,
-            url,
-            pubkey,
-            signTx as any,
-            { uuid: id, ckbAddress: sentAddress }
-          )
+          location.href = generateUnipassSignTxUrl(url, url, pubkey, signTx, {
+            uuid: id,
+            ckbAddress: sentAddress,
+          })
           return
         }
       } else {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await api.transfer(id, signTx!, sentAddress).catch((err) => {
-          setFailedMessage(FailedMessage.TranferFail)
-          stopTranfer(false)
+        await api.transfer(id, signTx, sentAddress).catch((err) => {
+          stopTranfer(false, FailedMessage.TranferFail)
           console.log(err)
           throw err
         })
@@ -220,12 +306,13 @@ export const Transfer: React.FC = () => {
   }, [
     signTransaction,
     id,
-    ckbAddress,
+    finalUsedAddress,
+    finalUsedAddressType,
     api,
     walletType,
-    isEthAddress,
     routerLocation.state,
     pubkey,
+    stopTranfer,
   ])
 
   const closeDrawer = (): void => setIsDrawerOpen(false)
@@ -237,10 +324,12 @@ export const Transfer: React.FC = () => {
   const [hasVideoDevice, setHasVideoDevice] = useState(false)
   const startScan = useCallback(() => {
     if (!hasVideoDevice) {
-      setFailedMessage(
-        IS_IPHONE ? FailedMessage.IOSWebkit : FailedMessage.NoCamera
-      )
-      setIsErrorDialogOpen(true)
+      confirmDialog({
+        type: 'error',
+        title: buildFailedMessage(
+          IS_IPHONE ? FailedMessage.IOSWebkit : FailedMessage.NoCamera
+        ),
+      })
       return
     }
     if (hasPermission) {
@@ -249,7 +338,7 @@ export const Transfer: React.FC = () => {
     } else {
       alert(t('transfer.error.camera-auth'))
     }
-  }, [hasPermission, hasVideoDevice, t])
+  }, [hasPermission, hasVideoDevice, t, buildFailedMessage, confirmDialog])
 
   useEffect(() => {
     try {
@@ -264,10 +353,12 @@ export const Transfer: React.FC = () => {
     }
   }, [])
 
+  const getAuth = useGetAndSetAuth()
   const { data: remoteNftDetail, failureCount } = useQuery(
-    [Query.NFTDetail, id, api],
+    [Query.NFTDetail, id, api, getAuth],
     async () => {
-      const { data } = await api.getNFTDetail(id)
+      const auth = await getAuth()
+      const { data } = await api.getNFTDetail(id, auth)
       return data
     },
     { enabled: id != null && routerLocation.state?.nftDetail == null }
@@ -321,30 +412,68 @@ export const Transfer: React.FC = () => {
     )
   }, [address, remoteNftDetail, failureCount])
 
-  const alertMsg = useMemo(() => {
-    if (ckbAddress.startsWith('0x') && !verifyEthAddress(ckbAddress)) {
-      return t('transfer.error.eth')
+  const getAlertMsg = useCallback(
+    (addr: string, type: AddressVerifiedType): [AlertLevel, string] => {
+      if (addr.startsWith('0x') && type === AddressVerifiedType.unsupported) {
+        return [AlertLevel.error, t('transfer.error.eth')]
+      }
+      if (
+        (addr.startsWith('ckt') || addr.startsWith('ckb')) &&
+        type === AddressVerifiedType.unsupported
+      ) {
+        return [AlertLevel.error, t('transfer.error.ckb')]
+      }
+      if (
+        (addr.startsWith('ckt') || addr.startsWith('ckb')) &&
+        addr.length !== 95
+      ) {
+        return [AlertLevel.info, t('transfer.error.short-address')]
+      }
+      if (type === AddressVerifiedType.eth) {
+        return [AlertLevel.info, t('transfer.error.receive-eth')]
+      }
+      if (type === AddressVerifiedType.self) {
+        return [AlertLevel.error, t('transfer.error.self')]
+      }
+      return [AlertLevel.error, t('transfer.error.common')]
+    },
+    [t]
+  )
+
+  const [isAddressValid, showAlert, alertLevel, alertMsg] = useMemo(() => {
+    const valid =
+      finalUsedAddressType === AddressVerifiedType.eth ||
+      finalUsedAddressType === AddressVerifiedType.ckb
+    const showAlert =
+      (!valid && finalUsedAddress !== '') ||
+      (finalUsedAddressType === AddressVerifiedType.eth && valid) ||
+      (valid && finalUsedAddress.length !== 95)
+    let level = ''
+    let alertMsg = ''
+    if (showAlert) {
+      if (isDasAddress && !selectedDasAccount) {
+        ;[level, alertMsg] = [AlertLevel.info, t('transfer.error.das')]
+      } else {
+        ;[level, alertMsg] = getAlertMsg(finalUsedAddress, finalUsedAddressType)
+      }
     }
-    if (
-      (ckbAddress.startsWith('ckt') || ckbAddress.startsWith('ckb')) &&
-      !verifyCkbAddress(ckbAddress)
-    ) {
-      return t('transfer.error.ckb')
-    }
-    if (isEthAddress) {
-      return isSameAddress
-        ? t('transfer.error.self')
-        : t('transfer.error.receive-eth')
-    }
-    return isSameAddress ? t('transfer.error.self') : t('transfer.error.common')
-  }, [isSameAddress, isEthAddress, ckbAddress, t])
+
+    return [valid, showAlert, level, alertMsg]
+  }, [
+    finalUsedAddressType,
+    finalUsedAddress,
+    getAlertMsg,
+    isDasAddress,
+    selectedDasAccount,
+    t,
+  ])
 
   const colonWithSpace = useMemo(() => {
     const c = t('common.colon')
     return c === ':' ? ': ' : c
   }, [t])
 
-  if (isInvalid) {
+  if (isInvalid && !isSendDialogSuccess) {
     return <Redirect to={RoutePath.NotFound} />
   }
 
@@ -352,32 +481,36 @@ export const Transfer: React.FC = () => {
     <Container ref={containerRef}>
       <Appbar
         title={t('transfer.transfer')}
-        left={<BackSvg onClick={() => history.goBack()} />}
         right={<div />}
         ref={appRef}
+        transparent
       />
-      <QrcodeScaner
-        ref={qrcodeScanerRef}
-        isDrawerOpen={isScaning}
-        onCancel={stopScan}
-        history={history}
-        width={containerWidth}
-        t={t}
-        onScanCkbAddress={(addr) => {
-          inputOnChange(addr)
-          stopScan()
-        }}
-        onDecodeError={(e) => {
-          const msg = e.toString()
-          if (msg.includes('permission')) {
-            setHasPermission(false)
-          }
-          if (msg.includes('before any code')) {
-            return
-          }
-          stopScan()
-        }}
-      />
+      {isScaning ? (
+        <LoadableComponent>
+          <QrcodeScaner
+            ref={qrcodeScanerRef}
+            isDrawerOpen={isScaning}
+            onCancel={stopScan}
+            history={history}
+            width={containerWidth}
+            t={t}
+            onScanCkbAddress={(addr) => {
+              setCkbAddress(addr)
+              stopScan()
+            }}
+            onDecodeError={(e) => {
+              const msg = e.toString()
+              if (msg.includes('permission')) {
+                setHasPermission(false)
+              }
+              if (msg.includes('before any code')) {
+                return
+              }
+              stopScan()
+            }}
+          />
+        </LoadableComponent>
+      ) : null}
       <section className="main">
         <div className="boxes">
           <Box>
@@ -388,90 +521,75 @@ export const Transfer: React.FC = () => {
                 placeholder={t('transfer.placeholder')}
                 value={ckbAddress}
                 onChange={textareaOnChange}
-                rowsMax={4}
+                maxRows={4}
+                onFocus={handleTextareaFocus}
               />
-              <ScanSvg onClick={startScan} />
-            </div>
-            <div
-              className={`alert ${
-                isEthAddress && isAddressValid ? 'info' : 'error'
-              }`}
-              style={{
-                visibility:
-                  (!isAddressValid && ckbAddress !== '') ||
-                  (isEthAddress && isAddressValid)
-                    ? 'visible'
-                    : 'hidden',
-              }}
-            >
-              {isEthAddress ? <InfoIcon /> : <ErrorSvg />}
-              {alertMsg}
-            </div>
-            <div className="action">
               <div
-                className={`${!isAddressValid ? 'disabled' : ''} transfer`}
-                onClick={isAddressValid ? transferOnClick : undefined}
+                className={classnames('form-extra', {
+                  das: isDasAddress,
+                })}
               >
-                <img src={ArrowPng} />
+                <ScanSvg className="scan-btn" onClick={startScan} />
+                <DasSelector
+                  visible={isDasAddress}
+                  url={ckbAddress}
+                  onSelect={setSelectedDasAccount}
+                  selectedAccount={selectedDasAccount}
+                  dasPopoutVisibleTriggerRef={dasPopoutVisibleTrigger}
+                />
               </div>
             </div>
+            <div className="desc">
+              {t('transfer.check')}
+              {t('transfer.once-transfer')}
+            </div>
+            <Alert
+              style={{ visibility: showAlert ? 'visible' : 'hidden' }}
+              status={(alertLevel as any) || 'info'}
+              variant="subtle"
+              bg="white"
+            >
+              <AlertIcon boxSize="12px" />
+              <AlertDescription
+                fontSize="10px"
+                lineHeight="normal"
+                color={alertLevel === 'error' ? '#d03a3a' : '#2196f3'}
+              >
+                {alertMsg}
+              </AlertDescription>
+            </Alert>
+            <div className="action">
+              <Button
+                isDisabled={!isAddressValid}
+                w="118px"
+                fontSize="14px"
+                variant="solid"
+                colorScheme={'primary'}
+                borderRadius="20px"
+                color="white"
+                onClick={isAddressValid ? transferOnClick : undefined}
+              >
+                {t('nft.transfer')}
+              </Button>
+            </div>
           </Box>
-          <Box
-            style={{
-              margin: '0 22px',
-              opacity: '.6',
-              top: '-210px',
-              zIndex: 2,
-            }}
-          ></Box>
-          <Box
-            style={{
-              margin: '0 29px',
-              opacity: '.3',
-              top: '-420px',
-              zIndex: 1,
-            }}
-          ></Box>
-        </div>
-        <div className="desc">
-          {t('transfer.check')}&nbsp;
-          {t('transfer.once-transfer')}
         </div>
       </section>
-      <ActionDialog
-        icon={<img src={SuccessPng} />}
-        content={t('transfer.tips')}
-        extra={
-          <p style={{ color: '#1FD345', fontSize: '13px' }}>
-            {t('transfer.submitted')}
-          </p>
-        }
-        open={isSendDialogSuccess}
-        onConfrim={() => {
-          setIsSendDialogSuccess(false)
-          history.push(RoutePath.Transactions)
-        }}
-      />
-      <ActionDialog
-        icon={<img src={FailPng} />}
-        content={failedMessage}
-        open={isErrorDialogOpen}
-        onConfrim={() => setIsErrorDialogOpen(false)}
-        onBackdropClick={() => setIsErrorDialogOpen(false)}
-      />
+      <footer className="footer">
+        <FullLogo />
+      </footer>
       <Drawer
-        anchor="bottom"
-        open={isDrawerOpen && !!nftDetail}
-        PaperProps={{
+        placement="bottom"
+        isOpen={isDrawerOpen && !!nftDetail}
+        onClose={() => setIsDrawerOpen(false)}
+        contentProps={{
+          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
           style: {
-            position: 'absolute',
-            width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
             left: drawerLeft,
-            borderRadius: '20px 20px 0px 0px',
           },
+          overflow: 'hidden',
         }}
-        disableEnforceFocus
-        disableEscapeKeyDown
+        rounded="lg"
       >
         {nftDetail !== undefined ? (
           <DrawerContainer>
@@ -485,28 +603,29 @@ export const Transfer: React.FC = () => {
               }
             </div>
             <div className="card">
-              <LazyLoadImage
+              <CardImage
                 src={nftDetail.bg_image_url}
                 width={100}
                 height={100}
-                cover
-                imageStyle={{ borderRadius: '10px' }}
+                tid={`${nftDetail.n_token_id}`}
+                has3dIcon={nftDetail.renderer_type === NftType.ThreeD}
               />
             </div>
             <div className="title">
               {`${t('transfer.transfer')}${colonWithSpace}${nftDetail.name}`}
             </div>
             <p className="address">
-              {`${t('transfer.address')}${colonWithSpace}${ckbAddress}`}
+              {`${t('transfer.address')}${colonWithSpace}${finalUsedAddress}`}
             </p>
             <div className="center">
               <Button
-                type="primary"
+                variant="solid"
+                colorScheme="primary"
                 onClick={sendNFT}
-                disbaled={isSendingNFT}
                 isLoading={isSendingNFT}
+                size="sm"
               >
-                {isSendingNFT ? t('transfer.signing') : t('transfer.comfirm')}
+                {isSendingNFT ? t('transfer.signing') : t('transfer.confirm')}
               </Button>
             </div>
           </DrawerContainer>

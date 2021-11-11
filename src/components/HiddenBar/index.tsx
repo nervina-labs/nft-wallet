@@ -1,60 +1,65 @@
-import React, { useCallback } from 'react'
-import Slide from '@material-ui/core/Slide'
-import styled from 'styled-components'
+import React, { useEffect, useMemo, useState } from 'react'
 import { ReactComponent as MySvg } from '../../assets/svg/my.svg'
 import { ReactComponent as ExploreSvg } from '../../assets/svg/explore.svg'
 import { ReactComponent as AppsSvg } from '../../assets/svg/apps.svg'
+import { ReactComponent as HiddenBarKindsSvg } from '../../assets/svg/hidden-bar-kinds.svg'
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
-import classnames from 'classnames'
-import { useWalletModel } from '../../hooks/useWallet'
-import { useScrollTriggerWithThreshold } from '../../hooks/useScroll'
+import { useAccountStatus } from '../../hooks/useAccount'
+import { Stack } from '@mibao-ui/components'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import { useObservable } from 'rxjs-hooks'
+import { fromEvent, scan, tap, throttleTime } from 'rxjs'
 
-export const HideOnScroll: React.FC<{ alwaysShow?: boolean }> = ({
-  children,
-  alwaysShow,
-}) => {
-  const trigger = useScrollTriggerWithThreshold()
-  return (
-    <Slide appear={false} direction="up" in={!trigger || alwaysShow}>
-      {children as any}
-    </Slide>
-  )
-}
-
-const Container = styled.div`
+const Container = styled(Stack)`
   position: fixed;
   bottom: 20px;
-  border-radius: 20px;
-  background: #2a2a2a;
-  display: flex;
+  left: 50%;
   font-size: 16px;
-  width: 255px;
+  width: auto;
   height: 55px;
-  margin-left: calc((100% - 255px) / 2);
   z-index: 10;
   border-radius: 44px;
+  backdrop-filter: blur(32px);
+  transform: translateX(-50%);
+  background: linear-gradient(
+    87.48deg,
+    rgba(255, 255, 255, 0.5) 6.39% #ffffff 99.5%
+  );
+  box-shadow: 0 4px 20px rgba(168, 193, 221, 0.2);
+  border: 1px solid rgba(246, 246, 246, 0.1);
+  width: 80%;
+  justify-content: space-between;
+  max-width: 315px;
+  transition: 300ms;
 
-  @media (min-width: 500px) {
-    margin-left: 122.5px;
+  &.hide {
+    transform: translateX(-50%) translateY(100px);
   }
 
   .item {
+    margin: 0 auto;
+    cursor: pointer;
     display: flex;
-    align-items: center;
     justify-content: center;
-    flex: 1;
-    svg {
-      height: 24px;
-      width: 24px;
-      cursor: pointer;
+  }
+
+  svg {
+    height: 24px;
+    width: 24px;
+    fill: #777e90;
+    margin: auto;
+
+    path: {
+      fill: #777e90;
     }
-    &.active {
-      svg {
-        path {
-          fill: #ff5c00;
-        }
-      }
+  }
+
+  .active svg {
+    fill: #5065e5 !important;
+    path: {
+      fill: #5065e5 !important;
     }
   }
 `
@@ -62,50 +67,81 @@ const Container = styled.div`
 export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
   alwaysShow,
 }) => {
+  const { isLogined } = useAccountStatus()
   const matchExplore = useRouteMatch(RoutePath.Explore)
+  const matchExploreAll = useRouteMatch(RoutePath.ExploreAll)
   const matchNFTs = useRouteMatch({
     path: RoutePath.NFTs,
     exact: true,
   })
   const matchApps = useRouteMatch(RoutePath.Apps)
-  const history = useHistory()
-  const { isLogined } = useWalletModel()
-
-  const myOnClick = useCallback(() => {
-    if (matchNFTs?.isExact) {
-      return
+  const items = useMemo(
+    () => [
+      {
+        routeMatch: matchExplore?.isExact,
+        icon: <ExploreSvg />,
+        path: RoutePath.Explore,
+      },
+      {
+        routeMatch: matchExploreAll?.isExact,
+        icon: <HiddenBarKindsSvg />,
+        path: RoutePath.ExploreAll,
+      },
+      {
+        routeMatch: matchNFTs?.isExact,
+        icon: <MySvg />,
+        path: isLogined ? RoutePath.NFTs : RoutePath.Login,
+      },
+      {
+        routeMatch: matchApps?.isExact,
+        icon: <AppsSvg />,
+        path: RoutePath.Apps,
+      },
+    ],
+    [
+      isLogined,
+      matchApps?.isExact,
+      matchExplore?.isExact,
+      matchExploreAll?.isExact,
+      matchNFTs?.isExact,
+    ]
+  )
+  const [isHide, setIsHide] = useState(false)
+  useObservable(() =>
+    fromEvent(window, 'scroll').pipe(
+      throttleTime(200),
+      scan((acc) => [acc[1], window.scrollY], [window.scrollY, window.scrollY]),
+      tap(([prev, curr]) => {
+        if (!alwaysShow) {
+          setIsHide(prev < curr && curr > 200)
+        }
+      })
+    )
+  )
+  useEffect(() => {
+    if (alwaysShow) {
+      setIsHide(false)
     }
-    history.push(isLogined ? RoutePath.NFTs : RoutePath.Login)
-  }, [isLogined, matchNFTs, history])
+  }, [alwaysShow])
+  const { location } = useHistory()
 
   return (
-    <HideOnScroll alwaysShow={alwaysShow}>
-      <Container>
-        <div
-          onClick={
-            matchExplore?.isExact
-              ? undefined
-              : () => history.push(RoutePath.Explore)
-          }
-          className={classnames('item', { active: matchExplore != null })}
+    <Container spacing="50px" direction="row" className={isHide ? 'hide' : ''}>
+      {items.map((item, i) => (
+        <Link
+          to={{
+            pathname: item.path,
+            search:
+              matchExplore?.isExact || matchExploreAll?.isExact
+                ? location.search
+                : undefined,
+          }}
+          className={`item ${item.routeMatch ? 'active' : ''}`}
+          key={i}
         >
-          <ExploreSvg />
-        </div>
-        <div
-          onClick={myOnClick}
-          className={classnames('item', { active: matchNFTs?.isExact })}
-        >
-          <MySvg />
-        </div>
-        <div
-          onClick={
-            matchApps?.isExact ? undefined : () => history.push(RoutePath.Apps)
-          }
-          className={classnames('item', { active: matchApps?.isExact })}
-        >
-          <AppsSvg />
-        </div>
-      </Container>
-    </HideOnScroll>
+          {item.icon}
+        </Link>
+      ))}
+    </Container>
   )
 }

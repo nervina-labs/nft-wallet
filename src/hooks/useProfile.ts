@@ -1,10 +1,17 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useCallback, useMemo, useState } from 'react'
-import { createContainer } from 'unstated-next'
+import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
+import { useCallback, useMemo } from 'react'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
-import { useLocalStorage } from './useLocalStorage'
-import { useWalletModel, WalletType } from './useWallet'
+import { UnipassConfig } from '../utils'
+import {
+  useAccount,
+  useAPI,
+  useProvider,
+  useSignMessage,
+  WalletType,
+} from './useAccount'
+import { useToast } from './useToast'
 
 export type Gender = 'male' | 'female'
 
@@ -18,34 +25,15 @@ export interface Profile {
   auth?: string
 }
 
-export interface UseProfile {
-  profile: Auths | null
-  setProfile: (profile: Partial<Profile>) => void
-  setPreviewImageData: React.Dispatch<React.SetStateAction<string>>
-  showEditSuccess: boolean
-  setShowEditSuccess: React.Dispatch<React.SetStateAction<boolean>>
-  previewImageData: string
-  getAuth: () => Promise<Auth>
-  setRemoteProfile: (user: Partial<User>, ext?: string) => Promise<void>
-  snackbarMsg: React.ReactNode
-  snackbar: (msg: React.ReactNode) => void
-  closeSnackbar: () => void
-  toggleLike: (uuid: string, like: boolean) => Promise<boolean>
-  isAuthenticated: boolean
-}
-
 export interface Auths {
   [key: string]: Profile
 }
 
-function useProfile(): UseProfile {
-  const { address, walletType, signMessage, api, provider } = useWalletModel()
-  const [profile, _setProfile] = useLocalStorage<Auths | null>(
-    'mibao_account_profile',
-    null
-  )
+const profileAtom = atomWithStorage<Auths | null>('mibao_account_profile', null)
 
-  const [previewImageData, setPreviewImageData] = useState('')
+export function useProfile() {
+  const { address } = useAccount()
+  const [profile, _setProfile] = useAtom(profileAtom)
 
   const setProfile = useCallback(
     (p: Partial<Profile>) => {
@@ -61,9 +49,30 @@ function useProfile(): UseProfile {
     [_setProfile, address]
   )
 
-  const getAuth: () => Promise<Auth> = useCallback(async () => {
+  const isAuthenticated = useMemo(() => {
+    if (profile == null) {
+      return false
+    }
+    return !!profile[address]
+  }, [address, profile])
+
+  return {
+    profile,
+    setProfile,
+    isAuthenticated,
+  }
+}
+
+export function useGetAndSetAuth(): () => Promise<Auth> {
+  const { profile, setProfile } = useProfile()
+  const signMessage = useSignMessage()
+  const { address, walletType } = useAccount()
+  const provider = useProvider()
+
+  return useCallback(async () => {
     let signature = profile?.[address]?.auth
     if (!signature) {
+      UnipassConfig.setRedirectUri(location.pathname + location.search)
       signature = await signMessage(address)
       // we don't need set unipass profile auth in here
       if (signature.includes('N/A') || walletType === WalletType.Unipass) {
@@ -85,29 +94,12 @@ function useProfile(): UseProfile {
       signature,
     }
   }, [signMessage, walletType, address, profile, setProfile, provider])
+}
 
-  const [showEditSuccess, setShowEditSuccess] = useState(false)
-  const [snackbarMsg, setSnackbarMsg] = useState<React.ReactNode>()
-
-  const snackbar = useCallback((message: React.ReactNode) => {
-    setShowEditSuccess(true)
-    setSnackbarMsg(message)
-  }, [])
-
-  const closeSnackbar = useCallback(() => {
-    setShowEditSuccess(false)
-  }, [])
-
-  const setRemoteProfile = useCallback(
-    async (user: Partial<User>, ext?: string) => {
-      const auth = await getAuth()
-      await api.setProfile(user, auth, ext)
-      snackbar(i18n.t('profile.success', { ns: 'translations' }))
-    },
-    [getAuth, api, snackbar]
-  )
-
-  const toggleLike = useCallback(
+export function useToggleLike() {
+  const api = useAPI()
+  const getAuth = useGetAndSetAuth()
+  return useCallback(
     async (uuid: string, like: boolean) => {
       const auth = await getAuth()
       const { data } = await api.toggleLike(uuid, like, auth)
@@ -115,33 +107,21 @@ function useProfile(): UseProfile {
     },
     [getAuth, api]
   )
-
-  const isAuthenticated = useMemo(() => {
-    if (profile == null) {
-      return false
-    }
-    return !!profile[address]
-  }, [address, profile])
-
-  return {
-    profile,
-    setProfile,
-    previewImageData,
-    setPreviewImageData,
-    getAuth,
-    setRemoteProfile,
-    showEditSuccess,
-    setShowEditSuccess,
-    snackbarMsg,
-    snackbar,
-    closeSnackbar,
-    toggleLike,
-    isAuthenticated,
-  }
 }
 
-export const ProfileContainer = createContainer(useProfile)
+export function useSetServerProfile() {
+  const api = useAPI()
+  const getAuth = useGetAndSetAuth()
+  const toast = useToast()
 
-export const ProfileProvider = ProfileContainer.Provider
+  return useCallback(
+    async (user: Partial<User>, options?: { ext?: string }) => {
+      const auth = await getAuth()
+      await api.setProfile(user, { auth, ext: options?.ext })
+      toast(i18n.t('profile.success', { ns: 'translations' }))
+    },
+    [getAuth, api, toast]
+  )
+}
 
-export const useProfileModel = ProfileContainer.useContainer
+export const useProfileModel = () => {}

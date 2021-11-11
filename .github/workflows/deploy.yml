@@ -1,9 +1,9 @@
-name: DEPLOY
+name: DEPLOY STAGING
 
 on:
   push:
     branches:
-      - develop
+      - staging
 
 jobs:
   deploy:

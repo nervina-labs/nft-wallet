@@ -1,16 +1,40 @@
 import { AxiosResponse } from 'axios'
 import { NFT, NFTDetail } from './nft'
-import { ClassList, Tag, TokenClass } from './class-list'
-import { Transaction } from './transactions'
+import { ClassList, FollowClassList, Tag, TokenClass } from './class-list'
+import { Transaction, TransactionLogResponse } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
-import { Issuer } from './issuer'
+import {
+  Issuer,
+  IssuerInfo,
+  IssuerTokenClassResult,
+  FollowerResponse,
+  IssuersResponse,
+} from './issuer'
 import { Notifications } from './banner'
+import { ClaimResult } from './claim'
+import {
+  MyRedeemEvents,
+  RedeemDetailModel,
+  RedeemEvents,
+  RedeemListType,
+  RedeemParams,
+  RedeemResultResponse,
+  RewardDetailResponse,
+} from './redeem'
+import { WxSignConfig } from './wx'
+import { GetHolderByTokenClassUuidResponse } from './holder'
+import { RankingListResponse } from './rank'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
   token_ckb_transaction_uuid: string
+}
+
+export interface UnsignedReddemTransaction {
+  unsigned_tx: RPC.RawTransaction
+  redemption_event_uuid: string
 }
 
 export interface NFTTransaction {
@@ -22,16 +46,26 @@ export enum ClassSortType {
   Recommend = 'recommended',
   Latest = 'latest',
   Likes = 'likes',
+  OnSale = 'on_sale',
 }
 
-interface SpecialCategories {
+export interface SpecialCategories {
   special_categories: SpecialAssets[]
 }
 
-export interface NFTWalletAPI {
-  getNFTs: (page: number) => Promise<AxiosResponse<NFT>>
+export const PRODUCT_STATUE_SET = ['product_state', 'on_sale'] as const
+export type ProductState = typeof PRODUCT_STATUE_SET[number]
 
-  getNFTDetail: (uuid: string) => Promise<AxiosResponse<NFTDetail>>
+export interface NFTWalletAPI {
+  getNFTs: (
+    page: number,
+    options?: {
+      address?: string
+      exclude_banned?: boolean
+    }
+  ) => Promise<AxiosResponse<NFT>>
+
+  getNFTDetail: (uuid: string, auth?: Auth) => Promise<AxiosResponse<NFTDetail>>
 
   getTransactions: (page: number) => Promise<AxiosResponse<Transaction>>
 
@@ -54,7 +88,10 @@ export interface NFTWalletAPI {
     sortType: ClassSortType
   ) => Promise<AxiosResponse<ClassList>>
 
-  getUserLikesClassList: (page: number) => Promise<AxiosResponse<ClassList>>
+  getUserLikesClassList: (
+    page: number,
+    options?: { address?: string }
+  ) => Promise<AxiosResponse<ClassList>>
 
   toggleLike: (
     uuid: string,
@@ -64,13 +101,18 @@ export interface NFTWalletAPI {
 
   setProfile: (
     user: Partial<User>,
-    auth?: Auth,
-    ext?: string
+    options?: {
+      auth?: Auth
+      ext?: string
+    }
   ) => Promise<AxiosResponse<object>>
 
-  getProfile: () => Promise<UserResponse>
+  getProfile: (address?: string) => Promise<UserResponse>
 
-  getTokenClass: (uuid: string) => Promise<AxiosResponse<TokenClass>>
+  getTokenClass: (
+    uuid: string,
+    auth?: Auth
+  ) => Promise<AxiosResponse<TokenClass>>
 
   getTags: () => Promise<AxiosResponse<{ tags: Tag[] }>>
 
@@ -100,4 +142,96 @@ export interface NFTWalletAPI {
   getCollectionDetail: (uuid: string) => Promise<AxiosResponse<SpecialAssets>>
 
   getNotifications: () => Promise<AxiosResponse<Notifications>>
+
+  getClaimStatus: (uuid: string) => Promise<AxiosResponse<ClaimResult>>
+
+  claim: (uuid: string) => Promise<AxiosResponse<void>>
+
+  getWechatSignature: (
+    config: WxSignConfig
+  ) => Promise<AxiosResponse<{ signature: string }>>
+
+  getIssuerInfo: (uuid: string) => Promise<AxiosResponse<IssuerInfo>>
+
+  getIssuerTokenClass: (
+    uuid: string,
+    productState?: ProductState,
+    options?: {
+      limit?: number
+      page?: number
+    }
+  ) => Promise<AxiosResponse<IssuerTokenClassResult>>
+
+  toggleFollow: (
+    uuid: string,
+    auth: Auth
+  ) => Promise<AxiosResponse<FollowerResponse>>
+
+  getFollowIssuers: (options?: {
+    address?: string
+    auth?: Auth
+    page?: number
+    limit?: number
+  }) => Promise<AxiosResponse<IssuersResponse>>
+
+  getFollowTokenClasses: (
+    auth: Auth,
+    page: number,
+    sortType: ClassSortType
+  ) => Promise<AxiosResponse<FollowClassList>>
+
+  getAllRedeemEvents: (
+    page: number,
+    type: RedeemListType
+  ) => Promise<AxiosResponse<RedeemEvents>>
+
+  getMyRedeemEvents: (
+    page: number,
+    type: RedeemListType
+  ) => Promise<AxiosResponse<MyRedeemEvents>>
+
+  getRedeemDetail: (id: string) => Promise<AxiosResponse<RedeemDetailModel>>
+
+  getRedeemTransaction: (
+    id: string,
+    isUnipass?: boolean
+  ) => Promise<NFTTransaction>
+
+  getRedeemPrize: (id: string) => Promise<AxiosResponse<RewardDetailResponse>>
+
+  redeem: (params: RedeemParams) => Promise<AxiosResponse<RedeemResultResponse>>
+
+  getHolderByTokenClassUuid: (
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) => Promise<AxiosResponse<GetHolderByTokenClassUuidResponse>>
+
+  getTokenClassTransactions: (
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) => Promise<AxiosResponse<TransactionLogResponse>>
+
+  getTokenTransactions: (
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) => Promise<AxiosResponse<TransactionLogResponse>>
+
+  getUrlBase64: (url: string) => Promise<AxiosResponse<{ result: string }>>
+
+  getRankingList: <
+    O extends {
+      uuid?: string
+    }
+  >(
+    options?: O
+  ) => Promise<AxiosResponse<RankingListResponse<O>>>
 }

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useProfileModel } from '../../hooks/useProfile'
+import { useSetAccount, WalletType } from '../../hooks/useAccount'
+import { useProfile } from '../../hooks/useProfile'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
-import { useWalletModel, WalletType } from '../../hooks/useWallet'
 import {
   UnipassAction,
   UnipassResponse,
@@ -15,11 +15,11 @@ import { UnipassConfig } from '../../utils'
 
 export const Unipass: React.FC = () => {
   const action = useRouteQuery<UnipassAction>('action', UnipassAction.Login)
-  const ret = useRouteQuery('unipass_ret', '')
+  const ret = useRouteQuery('unipass_ret', '{}')
   const unipassInfo: UnipassResponse = JSON.parse(ret)
   const history = useHistory()
-  const { setUnipassAccount } = useWalletModel()
-  const { setProfile, profile } = useProfileModel()
+  const setUnipassAccount = useSetAccount()
+  const { setProfile, profile } = useProfile()
   const ps = useRouteQuery('prev_state', '{}')
   const prevState = JSON.parse(ps)
   const redirectUri = useRouteQuery('redirect', '')
@@ -28,7 +28,7 @@ export const Unipass: React.FC = () => {
     switch (action) {
       case UnipassAction.Login: {
         UnipassConfig.clear()
-        if (code !== 200) {
+        if (code !== 200 && code !== 401) {
           history.replace(redirectUri || RoutePath.Login)
           break
         }
@@ -46,7 +46,7 @@ export const Unipass: React.FC = () => {
       }
       case UnipassAction.Sign: {
         UnipassConfig.clear()
-        if (code !== 200) {
+        if (code !== 200 && code !== 401) {
           history.replace(redirectUri || RoutePath.NFTs)
           break
         }
@@ -57,9 +57,11 @@ export const Unipass: React.FC = () => {
           address: addr,
           walletType: WalletType.Unipass,
         })
-        setProfile({
-          auth: `0x01${data.sig.replace('0x', '')}`,
-        })
+        if (code === 200) {
+          setProfile({
+            auth: `0x01${data.sig.replace('0x', '')}`,
+          })
+        }
         history.replace(redirectUri ?? RoutePath.NFTs)
         break
       }
@@ -78,6 +80,25 @@ export const Unipass: React.FC = () => {
         })
         break
       }
+      case UnipassAction.Redeem: {
+        const id = prevState.uuid as string
+        const prevPath = prevState.prevPathname as string
+        if (code !== 200) {
+          history.replace(prevPath)
+          break
+        }
+        const data = unipassInfo?.data as UnipassSignData
+        const state: Record<string, string> = {
+          signature: `0x01${data.sig.replace('0x', '')}`,
+        }
+        if (prevState.customData) {
+          state.customData = JSON.parse(
+            decodeURIComponent(prevState.customData) || '{}'
+          )
+        }
+        history.replace(`${RoutePath.RedeemResult}/${id}`, state)
+        break
+      }
       default:
         break
     }
@@ -89,6 +110,7 @@ export const Unipass: React.FC = () => {
     setUnipassAccount,
     profile,
     prevState,
+    redirectUri,
   ])
   return null
 }

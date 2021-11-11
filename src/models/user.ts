@@ -1,3 +1,8 @@
+export enum AvatarType {
+  Token = 'token',
+  Image = 'image',
+}
+
 export interface User {
   email: string
   mobile_phone: string
@@ -7,6 +12,8 @@ export interface User {
   description: string
   region: string
   avatar: string
+  avatar_type: AvatarType
+  avatar_token_uuid: string
   guide_finished: string
 }
 
@@ -23,10 +30,14 @@ export interface Profile {
 
 export interface UserResponse {
   avatar_url: string
+  avatar_type: AvatarType
+  avatar_token_uuid?: string
   nickname: string
   gender: string
   birthday: string
   region: string
   guide_finished: boolean
   description: string
+  avatar_tid?: number
+  open_id?: string
 }

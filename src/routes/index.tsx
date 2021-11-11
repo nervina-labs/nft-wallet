@@ -1,300 +1,28 @@
-import React, { useEffect, useState, useContext, useRef } from 'react'
-import {
-  BrowserRouter,
-  Redirect,
-  Route,
-  RouteProps,
-  Switch,
-  useHistory,
-  useLocation,
-  useRouteMatch,
-} from 'react-router-dom'
-import { I18nextProvider, useTranslation } from 'react-i18next'
-import { useWalletModel, WalletType } from '../hooks/useWallet'
-import { Account } from '../views/Account'
-import { Login } from '../views/Login'
-import { NFT } from '../views/NFT'
-import { NFTs } from '../views/NFTs'
+import React, { useEffect, useMemo } from 'react'
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import { NotFound } from '../views/NotFound'
-import { Transfer } from '../views/Transfer'
-import i18n from '../i18n'
-import { Profile } from '../views/Profile'
-import { ImagePreview } from '../views/Profile/ImagePreview'
-import { TakePhoto } from '../views/Profile/TakePhoto'
-import { Explore } from '../views/Explore'
-import { ActionDialog } from '../components/ActionDialog'
-import { Comfirm } from '../components/Confirm'
-import { ReactComponent as FailSvg } from '../assets/svg/fail.svg'
-import Snackbar from '@material-ui/core/Snackbar'
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
-import { useProfileModel } from '../hooks/useProfile'
-import { Help } from '../views/Help'
-import { Unipass } from '../views/Unipass'
-import { Apps } from '../views/Apps'
-import { AddressCollector } from '../views/AddressCollector'
-import { useToast } from '../hooks/useToast'
-import { Collection } from '../views/Collection'
-
-const Alert: React.FC<AlertProps> = (props: AlertProps) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />
-}
-
-export enum RoutePath {
-  Launch = '/',
-  Login = '/login',
-  Account = '/account',
-  NFT = '/nft/:id',
-  TokenClass = '/class/:id',
-  NFTs = '/home',
-  NotFound = '/404',
-  Transfer = '/transfer/:id',
-  Info = '/account/info',
-  Transactions = '/account/tx',
-  Profile = '/profile',
-  ImagePreview = '/avatar/preview',
-  TakePhoto = '/avatar/camera',
-  Explore = '/explore',
-  Help = '/help',
-  Unipass = '/unipass',
-  Apps = '/apps',
-  License = '/license',
-  AddressCollector = '/addresses',
-  Collection = '/explore/collection',
-}
-
-export const RouterContext = React.createContext({
-  to: '',
-  from: '',
-})
-
-export interface Routes {
-  from: string
-  to: string
-}
-
-export const useRoute = (): Routes => {
-  return useContext(RouterContext)
-}
-
-const RouterProvider: React.FC = ({ children }) => {
-  const location = useLocation()
-  const [route, setRoute] = useState<Routes>({
-    to: location.pathname,
-    from: location.pathname,
-  })
-
-  useEffect(() => {
-    setRoute((prev) => ({ to: location.pathname, from: prev.to }))
-  }, [location])
-
-  return (
-    <RouterContext.Provider value={route}>{children}</RouterContext.Provider>
-  )
-}
-
-const allowWithoutLoginList = new Set([
-  RoutePath.Unipass,
-  RoutePath.Explore,
-  RoutePath.Apps,
-  RoutePath.AddressCollector,
-  '/',
-])
-
-const WalletChange: React.FC = ({ children }) => {
-  const {
-    address,
-    prevAddress,
-    walletType,
-    signMessage,
-    isLogined,
-    pubkey,
-  } = useWalletModel()
-  const history = useHistory()
-  const location = useLocation()
-  useEffect(() => {
-    if (
-      prevAddress &&
-      address &&
-      prevAddress !== address &&
-      walletType &&
-      walletType !== WalletType.Unipass
-    ) {
-      history.push(RoutePath.NFTs)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prevAddress, address, walletType])
-  const { isAuthenticated } = useProfileModel()
-  const isSigning = useRef(false)
-  const { toast } = useToast()
-  const [t] = useTranslation('translations')
-  const matchAddressCollector = useRouteMatch(
-    `${RoutePath.AddressCollector}/:id`
-  )
-  useEffect(() => {
-    if (
-      WalletType.Unipass === walletType &&
-      isLogined &&
-      !isAuthenticated &&
-      !allowWithoutLoginList.has(location.pathname) &&
-      !matchAddressCollector?.isExact &&
-      !isSigning.current &&
-      pubkey
-    ) {
-      isSigning.current = true
-      toast({
-        title: t('auth.title'),
-        content: t('auth.content'),
-        okText: t('auth.ok'),
-        showCloseIcon: false,
-        show: true,
-        onConfirm: () => {
-          signMessage(address).catch(Boolean)
-        },
-      })
-    }
-  }, [
-    isAuthenticated,
-    walletType,
-    address,
-    signMessage,
-    location.pathname,
-    isLogined,
-    pubkey,
-    t,
-    toast,
-    matchAddressCollector?.isExact,
-  ])
-
-  return <>{children}</>
-}
-
-interface MibaoRouterProps extends RouteProps {
-  key: string
-  params?: string
-  path: string
-}
-
-const routes: MibaoRouterProps[] = [
-  {
-    component: NFTs,
-    exact: false,
-    key: 'NFTs',
-    path: RoutePath.NFTs,
-  },
-  {
-    component: Account,
-    exact: false,
-    key: 'Account',
-    path: RoutePath.Account,
-  },
-  {
-    component: NFT,
-    exact: true,
-    key: 'NFT',
-    path: RoutePath.NFT,
-  },
-  {
-    component: NFT,
-    exact: true,
-    key: 'TokenClass',
-    path: RoutePath.TokenClass,
-  },
-  {
-    component: Transfer,
-    exact: true,
-    key: 'Transfer',
-    path: RoutePath.Transfer,
-  },
-  {
-    component: Login,
-    exact: true,
-    key: 'Login',
-    path: RoutePath.Login,
-  },
-  {
-    component: Profile,
-    exact: false,
-    key: 'Profile',
-    path: RoutePath.Profile,
-  },
-  {
-    component: ImagePreview,
-    exact: true,
-    key: 'ImagePreview',
-    path: RoutePath.ImagePreview,
-  },
-  {
-    component: TakePhoto,
-    exact: true,
-    key: 'TakePhoto',
-    path: RoutePath.TakePhoto,
-  },
-  {
-    component: AddressCollector,
-    exact: true,
-    key: 'Addresses',
-    path: RoutePath.AddressCollector,
-    params: '/:id',
-  },
-  {
-    component: Explore,
-    exact: true,
-    key: 'Explore',
-    path: RoutePath.Explore,
-  },
-  {
-    component: Help,
-    exact: false,
-    key: 'Help',
-    path: RoutePath.Help,
-  },
-  {
-    component: Help,
-    exact: false,
-    key: 'License',
-    path: RoutePath.License,
-  },
-  {
-    component: Unipass,
-    exact: false,
-    key: 'Unipass',
-    path: RoutePath.Unipass,
-  },
-  {
-    component: Apps,
-    exact: true,
-    key: 'Apps',
-    path: RoutePath.Apps,
-  },
-  {
-    component: Collection,
-    exact: true,
-    key: 'Collection',
-    path: RoutePath.Collection,
-    params: '/:id',
-  },
-]
-
-export enum ProfilePath {
-  Regions = '/profile/regions',
-  Provinces = '/profile/regions/provinces',
-  Cities = '/profile/regions/cities',
-  Username = '/profile/username',
-  Description = '/profile/description',
-  Birthday = '/profile/birthday',
-}
+import {
+  useAccount,
+  useAccountStatus,
+  useLogin,
+  WalletType,
+} from '../hooks/useAccount'
+import { RoutePath } from './path'
+import { AccountChange } from './AccountChange'
+import { routes } from './routes'
+import { RouterProvider } from '../hooks/useRoute'
+import { ConfirmDialog } from '../components/ConfirmDialog'
+import { LoadableComponent } from '../components/GlobalLoader'
+import { MibaoProvider, mibaoTheme } from '@mibao-ui/components'
+import { extendTheme } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import NFTFallbackImg from '../assets/img/nft-fallback.png'
+export * from './path'
 
 export const Routers: React.FC = () => {
-  const {
-    isLogined,
-    walletType,
-    login,
-    errorMsg,
-    isErrorDialogOpen,
-    setIsErrorDialogOpen,
-  } = useWalletModel()
-  const { showEditSuccess, closeSnackbar, snackbarMsg } = useProfileModel()
-  const { toastConfig } = useToast()
+  const { walletType } = useAccount()
+  const { isLogined } = useAccountStatus()
+  const { login } = useLogin()
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
       login(walletType).catch((e) => {
@@ -304,72 +32,59 @@ export const Routers: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const [t] = useTranslation('translations')
+
+  const theme = useMemo(() => {
+    return extendTheme(mibaoTheme, {
+      locales: {
+        issuer: {
+          banned: t('common.baned.issuer'),
+        },
+        nft: {
+          banned: t('common.baned.nft'),
+          cardBackTooltips: t('common.card-back'),
+          limited: t('common.limit.limit'),
+          unlimited: t('common.limit.unlimit'),
+        },
+      },
+      fallbacks: {
+        nft: NFTFallbackImg,
+      },
+    })
+  }, [t])
+
   return (
-    <I18nextProvider i18n={i18n}>
+    <MibaoProvider theme={theme}>
       <BrowserRouter>
         <RouterProvider>
-          <WalletChange>
-            <Switch>
-              {routes.map((route) => (
-                <Route
-                  {...route}
-                  key={route.key}
-                  path={`${route.path}${route.params ?? ''}`}
+          <AccountChange>
+            <LoadableComponent>
+              <Switch>
+                {routes.map((route) => (
+                  <Route
+                    {...route}
+                    key={route.key}
+                    path={`${route.path}${route.params ?? ''}`}
+                  />
+                ))}
+                <Redirect
+                  exact
+                  from={RoutePath.Launch}
+                  to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
                 />
-              ))}
-              <Redirect
-                exact
-                from={RoutePath.Launch}
-                to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
-              />
-              <Redirect
-                exact
-                from="/nfts"
-                to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
-              />
-              <Route component={NotFound} path="*" />
-            </Switch>
-            <ActionDialog
-              icon={<FailSvg />}
-              content={errorMsg}
-              open={isErrorDialogOpen}
-              onConfrim={() => setIsErrorDialogOpen(false)}
-              onBackdropClick={() => setIsErrorDialogOpen(false)}
-            />
-            <ActionDialog
-              icon={null}
-              dialogTitle={toastConfig.title}
-              content={toastConfig.content}
-              open={toastConfig.show}
-              okText={toastConfig.okText}
-              showCloseIcon={toastConfig.showCloseIcon}
-              onConfrim={toastConfig.onConfirm}
-              onBackdropClick={toastConfig.onBackdropClick}
-            />
-            <Snackbar
-              open={showEditSuccess}
-              autoHideDuration={1500}
-              onClose={closeSnackbar}
-              style={{
-                bottom: `${window.innerHeight / 2 + 16}px`,
-              }}
-            >
-              <Alert
-                style={{
-                  borderRadius: '16px',
-                  background: 'rgba(51, 51, 51, 0.692657)',
-                  padding: '0px 40px',
-                }}
-                icon={false}
-                severity="success"
-              >
-                {snackbarMsg}
-              </Alert>
-            </Snackbar>
-            <Comfirm open disableBackdropClick />
-          </WalletChange>
+                <Redirect
+                  exact
+                  from="/nfts"
+                  to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
+                />
+                <Route path="/alipay.htm" />
+                <Route component={NotFound} path="*" />
+              </Switch>
+            </LoadableComponent>
+            <ConfirmDialog />
+          </AccountChange>
         </RouterProvider>
       </BrowserRouter>
-    </I18nextProvider>
+    </MibaoProvider>
   )
 }

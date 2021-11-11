@@ -2,8 +2,10 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
+      "login": "登录",
       "actions": {
-        "comfirm": "确认",
+        "confirm": "确认",
+        "cancel": "取消",
         "loading": "加载中",
         "pull-to-down": "暂无更多秘宝~",
         "pull-down-refresh": " 下拉刷新",
@@ -16,7 +18,24 @@
       },
       "share": {
         "copy": "点击复制链接并分享至社交媒体",
-        "close": "关闭"
+        "close": "关闭",
+        "copied": "复制成功",
+        "cancel": "取消",
+        "icons": {
+          "copy": "复制链接",
+          "download": "下载",
+          "more": "更多",
+          "create-poster": "生成分享图",
+          "creating": "生成中"
+        },
+        "poster": {
+          "desc-1": "长按识别二维码",
+          "desc-nft": "一起欣赏这份数字藏品",
+          "desc-holder": "围观我发现的秘宝收藏家",
+          "desc-my": "来秘宝欣赏我的数字藏品",
+          "desc-issuer": "欣赏秘宝创作者的数字作品",
+          "collected": "已收藏秘宝"
+        }
       },
       "limit": {
         "limit": "限量",
@@ -33,10 +52,13 @@
       "colon": "：",
       "title": "秘宝账户",
       "description": "随时随地查看并管理你的秘宝",
-      "img-lost": "图片失联"
+      "img-lost": "图片失联",
+      "card-back": "该秘宝卡背设置有信息，仅持有人可见",
+      "show-detail": "查看详情"
     },
     "login": {
       "title": "秘宝账户",
+      "select": "选择您的登录方式",
       "connect": {
         "unipass": "连接 UniPass",
         "metamask": "连接以太坊环境",
@@ -47,20 +69,32 @@
         "not-support": "当前环境不支持连接以太坊",
         "refuse": "用户拒绝授权，请重新打开页面进行授权"
       },
-      "desc-1": "随时随地查看",
-      "desc-2": "并管理你持有的秘宝"
+      "slides": {
+        "1": {
+          "line-1": "随手分享秘宝",
+          "line-2": "邀好友一起鉴赏"
+        },
+        "2": {
+          "line-1": "方便快捷操作",
+          "line-2": "探索秘宝宇宙"
+        },
+        "3": {
+          "line-1": "随时随地查看并",
+          "line-2": "管理你持有的秘宝"
+        }
+      }
     },
     "nfts": {
       "title": "我的秘宝",
       "owned": "持有",
       "liked": "赞过",
       "status": {
-        "comfirming": "确认中",
+        "confirming": "确认中",
         "receiving": "接收中",
         "tranferring": "转让中"
       },
-      "no-data": "啊喔...您尚未拥有任何秘宝",
-      "no-likes": "您尚未赞过任何秘宝",
+      "no-data": "尚未拥有任何秘宝",
+      "no-likes": "尚未赞过任何秘宝",
       "link": "探索秘宝的广阔宇宙",
       "welcome": "欢迎来到秘宝宇宙",
       "hi": "Hi 秘宝收藏家",
@@ -71,15 +105,17 @@
         "qrcode": "二维码扫描",
         "result": "扫描结果",
         "detected": "已识别到的二维码内容",
-        "error": "请扫描正确的 CKB 或以太坊地址二维码",
+        "error": "请扫描正确的 CKB 地址/以太坊地址/DAS 账户",
         "rescan": "重新扫描"
       },
       "error": {
         "eth": "请输入正确的以太坊地址",
         "ckb": "请输入正确的 CKB 地址",
         "self": "无法转让秘宝给自己",
+        "das": "请输入 DAS 地址并选择一个解析结果",
         "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「秘宝账户」应用，方可查看收到的秘宝",
-        "common": "请输入正确的 CKB 地址或以太坊地址",
+        "short-address": "当前接收方地址不是在秘宝应用生成的地址，请提醒接收方，除秘宝应用外，目前仅 Neuron 钱包生成的地址支持接收秘宝。切勿使用交易所等其他应用生成的 CKB 地址",
+        "common": "请输入正确的 CKB 地址/以太坊地址/DAS 账户",
         "sign-fail": "签名失败，请重新签名",
         "tranfer-fail": "发送失败，请检查当前网络情况，重新发送",
         "no-camera": "没有找到摄像头",
@@ -87,14 +123,20 @@
         "camera-auth": "没有摄像头权限，请刷新页面重新授权",
         "ios-webkit": "请升级操作系统至 iOS 14.3+，或使用 Safari 浏览器进行扫码"
       },
+      "das": {
+        "not-register": "当前 DAS 还未注册",
+        "empty": "当前 DAS 账户下未检测到可接收秘宝的地址",
+        "single-result": "解析结果",
+        "multi-result": "存在多个解析结果，请选择"
+      },
       "transfer": "转让",
       "address": "接收方地址",
-      "placeholder": "请输入 CKB 地址或以太坊地址",
+      "placeholder": "CKB 地址/以太坊地址/DAS 账户",
       "check": "请仔细检查输入的地址，",
       "once-transfer": "一旦转让，将无法撤回",
       "submitted": "已提交转让交易",
       "tips": "提示: 链上确认可能需要半分钟时间",
-      "comfirm": "确认",
+      "confirm": "确认",
       "signing": "签名中"
     },
     "404": {
@@ -109,7 +151,7 @@
       "send-to": "发送至",
       "status": {
         "waiting": "等待中",
-        "comfirming": "确认中"
+        "confirming": "确认中"
       }
     },
     "info": {
@@ -120,7 +162,16 @@
     "nft": {
       "title": "秘宝细节",
       "transfer": "转让",
-      "desc": "秘宝简介"
+      "desc": "简介",
+      "transaction-history": "流转历史",
+      "tx_hash": "交易哈希",
+      "lock": "只有该秘宝的持有者才能解锁该内容",
+      "no-desc": "无简介",
+      "no-holder": "无收藏者",
+      "holder": "收藏者",
+      "show-card-back": "翻转卡背",
+      "no-more-holder": "没有更多收藏者了",
+      "no-more-transaction-history": "没有更多记录了"
     },
     "account": {
       "title": "我的帐号",
@@ -129,6 +180,11 @@
       "warning": "该地址仅用于接收 CKB 链上资产，切勿转入其他链上资产",
       "qrcode": "扫描二维码，快速接收秘宝",
       "address": "秘宝接收地址"
+    },
+    "holder": {
+      "user-name-empty": "未设置昵称",
+      "desc": "这个人很懒，什么也没设置",
+      "title": "收藏者"
     },
     "profile": {
       "title": "编辑资料",
@@ -139,6 +195,7 @@
       "description": "简介",
       "input": "请填写",
       "select": "请选择",
+      "choose-nft-avatar": "请选择秘宝",
       "user-name": {
         "edit": "修改昵称",
         "desc": "请输入 2-24 个字符",
@@ -162,13 +219,14 @@
       },
       "avatar": {
         "camera": "拍照",
-        "photo-lib": "图片库"
+        "photo-lib": "图片库",
+        "nft": "选择秘宝做头像"
       },
       "save": "保存",
       "cancel": "取消",
       "male": "男",
       "female": "女",
-      "comfirm": "确认",
+      "confirm": "确认",
       "reshot": "重拍",
       "success": "设置成功",
       "years": "{{year}} 岁",
@@ -181,17 +239,23 @@
       "all": "全部",
       "others": "其他",
       "metaverse": "探索",
+      "follow": "关注",
+      "on-sale": "在售",
       "my": "我的",
+      "ranking": "排行榜",
       "latest": "最新创作",
       "most-liked": "获赞最多",
       "recommended": "推荐",
-      "hotest": "最热秘宝",
+      "hotest": "最热",
+      "title-recommended": "秘宝推荐",
       "collections": "秘宝精选",
       "issuers": "最受欢迎创作者",
-      "home": "首页"
+      "home": "首页",
+      "more": "更多"
     },
     "menu": {
       "profile": "个人资料",
+      "order": "我的订单",
       "txs": "流转记录",
       "language": "语言设置",
       "help": "帮助支持",
@@ -225,6 +289,10 @@
     },
     "apps": {
       "welcome": "欢迎开发者入驻，共建秘宝生态",
+      "shop": {
+        "title": "秘宝店铺",
+        "desc": "购买数字收藏品就到秘宝店铺"
+      },
       "red-envelope": {
         "title": "UniPass 红包",
         "desc": "为朋友发送随机秘宝红包，没有账户也能收"
@@ -255,7 +323,7 @@
     },
     "license": {
       "agree": "同意相关<a>《用户使用条款及隐私条款》<a/>",
-      "warn": "请先同意相关协议",
+      "warn": "请阅读并勾选同意相关《用户使用条款及隐私条款》",
       "title": "服务条款"
     },
     "addresses": {
@@ -275,6 +343,245 @@
       "title": "授权确认",
       "content": "我们将请求一个针对秘宝地址的数字签名，从而保护您的隐私数据不会被泄露和篡改，如个人信息，点赞数据等。",
       "ok": "继续"
+    },
+    "shop": {
+      "title": "秘宝店铺",
+      "scan": "微信扫一扫",
+      "desc": "进入秘宝店铺微信小程序",
+      "save": "保存图片",
+      "buy": "购买",
+      "sold-out": "售罄"
+    },
+    "claim": {
+      "tips": "您有一个秘宝待领取",
+      "login": "请先登录秘宝",
+      "last-step": "您离领取还差最后一步",
+      "error": "领取码错误",
+      "confirm": "确认领取",
+      "continue": "您还可以继续操作",
+      "success": "领取成功",
+      "claimed": "Opps～秘宝已被领走",
+      "go-home": "进入秘宝查看",
+      "go-explore": "发现更多秘宝",
+      "placeholder": "请输入领取密码"
+    },
+    "issuer": {
+      "created": "已创作",
+      "selling": "在售",
+      "title": "创作者个人主页",
+      "follower": "粉丝",
+      "like": "获赞",
+      "no-data": "无数据",
+      "more": "更多",
+      "sale-empty": "啊哦～暂无售卖的作品",
+      "empty": "啊哦～暂未创作秘宝"
+    },
+    "exchange": {
+      "title": "兑换中心",
+      "count": "{{count}} 个",
+      "redeemed": "已兑",
+      "nft-prize": "奖品包含下面所有秘宝",
+      "blind-prize": "奖品随机包含下面的 {{count}} 个秘宝",
+      "othder-prize": "发起人会在您提交兑换后根据您提供的接收信息进行承兑",
+      "redeem-time": "兑换时间：",
+      "type": {
+        "token": "NFT",
+        "blind_box": "NFT 盲盒",
+        "custom": "其他"
+      },
+      "progress": "兑换进度",
+      "tabs": {
+        "all": "全部活动",
+        "redeemable": "可兑换"
+      },
+      "actions": {
+        "redeem": "立即兑换",
+        "insufficient": "条件不足无法兑换"
+      },
+      "mine": {
+        "title": "我的兑换",
+        "all": "全部",
+        "wait": "待承兑"
+      },
+      "prize": {
+        "title": "奖品",
+        "get": "本次兑换获得",
+        "receiver": {
+          "info": "接收人信息",
+          "address": "接收地址："
+        },
+        "address": {
+          "name": "姓名：",
+          "phone": "电话号码：",
+          "address": "地址："
+        },
+        "ckb": "接收地址：",
+        "issuer": {
+          "comment": "发起人留言",
+          "company": "物流公司：",
+          "sn": "发货单号：",
+          "time": "发货时间："
+        }
+      },
+      "alert": {
+        "normal": "兑换不会销毁您参与兑换的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他兑换",
+        "destroy": "兑换将会销毁您参与兑换的NFT，该操作不可逆，一经销毁将无法找回",
+        "confirm": "确认兑换",
+        "cancel": "取消"
+      },
+      "form": {
+        "address": {
+          "title": "填写邮寄地址",
+          "name-label": "姓名",
+          "name-placeholder": "请输入姓名",
+          "phone-label": "电话号码",
+          "phone-placeholder": "请输入电话号码",
+          "address-label": "详细地址",
+          "address-placeholder": "请填写地址"
+        },
+        "email": {
+          "title": "填写邮箱地址",
+          "label": "邮箱地址",
+          "placeholder": "请输入邮箱地址",
+          "error": "请输入合法 Email 地址"
+        },
+        "ckb": {
+          "title": "填写 CKB 地址",
+          "label": "CKB 地址",
+          "placeholder": "请输入 CKB 地址",
+          "fill": "填充当前账户地址",
+          "error": "请输入合法 CKB 地址"
+        }
+      },
+      "exchanged": "已兑换",
+      "issuer": "发起人",
+      "issue-time": "发起时间：",
+      "event": {
+        "title": "活动详情",
+        "on-going": "活动进行中",
+        "closed": "活动已关闭",
+        "end": "活动已结束",
+        "tabs": {
+          "price": "活动奖品",
+          "requirement": "兑换条件"
+        },
+        "condition": "同时持有以下秘宝的用户才可参与兑换"
+      },
+      "condition": {
+        "nft": "NFT",
+        "needed": "需持有",
+        "held": "当前可兑换"
+      },
+      "warning": "兑换不会销毁您持有的秘宝，但会对其进行标记，标记过的秘宝无法再次参与其他任何兑换活动。",
+      "warning-destroyed": "兑换将会销毁您参与兑换的秘宝 ，该操作不可逆，一经销毁将无法找回",
+      "check": {
+        "price": "查看奖品",
+        "comment": "查看奖品和留言",
+        "wait": "• 待承兑"
+      },
+      "empty": "无记录",
+      "no-more": "没有更多兑换了",
+      "error": "兑换失败，请检查当前网络情况或兑换条件",
+      "result": {
+        "success": "兑换成功",
+        "submited": "已提交兑换",
+        "time": "提交时间：",
+        "fail": "兑换失败",
+        "custom": "活动发起人会根据您提供的接收信息进行承兑",
+        "check": "查看兑换的秘宝",
+        "confirm": "确认",
+        "go-back": "返回兑换中心",
+        "error": "请检查当前网络情况或兑换条件",
+        "redeeming": "兑换中..."
+      }
+    },
+    "orders": {
+      "title": "订单列表",
+      "detail": "订单详情",
+      "tabs": {
+        "all": "全部",
+        "placed": "待付款",
+        "paid": "接收中",
+        "done": "已接收"
+      },
+      "no-data": "暂无订单",
+      "no-more": "没有更多订单了",
+      "state": {
+        "order_placed": "待付款",
+        "paid": "接收中",
+        "expired": "交易关闭",
+        "closed": "交易关闭",
+        "done": "交易成功",
+        "refunded": "已退款"
+      },
+      "paid-payment": "实付：",
+      "needed-payment": "需付款：",
+      "success": "支付成功",
+      "send-soon": "秘宝将很快发送到您的账户地址上",
+      "be-patient": "请耐心等待",
+      "check": "点击查看我的订单",
+      "countdown": "{{minutes}} 分 {{seconds}} 秒内付款，超时订单将自动关闭",
+      "drawer": {
+        "submit": "提交订单",
+        "confirm": "确认支付",
+        "limit": "每人限购数量为：{{limit}}",
+        "count": "购买数量：",
+        "remain": "剩余：{{remain}}",
+        "wechat": "微信支付",
+        "alipay": "支付宝支付",
+        "paypal": "PayPal 支付",
+        "select-title": "选择支付方式",
+        "confirm-title": "支付订单",
+        "select-more": "点击切换更多支付方式",
+        "channel": "支付方式",
+        "warning": "请在 5 分钟内完成支付，支付成功后系统将会自动发送秘宝到你的地址上。该过程可能会需要 2-3 分钟，请耐心等待。",
+        "place-order-error": "购买失败，请检查当前网络情况",
+        "submit-order-error": "创建订单失败，请检查当前网络情况",
+        "reject-payment-error": "用户拒绝支付，请重新支付",
+        "continue-payment": "继续支付"
+      },
+      "actions": {
+        "cancel": "取消支付",
+        "pay-and-hold": "付款并持有"
+      },
+      "dialog": {
+        "cancel-title": "确认放弃付款吗？",
+        "cancel-desc": "您的订单已提交成功\n请在 <b>5 分钟</b>内完成支付",
+        "cancel-confirm": "继续付款",
+        "cancel-quit": "暂时放弃",
+        "delete-title": "确认取消订单吗？",
+        "delete-desc": "您的订单已提交成功\n取消订单将会失去持有秘宝的机会",
+        "delete-confirm": "我想支付并持有",
+        "delete-quit": "取消订单",
+        "contact": "订单问题请联系客服：",
+        "copy-email": "复制邮件地址",
+        "copy-email-address": "复制邮件地址"
+      },
+      "info": {
+        "title": "订单信息",
+        "address": "接收地址：",
+        "uuid": "订单号：",
+        "created_at": "下单时间：",
+        "paid_at": "支付时间：",
+        "send-at": "发送时间：",
+        "done_timestamp": "接收时间："
+      }
+    },
+    "follow": {
+      "follow": "关注",
+      "followed": "已关注",
+      "confirm": "确认不再关注？",
+      "follower": "粉丝：",
+      "likes": "获赞：",
+      "count": "• 已关注 {{count}} 人",
+      "end": "已经拉到底啦~",
+      "login": {
+        "desc-1": "啊哦～您还未登录",
+        "desc-2": "请登录秘宝，查看您关注的精彩内容",
+        "login": "登录"
+      },
+      "no-data": "尚未关注任何创作者",
+      "let-s-go-to-explore": "去探索页面"
     }
   }
 }

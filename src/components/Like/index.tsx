@@ -1,15 +1,15 @@
-import { CircularProgress } from '@material-ui/core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as Heart } from '../../assets/svg/liked.svg'
 import { ReactComponent as UnHeart } from '../../assets/svg/unlike.svg'
-import { useLikeStatusModel } from '../../hooks/useLikeStatus'
-import { useProfileModel } from '../../hooks/useProfile'
-import { useWalletModel } from '../../hooks/useWallet'
+import { useAccountStatus } from '../../hooks/useAccount'
+import { useLikeStatus } from '../../hooks/useLikeStatus'
+import { useToggleLike } from '../../hooks/useProfile'
 import { RoutePath } from '../../routes'
-import { roundDown } from '../../utils'
+import { formatCount } from '../../utils'
+import { Loading } from '@mibao-ui/components'
 
 const Container = styled.div`
   display: flex;
@@ -32,17 +32,10 @@ const Container = styled.div`
 `
 
 export interface LikeProps {
-  count: string
+  count: number
   liked: boolean
   uuid: string
   likeble?: boolean
-}
-
-const formatCount = (count: number, lang: string): number | string => {
-  if (lang === 'zh') {
-    return count >= 10000 ? `${roundDown(count / 10000)} 万` : count
-  }
-  return count >= 1000 ? `${roundDown(count / 1000)}k` : count
 }
 
 export const Like: React.FC<LikeProps> = ({
@@ -52,7 +45,7 @@ export const Like: React.FC<LikeProps> = ({
   likeble = true,
 }) => {
   const { i18n } = useTranslation('translations')
-  const { likeStatus, setLikeStatus } = useLikeStatusModel()
+  const { likeStatus, setLikeStatus } = useLikeStatus()
   const isLiked = useMemo(() => {
     return likeStatus[uuid] ?? isLikedFromList
   }, [likeStatus, uuid, isLikedFromList])
@@ -66,8 +59,8 @@ export const Like: React.FC<LikeProps> = ({
     }
     return formatCount(c, i18n.language)
   }, [i18n.language, count, isLiked, isLikedFromList])
-  const { toggleLike } = useProfileModel()
-  const { isLogined } = useWalletModel()
+  const toggleLike = useToggleLike()
+  const { isLogined } = useAccountStatus()
   const history = useHistory()
 
   const toggle = useCallback(async () => {
@@ -102,7 +95,7 @@ export const Like: React.FC<LikeProps> = ({
       }}
     >
       {isLoading ? (
-        <CircularProgress size="16px" className="loading" />
+        <Loading width="16px" />
       ) : !isLiked ? (
         <UnHeart />
       ) : (

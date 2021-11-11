@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 // import { ReactComponent as WeiboSvg } from '../../assets/svg/weibo.svg'
 import goldBox from '../../assets/img/gold-box.png'
+import { formatCount } from '../../utils'
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +22,7 @@ const Container = styled.div`
 `
 
 export interface LimitedProps {
-  count: string
+  count: string | number
   fontSize?: number
   bold?: boolean
   color?: string
@@ -37,8 +38,8 @@ export const Limited: React.FC<LimitedProps> = ({
   banned = false,
   sn,
 }) => {
-  const isUnlimited = count === '0'
-  const { t } = useTranslation('translations')
+  const isUnlimited = count === '0' || count === 0
+  const { t, i18n } = useTranslation('translations')
   const content = useMemo(() => {
     if (banned) {
       return ''
@@ -48,9 +49,12 @@ export const Limited: React.FC<LimitedProps> = ({
       no +
       (isUnlimited
         ? t('common.limit.unlimit')
-        : `${t('common.limit.limit')} ${count}`)
+        : `${t('common.limit.limit')} ${formatCount(
+            Number(count),
+            i18n.language
+          )}`)
     )
-  }, [t, isUnlimited, banned, count, sn])
+  }, [t, isUnlimited, banned, count, sn, i18n.language])
   return (
     <Container fontSize={fontSize} color={color}>
       {isUnlimited || banned ? null : <img src={goldBox} />}

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { MainContainer } from '../../styles'
-import Bg from '../../assets/svg/home-bg.svg'
+import { HEADER_HEIGHT } from '../../components/Appbar'
 
 export const Container = styled(MainContainer)`
   display: flex;
@@ -13,51 +13,8 @@ export const Container = styled(MainContainer)`
     color: rgba(0, 0, 0, 0.6);
   }
   .filters {
-    margin-right: 15px;
-    font-size: 14px;
-    color: #333333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    width: 100%;
-    max-width: 500px;
-    border-bottom: 1px solid #ececec;
-    background-color: white;
-    border-top-left-radius: 35px;
-    border-top-right-radius: 35px;
-    transition: all 0.3s;
-    &.fixed {
-      position: fixed;
-      top: 0;
-      justify-content: center;
-      z-index: 3;
-      border-radius: 0;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-      backdrop-filter: blur(10px);
-    }
-    .filter {
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      justify-content: center;
-      align-items: center;
-      &:first-child {
-        margin-right: 48px;
-      }
-    }
-    .active-line {
-      background: #ff5c00;
-      border-radius: 10px;
-      position: absolute;
-      border-radius: 10px;
-      height: 3px;
-      width: 28px;
-      position: relative;
-      top: 1px;
-    }
+    background-color: #fff;
+    z-index: 10;
   }
   .share {
     display: flex;
@@ -72,7 +29,7 @@ export const Container = styled(MainContainer)`
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     z-index: 10;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     font-size: 13px;
     line-height: 18px;
     color: #333;
@@ -100,18 +57,28 @@ export const Container = styled(MainContainer)`
     }
   }
   .bg {
-    position: fixed;
+    position: relative;
     top: 0;
     width: 100%;
-    padding: 0 20px;
+    padding: calc(${HEADER_HEIGHT ?? 0}px + 20px) 20px 20px;
     max-width: calc(100% - 40px);
-    height: 400px;
-    background: darkgray url(${Bg as any});
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 0 -100px;
     display: flex;
     flex-direction: column;
+    transition: 100ms;
+
+    .info {
+      position: relative;
+      z-index: 1;
+    }
+
+    .bg-image {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      z-index: 0;
+    }
 
     @media (min-width: 500px) {
       max-width: 460px;
@@ -146,18 +113,13 @@ export const Container = styled(MainContainer)`
     }
   }
   .list {
+    user-select: none;
     flex: 1;
-    background-color: white;
-    background: #ecf2f5;
-    border-radius: 35px 35px 0px 0px;
-    margin-top: 199px;
     z-index: 2;
-    .infinite-scroll-component {
-      > div {
-        &:nth-child(2) {
-          margin-top: 20px;
-        }
-      }
+    position: relative;
+    img {
+      -webkit-user-drag: none;
+      -webkit-touch-callout: none;
     }
   }
 `

@@ -1,27 +1,19 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import Emptypng from '../../assets/img/empty.png'
-import { NFT_EXPLORER_URL } from '../../constants'
-import { LazyLoadImage } from '../../components/Image'
-import { useHistory } from 'react-router'
-import { RoutePath } from '../../routes'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { ReactComponent as NoNFT } from '../../assets/svg/no-nft.svg'
+import { ReactComponent as NoLike } from '../../assets/svg/no-like.svg'
+import { ReactComponent as NoFollower } from '../../assets/svg/no-follow.svg'
 
 const Container = styled.div`
   margin-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  img {
-    margin-top: 100px;
-  }
   .desc {
-    margin-top: 30px;
-    font-size: 15px;
-    line-height: 22px;
-    color: rgba(0, 0, 0, 0.6);
-    font-weight: 600;
+    font-size: 14px;
+    color: #777e90;
   }
   .link {
     margin-top: 15px;
@@ -33,28 +25,35 @@ const Container = styled.div`
   }
 `
 
-export const Empty: React.FC = () => {
+export const Empty: React.FC<{
+  showExplore?: boolean
+}> = ({ showExplore = true }) => {
   const { t } = useTranslation('translations')
-  const history = useHistory()
-  const isLiked = useRouteQuery('liked', '')
+  const listTag = useRouteQuery<string>('list', '')
+  const isLiked = listTag === 'liked'
+  const isFollow = listTag === 'follow'
+  const desc = useMemo(() => {
+    if (isLiked) {
+      return t('nfts.no-likes')
+    } else if (isFollow) {
+      return t('follow.no-data')
+    }
+    return t('nfts.no-data')
+  }, [t, isLiked, isFollow])
+
+  const img = useMemo(() => {
+    if (isLiked) {
+      return <NoLike />
+    } else if (isFollow) {
+      return <NoFollower />
+    }
+    return <NoNFT />
+  }, [isLiked, isFollow])
+
   return (
     <Container>
-      <LazyLoadImage src={Emptypng} width={260} height={172} />
-      <div className="desc">
-        {isLiked ? t('nfts.no-likes') : t('nfts.no-data')}
-      </div>
-      <a
-        className="link"
-        target="_blank"
-        rel="noopener noreferrer"
-        href={NFT_EXPLORER_URL}
-        onClick={(e) => {
-          e.preventDefault()
-          history.push(RoutePath.Explore)
-        }}
-      >
-        {t('nfts.link')}
-      </a>
+      {img}
+      <div className="desc">{desc}</div>
     </Container>
   )
 }

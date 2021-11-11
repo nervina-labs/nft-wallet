@@ -1,17 +1,52 @@
-import { CircularProgress, Drawer } from '@material-ui/core'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import styled from 'styled-components'
 import { useWidth } from '../../hooks/useWidth'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
+import classNames from 'classnames'
+import { Drawer, Loading } from '@mibao-ui/components'
+import { DrawerContentProps } from '@chakra-ui/modal'
+import { HEADER_HEIGHT } from '../../components/Appbar'
 
 const DrawerContainer = styled.div`
   height: 100%;
   background-color: ${(props: { bg: string }) => props.bg};
-  .username {
+  .container {
     margin: 0 20px;
-    margin-top: 38px;
+    margin-top: 10px;
+    .alert {
+      font-size: 11px;
+      color: #d03a3a;
+      margin-top: 8px;
+    }
+  }
+  .label {
+    font-size: 14px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  .adornment-container {
+    position: absolute;
+    bottom: 18px;
+    right: 8px;
+    > span {
+      color: #fb5d3b;
+    }
+  }
+
+  .warning {
+    margin-top: 4px;
+    font-size: 10px;
+    color: #d03a3a;
+  }
+
+  .MuiAlert-root {
+    font-size: 12px;
+    margin: 16px 0;
+    margin-bottom: 80px;
   }
 
   .adornment {
@@ -20,11 +55,9 @@ const DrawerContainer = styled.div`
   }
 
   .desc {
-    margin-top: 10px;
     font-size: 12px;
     line-height: 24px;
     color: #999;
-    margin-left: 16px;
   }
 
   .birthday {
@@ -65,14 +98,13 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 78px;
+  height: 60px;
   background: white;
   color: #2c454c;
-  border-bottom: 1px solid #ccc;
+
   .left {
     width: 50px;
     text-align: left;
-    margin-left: 25px;
     height: 30px;
     display: flex;
     align-items: center;
@@ -86,7 +118,6 @@ const Header = styled.header`
   }
   .right {
     text-align: right;
-    margin-right: 25px;
     font-size: 14px;
     line-height: 30px;
     width: 50px;
@@ -96,6 +127,10 @@ const Header = styled.header`
     &.invalid {
       color: #ccc;
       cursor: not-allowed;
+    }
+
+    &.hidden {
+      visibility: hidden;
     }
   }
 `
@@ -109,7 +144,9 @@ export interface DrawerConfigProps {
   isValid: boolean
   onSaving?: () => void
   onClose?: () => void
+  showSave?: boolean
   bg?: string
+  height?: string
 }
 
 export const DrawerConfig: React.FC<DrawerConfigProps> = ({
@@ -122,6 +159,8 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
   onSaving,
   onClose,
   bg = 'white',
+  showSave = true,
+  height,
 }) => {
   const [t] = useTranslation('translations')
   const bodyRef = useRef(document.body)
@@ -133,32 +172,38 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
     if (bodyWidth <= CONTAINER_MAX_WIDTH) {
       return 0
     }
-    return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
+    return (bodyWidth - CONTAINER_MAX_WIDTH) / 2
   }, [bodyWidth])
-  const height = useMemo(() => {
-    return window.innerHeight - 44
+  const fullHeight = useMemo(() => {
+    return window.innerHeight - HEADER_HEIGHT
   }, [])
+
+  const drawerContentProps: DrawerContentProps = {
+    width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
+    style: {
+      left: `${drawerLeft}px`,
+    },
+    overflow: 'hidden',
+    height: height ?? fullHeight,
+  }
+
+  if (height) {
+    drawerContentProps.borderRadius = '20px'
+    drawerContentProps.style!.left = `${drawerLeft + 20}px`
+    drawerContentProps.style!.bottom = '40px'
+    drawerContentProps.style!.maxWidth = `calc(${
+      drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH + 'px'}`
+    } - 40px)`
+  }
 
   return (
     <Drawer
-      anchor="bottom"
-      open={isDrawerOpen}
-      onBackdropClick={close}
-      onClose={onClose}
-      PaperProps={{
-        style: {
-          position: 'absolute',
-          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
-          left: drawerLeft,
-          borderTopLeftRadius: '25px',
-          borderTopRightRadius: '25px',
-          height: `${height}px`,
-          overflow: 'hidden',
-        },
-      }}
-      disableEnforceFocus
-      disableEscapeKeyDown
-      disableScrollLock={window.innerWidth >= 500}
+      placement="bottom"
+      isOpen={isDrawerOpen}
+      onClose={close}
+      hasOverlay
+      rounded="lg"
+      contentProps={drawerContentProps}
     >
       <DrawerContainer bg={bg}>
         <Header>
@@ -166,16 +211,21 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
             <BackSvg />
           </span>
           <span className="title">{title}</span>
-          <span
-            className={`right ${isValid ? '' : 'invalid'}`}
-            onClick={isValid && !isSaving ? onSaving : undefined}
-          >
-            {isSaving ? (
-              <CircularProgress size="1em" className="loading" />
-            ) : (
-              t('profile.save')
-            )}
-          </span>
+          {
+            <span
+              className={classNames('right', {
+                invalid: !isValid,
+                hidden: !showSave,
+              })}
+              onClick={isValid && !isSaving ? onSaving : undefined}
+            >
+              {isSaving ? (
+                <Loading size="sm" className="loading" />
+              ) : (
+                t('profile.save')
+              )}
+            </span>
+          }
         </Header>
         {children}
       </DrawerContainer>

@@ -7,16 +7,16 @@ import {
   Redirect,
 } from 'react-router'
 import styled from 'styled-components'
-import { Appbar } from '../../components/Appbar'
+import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import LogoutPng from '../../assets/img/logout.png'
 import { RoutePath } from '../../routes'
 import { Info } from '../Info'
 import { Transactions } from '../Transactions'
-import { useWalletModel } from '../../hooks/useWallet'
 import { MainContainer } from '../../styles'
 import { useTranslation } from 'react-i18next'
 import Bg from '../../assets/img/account-bg.png'
+import { useAccount, useAccountStatus, useLogout } from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -70,16 +70,21 @@ const Container = styled(MainContainer)`
   }
 `
 
+export const InfoComponent: React.FC = () => {
+  const { address } = useAccount()
+  return <Info address={address} />
+}
+
 export const Account: React.FC = () => {
   const history = useHistory()
   const { t } = useTranslation('translations')
-  const { logout } = useWalletModel()
+  const logout = useLogout()
+  const { isLogined } = useAccountStatus()
   const matchInfo = useRouteMatch(RoutePath.Info)
   const matchAccount = useRouteMatch(RoutePath.Account)
   const isInfo = matchInfo?.isExact != null
   const isAccount = matchAccount?.isExact === true
 
-  const { isLogined } = useWalletModel()
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
   }
@@ -88,14 +93,20 @@ export const Account: React.FC = () => {
   }
   return (
     <Container>
-      <Appbar
-        title={isInfo ? t('account.title') : t('account.transactions')}
-        left={<BackSvg onClick={() => history.push(RoutePath.NFTs)} />}
-        right={<img src={LogoutPng} onClick={logout.bind(null, history)} />}
-      />
+      <AppbarSticky>
+        <Appbar
+          title={isInfo ? t('account.title') : t('account.transactions')}
+          left={
+            <AppbarButton onClick={() => history.push(RoutePath.NFTs)}>
+              <BackSvg />
+            </AppbarButton>
+          }
+          right={<img src={LogoutPng} onClick={logout.bind(null, history)} />}
+        />
+      </AppbarSticky>
       <section className="detail">
         <Switch>
-          <Route component={Info} path={RoutePath.Info} exact />
+          <Route component={InfoComponent} path={RoutePath.Info} exact />
           <Route component={Transactions} path={RoutePath.Transactions} exact />
           <Redirect to={RoutePath.NotFound} />
         </Switch>

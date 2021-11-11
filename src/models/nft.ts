@@ -1,4 +1,5 @@
 import { ClassLikes, VipInfo } from './class-list'
+import { Follower } from './issuer'
 import { TransactionStatus } from './transactions'
 
 export interface NFT {
@@ -15,10 +16,18 @@ export interface ListMeta {
 export enum NftType {
   Audio = 'audio',
   Video = 'video',
+  ThreeD = 'three_d',
   Picture = 'image',
 }
 
-export interface NFTToken extends VipInfo {
+export interface CardBack {
+  card_back_content_exist: boolean
+  card_back_content: string
+  class_card_back_content?: string
+  class_card_back_content_exist?: boolean
+}
+
+export interface NFTToken extends VipInfo, CardBack {
   renderer_type: NftType
   class_name: string
   class_bg_image_url: string
@@ -37,16 +46,18 @@ export interface NFTToken extends VipInfo {
   n_token_id: number
 }
 
-export interface NFTDetail extends ClassLikes, VipInfo {
+export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
   name: string
   description: string
   bg_image_url: string
   class_uuid: string
+  is_redeemed?: boolean
+  product_qr_code?: string
   issuer_info: {
     name: string
     uuid: string
     avatar_url: string
-  }
+  } & Follower
   total: string
   issued: number
   tx_state: TransactionStatus
@@ -57,4 +68,10 @@ export interface NFTDetail extends ClassLikes, VipInfo {
   n_token_id: number
   renderer_type: NftType
   renderer: string
+  uuid: string
+  product_on_sale_uuid?: string
+  product_limit: null | number
+  product_count: number
+  product_price: string
+  product_price_currency: string
 }

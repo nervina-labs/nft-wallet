@@ -1,26 +1,22 @@
-import { Drawer } from '@material-ui/core'
 import React, { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useWidth } from '../../hooks/useWidth'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
-import { UserResponse } from '../../models/user'
-import { User } from './User'
-import List from '@material-ui/core/List'
-import Divider from '@material-ui/core/Divider'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import { useHistory } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
-import { ReactComponent as ProfileSvg } from '../../assets/svg/profile.svg'
-import { ReactComponent as TxSvg } from '../../assets/svg/tx-list.svg'
-import { ReactComponent as LangSvg } from '../../assets/svg/language.svg'
-import { ReactComponent as HelpSvg } from '../../assets/svg/help.svg'
-import { useWalletModel } from '../../hooks/useWallet'
-import { DrawerAcion } from '../Profile/DrawerAction'
+import { ReactComponent as OrderSvg } from '../../assets/svg/home/order.svg'
+import { ReactComponent as ProfileSvg } from '../../assets/svg/home/profile.svg'
+import { ReactComponent as TxSvg } from '../../assets/svg/home/tx.svg'
+import { ReactComponent as LocaleSvg } from '../../assets/svg/home/locale.svg'
+import { ReactComponent as HelpSvg } from '../../assets/svg/home/help.svg'
+import { ReactComponent as LogoutSvg } from '../../assets/svg/home/logout.svg'
+import { ReactComponent as ArrowSvg } from '../../assets/svg/home/arrow.svg'
+import { DrawerAction } from '../Profile/DrawerAction'
 import { LocalCache } from '../../cache'
 import { getHelpCenterUrl } from '../../data/help'
+import { useLogout } from '../../hooks/useAccount'
+import { Drawer, Stack, StackDivider, Text, Flex } from '@mibao-ui/components'
 
 const DrawerContainer = styled.div`
   background-color: white;
@@ -53,22 +49,18 @@ export interface DrawerConfigProps {
   children?: React.ReactNode
   close: () => void
   isDrawerOpen: boolean
-  user?: UserResponse
-  setShowAvatarAction: (show: boolean) => void
 }
 
 export const DrawerMenu: React.FC<DrawerConfigProps> = ({
   close,
   isDrawerOpen,
-  user,
-  setShowAvatarAction,
 }) => {
   const bodyRef = useRef(document.body)
   const bodyWidth = useWidth(bodyRef)
   const [showAction, setShowAction] = useState(false)
   const history = useHistory()
   const { t, i18n } = useTranslation('translations')
-  const { logout } = useWalletModel()
+  const logout = useLogout()
 
   const drawerLeft = useMemo(() => {
     if (bodyWidth == null) {
@@ -83,6 +75,11 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
   const list = useMemo(() => {
     return [
       {
+        text: t('menu.order'),
+        icon: <OrderSvg />,
+        onClick: () => history.push(RoutePath.Orders),
+      },
+      {
         text: t('menu.profile'),
         icon: <ProfileSvg />,
         onClick: () => history.push(RoutePath.Profile),
@@ -94,7 +91,7 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
       },
       {
         text: t('menu.language'),
-        icon: <LangSvg />,
+        icon: <LocaleSvg />,
         onClick: () => {
           close()
           setShowAction(true)
@@ -110,6 +107,12 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
             )}`
           ),
       },
+      {
+        text: t('menu.logout'),
+        icon: <LogoutSvg />,
+        onClick: () => logout(history),
+        disableArrow: true,
+      },
     ]
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t, history])
@@ -124,53 +127,46 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
   return (
     <>
       <Drawer
-        anchor="left"
-        open={isDrawerOpen}
-        onBackdropClick={close}
-        PaperProps={{
+        placement="left"
+        isOpen={isDrawerOpen}
+        onClose={close}
+        hasOverlay
+        rounded="xl"
+        contentProps={{
+          w: '300px',
           style: {
-            position: 'absolute',
-            width: '280px',
             left: drawerLeft,
           },
         }}
-        disableEnforceFocus
-        disableEscapeKeyDown
       >
         <DrawerContainer>
-          <div className="user">
-            <User
-              user={user}
-              setShowAvatarAction={setShowAvatarAction}
-              closeMenu={close}
-            />
-          </div>
-          <Divider />
-          <List style={{ marginTop: '28px' }}>
-            {list.map(({ text, icon, onClick }, index) => (
-              <ListItem
-                button
+          <Stack
+            mt="50px"
+            spacing="20px"
+            divider={<StackDivider borderColor="gray.200" />}
+          >
+            {list.map(({ text, icon, onClick, disableArrow }, index) => (
+              <Flex
                 key={text}
                 onClick={onClick}
-                style={{ padding: '12px 16px' }}
+                cursor="pointer"
+                justifyContent="space-between"
+                alignItems="center"
+                w="100%"
               >
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
+                <Flex justifyContent="space-between" alignItems="center">
+                  {icon}
+                  <Text ml="16px" fontSize="16px">
+                    {text}
+                  </Text>
+                </Flex>
+                {disableArrow ? null : <ArrowSvg />}
+              </Flex>
             ))}
-          </List>
-          <div className="footer">
-            <ListItem
-              button
-              onClick={() => logout(history)}
-              style={{ textAlign: 'center', padding: '12px 16px' }}
-            >
-              <ListItemText primary={t('menu.logout')} />
-            </ListItem>
-          </div>
+          </Stack>
         </DrawerContainer>
       </Drawer>
-      <DrawerAcion
+      <DrawerAction
         isDrawerOpen={showAction}
         close={() => setShowAction(false)}
         actions={[
