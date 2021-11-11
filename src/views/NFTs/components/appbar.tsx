@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-import { useDisclosure } from '@chakra-ui/react'
 import {
   AppbarSticky,
   Appbar as RowAppbar,
@@ -14,11 +12,12 @@ import { DrawerMenu } from '../DrawerMenu'
 import { ReactComponent as SettingsSvg } from '../../../assets/svg/settings.svg'
 import { useTranslation } from 'react-i18next'
 import { addParamsToUrl } from '../../../utils'
-import { lazy } from 'react'
-import { LoadableComponent } from '../../../components/GlobalLoader'
+import { lazy, Suspense } from 'react'
 import { useQuery } from 'react-query'
 import { Query } from '../../../models'
 import { useAPI } from '../../../hooks/useAccount'
+import { useShareDisclosure } from '../../../hooks/useShareDisclosure'
+import { useDisclosure } from '@chakra-ui/react'
 
 const Share = lazy(async () => await import('../../../components/Share'))
 
@@ -30,11 +29,16 @@ export const Appbar: React.FC<{
   const api = useAPI()
   const { t, i18n } = useTranslation('translations')
   const goBack = useHistoryBack()
+  const urlParams = {
+    tid: `${user?.avatar_tid ?? ''}`,
+    locale: i18n.language,
+  }
   const {
-    isOpen: isOpenShare,
-    onOpen: onOpenShare,
-    onClose: onCloseShare,
-  } = useDisclosure()
+    isOpenShare,
+    onOpenShare,
+    onCloseShare,
+    neverOpened,
+  } = useShareDisclosure()
   const {
     isOpen: isDrawerOpen,
     onOpen: openDrawer,
@@ -42,19 +46,20 @@ export const Appbar: React.FC<{
   } = useDisclosure()
   const shareAvatarUrl =
     user?.avatar_type === AvatarType.Token && user?.avatar_url
-      ? addParamsToUrl(user?.avatar_url, {
-        tid: `${user?.avatar_tid ?? ''}`,
-        locale: i18n.language,
-      })
+      ? addParamsToUrl(user?.avatar_url, urlParams)
       : user?.avatar_url
 
-  const { data } = useQuery([Query.NFTList, address, 'owned'], async () => {
-    const { data } = await api.getNFTs(1, { address })
-    return { pages: [data] }
-  }, {
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  })
+  const { data } = useQuery(
+    [Query.NFTList, address, 'owned'],
+    async () => {
+      const { data } = await api.getNFTs(1, { address })
+      return { pages: [data] }
+    },
+    {
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   return (
     <>
@@ -76,8 +81,8 @@ export const Appbar: React.FC<{
         />
       </AppbarSticky>
       <DrawerMenu close={closeDrawer} isDrawerOpen={isDrawerOpen} />
-      {user ? (
-        <LoadableComponent>
+      {user && !neverOpened ? (
+        <Suspense fallback={null}>
           <Share
             isOpen={isOpenShare}
             onClose={onCloseShare}
@@ -91,13 +96,14 @@ export const Appbar: React.FC<{
                 avatarUrl: shareAvatarUrl ?? '',
                 collectionCount: data?.pages?.[0]?.meta?.total_count ?? 0,
                 desc: user.description,
-                coverImage: data?.pages?.[0]?.token_list?.[0]?.class_bg_image_url ?? '',
+                coverImage:
+                  data?.pages?.[0]?.token_list?.[0]?.class_bg_image_url ?? '',
                 isNftAvatar: user.avatar_type === AvatarType.Token,
                 isHolder,
               },
             }}
           />
-        </LoadableComponent>
+        </Suspense>
       ) : null}
     </>
   )

@@ -1,4 +1,3 @@
-import { useDisclosure } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import {
@@ -12,11 +11,11 @@ import { formatCount } from '../../../utils'
 import { ReactComponent as BackSvg } from '../../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../../assets/svg/share.svg'
 import { useIssuerInfo } from '../hooks/useIssuerInfo'
-import { lazy } from 'react'
-import { LoadableComponent } from '../../../components/GlobalLoader'
+import { lazy, Suspense } from 'react'
 import { Query } from '../../../models'
 import { useAPI } from '../../../hooks/useAccount'
 import { useQuery } from 'react-query'
+import { useShareDisclosure } from '../../../hooks/useShareDisclosure'
 
 const Share = lazy(async () => await import('../../../components/Share'))
 
@@ -24,10 +23,11 @@ export const Appbar: React.FC = () => {
   const goBack = useHistoryBack()
   const { i18n } = useTranslation('translations')
   const {
-    isOpen: isOpenShare,
-    onOpen: onOpenShare,
-    onClose: onCloseShare,
-  } = useDisclosure()
+    isOpenShare,
+    onOpenShare,
+    onCloseShare,
+    neverOpened,
+  } = useShareDisclosure()
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const { data: infoData } = useIssuerInfo(id)
@@ -61,8 +61,8 @@ export const Appbar: React.FC = () => {
           }
         />
       </AppbarSticky>
-      {infoData ? (
-        <LoadableComponent>
+      {infoData && listData && !neverOpened ? (
+        <Suspense fallback={null}>
           <Share
             isOpen={isOpenShare}
             onClose={onCloseShare}
@@ -82,7 +82,7 @@ export const Appbar: React.FC = () => {
               },
             }}
           />
-        </LoadableComponent>
+        </Suspense>
       ) : null}
     </>
   )
