@@ -813,4 +813,13 @@ export class ServerWalletAPI {
       '/ranking_lists' + (uuid ? `/${uuid}` : '')
     )
   }
+
+  async getUrlBase64(url: string) {
+    return await this.axios.get<{ result: string }>('/image_forwardings', {
+      params: {
+        url,
+        type: 'base64',
+      },
+    })
+  }
 }

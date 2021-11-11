@@ -18,7 +18,24 @@
       },
       "share": {
         "copy": "Click to copy the link and share to social media",
-        "close": "Close"
+        "close": "Close",
+        "copied": "Copied",
+        "cancel": "Cancel",
+        "icons": {
+          "copy": "Copy Link",
+          "download": "Downloads",
+          "more": "More",
+          "create-poster": "Create Poster",
+          "creating": "Creating"
+        },
+        "poster": {
+          "desc-1": "Scanning QR code",
+          "desc-nft": "Enjoy the digital collection",
+          "desc-holder": "Watch the NFT collector I found",
+          "desc-my": "Come to the Mibao to enjoy my NFT",
+          "desc-issuer": "Enjoy the works of the creator of the NFT",
+          "collected": "Collected"
+        }
       },
       "limit": {
         "limit": "Limited",

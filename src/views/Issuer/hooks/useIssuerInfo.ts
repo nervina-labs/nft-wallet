@@ -16,6 +16,11 @@ export function useIssuerInfo(
     async () => {
       const { data } = await api.getIssuerInfo(issuerId)
       return data
+    },
+    {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     }
   )
   if (options?.errorRedirection !== false && error) {

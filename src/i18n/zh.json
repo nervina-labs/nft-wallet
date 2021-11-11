@@ -18,7 +18,24 @@
       },
       "share": {
         "copy": "点击复制链接并分享至社交媒体",
-        "close": "关闭"
+        "close": "关闭",
+        "copied": "复制成功",
+        "cancel": "取消",
+        "icons": {
+          "copy": "复制链接",
+          "download": "下载",
+          "more": "更多",
+          "create-poster": "生成分享图",
+          "creating": "生成中"
+        },
+        "poster": {
+          "desc-1": "长按识别二维码",
+          "desc-nft": "一起欣赏这份数字藏品",
+          "desc-holder": "围观我发现的秘宝收藏家",
+          "desc-my": "来秘宝欣赏我的数字藏品",
+          "desc-issuer": "欣赏秘宝创作者的数字作品",
+          "collected": "已收藏秘宝"
+        }
       },
       "limit": {
         "limit": "限量",
