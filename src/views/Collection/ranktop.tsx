@@ -20,6 +20,8 @@ export const RankTop: React.FC<{
           height={`calc(${size} + 4px)`}
           rounded="20%"
           mx="auto"
+          mt="auto"
+          rank={rank}
         >
           <Image
             w={size}
