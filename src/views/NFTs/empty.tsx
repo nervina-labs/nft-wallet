@@ -29,10 +29,9 @@ export const Empty: React.FC<{
   showExplore?: boolean
 }> = ({ showExplore = true }) => {
   const { t } = useTranslation('translations')
-  const isLiked = useRouteQuery('liked', '')
-  const tag = useRouteQuery<string>('tag', '')
-  const follow = useRouteQuery<string>('follow', '')
-  const isFollow = tag === 'follow' || follow
+  const listTag = useRouteQuery<string>('list', '')
+  const isLiked = listTag === 'liked'
+  const isFollow = listTag === 'follow'
   const desc = useMemo(() => {
     if (isLiked) {
       return t('nfts.no-likes')
