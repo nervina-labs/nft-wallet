@@ -4,6 +4,7 @@ import { IssuerInfo } from './components/issuerInfo'
 import { NftCards } from './components/nftCards'
 import { Appbar } from './components/appbar'
 import { MainContainer } from '../../styles'
+import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 
 const IssuerContainer = styled(MainContainer)`
   position: relative;
@@ -11,6 +12,8 @@ const IssuerContainer = styled(MainContainer)`
 `
 
 export const Issuer: React.FC = () => {
+  useScrollRestoration()
+
   return (
     <IssuerContainer>
       <Appbar />

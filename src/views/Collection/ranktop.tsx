@@ -20,6 +20,8 @@ export const RankTop: React.FC<{
           height={`calc(${size} + 4px)`}
           rounded="20%"
           mx="auto"
+          mt="auto"
+          rank={rank}
         >
           <Image
             w={size}
@@ -31,7 +33,7 @@ export const RankTop: React.FC<{
           />
         </RankBorderBox>
         <Box
-          fontSize="14px"
+          fontSize={rank === 0 ? '14px' : '12px'}
           w="full"
           textOverflow="ellipsis"
           overflow="hidden"

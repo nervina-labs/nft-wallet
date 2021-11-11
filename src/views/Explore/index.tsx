@@ -1,13 +1,19 @@
 import { Box, Flex } from '@mibao-ui/components'
 import { Switch } from '@chakra-ui/react'
 import { Lite } from './components/lite'
-import { useState } from 'react'
+import { useCallback } from 'react'
 import { MainContainer } from '../../styles'
 import { Pro } from './components/pro'
 import { HiddenBar } from '../../components/HiddenBar'
+import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
+import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 
 export const Explore: React.FC = () => {
-  const [isLite, setIsLite] = useState(false)
+  const [mode, setMode] = useRouteQuerySearch<'pro' | 'lite'>('mode', 'pro')
+  const onChangeMode = useCallback(() => {
+    setMode(mode === 'lite' ? 'pro' : 'lite')
+  }, [mode, setMode])
+  useScrollRestoration()
 
   return (
     <MainContainer>
@@ -24,20 +30,20 @@ export const Explore: React.FC = () => {
 
         <Flex mt="auto">
           <Box as="span" mr="10px" fontSize="14px" fontWeight="600">
-            {isLite ? 'Lite' : 'Pro'}
+            {mode === 'lite' ? 'Lite' : 'Pro'}
           </Box>
           <Switch
             my="auto"
             id="is-lite"
             size="md"
             colorScheme="green"
-            isChecked={isLite}
-            onChange={() => setIsLite((v) => !v)}
+            isChecked={mode === 'lite'}
+            onChange={onChangeMode}
           />
         </Flex>
       </Flex>
 
-      {isLite ? <Lite /> : <Pro />}
+      {mode === 'lite' ? <Lite /> : <Pro />}
       <HiddenBar />
     </MainContainer>
   )

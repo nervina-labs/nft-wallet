@@ -10,7 +10,8 @@ import { InfiniteList } from '../../../components/InfiniteList'
 import { Card } from '../card'
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from '@mibao-ui/components'
 
-type ListType = 'owned' | 'liked' | 'follow'
+const ListTypeSet = ['owned', 'liked', 'follow'] as const
+type ListType = typeof ListTypeSet[number]
 
 export const NftList: React.FC<{
   address: string
@@ -19,10 +20,7 @@ export const NftList: React.FC<{
   const api = useAPI()
   const { t } = useTranslation('translations')
   const [listType, setListType] = useRouteQuerySearch<ListType>('list', 'owned')
-
-  const filterIndex = ['owned', 'liked', 'follow'].findIndex(
-    (l) => l === listType
-  )
+  const filterIndex = ListTypeSet.findIndex((l) => l === listType)
 
   const getLikeData = useCallback(
     async ({ pageParam }) => {
