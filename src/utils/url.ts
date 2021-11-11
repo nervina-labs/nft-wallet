@@ -1,5 +1,6 @@
 import {
   BOWSER_BROWSER,
+  IS_WEBKIT,
   OSS_IMG_HOSTS,
   OSS_IMG_PROCESS_QUERY_KEY,
   OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
@@ -8,6 +9,9 @@ import {
 import i18n from '../i18n'
 
 export function isSupportWebp(): boolean {
+  if (IS_WEBKIT) {
+    return false
+  }
   // https://caniuse.com/?search=webp
   // https://x5.tencent.com/guide/caniuse/index.html
   const supportedBrowsers = {
@@ -80,4 +84,40 @@ export const getNFTQueryParams = (tid?: number, locale = i18n.language) => {
     }
   }
   return undefined
+}
+
+export async function toDataUrl(
+  src: string,
+  options?: {
+    outputFormat?: string
+    disableCache?: boolean
+  }
+): Promise<string> {
+  const outputFormat = options?.outputFormat ?? 'image/png'
+  const urlObj = new URL(src)
+  urlObj.searchParams.append('time', `${new Date().getTime()}`)
+  const url = decodeURI(urlObj.toString())
+  return await new Promise<string>((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      canvas.height = img.height
+      canvas.width = img.width
+      if (ctx) {
+        ctx.drawImage(img, 0, 0)
+      }
+      const dataURL = canvas.toDataURL(outputFormat)
+      resolve(dataURL)
+    }
+    img.onerror = reject
+    img.src = url
+    if (img.complete || img.complete === undefined) {
+      img.src =
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
+      img.src = url
+      resolve(url)
+    }
+  })
 }

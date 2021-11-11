@@ -225,6 +225,8 @@ export interface NFTWalletAPI {
     }
   ) => Promise<AxiosResponse<TransactionLogResponse>>
 
+  getUrlBase64: (url: string) => Promise<AxiosResponse<{ result: string }>>
+
   getRankingList: <
     O extends {
       uuid?: string

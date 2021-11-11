@@ -10,7 +10,7 @@ import {
 } from '../../hooks/useOrder'
 import { ReactComponent as NextStepSvg } from '../../assets/svg/next-step.svg'
 import { ReactComponent as PrevStepSvg } from '../../assets/svg/prev-step.svg'
-import { BOWSER_BROWSER, IS_WEXIN } from '../../constants'
+import { IS_DESKTOP, IS_WEXIN } from '../../constants'
 import { Payment } from './Payment'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 
@@ -70,16 +70,16 @@ export const SelectPayment = () => {
       <Stack mt="32px" spacing="30px">
         <Item
           channel={
-            BOWSER_BROWSER.getPlatformType() === 'desktop'
-              ? PaymentChannel.AlipayPC
-              : PaymentChannel.AlipayMobile
+            IS_DESKTOP ? PaymentChannel.AlipayPC : PaymentChannel.AlipayMobile
           }
         />
-        <Item
-          channel={
-            IS_WEXIN ? PaymentChannel.WechatPub : PaymentChannel.WechatMobile
-          }
-        />
+        {IS_DESKTOP ? null : (
+          <Item
+            channel={
+              IS_WEXIN ? PaymentChannel.WechatPub : PaymentChannel.WechatMobile
+            }
+          />
+        )}
         <Item channel={PaymentChannel.Paypal} />
       </Stack>
     </>

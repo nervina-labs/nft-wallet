@@ -698,6 +698,7 @@ export class ServerWalletAPI {
         token_order: {
           ...props,
           callback_url: this.orderCallbackURL,
+          cancel_url: location.href,
         },
         auth,
       },
@@ -753,12 +754,14 @@ export class ServerWalletAPI {
         channel,
         address: this.address,
         callback_url: this.orderCallbackURL,
+        cancel_url: location.href,
       },
       {
         params: {
           channel,
           address: this.address,
           callback_url: this.orderCallbackURL,
+          cancel_url: location.href,
         },
         headers,
       }
@@ -815,5 +818,14 @@ export class ServerWalletAPI {
     return await this.axios.get<RankingListResponse<O>>(
       '/ranking_lists' + (uuid ? `/${uuid}` : '')
     )
+  }
+
+  async getUrlBase64(url: string) {
+    return await this.axios.get<{ result: string }>('/image_forwardings', {
+      params: {
+        url,
+        type: 'base64',
+      },
+    })
   }
 }
