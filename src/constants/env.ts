@@ -39,6 +39,8 @@ export const IS_SAFARI =
   !navigator.userAgent.includes('CriOS') &&
   !navigator.userAgent.includes('FxiOS')
 
+export const IS_WEBKIT = BOWSER_BROWSER.getEngineName() === 'WebKit'
+
 export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 
 export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE
