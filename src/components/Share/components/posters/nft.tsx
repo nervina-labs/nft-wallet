@@ -38,6 +38,7 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
     bgImgUrl,
     {
       usePreviewUrl: 500,
+      toBlob: true,
     }
   )
   const { data: avatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
@@ -45,6 +46,7 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
     {
       fallbackImg: FallbackAvatarPath,
       usePreviewUrl: 100,
+      toBlob: true,
     }
   )
   const [nftName] = useTextEllipsis(name, 150)

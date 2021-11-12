@@ -47,6 +47,7 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
     coverImage ?? '',
     {
       usePreviewUrl: 500,
+      toBlob: true,
     }
   )
   const { data: issuerAvatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
@@ -54,6 +55,7 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
     {
       fallbackImg: FallbackAvatarPath,
       usePreviewUrl: 100,
+      toBlob: true,
     }
   )
   usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)

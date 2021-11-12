@@ -30,8 +30,11 @@ export function useHtml2Canvas(
         y: scrollTop,
         scale: 3,
       })
-        .then((canvas) => {
-          setImgSrc(canvas.toDataURL('image/png'))
+        .then(async (canvas) => {
+          const url = await fetch(
+            canvas.toDataURL('image/png')
+          ).then(async (res) => URL.createObjectURL(await res.blob()))
+          setImgSrc(url)
         })
         .catch((err) => {
           setError(err)
