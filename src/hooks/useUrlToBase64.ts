@@ -4,6 +4,8 @@ import { useQuery } from 'react-query'
 import { useAPI } from './useAccount'
 import { useCallback } from 'react'
 
+const URL_CACHE_MAP = new Map<string, string>()
+
 export function useUrlToBase64<
   S extends string | undefined,
   U extends S | S[],
@@ -20,29 +22,27 @@ export function useUrlToBase64<
   const fallbackImg = options?.fallbackImg ?? FallbackImgPath
   const toDataUrlFromApi = useCallback(
     async (url?: string) => {
+      if (url && URL_CACHE_MAP.has(url)) {
+        return URL_CACHE_MAP.get(url)
+      }
       const previewUrl = options?.usePreviewUrl
         ? getImagePreviewUrl(url, options.usePreviewUrl)
         : url
       if (!previewUrl) {
         return fallbackImg
       }
-      // eslint-disable-next-line @typescript-eslint/return-await
-      return await toDataUrl(previewUrl)
+      const result = await toDataUrl(previewUrl, { toBlob: options?.toBlob })
         .catch(async () => {
           const base64Content = (await api.getUrlBase64(previewUrl)).data.result
           return base64Content
             ? `data:image/jpeg;base64,${base64Content}`
             : fallbackImg
         })
-        .then((base64) => {
-          if (options?.toBlob) {
-            return fetch(base64).then(async (res) =>
-              URL.createObjectURL(await res.blob())
-            )
-          }
-          return base64
-        })
         .catch(() => fallbackImg)
+      if (url) {
+        URL_CACHE_MAP.set(url, result)
+      }
+      return result
     },
     [api, fallbackImg, options?.toBlob, options?.usePreviewUrl]
   )

@@ -7,7 +7,7 @@ import {
 } from '../../../components/Appbar'
 import { PosterType } from '../../../components/Share/share.interface'
 import { useHistoryBack } from '../../../hooks/useHistoryBack'
-import { formatCount } from '../../../utils'
+import { formatCount, getImagePreviewUrl } from '../../../utils'
 import { ReactComponent as BackSvg } from '../../../assets/svg/back.svg'
 import { ReactComponent as ShareSvg } from '../../../assets/svg/share.svg'
 import { useIssuerInfo } from '../hooks/useIssuerInfo'
@@ -44,6 +44,8 @@ export const Appbar: React.FC = () => {
       refetchOnWindowFocus: false,
     }
   )
+  const bgImageUrl = listData?.pages?.[0]?.token_classes?.[0].bg_image_url
+  const posterCoverImage = bgImageUrl ? getImagePreviewUrl(bgImageUrl, 300) : ''
 
   return (
     <>
@@ -77,8 +79,7 @@ export const Appbar: React.FC = () => {
                 desc: infoData.description ?? '',
                 follow: formatCount(infoData.issuer_follows, i18n.language),
                 like: formatCount(infoData.issuer_likes, i18n.language),
-                coverImage:
-                  listData?.pages?.[0]?.token_classes?.[0].bg_image_url ?? '',
+                coverImage: posterCoverImage,
               },
             }}
           />

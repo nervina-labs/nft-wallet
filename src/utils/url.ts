@@ -91,12 +91,18 @@ export async function toDataUrl(
   options?: {
     outputFormat?: string
     disableCache?: boolean
+    toBlob?: boolean
+    useRam?: boolean
   }
 ): Promise<string> {
   const outputFormat = options?.outputFormat ?? 'image/png'
-  const urlObj = new URL(src)
-  urlObj.searchParams.append('time', `${new Date().getTime()}`)
-  const url = decodeURI(urlObj.toString())
+  const url = options?.useRam
+    ? (() => {
+        const urlObj = new URL(src)
+        urlObj.searchParams.append('time', `${new Date().getTime()}`)
+        return decodeURI(urlObj.toString())
+      })()
+    : src
   return await new Promise<string>((resolve, reject) => {
     const img = new Image()
     img.crossOrigin = 'anonymous'
@@ -108,8 +114,19 @@ export async function toDataUrl(
       if (ctx) {
         ctx.drawImage(img, 0, 0)
       }
-      const dataURL = canvas.toDataURL(outputFormat)
-      resolve(dataURL)
+      if (options?.toBlob) {
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('not blob'))
+            return
+          }
+          const url = URL.createObjectURL(blob)
+          resolve(url)
+        }, outputFormat)
+      } else {
+        const dataURL = canvas.toDataURL(outputFormat)
+        resolve(dataURL)
+      }
     }
     img.onerror = reject
     img.src = url

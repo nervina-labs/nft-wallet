@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import {
   AppbarSticky,
   Appbar as RowAppbar,
@@ -11,7 +12,7 @@ import { PosterType } from '../../../components/Share/share.interface'
 import { DrawerMenu } from '../DrawerMenu'
 import { ReactComponent as SettingsSvg } from '../../../assets/svg/settings.svg'
 import { useTranslation } from 'react-i18next'
-import { addParamsToUrl } from '../../../utils'
+import { addParamsToUrl, getImagePreviewUrl } from '../../../utils'
 import { lazy, Suspense } from 'react'
 import { useQuery } from 'react-query'
 import { Query } from '../../../models'
@@ -61,6 +62,15 @@ export const Appbar: React.FC<{
     }
   )
 
+  const classBgImageUrl = data?.pages?.[0]?.token_list?.[0]?.class_bg_image_url
+
+  const posterCoverImage = classBgImageUrl
+    ? addParamsToUrl(getImagePreviewUrl(classBgImageUrl, 600), {
+        tid: `${data?.pages?.[0]?.token_list?.[0].n_token_id}`,
+        locale: i18n.language,
+      })
+    : ''
+
   return (
     <>
       <AppbarSticky position={isHolder ? 'sticky' : 'relative'}>
@@ -86,7 +96,7 @@ export const Appbar: React.FC<{
           <Share
             isOpen={isOpenShare}
             onClose={onCloseShare}
-            shareUrl={`https://${window.location.pathname}/holder/${
+            shareUrl={`https://${window.location.origin}/holder/${
               address ?? ''
             }`}
             poster={{
@@ -96,8 +106,7 @@ export const Appbar: React.FC<{
                 avatarUrl: shareAvatarUrl ?? '',
                 collectionCount: data?.pages?.[0]?.meta?.total_count ?? 0,
                 desc: user.description,
-                coverImage:
-                  data?.pages?.[0]?.token_list?.[0]?.class_bg_image_url ?? '',
+                coverImage: posterCoverImage,
                 isNftAvatar: user.avatar_type === AvatarType.Token,
                 isHolder,
               },

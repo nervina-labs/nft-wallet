@@ -7,6 +7,7 @@ import { Query, ClassSortType as SortType } from '../../../models'
 import { isSupportWebp } from '../../../utils'
 import FALLBACK from '../../../assets/svg/fallback.svg'
 import { useRouteQuerySearch } from '../../../hooks/useRouteQuery'
+import { useHistory } from 'react-router-dom'
 
 export const Lite: React.FC = () => {
   const { t } = useTranslation('translations')
@@ -24,6 +25,7 @@ export const Lite: React.FC = () => {
     },
     [api, currentTag, sort]
   )
+  const { push } = useHistory()
 
   return (
     <Box mt="25px" px="20px">
@@ -46,6 +48,8 @@ export const Lite: React.FC = () => {
               key={`${i}-${j}`}
               ratio={i === 0 && j === 0 ? 1 : 9 / 12}
               mb="10px"
+              cursor="pointer"
+              onClick={() => push(`/class/${token.uuid}`)}
             >
               <Image
                 src={token.bg_image_url === null ? '' : token.bg_image_url}

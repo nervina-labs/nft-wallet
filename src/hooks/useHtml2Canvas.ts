@@ -1,13 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import html2canvas from 'html2canvas-objectfit-fix'
 
-export function useHtml2Canvas(
-  element: HTMLDivElement | null,
-  options?: {
-    enable?: boolean
-    onError?: <E>(error: E) => void
-  }
-) {
+export function useHtml2Canvas(options?: { onError?: <E>(error: E) => void }) {
   const [imgSrc, setImgSrc] = useState<string | undefined>()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<any>()
@@ -16,11 +10,15 @@ export function useHtml2Canvas(
     setImgSrc(undefined)
   }, [])
 
-  useEffect(() => {
-    const scrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop
-    if (element && options?.enable !== false) {
+  const onRender = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (!element) {
+        return
+      }
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop
       setIsLoading(true)
+      setImgSrc(undefined)
       html2canvas(element, {
         useCORS: true,
         allowTaint: true,
@@ -30,8 +28,14 @@ export function useHtml2Canvas(
         y: scrollTop,
         scale: 3,
       })
-        .then((canvas) => {
-          setImgSrc(canvas.toDataURL('image/png'))
+        .then(async (canvas) => {
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              throw new Error('not blob')
+            }
+            const url = URL.createObjectURL(blob)
+            setImgSrc(url)
+          })
         })
         .catch((err) => {
           setError(err)
@@ -43,12 +47,15 @@ export function useHtml2Canvas(
         .then(() => {
           setIsLoading(false)
         })
-    }
-  }, [element, options, options?.enable])
+    },
+    [options]
+  )
+
   return {
     imgSrc,
     isLoading,
     error,
     reload,
+    onRender,
   }
 }
