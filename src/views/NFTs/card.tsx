@@ -138,6 +138,8 @@ export const Card: React.FC<CardProps> = ({
             e.preventDefault()
             history.push(`${RoutePath.Issuer}/${token.issuer_uuid as string}`)
           },
+          webp: isSupportWebp(),
+          resizeScale: 100,
         }}
         imageProps={{
           webp: isSupportWebp(),
