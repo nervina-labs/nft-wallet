@@ -11,6 +11,7 @@ import { isSupportWebp } from '../../utils'
 import { RankBorderBox } from '../../components/RankIcon'
 import { RankTop } from '../Collection/ranktop'
 import { RoutePath } from '../../routes'
+import { useFirstOpenScrollToTop } from '../../hooks/useFirstOpenScrollToTop'
 
 export const Ranking: React.FC = () => {
   const { i18n } = useTranslation('translations')
@@ -34,6 +35,7 @@ export const Ranking: React.FC = () => {
   const issuers = useMemo(() => {
     return data?.issuers?.slice(0, 3)
   }, [data])
+  useFirstOpenScrollToTop()
 
   if (error && failureCount >= 3) {
     return <Redirect to={RoutePath.NotFound} />
