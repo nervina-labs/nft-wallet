@@ -92,12 +92,17 @@ export async function toDataUrl(
     outputFormat?: string
     disableCache?: boolean
     toBlob?: boolean
+    useRam?: boolean
   }
 ): Promise<string> {
   const outputFormat = options?.outputFormat ?? 'image/png'
-  const urlObj = new URL(src)
-  urlObj.searchParams.append('time', `${new Date().getTime()}`)
-  const url = decodeURI(urlObj.toString())
+  const url = options?.useRam
+    ? (() => {
+        const urlObj = new URL(src)
+        urlObj.searchParams.append('time', `${new Date().getTime()}`)
+        return decodeURI(urlObj.toString())
+      })()
+    : src
   return await new Promise<string>((resolve, reject) => {
     const img = new Image()
     img.crossOrigin = 'anonymous'

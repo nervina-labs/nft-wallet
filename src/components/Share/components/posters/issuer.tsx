@@ -1,5 +1,5 @@
 import { Box, Flex, Image } from '@chakra-ui/react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import UserBgPath from '../../../../assets/share/bg/user.png'
 import { usePosterLoader } from '../../hooks/usePosterLoader'
 import { PosterProps } from '../../share.interface'
@@ -11,6 +11,7 @@ import { useUrlToBase64 } from '../../../../hooks/useUrlToBase64'
 import { useTranslation } from 'react-i18next'
 import { useTextEllipsis } from '../../hooks/useTextEllipsis'
 import FallbackAvatarPath from '../../../../assets/img/fallback.png'
+import FallbackImgPath from '../../../../assets/img/nft-fallback.png'
 import { DescContainer } from './holder'
 
 const ISSUER_ICON_MAP: { [key: string]: string } = {
@@ -62,9 +63,21 @@ export const Issuer: React.FC<IssuerProps & PosterProps> = ({
   const [issuerName] = useTextEllipsis(username, 300)
   const [verifiedTitleEllipsis] = useTextEllipsis(verifiedTitle ?? '', 300)
   const [descEllipsis] = useTextEllipsis(desc ?? '', 900)
+  const [isCoverImageError, setIsCoverImageError] = useState(false)
 
   return (
     <Box position="relative" w="340px" h="490px" ref={ref}>
+      {isCoverImageError ? (
+        <Image
+          src={FallbackImgPath}
+          w="full"
+          h="auto"
+          left="0"
+          top="0"
+          position="absolute"
+          zIndex={-1}
+        />
+      ) : null}
       <Image
         src={coverImageUrl}
         w="full"
@@ -73,6 +86,7 @@ export const Issuer: React.FC<IssuerProps & PosterProps> = ({
         top="0"
         position="absolute"
         zIndex={0}
+        onError={() => setIsCoverImageError(true)}
       />
       <Image
         src={UserBgPath}

@@ -37,7 +37,6 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
   const { data: bgImageUrl, isLoading: bgImageUrlLoading } = useUrlToBase64(
     bgImgUrl,
     {
-      usePreviewUrl: 500,
       toBlob: true,
     }
   )

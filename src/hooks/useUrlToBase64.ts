@@ -26,7 +26,6 @@ export function useUrlToBase64<
       if (!previewUrl) {
         return fallbackImg
       }
-      // eslint-disable-next-line @typescript-eslint/return-await
       return await toDataUrl(previewUrl, { toBlob: options?.toBlob })
         .catch(async () => {
           const base64Content = (await api.getUrlBase64(previewUrl)).data.result

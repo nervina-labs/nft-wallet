@@ -131,9 +131,9 @@ export const Share: React.FC<ShareProps> = ({
       ),
     [onCopyShareUrl, onShare, posterAction, posterIcon, posterText, t]
   )
-  const creatingPoster = poster && posterState === PosterState.Creating
   const showPoster =
     posterState === PosterState.Creating || posterState === PosterState.Created
+  const creatingPoster = poster && posterState === PosterState.Creating
   const { location } = useHistory()
 
   const reloadKey = useMemo(() => {
