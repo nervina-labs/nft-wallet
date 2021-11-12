@@ -319,7 +319,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
         ]}
         actionOnClick={(val) => {
           if (val === 'camera') {
-            history.replace(RoutePath.Profile, {
+            history.push(RoutePath.Profile, {
               showCamera: true,
             })
           }
