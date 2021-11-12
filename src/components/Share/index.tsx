@@ -55,10 +55,7 @@ export const Share: React.FC<ShareProps> = ({
 }) => {
   const { t } = useTranslation('translations')
   const [posterState, setPosterState] = useState(PosterState.None)
-  const [el, setEl] = useState<HTMLDivElement | null>(null)
-  const { imgSrc, reload } = useHtml2Canvas(el, {
-    enable: posterState === PosterState.Creating,
-  })
+  const { imgSrc, reload, onRender } = useHtml2Canvas()
   useEffect(() => {
     if (imgSrc) {
       setPosterState(PosterState.Created)
@@ -146,7 +143,6 @@ export const Share: React.FC<ShareProps> = ({
   useEffect(() => {
     setPosterState(PosterState.None)
     reload()
-    setEl(null)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadKey])
 
@@ -159,20 +155,24 @@ export const Share: React.FC<ShareProps> = ({
             {creatingPoster ? (
               <Box position="fixed" top="0" left="0" opacity="0">
                 {poster.type === PosterType.Nft && (
-                  <Nft {...poster.data} shareUrl={shareUrl} onLoaded={setEl} />
+                  <Nft
+                    {...poster.data}
+                    shareUrl={shareUrl}
+                    onLoaded={onRender}
+                  />
                 )}
                 {poster.type === PosterType.Issuer && (
                   <Issuer
                     {...poster.data}
                     shareUrl={shareUrl}
-                    onLoaded={setEl}
+                    onLoaded={onRender}
                   />
                 )}
                 {poster.type === PosterType.Holder && (
                   <Holder
                     {...poster.data}
                     shareUrl={shareUrl}
-                    onLoaded={setEl}
+                    onLoaded={onRender}
                   />
                 )}
               </Box>

@@ -1,25 +1,25 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import html2canvas from 'html2canvas-objectfit-fix'
 
-export function useHtml2Canvas(
-  element: HTMLDivElement | null,
-  options?: {
-    enable?: boolean
-    onError?: <E>(error: E) => void
-  }
-) {
+export function useHtml2Canvas(options?: { onError?: <E>(error: E) => void }) {
   const [imgSrc, setImgSrc] = useState<string | undefined>()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<any>()
+  const [element, setElement] = useState<HTMLDivElement | null>(null)
 
   const reload = useCallback(() => {
     setImgSrc(undefined)
+    setElement(null)
   }, [])
 
-  useEffect(() => {
-    const scrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop
-    if (element && options?.enable !== false) {
+  const onRender = useCallback(
+    (el: HTMLDivElement | null) => {
+      setElement(el)
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop
+      if (!element) {
+        return
+      }
       setIsLoading(true)
       html2canvas(element, {
         useCORS: true,
@@ -49,12 +49,15 @@ export function useHtml2Canvas(
         .then(() => {
           setIsLoading(false)
         })
-    }
-  }, [element, options, options?.enable])
+    },
+    [element, options]
+  )
+
   return {
     imgSrc,
     isLoading,
     error,
     reload,
+    onRender,
   }
 }
