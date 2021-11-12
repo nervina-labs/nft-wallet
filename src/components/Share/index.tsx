@@ -25,6 +25,7 @@ import { Holder } from './components/posters/holder'
 import styled from '@emotion/styled'
 import { PosterType, ShareProps } from './share.interface'
 import { useHistory } from 'react-router-dom'
+import { IS_WEXIN } from '../../constants'
 
 const IconContainer = styled(RowImage)`
   &.loading {
@@ -64,10 +65,15 @@ export const Share: React.FC<ShareProps> = ({
   const toast = useToast()
   const { onCopy } = useClipboard(shareUrl)
   const onDownload = useCallback(() => {
+    const isSupportDownload = 'download' in document.createElement('a')
+    if (!isSupportDownload || IS_WEXIN) {
+      toast(t('common.share.long-press-to-save'))
+      return
+    }
     if (imgSrc) {
       downloadImage(imgSrc, 'poster.png')
     }
-  }, [imgSrc])
+  }, [imgSrc, t, toast])
   const onCopyShareUrl = useCallback(() => {
     onCopy()
     toast(t('common.share.copied'))

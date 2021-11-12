@@ -6,7 +6,7 @@ import { ReactComponent as HiddenBarKindsSvg } from '../../assets/svg/hidden-bar
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import { useAccountStatus } from '../../hooks/useAccount'
-import { Stack } from '@mibao-ui/components'
+import { Box, Stack, BoxProps } from '@mibao-ui/components'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useObservable } from 'rxjs-hooks'
@@ -144,4 +144,8 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
       ))}
     </Container>
   )
+}
+
+export const HiddenBarFill: React.FC<BoxProps> = (props) => {
+  return <Box h="95px" {...props} />
 }
