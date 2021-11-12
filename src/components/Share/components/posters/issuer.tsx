@@ -47,7 +47,6 @@ export const Issuer: React.FC<IssuerProps & PosterProps> = ({
   const { data: coverImageUrl, isLoading: coverImageLoading } = useUrlToBase64(
     coverImage,
     {
-      usePreviewUrl: 500,
       toBlob: true,
     }
   )
