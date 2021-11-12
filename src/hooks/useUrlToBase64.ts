@@ -27,20 +27,12 @@ export function useUrlToBase64<
         return fallbackImg
       }
       // eslint-disable-next-line @typescript-eslint/return-await
-      return await toDataUrl(previewUrl)
+      return await toDataUrl(previewUrl, { toBlob: options?.toBlob })
         .catch(async () => {
           const base64Content = (await api.getUrlBase64(previewUrl)).data.result
           return base64Content
             ? `data:image/jpeg;base64,${base64Content}`
             : fallbackImg
-        })
-        .then((base64) => {
-          if (options?.toBlob) {
-            return fetch(base64).then(async (res) =>
-              URL.createObjectURL(await res.blob())
-            )
-          }
-          return base64
         })
         .catch(() => fallbackImg)
     },
