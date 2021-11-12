@@ -13,7 +13,7 @@ import { Query } from '../../../models'
 import { SpecialAssets } from '../../../models/special-assets'
 import { ReactComponent as MoreSvg } from '../../../assets/svg/recommend-more.svg'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { isSupportWebp } from '../../../utils'
 
 const Item: React.FC<SpecialAssets> = ({
@@ -151,7 +151,6 @@ export const Recommend: React.FC = () => {
       refetchOnMount: false,
     }
   )
-  const { push } = useHistory()
 
   return (
     <Box overflowY="hidden" overflowX={isLoading ? 'hidden' : 'auto'}>
@@ -180,12 +179,11 @@ export const Recommend: React.FC = () => {
                 pr="15px"
                 maxW="305px"
                 key={i}
-                onClick={() =>
-                  push(`/explore/collection/${specialAssets.uuid}`)
-                }
                 cursor="pointer"
               >
-                <Item {...specialAssets} />
+                <Link to={`/explore/collection/${specialAssets.uuid}`}>
+                  <Item {...specialAssets} />
+                </Link>
               </Flex>
             ))}
           </>
