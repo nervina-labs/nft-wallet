@@ -4,7 +4,7 @@ import { Lite } from './components/lite'
 import { useCallback } from 'react'
 import { MainContainer } from '../../styles'
 import { Pro } from './components/pro'
-import { HiddenBar } from '../../components/HiddenBar'
+import { HiddenBar, HiddenBarFill } from '../../components/HiddenBar'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import LogoPath from '../../assets/svg/explore-logo.svg'
@@ -38,6 +38,7 @@ export const Explore: React.FC = () => {
 
       {mode === 'lite' ? <Lite /> : <Pro />}
       <HiddenBar />
+      <HiddenBarFill />
     </MainContainer>
   )
 }
