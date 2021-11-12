@@ -1,4 +1,4 @@
-import { Button, Image } from '@mibao-ui/components'
+import { Button } from '@mibao-ui/components'
 import {
   Box,
   Center,
@@ -190,7 +190,7 @@ export const Share: React.FC<ShareProps> = ({
                 p="20px"
                 w="100%"
               >
-                <Image
+                <RowImage
                   src={imgSrc}
                   m="auto"
                   h="auto"
@@ -199,11 +199,6 @@ export const Share: React.FC<ShareProps> = ({
                   maxH="100%"
                   objectFit="contain"
                   rounded="20px"
-                  containerProps={{
-                    w: '100%',
-                    h: '100%',
-                    display: 'flex',
-                  }}
                 />
               </Center>
             ) : null}
