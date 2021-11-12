@@ -41,7 +41,6 @@ export function useUrlToBase64<
         .catch(() => fallbackImg)
       if (url) {
         URL_CACHE_MAP.set(url, result)
-        console.log(URL_CACHE_MAP)
       }
       return result
     },
