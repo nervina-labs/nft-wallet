@@ -44,7 +44,7 @@ export const Appbar: React.FC = () => {
       refetchOnWindowFocus: false,
     }
   )
-  const bgImageUrl = listData?.pages?.[0]?.token_classes?.[0].bg_image_url
+  const bgImageUrl = listData?.pages?.[0]?.token_classes?.[0]?.bg_image_url
   const posterCoverImage = bgImageUrl ? getImagePreviewUrl(bgImageUrl, 300) : ''
 
   return (
