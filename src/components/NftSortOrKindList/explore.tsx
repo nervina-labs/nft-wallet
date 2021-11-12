@@ -38,9 +38,6 @@ const tabProps: TabProps = {
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { i18n } = useTranslation('translations')
   const { push } = useHistory()
-  const gotoClass = useCallback(() => {
-    push(`/class/${token.uuid}`)
-  }, [push, token.uuid])
   const gotoIssuer = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       e.preventDefault()
@@ -65,7 +62,6 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           src={token.bg_image_url === null ? '' : token.bg_image_url}
           type={token.renderer_type}
           hasCardBack={token.card_back_content_exist}
-          onClick={gotoClass}
           resizeScale={300}
           webp={isSupportWebp()}
         />
