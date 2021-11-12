@@ -11,7 +11,6 @@ export enum RoutePath {
   Transactions = '/transactions',
   Profile = '/profile',
   ImagePreview = '/avatar/preview',
-  TakePhoto = '/avatar/camera',
   Explore = '/explore',
   ExploreAll = '/explore/all',
   Help = '/help',

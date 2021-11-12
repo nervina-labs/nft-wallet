@@ -45,7 +45,6 @@ const Container = styled(MainContainer)`
   background-size: cover;
   background-repeat: repeat-y;
   min-height: 100%;
-
   .close {
     width: 24px;
     height: 24px;

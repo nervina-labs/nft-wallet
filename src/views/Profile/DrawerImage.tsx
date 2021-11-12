@@ -319,7 +319,9 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
         ]}
         actionOnClick={(val) => {
           if (val === 'camera') {
-            history.push(RoutePath.TakePhoto)
+            history.replace(RoutePath.Profile, {
+              showCamera: true,
+            })
           }
           if (val === 'nft') {
             setOpenChooseTokenClassModal(true)
