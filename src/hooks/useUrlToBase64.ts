@@ -4,6 +4,8 @@ import { useQuery } from 'react-query'
 import { useAPI } from './useAccount'
 import { useCallback } from 'react'
 
+const URL_CACHE_MAP = new Map<string, string>()
+
 export function useUrlToBase64<
   S extends string | undefined,
   U extends S | S[],
@@ -20,13 +22,16 @@ export function useUrlToBase64<
   const fallbackImg = options?.fallbackImg ?? FallbackImgPath
   const toDataUrlFromApi = useCallback(
     async (url?: string) => {
+      if (url && URL_CACHE_MAP.has(url)) {
+        return URL_CACHE_MAP.get(url)
+      }
       const previewUrl = options?.usePreviewUrl
         ? getImagePreviewUrl(url, options.usePreviewUrl)
         : url
       if (!previewUrl) {
         return fallbackImg
       }
-      return await toDataUrl(previewUrl, { toBlob: options?.toBlob })
+      const result = await toDataUrl(previewUrl, { toBlob: options?.toBlob })
         .catch(async () => {
           const base64Content = (await api.getUrlBase64(previewUrl)).data.result
           return base64Content
@@ -34,6 +39,11 @@ export function useUrlToBase64<
             : fallbackImg
         })
         .catch(() => fallbackImg)
+      if (url) {
+        URL_CACHE_MAP.set(url, result)
+        console.log(URL_CACHE_MAP)
+      }
+      return result
     },
     [api, fallbackImg, options?.toBlob, options?.usePreviewUrl]
   )

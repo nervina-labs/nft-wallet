@@ -5,22 +5,20 @@ export function useHtml2Canvas(options?: { onError?: <E>(error: E) => void }) {
   const [imgSrc, setImgSrc] = useState<string | undefined>()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<any>()
-  const [element, setElement] = useState<HTMLDivElement | null>(null)
 
   const reload = useCallback(() => {
     setImgSrc(undefined)
-    setElement(null)
   }, [])
 
   const onRender = useCallback(
-    (el: HTMLDivElement | null) => {
-      setElement(el)
-      const scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop
+    (element: HTMLDivElement | null) => {
       if (!element) {
         return
       }
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop
       setIsLoading(true)
+      setImgSrc(undefined)
       html2canvas(element, {
         useCORS: true,
         allowTaint: true,
@@ -50,7 +48,7 @@ export function useHtml2Canvas(options?: { onError?: <E>(error: E) => void }) {
           setIsLoading(false)
         })
     },
-    [element, options]
+    [options]
   )
 
   return {
