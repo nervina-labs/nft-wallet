@@ -58,6 +58,7 @@
     },
     "login": {
       "title": "NFT Account",
+      "select": "选择您的登录方式",
       "connect": {
         "unipass": "Connect to UniPass",
         "metamask": "Connect to Ethereum Environment",
@@ -68,8 +69,20 @@
         "not-support": "The current environment does not support connecting to Ethereum",
         "refuse": "User rejects authorization, please reopen the page for authorization"
       },
-      "desc-1": "View and manage",
-      "desc-2": "your NFT anytime, anywhere"
+      "slides": {
+        "1": {
+          "line-1": "随手分享秘宝",
+          "line-2": "邀好友一起鉴赏"
+        },
+        "2": {
+          "line-1": "方便快捷操作",
+          "line-2": "探索秘宝宇宙"
+        },
+        "3": {
+          "line-1": "随时随地查看并",
+          "line-2": "管理你持有的秘宝"
+        }
+      }
     },
     "nfts": {
       "title": "My NFT",
@@ -242,6 +255,7 @@
     },
     "menu": {
       "profile": "Profile",
+      "order": "我的订单",
       "txs": "Activity",
       "language": "Language",
       "help": "Help",
@@ -335,7 +349,8 @@
       "scan": "Scan by Wechat",
       "desc": "Enter Mibao Shop",
       "save": "Save Image",
-      "buy": "Buy"
+      "buy": "Buy",
+      "sold-out": "售罄"
     },
     "claim": {
       "tips": "You have a NFT to be claimed",
@@ -478,6 +493,78 @@
         "go-back": "Back to redeem center",
         "error": "Please check your network and redeem rules",
         "redeeming": "Redeeming"
+      }
+    },
+    "orders": {
+      "title": "订单列表",
+      "detail": "订单详情",
+      "tabs": {
+        "all": "全部",
+        "placed": "待付款",
+        "paid": "接收中",
+        "done": "已接收"
+      },
+      "no-data": "暂无订单",
+      "no-more": "没有更多订单了",
+      "state": {
+        "order_placed": "待付款",
+        "paid": "接收中",
+        "expired": "交易关闭",
+        "closed": "交易关闭",
+        "done": "交易成功",
+        "refunded": "已退款"
+      },
+      "paid-payment": "实付：",
+      "needed-payment": "需付款：",
+      "success": "支付成功",
+      "send-soon": "秘宝将很快发送到您的账户地址上",
+      "be-patient": "请耐心等待",
+      "check": "点击查看我的订单",
+      "countdown": "{{minutes}} 分 {{seconds}} 秒内付款，超时订单将自动关闭",
+      "drawer": {
+        "submit": "提交订单",
+        "confirm": "确认支付",
+        "limit": "每人限购数量为：{{limit}}",
+        "count": "购买数量：",
+        "remain": "剩余：{{remain}}",
+        "wechat": "微信支付",
+        "alipay": "支付宝支付",
+        "paypal": "PayPal 支付",
+        "select-title": "选择支付方式",
+        "confirm-title": "支付订单",
+        "select-more": "点击切换更多支付方式",
+        "channel": "支付方式",
+        "warning": "请在 5 分钟内完成支付，支付成功后系统将会自动发送秘宝到你的地址上。该过程可能会需要 2-3 分钟，请耐心等待。",
+        "place-order-error": "购买失败，请检查当前网络情况",
+        "submit-order-error": "创建订单失败，请检查当前网络情况",
+        "reject-payment-error": "用户拒绝支付，请重新支付",
+        "continue-payment": "继续支付"
+      },
+      "actions": {
+        "cancel": "取消支付",
+        "pay-and-hold": "付款并持有"
+      },
+      "dialog": {
+        "cancel-title": "确认放弃付款吗？",
+        "cancel-desc": "您的订单已提交成功\n请在 <b>5 分钟</b>内完成支付",
+        "cancel-confirm": "继续付款",
+        "cancel-quit": "暂时放弃",
+        "delete-title": "确认取消订单吗？",
+        "delete-desc": "您的订单已提交成功\n取消订单将会失去持有秘宝的机会",
+        "delete-confirm": "我想支付并持有",
+        "delete-quit": "取消订单",
+        "contact": "订单问题请联系客服：",
+        "copy-email": "复制邮件地址",
+        "copy-email-address": "复制邮件地址"
+      },
+      "info": {
+        "title": "订单信息",
+        "address": "接收地址：",
+        "uuid": "订单号：",
+        "created_at": "下单时间：",
+        "paid_at": "支付时间：",
+        "send-at": "发送时间：",
+        "done_timestamp": "接收时间："
       }
     },
     "follow": {
