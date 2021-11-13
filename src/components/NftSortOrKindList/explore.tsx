@@ -64,6 +64,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           hasCardBack={token.card_back_content_exist}
           resizeScale={300}
           webp={isSupportWebp()}
+          rounded="22px"
         />
         <Box
           fontSize="16px"

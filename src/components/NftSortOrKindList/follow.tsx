@@ -46,6 +46,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           webp: isSupportWebp(),
         }}
         onClick={gotoClass}
+        rounded="30px"
       />
       <Grid
         templateColumns="25px calc(100% - 25px - 65px) 60px"

@@ -4,8 +4,8 @@ import {
   AspectRatio,
   Flex,
   Grid,
-  Avatar,
   Skeleton,
+  Issuer,
 } from '@mibao-ui/components'
 import { useQuery } from 'react-query'
 import { useAPI } from '../../../hooks/useAccount'
@@ -93,7 +93,7 @@ const Item: React.FC<SpecialAssets> = ({
                 h="full"
                 resizeScale={100}
                 webp={isSupportWebp()}
-                rounded="10px"
+                rounded="22px"
               />
             </AspectRatio>
             <Flex direction="column" py="5px" pl="10px">
@@ -106,30 +106,18 @@ const Item: React.FC<SpecialAssets> = ({
               >
                 {tokenClass.name}
               </Box>
-              <Flex>
-                <Avatar
-                  src={
-                    tokenClass.issuer_info.avatar_url === null
-                      ? ''
-                      : tokenClass.issuer_info.avatar_url
-                  }
-                  isVerified={tokenClass?.verified_info?.is_verified}
-                  resizeScale={150}
-                  webp={isSupportWebp()}
-                  size="25px"
-                />
-                <Box
-                  fontSize="12px"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                  w="calc(100% - 30px)"
-                  lineHeight="25px"
-                  ml="5px"
-                >
-                  {tokenClass.issuer_info.name}
-                </Box>
-              </Flex>
+              <Issuer
+                name={tokenClass.issuer_info.name}
+                size="25px"
+                src={
+                  tokenClass.issuer_info.avatar_url === null
+                    ? ''
+                    : tokenClass.issuer_info.avatar_url
+                }
+                isVerified={tokenClass?.verified_info?.is_verified}
+                resizeScale={100}
+                webp={isSupportWebp()}
+              />
             </Flex>
           </Grid>
         ))}
