@@ -127,7 +127,6 @@ const CardBack: React.FC<{
         zIndex={2}
         transform="rotateY(180deg)"
         bg="rgba(255, 255, 255, 0.2)"
-        backdropFilter="blur(20px)"
         overflow="hidden"
         userSelect="text"
         pointerEvents={clickable ? undefined : 'none'}
@@ -361,7 +360,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             position="relative"
             color="white"
             fontSize="12px"
-            bg="rgba(0, 0, 0, 0.4)"
+            bg="rgba(0, 0, 0, 0.6)"
             rounded="8px"
             pr="6px"
             cursor="pointer"
