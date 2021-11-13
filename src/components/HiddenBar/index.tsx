@@ -21,12 +21,8 @@ const Container = styled(Stack)`
   height: 55px;
   z-index: 10;
   border-radius: 44px;
-  backdrop-filter: blur(32px);
   transform: translateX(-50%);
-  background: linear-gradient(
-    87.48deg,
-    rgba(255, 255, 255, 0.5) 6.39% #ffffff 99.5%
-  );
+  background-color: white;
   box-shadow: 0 4px 20px rgba(168, 193, 221, 0.2);
   border: 1px solid rgba(246, 246, 246, 0.1);
   width: 80%;

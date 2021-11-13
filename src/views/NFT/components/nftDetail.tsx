@@ -169,7 +169,6 @@ export const NftDetail: React.FC<{
         <Avatar
           src={avatarUrl}
           size="48px"
-          border="3px solid #f6f6f6"
           fallbackSrc={FallbackAvatarSrc}
           onClick={gotoIssuer}
           isVerified={detail?.verified_info?.is_verified}

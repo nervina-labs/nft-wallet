@@ -18,7 +18,6 @@ const Container = styled.div`
       background-size: auto 100%;
       background-position: center 0;
       background-repeat: no-repeat;
-      border-radius: 4px;
     }
   }
 `

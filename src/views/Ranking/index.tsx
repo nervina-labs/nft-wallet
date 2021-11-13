@@ -1,17 +1,110 @@
-import { Avatar, Box, Flex, Grid, Image } from '@mibao-ui/components'
+import { Avatar, Box, Center, Flex, Grid, Image } from '@mibao-ui/components'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, Redirect, useParams } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAccount'
 import { Query } from '../../models'
-import { Appbar, BgAnimation, Container, RankNumber } from '../Collection'
-import FALLBACK from '../../assets/svg/fallback.svg'
+import FALLBACK from '../../assets/img/nft-fallback.png'
 import { isSupportWebp } from '../../utils'
 import { RankBorderBox } from '../../components/RankIcon'
-import { RankTop } from '../Collection/ranktop'
+import { RankTop } from './ranktop'
 import { RoutePath } from '../../routes'
 import { useFirstOpenScrollToTop } from '../../hooks/useFirstOpenScrollToTop'
+import { useHistoryBack } from '../../hooks/useHistoryBack'
+import {
+  AppbarSticky,
+  Appbar as RowAppbar,
+  AppbarButton,
+} from '../../components/Appbar'
+import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import { MainContainer } from '../../styles'
+import styled from '@emotion/styled'
+
+export const Container = styled(MainContainer)`
+  background: linear-gradient(192.04deg, #e5eff5 44.62%, #ffecde 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  @keyframes run {
+    0% {
+      transform: translateX(0);
+    }
+
+    50% {
+      transform: translateX(50%);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+`
+export const BgAnimation: React.FC = () => {
+  return (
+    <>
+      <Box
+        position="absolute"
+        top="20px"
+        right="20%"
+        w="166px"
+        h="166px"
+        bg="#FFA4E0"
+        filter="blur(50px)"
+        animation="run 5s ease infinite alternate"
+        zIndex={1}
+      />
+      <Box
+        position="absolute"
+        top="10px"
+        left="20%"
+        w="214px"
+        h="214px"
+        bg="#FFEB90"
+        filter="blur(90px)"
+        animation="run 10s ease infinite alternate"
+        zIndex={1}
+      />
+    </>
+  )
+}
+
+export const Appbar: React.FC<{ title: string }> = ({ title }) => {
+  const goBack = useHistoryBack()
+  return (
+    <AppbarSticky backdropFilter="blur(10px)">
+      <RowAppbar
+        transparent
+        left={
+          <AppbarButton onClick={goBack}>
+            <BackSvg />
+          </AppbarButton>
+        }
+        title={title}
+      />
+    </AppbarSticky>
+  )
+}
+
+export const RankNumber: React.FC<{
+  n: number
+}> = ({ n }) => {
+  return (
+    <Center
+      bg="linear-gradient(192.04deg, #E2E3FF 50.5%, #EADEFF 100%)"
+      m="auto"
+      mr="0"
+      rounded="full"
+      w="20px"
+      h="20px"
+      fontSize="12px"
+    >
+      {n}
+    </Center>
+  )
+}
 
 export const Ranking: React.FC = () => {
   const { i18n } = useTranslation('translations')
@@ -94,6 +187,7 @@ export const Ranking: React.FC = () => {
                           : issuers[v].avatar_url
                       }
                       size={v === 0 ? '60px' : '48px'}
+                      border="none"
                     />
                   </RankBorderBox>
                   <Box
