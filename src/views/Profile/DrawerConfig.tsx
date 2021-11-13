@@ -202,6 +202,7 @@ export const DrawerConfig: React.FC<DrawerConfigProps> = ({
       isOpen={isDrawerOpen}
       onClose={close}
       hasOverlay
+      autoFocus={false}
       rounded="lg"
       contentProps={drawerContentProps}
     >

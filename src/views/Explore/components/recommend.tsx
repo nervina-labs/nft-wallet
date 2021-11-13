@@ -4,8 +4,8 @@ import {
   AspectRatio,
   Flex,
   Grid,
-  Avatar,
   Skeleton,
+  Issuer,
 } from '@mibao-ui/components'
 import { useQuery } from 'react-query'
 import { useAPI } from '../../../hooks/useAccount'
@@ -15,6 +15,7 @@ import { ReactComponent as MoreSvg } from '../../../assets/svg/recommend-more.sv
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { isSupportWebp } from '../../../utils'
+import FALLBACK from '../../../assets/img/nft-fallback.png'
 
 const Item: React.FC<SpecialAssets> = ({
   locales,
@@ -45,6 +46,7 @@ const Item: React.FC<SpecialAssets> = ({
                 mt: 'auto',
                 zIndex: i === 1 ? 2 : 1,
               }}
+              fallbackSrc={FALLBACK}
             />
           ))}
         <Box
@@ -57,6 +59,7 @@ const Item: React.FC<SpecialAssets> = ({
           bg={`linear-gradient(360deg, ${bgColor} -16.67%, rgba(194, 201, 254, 0.24) 80.56%)`}
           transform="perspective(50px) rotateX(60deg)"
           transformOrigin="bottom"
+          opacity={0.7}
         />
       </Flex>
       <Box
@@ -92,7 +95,8 @@ const Item: React.FC<SpecialAssets> = ({
                 h="full"
                 resizeScale={100}
                 webp={isSupportWebp()}
-                rounded="10px"
+                rounded="22px"
+                fallbackSrc={FALLBACK}
               />
             </AspectRatio>
             <Flex direction="column" py="5px" pl="10px">
@@ -105,30 +109,18 @@ const Item: React.FC<SpecialAssets> = ({
               >
                 {tokenClass.name}
               </Box>
-              <Flex>
-                <Avatar
-                  src={
-                    tokenClass.issuer_info.avatar_url === null
-                      ? ''
-                      : tokenClass.issuer_info.avatar_url
-                  }
-                  isVerified={tokenClass?.verified_info?.is_verified}
-                  resizeScale={150}
-                  webp={isSupportWebp()}
-                  size="25px"
-                />
-                <Box
-                  fontSize="12px"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                  w="calc(100% - 30px)"
-                  lineHeight="25px"
-                  ml="5px"
-                >
-                  {tokenClass.issuer_info.name}
-                </Box>
-              </Flex>
+              <Issuer
+                name={tokenClass.issuer_info.name}
+                size="25px"
+                src={
+                  tokenClass.issuer_info.avatar_url === null
+                    ? ''
+                    : tokenClass.issuer_info.avatar_url
+                }
+                isVerified={tokenClass?.verified_info?.is_verified}
+                resizeScale={100}
+                webp={isSupportWebp()}
+              />
             </Flex>
           </Grid>
         ))}

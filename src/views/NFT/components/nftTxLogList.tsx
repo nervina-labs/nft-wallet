@@ -48,7 +48,6 @@ const UserWithAddress: React.FC<{
   return (
     <Grid
       templateColumns="25px calc(100% - 25px - 8px)"
-      h="25px"
       cursor="pointer"
       onClick={goToHolderOrIssuer}
     >
@@ -70,7 +69,7 @@ const UserWithAddress: React.FC<{
         webp={isSupportWebp()}
         resizeScale={100}
       />
-      <Stack ml="8px" spacing="0" h="30px">
+      <Stack ml="8px" spacing="4px" h="30px">
         {nickname ? (
           <>
             <Box

@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/indent */
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  CSSProperties,
+} from 'react'
 import {
   useInfiniteQuery,
   QueryFunction,
@@ -52,6 +58,7 @@ export interface InfiniteListProps<
   enableQuery?: boolean
   columnCount?: number
   gap?: string
+  style?: CSSProperties
 }
 
 interface GridsProps<TQueryFnData = unknown, TData = TQueryFnData> {
@@ -119,6 +126,7 @@ export function InfiniteList<
   enableQuery,
   columnCount = 1,
   gap = '10px',
+  style,
 }: InfiniteListProps<TQueryFnData, TError, TData, TQueryKey>) {
   const [t] = useTranslation('translations')
   const {
@@ -198,6 +206,7 @@ export function InfiniteList<
               {dataLength <= 5 ? ' ' : noMoreElement}
             </ListDesciption>
           }
+          style={style}
         >
           {columnCount === 1 ? (
             data?.pages?.map((group, i) => {
