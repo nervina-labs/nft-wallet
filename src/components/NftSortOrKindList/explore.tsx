@@ -97,7 +97,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           />
         </HStack>
         {token.product_price && (
-          <Box fontWeight="500" fontSize="12px" mt="7px">
+          <Box fontWeight="500" fontSize="14px" mt="7px">
             ¥{token.product_price}
           </Box>
         )}
