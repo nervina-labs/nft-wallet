@@ -50,6 +50,9 @@ export const Routers: React.FC = () => {
       fallbacks: {
         nft: NFTFallbackImg,
       },
+      fonts: {
+        body: 'Poppins',
+      },
     })
   }, [t])
 
