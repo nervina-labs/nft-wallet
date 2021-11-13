@@ -215,7 +215,7 @@ export const usePlaceOrder = () => {
           })
         })
       },
-      [api, getAuth]
+      [api, getAuth, closeOrderDrawer]
     )
   )
 }

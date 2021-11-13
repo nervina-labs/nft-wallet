@@ -141,7 +141,7 @@ export const ImagePreview: React.FC = () => {
         })
       }
       if (fromCamera) {
-        history.go(-2)
+        history.replace(RoutePath.Profile)
       } else {
         history.replace(route.from)
       }
@@ -196,7 +196,7 @@ export const ImagePreview: React.FC = () => {
       onConfirm: onSave,
       onCancel() {
         if (fromCamera) {
-          history.go(-2)
+          history.replace(RoutePath.Profile)
         } else {
           history.goBack()
         }
@@ -223,7 +223,11 @@ export const ImagePreview: React.FC = () => {
         {!isBlob && !tokenUuid ? (
           <div
             className="cancel"
-            onClick={() => history.replace(RoutePath.TakePhoto)}
+            onClick={() => {
+              history.replace(RoutePath.Profile, {
+                showCamera: true,
+              })
+            }}
           >
             {t('profile.reshot')}
           </div>

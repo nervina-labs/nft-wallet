@@ -94,7 +94,7 @@ export const RankNumber: React.FC<{
 export const Appbar: React.FC<{ title: string }> = ({ title }) => {
   const goBack = useHistoryBack()
   return (
-    <AppbarSticky backdropFilter="blur(10px)">
+    <AppbarSticky>
       <RowAppbar
         transparent
         left={
