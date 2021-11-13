@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { CONTAINER_MAX_WIDTH, IS_IMTOKEN } from '../../constants'
+import { CONTAINER_MAX_WIDTH, IS_IMTOKEN, IS_WEBKIT } from '../../constants'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
@@ -35,6 +35,7 @@ import { Autoplay } from 'swiper'
 import Slide1 from '../../assets/img/login/slide-1.png'
 import Slide2 from '../../assets/img/login/slide-2.png'
 import Slide3 from '../../assets/img/login/slide-3.png'
+import classNames from 'classnames'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -146,6 +147,12 @@ const Container = styled(MainContainer)`
     margin-top: 12px;
     color: #000000;
     opacity: 0.4;
+
+    &.normal {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      position: initial;
+    }
     a {
       text-decoration: none;
       font-size: 10px;
@@ -313,7 +320,7 @@ export const Login: React.FC = () => {
         </Swiper>
       </div>
       <LoginButton
-        mt="15%"
+        mt={IS_WEBKIT ? '5%' : '15%'}
         onClick={() => {
           if (!isLicenseChecked) {
             toast(t('license.warn'), {
@@ -421,7 +428,7 @@ export const Login: React.FC = () => {
         </Checkbox>
       </div>
       {i18n.language !== 'en' ? (
-        <footer className="beian">
+        <footer className={classNames('beian', { normal: IS_WEBKIT })}>
           <a
             href="https://beian.miit.gov.cn/"
             target="_blank"
