@@ -187,6 +187,7 @@ export const Ranking: React.FC = () => {
                           : issuers[v].avatar_url
                       }
                       size={v === 0 ? '60px' : '48px'}
+                      border="none"
                     />
                   </RankBorderBox>
                   <Box

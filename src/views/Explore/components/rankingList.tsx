@@ -78,7 +78,6 @@ const Item: React.FC<RankingItem> = ({
               src={issuer.avatar_url === null ? '' : issuer.avatar_url}
               size="50px"
               isVerified={issuer.verified_info?.is_verified}
-              border="2px solid #f6f6f6"
               webp={isSupportWebp()}
               resizeScale={150}
             />
