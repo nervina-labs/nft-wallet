@@ -204,8 +204,7 @@ export const Share: React.FC<ShareProps> = ({
             ) : null}
 
             <Flex
-              bg="rgba(255, 255, 255, 0.7)"
-              backdropFilter="blur(15px)"
+              bg="rgba(255, 255, 255, 0.8)"
               w="full"
               maxW="500px"
               mx="auto"
