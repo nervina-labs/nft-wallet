@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { TokenClass } from '../../models/class-list'
 import { Link, useHistory } from 'react-router-dom'
 import { ReactComponent as EmptySvg } from '../../assets/svg/follow-empty.svg'
+import { ReactComponent as UnFollowSvg } from '../../assets/svg/unfollow.svg'
 import { isSupportWebp } from '../../utils'
 import { RoutePath } from '../../routes'
 
@@ -135,7 +136,10 @@ export const Follow: React.FC<{
       queryKey={[Query.Explore, sort, api]}
       emptyElement={
         <Box textAlign="center" minH="600px">
-          <Box color="#777E90" mb="16px" mt="300px">
+          <Center mt="100px">
+            <UnFollowSvg />
+          </Center>
+          <Box color="#777E90" mb="16px">
             {t('follow.no-data')}
           </Box>
           <Link to={RoutePath.Explore} style={{ textDecoration: 'underline' }}>

@@ -20,6 +20,7 @@ import { useHistoryBack } from '../../hooks/useHistoryBack'
 import styled from 'styled-components'
 import { RankTop } from './ranktop'
 import { RoutePath } from '../../routes'
+import { useFirstOpenScrollToTop } from '../../hooks/useFirstOpenScrollToTop'
 
 export const Container = styled(MainContainer)`
   background: linear-gradient(192.04deg, #e5eff5 44.62%, #ffecde 100%);
@@ -131,6 +132,7 @@ export const Collection: React.FC = () => {
     [api, id]
   )
   const [topTokenClass, setTopTokenClass] = useState<TokenClass[] | undefined>()
+  useFirstOpenScrollToTop()
 
   if (error && failureCount >= 3) {
     return <Redirect to={RoutePath.NotFound} />

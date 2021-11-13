@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { HiddenBar } from '../../components/HiddenBar'
+import { HiddenBar, HiddenBarFill } from '../../components/HiddenBar'
 import { MainContainer } from '../../styles'
 import Exhibition from '../../assets/img/exhibition2.png'
 import PlzWait from '../../assets/img/plz-wait.png'
@@ -251,7 +251,6 @@ export const Apps: React.FC = () => {
 
   return (
     <Container>
-      <HiddenBar alwaysShow />
       <div className="welcome" style={{ background: `url(${ShopBg})` }}>
         <span>{t('apps.welcome')}</span>
       </div>
@@ -274,6 +273,8 @@ export const Apps: React.FC = () => {
       <br />
       <br />
       <br />
+      <HiddenBar alwaysShow />
+      <HiddenBarFill />
     </Container>
   )
 }

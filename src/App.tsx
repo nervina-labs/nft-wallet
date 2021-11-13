@@ -7,6 +7,7 @@ import { I18nextProvider } from 'react-i18next'
 import '@mibao-ui/components/mibao-ui.esm.css'
 import 'swiper/swiper.min.css'
 import 'swiper/modules/autoplay/autoplay.min.css'
+import 'swiper/modules/pagination/pagination.min.css'
 import i18n from './i18n'
 
 IntryUrl.set(location.href.split('#')[0])

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import { useAPI } from '../../hooks/useAccount'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { Query, ClassSortType as SortType } from '../../models'
@@ -14,8 +14,8 @@ import {
   Tabs,
   NftImage,
   Like,
-  Grid,
-  Avatar,
+  HStack,
+  Issuer,
 } from '@mibao-ui/components'
 import { TokenClass } from '../../models/class-list'
 import { useLike } from '../../hooks/useLikeStatus'
@@ -38,14 +38,16 @@ const tabProps: TabProps = {
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { i18n } = useTranslation('translations')
   const { push } = useHistory()
-  const gotoClass = useCallback(() => {
-    push(`/class/${token.uuid}`)
-  }, [push, token.uuid])
-  const gotoIssuer = useCallback(() => {
-    if (token.issuer_info?.uuid) {
-      push(`/issuer/${token.issuer_info?.uuid}`)
-    }
-  }, [push, token.issuer_info?.uuid])
+  const gotoIssuer = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      if (token.issuer_info?.uuid) {
+        push(`/issuer/${token.issuer_info?.uuid}`)
+      }
+    },
+    [push, token.issuer_info?.uuid]
+  )
   const { likeCount, isLikeLoading, toggleLike, isLiked } = useLike({
     count: token.class_likes,
     liked: token.class_liked,
@@ -54,65 +56,53 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   })
 
   return (
-    <Box w="full" pb="20px">
-      <NftImage
-        src={token.bg_image_url === null ? '' : token.bg_image_url}
-        type={token.renderer_type}
-        hasCardBack={token.card_back_content_exist}
-        onClick={gotoClass}
-        resizeScale={300}
-        webp={isSupportWebp()}
-      />
-      <Box
-        fontSize="16px"
-        onClick={gotoClass}
-        mt="15px"
-        mb="10px"
-        textOverflow="ellipsis"
-        overflow="hidden"
-        whiteSpace="nowrap"
-      >
-        {token.name}
-      </Box>
-      <Grid
-        templateColumns="25px calc(100% - 30px - 50px) 40px"
-        onClick={gotoIssuer}
-      >
-        <Avatar
-          src={
-            token.issuer_info?.avatar_url === null
-              ? ''
-              : token.issuer_info?.avatar_url
-          }
-          resizeScale={50}
+    <Link to={`/class/${token.uuid}`}>
+      <Box w="full" pb="20px">
+        <NftImage
+          src={token.bg_image_url === null ? '' : token.bg_image_url}
+          type={token.renderer_type}
+          hasCardBack={token.card_back_content_exist}
+          resizeScale={300}
           webp={isSupportWebp()}
-          isVerified={token.verified_info?.is_verified}
         />
         <Box
-          fontSize="12px"
-          fontWeight="300"
-          lineHeight="25px"
-          whiteSpace="nowrap"
+          fontSize="16px"
+          mt="15px"
+          mb="10px"
           textOverflow="ellipsis"
           overflow="hidden"
-          px="10px"
-        >
-          {token.issuer_info?.name}
-        </Box>
-        <Like
-          likeCount={likeCount}
-          isLiked={isLiked}
-          isLoading={isLikeLoading}
-          onClick={toggleLike}
           whiteSpace="nowrap"
-        />
-      </Grid>
-      {token.product_price && (
-        <Box fontWeight="500" fontSize="12px" mt="7px">
-          ¥{token.product_price}
+        >
+          {token.name}
         </Box>
-      )}
-    </Box>
+        <HStack justifyContent="space-between">
+          <Issuer
+            src={
+              token.issuer_info?.avatar_url === null
+                ? ''
+                : token.issuer_info?.avatar_url
+            }
+            name={token.issuer_info?.name as string}
+            size="25px"
+            isVerified={token.verified_info?.is_verified}
+            onClick={gotoIssuer}
+            webp={isSupportWebp()}
+          />
+          <Like
+            likeCount={likeCount}
+            isLiked={isLiked}
+            isLoading={isLikeLoading}
+            onClick={toggleLike}
+            whiteSpace="nowrap"
+          />
+        </HStack>
+        {token.product_price && (
+          <Box fontWeight="500" fontSize="12px" mt="7px">
+            ¥{token.product_price}
+          </Box>
+        )}
+      </Box>
+    </Link>
   )
 }
 

@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { Redirect, useParams } from 'react-router'
 import { RoutePath } from '../../routes'
-import { HiddenBar } from '../../components/HiddenBar'
+import { HiddenBar, HiddenBarFill } from '../../components/HiddenBar'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { Container } from './styled'
 import { Intro } from '../../components/Intro'
@@ -60,6 +60,7 @@ export const NFTs: React.FC = () => {
         <>
           <Intro show={showGuide} />
           <HiddenBar />
+          <HiddenBarFill />
         </>
       )}
     </Container>
