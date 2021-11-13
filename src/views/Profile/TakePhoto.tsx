@@ -92,7 +92,7 @@ export const TakePhoto: React.FC = () => {
         }}
       />
       <footer>
-        <div className="cancel" onClick={() => history.push(RoutePath.Profile)}>
+        <div className="cancel" onClick={() => history.goBack()}>
           {t('profile.cancel')}
         </div>
         <div className="circle" onClick={takePhoto}>

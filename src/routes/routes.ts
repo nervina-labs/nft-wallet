@@ -5,7 +5,6 @@ import { NFTs } from '../views/NFTs'
 import { Transfer } from '../views/Transfer'
 import { Profile } from '../views/Profile'
 import { ImagePreview } from '../views/Profile/ImagePreview'
-import { TakePhoto } from '../views/Profile/TakePhoto'
 import { Explore } from '../views/Explore/index'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
@@ -92,12 +91,6 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'ImagePreview',
     path: RoutePath.ImagePreview,
-  },
-  {
-    component: TakePhoto,
-    exact: true,
-    key: 'TakePhoto',
-    path: RoutePath.TakePhoto,
   },
   {
     component: AddressCollector,

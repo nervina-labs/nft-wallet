@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Redirect, useHistory } from 'react-router'
+import { Redirect, useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
 import { MainContainer } from '../../styles'
@@ -21,6 +21,7 @@ import { getNFTQueryParams } from '../../utils'
 import { SetDesc } from './setDesc'
 import { SetUsername } from './setUserName'
 import { useToast } from '../../hooks/useToast'
+import { TakePhoto } from './TakePhoto'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -96,11 +97,17 @@ export const Profile: React.FC = () => {
 
   const toast = useToast()
 
+  const location = useLocation<{ showCamera: boolean }>()
+
+  const showCamera = !!location.state?.showCamera
+
   if (!isLogined) {
     return <Redirect to={RoutePath.Explore} />
   }
 
-  return (
+  return showCamera ? (
+    <TakePhoto />
+  ) : (
     <Container>
       <Appbar title={t('profile.title')} right={<div />} />
       <section className="main">
