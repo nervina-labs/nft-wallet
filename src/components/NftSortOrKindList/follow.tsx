@@ -161,6 +161,9 @@ export const Follow: React.FC<{
           return <Card token={token} key={`${i}-${j}`} />
         })
       }}
+      style={{
+        overflowX: 'hidden',
+      }}
     />
   )
 }

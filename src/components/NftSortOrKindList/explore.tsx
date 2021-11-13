@@ -200,6 +200,9 @@ export const Explore: React.FC<{
             return <Card token={token} key={`${i}-${j}`} />
           })
         }}
+        style={{
+          overflowX: 'hidden',
+        }}
       />
     </>
   )
