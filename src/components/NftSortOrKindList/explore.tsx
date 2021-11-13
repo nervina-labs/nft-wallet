@@ -148,6 +148,9 @@ export const Explore: React.FC<{
     },
     [setCurrentTag, tags]
   )
+  const stopPropagation = useCallback((e) => {
+    e?.stopPropagation()
+  }, [])
 
   if (isLoading || !tags) {
     return null
@@ -163,7 +166,12 @@ export const Explore: React.FC<{
         zIndex={2}
         position="relative"
       >
-        <TabList borderBottom="none" overflow="auto">
+        <TabList
+          borderBottom="none"
+          overflow="auto"
+          onScroll={stopPropagation}
+          onTouchMove={stopPropagation}
+        >
           <Tab {...tabProps}>{t('explore.recommended')}</Tab>
           {tags?.map((tag) => (
             <Tab {...tabProps} key={tag.name}>
