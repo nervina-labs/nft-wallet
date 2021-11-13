@@ -57,6 +57,7 @@ const Item: React.FC<SpecialAssets> = ({
           bg={`linear-gradient(360deg, ${bgColor} -16.67%, rgba(194, 201, 254, 0.24) 80.56%)`}
           transform="perspective(50px) rotateX(60deg)"
           transformOrigin="bottom"
+          opacity={0.7}
         />
       </Flex>
       <Box
