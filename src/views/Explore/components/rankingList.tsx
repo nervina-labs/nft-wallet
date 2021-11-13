@@ -6,8 +6,7 @@ import { Query } from '../../../models'
 import { RankingItem } from '../../../models/rank'
 import { ReactComponent as MoreSvg } from '../../../assets/svg/recommend-more.svg'
 import { RankIcon } from '../../../components/RankIcon'
-import { Link, useHistory } from 'react-router-dom'
-import { useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import { isSupportWebp } from '../../../utils'
 
 const RANKING_EMOJI_MAP: { [key in string]: string } = {
@@ -25,20 +24,10 @@ const Item: React.FC<RankingItem> = ({
   uuid,
 }) => {
   const { t, i18n } = useTranslation('translations')
-  const { push } = useHistory()
-  const gotoRanking = useCallback(() => {
-    push(`/explore/ranking/${uuid}`)
-  }, [push, uuid])
 
   return (
-    <>
-      <Flex
-        justify="space-between"
-        fontSize="16px"
-        mb="20px"
-        cursor="pointer"
-        onClick={gotoRanking}
-      >
+    <Link to={`/explore/ranking/${uuid}`}>
+      <Flex justify="space-between" fontSize="16px" mb="20px" cursor="pointer">
         <Box>
           {RANKING_EMOJI_MAP[name] ?? ''} {locales?.[i18n.language]}
         </Box>
@@ -54,76 +43,72 @@ const Item: React.FC<RankingItem> = ({
 
       <Box>
         {tokenClasses?.slice(0, 3).map((token, i) => (
-          <Link to={`/class/${token.uuid}`} key={i}>
-            <Grid
-              key={i}
-              mb="15px"
-              templateColumns={'60px calc(100% - 120px) 60px'}
+          <Grid
+            key={i}
+            mb="15px"
+            templateColumns={'60px calc(100% - 120px) 60px'}
+          >
+            <Image
+              src={token.bg_image_url === null ? '' : token.bg_image_url}
+              w="50px"
+              h="50px"
+              rounded="10px"
+              resizeScale={100}
+              webp={isSupportWebp()}
+            />
+            <Box
+              whiteSpace="nowrap"
+              textOverflow="ellipsis"
+              overflow="hidden"
+              ml="10px"
             >
-              <Image
-                src={token.bg_image_url === null ? '' : token.bg_image_url}
-                w="50px"
-                h="50px"
-                rounded="10px"
-                resizeScale={100}
-                webp={isSupportWebp()}
-              />
+              {token.name}
+            </Box>
+            <Box m="auto" mr="0">
+              <RankIcon rank={i} variant="trophy" />
+            </Box>
+          </Grid>
+        ))}
+
+        {issuers?.slice(0, 3).map((issuer, i) => (
+          <Grid mb="15px" templateColumns={'60px calc(100% - 120px) 60px'}>
+            <Avatar
+              src={issuer.avatar_url === null ? '' : issuer.avatar_url}
+              size="50px"
+              isVerified={issuer.verified_info?.is_verified}
+              border="2px solid #f6f6f6"
+              webp={isSupportWebp()}
+              resizeScale={150}
+            />
+            <Flex direction="column" mx="10px">
               <Box
                 whiteSpace="nowrap"
                 textOverflow="ellipsis"
                 overflow="hidden"
-                ml="10px"
+                fontWeight="500"
+                fontSize="14px"
               >
-                {token.name}
+                {issuer.name}
               </Box>
-              <Box m="auto" mr="0">
-                <RankIcon rank={i} variant="trophy" />
+              <Box
+                whiteSpace="nowrap"
+                textOverflow="ellipsis"
+                overflow="hidden"
+                fontWeight="500"
+                fontSize="12px"
+                color="#777E90"
+                mt="auto"
+              >
+                {issuer.verified_info?.verified_title}
               </Box>
-            </Grid>
-          </Link>
-        ))}
-
-        {issuers?.slice(0, 3).map((issuer, i) => (
-          <Link to={`/issuer/${issuer.uuid}`} key={i}>
-            <Grid mb="15px" templateColumns={'60px calc(100% - 120px) 60px'}>
-              <Avatar
-                src={issuer.avatar_url === null ? '' : issuer.avatar_url}
-                size="50px"
-                isVerified={issuer.verified_info?.is_verified}
-                border="2px solid #f6f6f6"
-                webp={isSupportWebp()}
-                resizeScale={150}
-              />
-              <Flex direction="column" mx="10px">
-                <Box
-                  whiteSpace="nowrap"
-                  textOverflow="ellipsis"
-                  overflow="hidden"
-                  fontWeight="500"
-                  fontSize="14px"
-                >
-                  {issuer.name}
-                </Box>
-                <Box
-                  whiteSpace="nowrap"
-                  textOverflow="ellipsis"
-                  overflow="hidden"
-                  fontWeight="500"
-                  fontSize="12px"
-                  color="#777E90"
-                  mt="auto"
-                >
-                  {issuer.verified_info?.verified_title}
-                </Box>
-              </Flex>
-              <Box m="auto" mr="0">
-                <RankIcon rank={i} variant="text" />
-              </Box>
-            </Grid>
-          </Link>
+            </Flex>
+            <Box m="auto" mr="0">
+              <RankIcon rank={i} variant="text" />
+            </Box>
+          </Grid>
         ))}
       </Box>
-    </>
+    </Link>
   )
 }
 
