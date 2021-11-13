@@ -8,6 +8,7 @@ import { ReactComponent as MoreSvg } from '../../../assets/svg/recommend-more.sv
 import { RankIcon } from '../../../components/RankIcon'
 import { Link } from 'react-router-dom'
 import { isSupportWebp } from '../../../utils'
+import FALLBACK from '../../../assets/img/nft-fallback.png'
 
 const RANKING_EMOJI_MAP: { [key in string]: string } = {
   hot_sale_issuer: '🏆',
@@ -55,6 +56,7 @@ const Item: React.FC<RankingItem> = ({
               rounded="10px"
               resizeScale={100}
               webp={isSupportWebp()}
+              fallbackSrc={FALLBACK}
             />
             <Box
               whiteSpace="nowrap"

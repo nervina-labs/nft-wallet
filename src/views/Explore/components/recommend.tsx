@@ -15,6 +15,7 @@ import { ReactComponent as MoreSvg } from '../../../assets/svg/recommend-more.sv
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { isSupportWebp } from '../../../utils'
+import FALLBACK from '../../../assets/img/nft-fallback.png'
 
 const Item: React.FC<SpecialAssets> = ({
   locales,
@@ -45,6 +46,7 @@ const Item: React.FC<SpecialAssets> = ({
                 mt: 'auto',
                 zIndex: i === 1 ? 2 : 1,
               }}
+              fallbackSrc={FALLBACK}
             />
           ))}
         <Box
@@ -94,6 +96,7 @@ const Item: React.FC<SpecialAssets> = ({
                 resizeScale={100}
                 webp={isSupportWebp()}
                 rounded="22px"
+                fallbackSrc={FALLBACK}
               />
             </AspectRatio>
             <Flex direction="column" py="5px" pl="10px">
