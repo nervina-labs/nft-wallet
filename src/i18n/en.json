@@ -58,7 +58,7 @@
     },
     "login": {
       "title": "NFT Account",
-      "select": "选择您的登录方式",
+      "select": "Log in with",
       "connect": {
         "unipass": "Connect to UniPass",
         "metamask": "Connect to Ethereum Environment",
