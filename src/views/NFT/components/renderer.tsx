@@ -170,6 +170,7 @@ const CardBack: React.FC<{
               whiteSpace="nowrap"
               textOverflow="ellipsis"
               overflow="hidden"
+              px="20px"
             >
               {t('nft.lock')}
             </Box>
