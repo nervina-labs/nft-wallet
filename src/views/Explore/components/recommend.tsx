@@ -28,8 +28,9 @@ const Item: React.FC<SpecialAssets> = ({
   return (
     <>
       <Flex h="105px" position="relative" justify="center" pb="15px">
-        {tokenClasses.slice(0, 3).map((t, i) => {
-          return (
+        {[1, 0, 2]
+          .map((i) => tokenClasses[i])
+          .map((t, i) => (
             <Image
               key={i}
               src={t.bg_image_url === null ? '' : t.bg_image_url}
@@ -48,8 +49,7 @@ const Item: React.FC<SpecialAssets> = ({
               }}
               fallbackSrc={FALLBACK}
             />
-          )
-        })}
+          ))}
         <Box
           position="absolute"
           w="full"
