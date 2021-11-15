@@ -3,7 +3,7 @@ type ChainType = 'mainnet' | 'testnet'
 
 export const BOWSER_BROWSER = Bowser.getParser(window.navigator.userAgent)
 export const IS_DESKTOP = BOWSER_BROWSER.getPlatformType() === 'desktop'
-
+export const IS_CHROME = BOWSER_BROWSER.getBrowserName() === 'Chrome'
 export const SERVER_URL =
   process.env.REACT_APP_SERVER_URL ??
   'https://goldenlegend.staging.nervina.cn/api/wallet/v1'
