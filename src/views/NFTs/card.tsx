@@ -112,7 +112,7 @@ export const Card: React.FC<CardProps> = ({
     : `/nft/${token.token_uuid}`
 
   return (
-    <Box position="relative" w="100%" mb="24px" px="20px">
+    <Box position="relative" w="100%" mb="35px" px="20px">
       <Label address={address} nft={token} />
       <NFTCard
         w="100%"
