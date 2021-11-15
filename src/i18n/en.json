@@ -31,10 +31,10 @@
         "long-press-to-save": "Long press to save",
         "poster": {
           "desc-1": "Scanning QR code",
-          "desc-nft": "Enjoy the digital collection",
-          "desc-holder": "Watch the NFT collector I found",
-          "desc-my": "Come to the Mibao to enjoy my NFT",
-          "desc-issuer": "Enjoy the works of the creator of the NFT",
+          "desc-nft": "Enjoy the Digital Collection",
+          "desc-holder": "To see the MIBAO Collector I found",
+          "desc-my": "Come and see my Digital Collections at MIBAO",
+          "desc-issuer": "Enjoy the Digital Works of the MIBAO Creators",
           "collected": "Collected"
         }
       },
@@ -94,8 +94,8 @@
         "receiving": "Receiving",
         "tranferring": "Transferring"
       },
-      "no-data": "Awwww... You do not yet own any NFT",
-      "no-likes": "You have not yet liked any NFT",
+      "no-data": "Awwww... You do not yet own any Digital Collection",
+      "no-likes": "You have not yet liked any Digital Collection",
       "link": "Explore NFT Meta-universe",
       "welcome": "Welcome to NFT universe",
       "hi": "Hi, NFT collector",
@@ -296,11 +296,11 @@
       },
       "red-envelope": {
         "title": "Unipass Red Pocket",
-        "desc": "Send NFT red pockets"
+        "desc": "Send Collection red pockets"
       },
       "ticket": {
         "title": "UniPass Ticket",
-        "desc": "Show your NFT ticket, get the follow-up utility"
+        "desc": "Show your Collections ticket, get the follow-up utility"
       },
       "dao": {
         "title": "Mi·DAO",
@@ -308,7 +308,7 @@
       },
       "exchange": {
         "title": "Prize Redeem",
-        "desc": "Collect NFT(s) to redeem prizes"
+        "desc": "Collect Digital Collections to redeem prize"
       },
       "exhibition": {
         "title": "Exhibition hall",
@@ -316,7 +316,7 @@
       },
       "vip": {
         "title": "VIP Community",
-        "desc": "Only can be accessed by holding a special NFT"
+        "desc": "Only can be accessed by holding a special Digital Collection"
       }
     },
     "resource": {
@@ -386,8 +386,8 @@
       "othder-prize": "The organizer will give out the prize after you submit the redeem",
       "redeem-time": "Time: ",
       "type": {
-        "token": "NFT",
-        "blind_box": "NFT Mystery Box",
+        "token": "Digtal collection",
+        "blind_box": "Mystery Box",
         "custom": "Others"
       },
       "progress": "Progress",
@@ -519,7 +519,7 @@
       "needed-payment": "Pay: ",
       "success": "Paid successfully",
       "send-soon": "Digital collection will be sent to your address soon",
-      "be-patient": "请耐心等待",
+      "be-patient": "Please be patient",
       "check": "Check my order",
       "countdown": "Please pay within {{minutes}} minites {{seconds}} seconds, overtime orders will be automatically closed",
       "drawer": {
