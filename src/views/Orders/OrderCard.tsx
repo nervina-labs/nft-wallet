@@ -57,11 +57,16 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
   )
   const deleteOrder = useDeleteOrder()
 
-  const gotoClassDetail = useCallback(() => {
-    if (order.token_class_uuid) {
-      history.push(`/class/${order.token_class_uuid}`)
-    }
-  }, [history, order])
+  const gotoClassDetail = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      e.stopPropagation()
+      e.preventDefault()
+      if (order.token_class_uuid) {
+        history.push(`/class/${order.token_class_uuid}`)
+      }
+    },
+    [history, order]
+  )
 
   return (
     <Box
