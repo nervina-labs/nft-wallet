@@ -3,11 +3,6 @@
   src: url("./assets/fonts/Poppins-Regular.ttf") format("woff2");
 }
 
-@font-face {
-  font-family: "SourceHanSans";
-  src: url("./assets/fonts/SourceHanSansCN-Regular.otf") format("woff2");
-}
-
 body {
   margin: 0;
   font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",

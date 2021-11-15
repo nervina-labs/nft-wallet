@@ -36,11 +36,7 @@ export const Routers: React.FC = () => {
 
   const theme = useMemo(() => {
     const font =
-      (IS_ANDROID
-        ? i18n.language === 'en'
-          ? 'Poppins, '
-          : 'SourceHanSans, '
-        : '') +
+      (IS_ANDROID && i18n.language === 'en' ? 'Poppins, ' : '') +
       `"PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
       "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
       sans-serif`
