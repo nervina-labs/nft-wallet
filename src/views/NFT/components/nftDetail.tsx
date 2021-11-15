@@ -16,6 +16,7 @@ import {
 import { NFTDetail } from '../../../models'
 import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as OwnedSealSvg } from '../../../assets/svg/owned-seal.svg'
+import { ReactComponent as OwnedSealENSvg } from '../../../assets/svg/owned-seal-en.svg'
 import styled from 'styled-components'
 import { Follow } from '../../../components/Follow'
 import { useTranslation } from 'react-i18next'
@@ -154,7 +155,7 @@ export const NftDetail: React.FC<{
           </Box>
           {isOwned ? (
             <Center w="50px">
-              <OwnedSealSvg />
+              {i18n.language === 'en' ? <OwnedSealENSvg /> : <OwnedSealSvg />}
             </Center>
           ) : null}
         </Flex>
