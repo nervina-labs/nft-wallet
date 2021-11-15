@@ -24,6 +24,7 @@ const Item: React.FC<SpecialAssets> = ({
   token_classes: tokenClasses,
 }) => {
   const { t, i18n } = useTranslation('translations')
+
   return (
     <>
       <Flex h="105px" position="relative" justify="center" pb="15px">
@@ -174,7 +175,9 @@ export const Recommend: React.FC = () => {
                 cursor="pointer"
               >
                 <Link to={`/explore/collection/${specialAssets.uuid}`}>
-                  <Item {...specialAssets} />
+                  {specialAssets.token_classes?.length >= 3 ? (
+                    <Item {...specialAssets} />
+                  ) : null}
                 </Link>
               </Flex>
             ))}
