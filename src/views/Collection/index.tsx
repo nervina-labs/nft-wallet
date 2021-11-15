@@ -70,7 +70,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
 }
 
 export const Collection: React.FC = () => {
-  const { i18n } = useTranslation('translations')
+  const { i18n, t } = useTranslation('translations')
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const goBack = useHistoryBack()
@@ -120,8 +120,8 @@ export const Collection: React.FC = () => {
           enableQuery
           queryFn={queryFn}
           queryKey={[Query.Collection, api, id]}
-          emptyElement={null}
-          noMoreElement={null}
+          emptyElement={t('issuer.no-data')}
+          noMoreElement={t('common.actions.pull-to-down')}
           calcDataLength={(data) =>
             data?.pages.reduce(
               (acc, token) => token.class_list.length + acc,

@@ -92,7 +92,12 @@ const NftDetailTab: React.FC<{
       <TabPanels minH="200px">
         <TabPanel p="20px">
           <SkeletonText isLoaded={!isLoading} spacing={4} noOfLines={3}>
-            <Box fontSize="14px" color="#777E90" userSelect="text">
+            <Box
+              fontSize="14px"
+              color="#777E90"
+              userSelect="text"
+              whiteSpace="pre-wrap"
+            >
               {detail?.description ? detail?.description : t('nft.no-desc')}
             </Box>
           </SkeletonText>
