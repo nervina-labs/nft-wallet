@@ -24,12 +24,12 @@ const Item: React.FC<SpecialAssets> = ({
   token_classes: tokenClasses,
 }) => {
   const { t, i18n } = useTranslation('translations')
+
   return (
     <>
       <Flex h="105px" position="relative" justify="center" pb="15px">
-        {[1, 0, 2]
-          .map((i) => tokenClasses[i])
-          .map((t, i) => (
+        {tokenClasses.slice(0, 3).map((t, i) => {
+          return (
             <Image
               key={i}
               src={t.bg_image_url === null ? '' : t.bg_image_url}
@@ -48,7 +48,8 @@ const Item: React.FC<SpecialAssets> = ({
               }}
               fallbackSrc={FALLBACK}
             />
-          ))}
+          )
+        })}
         <Box
           position="absolute"
           w="full"
@@ -174,7 +175,9 @@ export const Recommend: React.FC = () => {
                 cursor="pointer"
               >
                 <Link to={`/explore/collection/${specialAssets.uuid}`}>
-                  <Item {...specialAssets} />
+                  {specialAssets.token_classes?.length >= 3 ? (
+                    <Item {...specialAssets} />
+                  ) : null}
                 </Link>
               </Flex>
             ))}
