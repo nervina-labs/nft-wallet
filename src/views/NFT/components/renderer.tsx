@@ -232,9 +232,11 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   } = useDisclosure()
   const toast = useToast()
   const onRendererError = useCallback(() => {
-    toast(t('resource.fail'))
-    onClosePreview()
-  }, [onClosePreview, t, toast])
+    if (isOpenPreview) {
+      toast(t('resource.fail'))
+      onClosePreview()
+    }
+  }, [t, toast, isOpenPreview, onClosePreview])
   const onPreview = useCallback(
     (e) => {
       if (!showCardBackContent) {
@@ -335,6 +337,11 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               </LoadableComponent>
             ) : null
           }
+          bgImageOnError={() => {
+            if (detail?.renderer_type === NftType.Picture) {
+              onRendererError()
+            }
+          }}
           type={detail?.renderer_type}
           onError={onRendererError}
         />
