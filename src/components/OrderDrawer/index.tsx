@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 // import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { useWidth } from '../../hooks/useWidth'
@@ -15,6 +15,7 @@ import { SelectPayment } from './SelectPayment'
 import { ConfirmPayment } from './ConfirmPayment'
 import { useAtom } from 'jotai'
 import { Reselect } from './Reselect'
+import { useTranslation } from 'react-i18next'
 
 const DrawerContainer = styled.div`
   display: flex;
@@ -39,7 +40,7 @@ const Comps: Record<OrderStep, React.FC> = {
 export const OrderDrawer: React.FC = () => {
   const bodyRef = useRef(document.body)
   const bodyWidth = useWidth(bodyRef)
-
+  const { i18n } = useTranslation('translations')
   const drawerLeft = useMemo(() => {
     if (bodyWidth == null) {
       return 0
@@ -56,15 +57,18 @@ export const OrderDrawer: React.FC = () => {
 
   const [isOpen, setOpen] = useAtom(isDrawerOpenAtom)
   const resetOrder = useResetOrderState()
+
+  const reset = useCallback(() => {
+    resetOrder()
+    setOpen(false)
+  }, [resetOrder, setOpen])
+
   return (
     <Drawer
       placement="bottom"
       isOpen={isOpen}
       hasOverlay
-      onClose={() => {
-        resetOrder()
-        setOpen(false)
-      }}
+      onClose={reset}
       rounded="lg"
       autoFocus={false}
       contentProps={{
@@ -72,7 +76,7 @@ export const OrderDrawer: React.FC = () => {
         style: {
           left: drawerLeft,
         },
-        height: '350px',
+        height: i18n.language === 'en' ? '380px' : '350px',
         borderRadius: '20px',
         borderBottomRadius: 0,
       }}

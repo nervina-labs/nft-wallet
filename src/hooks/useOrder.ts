@@ -12,7 +12,7 @@ import {
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
-import { IS_WEXIN } from '../constants'
+import { IS_DESKTOP, IS_WEBKIT, IS_WEXIN } from '../constants'
 import { NftType, Query } from '../models'
 import { useAPI } from './useAccount'
 import { useConfirmDialog } from './useConfirmDialog'
@@ -181,7 +181,7 @@ export const usePlaceOrder = () => {
   const { closeOrderDrawer } = useOrderDrawer()
   return useAtomCallback(
     useCallback(
-      async (get) => {
+      async (get, set) => {
         const auth = await getAuth()
         const { uuid, channel, productId, count } = get(placeOrderPropsAtom)
         const { data } = await (productId
@@ -200,6 +200,19 @@ export const usePlaceOrder = () => {
         const pingxx = await import('pingpp-js')
         if (channel === PaymentChannel.AlipayMobile && IS_WEXIN) {
           pingxx.setAPURL(`${location.origin}/alipay.htm`)
+        }
+        if (!IS_WEXIN && IS_WEBKIT) {
+          pingxx.setUrlReturnCallback(
+            function (err: any, url: string) {
+              if (err) {
+                throw new Error('')
+              }
+              location.href = url
+              closeOrderDrawer()
+              set(orderStepAtom, OrderStep.Init)
+            },
+            [PaymentChannel.AlipayMobile]
+          )
         }
         return await new Promise<void>((resolve, reject) => {
           pingxx.createPayment(data, function (result: string, err: any) {
@@ -275,7 +288,9 @@ export const useContinueOrder = () => {
       setProps({
         count,
         uuid,
-        channel: channel || PaymentChannel.AlipayMobile,
+        channel:
+          channel ||
+          (IS_DESKTOP ? PaymentChannel.AlipayPC : PaymentChannel.AlipayMobile),
       })
       setDrawerVisable(true)
       setStep(OrderStep.ConfirmOrder)
