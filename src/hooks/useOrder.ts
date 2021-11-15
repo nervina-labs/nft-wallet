@@ -12,7 +12,13 @@ import {
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
-import { IS_DESKTOP, IS_WEBKIT, IS_WEXIN } from '../constants'
+import {
+  IS_ANDROID,
+  IS_CHROME,
+  IS_DESKTOP,
+  IS_WEBKIT,
+  IS_WEXIN,
+} from '../constants'
 import { NftType, Query } from '../models'
 import { useAPI } from './useAccount'
 import { useConfirmDialog } from './useConfirmDialog'
@@ -212,6 +218,24 @@ export const usePlaceOrder = () => {
               set(orderStepAtom, OrderStep.Init)
             },
             [PaymentChannel.AlipayMobile]
+          )
+        }
+        if (
+          channel === PaymentChannel.WechatMobile &&
+          !IS_WEXIN &&
+          IS_CHROME &&
+          IS_ANDROID
+        ) {
+          pingxx.setUrlReturnCallback(
+            function (err: any, url: string) {
+              if (err) {
+                throw new Error('unknown')
+              }
+              location.replace(url)
+              closeOrderDrawer()
+              set(orderStepAtom, OrderStep.Init)
+            },
+            [PaymentChannel.WechatMobile]
           )
         }
         return await new Promise<void>((resolve, reject) => {
