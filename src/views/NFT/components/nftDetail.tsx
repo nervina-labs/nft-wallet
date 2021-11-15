@@ -22,13 +22,14 @@ import { Follow } from '../../../components/Follow'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuery } from '../../../hooks/useRouteQuery'
 import { useCallback, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useRouteMatch } from 'react-router-dom'
 import { NftTxLogsList } from './nftTxLogList'
 import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 import { isSupportWebp } from '../../../utils'
 import { Tag, TagLabel } from '@chakra-ui/react'
+import { RoutePath } from '../../../routes'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -132,6 +133,8 @@ export const NftDetail: React.FC<{
     }
   }, [detail?.issuer_info?.uuid, push])
 
+  const matchNFT = useRouteMatch(RoutePath.NFT)
+
   return (
     <Box py="20px">
       <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={2} px="20px">
@@ -153,7 +156,7 @@ export const NftDetail: React.FC<{
               ) : null}
             </Flex>
           </Box>
-          {isOwned ? (
+          {isOwned && matchNFT?.isExact ? (
             <Center w="50px">
               {i18n.language === 'en' ? <OwnedSealENSvg /> : <OwnedSealSvg />}
             </Center>
