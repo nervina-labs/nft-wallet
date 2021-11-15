@@ -35,3 +35,8 @@ model-viewer {
   --poster-color: rgba(0 , 0, 0, 0);
   --poster-image: rgba(0 , 0, 0, 0);
 }
+
+:root {
+  --input-bg-color: #f6f6f6;
+  --secondary-font-color: #777e90;
+}

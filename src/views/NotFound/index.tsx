@@ -1,8 +1,8 @@
 import React from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { Appbar } from '../../components/Appbar'
-import { Button } from '../../components/Button'
+import { Appbar, AppbarButton } from '../../components/Appbar'
+import { Button } from '@mibao-ui/components'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import NotFoundPng from '../../assets/img/404.png'
@@ -51,12 +51,14 @@ export const NotFound: React.FC = () => {
       <Appbar
         title={t('404.title')}
         left={
-          <img
-            src={AccountPng}
-            onClick={() => {
-              history.push(RoutePath.Info)
-            }}
-          />
+          <AppbarButton>
+            <img
+              src={AccountPng}
+              onClick={() => {
+                history.push(RoutePath.NFTs)
+              }}
+            />
+          </AppbarButton>
         }
         right={<div />}
       />
@@ -64,7 +66,12 @@ export const NotFound: React.FC = () => {
         <div className="content">
           <img src={NotFoundPng} alt={t('404.not-found')} />
           <div className="desc">{t('404.not-found')}</div>
-          <Button type="primary" onClick={() => history.push(RoutePath.NFTs)}>
+          <Button
+            colorScheme="primary"
+            variant="solid"
+            onClick={() => history.push(RoutePath.NFTs)}
+            size="sm"
+          >
             {t('404.back')}
           </Button>
         </div>

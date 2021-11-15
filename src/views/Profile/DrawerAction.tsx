@@ -1,9 +1,9 @@
-import { Drawer } from '@material-ui/core'
 import React, { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { useWidth } from '../../hooks/useWidth'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
+import { Drawer } from '@mibao-ui/components'
 
 export const Action = styled.div`
   display: flex;
@@ -61,45 +61,42 @@ export const DrawerAction: React.FC<DrawerConfigProps> = ({
     if (bodyWidth <= CONTAINER_MAX_WIDTH) {
       return 0
     }
-    return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
+    return (bodyWidth - CONTAINER_MAX_WIDTH) / 2
   }, [bodyWidth])
 
   return (
     <Drawer
-      anchor="bottom"
-      open={isDrawerOpen}
-      onBackdropClick={close}
-      PaperProps={{
+      placement="bottom"
+      isOpen={isDrawerOpen}
+      hasOverlay
+      onClose={close}
+      rounded="lg"
+      contentProps={{
         style: {
-          position: 'absolute',
-          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
-          left: drawerLeft,
-          borderTopLeftRadius: '25px',
-          borderTopRightRadius: '25px',
+          left: `${drawerLeft + 20}px`,
+          bottom: '40px',
+          maxWidth: `calc(${
+            drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH + 'px'}`
+          } - 40px)`,
         },
+        borderRadius: '20px',
       }}
-      variant="temporary"
-      disableEnforceFocus
-      disableEscapeKeyDown
-      disableScrollLock={window.innerWidth >= 500}
     >
       <DrawerContainer>
         {actions.map((action) => {
           return (
             <Action
-              onClick={() => actionOnClick(action.value)}
+              onClick={() => {
+                close()
+                actionOnClick(action.value)
+              }}
               key={action.value}
             >
               {action.content}
             </Action>
           )
         })}
-        <Action
-          style={{ paddingBottom: '16px', marginTop: '10px' }}
-          onClick={close}
-        >
-          {t('profile.cancel')}
-        </Action>
+        <Action onClick={close}>{t('profile.cancel')}</Action>
       </DrawerContainer>
     </Drawer>
   )

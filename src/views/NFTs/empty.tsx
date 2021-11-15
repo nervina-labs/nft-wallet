@@ -1,26 +1,20 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import Emptypng from '../../assets/img/empty.png'
-import { LazyLoadImage } from '../../components/Image'
-import { RoutePath } from '../../routes'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
-import { Link } from 'react-router-dom'
+import { ReactComponent as NoNFT } from '../../assets/svg/no-nft.svg'
+import { ReactComponent as NoLike } from '../../assets/svg/no-like.svg'
+import { ReactComponent as NoFollower } from '../../assets/svg/no-follow.svg'
+import { IS_DESKTOP } from '../../constants'
 
 const Container = styled.div`
-  margin-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  img {
-    margin-top: 100px;
-  }
+  justify-content: center;
   .desc {
-    margin-top: 30px;
-    font-size: 15px;
-    line-height: 22px;
-    color: rgba(0, 0, 0, 0.6);
-    font-weight: 600;
+    font-size: 14px;
+    color: #777e90;
   }
   .link {
     margin-top: 15px;
@@ -36,10 +30,9 @@ export const Empty: React.FC<{
   showExplore?: boolean
 }> = ({ showExplore = true }) => {
   const { t } = useTranslation('translations')
-  const isLiked = useRouteQuery('liked', '')
-  const tag = useRouteQuery<string>('tag', '')
-  const follow = useRouteQuery<string>('follow', '')
-  const isFollow = tag === 'follow' || follow
+  const listTag = useRouteQuery<string>('list', '')
+  const isLiked = listTag === 'liked'
+  const isFollow = listTag === 'follow'
   const desc = useMemo(() => {
     if (isLiked) {
       return t('nfts.no-likes')
@@ -48,15 +41,24 @@ export const Empty: React.FC<{
     }
     return t('nfts.no-data')
   }, [t, isLiked, isFollow])
+
+  const img = useMemo(() => {
+    if (isLiked) {
+      return <NoLike />
+    } else if (isFollow) {
+      return <NoFollower />
+    }
+    return <NoNFT />
+  }, [isLiked, isFollow])
+
   return (
-    <Container>
-      <LazyLoadImage src={Emptypng} width={260} height={172} />
+    <Container
+      style={{
+        marginTop: IS_DESKTOP ? '60px' : '0',
+      }}
+    >
+      {img}
       <div className="desc">{desc}</div>
-      {showExplore ? (
-        <Link className="link" to={RoutePath.Explore}>
-          {t('nfts.link')}
-        </Link>
-      ) : null}
     </Container>
   )
 }

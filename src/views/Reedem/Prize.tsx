@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { LazyLoadImage } from '../../components/Image'
@@ -16,7 +16,7 @@ import { getImagePreviewUrl } from '../../utils'
 import { RedeeemLabel } from './Label'
 import FallbackImg from '../../assets/svg/fallback.svg'
 import { NFTCard } from './NFTCard'
-import { PhotoProvider } from 'react-photo-view'
+import { Preview, useDisclosure } from '@mibao-ui/components'
 
 export interface PriceCardProps {
   info: RewardInfo
@@ -160,6 +160,8 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
   showLabel,
 }) => {
   const [t] = useTranslation('translations')
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [previewImage, setPreviewImage] = useState('')
   return (
     <OthderPriceContainer>
       {showLabel ? (
@@ -173,35 +175,46 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
       <div className="price-title">{prizes.reward_name}</div>
       <div className="price-desc">{prizes.reward_description}</div>
       <div className="imgs">
-        <PhotoProvider maskClassName="preview-mask" toolbarRender={() => null}>
-          {prizes.images.map((p, i) => {
-            return (
-              <div className="img" key={p + i}>
-                <LazyLoadImage
-                  src={getImagePreviewUrl(p)}
-                  dataSrc={p}
-                  enablePreview
-                  width={140}
-                  height={140}
-                  skeletonStyle={{ borderRadius: '8px' }}
-                  cover={true}
-                  imageStyle={{ borderRadius: '8px' }}
-                  disableContextMenu={true}
-                  backup={
-                    <LazyLoadImage
-                      skeletonStyle={{ borderRadius: '8px' }}
-                      width={140}
-                      cover
-                      height={140}
-                      src={FallbackImg}
-                    />
-                  }
-                />
-              </div>
-            )
-          })}
-        </PhotoProvider>
+        {prizes.images.map((p, i) => {
+          return (
+            <div
+              className="img"
+              key={p + i}
+              onClick={() => {
+                setPreviewImage(p)
+                onOpen()
+              }}
+            >
+              <LazyLoadImage
+                src={getImagePreviewUrl(p)}
+                width={140}
+                height={140}
+                skeletonStyle={{ borderRadius: '8px' }}
+                cover={true}
+                imageStyle={{ borderRadius: '8px' }}
+                disableContextMenu={true}
+                backup={
+                  <LazyLoadImage
+                    skeletonStyle={{ borderRadius: '8px' }}
+                    width={140}
+                    cover
+                    height={140}
+                    src={FallbackImg}
+                  />
+                }
+              />
+            </div>
+          )
+        })}
       </div>
+      <Preview
+        isOpen={isOpen}
+        onClose={onClose}
+        renderer={previewImage}
+        bgImgUrl={previewImage}
+        type="image"
+        render3D={() => null}
+      />
     </OthderPriceContainer>
   )
 }

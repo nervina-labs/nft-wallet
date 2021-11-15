@@ -1,35 +1,89 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
-import Logo from '../../assets/img/login.png'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { IS_IMTOKEN } from '../../constants'
-import Button from '@material-ui/core/Button'
-import { CircularProgress, FormControlLabel, Checkbox } from '@material-ui/core'
-import { LazyLoadImage } from '../../components/Image'
-import { ActionDialog } from '../../components/ActionDialog'
-import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
-import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
+import { CONTAINER_MAX_WIDTH, IS_IMTOKEN, IS_WEBKIT } from '../../constants'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { Redirect, useHistory, useLocation } from 'react-router'
+import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
 import { useTranslation, Trans } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
 import { getLicenseUrl } from '../../data/license'
 import { UnipassConfig } from '../../utils'
-import { useSnackbar } from '../../hooks/useSnackbar'
+import { useToast } from '../../hooks/useToast'
 import { useAccountStatus, useLogin, WalletType } from '../../hooks/useAccount'
+import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
+import { Appbar, AppbarButton } from '../../components/Appbar'
+import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import {
+  Drawer,
+  useDisclosure,
+  Center,
+  Text,
+  Stack,
+  Flex,
+  Heading,
+} from '@mibao-ui/components'
+import { AspectRatio, Checkbox } from '@chakra-ui/react'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { LoginButton } from '../../components/LoginButton'
+import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js'
+import { Autoplay } from 'swiper'
+import Slide1 from '../../assets/img/login/slide-1.png'
+import Slide2 from '../../assets/img/login/slide-2.png'
+import Slide3 from '../../assets/img/login/slide-3.png'
+import classNames from 'classnames'
 
 const Container = styled(MainContainer)`
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
-  background: white;
-  padding: 20px 0;
+  background: linear-gradient(192.04deg, #e2e3ff 50.5%, #eadeff 100%);
+  position: relative;
+  overflow-x: hidden;
 
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    filter: blur(100px);
+    position: absolute;
+    z-index: 0;
+    border-radius: 100%;
+  }
+  &:before {
+    width: 166px;
+    height: 166px;
+    right: 30px;
+    top: 104px;
+    background: #ffa4e0;
+    animation: run-bg-animation 5s infinite alternate;
+  }
+
+  &:after {
+    width: 214px;
+    height: 214px;
+    left: 60px;
+    top: 25px;
+    background: #ffeb90;
+    animation: run-bg-animation 10s infinite alternate;
+  }
+
+  @keyframes run-bg-animation {
+    0% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(50%, 0);
+    }
+    100% {
+      transform: translate(-50%, 0);
+    }
+  }
+
+  min-height: 100%;
   .close {
     width: 24px;
     height: 24px;
@@ -57,22 +111,17 @@ const Container = styled(MainContainer)`
   }
 
   .header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .status {
-      margin-right: 4px;
-      font-weight: normal;
-      font-size: 12px;
-      line-height: 17px;
-      color: #000000;
-    }
+    width: 100%;
+    z-index: 2;
+    position: relative;
   }
   .logo {
     margin-top: 15px;
     margin-bottom: 15px;
-    margin-left: 50px;
-    margin-right: 50px;
+    max-width: 100%;
+    padding: 0 24px;
+    z-index: 2;
+    position: relative;
   }
 
   .desc {
@@ -93,12 +142,6 @@ const Container = styled(MainContainer)`
 
     .imtoken {
       margin: 0 4px;
-    }
-
-    svg {
-      g {
-        fill: white;
-      }
     }
 
     &:disabled {
@@ -125,34 +168,24 @@ const Container = styled(MainContainer)`
     }
   }
 
-  .question {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #232222;
-    font-size: 12px;
-    margin-top: 30px;
-    cursor: pointer;
-    svg {
-      margin-right: 4px;
-    }
-  }
-
   .license {
-    .MuiFormControlLabel-label {
-      font-size: 12px;
-    }
-    .MuiFormControlLabel-root {
-      margin: 0;
-    }
+    font-size: 12px;
   }
 
   .beian {
+    position: fixed;
+    bottom: 20px;
     display: flex;
     align-items: center;
     margin-top: 12px;
     color: #000000;
     opacity: 0.4;
+
+    &.normal {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      position: initial;
+    }
     a {
       text-decoration: none;
       font-size: 10px;
@@ -164,14 +197,6 @@ const Container = styled(MainContainer)`
   }
 `
 
-const Title = styled.h2`
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 28px;
-  color: #000000;
-  margin: 0;
-`
-
 enum ErrorMsg {
   NotSupport = 'not-support',
   Imtoken = 'refuse',
@@ -181,30 +206,34 @@ export const Login: React.FC = () => {
   const { login } = useLogin()
   const { isLogined } = useAccountStatus()
   const { t, i18n } = useTranslation('translations')
+  const onConfirm = useConfirmDialog()
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isLicenseChecked, setIsLicenseChecked] = useState(false)
-  const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
-  const { snackbar } = useSnackbar()
+  const toast = useToast()
   const history = useHistory()
   const location = useLocation<{ redirect?: string }>()
   const redirectUrl = location?.state?.redirect
-  const errorMsg = useMemo(() => {
-    return t(`login.errors.${errorStatus}`)
-  }, [errorStatus, t])
+  const {
+    isOpen: isDrawerOpen,
+    onOpen: drawerOnOpen,
+    onClose: drawerOnClose,
+  } = useDisclosure()
 
   const containerRef = useRef(null)
-  const containerWidth = useWidth(containerRef)
-  const width = useMemo(() => {
-    const w = containerWidth ?? 0
-    if (w === 0) {
+
+  const bodyRef = useRef(document.body)
+  const bodyWidth = useWidth(bodyRef)
+  const drawerLeft = useMemo(() => {
+    if (bodyWidth == null) {
       return 0
     }
-    // 100 = margin * 2
-    return w - 100
-  }, [containerWidth])
+    if (bodyWidth <= CONTAINER_MAX_WIDTH) {
+      return 0
+    }
+    return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
+  }, [bodyWidth])
 
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
@@ -224,17 +253,15 @@ export const Login: React.FC = () => {
   }
   const loginBtnOnClick = useCallback(
     async (walletType = WalletType.Unipass) => {
-      if (!isLicenseChecked) {
-        snackbar(t('license.warn'))
-        return
-      }
       setLoading(true, walletType)
       try {
         if (walletType === WalletType.Metamask) {
           const provider = await detectEthereumProvider()
           if (!provider) {
-            setErrorMsg(ErrorMsg.NotSupport)
-            setIsErrorDialogOpen(true)
+            onConfirm({
+              type: 'error',
+              title: t(`login.errors.${ErrorMsg.NotSupport}`),
+            })
             setLoading(false, walletType)
             return
           }
@@ -247,14 +274,34 @@ export const Login: React.FC = () => {
       } catch (error) {
         setLoading(false, walletType)
         if (IS_IMTOKEN && walletType === WalletType.Metamask) {
-          setErrorMsg(ErrorMsg.Imtoken)
-          setIsErrorDialogOpen(true)
+          onConfirm({
+            type: 'error',
+            title: t(`login.errors.${ErrorMsg.Imtoken}`),
+          })
           setLoading(false, walletType)
         }
       }
     },
-    [login, isLicenseChecked, snackbar, t, redirectUrl, history]
+    [login, redirectUrl, onConfirm, t, history]
   )
+
+  const slides = [
+    {
+      src: Slide1,
+      desc1: '',
+      desc2: '',
+    },
+    {
+      src: Slide2,
+      desc1: '',
+      desc2: '',
+    },
+    {
+      src: Slide3,
+      desc1: '',
+      desc2: '',
+    },
+  ]
 
   if (isLogined && redirectUrl == null) {
     return <Redirect to={RoutePath.NFTs} />
@@ -262,113 +309,163 @@ export const Login: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
-      <div
-        className="close"
-        onClick={() => {
-          UnipassConfig.clear()
-          history.replace(RoutePath.Explore)
-        }}
-      >
-        <CloseSvg />
-      </div>
       <div className="header">
-        <Title style={{ marginRight: '8px' }}>{t('login.title')}</Title>
-      </div>
-      <div className="logo">
-        <LazyLoadImage src={Logo} width={width} height={width * 1.091} />
-      </div>
-      <ActionDialog
-        icon={<FailSvg />}
-        content={errorMsg}
-        open={isErrorDialogOpen}
-        onConfrim={() => setIsErrorDialogOpen(false)}
-        onBackdropClick={() => setIsErrorDialogOpen(false)}
-      />
-      <div className="center">
-        <p className="desc">{t('login.desc-1')}</p>
-        <p className="desc">{t('login.desc-2')}</p>
-      </div>
-      <Button
-        className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
-        disabled={
-          isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-        }
-        onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
-      >
-        {t('login.connect.unipass')}&nbsp;
-        {isUnipassLogining ? (
-          <CircularProgress className="loading" size="1em" />
-        ) : null}
-      </Button>
-      <Button
-        className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}
-        disabled={
-          isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-        }
-        onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
-      >
-        {IS_IMTOKEN ? (
-          <>
-            {t('login.connect.connect')}
-            <ImtokenSvg className="imtoken" />
-          </>
-        ) : (
-          t('login.connect.metamask')
-        )}
-        &nbsp;
-        {isMetamaskLoging ? (
-          <CircularProgress className="loading" size="1em" />
-        ) : null}
-      </Button>
-      <div
-        className="question"
-        onClick={() => {
-          history.push(
-            `${RoutePath.Help}?url=${encodeURIComponent(
-              getHelpUnipassUrl(i18n.language)
-            )}`
-          )
-        }}
-      >
-        <QuestionSvg />
-        <span>{t('help.question')}</span>
-      </div>
-      <div className="license">
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isLicenseChecked}
-              onChange={() => setIsLicenseChecked(!isLicenseChecked)}
-              color="default"
-              name="license"
-              size="small"
-            />
-          }
-          label={
-            <Trans
-              ns="translations"
-              i18nKey="license.agree"
-              t={t}
-              components={{
-                a: (
-                  <span
-                    style={{ color: '#D8B340' }}
-                    onClick={() => {
-                      history.push(
-                        `${RoutePath.License}?url=${encodeURIComponent(
-                          getLicenseUrl(i18n.language)
-                        )}`
-                      )
-                    }}
-                  />
-                ),
+        <Appbar
+          transparent
+          left={
+            <AppbarButton
+              onClick={() => {
+                UnipassConfig.clear()
+                history.replace(RoutePath.Explore)
               }}
-            />
+            >
+              <BackSvg />
+            </AppbarButton>
           }
+          title={<FullLogo />}
         />
       </div>
+      <div className="logo">
+        <Swiper
+          modules={[Autoplay]}
+          navigation={false}
+          className="swiper"
+          pagination={{ clickable: true }}
+          loop
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+        >
+          {slides?.map((slide, i) => (
+            <SwiperSlide key={i}>
+              <Stack direction="column">
+                <AspectRatio ratio={1 / 1}>
+                  <img src={slide.src} />
+                </AspectRatio>
+                <Flex flexDirection="column" fontSize="24px" px="30px">
+                  <Heading textAlign="left" size="lg">
+                    {t(`login.slides.${i + 1}.line-1`)}
+                  </Heading>
+                  <Heading textAlign="right" color="#5065e5" size="lg">
+                    {t(`login.slides.${i + 1}.line-2`)}
+                  </Heading>
+                </Flex>
+              </Stack>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+      <LoginButton
+        mt={IS_WEBKIT ? '5%' : '15%'}
+        onClick={() => {
+          if (!isLicenseChecked) {
+            toast(t('license.warn'), {
+              textProps: {
+                fontSize: '12px',
+                px: '20px',
+                py: '5px',
+              },
+            })
+            return
+          }
+          drawerOnOpen()
+        }}
+      >
+        {t('common.login')}
+      </LoginButton>
+      <Drawer
+        placement="bottom"
+        isOpen={isDrawerOpen}
+        onClose={drawerOnClose}
+        hasOverlay
+        rounded="lg"
+        contentProps={{
+          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
+          style: {
+            left: drawerLeft,
+          },
+          overflow: 'hidden',
+        }}
+      >
+        <Center flexDirection="column" my="24px">
+          <Text fontSize="16px" mb="32px">
+            {t('login.select')}
+          </Text>
+          <LoginButton
+            className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
+            isLoading={isUnipassLogining}
+            disabled={
+              isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+            }
+            onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+            variant={IS_IMTOKEN ? 'outline' : 'solid'}
+          >
+            {t('login.connect.unipass')}
+          </LoginButton>
+          <LoginButton
+            className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}
+            disabled={
+              isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+            }
+            isLoading={isMetamaskLoging}
+            onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+            variant={!IS_IMTOKEN ? 'outline' : 'solid'}
+          >
+            {IS_IMTOKEN ? (
+              <>
+                {t('login.connect.connect')}
+                <ImtokenSvg className="imtoken" />
+              </>
+            ) : (
+              t('login.connect.metamask')
+            )}
+          </LoginButton>
+          <Link
+            to={`${RoutePath.Help}?url=${encodeURIComponent(
+              getHelpUnipassUrl(i18n.language)
+            )}`}
+          >
+            <Center>
+              <QuestionSvg />
+              <Text fontSize="12px" ml="4px">
+                {t('help.question')}
+              </Text>
+            </Center>
+          </Link>
+        </Center>
+      </Drawer>
+
+      <div className="license">
+        <Checkbox
+          isChecked={isLicenseChecked}
+          size="sm"
+          iconSize="12px"
+          onChange={() => setIsLicenseChecked(!isLicenseChecked)}
+        >
+          <Trans
+            ns="translations"
+            i18nKey="license.agree"
+            t={t}
+            components={{
+              a: (
+                <span
+                  style={{ color: '#5065E5' }}
+                  onClick={() => {
+                    history.push(
+                      `${RoutePath.License}?url=${encodeURIComponent(
+                        getLicenseUrl(i18n.language)
+                      )}`
+                    )
+                  }}
+                />
+              ),
+            }}
+          />
+        </Checkbox>
+      </div>
       {i18n.language !== 'en' ? (
-        <div className="beian">
+        <footer className={classNames('beian', { normal: IS_WEBKIT })}>
           <a
             href="https://beian.miit.gov.cn/"
             target="_blank"
@@ -376,19 +473,8 @@ export const Login: React.FC = () => {
           >
             {t('common.beian')}
           </a>
-        </div>
+        </footer>
       ) : null}
-      {/* <Button
-          disabled={
-            isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-          }
-          onClick={loginBtnOnClick.bind(null, WalletType.WalletConnect)}
-        >
-          {t('login.connect.wallet-connect')}&nbsp;
-          {isWalletConnectLoging ? (
-            <CircularProgress className="loading" size="1em" />
-          ) : null}
-        </Button> */}
     </Container>
   )
 }

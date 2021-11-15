@@ -2,6 +2,7 @@ export enum Query {
   DetectAddress = 'detect-address',
   Transactions = 'transactions',
   NFTDetail = 'nft-detail',
+  NFTTransactions = 'nft-transactions',
   NFTList = 'nft-list',
   Transfer = 'transfer',
   Explore = 'explore',
@@ -22,4 +23,7 @@ export enum Query {
   Claim = 'Claim',
   FollowedIssuers = 'FollowedIssuers',
   NftHolderList = 'nft-holder-list',
+  OrderList = 'order-list',
+  OrderDetail = 'OrderDetail',
+  RankingList = 'RankingList',
 }

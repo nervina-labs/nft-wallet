@@ -1,3 +1,6 @@
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
+
 module.exports = {
   babel: {
     plugins: ['babel-plugin-styled-components'],
@@ -11,6 +14,9 @@ module.exports = {
         )
         if (TerserPlugin) {
           TerserPlugin.options.terserOptions.compress.drop_console = true
+        }
+        if (process.env.ANALYZE_BUNDLE) {
+          webpackConfig.plugins.push(new BundleAnalyzerPlugin())
         }
       }
 

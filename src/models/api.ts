@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { NFT, NFTDetail } from './nft'
 import { ClassList, FollowClassList, Tag, TokenClass } from './class-list'
-import { Transaction } from './transactions'
+import { Transaction, TransactionLogResponse } from './transactions'
 import { Transaction as PwTransaction } from '@lay2/pw-core'
 import { Auth, User, UserResponse } from './user'
 import { SpecialAssets } from './special-assets'
@@ -25,6 +25,7 @@ import {
 } from './redeem'
 import { WxSignConfig } from './wx'
 import { GetHolderByTokenClassUuidResponse } from './holder'
+import { RankingListResponse } from './rank'
 
 export interface UnsignedTransaction {
   unsigned_tx: RPC.RawTransaction
@@ -45,6 +46,7 @@ export enum ClassSortType {
   Recommend = 'recommended',
   Latest = 'latest',
   Likes = 'likes',
+  OnSale = 'on_sale',
 }
 
 export interface SpecialCategories {
@@ -206,4 +208,30 @@ export interface NFTWalletAPI {
       limit?: number
     }
   ) => Promise<AxiosResponse<GetHolderByTokenClassUuidResponse>>
+
+  getTokenClassTransactions: (
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) => Promise<AxiosResponse<TransactionLogResponse>>
+
+  getTokenTransactions: (
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) => Promise<AxiosResponse<TransactionLogResponse>>
+
+  getUrlBase64: (url: string) => Promise<AxiosResponse<{ result: string }>>
+
+  getRankingList: <
+    O extends {
+      uuid?: string
+    }
+  >(
+    options?: O
+  ) => Promise<AxiosResponse<RankingListResponse<O>>>
 }

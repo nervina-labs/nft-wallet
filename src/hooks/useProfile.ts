@@ -3,6 +3,7 @@ import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
+import { UnipassConfig } from '../utils'
 import {
   useAccount,
   useAPI,
@@ -10,7 +11,7 @@ import {
   useSignMessage,
   WalletType,
 } from './useAccount'
-import { useSnackbar } from './useSnackbar'
+import { useToast } from './useToast'
 
 export type Gender = 'male' | 'female'
 
@@ -71,6 +72,7 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
   return useCallback(async () => {
     let signature = profile?.[address]?.auth
     if (!signature) {
+      UnipassConfig.setRedirectUri(location.pathname + location.search)
       signature = await signMessage(address)
       // we don't need set unipass profile auth in here
       if (signature.includes('N/A') || walletType === WalletType.Unipass) {
@@ -110,15 +112,15 @@ export function useToggleLike() {
 export function useSetServerProfile() {
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
-  const { snackbar } = useSnackbar()
+  const toast = useToast()
 
   return useCallback(
     async (user: Partial<User>, options?: { ext?: string }) => {
       const auth = await getAuth()
       await api.setProfile(user, { auth, ext: options?.ext })
-      snackbar(i18n.t('profile.success', { ns: 'translations' }))
+      toast(i18n.t('profile.success', { ns: 'translations' }))
     },
-    [getAuth, api, snackbar]
+    [getAuth, api, toast]
   )
 }
 

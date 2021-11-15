@@ -14,7 +14,7 @@ const Container = styled.footer`
   max-width: 500px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  padding: 8px 0;
+  padding: 12px 0;
   position: fixed;
   bottom: 0;
   display: flex;
@@ -26,12 +26,14 @@ export interface FooterProps extends ButtonProps {
   status: RedeemStatus
   isReedemable: boolean
   willDestroyed: boolean
+  isInDialog?: boolean
 }
 
 export const Footer: React.FC<FooterProps> = ({
   isReedemable,
   status,
   willDestroyed,
+  isInDialog,
   ...props
 }) => {
   const [t] = useTranslation('translations')
@@ -73,7 +75,7 @@ export const Footer: React.FC<FooterProps> = ({
     return false
   }, [props.disabled, isReedemable, isLogined])
   return (
-    <Container>
+    <Container style={isInDialog ? { left: 0 } : undefined}>
       <Button {...props} onClick={onClick} disabled={disabled}>
         {text}
       </Button>

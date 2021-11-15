@@ -30,8 +30,12 @@ export function throttle(fn: () => void, wait: number): () => void {
 const TIME_FORMAT_CN = 'YYYY-MM-DD, HH:mm:ss'
 const TIME_FORMAT_EN = 'MMM DD, YYYY HH:mm:ss'
 
-export function formatTime(timestamp: string, lang: string) {
-  return dayjs(Number(timestamp + '000')).format(
+export function formatTime(
+  timestamp: string,
+  lang: string,
+  skipNumber = false
+) {
+  return dayjs(skipNumber ? timestamp : Number(timestamp + '000')).format(
     lang !== 'en' ? TIME_FORMAT_CN : TIME_FORMAT_EN
   )
 }

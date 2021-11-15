@@ -10,7 +10,6 @@ import React, {
 } from 'react'
 import ReactDOM from 'react-dom'
 import Das, { AccountRecord } from 'das-sdk'
-import { CircularProgress } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import { useQuery } from 'react-query'
@@ -24,6 +23,7 @@ import { useDas } from '../../hooks/usdDas'
 import { ReactComponent as CheckoutSvg } from '../../assets/svg/das-checkout.svg'
 import { ReactComponent as DefaultSvg } from '../../assets/svg/default-das.svg'
 import { IS_MAINNET } from '../../constants'
+import { Loading } from '@mibao-ui/components'
 
 export interface DasSelectorProps {
   visible: boolean
@@ -294,7 +294,7 @@ export const DasSelector: React.FC<DasSelectorProps> = ({
   }, [showPopout, data])
 
   const avatar = loading ? (
-    <CircularProgress size={16} className="loading" />
+    <Loading width="16px" className="loading" />
   ) : selectedAccount?.avatar ? (
     <img src={selectedAccount.avatar} alt="" />
   ) : (
