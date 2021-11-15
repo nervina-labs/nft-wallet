@@ -17,11 +17,10 @@ import { MibaoProvider, mibaoTheme } from '@mibao-ui/components'
 import { extendTheme } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import NFTFallbackImg from '../assets/img/nft-fallback.png'
-import { IS_ANDROID } from '../constants'
 export * from './path'
 
 export const Routers: React.FC = () => {
-  const { t, i18n } = useTranslation('translations')
+  const { t } = useTranslation('translations')
   const { walletType } = useAccount()
   const { isLogined } = useAccountStatus()
   const { login } = useLogin()
@@ -35,9 +34,7 @@ export const Routers: React.FC = () => {
   }, [])
 
   const theme = useMemo(() => {
-    const font =
-      (IS_ANDROID && i18n.language === 'en' ? 'Poppins, ' : '') +
-      `"PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    const font = `"PingFang SC", Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
       "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
       sans-serif`
 
@@ -60,7 +57,7 @@ export const Routers: React.FC = () => {
         body: font,
       },
     })
-  }, [i18n.language, t])
+  }, [t])
 
   return (
     <MibaoProvider theme={theme}>
