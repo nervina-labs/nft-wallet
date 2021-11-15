@@ -31,7 +31,7 @@ export const Address: React.FC<{ content: string }> = ({ content }) => {
       >
         {content.substring(0, content.length - 5)}
       </Box>
-      <Box>{content.substring(content.length - 5)}</Box>
+      <Box mr="6px">{content.substring(content.length - 5)}</Box>
       <Icon src={hasCopied ? SuccessSvg : CopySvg} />
     </Flex>
   )
