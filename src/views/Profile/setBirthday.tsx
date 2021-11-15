@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
-import { useConfirm } from '../../hooks/useConfirm'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { usePrevious } from '../../hooks/usePrevious'
 import { useSetServerProfile } from '../../hooks/useProfile'
 import { Query } from '../../models'
@@ -33,7 +33,7 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
   )
 
   const prevValue = usePrevious(value)
-  const confirm = useConfirm()
+  const onConfirm = useConfirmDialog()
 
   const isChinese = i18n.language !== 'en'
 
@@ -106,11 +106,16 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
 
   const onClose = useCallback(() => {
     if (prevValue !== value) {
-      confirm(t('profile.save-edit'), onSave, close).catch(Boolean)
+      onConfirm({
+        type: 'text',
+        title: t('profile.save-edit'),
+        onConfirm: onSave,
+        onCancel: close,
+      })
     } else {
       close()
     }
-  }, [onSave, close, t, prevValue, value, confirm])
+  }, [prevValue, value, onConfirm, t, onSave, close])
 
   return (
     <DrawerConfig
@@ -120,6 +125,7 @@ export const SetBirthday: React.FC<SetUsernameProps> = ({
       isValid
       onSaving={onSave}
       isSaving={isSaving}
+      height="340px"
     >
       <div className="birthday">
         <Datepicker

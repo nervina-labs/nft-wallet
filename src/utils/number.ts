@@ -12,6 +12,10 @@ export function roundDown(n: number, decimals = 1): number {
 
 const MILLION = 1e6
 
+export function isUnlimited(n: number | string) {
+  return n === '0' || n === 0
+}
+
 export const formatCount = (count: number, lang: string): number | string => {
   if (lang === 'zh') {
     if (count >= MILLION) {
@@ -25,4 +29,13 @@ export const formatCount = (count: number, lang: string): number | string => {
     return `${roundDown(count / MILLION)}m`
   }
   return count >= 1000 ? `${roundDown(count / 1000)}k` : count
+}
+
+export const formatCurrency = (n?: string | number, currency = '¥') => {
+  if (currency === 'cny') {
+    currency = '¥'
+  } else if (currency === 'usd') {
+    currency = '$'
+  }
+  return n ? `${currency} ${Number(n).toFixed(2)}` : ''
 }

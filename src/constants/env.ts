@@ -2,7 +2,8 @@ import * as Bowser from 'bowser'
 type ChainType = 'mainnet' | 'testnet'
 
 export const BOWSER_BROWSER = Bowser.getParser(window.navigator.userAgent)
-
+export const IS_DESKTOP = BOWSER_BROWSER.getPlatformType() === 'desktop'
+export const IS_CHROME = BOWSER_BROWSER.getBrowserName() === 'Chrome'
 export const SERVER_URL =
   process.env.REACT_APP_SERVER_URL ??
   'https://goldenlegend.staging.nervina.cn/api/wallet/v1'
@@ -37,6 +38,8 @@ export const IS_SAFARI =
   navigator.vendor?.includes('Apple') &&
   !navigator.userAgent.includes('CriOS') &&
   !navigator.userAgent.includes('FxiOS')
+
+export const IS_WEBKIT = BOWSER_BROWSER.getEngineName() === 'WebKit'
 
 export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 

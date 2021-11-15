@@ -1,4 +1,3 @@
-import { CircularProgress } from '@material-ui/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -10,12 +9,12 @@ import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { AvatarType } from '../../models/user'
 import { LazyLoadImage } from '../../components/Image'
-import PeopleSrc from '../../assets/img/people.png'
 import { addParamsToUrl } from '../../utils'
 import i18n from 'i18next'
-import { useConfirm } from '../../hooks/useConfirm'
-import { useErrorToast } from '../../hooks/useErrorToast'
 import { useRoute } from '../../hooks/useRoute'
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { Loading } from '@mibao-ui/components'
+import Fallback from '../../assets/svg/fallback.svg'
 
 const Container = styled(MainContainer)`
   min-height: 100%;
@@ -23,6 +22,7 @@ const Container = styled(MainContainer)`
   padding: 0;
   position: relative;
   max-width: 500px;
+  width: 100% !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,7 +62,7 @@ const Container = styled(MainContainer)`
       margin-left: 25px;
       cursor: pointer;
     }
-    .comfirm {
+    .confirm {
       margin-right: 25px;
       cursor: pointer;
       color: #fe6035;
@@ -104,8 +104,7 @@ export const ImagePreview: React.FC = () => {
       location.state.tokenUuid,
     ]
   }, [location.state])
-  const toast = useErrorToast()
-  const confirm = useConfirm()
+  const onConfirm = useConfirmDialog()
 
   const isBlob = useMemo(() => datauri?.startsWith('blob:'), [datauri])
 
@@ -142,22 +141,34 @@ export const ImagePreview: React.FC = () => {
         })
       }
       if (fromCamera) {
-        history.go(-2)
+        history.replace(RoutePath.Profile)
       } else {
         history.replace(route.from)
       }
     } catch (error: any) {
       // axios error
       if (error?.message?.includes('Network Error')) {
-        toast(t('profile.image-network-error'))
+        onConfirm({
+          type: 'error',
+          title: t('profile.image-network-error'),
+        })
       } else if (
         error?.response?.data?.detail?.includes('should be less than')
       ) {
-        toast(t('profile.size-limit'))
+        onConfirm({
+          type: 'error',
+          title: t('profile.size-limit'),
+        })
       } else if (error?.response?.data?.detail?.includes('allowed types')) {
-        toast(t('profile.wrong-image-format'))
+        onConfirm({
+          type: 'error',
+          title: t('profile.wrong-image-format'),
+        })
       } else {
-        toast(error?.response?.data?.detail ?? error?.message ?? error)
+        onConfirm({
+          type: 'error',
+          title: error?.response?.data?.detail ?? error?.message ?? error,
+        })
       }
       // alert('upload failed')
     } finally {
@@ -165,28 +176,33 @@ export const ImagePreview: React.FC = () => {
       setIsSaving(false)
     }
   }, [
-    datauri,
-    setRemoteProfile,
-    tokenUuid,
-    history,
     isSaving,
-    ext,
-    qc,
+    tokenUuid,
     fromCamera,
-    toast,
+    setRemoteProfile,
+    datauri,
+    ext,
+    history,
+    route.from,
+    onConfirm,
     t,
-    route,
+    qc,
   ])
 
   const onClose = useCallback(() => {
-    confirm(t('profile.save-edit'), onSave, () => {
-      if (fromCamera) {
-        history.go(-2)
-      } else {
-        history.goBack()
-      }
-    }).catch(Boolean)
-  }, [confirm, onSave, history, t, fromCamera])
+    onConfirm({
+      type: 'text',
+      title: t('profile.save-edit'),
+      onConfirm: onSave,
+      onCancel() {
+        if (fromCamera) {
+          history.replace(RoutePath.Profile)
+        } else {
+          history.goBack()
+        }
+      },
+    })
+  }, [onConfirm, t, onSave, fromCamera, history])
 
   if (!datauri && !tokenUuid) {
     return <Redirect to={RoutePath.Profile} />
@@ -199,7 +215,7 @@ export const ImagePreview: React.FC = () => {
           src={datauri}
           width={imageWidth}
           height={imageWidth}
-          backup={<img src={PeopleSrc} />}
+          backup={<img src={Fallback} />}
         />
         <div className="circle" />
       </div>
@@ -207,7 +223,11 @@ export const ImagePreview: React.FC = () => {
         {!isBlob && !tokenUuid ? (
           <div
             className="cancel"
-            onClick={() => history.replace(RoutePath.TakePhoto)}
+            onClick={() => {
+              history.replace(RoutePath.Profile, {
+                showCamera: true,
+              })
+            }}
           >
             {t('profile.reshot')}
           </div>
@@ -216,8 +236,8 @@ export const ImagePreview: React.FC = () => {
             {t('profile.cancel')}
           </div>
         )}
-        <div className="comfirm" onClick={onSave}>
-          {isSaving ? <CircularProgress size="1em" /> : t('profile.comfirm')}
+        <div className="confirm" onClick={onSave}>
+          {isSaving ? <Loading size="sm" /> : t('profile.confirm')}
         </div>
       </footer>
     </Container>

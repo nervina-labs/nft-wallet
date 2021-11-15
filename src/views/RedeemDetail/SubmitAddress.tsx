@@ -1,31 +1,12 @@
-import { makeStyles } from '@material-ui/core'
 import React, { useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RedeemDrawer } from './Drawer'
-import { InputBaseFix } from '../Profile/InputMod'
 import styled from 'styled-components'
 import { Footer } from './Footer'
 import { CustomRewardType, RedeemStatus } from '../../models/redeem'
-import Alert from '@material-ui/lab/Alert'
 import { useSignRedeem } from '../../hooks/useRedeem'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: 400,
-  },
-  input: {
-    flex: 1,
-    width: '100%',
-    background: '#FBFBFC',
-    border: '1px solid #EAEAEA',
-    borderRadius: '8px',
-    padding: '11px 16px',
-    fontSize: '14px',
-  },
-}))
+import { Alert } from '../../components/Alert'
+import { Input } from '../Profile/Input'
 
 export interface SubmitAddressProps {
   open: boolean
@@ -67,7 +48,6 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
     },
     { name: '', phone: '', address: '' }
   )
-  const classes = useStyles()
 
   const isReadyForSumit = !!(
     formState.address &&
@@ -91,8 +71,7 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
     >
       <div className="container">
         <div className="label">{t('exchange.form.address.name-label')}</div>
-        <InputBaseFix
-          className={classes.input}
+        <Input
           placeholder={t('exchange.form.address.name-placeholder')}
           type="text"
           value={formState.name}
@@ -101,8 +80,7 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
           }
         />
         <div className="label">{t('exchange.form.address.phone-label')}</div>
-        <InputBaseFix
-          className={classes.input}
+        <Input
           placeholder={t('exchange.form.address.phone-placeholder')}
           type="text"
           value={formState.phone}
@@ -111,24 +89,22 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
           }
         />
         <div className="label">{t('exchange.form.address.address-label')}</div>
-        <InputBaseFix
-          className={classes.input}
+        <Input
           placeholder={t('exchange.form.address.address-placeholder')}
-          type="text"
-          multiline
-          rows={6}
+          isTextarea
           value={formState.address}
           onChange={(e: any) =>
             dispatch({ key: 'address', value: e.target.value })
           }
         />
-        <Alert severity="error">
+        <Alert mt="10px" borderRadius="8px">
           {t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`)}
         </Alert>
       </div>
       <Footer
         status={status}
         isReedemable
+        isInDialog
         willDestroyed={willDestroyed}
         isLoading={isRedeeming}
         onClick={() => {

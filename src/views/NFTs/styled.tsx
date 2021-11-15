@@ -13,7 +13,6 @@ export const Container = styled(MainContainer)`
     color: rgba(0, 0, 0, 0.6);
   }
   .filters {
-    padding: 0 15px;
     background-color: #fff;
     z-index: 10;
   }
@@ -116,21 +115,11 @@ export const Container = styled(MainContainer)`
   .list {
     user-select: none;
     flex: 1;
-    background: #f8fafd;
-    border-radius: 35px 35px 0 0;
     z-index: 2;
     position: relative;
     img {
       -webkit-user-drag: none;
       -webkit-touch-callout: none;
-    }
-
-    .infinite-scroll-component {
-      > div {
-        &:nth-child(2) {
-          margin-top: 20px;
-        }
-      }
     }
   }
 `

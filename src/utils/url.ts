@@ -1,12 +1,17 @@
 import {
   BOWSER_BROWSER,
+  IS_WEBKIT,
   OSS_IMG_HOSTS,
   OSS_IMG_PROCESS_QUERY_KEY,
   OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP,
   OSS_IMG_PROCESS_QUERY_KEY_SCALE,
 } from '../constants'
+import i18n from '../i18n'
 
-function isSupportWebp(): boolean {
+export function isSupportWebp(): boolean {
+  if (IS_WEBKIT) {
+    return false
+  }
   // https://caniuse.com/?search=webp
   // https://x5.tencent.com/guide/caniuse/index.html
   const supportedBrowsers = {
@@ -69,4 +74,67 @@ export function getImagePreviewUrl<U extends string | undefined>(
     OSS_IMG_PROCESS_QUERY_KEY
   ] = `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webpParam}`
   return addParamsToUrl(url, params) as any
+}
+
+export const getNFTQueryParams = (tid?: number, locale = i18n.language) => {
+  if (typeof tid === 'number' || typeof tid === 'string') {
+    return {
+      tid,
+      locale,
+    }
+  }
+  return undefined
+}
+
+export async function toDataUrl(
+  src: string,
+  options?: {
+    outputFormat?: string
+    disableCache?: boolean
+    toBlob?: boolean
+    useRam?: boolean
+  }
+): Promise<string> {
+  const outputFormat = options?.outputFormat ?? 'image/png'
+  const url = options?.useRam
+    ? (() => {
+        const urlObj = new URL(src)
+        urlObj.searchParams.append('time', `${new Date().getTime()}`)
+        return decodeURI(urlObj.toString())
+      })()
+    : src
+  return await new Promise<string>((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      canvas.height = img.height
+      canvas.width = img.width
+      if (ctx) {
+        ctx.drawImage(img, 0, 0)
+      }
+      if (options?.toBlob) {
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('not blob'))
+            return
+          }
+          const url = URL.createObjectURL(blob)
+          resolve(url)
+        }, outputFormat)
+      } else {
+        const dataURL = canvas.toDataURL(outputFormat)
+        resolve(dataURL)
+      }
+    }
+    img.onerror = reject
+    img.src = url
+    if (img.complete || img.complete === undefined) {
+      img.src =
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
+      img.src = url
+      resolve(url)
+    }
+  })
 }

@@ -1,81 +1,34 @@
 import styled from 'styled-components'
-import { HEADER_HEIGHT } from '../../components/Appbar'
 import React from 'react'
-import { GotoProfile, ProfilePath, User } from './User'
 import { Addressbar } from '../../components/AddressBar'
-import Bg from '../../assets/svg/home-bg.svg'
-import { UserResponse } from '../../models/user'
+import { AvatarType, UserResponse } from '../../models/user'
 import { useTranslation } from 'react-i18next'
-import classNames from 'classnames'
-import { Skeleton } from '@material-ui/lab'
+import {
+  Center,
+  Avatar,
+  Heading,
+  Text,
+  Skeleton,
+  SkeletonCircle,
+  Preview,
+  useDisclosure,
+  NFTCard,
+  Box,
+  Button,
+} from '@mibao-ui/components'
+import { addParamsToUrl, getNFTQueryParams, isSupportWebp } from '../../utils'
+import { ProfilePath } from '../../routes'
+import { Link } from 'react-router-dom'
+import { Query } from '../../models'
+import { useAPI } from '../../hooks/useAccount'
+import { useQuery } from 'react-query'
 
-const InfoContainer = styled.div`
-  --padding: calc(${HEADER_HEIGHT ?? 0}px + 20px) 20px 20px;
-  position: relative;
-  top: 0;
-  width: 100%;
-  padding: var(--padding);
-  max-width: calc(100% - 40px);
-  display: flex;
-  flex-direction: column;
-  transition: 100ms;
-
-  .info {
-    position: relative;
-    z-index: 1;
-
-    &.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
-  }
-
-  .bg-image {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    z-index: 0;
-  }
-
-  @media (min-width: 500px) {
-    max-width: 460px;
-  }
-  .loading {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: var(--padding);
-    box-sizing: border-box;
-    z-index: 3;
-
-    .username-loading {
-      margin: auto 0 auto 15px;
-    }
-    .address-loading {
-      margin-top: 24px;
-    }
-  }
-  .desc {
-    margin-top: 12px;
-    color: black;
-    font-size: 14px;
-    line-height: 16px;
-    margin-bottom: 24px;
-    white-space: pre-line;
-    word-break: break-all;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 4; /* number of lines to show */
-    -webkit-box-orient: vertical;
-  }
-  .flex {
-    display: flex;
-  }
+const InfoContainer = styled(Center)`
+  padding: 24px;
+  padding-top: 0;
+  flex-direction: row;
+  text-align: center;
+  margin-top: 8px;
 `
 
 export const Info: React.FC<{
@@ -93,54 +46,162 @@ export const Info: React.FC<{
   isHolder,
   address,
 }) => {
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const description = React.useMemo(() => {
     if (user?.description) {
       return user?.description
     }
-    return isHolder ?? !closeMenu ? (
+    return isHolder ? (
       t('holder.desc')
     ) : (
-      <GotoProfile path={ProfilePath.Description} closeMenu={closeMenu}>
-        {t('profile.desc.empty')}
-      </GotoProfile>
+      <Link to={ProfilePath.Description}>{t('profile.desc.empty')}</Link>
     )
-  }, [user?.description, isHolder, t, closeMenu])
+  }, [user?.description, isHolder, t])
+
+  const userName = React.useMemo(() => {
+    if (user?.nickname) {
+      return user?.nickname
+    }
+    return isHolder ? (
+      t('holder.user-name-empty')
+    ) : (
+      <Link to={ProfilePath.Username}>{t('profile.user-name.empty')}</Link>
+    )
+  }, [t, user, isHolder])
+
+  const {
+    isOpen: isPreviewOpen,
+    onClose: onPreviewClose,
+    onOpen: onPreviewOpen,
+  } = useDisclosure()
+
+  const api = useAPI()
+
+  const { data: nft } = useQuery(
+    [Query.NFTDetail, user?.avatar_token_uuid, api],
+    async () => {
+      const id = user?.avatar_token_uuid as string
+      const { data } = await api.getNFTDetail(id)
+      return data
+    },
+    {
+      enabled:
+        user?.avatar_type === AvatarType.Token &&
+        Boolean(user?.avatar_token_uuid),
+    }
+  )
+
   return (
-    <InfoContainer>
-      <div
-        className={classNames('info', {
-          hide: isLoading,
-        })}
-      >
-        <User
-          user={user}
-          setShowAvatarAction={setShowAvatarAction}
-          closeMenu={closeMenu}
-          isHolder={isHolder}
-          enablePreview={true}
-        />
-        <div className="desc">{description}</div>
-        <Addressbar address={address} isHolder={isHolder} />
-      </div>
-      <img className="bg-image" src={(Bg as unknown) as string} alt="Bg" />
-      {isLoading && (
-        <div className="loading">
-          <div className="flex">
-            <Skeleton variant="circle" width="56px" height="56px" />
-            <div className="username-loading">
-              <Skeleton variant="rect" width="150px" height="22px" />
-              <div style={{ height: '4px' }} />
-              <Skeleton variant="rect" width="200px" height="16px" />
-            </div>
-          </div>
-          <div className="desc">
-            <Skeleton variant="rect" width="100%" height="16px" />
-          </div>
-          <div className="address-loading">
-            <Skeleton variant="rect" width="100%" height="33px" />
-          </div>
-        </div>
+    <InfoContainer flexDirection="column">
+      {isLoading ? (
+        <>
+          <SkeletonCircle size="100px" />
+          <Skeleton height="24px" mt="8px" mb="12px" width="150px" />
+          <Skeleton height="18px" mb="24px" width="150px" />
+          <Skeleton height="32px" mb="24px" width="180px" borderRadius="21px" />
+        </>
+      ) : (
+        <>
+          <Avatar
+            src={user?.avatar_url || ''}
+            resizeScale={200}
+            size="100px"
+            type={user?.avatar_type}
+            srcQueryParams={getNFTQueryParams(user?.avatar_tid, i18n.language)}
+            onClick={() => {
+              if (user?.avatar_type === AvatarType.Token || user?.avatar_url) {
+                onPreviewOpen()
+              }
+            }}
+          />
+          <Heading
+            mt="8px"
+            mb="12px"
+            fontSize="16px"
+            fontWeight="bold"
+            isTruncated
+            w="100%"
+          >
+            {userName}
+          </Heading>
+          <Text
+            mb="24px"
+            noOfLines={3}
+            color="#777E90"
+            fontSize="12px"
+            whiteSpace="pre-wrap"
+            w="100%"
+          >
+            {description}
+          </Text>
+          <Addressbar address={address} isHolder={isHolder} />
+          <Preview
+            isOpen={isPreviewOpen}
+            onClose={onPreviewClose}
+            renderer="1"
+            bgImgUrl={addParamsToUrl(
+              user?.avatar_url as string,
+              Object.create(
+                getNFTQueryParams(user?.avatar_tid, i18n.language) || {}
+              )
+            )}
+            type={user?.avatar_type === AvatarType.Token ? 'three_d' : 'image'}
+            render3D={(renderer) => {
+              return (
+                <Center w="100%" height="100%">
+                  <Box w="300px">
+                    <NFTCard
+                      w="100%"
+                      borderRadius="22px"
+                      bg="white"
+                      p="16px"
+                      isIssuerBanned={nft?.is_issuer_banned}
+                      isNFTBanned={nft?.is_class_banned}
+                      hasCardback={nft?.card_back_content_exist}
+                      resizeScale={600}
+                      title={nft?.name}
+                      bannedText={t('common.baned.nft')}
+                      type={nft?.renderer_type}
+                      src={nft?.bg_image_url || ''}
+                      locale={i18n.language}
+                      imageProps={{
+                        webp: isSupportWebp(),
+                      }}
+                      issuerProps={{
+                        name: nft?.issuer_info?.name as string,
+                        src: nft?.issuer_info?.avatar_url,
+                        bannedText: t('common.baned.issuer'),
+                        size: '25px',
+                        isVerified: nft?.verified_info?.is_verified,
+                      }}
+                      limitProps={{
+                        count: nft?.total as string,
+                        limitedText: t('common.limit.limit'),
+                        unlimitedText: t('common.limit.unlimit'),
+                        serialNumber: nft?.n_token_id,
+                        ml: '4px',
+                      }}
+                      likeProps={{
+                        likeCount: nft?.class_likes as number,
+                        isLiked: nft?.class_liked as boolean,
+                      }}
+                    />
+                    <Link to={`/nft/${user?.avatar_token_uuid as string}`}>
+                      <Button
+                        isFullWidth
+                        variant="solid"
+                        colorScheme="primary"
+                        mt="20px"
+                      >
+                        {t('common.show-detail')}
+                      </Button>
+                    </Link>
+                  </Box>
+                </Center>
+              )
+            }}
+          />
+        </>
       )}
     </InfoContainer>
   )

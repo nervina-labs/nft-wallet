@@ -4,7 +4,7 @@
       "beian": "浙ICP备2021006943号-3",
       "login": "Login",
       "actions": {
-        "comfirm": "Confirm",
+        "confirm": "Confirm",
         "cancel": "Cancel",
         "loading": "Loading",
         "pull-to-down": "No More NFT~",
@@ -18,7 +18,25 @@
       },
       "share": {
         "copy": "Click to copy the link and share to social media",
-        "close": "Close"
+        "close": "Close",
+        "copied": "Copied",
+        "cancel": "Cancel",
+        "icons": {
+          "copy": "Copy Link",
+          "download": "Downloads",
+          "more": "More",
+          "create-poster": "Create Poster",
+          "creating": "Creating"
+        },
+        "long-press-to-save": "Long press to save",
+        "poster": {
+          "desc-1": "Scanning QR code",
+          "desc-nft": "Enjoy the digital collection",
+          "desc-holder": "Watch the NFT collector I found",
+          "desc-my": "Come to the Mibao to enjoy my NFT",
+          "desc-issuer": "Enjoy the works of the creator of the NFT",
+          "collected": "Collected"
+        }
       },
       "limit": {
         "limit": "Limited",
@@ -41,6 +59,7 @@
     },
     "login": {
       "title": "NFT Account",
+      "select": "Log in with",
       "connect": {
         "unipass": "Connect to UniPass",
         "metamask": "Connect to Ethereum Environment",
@@ -51,15 +70,27 @@
         "not-support": "The current environment does not support connecting to Ethereum",
         "refuse": "User rejects authorization, please reopen the page for authorization"
       },
-      "desc-1": "View and manage",
-      "desc-2": "your NFT anytime, anywhere"
+      "slides": {
+        "1": {
+          "line-1": "Share NFT",
+          "line-2": "With your friends"
+        },
+        "2": {
+          "line-1": "Manage your NFT",
+          "line-2": "Explore Metaverse"
+        },
+        "3": {
+          "line-1": "View and manage your NFT",
+          "line-2": "Anywhere, anytime"
+        }
+      }
     },
     "nfts": {
       "title": "My NFT",
       "owned": "Owned",
       "liked": "Liked",
       "status": {
-        "comfirming": "Confirming",
+        "confirming": "Confirming",
         "receiving": "Receiving",
         "tranferring": "Transferring"
       },
@@ -106,7 +137,7 @@
       "once-transfer": "Once transferred, it cannot be withdrawn",
       "submitted": "Transfer transaction submitted",
       "tips": "On-chain confirmation may take 1-2 minutes",
-      "comfirm": "Confirm",
+      "confirm": "Confirm",
       "signing": "Signing"
     },
     "404": {
@@ -121,7 +152,7 @@
       "send-to": "Send to",
       "status": {
         "waiting": "Waiting",
-        "comfirming": "Confirming"
+        "confirming": "Confirming"
       }
     },
     "info": {
@@ -132,11 +163,16 @@
     "nft": {
       "title": "NFT Details",
       "transfer": "Transfer",
-      "desc": "NFT description",
+      "desc": "Desc",
+      "transaction-history": "Tx Logs",
+      "tx_hash": "Tx Hash",
       "lock": "Include card back content which can only be revealed by the owner of this NFT",
       "no-desc": "No description",
       "no-holder": "No collector",
-      "holder": "Collectors"
+      "holder": "Collectors",
+      "show-card-back": "Show Cardback",
+      "no-more-holder": "No more collectors",
+      "no-more-transaction-history": "No more logs"
     },
     "account": {
       "title": "My Account",
@@ -191,7 +227,7 @@
       "cancel": "Cancel",
       "male": "Male",
       "female": "Female",
-      "comfirm": "Confirm",
+      "confirm": "Confirm",
       "reshot": "Retake",
       "success": "Profile updated",
       "years": "{{year}} years old",
@@ -204,17 +240,23 @@
       "all": "All",
       "others": "Others",
       "metaverse": "Explore",
+      "follow": "Follow",
+      "on-sale": "Sale",
       "my": "My",
+      "ranking": "Ranking",
       "latest": "Latest",
       "most-liked": "Most Liked",
       "recommended": "Recommended",
       "hotest": "Hot NFTs",
+      "title-recommended": "Recommended",
       "collections": "Featured by Mibao",
       "issuers": "Hot Creators",
-      "home": "Home"
+      "home": "Home",
+      "more": "More"
     },
     "menu": {
       "profile": "Profile",
+      "order": "My orders",
       "txs": "Activity",
       "language": "Language",
       "help": "Help",
@@ -308,7 +350,8 @@
       "scan": "Scan by Wechat",
       "desc": "Enter Mibao Shop",
       "save": "Save Image",
-      "buy": "Buy"
+      "buy": "Buy",
+      "sold-out": "Sold out"
     },
     "claim": {
       "tips": "You have a NFT to be claimed",
@@ -331,7 +374,8 @@
       "like": "Like",
       "no-data": "No data",
       "more": "More",
-      "no-on-sale": "No NFT on sale"
+      "sale-empty": "Ahhh ~ No NFT on sale",
+      "empty": "Ahhh ~ The issuer haven't created NFT yet"
     },
     "exchange": {
       "title": "Redeem Center",
@@ -452,20 +496,93 @@
         "redeeming": "Redeeming"
       }
     },
+    "orders": {
+      "title": "Orders",
+      "detail": "Details",
+      "tabs": {
+        "all": "All",
+        "placed": "Pending",
+        "paid": "Receiving",
+        "done": "Received"
+      },
+      "no-data": "No data",
+      "no-more": "No more",
+      "state": {
+        "order_placed": "Pending",
+        "paid": "Receiving",
+        "expired": "Closed",
+        "closed": "Closed",
+        "done": "Finished",
+        "refunded": "Refunded"
+      },
+      "paid-payment": "Final pay: ",
+      "needed-payment": "Pay: ",
+      "success": "Paid successfully",
+      "send-soon": "Digital collection will be sent to your address soon",
+      "be-patient": "请耐心等待",
+      "check": "Check my order",
+      "countdown": "Please pay within {{minutes}} minites {{seconds}} seconds, overtime orders will be automatically closed",
+      "drawer": {
+        "submit": "Submit",
+        "confirm": "Confirm",
+        "limit": "Limit per user: {{limit}}",
+        "count": "Amount: ",
+        "remain": "Remain: {{remain}}",
+        "wechat": "Wechat",
+        "alipay": "Alipay",
+        "paypal": "PayPal",
+        "select-title": "Pay with",
+        "confirm-title": "Payment",
+        "select-more": "More",
+        "channel": "Payment method",
+        "warning": "Please complete the payment within 5 minutes. After the payment is successful, the system will automatically send the digital collection to your address. This process may take 2-3 minutes, please be patient.",
+        "place-order-error": "The purchase failed, please check your network",
+        "submit-order-error": "Failed to submit the order, please check your network",
+        "reject-payment-error": "Payment error, please pay again",
+        "continue-payment": "Continue"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "pay-and-hold": "Pay"
+      },
+      "dialog": {
+        "cancel-title": "Cancel the order?",
+        "cancel-desc": "Your order has been submitted successfully\nPlease complete the payment within <b>5 minutes</b>",
+        "cancel-confirm": "Continue",
+        "cancel-quit": "Cancel",
+        "delete-title": "Cancel the order?",
+        "delete-desc": "Your order has been submitted successfully\nIf you cancel the order, you will not receive the digital collection",
+        "delete-confirm": "Pay",
+        "delete-quit": "Cancel",
+        "contact": "For order questions, please contact:",
+        "copy-email": "Copy",
+        "copy-email-address": "Copy"
+      },
+      "info": {
+        "title": "Order Info",
+        "address": "Receiver address: ",
+        "uuid": "Order No.: ",
+        "created_at": "Create at: ",
+        "paid_at": "Pay at: ",
+        "send-at": "Send at: ",
+        "done_timestamp": "Received at: "
+      }
+    },
     "follow": {
       "follow": "Follow",
       "followed": "Following",
       "confirm": "Confirm to unfollow?",
       "follower": "Followers: ",
       "likes": "Likes: ",
-      "count": "Following {{count}} creators",
+      "count": "• Following {{count}} creators",
       "end": "The end~",
       "login": {
         "desc-1": "Opps~ please log in first",
         "desc-2": "Log in and view your following content",
         "login": "Log In"
       },
-      "no-data": "You haven't followed any creators"
+      "no-data": "You haven't followed any creators",
+      "let-s-go-to-explore": "Let's go to explore"
     }
   }
 }

@@ -1,36 +1,14 @@
-import { InputAdornment, makeStyles } from '@material-ui/core'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useHistory } from 'react-router-dom'
-import { useConfirm } from '../../hooks/useConfirm'
 import { usePrevious } from '../../hooks/usePrevious'
 import { useSetServerProfile } from '../../hooks/useProfile'
 import { Query } from '../../models'
 import { DrawerConfig } from './DrawerConfig'
-import { InputBaseFix } from './InputMod'
 import { useRoute } from '../../hooks/useRoute'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: 400,
-  },
-  input: {
-    flex: 1,
-    width: '100%',
-    background: '#FBFBFC',
-    border: '1px solid #EAEAEA',
-    borderRadius: '8px',
-    padding: '11px 16px',
-    paddingBottom: '26px',
-    fontSize: '14px',
-    alignItems: 'flex-end',
-    flexDirection: 'column',
-  },
-}))
+import { useConfirmDialog } from '../../hooks/useConfirmDialog'
+import { Input } from './Input'
 
 export interface SetUsernameProps {
   open: boolean
@@ -46,9 +24,7 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
     if (value.length >= 100) return 100
     return value.length
   }, [value])
-  const confirm = useConfirm()
-
-  const classes = useStyles()
+  const confirm = useConfirmDialog()
 
   const [isSaving, setIsSaving] = useState(false)
   const history = useHistory()
@@ -82,7 +58,12 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
 
   const onClose = useCallback(() => {
     if (prevValue !== value) {
-      confirm(t('profile.save-edit'), onSave, close).catch(Boolean)
+      confirm({
+        type: 'text',
+        title: t('profile.save-edit'),
+        onConfirm: onSave,
+        onCancel: close,
+      })
     } else {
       close()
     }
@@ -98,22 +79,13 @@ export const SetDesc: React.FC<SetUsernameProps> = ({ open, close, desc }) => {
       onSaving={onSave}
     >
       <div className="username">
-        <InputBaseFix
-          className={classes.input}
-          placeholder={t('profile.desc.placeholder')}
-          type="text"
+        <Input
+          placeholder={`${t('profile.input')}${t('profile.description')}`}
           value={value}
-          multiline
-          rows={8}
           formatter={(v: string) => v.slice(0, 100)}
-          onChange={(e: any) => {
-            setValue(e.target.value)
-          }}
-          endAdornment={
-            <InputAdornment position="end" style={{ alignItems: 'baseline' }}>
-              <span className="adornment">{`${len}/100`}</span>
-            </InputAdornment>
-          }
+          onChange={(e) => setValue(e.target.value)}
+          isTextarea
+          max={100}
         />
       </div>
     </DrawerConfig>

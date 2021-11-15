@@ -32,6 +32,12 @@ export function ellipsisIssuerID(value: string): string {
   return `${value.substr(0, 8)}...${value.substr(8, 6)}`
 }
 
+export const ellipsisString = (value: string, range: [number, number]) => {
+  return `${value.substring(0, range[0])}...${value.substring(
+    value.length - range[1]
+  )}`
+}
+
 export function copyFallback(data: string): void {
   const input = document.createElement('input')
   input.readOnly = true

@@ -38,7 +38,7 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
       {
         title: t('guide.three.title'),
         content: t('guide.three.desc'),
-        selector: '.account',
+        selector: '.setting',
         placement: 'bottom-left',
         beforeStepChange: () => {
           setShowArrow(false)

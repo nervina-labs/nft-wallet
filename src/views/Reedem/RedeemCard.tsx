@@ -1,9 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
-import LinearProgress from '@material-ui/core/LinearProgress'
 import { useTranslation } from 'react-i18next'
-import { Creator } from '../../components/Creator'
 import {
   CustomRewardType,
   isBlindReward,
@@ -12,38 +9,19 @@ import {
   RedeemStatus,
   UserRedeemState,
 } from '../../models/redeem'
-import { Divider } from '@material-ui/core'
 import { RedeeemLabel } from './Label'
 import classNames from 'classnames'
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
 import { useSignRedeem } from '../../hooks/useRedeem'
-
-const BorderLinearProgress = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      height: 8,
-      borderRadius: 5,
-    },
-    colorPrimary: {
-      backgroundColor:
-        theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
-    },
-    bar: {
-      borderRadius: 5,
-      backgroundColor: '#45B26B',
-      transition: 'none',
-      animation: 'none',
-    },
-  })
-)(LinearProgress)
+import { Issuer, Progress as RawProgress, Divider } from '@mibao-ui/components'
 
 const Container = styled.div`
   box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);
   border-radius: 20px;
   background-color: white;
-  margin: 16px 20px;
+  margin: 0 20px 16px 20px;
   /* margin-top: 0; */
   .issuer {
     display: flex;
@@ -135,8 +113,8 @@ const Progress: React.FC<ProgressProps> = ({ total, exchanged }) => {
   return (
     <div className="progress">
       <span>{t('exchange.progress')}</span>
-      <BorderLinearProgress
-        variant="determinate"
+      <RawProgress
+        colorScheme="green"
         value={(exchanged / total) * 100}
         style={{ flex: 1, margin: '0 12px' }}
       />
@@ -266,21 +244,28 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
       onClick={() => history.push(`${RoutePath.Redeem}/${item.uuid}`, item)}
     >
       <div className="issuer">
-        <Creator
-          title=""
-          baned={item.issuer_info.is_issuer_banned}
-          url={item.issuer_info.avatar_url}
-          name={item.issuer_info?.name}
-          uuid={item.issuer_info?.uuid}
-          vipAlignRight={false}
-          color="rgb(51, 51, 51)"
-          isVip={
-            item.issuer_info.is_issuer_banned
+        <Issuer
+          isBanned={item?.issuer_info?.is_issuer_banned}
+          src={item?.issuer_info.avatar_url}
+          name={item?.issuer_info?.name}
+          isVerified={
+            item?.issuer_info?.is_issuer_banned
               ? false
               : item?.verified_info?.is_verified
           }
-          vipTitle={item?.verified_info?.verified_title}
-          vipSource={item?.verified_info?.verified_source}
+          href={`${RoutePath.Issuer}/${
+            item?.issuer_info?.issuer_id ?? item?.issuer_info?.uuid
+          }`}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            history.push(
+              `${RoutePath.Issuer}/${
+                item?.issuer_info?.issuer_id ?? item?.issuer_info?.uuid
+              }`
+            )
+          }}
+          size="25px"
         />
         <span>{t('exchange.issuer')}</span>
       </div>

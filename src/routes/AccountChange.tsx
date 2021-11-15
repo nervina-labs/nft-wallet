@@ -3,10 +3,13 @@ import React, { useEffect, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useGetAndSetAuth, useProfile } from '../hooks/useProfile'
-import { useToast } from '../hooks/useToast'
 import { UnipassConfig } from '../utils'
 import { useAccount, useAccountStatus, WalletType } from '../hooks/useAccount'
 import { RoutePath } from './path'
+import {
+  useCloseConfirmDialog,
+  useConfirmDialog,
+} from '../hooks/useConfirmDialog'
 
 const allowWithoutAuthList = new Set([
   RoutePath.Unipass,
@@ -20,6 +23,7 @@ const allowWithoutAuthList = new Set([
   RoutePath.RedeemResult,
   RoutePath.MyRedeem,
   RoutePath.Login,
+  RoutePath.TokenClass,
 ])
 
 const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
@@ -44,7 +48,8 @@ export const AccountChange: React.FC = ({ children }) => {
   const { isAuthenticated } = useProfile()
   const getAuth = useGetAndSetAuth()
   const isSigning = useRef(false)
-  const { toast, closeToast } = useToast()
+  const onOpenConfirm = useConfirmDialog()
+  const onCloseConfirm = useCloseConfirmDialog()
   const [t] = useTranslation('translations')
 
   useEffect(() => {
@@ -65,12 +70,11 @@ export const AccountChange: React.FC = ({ children }) => {
         WalletType.Metamask === walletType
       ) {
         isSigning.current = true
-        toast({
+        onOpenConfirm({
+          type: 'text',
           title: t('auth.title'),
           content: t('auth.content'),
           okText: t('auth.ok'),
-          showCloseIcon: false,
-          show: true,
           onConfirm: () => {
             if (pathInForceAuthList && WalletType.Unipass === walletType) {
               UnipassConfig.setRedirectUri(location.pathname + location.search)
@@ -78,7 +82,7 @@ export const AccountChange: React.FC = ({ children }) => {
             getAuth()
               .then(() => {
                 if (WalletType.Metamask === walletType) {
-                  closeToast()
+                  onCloseConfirm()
                 }
               })
               .catch(Boolean)
@@ -95,9 +99,9 @@ export const AccountChange: React.FC = ({ children }) => {
     isLogined,
     pubkey,
     t,
-    toast,
-    closeToast,
     getAuth,
+    onOpenConfirm,
+    onCloseConfirm,
   ])
 
   return <>{children}</>

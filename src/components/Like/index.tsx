@@ -1,4 +1,3 @@
-import { CircularProgress } from '@material-ui/core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
@@ -10,6 +9,7 @@ import { useLikeStatus } from '../../hooks/useLikeStatus'
 import { useToggleLike } from '../../hooks/useProfile'
 import { RoutePath } from '../../routes'
 import { formatCount } from '../../utils'
+import { Loading } from '@mibao-ui/components'
 
 const Container = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const Container = styled.div`
 `
 
 export interface LikeProps {
-  count: string
+  count: number
   liked: boolean
   uuid: string
   likeble?: boolean
@@ -95,7 +95,7 @@ export const Like: React.FC<LikeProps> = ({
       }}
     >
       {isLoading ? (
-        <CircularProgress size="16px" className="loading" />
+        <Loading width="16px" />
       ) : !isLiked ? (
         <UnHeart />
       ) : (

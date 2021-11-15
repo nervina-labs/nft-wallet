@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import Skeleton from '@material-ui/lab/Skeleton'
+import { Skeleton } from '@mibao-ui/components'
 import { PhotoConsumer } from 'react-photo-view'
 import { disableImageContext } from '../../utils/dom'
 
