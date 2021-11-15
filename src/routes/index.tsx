@@ -20,6 +20,7 @@ import NFTFallbackImg from '../assets/img/nft-fallback.png'
 export * from './path'
 
 export const Routers: React.FC = () => {
+  const { t } = useTranslation('translations')
   const { walletType } = useAccount()
   const { isLogined } = useAccountStatus()
   const { login } = useLogin()
@@ -32,9 +33,11 @@ export const Routers: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [t] = useTranslation('translations')
-
   const theme = useMemo(() => {
+    const font = `"PingFang SC", Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+      "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+      sans-serif`
+
     return extendTheme(mibaoTheme, {
       locales: {
         issuer: {
@@ -49,6 +52,9 @@ export const Routers: React.FC = () => {
       },
       fallbacks: {
         nft: NFTFallbackImg,
+      },
+      fonts: {
+        body: font,
       },
     })
   }, [t])
