@@ -234,9 +234,8 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const onRendererError = useCallback(() => {
     if (isOpenPreview) {
       toast(t('resource.fail'))
-      onClosePreview()
     }
-  }, [t, toast, isOpenPreview, onClosePreview])
+  }, [t, toast, isOpenPreview])
   const onPreview = useCallback(
     (e) => {
       if (!showCardBackContent) {
