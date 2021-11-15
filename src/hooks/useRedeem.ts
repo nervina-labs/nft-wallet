@@ -9,15 +9,15 @@ import {
   RedeemEventItem,
 } from '../models/redeem'
 import { RoutePath } from '../routes'
-import { generateUnipassRedeemUrl, UnipassConfig } from '../utils'
+import { generateUnipassRedeemUrl, noop, UnipassConfig } from '../utils'
 import {
   useAccount,
   useAPI,
   useSignTransaction,
   WalletType,
 } from './useAccount'
-import { useSnackbar } from './useSnackbar'
-import { useWarning } from './useWarning'
+import { useConfirmDialog } from './useConfirmDialog'
+import { useToast } from './useToast'
 
 export interface onRedeemProps {
   deliverType?: CustomRewardType
@@ -49,11 +49,11 @@ export const useSignRedeem = () => {
   const { walletType, pubkey } = useAccount()
   const signTransaction = useSignTransaction()
   const reactLocation = useLocation<TransferState>()
-  const warning = useWarning()
+  const confirmDialog = useConfirmDialog()
   const [t] = useTranslation('translations')
 
   const [isRedeeming, setIsRedeeming] = useAtom(isSigningAtom)
-  const { snackbar } = useSnackbar()
+  const toast = useToast()
   const confirmRedeem = useCallback(
     async ({ customData, id, onConfirmError }: ConfirmRedeemProps) => {
       setIsRedeeming(true)
@@ -94,7 +94,7 @@ export const useSignRedeem = () => {
         }
       } catch (error) {
         setIsRedeeming(false)
-        snackbar(t('exchange.error'))
+        toast(t('exchange.error'))
         await onConfirmError?.()
       }
     },
@@ -106,7 +106,7 @@ export const useSignRedeem = () => {
       walletType,
       reactLocation.pathname,
       setIsRedeeming,
-      snackbar,
+      toast,
       t,
     ]
   )
@@ -131,18 +131,20 @@ export const useSignRedeem = () => {
           item
         )
       } else {
-        warning(
-          t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`),
-          async function () {
+        confirmDialog({
+          type: 'warning',
+          title: t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`),
+          onConfirm: async () => {
             await confirmRedeem({
               id,
               customData,
             })
-          }
-        )
+          },
+          onCancel: noop,
+        })
       }
     },
-    [confirmRedeem, t, warning, reactLocation, history]
+    [confirmRedeem, t, confirmDialog, reactLocation, history]
   )
 
   return {

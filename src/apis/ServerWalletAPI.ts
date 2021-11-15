@@ -5,10 +5,10 @@ import {
   NFT,
   NFTDetail,
   NFTTransaction,
-  NFTWalletAPI,
   ProductState,
   SpecialCategories,
   Transaction,
+  TransactionLogResponse,
   UnsignedTransaction,
 } from '../models'
 import {
@@ -49,6 +49,14 @@ import {
   RewardDetailResponse,
 } from '../models/redeem'
 import { ClaimResult } from '../models/claim'
+import {
+  OrderDetail,
+  OrdersResponse,
+  OrderState,
+  PlaceOrderProps,
+} from '../models/order'
+import { RoutePath } from '../routes'
+import { RankingListResponse } from '../models/rank'
 
 function randomid(length = 10): string {
   let result = ''
@@ -91,9 +99,11 @@ async function writeFormData(
   return formData
 }
 
-export class ServerWalletAPI implements NFTWalletAPI {
+export class ServerWalletAPI {
   private readonly address: string
   private readonly axios: AxiosInstance
+
+  private readonly orderCallbackURL = `${location.origin}${RoutePath.OrderSuccess}`
 
   constructor(address: string) {
     this.address = address
@@ -199,12 +209,17 @@ export class ServerWalletAPI implements NFTWalletAPI {
       page,
       limit: PER_ITEM_LIMIT,
     }
+
     if (sortType === ClassSortType.Likes) {
       params.sort = 'likes'
       params.order = 'desc'
     }
     if (sortType === ClassSortType.Recommend) {
       params.sort = 'recommended'
+      params.order = 'desc'
+    }
+    if (sortType === ClassSortType.OnSale) {
+      params.sort = sortType
       params.order = 'desc'
     }
     if (this.address) {
@@ -460,8 +475,14 @@ export class ServerWalletAPI implements NFTWalletAPI {
       page,
       limit: PER_ITEM_LIMIT,
     }
+    if (sortType === ClassSortType.OnSale) {
+      params.sort = ClassSortType.OnSale
+    }
+    if (sortType === ClassSortType.Latest) {
+      params.sort = ClassSortType.Latest
+    }
     if (sortType === ClassSortType.Likes) {
-      params.sort = 'likes'
+      params.sort = ClassSortType.Likes
     }
     return await this.axios.get(`/followed_token_classes/${this.address}`, {
       headers: {
@@ -585,7 +606,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       page?: number
     }
   ) {
-    const limit = options?.limit ?? 20
+    const limit = options?.limit ?? PER_ITEM_LIMIT
     const page = options?.page ?? 0
     return await this.axios.get<IssuerTokenClassResult>(
       `/issuers/${uuid}/token_classes`,
@@ -617,7 +638,7 @@ export class ServerWalletAPI implements NFTWalletAPI {
       limit?: number
     }
   ): Promise<AxiosResponse<GetHolderByTokenClassUuidResponse>> {
-    const limit = options?.limit ?? 20
+    const limit = options?.limit ?? PER_ITEM_LIMIT
     const page = options?.page ?? 0
     return await this.axios.get<GetHolderByTokenClassUuidResponse>(
       `/token_classes/${uuid}/holders`,
@@ -628,5 +649,183 @@ export class ServerWalletAPI implements NFTWalletAPI {
         },
       }
     )
+  }
+
+  async submitOrder(auth: Auth): Promise<AxiosResponse<{ uuid: string }>> {
+    return await this.axios.post(
+      '/token_order_uuid',
+      {
+        auth,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+      }
+    )
+  }
+
+  async getOrders(
+    page: number,
+    auth: Auth,
+    orderState?: OrderState
+  ): Promise<AxiosResponse<OrdersResponse>> {
+    const params: Record<string, unknown> = {
+      page,
+      limit: PER_ITEM_LIMIT,
+      address: this.address,
+    }
+    if (orderState) {
+      params.state = orderState
+    }
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    return await this.axios.get('/token_orders', {
+      params,
+      headers,
+    })
+  }
+
+  async placeOrder(props: PlaceOrderProps, auth: Auth) {
+    const headers: { auth?: string } = {
+      auth: JSON.stringify(auth),
+    }
+    return await this.axios.post(
+      '/token_orders',
+      {
+        token_order: {
+          ...props,
+          callback_url: this.orderCallbackURL,
+          cancel_url: location.href,
+        },
+        auth,
+      },
+      {
+        headers,
+      }
+    )
+  }
+
+  async getTokenClassTransactions(
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ): Promise<AxiosResponse<TransactionLogResponse>> {
+    const limit = options?.limit ?? PER_ITEM_LIMIT
+    const page = options?.page ?? 0
+    return await this.axios.get<TransactionLogResponse>(
+      `/token_classes/${uuid}/token_ckb_transactions`,
+      {
+        params: {
+          limit,
+          page,
+        },
+      }
+    )
+  }
+
+  async getOrderDetail(
+    uuid: string,
+    auth: Auth
+  ): Promise<AxiosResponse<{ token_order: OrderDetail }>> {
+    const headers: { auth?: string } = {}
+    headers.auth = JSON.stringify(auth)
+    return await this.axios.get(`/token_orders/${uuid}`, {
+      params: {
+        uuid,
+        address: this.address,
+      },
+      headers,
+    })
+  }
+
+  async continuePlaceOrder(uuid: string, channel: string, auth: Auth) {
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    return await this.axios.put(
+      `/token_orders/${uuid}`,
+      {
+        channel,
+        address: this.address,
+        callback_url: this.orderCallbackURL,
+        cancel_url: location.href,
+      },
+      {
+        params: {
+          channel,
+          address: this.address,
+          callback_url: this.orderCallbackURL,
+          cancel_url: location.href,
+        },
+        headers,
+      }
+    )
+  }
+
+  async deleteOrder(uuid: string, auth: Auth) {
+    const headers: { auth?: string } = {}
+    if (auth) {
+      headers.auth = JSON.stringify(auth)
+    }
+    return await this.axios.delete(`/token_orders/${uuid}`, {
+      headers,
+    })
+  }
+
+  async getTokenTransactions(
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ): Promise<AxiosResponse<TransactionLogResponse>> {
+    const limit = options?.limit ?? PER_ITEM_LIMIT
+    const page = options?.page ?? 0
+    return await this.axios.get<TransactionLogResponse>(
+      `/tokens/${uuid}/token_ckb_transactions`,
+      {
+        params: {
+          limit,
+          page,
+        },
+      }
+    )
+  }
+
+  async getWechatOauthUrl(auth: Auth) {
+    return await this.axios.get<{ oauth_url: string }>('/wechat_auths', {
+      params: {
+        mibao_url: location.href,
+      },
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+    })
+  }
+
+  async getRankingList<
+    O extends {
+      uuid?: string
+    }
+  >(options?: O): Promise<AxiosResponse<RankingListResponse<O>>> {
+    const uuid = options?.uuid
+    return await this.axios.get<RankingListResponse<O>>(
+      '/ranking_lists' + (uuid ? `/${uuid}` : '')
+    )
+  }
+
+  async getUrlBase64(url: string) {
+    return await this.axios.get<{ result: string }>('/image_forwardings', {
+      params: {
+        url,
+        type: 'base64',
+      },
+    })
   }
 }

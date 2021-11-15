@@ -1,13 +1,11 @@
 import { RouteProps } from 'react-router-dom'
-import { Account } from '../views/Account'
 import { Login } from '../views/Login'
 import { NFT } from '../views/NFT'
 import { NFTs } from '../views/NFTs'
 import { Transfer } from '../views/Transfer'
 import { Profile } from '../views/Profile'
 import { ImagePreview } from '../views/Profile/ImagePreview'
-import { TakePhoto } from '../views/Profile/TakePhoto'
-import { Explore } from '../views/Explore'
+import { Explore } from '../views/Explore/index'
 import { Help } from '../views/Help'
 import { Unipass } from '../views/Unipass'
 import { Apps } from '../views/Apps'
@@ -15,7 +13,6 @@ import { AddressCollector } from '../views/AddressCollector'
 import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
-import { Shop } from '../views/Shop'
 import { Redeem } from '../views/Reedem'
 import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
@@ -23,7 +20,15 @@ import { MyRedeem } from '../views/Reedem/My'
 import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
-import { PDFViewer } from '../views/PDFViewer'
+import { Transactions } from '../views/Transactions'
+import { lazy } from 'react'
+import { Orders } from '../views/Orders'
+import { OrderSuccess } from '../views/OrderSuccess'
+import { OrderDetail } from '../views/OrderDetail'
+import { Ranking } from '../views/Ranking'
+import { ExploreAll } from '../views/ExploreAll'
+
+const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
 interface MibaoRouterProps extends RouteProps {
   key: string
@@ -39,10 +44,17 @@ export const routes: MibaoRouterProps[] = [
     path: RoutePath.NFTs,
   },
   {
-    component: Account,
+    component: HolderAddress,
     exact: false,
     key: 'Account',
     path: RoutePath.Account,
+    params: '/:address',
+  },
+  {
+    component: Transactions,
+    exact: false,
+    key: 'Transactions',
+    path: RoutePath.Transactions,
   },
   {
     component: NFT,
@@ -81,12 +93,6 @@ export const routes: MibaoRouterProps[] = [
     path: RoutePath.ImagePreview,
   },
   {
-    component: TakePhoto,
-    exact: true,
-    key: 'TakePhoto',
-    path: RoutePath.TakePhoto,
-  },
-  {
     component: AddressCollector,
     exact: true,
     key: 'Addresses',
@@ -100,10 +106,10 @@ export const routes: MibaoRouterProps[] = [
     path: RoutePath.Explore,
   },
   {
-    component: Shop,
+    component: ExploreAll,
     exact: true,
-    key: 'Shop',
-    path: RoutePath.Shop,
+    key: 'ExploreAll',
+    path: RoutePath.ExploreAll,
   },
   {
     component: Help,
@@ -150,6 +156,13 @@ export const routes: MibaoRouterProps[] = [
     params: '/:id',
   },
   {
+    component: Ranking,
+    exact: true,
+    key: 'Ranking',
+    path: RoutePath.RankingList,
+    params: '/:id',
+  },
+  {
     component: Redeem,
     exact: true,
     key: 'Redeem',
@@ -190,13 +203,6 @@ export const routes: MibaoRouterProps[] = [
     params: '/:id',
   },
   {
-    component: HolderAddress,
-    exact: true,
-    key: 'HolderAddress',
-    path: RoutePath.HolderAddress,
-    params: '/:address',
-  },
-  {
     component: NFTs,
     exact: true,
     key: 'Holder',
@@ -208,5 +214,24 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'PDFViewer',
     path: RoutePath.PDFViewer,
+  },
+  {
+    component: Orders,
+    exact: false,
+    key: 'Orders',
+    path: RoutePath.Orders,
+  },
+  {
+    component: OrderSuccess,
+    exact: true,
+    key: 'OrderSuccess',
+    path: RoutePath.OrderSuccess,
+  },
+  {
+    component: OrderDetail,
+    exact: false,
+    key: 'OrderDetail',
+    path: RoutePath.OrderDetail,
+    params: '/:id',
   },
 ]

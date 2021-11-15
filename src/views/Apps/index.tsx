@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { HiddenBar } from '../../components/HiddenBar'
+import { HiddenBar, HiddenBarFill } from '../../components/HiddenBar'
 import { MainContainer } from '../../styles'
 import Exhibition from '../../assets/img/exhibition2.png'
 import PlzWait from '../../assets/img/plz-wait.png'
@@ -12,20 +12,17 @@ import Ticket from '../../assets/svg/ticket2.svg'
 import DAO from '../../assets/svg/dao2.svg'
 import Exchange from '../../assets/svg/exchange2.svg'
 import Vip from '../../assets/svg/vip2.svg'
-import { ReactComponent as ShopSvg } from '../../assets/svg/shop.svg'
 import ShopBg from '../../assets/svg/shop-bg.svg'
 import classNames from 'classnames'
-import { RED_ENVELOP_APP_URL, TICKET_APP_URL, WEAPP_ID } from '../../constants'
-import { useWechatLaunchWeapp } from '../../hooks/useWechat'
+import { RED_ENVELOP_APP_URL, TICKET_APP_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router-dom'
 import { useAccount } from '../../hooks/useAccount'
-import { useDidMount } from '../../hooks/useDidMount'
 
 const Container = styled(MainContainer)`
   padding-top: 20px;
   max-width: 500px;
-  min-height: calc(100% - 20px);
+  min-height: 100%;
   background: #fafafa;
   .welcome {
     width: 343px;
@@ -86,7 +83,7 @@ const Container = styled(MainContainer)`
 
 export const ItemContainer = styled.div`
   color: white;
-  height: 194px;
+  height: ${(props: { isEn: boolean }) => (props.isEn ? '214px' : '194px')};
   background-size: cover;
   background-color: white;
   width: 168px;
@@ -125,7 +122,7 @@ export const ItemContainer = styled.div`
     text-align: left;
     border-radius: 15px;
     width: 136px;
-    height: 71px;
+    height: ${(props: { isEn: boolean }) => (props.isEn ? '120px' : '100px')};
     padding: 10px 6px;
     position: absolute;
   }
@@ -159,8 +156,13 @@ export const Item: React.FC<ItemProps> = ({
   lang,
   color,
 }) => {
+  const { i18n } = useTranslation('translations')
   return (
-    <ItemContainer className={classNames({ available })} onClick={onClick}>
+    <ItemContainer
+      isEn={i18n.language === 'en'}
+      className={classNames({ available })}
+      onClick={onClick}
+    >
       <img src={bg} className="icon" />
       {available ? null : (
         <div className="wait">
@@ -179,10 +181,6 @@ export const Apps: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const { pubkey, email } = useAccount()
   const history = useHistory()
-  const { initWechat, isWechatInited } = useWechatLaunchWeapp()
-  useDidMount(() => {
-    initWechat().catch(Boolean)
-  })
   const getAppUrl = useCallback(
     (baseUrl: string): string => {
       const url = `${baseUrl}`
@@ -255,60 +253,11 @@ export const Apps: React.FC = () => {
       available: false,
     },
   ]
-  const weappHtml = `
-    <wx-open-launch-weapp
-    id="launch-btn"
-    username="${WEAPP_ID}"
-    path="pages/index/index.html"
-  >
-    <script type="text/wxtag-template">
-      <style>
-        .btn {
-          cursor: pointer;
-          width: 231px;
-          margin-left: 10px;
-          margin-right: 10px;
-          padding: 10px;
-          background-color: #f8f7fb;
-          box-shadow: 0px 10px 20px rgba(227, 227, 227, 0.25);
-          border-radius: 15px;
-        }
-        .title {
-          font-size: 16px;
-          color: black;
-          font-weight: bold;
-        }
-        .desc {
-          margin: 6px 0;
-          text-align: left;
-          font-size: 12px;
-          color: black;
-          word-break: break-all;
-        }
-      </style>
-      <div class="btn">
-        <div class="title">${t('apps.shop.title')}</div>
-        <div class="desc">${t('apps.shop.desc')}</div>
-      </div>
-    </script>
-  </wx-open-launch-weapp>
-  `
+
   return (
     <Container>
-      <HiddenBar alwaysShow />
       <div className="welcome" style={{ background: `url(${ShopBg})` }}>
         <span>{t('apps.welcome')}</span>
-      </div>
-      <div className="shop">
-        <ShopSvg />
-        {isWechatInited ? (
-          <div dangerouslySetInnerHTML={{ __html: weappHtml }} />
-        ) : (
-          <div className="content" onClick={() => history.push(RoutePath.Shop)}>
-            <div className="title">{t('apps.shop.title')}</div>
-            <div className="desc">{t('apps.shop.desc')}</div>
-          </div>
-        )}
       </div>
       <div className="main">
         {data.map(({ title, desc, bg, onClick, available, color }) => {
@@ -329,6 +278,8 @@ export const Apps: React.FC = () => {
       <br />
       <br />
       <br />
+      <HiddenBar alwaysShow />
+      <HiddenBarFill />
     </Container>
   )
 }
