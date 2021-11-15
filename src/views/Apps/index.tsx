@@ -83,7 +83,7 @@ const Container = styled(MainContainer)`
 
 export const ItemContainer = styled.div`
   color: white;
-  height: 194px;
+  height: ${(props: { isEn: boolean }) => (props.isEn ? '214px' : '194px')};
   background-size: cover;
   background-color: white;
   width: 168px;
@@ -122,7 +122,7 @@ export const ItemContainer = styled.div`
     text-align: left;
     border-radius: 15px;
     width: 136px;
-    height: 100px;
+    height: ${(props: { isEn: boolean }) => (props.isEn ? '120px' : '100px')};
     padding: 10px 6px;
     position: absolute;
   }
@@ -156,8 +156,13 @@ export const Item: React.FC<ItemProps> = ({
   lang,
   color,
 }) => {
+  const { i18n } = useTranslation('translations')
   return (
-    <ItemContainer className={classNames({ available })} onClick={onClick}>
+    <ItemContainer
+      isEn={i18n.language === 'en'}
+      className={classNames({ available })}
+      onClick={onClick}
+    >
       <img src={bg} className="icon" />
       {available ? null : (
         <div className="wait">
