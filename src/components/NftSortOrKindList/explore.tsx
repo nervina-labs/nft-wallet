@@ -20,6 +20,7 @@ import {
 import { TokenClass } from '../../models/class-list'
 import { useLike } from '../../hooks/useLikeStatus'
 import { isSupportWebp } from '../../utils'
+import styled from '@emotion/styled'
 
 const tabProps: TabProps = {
   py: '4px',
@@ -34,6 +35,12 @@ const tabProps: TabProps = {
     color: 'var(--chakra-colors-black)',
   },
 }
+
+const TabListStyled = styled(TabList)`
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`
 
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { i18n } = useTranslation('translations')
@@ -167,7 +174,7 @@ export const Explore: React.FC<{
         zIndex={2}
         position="relative"
       >
-        <TabList
+        <TabListStyled
           borderBottom="none"
           overflow="auto"
           onScroll={stopPropagation}
@@ -179,7 +186,7 @@ export const Explore: React.FC<{
               {tag.locales[i18n.language]}
             </Tab>
           ))}
-        </TabList>
+        </TabListStyled>
       </Tabs>
       <InfiniteList
         enableQuery

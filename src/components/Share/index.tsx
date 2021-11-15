@@ -56,13 +56,21 @@ export const Share: React.FC<ShareProps> = ({
 }) => {
   const { t } = useTranslation('translations')
   const [posterState, setPosterState] = useState(PosterState.None)
-  const { imgSrc, reload, onRender } = useHtml2Canvas()
+  const toast = useToast()
+  const onRenderError = useCallback(
+    (e) => {
+      toast(e)
+    },
+    [toast]
+  )
+  const { imgSrc, reload, onRender } = useHtml2Canvas({
+    onError: onRenderError,
+  })
   useEffect(() => {
     if (imgSrc) {
       setPosterState(PosterState.Created)
     }
   }, [imgSrc])
-  const toast = useToast()
   const { onCopy } = useClipboard(shareUrl)
   const onDownload = useCallback(() => {
     const isSupportDownload = 'download' in document.createElement('a')
@@ -210,7 +218,7 @@ export const Share: React.FC<ShareProps> = ({
             ) : null}
 
             <Flex
-              bg="rgba(255, 255, 255, 0.8)"
+              bg="linear-gradient(0deg, rgba(255, 255, 255, 0.8) 100%, #F2F2F2 100%);"
               w="full"
               maxW="500px"
               mx="auto"

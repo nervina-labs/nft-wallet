@@ -96,9 +96,7 @@ export const Appbar: React.FC<{
           <Share
             isOpen={isOpenShare}
             onClose={onCloseShare}
-            shareUrl={`https://${window.location.origin}/holder/${
-              address ?? ''
-            }`}
+            shareUrl={`${window.location.origin}/holder/${address ?? ''}`}
             poster={{
               type: PosterType.Holder,
               data: {

@@ -171,7 +171,7 @@ export const Ranking: React.FC = () => {
           {[1, 0, 2].map((v) => (
             <Box w="105px" mt={v === 0 ? '0' : '26px'} key={v}>
               {issuers?.[v] ? (
-                <>
+                <Link to={`/issuer/${issuers?.[v].uuid}`}>
                   <RankBorderBox
                     rank={v}
                     w={v === 0 ? '64px' : '52px'}
@@ -214,7 +214,7 @@ export const Ranking: React.FC = () => {
                   >
                     {issuers[v].verified_info?.verified_title}
                   </Box>
-                </>
+                </Link>
               ) : null}
             </Box>
           ))}
@@ -273,11 +273,9 @@ export const Ranking: React.FC = () => {
                 resizeScale={300}
                 isVerified={issuer.verified_info?.is_verified}
                 webp={isSupportWebp()}
-                fallbackSrc={FALLBACK}
               />
               <Flex h="50px" justify="center" direction="column" px="10px">
                 <Box
-                  px="10px"
                   textOverflow="ellipsis"
                   overflow="hidden"
                   whiteSpace="nowrap"
