@@ -54,7 +54,6 @@ export const HolderList: React.FC<{
                   : item.holder_info.avatar_url
               }
               type={item.holder_info.avatar_type}
-              border="2px solid #f6f6f6"
               fallbackSrc={FallbackAvatarSrc}
               srcQueryParams={{
                 tid: item.n_token_id,

@@ -64,6 +64,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           hasCardBack={token.card_back_content_exist}
           resizeScale={300}
           webp={isSupportWebp()}
+          rounded="22px"
         />
         <Box
           fontSize="16px"
@@ -97,7 +98,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           />
         </HStack>
         {token.product_price && (
-          <Box fontWeight="500" fontSize="12px" mt="7px">
+          <Box fontWeight="500" fontSize="14px" mt="7px" whiteSpace="nowrap">
             ¥{token.product_price}
           </Box>
         )}
@@ -148,6 +149,9 @@ export const Explore: React.FC<{
     },
     [setCurrentTag, tags]
   )
+  const stopPropagation = useCallback((e) => {
+    e?.stopPropagation()
+  }, [])
 
   if (isLoading || !tags) {
     return null
@@ -163,7 +167,12 @@ export const Explore: React.FC<{
         zIndex={2}
         position="relative"
       >
-        <TabList borderBottom="none" overflow="auto">
+        <TabList
+          borderBottom="none"
+          overflow="auto"
+          onScroll={stopPropagation}
+          onTouchMove={stopPropagation}
+        >
           <Tab {...tabProps}>{t('explore.recommended')}</Tab>
           {tags?.map((tag) => (
             <Tab {...tabProps} key={tag.name}>
@@ -190,6 +199,9 @@ export const Explore: React.FC<{
           return group.class_list.map((token, j) => {
             return <Card token={token} key={`${i}-${j}`} />
           })
+        }}
+        style={{
+          overflowX: 'hidden',
         }}
       />
     </>

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { CONTAINER_MAX_WIDTH, IS_IMTOKEN } from '../../constants'
+import { CONTAINER_MAX_WIDTH, IS_IMTOKEN, IS_WEBKIT } from '../../constants'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
@@ -17,7 +17,6 @@ import { useAccountStatus, useLogin, WalletType } from '../../hooks/useAccount'
 import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
 import { Appbar, AppbarButton } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
-import AccountBg from '../../assets/img/account-bg.png'
 import {
   Drawer,
   useDisclosure,
@@ -27,7 +26,7 @@ import {
   Flex,
   Heading,
 } from '@mibao-ui/components'
-import { Checkbox } from '@chakra-ui/react'
+import { AspectRatio, Checkbox } from '@chakra-ui/react'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js'
@@ -35,17 +34,56 @@ import { Autoplay } from 'swiper'
 import Slide1 from '../../assets/img/login/slide-1.png'
 import Slide2 from '../../assets/img/login/slide-2.png'
 import Slide3 from '../../assets/img/login/slide-3.png'
+import classNames from 'classnames'
 
 const Container = styled(MainContainer)`
   display: flex;
   align-items: center;
   flex-direction: column;
-  background: white;
-  background: url(${AccountBg});
-  background-size: cover;
-  background-repeat: repeat-y;
-  min-height: 100%;
+  background: linear-gradient(192.04deg, #e2e3ff 50.5%, #eadeff 100%);
+  position: relative;
+  overflow-x: hidden;
 
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    filter: blur(100px);
+    position: absolute;
+    z-index: 0;
+    border-radius: 100%;
+  }
+  &:before {
+    width: 166px;
+    height: 166px;
+    right: 30px;
+    top: 104px;
+    background: #ffa4e0;
+    animation: run-bg-animation 5s infinite alternate;
+  }
+
+  &:after {
+    width: 214px;
+    height: 214px;
+    left: 60px;
+    top: 25px;
+    background: #ffeb90;
+    animation: run-bg-animation 10s infinite alternate;
+  }
+
+  @keyframes run-bg-animation {
+    0% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(50%, 0);
+    }
+    100% {
+      transform: translate(-50%, 0);
+    }
+  }
+
+  min-height: 100%;
   .close {
     width: 24px;
     height: 24px;
@@ -73,22 +111,17 @@ const Container = styled(MainContainer)`
   }
 
   .header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .status {
-      margin-right: 4px;
-      font-weight: normal;
-      font-size: 12px;
-      line-height: 17px;
-      color: #000000;
-    }
+    width: 100%;
+    z-index: 2;
+    position: relative;
   }
   .logo {
     margin-top: 15px;
     margin-bottom: 15px;
     max-width: 100%;
     padding: 0 24px;
+    z-index: 2;
+    position: relative;
   }
 
   .desc {
@@ -147,6 +180,12 @@ const Container = styled(MainContainer)`
     margin-top: 12px;
     color: #000000;
     opacity: 0.4;
+
+    &.normal {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      position: initial;
+    }
     a {
       text-decoration: none;
       font-size: 10px;
@@ -270,20 +309,22 @@ export const Login: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
-      <Appbar
-        transparent
-        left={
-          <AppbarButton
-            onClick={() => {
-              UnipassConfig.clear()
-              history.replace(RoutePath.Explore)
-            }}
-          >
-            <BackSvg />
-          </AppbarButton>
-        }
-        title={<FullLogo />}
-      />
+      <div className="header">
+        <Appbar
+          transparent
+          left={
+            <AppbarButton
+              onClick={() => {
+                UnipassConfig.clear()
+                history.replace(RoutePath.Explore)
+              }}
+            >
+              <BackSvg />
+            </AppbarButton>
+          }
+          title={<FullLogo />}
+        />
+      </div>
       <div className="logo">
         <Swiper
           modules={[Autoplay]}
@@ -299,7 +340,9 @@ export const Login: React.FC = () => {
           {slides?.map((slide, i) => (
             <SwiperSlide key={i}>
               <Stack direction="column">
-                <img src={slide.src} />
+                <AspectRatio ratio={1 / 1}>
+                  <img src={slide.src} />
+                </AspectRatio>
                 <Flex flexDirection="column" fontSize="24px" px="30px">
                   <Heading textAlign="left" size="lg">
                     {t(`login.slides.${i + 1}.line-1`)}
@@ -314,7 +357,7 @@ export const Login: React.FC = () => {
         </Swiper>
       </div>
       <LoginButton
-        mt="15%"
+        mt={IS_WEBKIT ? '5%' : '15%'}
         onClick={() => {
           if (!isLicenseChecked) {
             toast(t('license.warn'), {
@@ -422,7 +465,7 @@ export const Login: React.FC = () => {
         </Checkbox>
       </div>
       {i18n.language !== 'en' ? (
-        <footer className="beian">
+        <footer className={classNames('beian', { normal: IS_WEBKIT })}>
           <a
             href="https://beian.miit.gov.cn/"
             target="_blank"

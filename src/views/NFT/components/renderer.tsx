@@ -127,7 +127,6 @@ const CardBack: React.FC<{
         zIndex={2}
         transform="rotateY(180deg)"
         bg="rgba(255, 255, 255, 0.2)"
-        backdropFilter="blur(20px)"
         overflow="hidden"
         userSelect="text"
         pointerEvents={clickable ? undefined : 'none'}
@@ -225,7 +224,6 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   )
   const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
-  const [imgLoaded, setImgLoaded] = useState(false)
   const {
     isOpen: isOpenPreview,
     onOpen: onOpenPreview,
@@ -246,9 +244,8 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     [onOpenPreview, showCardBackContent]
   )
   const hasPlayIcon =
-    (detail?.renderer_type === NftType.Audio ||
-      detail?.renderer_type === NftType.Video) &&
-    imgLoaded
+    detail?.renderer_type === NftType.Audio ||
+    detail?.renderer_type === NftType.Video
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
   const tid = (detail as NFTDetail)?.n_token_id
 
@@ -291,15 +288,16 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               webp={isSupportWebp()}
               fallbackSrc={FALLBACK_SRC}
               zIndex={3}
-              onLoad={() => setImgLoaded(true)}
               srcQueryParams={tid ? { tid, locale: i18n.language } : {}}
+              minW="100px"
+              minH="100px"
             />
             {hasPlayIcon ? (
               <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
                 <NftPlaySvg />
               </Box>
             ) : null}
-            {detail?.renderer_type === NftType.ThreeD && imgLoaded ? (
+            {detail?.renderer_type === NftType.ThreeD ? (
               <Center
                 position="absolute"
                 bottom="10px"
@@ -325,7 +323,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       </TiltContainer>
       {detail ? (
         <Preview
-          bgImgUrl={imgUrl}
+          bgImgUrl={imgUrl || FALLBACK_SRC}
           renderer={detail.renderer}
           isOpen={isOpenPreview}
           onClose={onClosePreview}
@@ -361,7 +359,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             position="relative"
             color="white"
             fontSize="12px"
-            bg="rgba(0, 0, 0, 0.4)"
+            bg="rgba(0, 0, 0, 0.6)"
             rounded="8px"
             pr="6px"
             cursor="pointer"

@@ -46,6 +46,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           webp: isSupportWebp(),
         }}
         onClick={gotoClass}
+        rounded="30px"
       />
       <Grid
         templateColumns="25px calc(100% - 25px - 65px) 60px"
@@ -159,6 +160,9 @@ export const Follow: React.FC<{
         return group.class_list.map((token, j) => {
           return <Card token={token} key={`${i}-${j}`} />
         })
+      }}
+      style={{
+        overflowX: 'hidden',
       }}
     />
   )

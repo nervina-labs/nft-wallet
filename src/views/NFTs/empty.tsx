@@ -5,12 +5,13 @@ import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { ReactComponent as NoNFT } from '../../assets/svg/no-nft.svg'
 import { ReactComponent as NoLike } from '../../assets/svg/no-like.svg'
 import { ReactComponent as NoFollower } from '../../assets/svg/no-follow.svg'
+import { IS_DESKTOP } from '../../constants'
 
 const Container = styled.div`
-  margin-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   .desc {
     font-size: 14px;
     color: #777e90;
@@ -51,7 +52,11 @@ export const Empty: React.FC<{
   }, [isLiked, isFollow])
 
   return (
-    <Container>
+    <Container
+      style={{
+        marginTop: IS_DESKTOP ? '60px' : '0',
+      }}
+    >
       {img}
       <div className="desc">{desc}</div>
     </Container>

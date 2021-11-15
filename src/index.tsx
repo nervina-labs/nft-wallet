@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
+import * as sw from './serviceWorkerRegistration'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 
@@ -22,3 +23,5 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 )
+
+sw.register()
