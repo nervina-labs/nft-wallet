@@ -55,7 +55,7 @@ const UserWithAddress: React.FC<{
         src={avatarUrl === null ? '' : avatarUrl}
         type={avatarType}
         size="25px"
-        border="1px solid #f6f6f6"
+        border={avatarType === 'token' ? undefined : '1px solid #f6f6f6'}
         fallbackSrc={FallbackAvatarSrc}
         isVerified={isVerified}
         srcQueryParams={
