@@ -18,10 +18,10 @@ const RANKING_EMOJI_MAP: { [key in string]: string } = {
 }
 
 const RANKING_EMOJI_SORT_VALUE: { [key in string]: number } = {
-  hot_sale_token_class: 0,
-  hot_sale_issuer: 1,
-  popular_token_class: 2,
-  popular_issuer: 3,
+  popular_token_class: 0,
+  popular_issuer: 1,
+  hot_sale_token_class: 2,
+  hot_sale_issuer: 3,
 }
 
 const Item: React.FC<RankingItem> = ({
