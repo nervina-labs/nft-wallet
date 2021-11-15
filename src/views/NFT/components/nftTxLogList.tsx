@@ -6,7 +6,7 @@ import {
   Grid,
   Stack,
 } from '@mibao-ui/components'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
@@ -24,6 +24,7 @@ const UserWithAddress: React.FC<{
   avatarType?: AvatarType
   nickname: string
   address: string
+  showAddress?: string
   isIssuer?: boolean
   isVerified?: boolean
 }> = ({
@@ -32,6 +33,7 @@ const UserWithAddress: React.FC<{
   avatarType = 'image',
   nickname,
   address,
+  showAddress,
   isIssuer,
   isVerified,
 }) => {
@@ -44,6 +46,14 @@ const UserWithAddress: React.FC<{
     }
     push(`/holder/${address}`)
   }, [address, isIssuer, push])
+  const showingAddress = useMemo(() => showAddress || address, [
+    address,
+    showAddress,
+  ])
+  const addressEllipsisRange: [number, number] = useMemo(
+    () => [isIssuer ? 12 : 5, 5],
+    [isIssuer]
+  )
 
   return (
     <Grid
@@ -83,12 +93,12 @@ const UserWithAddress: React.FC<{
               {nickname}
             </Box>
             <Box fontSize="12px" color="#777E90" lineHeight="12px">
-              {ellipsisString(address, [5, 5])}
+              {ellipsisString(showingAddress, addressEllipsisRange)}
             </Box>
           </>
         ) : (
           <Box fontSize="14px" fontWeight="500" lineHeight="25px">
-            {ellipsisString(address, [5, 5])}
+            {ellipsisString(showingAddress, addressEllipsisRange)}
           </Box>
         )}
       </Stack>
@@ -110,7 +120,8 @@ const NftTxLog: React.FC<{ log: TransactionLog }> = ({ log }) => {
       ? {
           avatarUrl: log.issuer_avatar_url,
           nickname: log.issuer_name,
-          address: log.n_issuer_id,
+          address: log.issuer_uuid,
+          showAddress: log.n_issuer_id,
           isIssuer: true,
           isVerified: log.verified_info?.is_verified,
         }
