@@ -1,7 +1,6 @@
 import { Box, Flex } from '@mibao-ui/components'
 import CopySvg from '../../../assets/svg/copy.svg'
 import SuccessSvg from '../../../assets/svg/success.svg'
-import { ellipsisIssuerID } from '../../../utils'
 import styled from 'styled-components'
 import { useClipboard } from '@chakra-ui/react'
 
@@ -14,9 +13,25 @@ const Icon = styled.img`
 export const Address: React.FC<{ content: string }> = ({ content }) => {
   const { hasCopied, onCopy } = useClipboard(content)
   return (
-    <Flex fontSize="12px" whiteSpace="nowrap" onClick={onCopy} cursor="pointer">
+    <Flex
+      fontSize="12px"
+      whiteSpace="nowrap"
+      onClick={onCopy}
+      cursor="pointer"
+      maxW="260px"
+      w="100%"
+    >
       ID:
-      <Box mx="6px">{ellipsisIssuerID(content)}</Box>
+      <Box
+        ml="6px"
+        textOverflow="ellipsis"
+        overflow="hidden"
+        whiteSpace="nowrap"
+        minW="40px"
+      >
+        {content.substring(0, content.length - 5)}
+      </Box>
+      <Box>{content.substring(content.length - 5)}</Box>
       <Icon src={hasCopied ? SuccessSvg : CopySvg} />
     </Flex>
   )
