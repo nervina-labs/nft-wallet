@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, Redirect, useParams } from 'react-router-dom'
 import { Query } from '../../models'
+import { TokenClass } from '../../models/class-list'
 import {
   Appbar as RowAppbar,
   AppbarButton,
@@ -17,6 +18,7 @@ import { useHistoryBack } from '../../hooks/useHistoryBack'
 import styled from 'styled-components'
 import { useFirstOpenScrollToTop } from '../../hooks/useFirstOpenScrollToTop'
 import { RoutePath } from '../../routes'
+import { useLike } from '../../hooks/useLikeStatus'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -24,8 +26,51 @@ const Container = styled(MainContainer)`
   position: relative;
 `
 
-export const Collection: React.FC = () => {
+const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { t, i18n } = useTranslation('translations')
+  const { likeCount, isLikeLoading, toggleLike, isLiked } = useLike({
+    count: token.class_likes,
+    liked: token.class_liked,
+    locale: i18n.language,
+    uuid: token.uuid,
+  })
+
+  return (
+    <Link to={`/class/${token.uuid}`}>
+      <NFTCard
+        src={token.bg_image_url === null ? '' : token.bg_image_url}
+        type={token.renderer_type}
+        locale={i18n.language}
+        title={token.name}
+        hasCardback={token.card_back_content_exist}
+        titleProps={{ fontWeight: 'normal' }}
+        issuerProps={{
+          name: token.issuer_info?.name ?? '',
+          src:
+            token.issuer_info?.avatar_url === null
+              ? ''
+              : token.issuer_info?.avatar_url,
+        }}
+        limitProps={{
+          count: token.total,
+          locale: i18n.language,
+          limitedText: t('common.limit.limit'),
+          unlimitedText: t('common.limit.unlimit'),
+        }}
+        likeProps={{
+          isLiked,
+          likeCount,
+          isLoading: isLikeLoading,
+          onClick: toggleLike,
+        }}
+        mb="20px"
+      />
+    </Link>
+  )
+}
+
+export const Collection: React.FC = () => {
+  const { i18n } = useTranslation('translations')
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const goBack = useHistoryBack()
@@ -87,51 +132,7 @@ export const Collection: React.FC = () => {
           gap="20px"
           renderItems={(group, i) => {
             return group.class_list.map((token, j: number) => (
-              <Link to={`/class/${token.uuid}`} key={`${i}-${j}`}>
-                <NFTCard
-                  src={token.bg_image_url === null ? '' : token.bg_image_url}
-                  type={token.renderer_type}
-                  locale={i18n.language}
-                  title={token.name}
-                  hasCardback={token.card_back_content_exist}
-                  titleProps={{ fontWeight: 'normal' }}
-                  issuerProps={{
-                    name: token.issuer_info?.name ?? '',
-                    src:
-                      token.issuer_info?.avatar_url === null
-                        ? ''
-                        : token.issuer_info?.avatar_url,
-                  }}
-                  limitProps={{
-                    count: token.total,
-                    locale: i18n.language,
-                    limitedText: t('common.limit.limit'),
-                    unlimitedText: t('common.limit.unlimit'),
-                  }}
-                  mb="20px"
-                />
-                {/* <Flex mb="16px">
-                  <Image
-                    src={token.bg_image_url === null ? '' : token.bg_image_url}
-                    width="50px"
-                    height="50px"
-                    rounded="10px"
-                    resizeScale={300}
-                    webp={isSupportWebp()}
-                    fallbackSrc={FALLBACK}
-                  />
-                  <Box
-                    h="50px"
-                    lineHeight="50px"
-                    ml="10px"
-                    textOverflow="ellipsis"
-                    overflow="hidden"
-                    whiteSpace="nowrap"
-                  >
-                    {token.name}
-                  </Box>
-                </Flex> */}
-              </Link>
+              <Card key={`${i}-${j}`} token={token} />
             ))
           }}
         />

@@ -170,6 +170,7 @@ const CardBack: React.FC<{
               whiteSpace="nowrap"
               textOverflow="ellipsis"
               overflow="hidden"
+              px="20px"
             >
               {t('nft.lock')}
             </Box>
@@ -359,7 +360,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             position="relative"
             color="white"
             fontSize="12px"
-            bg="rgba(0, 0, 0, 0.6)"
+            bg="rgba(0, 0, 0, 0.5)"
             rounded="8px"
             pr="6px"
             cursor="pointer"

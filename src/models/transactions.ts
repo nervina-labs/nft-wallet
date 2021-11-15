@@ -37,6 +37,7 @@ export interface TransactionLog extends VipInfo {
   tx_hash: string
   on_chain_timestamp: string
   tx_type: string
+  n_issuer_id: string
   issuer_uuid: string
   issuer_avatar_url: string
   issuer_name: string

@@ -17,6 +17,13 @@ const RANKING_EMOJI_MAP: { [key in string]: string } = {
   popular_token_class: '🔥',
 }
 
+const RANKING_EMOJI_SORT_VALUE: { [key in string]: number } = {
+  hot_sale_token_class: 0,
+  hot_sale_issuer: 1,
+  popular_token_class: 2,
+  popular_issuer: 3,
+}
+
 const Item: React.FC<RankingItem> = ({
   name,
   locales,
@@ -119,6 +126,10 @@ export const RankingList: React.FC = () => {
     Query.RankingList,
     async () => {
       const { data } = await api.getRankingList()
+      data.ranking_list.sort(
+        (a, b) =>
+          RANKING_EMOJI_SORT_VALUE[a.name] - RANKING_EMOJI_SORT_VALUE[b.name]
+      )
       return data
     },
     {

@@ -55,7 +55,7 @@ const UserWithAddress: React.FC<{
         src={avatarUrl === null ? '' : avatarUrl}
         type={avatarType}
         size="25px"
-        border="1px solid #f6f6f6"
+        border={avatarType === 'token' ? undefined : '1px solid #f6f6f6'}
         fallbackSrc={FallbackAvatarSrc}
         isVerified={isVerified}
         srcQueryParams={
@@ -110,7 +110,7 @@ const NftTxLog: React.FC<{ log: TransactionLog }> = ({ log }) => {
       ? {
           avatarUrl: log.issuer_avatar_url,
           nickname: log.issuer_name,
-          address: log.issuer_uuid,
+          address: log.n_issuer_id,
           isIssuer: true,
           isVerified: log.verified_info?.is_verified,
         }

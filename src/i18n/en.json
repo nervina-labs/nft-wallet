@@ -501,14 +501,14 @@
       "detail": "Details",
       "tabs": {
         "all": "All",
-        "placed": "Pending payment",
+        "placed": "Pending",
         "paid": "Receiving",
         "done": "Received"
       },
       "no-data": "No data",
       "no-more": "No more",
       "state": {
-        "order_placed": "Pending Payment",
+        "order_placed": "Pending",
         "paid": "Receiving",
         "expired": "Closed",
         "closed": "Closed",
