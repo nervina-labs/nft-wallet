@@ -370,11 +370,12 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             bg="rgba(0, 0, 0, 0.2)"
             rounded="8px"
             cursor="pointer"
-            fontWeight="200"
             userSelect="none"
+            pr="6px"
             onClick={() => setShowCardBackContent((bool) => !bool)}
           >
             <CardbackSvg />
+            {t('nft.show-card-back')}
           </Center>
         </Center>
       ) : null}
