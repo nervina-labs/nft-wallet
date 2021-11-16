@@ -10,9 +10,6 @@ export const Pro: React.FC = () => {
   return (
     <Box>
       <Banner />
-      <Box fontWeight="200" fontSize="24px" px="20px" mt="30px">
-        {t('explore.title-recommended')}
-      </Box>
       <Recommend />
       <Box fontWeight="200" fontSize="24px" px="20px" mt="30px">
         {t('explore.ranking')}
