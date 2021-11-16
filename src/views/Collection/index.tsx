@@ -50,6 +50,8 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
             token.issuer_info?.avatar_url === null
               ? ''
               : token.issuer_info?.avatar_url,
+          isVerified: token.verified_info?.is_verified,
+          containerProps: { h: '25px' },
         }}
         limitProps={{
           count: token.total,
