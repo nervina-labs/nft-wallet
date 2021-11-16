@@ -167,10 +167,12 @@ export const Footer: React.FC<{
       bottom="0"
       transform={`translateY(${hidden ? '60px' : '0'})`}
       transition="transform 300ms"
-      h="60px"
+      h="calc(60px + var(--safe-area-inset-bottom))"
       bg="white"
       px="20px"
-      mt="auto"
+      pt="10px"
+      pb="calc(10px + var(--safe-area-inset-bottom))"
+      mb="auto"
       borderTop="1px solid #e1e1e1"
       zIndex={5}
     >
