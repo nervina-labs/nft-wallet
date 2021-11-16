@@ -172,7 +172,8 @@ export const Footer: React.FC<{
       px="20px"
       pt="10px"
       pb="calc(10px + var(--safe-area-inset-bottom))"
-      mb="auto"
+      mt="auto"
+      mb="0"
       borderTop="1px solid #e1e1e1"
       zIndex={5}
     >
