@@ -103,8 +103,8 @@ const TranferOrBuy: React.FC<{
   ])
 
   const isSoldout = Number(detail?.product_count) === 0
-
-  if (isClass) {
+  const disableSell = true
+  if (isClass && disableSell) {
     return detail?.product_on_sale_uuid ? (
       <Button
         colorScheme="primary"
