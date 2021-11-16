@@ -16,6 +16,7 @@ import { formatCount, getNFTQueryParams, isUnlimited } from '../../utils'
 import { Masonry } from '../../components/Masonry'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import Fallback from '../../assets/svg/fallback.svg'
+import { PER_ITEM_LIMIT } from '../../constants'
 
 export interface DrawerImageProps {
   showAvatarAction: boolean
@@ -92,7 +93,7 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
   const { t, i18n } = useTranslation('translations')
   const onConfirm = useConfirmDialog()
   const history = useHistory()
-  const ITEM_LIMIT = 15
+  const ITEM_LIMIT = PER_ITEM_LIMIT
   const uploadInputRef = useRef<HTMLInputElement>(null)
 
   const [openChooseTokenClassModal, setOpenChooseTokenClassModal] = useState(
