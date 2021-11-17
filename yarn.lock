@@ -2187,10 +2187,10 @@
   version "1.2.0"
   resolved "https://registry.npmjs.org/@metamask/detect-provider/-/detect-provider-1.2.0.tgz"
 
-"@mibao-ui/components@0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@mibao-ui/components/-/components-0.0.25.tgz#b017657b40574fce1cc70098a44416369ed9183d"
-  integrity sha512-XZlMLFeIcviYsF2ywsaPQdyojKXNleJUs1ygt4OfB92iVg4QgZ4fgTNG5cO3D0VM5gChtgKeiqSBdcaujg/ykg==
+"@mibao-ui/components@0.0.27":
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/@mibao-ui/components/-/components-0.0.27.tgz#4fb7ca9c88fa67ae0d08b59fd3171fc7896fe8cd"
+  integrity sha512-gpK5DKdHK8/qZQITWzXHzcHyG0ngS9qx7OvNpW4XzqltKadoAJ9/uyfcG0JA1NbKZVirtplwU7Hm8dQsFZP0SA==
 
 "@nervosnetwork/ckb-sdk-core@^0.40.0":
   version "0.40.0"
