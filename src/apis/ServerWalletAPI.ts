@@ -402,9 +402,7 @@ export class ServerWalletAPI {
     return await this.axios.get<ClassList>(
       `/special_categories/${uuid}/token_classes`,
       {
-        params: {
-          address: this.address,
-        },
+        params,
       }
     )
   }

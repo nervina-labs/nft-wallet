@@ -79,8 +79,8 @@ export const Follow: React.FC<FollowProps> = ({
     <Button
       isLoading={isLoading}
       size="sm"
-      colorScheme={isPrimary ? 'primary' : 'gray'}
-      variant={isPrimary && !isFollow ? 'solid' : 'outline'}
+      colorScheme={isPrimary && !isFollow ? 'primary' : 'gray'}
+      variant="outline"
       isDisabled={isLoading}
       onClick={toggleFollow}
       fontWeight="normal"

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { Link, Redirect, useParams } from 'react-router-dom'
+import { Link, Redirect, useHistory, useParams } from 'react-router-dom'
 import { Query } from '../../models'
 import { TokenClass } from '../../models/class-list'
 import {
@@ -28,6 +28,7 @@ const Container = styled(MainContainer)`
 
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { t, i18n } = useTranslation('translations')
+  const { push } = useHistory()
   const { likeCount, isLikeLoading, toggleLike, isLiked } = useLike({
     count: token.class_likes,
     liked: token.class_liked,
@@ -50,6 +51,13 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
             token.issuer_info?.avatar_url === null
               ? ''
               : token.issuer_info?.avatar_url,
+          isVerified: token.verified_info?.is_verified,
+          containerProps: { h: '25px' },
+          onClick(e) {
+            push(`/issuer/${token.issuer_info?.uuid ?? ''}`)
+            e.stopPropagation()
+            e.preventDefault()
+          },
         }}
         limitProps={{
           count: token.total,
@@ -70,7 +78,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
 }
 
 export const Collection: React.FC = () => {
-  const { i18n } = useTranslation('translations')
+  const { i18n, t } = useTranslation('translations')
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const goBack = useHistoryBack()
@@ -120,8 +128,8 @@ export const Collection: React.FC = () => {
           enableQuery
           queryFn={queryFn}
           queryKey={[Query.Collection, api, id]}
-          emptyElement={null}
-          noMoreElement={null}
+          emptyElement={t('issuer.no-data')}
+          noMoreElement={t('common.actions.pull-to-down')}
           calcDataLength={(data) =>
             data?.pages.reduce(
               (acc, token) => token.class_list.length + acc,

@@ -2191,7 +2191,7 @@
   version "0.0.26"
   resolved "https://registry.yarnpkg.com/@mibao-ui/components/-/components-0.0.26.tgz#a17db977ccb082024ef53dc8810ba6e3569c0a1e"
   integrity sha512-A329dQsoCKgSzgM7dRFd1QFoPoXuFEihKyDOB/8wQ4Zul9f+T2CAJXw/PaQGuLGTsocZYISokrUVMfSdmWmQ8Q==
-
+  
 "@nervosnetwork/ckb-sdk-core@^0.40.0":
   version "0.40.0"
   resolved "https://registry.npmjs.org/@nervosnetwork/ckb-sdk-core/-/ckb-sdk-core-0.40.0.tgz"
