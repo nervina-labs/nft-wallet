@@ -1,16 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Center, Text, HStack } from '@mibao-ui/components'
 import {
-  currentOrderInfoAtom,
   OrderStep,
   placeOrderPropsAtom,
+  useOrderPrice,
   usePlaceOrder,
   useSetOrderStep,
   useSetProductId,
 } from '../../hooks/useOrder'
 import { useAtomValue } from 'jotai/utils'
-import { formatCurrency } from '../../utils'
 import { Payment } from './Payment'
 import { ReactComponent as NextStepSvg } from '../../assets/svg/next-step.svg'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
@@ -48,14 +47,8 @@ export const ConfirmPayment = () => {
       setIsSubmitting(false)
     }
   }, [placeOrder, confirmDialog, t, hisotry, setProductId])
-  const order = useAtomValue(currentOrderInfoAtom)
   const orderProps = useAtomValue(placeOrderPropsAtom)
-  const [prime, decimal] = useMemo(() => {
-    const price = order.price
-    const count = orderProps.count
-    const tp = formatCurrency(Number(price) * Number(count), order.currency)
-    return tp.split('.')
-  }, [order, orderProps])
+  const { prime, decimal } = useOrderPrice()
   const setOrderStep = useSetOrderStep()
 
   return (

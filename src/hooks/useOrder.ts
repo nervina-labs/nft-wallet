@@ -9,7 +9,7 @@ import {
   atomWithReset,
   atomWithStorage,
 } from 'jotai/utils'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import {
@@ -20,6 +20,7 @@ import {
   IS_WEXIN,
 } from '../constants'
 import { NftType, Query } from '../models'
+import { formatCurrency } from '../utils'
 import { useAPI } from './useAccount'
 import { useConfirmDialog } from './useConfirmDialog'
 import { useGetAndSetAuth } from './useProfile'
@@ -41,6 +42,7 @@ export enum PaymentChannel {
   WechatMobile = 'wx_wap',
   WechatPub = 'wx_pub',
   Paypal = 'paypal',
+  WechatScan = 'wx_pub_qr',
 }
 
 export enum OrderStep {
@@ -62,9 +64,18 @@ export const currentOrderInfoAtom = atomWithReset<CurrentOrder>({})
 export const orderStepAtom = atomWithReset<OrderStep>(OrderStep.Init)
 export const placeOrderPropsAtom = atomWithReset<PlaceOrderProps>({})
 export const isWechatAuthedAtom = atomWithStorage('mibao_wechat_auth', false)
+export const isWechatScanModalOpenAtom = atom(false)
+export const wechatPaymentQrCodeAtom = atom('')
 
 export const useOrderStep = () => {
   return useAtomValue(orderStepAtom)
+}
+
+export const useCloseWechatScanModal = () => {
+  const setIsWechatScanModalOpen = useUpdateAtom(isWechatScanModalOpenAtom)
+  return useCallback(() => {
+    setIsWechatScanModalOpen(false)
+  }, [setIsWechatScanModalOpen])
 }
 
 export const useSetOrderStep = () => {
@@ -185,6 +196,7 @@ export const usePlaceOrder = () => {
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
   const { closeOrderDrawer } = useOrderDrawer()
+  const closeWechatModal = useCloseWechatScanModal()
   return useAtomCallback(
     useCallback(
       async (get, set) => {
@@ -207,11 +219,16 @@ export const usePlaceOrder = () => {
         if (channel === PaymentChannel.AlipayMobile && IS_WEXIN) {
           pingxx.setAPURL(`${location.origin}/alipay.htm`)
         }
+        if (channel === PaymentChannel.WechatScan) {
+          closeOrderDrawer()
+          set(wechatPaymentQrCodeAtom, data.credential.wx_pub_qr)
+          set(isWechatScanModalOpenAtom, true)
+        }
         if (!IS_WEXIN && IS_WEBKIT) {
           pingxx.setUrlReturnCallback(
             function (err: any, url: string) {
               if (err) {
-                throw new Error('')
+                throw new Error('unknown')
               }
               location.href = url
               closeOrderDrawer()
@@ -242,6 +259,7 @@ export const usePlaceOrder = () => {
           pingxx.createPayment(data, function (result: string, err: any) {
             if (result === 'success') {
               closeOrderDrawer()
+              closeWechatModal()
               resolve()
             } else if (result === 'fail') {
               reject(err)
@@ -252,7 +270,7 @@ export const usePlaceOrder = () => {
           })
         })
       },
-      [api, getAuth, closeOrderDrawer]
+      [api, getAuth, closeOrderDrawer, closeWechatModal]
     )
   )
 }
@@ -321,4 +339,20 @@ export const useContinueOrder = () => {
     },
     [setOrderInfo, setProps, setDrawerVisable, setStep]
   )
+}
+
+export const useOrderPrice = () => {
+  const order = useAtomValue(currentOrderInfoAtom)
+  const orderProps = useAtomValue(placeOrderPropsAtom)
+  const [prime, decimal] = useMemo(() => {
+    const price = order.price
+    const count = orderProps.count
+    const tp = formatCurrency(Number(price) * Number(count), order.currency)
+    return tp.split('.')
+  }, [order, orderProps])
+
+  return {
+    prime,
+    decimal,
+  }
 }
