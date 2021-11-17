@@ -211,7 +211,9 @@ export const usePlaceOrder = () => {
     useCallback(
       async (get, set) => {
         const auth = await getAuth()
-        const { uuid, channel, productId, count } = get(placeOrderPropsAtom)
+        const { uuid = '', channel, productId, count } = get(
+          placeOrderPropsAtom
+        )
         const { data } = await (productId
           ? api.placeOrder(
               {
@@ -222,7 +224,7 @@ export const usePlaceOrder = () => {
               },
               auth
             )
-          : api.continuePlaceOrder(uuid as string, channel as string, auth))
+          : api.continuePlaceOrder(uuid, channel as string, auth))
         // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
         // @ts-ignore
         const pingxx = await import('pingpp-js')
@@ -255,7 +257,7 @@ export const usePlaceOrder = () => {
                 set(isWechatScanModalOpenAtom, false)
               })
             )
-          )
+          ).then(() => uuid)
         }
         if (!IS_WEXIN && IS_WEBKIT) {
           pingxx.setUrlReturnCallback(
@@ -288,12 +290,12 @@ export const usePlaceOrder = () => {
             [PaymentChannel.WechatMobile]
           )
         }
-        return await new Promise<void>((resolve, reject) => {
+        return await new Promise<string>((resolve, reject) => {
           pingxx.createPayment(data, function (result: string, err: any) {
             if (result === 'success') {
               closeOrderDrawer()
               closeWechatModal()
-              resolve()
+              resolve(uuid)
             } else if (result === 'fail') {
               reject(err)
             } else if (result === 'reject' || result === 'cancel') {

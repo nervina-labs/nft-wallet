@@ -15,6 +15,9 @@ import { PosterType } from '../../../components/Share/share.interface'
 import { NFTDetail } from '../../../models'
 import { TokenClass } from '../../../models/class-list'
 import { useShareDisclosure } from '../../../hooks/useShareDisclosure'
+import { useRouteQuery } from '../../../hooks/useRouteQuery'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../../../routes'
 
 const Share = lazy(async () => await import('../../../components/Share'))
 
@@ -38,13 +41,25 @@ export const Appbar: React.FC<{
     )
   )
 
+  const history = useHistory()
+
+  const isFromWechat = useRouteQuery('from_wechat', '')
+
   return (
     <>
       <AppbarSticky>
         <RowAppbar
           transparent
           left={
-            <AppbarButton onClick={goBack}>
+            <AppbarButton
+              onClick={() => {
+                if (isFromWechat) {
+                  history.replace(RoutePath.NFTs)
+                } else {
+                  goBack()
+                }
+              }}
+            >
               <BackSvg />
             </AppbarButton>
           }
