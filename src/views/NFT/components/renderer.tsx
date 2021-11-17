@@ -126,7 +126,7 @@ const CardBack: React.FC<{
         height="100%"
         zIndex={2}
         transform="rotateY(180deg)"
-        bg="rgba(255, 255, 255, 0.2)"
+        bg="rgba(222, 222, 222, 0.6)"
         overflow="hidden"
         userSelect="text"
         pointerEvents={clickable ? undefined : 'none'}
@@ -138,6 +138,7 @@ const CardBack: React.FC<{
             w="full"
             h="full"
             p="10px"
+            bg="rgba(255, 255, 255, 0.6)"
             dangerouslySetInnerHTML={{
               __html: content,
             }}
@@ -161,16 +162,15 @@ const CardBack: React.FC<{
             </Center>
 
             <Box
-              bg="rgba(0, 0, 0, 0.3)"
-              h="48px"
-              lineHeight="48px"
               color="white"
               textAlign="center"
-              fontSize="14px"
-              whiteSpace="nowrap"
+              fontSize="12px"
               textOverflow="ellipsis"
               overflow="hidden"
               px="20px"
+              py="10px"
+              bg="rgba(200, 200, 200, 0.5)"
+              noOfLines={2}
             >
               {t('nft.lock')}
             </Box>
@@ -183,6 +183,7 @@ const CardBack: React.FC<{
         <ModalContent
           bg="rgba(255, 255, 255, 0.9)"
           p="20px"
+          pt="40px"
           rounded="30px"
           backdropFilter="blur(10px)"
           w="95%"
@@ -354,7 +355,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           opacity={0.8}
           webp={isSupportWebp()}
           transform="translate(-5%, -5%)"
-          filter="blur(50px) contrast(1.2)"
+          filter="blur(50px) contrast(1)"
           fallbackSrc={FALLBACK_SRC}
         />
       </Box>
@@ -366,11 +367,11 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             position="relative"
             color="white"
             fontSize="12px"
-            bg="rgba(0, 0, 0, 0.5)"
+            bg="rgba(0, 0, 0, 0.2)"
             rounded="8px"
-            pr="6px"
             cursor="pointer"
             userSelect="none"
+            pr="6px"
             onClick={() => setShowCardBackContent((bool) => !bool)}
           >
             <CardbackSvg />
