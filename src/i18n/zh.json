@@ -499,6 +499,7 @@
     "orders": {
       "title": "订单列表",
       "detail": "订单详情",
+      "timeout": "订单已超时",
       "wechat": {
         "buy": "您即将支付",
         "desc": "使用手机微信 App\n扫描二维码完成支付"

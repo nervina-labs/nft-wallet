@@ -13,6 +13,15 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import {
+  interval,
+  switchMap,
+  filter,
+  take,
+  lastValueFrom,
+  timeout,
+  tap,
+} from 'rxjs'
+import {
   IS_ANDROID,
   IS_CHROME,
   IS_DESKTOP,
@@ -20,6 +29,7 @@ import {
   IS_WEXIN,
 } from '../constants'
 import { NftType, Query } from '../models'
+import { OrderState } from '../models/order'
 import { formatCurrency } from '../utils'
 import { useAPI } from './useAccount'
 import { useConfirmDialog } from './useConfirmDialog'
@@ -220,9 +230,32 @@ export const usePlaceOrder = () => {
           pingxx.setAPURL(`${location.origin}/alipay.htm`)
         }
         if (channel === PaymentChannel.WechatScan) {
-          closeOrderDrawer()
-          set(wechatPaymentQrCodeAtom, data.credential.wx_pub_qr)
+          set(wechatPaymentQrCodeAtom, JSON.parse(data).credential.wx_pub_qr)
           set(isWechatScanModalOpenAtom, true)
+          closeOrderDrawer()
+          set(orderStepAtom, OrderStep.Init)
+          return await lastValueFrom(
+            // polling for every 5 seconds
+            interval(5000).pipe(
+              switchMap(async () => {
+                const isModalOpen = get(isWechatScanModalOpenAtom)
+                if (!isModalOpen) {
+                  throw new Error('modal close')
+                }
+                return await api.getOrderDetail(uuid as string, auth)
+              }),
+              filter((res) => {
+                const state = res.data.token_order.state
+                return state === OrderState.Paid || state === OrderState.Done
+              }),
+              take(1),
+              // timeout for 5 minutes
+              timeout(3e5),
+              tap(() => {
+                set(isWechatScanModalOpenAtom, false)
+              })
+            )
+          )
         }
         if (!IS_WEXIN && IS_WEBKIT) {
           pingxx.setUrlReturnCallback(

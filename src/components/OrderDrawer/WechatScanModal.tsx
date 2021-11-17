@@ -2,7 +2,6 @@ import React from 'react'
 import {
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalOverlay,
   Center,
@@ -27,10 +26,9 @@ export const WechatScanModal: React.FC = () => {
   return (
     <Modal isOpen={isOpen} onClose={closeModal} isCentered>
       <ModalOverlay />
-      <ModalContent>
-        <ModalCloseButton />
+      <ModalContent borderRadius="22px" width="325px" py="0">
         <ModalBody>
-          <Center borderRadius="22px" bg="white" h="420px" w="325px">
+          <Center borderRadius="22px" bg="white" flexDirection="column">
             <Text fontSize="16px" mb="8px">
               {t('orders.wechat.buy')}
             </Text>
@@ -47,7 +45,7 @@ export const WechatScanModal: React.FC = () => {
                 value={qrcode}
               />
             </Center>
-            <Text fontSize="12px" px="12px">
+            <Text fontSize="12px" px="12px" whiteSpace="pre-wrap">
               {t('orders.wechat.desc')}
             </Text>
           </Center>

@@ -499,6 +499,11 @@
     "orders": {
       "title": "Orders",
       "detail": "Details",
+      "timeout": "The order has timed out",
+      "wechat": {
+        "buy": "You need to pay",
+        "desc": "Use WeChat App Scan the QR code\n to complete the payment"
+      },
       "tabs": {
         "all": "All",
         "placed": "Pending",
