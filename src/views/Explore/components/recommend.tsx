@@ -102,13 +102,13 @@ const Item: React.FC<SpecialAssets> = ({
                 fallbackSrc={FALLBACK}
               />
             </AspectRatio>
-            <Flex direction="column" py="5px" pl="10px">
+            <Flex direction="column" py="5px" pl="10px" justify="center">
               <Box
                 fontSize="14px"
                 textOverflow="ellipsis"
-                whiteSpace="nowrap"
                 overflow="hidden"
-                mb="auto"
+                mb="4px"
+                noOfLines={2}
               >
                 {tokenClass.name}
               </Box>
