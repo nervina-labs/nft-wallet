@@ -20,7 +20,7 @@ import { InfiniteList } from '../../../components/InfiniteList'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { IssuerTokenClass } from '../../../models/issuer'
 import { isSupportWebp } from '../../../utils'
-import FALLBACK from '../../../assets/svg/fallback.svg'
+import FALLBACK from '../../../assets/img/nft-fallback.png'
 import { Empty } from './empty'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 
@@ -94,7 +94,7 @@ export const NftCards: React.FC = () => {
     [push]
   )
   const queryFn = useCallback(
-    async ({ pageParam = 0 }) => {
+    async ({ pageParam = 1 }) => {
       const { data } = await api.getIssuerTokenClass(id, productState, {
         page: pageParam,
       })

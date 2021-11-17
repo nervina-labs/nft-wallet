@@ -161,28 +161,41 @@ export const Footer: React.FC<{
   })
 
   return (
-    <Grid
-      templateColumns="calc(100% - 120px) 120px"
-      position="sticky"
-      bottom="0"
-      transform={`translateY(${hidden ? '60px' : '0'})`}
-      transition="transform 300ms"
-      h="60px"
-      bg="white"
-      px="20px"
-      mt="auto"
-      borderTop="1px solid #e1e1e1"
-      zIndex={5}
-    >
-      <Like
-        likeCount={likeCount}
-        isLiked={isLiked}
-        isLoading={isLikeLoading}
-        onClick={toggleLike}
-        my="auto"
-      />
+    <>
+      <Grid
+        templateColumns="calc(100% - 120px) 120px"
+        position="fixed"
+        bottom="-40px"
+        opacity={hidden ? 0 : 1}
+        transform={`translateY(${
+          hidden ? '60px' : 'calc(0px - var(--safe-area-inset-bottom))'
+        })`}
+        transition="transform 100ms"
+        h="100px"
+        bg="white"
+        px="20px"
+        pt="10px"
+        pb="50px"
+        mt="auto"
+        mb="0"
+        w="100%"
+        left="unset"
+        right="unset"
+        maxW="500px"
+        borderTop="1px solid #e1e1e1"
+        zIndex={5}
+      >
+        <Like
+          likeCount={likeCount}
+          isLiked={isLiked}
+          isLoading={isLikeLoading}
+          onClick={toggleLike}
+          my="auto"
+        />
 
-      <TranferOrBuy uuid={uuid} detail={detail} isClass={isClass} />
-    </Grid>
+        <TranferOrBuy uuid={uuid} detail={detail} isClass={isClass} />
+      </Grid>
+      <Box h="60px" />
+    </>
   )
 }

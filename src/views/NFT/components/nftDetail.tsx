@@ -17,6 +17,7 @@ import { NFTDetail } from '../../../models'
 import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as OwnedSealSvg } from '../../../assets/svg/owned-seal.svg'
 import { ReactComponent as OwnedSealENSvg } from '../../../assets/svg/owned-seal-en.svg'
+import { ReactComponent as AvatarVerifiedSvg } from '../../../assets/svg/avatar-verified.svg'
 import styled from 'styled-components'
 import { Follow } from '../../../components/Follow'
 import { useTranslation } from 'react-i18next'
@@ -137,8 +138,11 @@ export const NftDetail: React.FC<{
       push(`/issuer/${detail?.issuer_info?.uuid}`)
     }
   }, [detail?.issuer_info?.uuid, push])
-
   const matchNFT = useRouteMatch(RoutePath.NFT)
+  const showAvatarVerified =
+    !detail?.is_class_banned &&
+    !detail?.is_issuer_banned &&
+    detail?.verified_info?.is_verified
 
   return (
     <Box py="20px">
@@ -175,15 +179,21 @@ export const NftDetail: React.FC<{
         px="20px"
         cursor="pointer"
       >
-        <Avatar
-          src={avatarUrl}
-          size="48px"
-          fallbackSrc={FallbackAvatarSrc}
-          onClick={gotoIssuer}
-          isVerified={detail?.verified_info?.is_verified}
-          webp={isSupportWebp()}
-          resizeScale={100}
-        />
+        <Box position="relative">
+          <Avatar
+            src={avatarUrl}
+            size="48px"
+            fallbackSrc={FallbackAvatarSrc}
+            onClick={gotoIssuer}
+            webp={isSupportWebp()}
+            resizeScale={100}
+          />
+          {showAvatarVerified ? (
+            <Center position="absolute" right="0" bottom="0" zIndex={2}>
+              <AvatarVerifiedSvg />
+            </Center>
+          ) : null}
+        </Box>
         <SkeletonText
           isLoaded={!isLoading}
           noOfLines={2}

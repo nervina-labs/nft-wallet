@@ -11,7 +11,6 @@ import { ReactComponent as TxSvg } from '../../assets/svg/home/tx.svg'
 import { ReactComponent as LocaleSvg } from '../../assets/svg/home/locale.svg'
 import { ReactComponent as HelpSvg } from '../../assets/svg/home/help.svg'
 import { ReactComponent as LogoutSvg } from '../../assets/svg/home/logout.svg'
-import { ReactComponent as ArrowSvg } from '../../assets/svg/home/arrow.svg'
 import { DrawerAction } from '../Profile/DrawerAction'
 import { LocalCache } from '../../cache'
 import { getHelpCenterUrl } from '../../data/help'
@@ -111,7 +110,6 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
         text: t('menu.logout'),
         icon: <LogoutSvg />,
         onClick: () => logout(history),
-        disableArrow: true,
       },
     ]
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,7 +143,7 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
             spacing="20px"
             divider={<StackDivider borderColor="gray.200" />}
           >
-            {list.map(({ text, icon, onClick, disableArrow }, index) => (
+            {list.map(({ text, icon, onClick }, index) => (
               <Flex
                 key={text}
                 onClick={onClick}
@@ -160,7 +158,6 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
                     {text}
                   </Text>
                 </Flex>
-                {disableArrow ? null : <ArrowSvg />}
               </Flex>
             ))}
           </Stack>

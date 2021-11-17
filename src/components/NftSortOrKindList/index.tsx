@@ -145,8 +145,8 @@ export const NftSortOrKindList: React.FC<{
               px="0"
               py="0"
               mr="15px"
-              fontWeight="normal"
-              _selected={{ fontWeight: '500' }}
+              fontWeight="200"
+              _selected={{ fontWeight: 'normal' }}
             >
               {type.label}
             </Tab>
