@@ -94,7 +94,7 @@ export const NftCards: React.FC = () => {
     [push]
   )
   const queryFn = useCallback(
-    async ({ pageParam = 0 }) => {
+    async ({ pageParam = 1 }) => {
       const { data } = await api.getIssuerTokenClass(id, productState, {
         page: pageParam,
       })
