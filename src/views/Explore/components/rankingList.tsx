@@ -9,6 +9,7 @@ import { RankIcon } from '../../../components/RankIcon'
 import { Link } from 'react-router-dom'
 import { isSupportWebp } from '../../../utils'
 import FALLBACK from '../../../assets/img/nft-fallback.png'
+import { Heading } from './heading'
 
 const RANKING_EMOJI_MAP: { [key in string]: string } = {
   hot_sale_issuer: '🏆',
@@ -88,7 +89,7 @@ const Item: React.FC<RankingItem> = ({
               webp={isSupportWebp()}
               resizeScale={150}
             />
-            <Flex direction="column" mx="10px">
+            <Flex direction="column" mx="10px" justify="center">
               <Box
                 whiteSpace="nowrap"
                 textOverflow="ellipsis"
@@ -105,7 +106,6 @@ const Item: React.FC<RankingItem> = ({
                 fontWeight="500"
                 fontSize="12px"
                 color="#777E90"
-                mt="auto"
               >
                 {issuer.verified_info?.verified_title}
               </Box>
@@ -121,6 +121,7 @@ const Item: React.FC<RankingItem> = ({
 }
 
 export const RankingList: React.FC = () => {
+  const { t } = useTranslation('translations')
   const api = useAPI()
   const { data, isLoading } = useQuery(
     Query.RankingList,
@@ -139,42 +140,55 @@ export const RankingList: React.FC = () => {
     }
   )
 
+  if (!isLoading && !data?.ranking_list.length) {
+    return null
+  }
+
   return (
-    <Box overflowY="hidden" overflowX="auto">
-      <Flex w="auto" p="20px">
-        {isLoading ? (
-          <>
-            {[0, 1].map((k) => (
-              <Skeleton
-                w="90%"
-                maxWidth="305px"
-                h="240px"
-                mr="15px"
-                flexShrink={0}
-                rounded="15px"
-                key={k}
-              />
-            ))}
-          </>
-        ) : (
-          <>
-            {data?.ranking_list?.map((ranking, i) => (
-              <Flex
-                w="90%"
-                h="240px"
-                direction="column"
-                shrink={0}
-                pr="15px"
-                mr="15px"
-                maxW="305px"
-                key={i}
-              >
-                <Item {...ranking} />
-              </Flex>
-            ))}
-          </>
-        )}
-      </Flex>
-    </Box>
+    <>
+      <Heading>{t('explore.ranking')}</Heading>
+      <Box overflowY="hidden" overflowX="auto">
+        <Flex w="auto" p="20px">
+          {isLoading ? (
+            <>
+              {[0, 1].map((k) => (
+                <Skeleton
+                  w="90%"
+                  maxWidth="305px"
+                  h="240px"
+                  mr="15px"
+                  flexShrink={0}
+                  rounded="15px"
+                  key={k}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              {data?.ranking_list
+                ?.filter(
+                  (ranking) =>
+                    ranking?.token_classes?.length > 0 ||
+                    ranking?.issuers?.length > 0
+                )
+                .map((ranking, i) => (
+                  <Flex
+                    w="90%"
+                    h="240px"
+                    direction="column"
+                    shrink={0}
+                    pr="15px"
+                    mr="15px"
+                    maxW="305px"
+                    key={i}
+                  >
+                    <Item {...ranking} />
+                  </Flex>
+                ))}
+            </>
+          )}
+        </Flex>
+      </Box>
+    </>
   )
 }

@@ -68,7 +68,7 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
         zIndex={1}
         direction="column"
       >
-        <Box bg="white" w="full" rounded="10%" p="20px">
+        <Box bg="white" w="full" rounded="38px" p="20px">
           <Image
             src={bgImageUrl}
             rounded="10%"
