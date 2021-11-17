@@ -290,7 +290,9 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               webp={isSupportWebp()}
               fallbackSrc={FALLBACK_SRC}
               zIndex={3}
-              srcQueryParams={tid ? { tid, locale: i18n.language } : {}}
+              srcQueryParams={
+                typeof tid !== 'undefined' ? { tid, locale: i18n.language } : {}
+              }
               minW="100px"
               minH="100px"
             />
