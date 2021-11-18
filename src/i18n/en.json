@@ -36,6 +36,28 @@
           "desc-my": "Come and see my Digital Collections at MIBAO",
           "desc-issuer": "Enjoy the Digital Works of the MIBAO Creators",
           "collected": "Collected"
+        },
+        "wx": {
+          "nft": {
+            "title": "",
+            "desc": "Enjoy this Digital Collection"
+          },
+          "issuer": {
+            "title": "{{name}}’s homepage",
+            "desc": "Enjoy the Digital Works of this MIBAO Creator."
+          },
+          "collector": {
+            "title": "{{name}}’s homepage",
+            "desc": "Enjoy the Digital Collections of this MIBAO Collector."
+          },
+          "home": {
+            "title": "{{name}}’s homepage",
+            "desc": "Enjoy my Digital Collections of on MIBAO."
+          },
+          "others": {
+            "title": "MIBAO — Make inspiration last forever",
+            "desc": "Create, sell and discovery Digital Collection in one stop."
+          }
         }
       },
       "limit": {
@@ -51,14 +73,14 @@
         "issuer": "Invalid creator"
       },
       "colon": ":",
-      "title": "NFT Account",
+      "title": "MIBAO",
       "description": "View and manage your NFT anytime, anywhere",
       "img-lost": "Image lost",
       "card-back": "Include card back content which can only be revealed by the owner of this NFT",
       "show-detail": "Show Detail"
     },
     "login": {
-      "title": "NFT Account",
+      "title": "MIBAO",
       "select": "Log in with",
       "connect": {
         "unipass": "Connect to UniPass",
