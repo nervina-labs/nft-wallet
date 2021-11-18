@@ -113,8 +113,13 @@ export const useWechatShare = () => {
         }
       }
       initWechat(() => {
-        wx.updateAppMessageShareData(data)
-        wx.updateTimelineShareData(data)
+        if (wx.onMenuShareAppMessage) {
+          wx.onMenuShareAppMessage(data)
+          wx.onMenuShareTimeline(data)
+        } else {
+          wx.updateAppMessageShareData(data)
+          wx.updateTimelineShareData(data)
+        }
       })
     },
     [
