@@ -57,6 +57,7 @@ export interface IssuerInfo extends VipInfo {
     social_type: SocialMediaType
     url: string
   }>
+  cover_image_url?: string | null
 }
 
 export interface IssuerTokenClassResult {
