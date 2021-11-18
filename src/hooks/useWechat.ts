@@ -60,6 +60,7 @@ export const useInitWechat = () => {
           timestamp: wxSignConfig.timestamp,
           jsApiList: [
             'chooseImage',
+            'showMenuItems',
             'updateAppMessageShareData',
             'updateTimelineShareData',
           ],
@@ -113,6 +114,9 @@ export const useWechatShare = () => {
         }
       }
       initWechat(() => {
+        wx.showMenuItems({
+          menuList: ['menuItem:share:appMessage', 'menuItem:share:timeline'],
+        })
         if (wx.onMenuShareAppMessage) {
           wx.onMenuShareAppMessage(data)
           wx.onMenuShareTimeline(data)
