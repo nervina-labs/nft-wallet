@@ -170,7 +170,7 @@
       "no-desc": "No description",
       "no-holder": "No collector",
       "holder": "Collectors",
-      "show-card-back": "Show Cardback",
+      "show-card-back": "Flip",
       "no-more-holder": "No more collectors",
       "no-more-transaction-history": "No more logs"
     },

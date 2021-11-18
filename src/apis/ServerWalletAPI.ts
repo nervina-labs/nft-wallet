@@ -834,7 +834,7 @@ export class ServerWalletAPI {
   async getUrlBase64(url: string) {
     return await this.axios.get<{ result: string }>('/image_forwardings', {
       params: {
-        url,
+        url: encodeURI(url),
         type: 'base64',
       },
     })

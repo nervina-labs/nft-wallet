@@ -69,7 +69,7 @@ const UserWithAddress: React.FC<{
         fallbackSrc={FallbackAvatarSrc}
         isVerified={isVerified}
         srcQueryParams={
-          avatarTid
+          typeof avatarTid === 'number'
             ? {
                 tid: avatarTid,
                 locale: i18n.language,
