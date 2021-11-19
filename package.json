@@ -13,7 +13,7 @@
     "yarn": "1.22"
   },
   "scripts": {
-    "dev": "HTTPS=true SSL_CRT_FILE=crt.pem SSL_KEY_FILE=key.pem PORT=443 craco start",
+    "dev": "craco start",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 craco build",
     "lint": "eslint src",
     "start": "serve -s build",
