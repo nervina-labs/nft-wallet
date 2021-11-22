@@ -23,6 +23,7 @@ import { SubmitInfo } from '../RedeemDetail/SubmitInfo'
 import { RedeemListType } from '../../models/redeem'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { Tab, TabList, Tabs } from '@mibao-ui/components'
+import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 
 export const RedeemContainer = styled(MainContainer)`
   display: flex;
@@ -105,6 +106,8 @@ export const Redeem: React.FC = () => {
       data?.pages.reduce((acc, token) => token.event_list.length + acc, 0) ?? 0
     )
   }, [data])
+
+  useScrollRestoration()
 
   return (
     <RedeemContainer>
