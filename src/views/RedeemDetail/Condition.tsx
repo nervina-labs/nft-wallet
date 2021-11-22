@@ -7,6 +7,8 @@ import {
   Th as RawTh,
   Td as RawTd,
   TableCellProps,
+  Box,
+  Flex,
 } from '@chakra-ui/react'
 import { TokenClass } from '../../models/class-list'
 import { NFTCard } from '../Redeem/NFTCard'
@@ -32,34 +34,13 @@ const Td: React.FC<TableCellProps> = (props) => (
   <RawTd padding="12px 4px" {...props} />
 )
 
-const Container = styled.div`
-  padding: 20px;
-  padding-top: 8px;
-  padding-bottom: 0;
-  display: flex;
+const Container = styled(Flex)`
+  padding: 0 20px;
   flex-direction: column;
-  .contain {
-    background: #fff5c5;
-    margin: 10px 0;
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  .MuiPaper-elevation1 {
-    box-shadow: none;
-  }
-  .MuiTableCell-root {
-    padding: 6px 3px;
-    word-break: keep-all;
-    border: none;
-    &:first-child {
-      padding: 6px 10px;
-      padding-right: 0;
-    }
-    &:last-child {
-      padding: 6px 10px;
-      padding-left: 0;
-    }
+  th {
+    white-space: nowrap;
+    font-weight: normal;
+    background-color: #e5e8f9;
   }
 `
 
@@ -68,13 +49,23 @@ export const Condition: React.FC<ConditionProps> = ({ detail }) => {
 
   return (
     <Container>
-      <div className="contain">{t('exchange.event.condition')}</div>
+      <Box color="#5065E5" fontSize="12px" mb="15px" fontWeight="500">
+        {t('exchange.event.condition')}
+      </Box>
       <Table variant="unstyled">
-        <Thead bg="#ededed">
+        <Thead>
           <Tr>
-            <Th textAlign="left">{t('exchange.condition.nft')}</Th>
-            <Th textAlign="right">{t('exchange.condition.needed')}</Th>
-            <Th textAlign="right">{t('exchange.condition.held')}</Th>
+            <Th textAlign="left" roundedTopLeft="4px" roundedBottomLeft="4px">
+              {t('exchange.condition.nft')}
+            </Th>
+            <Th textAlign="center">{t('exchange.condition.needed')}</Th>
+            <Th
+              textAlign="right"
+              roundedTopRight="4px"
+              roundedBottomRight="4px"
+            >
+              {t('exchange.condition.held')}
+            </Th>
           </Tr>
         </Thead>
         <Tbody>

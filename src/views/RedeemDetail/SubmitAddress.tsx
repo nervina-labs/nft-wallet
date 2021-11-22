@@ -49,7 +49,7 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
     { name: '', phone: '', address: '' }
   )
 
-  const isReadyForSumit = !!(
+  const isReadyForSubmit = !!(
     formState.address &&
     formState.name &&
     formState.phone
@@ -120,7 +120,7 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
             willDestroyed,
           })
         }}
-        disabled={!isReadyForSumit}
+        disabled={!isReadyForSubmit}
       />
     </Container>
   )

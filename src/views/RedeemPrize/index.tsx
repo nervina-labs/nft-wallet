@@ -148,12 +148,7 @@ export const RedeemPrize: React.FC = () => {
                 <RedeemLabel type={data.reward_type} />
               </div>
               <Divider />
-              <Prize
-                type={data.reward_type}
-                prizes={data.record_info}
-                showLabel={false}
-                className="prize"
-              />
+              <Prize prizes={data.record_info} showLabel={false} />
               <Divider />
               <div className="time">
                 {t('exchange.redeem-time')}
