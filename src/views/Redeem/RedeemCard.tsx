@@ -1,5 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
-import styled from 'styled-components'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   CustomRewardType,
@@ -10,7 +9,6 @@ import {
   UserRedeemState,
 } from '../../models/redeem'
 import { RedeemLabel } from './Label'
-import classNames from 'classnames'
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
@@ -21,82 +19,19 @@ import {
   Divider,
   Stack,
   Box,
+  Flex,
+  Button,
+  Center,
 } from '@mibao-ui/components'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
-const Container = styled.div`
+const Container = styled(Link)`
   box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);
   border-radius: 20px;
   background-color: white;
   margin: 0 20px 16px 20px;
-  /* margin-top: 0; */
-  .issuer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    > span {
-      font-size: 12px;
-      margin-left: auto;
-      color: #999999;
-      word-break: keep-all;
-      margin-left: 4px;
-    }
-  }
-  .header {
-    padding: 12px 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* margin-bottom: 0; */
-    .title {
-      font-size: 14px;
-      font-weight: 500;
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      word-break: break-all;
-      text-overflow: ellipsis;
-      color: black;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-    }
-    > span {
-      margin-left: auto;
-    }
-  }
-
-  .content {
-    display: flex;
-    /* justify-content: center; */
-    align-items: center;
-    padding: 8px 16px;
-  }
-
-  .status {
-    padding: 10px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    font-size: 14px;
-    cursor: pointer;
-    &.exchange {
-      color: #ff6e30;
-    }
-    &.exchanged {
-      color: black;
-    }
-    &.disabled {
-      color: #999999;
-      cursor: not-allowed;
-    }
-    .wait {
-      color: #fb5d3b;
-      position: absolute;
-      right: 16px;
-    }
-  }
+  display: block;
 `
 interface ProgressProps {
   total: number
@@ -146,7 +81,6 @@ const ExchangeAction: React.FC<ActionProps> = ({
   item,
 }) => {
   const [t] = useTranslation('translations')
-  const history = useHistory()
   const isAllowRedeem =
     status === RedeemStatus.Open && UserRedeemState.AllowRedeem === userState
   const matchMyRedeem = useRouteMatch(RoutePath.MyRedeem)
@@ -165,55 +99,52 @@ const ExchangeAction: React.FC<ActionProps> = ({
     } else if (status === RedeemStatus.Done) {
       return t('exchange.event.end')
     } else if (userState === UserRedeemState.AllowRedeem) {
-      return t('exchange.actions.redeem')
+      return ''
     }
     return t('exchange.actions.insufficient')
   }, [status, t, userState, deliverType, matchMyRedeem])
 
   const { onRedeem } = useSignRedeem()
-  const onClick = useCallback(
-    (e: React.SyntheticEvent) => {
-      e.stopPropagation()
-      e.preventDefault()
-      if (matchMyRedeem) {
-        history.push(`${RoutePath.RedeemPrize}/${prizeId}`)
-      } else if (isAllowRedeem) {
-        onRedeem({
-          deliverType,
-          isAllow: true,
-          id,
-          willDestroyed,
-          item,
-        })
-      }
-    },
-    [
-      history,
-      prizeId,
-      isAllowRedeem,
-      willDestroyed,
-      id,
-      onRedeem,
-      deliverType,
-      item,
-      matchMyRedeem,
-    ]
-  )
 
   return (
-    <div
-      className={classNames('status', {
-        exchange: isAllowRedeem,
-        exchanged: !!matchMyRedeem,
-        disabled: !isAllowRedeem && !matchMyRedeem,
-      })}
-      onClick={onClick}
-    >
-      <span>{text}</span>
-      {userState === UserRedeemState.WaittingRedeem && matchMyRedeem ? (
-        <span className="wait">{t('exchange.check.wait')}</span>
-      ) : null}
-    </div>
+    <Flex justify="space-between" h="45px" px="15px">
+      <Box
+        as="span"
+        fontSize="12px"
+        color="#777E90"
+        py="auto"
+        lineHeight="45px"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+      >
+        {text}
+      </Box>
+      <Stack my="auto" spacing="12px" direction="row">
+        <Button size="sm" fontSize="12px">
+          查看奖品
+        </Button>
+        <Button
+          size="sm"
+          fontSize="12px"
+          disabled={!isAllowRedeem}
+          colorScheme="primary"
+          onClick={(e) => {
+            onRedeem({
+              deliverType,
+              isAllow: true,
+              id,
+              willDestroyed,
+              item,
+            })
+            e?.stopPropagation()
+            e?.preventDefault()
+          }}
+        >
+          {t('exchange.actions.redeem')}
+        </Button>
+      </Stack>
+    </Flex>
   )
 }
 
@@ -237,9 +168,12 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
   }, [item.reward_info])
   return (
     <Container
-      onClick={() => history.push(`${RoutePath.Redeem}/${item.uuid}`, item)}
+      to={{
+        pathname: `${RoutePath.Redeem}/${item.uuid}`,
+        state: item,
+      }}
     >
-      <div className="issuer">
+      <Flex px="16px" py="12px" justify="space-between">
         <Issuer
           isBanned={item?.issuer_info?.is_issuer_banned}
           src={item?.issuer_info.avatar_url}
@@ -263,14 +197,45 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
           }}
           size="25px"
         />
-        <span>{t('exchange.issuer')}</span>
-      </div>
+        <Box
+          as="span"
+          color="#999"
+          fontSize="12px"
+          display="inline-block"
+          my="auto"
+          whiteSpace="nowrap"
+        >
+          {t('exchange.issuer')}
+        </Box>
+      </Flex>
       <Divider />
-      <div className="header">
-        <span className="title">{item.name}</span>
-        <RedeemLabel type={item.reward_type} />
-      </div>
-      {rewards.length ? <div className="content">{rewards}</div> : null}
+      <Flex justify="space-between" px="16px" py="12px">
+        <Box
+          as="span"
+          fontSize="14px"
+          fontWeight="500"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          whiteSpace="nowrap"
+          mr="10px"
+        >
+          {item.name}
+        </Box>
+        <Center>
+          <RedeemLabel type={item.reward_type} />
+        </Center>
+      </Flex>
+      {rewards.length ? (
+        <Flex
+          px="16px"
+          py="8px"
+          alignItems="center"
+          overflowY="hidden"
+          overflowX="auto"
+        >
+          {rewards}
+        </Flex>
+      ) : null}
       <Progress exchanged={item.progress.claimed} total={item.progress.total} />
       <Divider />
       <ExchangeAction
