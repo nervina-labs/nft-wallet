@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { MainContainer } from '../../styles'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
-import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { RoutePath } from '../../routes'
 import { useInfiniteQuery } from 'react-query'
 import { Query } from '../../models'
@@ -41,21 +41,19 @@ export const RedeemContainer = styled(MainContainer)`
   }
 `
 
+const TabTypeSet = [RedeemListType.All, RedeemListType.CanRedeem]
+
 export const Redeem: React.FC = () => {
   const { t } = useTranslation('translations')
   const history = useHistory()
-  const isRedeemable = !!useRouteQuery<string>('redeemable', '')
-  const tabOnClick = useCallback(
-    (type: 'all' | 'redeemable') => {
-      if (type === 'all' && isRedeemable) {
-        history.push(RoutePath.Redeem)
-      }
-      if (type === 'redeemable' && !isRedeemable) {
-        history.push(RoutePath.Redeem + '?redeemable=true')
-      }
-    },
-    [isRedeemable, history]
+  const [tabType, setTabType] = useRouteQuerySearch<RedeemListType>(
+    'type',
+    RedeemListType.All
   )
+  const tabIndex = useMemo(() => {
+    const i = TabTypeSet.indexOf(tabType)
+    return i === -1 ? 0 : i
+  }, [tabType])
 
   const api = useAPI()
   const { isLogined } = useAccountStatus()
@@ -68,11 +66,11 @@ export const Redeem: React.FC = () => {
     fetchNextPage,
     refetch,
   } = useInfiniteQuery(
-    [`${Query.RedeemList}${isRedeemable.toString()}`, address, isRedeemable],
+    [`${Query.RedeemList}${tabType}`, address],
     async ({ pageParam = 1 }) => {
       const { data } = await api.getAllRedeemEvents(
         pageParam,
-        isRedeemable ? RedeemListType.CanRedeem : RedeemListType.All
+        TabTypeSet.includes(tabType) ? tabType : TabTypeSet[0]
       )
       return data
     },
@@ -128,16 +126,12 @@ export const Redeem: React.FC = () => {
         />
       </AppbarSticky>
       <AppbarSticky top={`${HEADER_HEIGHT}px`} bg="white">
-        <Tabs
-          index={isRedeemable ? 1 : 0}
-          colorScheme="black"
-          align="space-around"
-        >
+        <Tabs index={tabIndex} colorScheme="black" align="space-around">
           <TabList px="20px">
-            <Tab onClick={() => tabOnClick('all')}>
+            <Tab onClick={() => setTabType(RedeemListType.All)}>
               {t('exchange.tabs.all')}
             </Tab>
-            <Tab onClick={() => tabOnClick('redeemable')}>
+            <Tab onClick={() => setTabType(RedeemListType.CanRedeem)}>
               {t('exchange.tabs.redeemable')}
             </Tab>
           </TabList>
