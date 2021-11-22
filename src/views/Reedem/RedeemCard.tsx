@@ -15,7 +15,13 @@ import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
 import { Media } from './Media'
 import { useSignRedeem } from '../../hooks/useRedeem'
-import { Issuer, Progress as RawProgress, Divider } from '@mibao-ui/components'
+import {
+  Issuer,
+  Progress as RawProgress,
+  Divider,
+  Stack,
+  Box,
+} from '@mibao-ui/components'
 
 const Container = styled.div`
   box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);
@@ -67,17 +73,6 @@ const Container = styled.div`
     padding: 8px 16px;
   }
 
-  .progress {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
-    padding: 8px 16px;
-    .exchanged {
-      color: #777e91;
-    }
-  }
-
   .status {
     padding: 10px 0;
     display: flex;
@@ -111,17 +106,19 @@ interface ProgressProps {
 const Progress: React.FC<ProgressProps> = ({ total, exchanged }) => {
   const [t] = useTranslation('translations')
   return (
-    <div className="progress">
-      <span>{t('exchange.progress')}</span>
+    <Stack spacing={2} mt="10px" mb="15px" mx="12px">
+      <Box fontSize="12px">
+        {t('exchange.progress')}:
+        <Box as="span" ml="6px">
+          {exchanged}/{total}
+        </Box>
+      </Box>
       <RawProgress
-        colorScheme="green"
+        colorScheme="process"
         value={(exchanged / total) * 100}
-        style={{ flex: 1, margin: '0 12px' }}
+        height="6px"
       />
-      <span>
-        <span className="exchanged">{exchanged}</span>/{total}
-      </span>
-    </div>
+    </Stack>
   )
 }
 

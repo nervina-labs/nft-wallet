@@ -56,6 +56,11 @@ export const Routers: React.FC = () => {
       fonts: {
         body: font,
       },
+      colors: {
+        process: {
+          500: '#02C2C6',
+        },
+      },
     })
   }, [t])
 
