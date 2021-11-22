@@ -387,7 +387,7 @@
       "redeem-time": "兑换时间：",
       "type": {
         "token": "NFT",
-        "blind_box": "NFT 盲盒",
+        "blind_box": "NFT盲盒",
         "custom": "其他"
       },
       "progress": "兑换进度",

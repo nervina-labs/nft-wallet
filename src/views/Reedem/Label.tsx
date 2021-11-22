@@ -1,24 +1,11 @@
+import { Box } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 import { RedeemType } from '../../models/redeem'
 
 export interface LabelProps {
   type: RedeemType
 }
-
-const Container = styled.span`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: ${(props) => props.color};
-  border: 1px solid;
-  border-color: ${(props) => props.color};
-  padding: 0 10px;
-  height: 17px;
-  font-size: 12px;
-  border-radius: 2px;
-`
 
 export const RedeemLabel: React.FC<LabelProps> = ({ type }) => {
   const [t] = useTranslation('translations')
@@ -31,5 +18,18 @@ export const RedeemLabel: React.FC<LabelProps> = ({ type }) => {
     }
     return '#6764f2'
   }, [type])
-  return <Container color={color}>{text}</Container>
+  return (
+    <Box
+      as="span"
+      rounded="3px"
+      bg={color}
+      minW="58px"
+      lineHeight="18px"
+      textAlign="center"
+      fontSize="12px"
+      color="white"
+    >
+      {text}
+    </Box>
+  )
 }
