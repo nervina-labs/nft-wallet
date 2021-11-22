@@ -126,7 +126,7 @@ export const NFTPrice: React.FC<NFTPriceProps> = ({
   )
 }
 
-const OthderPriceContainer = styled.div`
+const OtherPriceContainer = styled.div`
   .price-title {
     font-size: 14px;
     margin-bottom: 8px;
@@ -163,13 +163,13 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [previewImage, setPreviewImage] = useState('')
   return (
-    <OthderPriceContainer>
+    <OtherPriceContainer>
       {showLabel ? (
         <>
           <div style={{ display: 'flex' }}>
             <RedeemLabel type={type} />
           </div>
-          <div className="contain">{t('exchange.othder-prize')}</div>
+          <div className="contain">{t('exchange.other-prize')}</div>
         </>
       ) : null}
       <div className="price-title">{prizes.reward_name}</div>
@@ -215,6 +215,6 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
         type="image"
         render3D={() => null}
       />
-    </OthderPriceContainer>
+    </OtherPriceContainer>
   )
 }

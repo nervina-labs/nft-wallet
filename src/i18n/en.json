@@ -383,7 +383,7 @@
       "redeemed": "Redeemed",
       "nft-prize": "The prize includes all the following NFTs",
       "blind-prize": "The prize randomly includes {{count}} NFT(s) below",
-      "othder-prize": "The organizer will give out the prize after you submit the redeem",
+      "other-prize": "The organizer will give out the prize after you submit the redeem",
       "redeem-time": "Time: ",
       "type": {
         "token": "Digtal collection",
