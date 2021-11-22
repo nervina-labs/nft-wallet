@@ -9,7 +9,7 @@ import {
   TableCellProps,
 } from '@chakra-ui/react'
 import { TokenClass } from '../../models/class-list'
-import { NFTCard } from '../Reedem/NFTCard'
+import { NFTCard } from '../Redeem/NFTCard'
 import { useTranslation } from 'react-i18next'
 import { RedeemDetailModel } from '../../models/redeem'
 import styled from 'styled-components'

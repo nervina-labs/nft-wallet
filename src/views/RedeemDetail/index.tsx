@@ -16,7 +16,7 @@ import {
   RedeemStatus,
   UserRedeemState,
 } from '../../models/redeem'
-import { Prize } from '../Reedem/Prize'
+import { Prize } from '../Redeem/Prize'
 import { Condition } from './Condition'
 import { Footer } from './Footer'
 import { useSignRedeem } from '../../hooks/useRedeem'
@@ -160,7 +160,7 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ data }) => {
     <Footer
       status={data.state}
       willDestroyed={data?.rule_info?.will_destroyed}
-      isReedemable={
+      isRedeemable={
         data.user_redeemed_state === UserRedeemState.AllowRedeem &&
         data?.state === RedeemStatus.Open
       }

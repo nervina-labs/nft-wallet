@@ -101,7 +101,7 @@ export const SubmitEmail: React.FC<SubmitAddressProps> = ({
       </div>
       <Footer
         status={status}
-        isReedemable
+        isRedeemable
         isInDialog
         isLoading={isRedeeming}
         willDestroyed={willDestroyed}

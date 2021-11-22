@@ -6,7 +6,7 @@ import { useAccountStatus } from '../../hooks/useAccount'
 import { RedeemStatus } from '../../models/redeem'
 import { RoutePath } from '../../routes'
 import { UnipassConfig } from '../../utils'
-import { Button, ButtonProps } from '../Reedem/Button'
+import { Button, ButtonProps } from '../Redeem/Button'
 
 const Container = styled.footer`
   background: #ffffff;
@@ -24,13 +24,13 @@ const Container = styled.footer`
 
 export interface FooterProps extends ButtonProps {
   status: RedeemStatus
-  isReedemable: boolean
+  isRedeemable: boolean
   willDestroyed: boolean
   isInDialog?: boolean
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  isReedemable,
+  isRedeemable,
   status,
   willDestroyed,
   isInDialog,
@@ -49,11 +49,11 @@ export const Footer: React.FC<FooterProps> = ({
     } else if (status === RedeemStatus.Done) {
       return t('exchange.event.end')
     }
-    if (isReedemable) {
+    if (isRedeemable) {
       return t('exchange.actions.redeem')
     }
     return t('exchange.actions.insufficient')
-  }, [isReedemable, status, t, isLogined])
+  }, [isRedeemable, status, t, isLogined])
 
   const onClick = useCallback(
     (e: any) => {
@@ -70,10 +70,10 @@ export const Footer: React.FC<FooterProps> = ({
 
   const disabled = useMemo(() => {
     if (isLogined) {
-      return props.disabled || !isReedemable
+      return props.disabled || !isRedeemable
     }
     return false
-  }, [props.disabled, isReedemable, isLogined])
+  }, [props.disabled, isRedeemable, isLogined])
   return (
     <Container style={isInDialog ? { left: 0 } : undefined}>
       <Button {...props} onClick={onClick} disabled={disabled}>

@@ -116,7 +116,7 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
       </div>
       <Footer
         status={status}
-        isReedemable
+        isRedeemable
         isInDialog
         willDestroyed={willDestroyed}
         isLoading={isRedeeming}
