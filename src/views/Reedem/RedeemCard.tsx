@@ -9,7 +9,7 @@ import {
   RedeemStatus,
   UserRedeemState,
 } from '../../models/redeem'
-import { RedeeemLabel } from './Label'
+import { RedeemLabel } from './Label'
 import classNames from 'classnames'
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
@@ -170,7 +170,6 @@ const ExchangeAction: React.FC<ActionProps> = ({
     } else if (userState === UserRedeemState.AllowRedeem) {
       return t('exchange.actions.redeem')
     }
-
     return t('exchange.actions.insufficient')
   }, [status, t, userState, deliverType, matchMyRedeem])
 
@@ -221,7 +220,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
   )
 }
 
-export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
+export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
   const rewards = useMemo(() => {
@@ -272,7 +271,7 @@ export const ReedemCard: React.FC<ExchangeEventProps> = ({ item }) => {
       <Divider />
       <div className="header">
         <span className="title">{item.name}</span>
-        <RedeeemLabel type={item.reward_type} />
+        <RedeemLabel type={item.reward_type} />
       </div>
       {rewards.length ? <div className="content">{rewards}</div> : null}
       <Progress exchanged={item.progress.claimed} total={item.progress.total} />

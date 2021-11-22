@@ -17,7 +17,7 @@ import { Query } from '../../models'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Loading } from '../../components/Loading'
-import { ReedemCard } from './RedeemCard'
+import { RedeemCard } from './RedeemCard'
 import { Link } from 'react-router-dom'
 import { SubmitInfo } from '../RedeemDetail/SubmitInfo'
 import { RedeemListType } from '../../models/redeem'
@@ -173,7 +173,7 @@ export const Redeem: React.FC = () => {
               return (
                 <React.Fragment key={i}>
                   {group.event_list.map((e, j: number) => {
-                    return <ReedemCard item={e} key={`${i}+${j}`} />
+                    return <RedeemCard item={e} key={`${i}+${j}`} />
                   })}
                 </React.Fragment>
               )

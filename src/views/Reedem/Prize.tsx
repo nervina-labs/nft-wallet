@@ -13,7 +13,7 @@ import {
   RewardInfo,
 } from '../../models/redeem'
 import { getImagePreviewUrl } from '../../utils'
-import { RedeeemLabel } from './Label'
+import { RedeemLabel } from './Label'
 import FallbackImg from '../../assets/svg/fallback.svg'
 import { NFTCard } from './NFTCard'
 import { Preview, useDisclosure } from '@mibao-ui/components'
@@ -114,7 +114,7 @@ export const NFTPrice: React.FC<NFTPriceProps> = ({
       {showLabel ? (
         <>
           <div style={{ display: 'flex' }}>
-            <RedeeemLabel type={type} />
+            <RedeemLabel type={type} />
           </div>
           <div className="contain">{desc}</div>
         </>
@@ -167,7 +167,7 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
       {showLabel ? (
         <>
           <div style={{ display: 'flex' }}>
-            <RedeeemLabel type={type} />
+            <RedeemLabel type={type} />
           </div>
           <div className="contain">{t('exchange.othder-prize')}</div>
         </>

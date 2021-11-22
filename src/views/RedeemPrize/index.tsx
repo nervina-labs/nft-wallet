@@ -8,7 +8,7 @@ import { RoutePath } from '../../routes'
 import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { Loading } from '../../components/Loading'
-import { RedeeemLabel } from '../Reedem/Label'
+import { RedeemLabel } from '../Reedem/Label'
 import { Prize } from '../Reedem/Prize'
 import { formatTime } from '../../utils'
 import { isCustomReward } from '../../models/redeem'
@@ -145,7 +145,7 @@ export const RedeemPrize: React.FC = () => {
             <BoxContainer>
               <div className="header">
                 <span title="title">{t('exchange.prize.get')}</span>
-                <RedeeemLabel type={data.reward_type} />
+                <RedeemLabel type={data.reward_type} />
               </div>
               <Divider />
               <Prize
