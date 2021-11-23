@@ -81,15 +81,18 @@ const ExchangeAction: React.FC<ActionProps> = ({
   item,
 }) => {
   const [t] = useTranslation('translations')
-  const isAllowRedeem =
-    status === RedeemStatus.Open && UserRedeemState.AllowRedeem === userState
   const matchMyRedeem = useRouteMatch(RoutePath.MyRedeem)
   const text = useMemo(() => {
+    if (userState === UserRedeemState.Redeemed) {
+      return t('exchange.exchanged')
+    }
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
-    } else if (status === RedeemStatus.Done) {
+    }
+    if (status === RedeemStatus.Done) {
       return t('exchange.event.end')
-    } else if (userState === UserRedeemState.AllowRedeem) {
+    }
+    if (userState === UserRedeemState.AllowRedeem) {
       return ''
     }
     if (matchMyRedeem) {
@@ -118,11 +121,11 @@ const ExchangeAction: React.FC<ActionProps> = ({
         <Button size="sm" fontSize="12px">
           {t('exchange.actions.view-prizes')}
         </Button>
-        {status === RedeemStatus.Open ? (
+        {status === RedeemStatus.Open && !matchMyRedeem ? (
           <Button
             size="sm"
             fontSize="12px"
-            disabled={!isAllowRedeem}
+            disabled={UserRedeemState.AllowRedeem !== userState}
             colorScheme="primary"
             onClick={(e) => {
               onRedeem({
