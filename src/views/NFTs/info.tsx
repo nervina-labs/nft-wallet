@@ -146,7 +146,7 @@ export const Info: React.FC<{
               )
             )}
             type={user?.avatar_type === AvatarType.Token ? 'three_d' : 'image'}
-            render3D={(renderer) => {
+            render3D={() => {
               return (
                 <Center w="100%" height="100%">
                   <Box w="300px">
@@ -173,6 +173,7 @@ export const Info: React.FC<{
                         bannedText: t('common.baned.issuer'),
                         size: '25px',
                         isVerified: nft?.verified_info?.is_verified,
+                        containerProps: { h: '25px' },
                       }}
                       limitProps={{
                         count: nft?.total as string,

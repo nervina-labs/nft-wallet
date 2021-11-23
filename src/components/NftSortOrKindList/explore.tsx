@@ -28,10 +28,10 @@ const tabProps: TabProps = {
   rounded: '6px',
   mr: '22px',
   whiteSpace: 'nowrap',
-  fontWeight: 'normal',
+  fontWeight: '400',
   _selected: {
     bg: '#f6f6f6',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: 'var(--chakra-colors-black)',
   },
 }

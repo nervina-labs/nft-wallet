@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { isSupportWebp } from '../../../utils'
 import FALLBACK from '../../../assets/img/nft-fallback.png'
+import { Heading } from './heading'
 
 const Item: React.FC<SpecialAssets> = ({
   locales,
@@ -24,11 +25,13 @@ const Item: React.FC<SpecialAssets> = ({
   token_classes: tokenClasses,
 }) => {
   const { t, i18n } = useTranslation('translations')
+
   return (
     <>
       <Flex h="105px" position="relative" justify="center" pb="15px">
         {[1, 0, 2]
           .map((i) => tokenClasses[i])
+          .filter((t) => t)
           .map((t, i) => (
             <Image
               key={i}
@@ -99,13 +102,13 @@ const Item: React.FC<SpecialAssets> = ({
                 fallbackSrc={FALLBACK}
               />
             </AspectRatio>
-            <Flex direction="column" py="5px" pl="10px">
+            <Flex direction="column" py="5px" pl="10px" justify="center">
               <Box
                 fontSize="14px"
                 textOverflow="ellipsis"
-                whiteSpace="nowrap"
                 overflow="hidden"
-                mb="auto"
+                mb="4px"
+                noOfLines={2}
               >
                 {tokenClass.name}
               </Box>
@@ -131,6 +134,7 @@ const Item: React.FC<SpecialAssets> = ({
 
 export const Recommend: React.FC = () => {
   const api = useAPI()
+  const { t } = useTranslation('translations')
   const { data, isLoading } = useQuery(
     [Query.Collections, api],
     async () => {
@@ -144,43 +148,54 @@ export const Recommend: React.FC = () => {
     }
   )
 
+  if (!isLoading && !data?.special_categories.length) {
+    return null
+  }
+
   return (
-    <Box overflowY="hidden" overflowX={isLoading ? 'hidden' : 'auto'}>
-      <Flex w="auto" p="20px">
-        {isLoading ? (
-          <>
-            {[0, 1].map((k) => (
-              <Skeleton
-                w="90%"
-                maxWidth="305px"
-                h="400px"
-                mr="15px"
-                flexShrink={0}
-                rounded="15px"
-                key={k}
-              />
-            ))}
-          </>
-        ) : (
-          <>
-            {data?.special_categories.map((specialAssets, i) => (
-              <Flex
-                w="90%"
-                direction="column"
-                shrink={0}
-                pr="15px"
-                maxW="305px"
-                key={i}
-                cursor="pointer"
-              >
-                <Link to={`/explore/collection/${specialAssets.uuid}`}>
-                  <Item {...specialAssets} />
-                </Link>
-              </Flex>
-            ))}
-          </>
-        )}
-      </Flex>
-    </Box>
+    <>
+      <Heading>{t('explore.title-recommended')}</Heading>
+      <Box overflowY="hidden" overflowX={isLoading ? 'hidden' : 'auto'}>
+        <Flex w="auto" p="20px">
+          {isLoading ? (
+            <>
+              {[0, 1].map((k) => (
+                <Skeleton
+                  w="90%"
+                  maxWidth="305px"
+                  h="400px"
+                  mr="15px"
+                  flexShrink={0}
+                  rounded="15px"
+                  key={k}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              {data?.special_categories
+                .filter((specialAssets) => specialAssets.token_classes.length)
+                .map((specialAssets, i) => (
+                  <Flex
+                    w="90%"
+                    direction="column"
+                    shrink={0}
+                    pr="15px"
+                    maxW="305px"
+                    key={i}
+                    cursor="pointer"
+                  >
+                    <Link to={`/explore/collection/${specialAssets.uuid}`}>
+                      {specialAssets.token_classes?.length >= 3 ? (
+                        <Item {...specialAssets} />
+                      ) : null}
+                    </Link>
+                  </Flex>
+                ))}
+            </>
+          )}
+        </Flex>
+      </Box>
+    </>
   )
 }

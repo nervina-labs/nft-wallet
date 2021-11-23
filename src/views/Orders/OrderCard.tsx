@@ -133,7 +133,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
             </Flex>
           </Flex>
           <Flex marginTop="auto" justifyContent="flex-end" fontSize="14px">
-            <Text fontWeight={500}>
+            <Text fontWeight={500} mr="6px">
               {isNeededToPay
                 ? t('orders.needed-payment')
                 : t('orders.paid-payment')}

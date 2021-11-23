@@ -30,6 +30,7 @@ import { formatTime } from '../../utils'
 import dayjs, { Dayjs } from 'dayjs'
 import { Loading } from '../../components/Loading'
 import { Contact } from '../../components/Contact'
+import { IS_WEXIN } from '../../constants'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -119,7 +120,7 @@ const Countdown: React.FC<CountdownProps> = ({ time, id }) => {
   }
 
   return (
-    <Text fontSize="12px" color="#FF5C00">
+    <Text fontSize="12px" color="#FF5C00" px="20px">
       {t('orders.countdown', { minutes, seconds })}
     </Text>
   )
@@ -167,9 +168,10 @@ export const OrderDetail: React.FC = () => {
     },
     {
       enabled: id != null,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnReconnect: true,
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
+      cacheTime: IS_WEXIN ? 0 : undefined,
     }
   )
 
@@ -204,6 +206,7 @@ export const OrderDetail: React.FC = () => {
             py="20px"
             paddingBottom="14px"
             marginX="20px"
+            mb={order.state === OrderState.OrderPlaced ? '100px' : '20px'}
           >
             <Heading fontSize="16px" fontWeight={500} mb="16px">
               {t('orders.info.title')}
