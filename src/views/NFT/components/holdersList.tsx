@@ -36,7 +36,6 @@ export const HolderList: React.FC<{
         ) ?? 0
       }
       renderItems={(items, i) => {
-        console.log(items)
         return items.token_holder_list.map((item, j) => (
           <Grid
             key={`${i}-${j}`}
