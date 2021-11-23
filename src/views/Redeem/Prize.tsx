@@ -70,7 +70,7 @@ export const NFTPrice: React.FC<NFTPriceProps> = ({ prizes, showLabel }) => {
         count: prizes.every_box_reward_count as any,
       })
   return (
-    <Box px="20px">
+    <Box px={showLabel ? '20px' : undefined}>
       {showLabel ? (
         <Box color="#5065E5" fontSize="12px" mb="15px" fontWeight="500">
           {desc}
@@ -110,7 +110,7 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
           {t('exchange.other-prize')}
         </Box>
       ) : null}
-      <Box fontSize="14px" mb="8px" mx="20px">
+      <Box fontSize="14px" mb="8px" mx={showLabel ? '20px' : undefined}>
         {prizes.reward_name}
       </Box>
       <Box
@@ -118,7 +118,7 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
         color="#666666"
         mb="16px"
         whiteSpace="pre-line"
-        mx="20px"
+        mx={showLabel ? '20px' : undefined}
       >
         {prizes.reward_description}
       </Box>
@@ -127,7 +127,7 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
         minW="140px"
         h="140px"
         overflowY="hidden"
-        ml="20px"
+        ml={showLabel ? '20px' : undefined}
       >
         {prizes.images.map((image, i) => (
           <AspectRatio

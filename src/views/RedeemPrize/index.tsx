@@ -13,42 +13,16 @@ import { Prize } from '../Redeem/Prize'
 import { formatTime } from '../../utils'
 import { isCustomReward } from '../../models/redeem'
 import { useAccount, useAPI } from '../../hooks/useAccount'
-import { Divider } from '@chakra-ui/react'
+import { Box, Divider, Flex } from '@chakra-ui/react'
 
-const BoxContainer = styled.div`
+const BoxContainer = styled(Box)`
   padding: 16px;
   margin: 20px;
   border-radius: 20px;
   background: #fff;
-  .comment {
-    font-size: 12px;
-    margin-top: 8px;
-    white-space: pre-line;
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    .title {
-      font-size: 16px;
-      font-weight: bold;
-      color: #000;
-    }
-  }
-
-  .prize {
-    margin: 10px 0;
-    padding: 0;
-  }
-
-  .time {
-    font-size: 12px;
-    margin-top: 8px;
-  }
 `
 
-const RowContainer = styled.div`
+const RowContainer = styled(Box)`
   margin-top: 8px;
   .row {
     display: flex;
@@ -137,29 +111,33 @@ export const RedeemPrize: React.FC = () => {
       <AppbarSticky>
         <Appbar title={t('exchange.prize.title')} />
       </AppbarSticky>
-      <main>
+
+      <Box>
         {data == null ? (
           <Loading />
         ) : (
-          <>
+          <Box>
             <BoxContainer>
-              <div className="header">
-                <span title="title">{t('exchange.prize.get')}</span>
+              <Flex justify="space-between" alignItems="center" mb="8px">
+                <Box fontSize="16px" fontWeight="bold" color="#000">
+                  {t('exchange.prize.get')}
+                </Box>
                 <RedeemLabel type={data.reward_type} />
-              </div>
-              <Divider />
+              </Flex>
+              <Divider mb="20px" />
               <Prize prizes={data.record_info} showLabel={false} />
-              <Divider />
-              <div className="time">
+              <Divider mt="10px" />
+              <Box color="#777E90" fontSize="12px" mt="10px">
                 {t('exchange.redeem-time')}
                 {formatTime(data.redeemed_timestamp, i18n.language)}
-              </div>
+              </Box>
             </BoxContainer>
+
             <BoxContainer>
-              <div className="header">
-                <span title="title">{t('exchange.prize.receiver.info')}</span>
-              </div>
-              <Divider />
+              <Box fontSize="16px" fontWeight="bold" color="#000">
+                {t('exchange.prize.receiver.info')}
+              </Box>
+              <Divider mt="8px" />
               {addressInfo?.name ? (
                 <RowContainer>
                   <Row label={t('exchange.prize.address.name')}>
@@ -196,20 +174,21 @@ export const RedeemPrize: React.FC = () => {
                 </RowContainer>
               ) : null}
             </BoxContainer>
+
             {comment ? (
               <BoxContainer>
-                <div className="header">
-                  <span title="title">
-                    {t('exchange.prize.issuer.comment')}
-                  </span>
-                </div>
-                <Divider />
-                <div className="comment">{comment}</div>
+                <Box fontSize="16px" fontWeight="bold" color="#000">
+                  {t('exchange.prize.issuer.comment')}
+                </Box>
+                <Divider my="8px" />
+                <Box fontSize="12px" mt="8px" whiteSpace="pre-line">
+                  {comment}
+                </Box>
               </BoxContainer>
             ) : null}
-          </>
+          </Box>
         )}
-      </main>
+      </Box>
     </Container>
   )
 }
