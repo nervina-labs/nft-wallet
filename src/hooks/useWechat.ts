@@ -116,17 +116,18 @@ export const useWechatShare = () => {
       }
       // wx.updateAppMessageShareData(data)
       // wx.updateTimelineShareData(data)
-      await initWechat()
-      wx.showMenuItems({
-        menuList: ['menuItem:share:appMessage', 'menuItem:share:timeline'],
+      initWechat(() => {
+        wx.showMenuItems({
+          menuList: ['menuItem:share:appMessage', 'menuItem:share:timeline'],
+        })
+        if (wx.onMenuShareAppMessage) {
+          wx.onMenuShareAppMessage(data)
+          wx.onMenuShareTimeline(data)
+        } else {
+          wx.updateAppMessageShareData(data)
+          wx.updateTimelineShareData(data)
+        }
       })
-      if (wx.onMenuShareAppMessage) {
-        wx.onMenuShareAppMessage(data)
-        wx.onMenuShareTimeline(data)
-      } else {
-        wx.updateAppMessageShareData(data)
-        wx.updateTimelineShareData(data)
-      }
     },
     [
       t,
