@@ -33,7 +33,7 @@ export class IntryUrl {
 export const buildWechatShareData = (data: WechatShareData) => {
   return {
     ...data,
-    imgUrl: `${location.origin}/logo64.png`,
+    // imgUrl: `${location.origin}/logo64.png`,
   }
 }
 
@@ -114,8 +114,8 @@ export const useWechatShare = () => {
           return
         }
       }
-      // wx.updateAppMessageShareData(data)
-      // wx.updateTimelineShareData(data)
+      wx.updateAppMessageShareData(data)
+      wx.updateTimelineShareData(data)
       initWechat(() => {
         wx.showMenuItems({
           menuList: ['menuItem:share:appMessage', 'menuItem:share:timeline'],
@@ -123,9 +123,6 @@ export const useWechatShare = () => {
         if (wx.onMenuShareAppMessage) {
           wx.onMenuShareAppMessage(data)
           wx.onMenuShareTimeline(data)
-        } else {
-          wx.updateAppMessageShareData(data)
-          wx.updateTimelineShareData(data)
         }
       })
     },
