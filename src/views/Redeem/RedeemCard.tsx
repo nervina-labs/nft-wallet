@@ -85,15 +85,6 @@ const ExchangeAction: React.FC<ActionProps> = ({
     status === RedeemStatus.Open && UserRedeemState.AllowRedeem === userState
   const matchMyRedeem = useRouteMatch(RoutePath.MyRedeem)
   const text = useMemo(() => {
-    if (matchMyRedeem) {
-      if (
-        deliverType === CustomRewardType.None ||
-        userState === UserRedeemState.WaittingRedeem
-      ) {
-        return t('exchange.check.price')
-      }
-      return t('exchange.check.comment')
-    }
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
     } else if (status === RedeemStatus.Done) {
@@ -101,8 +92,11 @@ const ExchangeAction: React.FC<ActionProps> = ({
     } else if (userState === UserRedeemState.AllowRedeem) {
       return ''
     }
+    if (matchMyRedeem) {
+      return ''
+    }
     return t('exchange.actions.insufficient')
-  }, [status, t, userState, deliverType, matchMyRedeem])
+  }, [status, t, userState, matchMyRedeem])
 
   const { onRedeem } = useSignRedeem()
 
@@ -124,25 +118,27 @@ const ExchangeAction: React.FC<ActionProps> = ({
         <Button size="sm" fontSize="12px">
           {t('exchange.actions.view-prizes')}
         </Button>
-        <Button
-          size="sm"
-          fontSize="12px"
-          disabled={!isAllowRedeem}
-          colorScheme="primary"
-          onClick={(e) => {
-            onRedeem({
-              deliverType,
-              isAllow: true,
-              id,
-              willDestroyed,
-              item,
-            })
-            e?.stopPropagation()
-            e?.preventDefault()
-          }}
-        >
-          {t('exchange.actions.redeem')}
-        </Button>
+        {status === RedeemStatus.Open ? (
+          <Button
+            size="sm"
+            fontSize="12px"
+            disabled={!isAllowRedeem}
+            colorScheme="primary"
+            onClick={(e) => {
+              onRedeem({
+                deliverType,
+                isAllow: true,
+                id,
+                willDestroyed,
+                item,
+              })
+              e?.stopPropagation()
+              e?.preventDefault()
+            }}
+          >
+            {t('exchange.actions.redeem')}
+          </Button>
+        ) : null}
       </Stack>
     </Flex>
   )
