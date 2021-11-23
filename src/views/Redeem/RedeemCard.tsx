@@ -6,6 +6,7 @@ import {
   isCustomReward,
   RedeemEventItem,
   RedeemStatus,
+  RedeemType,
   UserRedeemState,
 } from '../../models/redeem'
 import { RedeemLabel } from './Label'
@@ -109,9 +110,19 @@ const ExchangeAction: React.FC<ActionProps> = ({
   }, [status, t, userState, matchMyRedeem])
 
   const { onRedeem } = useSignRedeem()
-  const isGotoPrize =
-    userState === UserRedeemState.Redeemed ||
-    userState === UserRedeemState.WaitingRedeem
+  const priceButton = (
+    <Button
+      size="sm"
+      fontSize="12px"
+      disabled={
+        Boolean(matchMyRedeem) && userState !== UserRedeemState.Redeemed
+      }
+    >
+      {item?.reward_type === RedeemType.Other && matchMyRedeem
+        ? t('exchange.check.comment')
+        : t('exchange.check.price')}
+    </Button>
+  )
 
   return (
     <Flex justify="space-between" h="45px" px="15px">
@@ -128,18 +139,10 @@ const ExchangeAction: React.FC<ActionProps> = ({
         {text}
       </Box>
       <Stack my="auto" spacing="12px" direction="row">
-        {isGotoPrize ? (
-          <Link to={`/redeem-prize/${prizeId}`}>
-            <Button size="sm" fontSize="12px">
-              {userState === UserRedeemState.Redeemed
-                ? t('exchange.check.comment')
-                : t('exchange.check.price')}
-            </Button>
-          </Link>
+        {userState === UserRedeemState.Redeemed ? (
+          <Link to={`/redeem-prize/${prizeId}`}>{priceButton}</Link>
         ) : (
-          <Button size="sm" fontSize="12px">
-            {t('exchange.check.price')}
-          </Button>
+          priceButton
         )}
 
         {status === RedeemStatus.Open && !matchMyRedeem ? (
@@ -186,6 +189,7 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
       return <Media src={isBaned ? '' : t.class_bg_image_url} key={i} />
     })
   }, [item.reward_info])
+
   return (
     <Container
       to={{
