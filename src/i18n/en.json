@@ -493,7 +493,8 @@
         "confirm": "Confirm",
         "go-back": "Back to redeem center",
         "error": "Please check your network and redeem rules",
-        "redeeming": "Redeeming"
+        "redeeming": "Redeeming",
+        "succeed-desc": "You have redeemed successfully\nclick the button to view the redeemed digital collection"
       }
     },
     "orders": {

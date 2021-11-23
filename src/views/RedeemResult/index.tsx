@@ -1,52 +1,23 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { useHistory, useLocation, useParams } from 'react-router'
-import styled from 'styled-components'
+import { useLocation, useParams } from 'react-router'
 import { Loading } from '../../components/Loading'
 import { TransferState } from '../../hooks/useRedeem'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { Query } from '../../models'
-import { MainContainer } from '../../styles'
-import { ReactComponent as WarningSvg } from '../../assets/svg/warning-dialog.svg'
+import { ReactComponent as SuccessSvg } from '../../assets/svg/order-success.svg'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
-import { Button } from '../Redeem/Button'
-import { RedeemResultResponse } from '../../models/redeem'
+import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { RoutePath } from '../../routes'
 import { formatTime } from '../../utils'
 import { useAPI } from '../../hooks/useAccount'
-
-const Container = styled(MainContainer)`
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: white;
-
-  .icon {
-    text-align: center;
-    margin: 32px 0;
-    svg {
-      width: 70px;
-      height: 70px;
-    }
-  }
-  .title {
-    color: #23262f;
-    font-size: 16px;
-    color: #23262f;
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  .time {
-    color: #23262f;
-    font-size: 16px;
-  }
-  button {
-    margin-top: 32px;
-  }
-`
+import { RainbowBackground } from '../../components/RainbowBackground'
+import { Box, Center, Flex, Heading, Link } from '@chakra-ui/react'
+import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
+import { useHistoryBack } from '../../hooks/useHistoryBack'
+import { Button } from '@mibao-ui/components'
+import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
 
 export enum ResultFlag {
   None = 'none',
@@ -54,51 +25,27 @@ export enum ResultFlag {
   Fail = 'fail',
 }
 
-interface ResultStateProps {
-  state?: TransferState
-  result: RedeemResultResponse
+interface ResultProps {
+  type: ResultFlag
+  title: string
+  time: string
+  desc?: string
 }
 
-const Success: React.FC<ResultStateProps> = ({ state, result }) => {
-  const { t, i18n } = useTranslation('translations')
-  const history = useHistory()
-  const hasCustomData = !!state?.customData
+const Result: React.FC<ResultProps> = ({ type, title, time, desc }) => {
   return (
     <>
-      <div className="icon">
-        <WarningSvg />
-      </div>
-      <div className="title">
-        {hasCustomData
-          ? t('exchange.result.submited')
-          : t('exchange.result.success')}
-      </div>
-      <div className="time">
-        {t('exchange.result.time')}
-        {formatTime(result?.redeemed_timestamp, i18n.language)}
-      </div>
-      <Button onClick={() => history.push(RoutePath.MyRedeem)}>
-        {hasCustomData
-          ? t('exchange.result.confirm')
-          : t('exchange.result.check')}
-      </Button>
-    </>
-  )
-}
-
-const Fail: React.FC = () => {
-  const { t } = useTranslation('translations')
-  const history = useHistory()
-  return (
-    <>
-      <div className="icon">
-        <FailSvg />
-      </div>
-      <div className="title">{t('exchange.result.fail')}</div>
-      <div className="time">{t('exchange.result.error')}</div>
-      <Button onClick={() => history.push(RoutePath.Redeem)}>
-        {t('exchange.result.go-back')}
-      </Button>
+      <Center mb="20px">
+        {type === ResultFlag.Success ? <SuccessSvg /> : null}
+        {type === ResultFlag.Fail ? <FailSvg /> : null}
+      </Center>
+      <Heading fontSize="30px" mb="8px">
+        {title}
+      </Heading>
+      <Box fontSize="12px">{time}</Box>
+      <Box fontSize="16px" color="#FD6A3C" whiteSpace="pre-line" mt="80px">
+        {desc}
+      </Box>
     </>
   )
 }
@@ -108,7 +55,7 @@ export const RedeemResult: React.FC = () => {
   const resultFlag = useRouteQuery<ResultFlag>('result', ResultFlag.None)
   const { id } = useParams<{ id: string }>()
   const location = useLocation<TransferState>()
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const transfer = useCallback(async () => {
     const { signature = '', tx, customData } = location?.state
     if (tx) {
@@ -128,7 +75,7 @@ export const RedeemResult: React.FC = () => {
     })
     return data
   }, [id, api, location?.state])
-
+  const onBack = useHistoryBack()
   const { data, isError, isLoading } = useQuery(
     [Query.SendRedeem, id, api, resultFlag],
     transfer,
@@ -140,20 +87,76 @@ export const RedeemResult: React.FC = () => {
       staleTime: Infinity,
     }
   )
+  const isSucceed = !isError && data
+  const hasCustomData = !!location.state?.customData
+  const resultProps = isSucceed
+    ? {
+        type: ResultFlag.Success,
+        title: hasCustomData
+          ? t('exchange.result.submited')
+          : t('exchange.result.success'),
+        time:
+          t('exchange.result.time') +
+          formatTime(data?.redeemed_timestamp, i18n.language),
+        desc: hasCustomData
+          ? t('exchange.result.custom')
+          : t('exchange.result.succeed-desc'),
+      }
+    : {
+        type: ResultFlag.Fail,
+        title: t('exchange.result.fail'),
+        time: t('exchange.result.error'),
+      }
 
   return (
-    <Container>
-      {!isLoading ? (
-        <>
-          {!isError && data ? (
-            <Success state={location.state} result={data} />
-          ) : (
-            <Fail />
-          )}
-        </>
-      ) : (
-        <Loading desc={t('exchange.result.redeeming')} />
-      )}
-    </Container>
+    <RainbowBackground px="24px">
+      <AppbarSticky position="absolute" top="0" zIndex={2}>
+        <Appbar
+          left={
+            <AppbarButton onClick={onBack}>
+              <BackSvg />
+            </AppbarButton>
+          }
+          transparent
+        />
+      </AppbarSticky>
+
+      <Flex
+        w="full"
+        h="60%"
+        bg="rgba(255, 255, 255, 0.7)"
+        zIndex={2}
+        position="relative"
+        rounded="22px"
+        justify="center"
+        direction="column"
+        textAlign="center"
+        mt="auto"
+      >
+        {!isLoading ? (
+          <>
+            <Result {...resultProps} />
+          </>
+        ) : (
+          <Loading desc={t('exchange.result.redeeming')} />
+        )}
+      </Flex>
+
+      <Box mt="30px" w="full">
+        <Link to={isSucceed ? RoutePath.MyRedeem : RoutePath.Redeem}>
+          <Button variant="solid" isFullWidth colorScheme="primary">
+            {isSucceed
+              ? hasCustomData
+                ? t('exchange.result.confirm')
+                : t('exchange.result.check')
+              : t('exchange.result.go-back')}
+          </Button>
+        </Link>
+      </Box>
+
+      <Center mt="auto" mb="50px">
+        <FullLogo />
+      </Center>
+    </RainbowBackground>
   )
 }
