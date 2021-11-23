@@ -120,7 +120,7 @@ export const IssuerInfo: React.FC = () => {
         w="100%"
         h="200px"
         fallback={<Box h="80px" />}
-        containerProps={{ h: 'auto' }}
+        containerProps={{ w: '100%', h: 'auto' }}
       />
       <Stack spacing="16px" px="16px" mt="12px">
         <Grid templateColumns="60px calc(100% - 76px)" h="32px">
