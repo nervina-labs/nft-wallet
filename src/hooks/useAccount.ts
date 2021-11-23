@@ -29,7 +29,7 @@ export interface UnipassAccount {
   expireTime?: string
 }
 
-const providerAtom = atom<Provider | null>(null)
+export const providerAtom = atom<Provider | null>(null)
 
 const accountAtom = atomWithStorage<UnipassAccount | null>(
   UNIPASS_ACCOUNT_KEY,

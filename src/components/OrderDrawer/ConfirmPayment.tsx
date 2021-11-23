@@ -1,21 +1,22 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Center, Text, HStack } from '@mibao-ui/components'
 import {
-  currentOrderInfoAtom,
   OrderStep,
   placeOrderPropsAtom,
+  useCloseWechatScanModal,
+  useOrderPrice,
   usePlaceOrder,
   useSetOrderStep,
   useSetProductId,
 } from '../../hooks/useOrder'
 import { useAtomValue } from 'jotai/utils'
-import { formatCurrency } from '../../utils'
 import { Payment } from './Payment'
 import { ReactComponent as NextStepSvg } from '../../assets/svg/next-step.svg'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
+import { TimeoutError } from 'rxjs'
 
 export const ConfirmPayment = () => {
   const [t] = useTranslation('translations')
@@ -24,6 +25,7 @@ export const ConfirmPayment = () => {
   const confirmDialog = useConfirmDialog()
   const hisotry = useHistory()
   const setProductId = useSetProductId()
+  const closeWechatModal = useCloseWechatScanModal()
   const onSumit = useCallback(async () => {
     setIsSubmitting(true)
     try {
@@ -31,7 +33,16 @@ export const ConfirmPayment = () => {
       hisotry.push(RoutePath.OrderSuccess)
     } catch (error: any) {
       console.log(error)
-      if (error?.message?.includes?.('reject')) {
+      if (error instanceof TimeoutError) {
+        closeWechatModal()
+        await confirmDialog({
+          type: 'warning',
+          title: t('orders.timeout'),
+          okText: t('common.actions.confirm'),
+        })
+      } else if (error?.message?.includes?.('modal close')) {
+        // do nothing
+      } else if (error?.message?.includes?.('reject')) {
         await confirmDialog({
           type: 'warning',
           title: t('orders.drawer.reject-payment-error'),
@@ -47,15 +58,9 @@ export const ConfirmPayment = () => {
     } finally {
       setIsSubmitting(false)
     }
-  }, [placeOrder, confirmDialog, t, hisotry, setProductId])
-  const order = useAtomValue(currentOrderInfoAtom)
+  }, [placeOrder, confirmDialog, t, hisotry, setProductId, closeWechatModal])
   const orderProps = useAtomValue(placeOrderPropsAtom)
-  const [prime, decimal] = useMemo(() => {
-    const price = order.price
-    const count = orderProps.count
-    const tp = formatCurrency(Number(price) * Number(count), order.currency)
-    return tp.split('.')
-  }, [order, orderProps])
+  const { prime, decimal } = useOrderPrice()
   const setOrderStep = useSetOrderStep()
 
   return (
