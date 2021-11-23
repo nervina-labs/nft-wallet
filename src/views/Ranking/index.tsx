@@ -1,5 +1,5 @@
 import { Avatar, Box, Center, Flex, Grid, Image } from '@mibao-ui/components'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { Link, Redirect, useParams } from 'react-router-dom'
@@ -20,6 +20,7 @@ import {
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { MainContainer } from '../../styles'
 import styled from '@emotion/styled'
+import { trackLabels, trackRank } from '../../hooks/useTrack'
 
 export const Container = styled(MainContainer)`
   background: linear-gradient(192.04deg, #e5eff5 44.62%, #ffecde 100%);
@@ -129,6 +130,12 @@ export const Ranking: React.FC = () => {
     return data?.issuers?.slice(0, 3)
   }, [data])
   useFirstOpenScrollToTop()
+  const pageName = data?.locales?.zh as string
+  useEffect(() => {
+    if (pageName) {
+      trackRank(pageName, 'didmount')
+    }
+  }, [pageName])
 
   if (error && failureCount >= 3) {
     return <Redirect to={RoutePath.NotFound} />
@@ -171,7 +178,16 @@ export const Ranking: React.FC = () => {
           {[1, 0, 2].map((v) => (
             <Box w="105px" mt={v === 0 ? '0' : '26px'} key={v}>
               {issuers?.[v] ? (
-                <Link to={`/issuer/${issuers?.[v].uuid}`}>
+                <Link
+                  to={`/issuer/${issuers?.[v].uuid}`}
+                  onClick={() => {
+                    trackRank(
+                      pageName,
+                      'click',
+                      trackLabels.explore['to-issuer']
+                    )
+                  }}
+                >
                   <RankBorderBox
                     rank={v}
                     w={v === 0 ? '64px' : '52px'}
@@ -231,7 +247,13 @@ export const Ranking: React.FC = () => {
         {data?.token_classes
           ?.slice(3, data?.token_classes.length)
           .map((token, i) => (
-            <Link to={`/class/${token.uuid}`} key={i}>
+            <Link
+              to={`/class/${token.uuid}`}
+              key={i}
+              onClick={() => {
+                trackRank(pageName, 'click', trackLabels.explore['to-nft'])
+              }}
+            >
               <Grid
                 mb="16px"
                 templateColumns="50px calc(100% - 50px - 20px) 20px"
@@ -261,7 +283,13 @@ export const Ranking: React.FC = () => {
             </Link>
           ))}
         {data?.issuers?.slice(3, data?.issuers.length).map((issuer, i) => (
-          <Link to={`/issuer/${issuer.uuid}`} key={i}>
+          <Link
+            to={`/issuer/${issuer.uuid}`}
+            key={i}
+            onClick={() => {
+              trackRank(pageName, 'click', trackLabels.explore['to-issuer'])
+            }}
+          >
             <Grid
               mb="16px"
               templateColumns="50px calc(100% - 50px - 20px) 20px"

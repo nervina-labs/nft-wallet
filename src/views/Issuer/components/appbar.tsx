@@ -16,6 +16,7 @@ import { Query } from '../../../models'
 import { useAPI } from '../../../hooks/useAccount'
 import { useQuery } from 'react-query'
 import { useShareDisclosure } from '../../../hooks/useShareDisclosure'
+import { useTrackClick } from '../../../hooks/useTrack'
 
 const Share = lazy(async () => await import('../../../components/Share'))
 
@@ -44,6 +45,7 @@ export const Appbar: React.FC = () => {
       refetchOnWindowFocus: false,
     }
   )
+  const trackShare = useTrackClick('issuer', 'click')
   const bgImageUrl = listData?.pages?.[0]?.token_classes?.[0]?.bg_image_url
   const posterCoverImage = bgImageUrl ? getImagePreviewUrl(bgImageUrl, 300) : ''
 
@@ -57,7 +59,13 @@ export const Appbar: React.FC = () => {
             </AppbarButton>
           }
           right={
-            <AppbarButton transparent onClick={onOpenShare}>
+            <AppbarButton
+              transparent
+              onClick={() => {
+                onOpenShare()
+                trackShare('share')
+              }}
+            >
               <ShareSvg />
             </AppbarButton>
           }

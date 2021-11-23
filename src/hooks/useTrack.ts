@@ -29,7 +29,7 @@ export const categories = {
   home: '秘宝-个人中心',
   'go-nft-from-home-holder': '秘宝-个人中心-持有-点击进入NFT',
   'go-nft-from-home-like': '秘宝-个人中心-赞过-点击进入NFT',
-  'go-nft-from-home-follow': '秘宝-个人中心-关注-点击进入NFT',
+  'go-issuer-from-home-follow': '秘宝-个人中心-关注-点击进入创作者主页',
   'home-icon': '秘宝-个人中心-设置',
   orders: '秘宝-我的订单',
   'order-detail': '秘宝-我的订单-订单详情页',
@@ -57,7 +57,7 @@ export const actions = {
   like: '点赞',
 }
 
-export const labels = {
+export const trackLabels = {
   login: {
     unipass: '通过unipass登录',
     eth: '通过以太坊环境登录',
@@ -117,7 +117,7 @@ export const labels = {
     like: '点赞',
     buy: '购买',
   },
-  collector: {
+  issuer: {
     switch: {
       creartor: '已创作',
       onsell: '在售',
@@ -127,7 +127,7 @@ export const labels = {
     'to-nft': '点击进入NFT',
     like: '点赞',
   },
-  issuer: {
+  collector: {
     switch: {
       hold: '持有',
       like: '赞过',
@@ -151,16 +151,32 @@ export const labels = {
 
 export type TrackCategory = keyof typeof categories
 export type TrackAction = keyof typeof actions
-export type TrackLabel = string | undefined
+export type TrackLabel = string | undefined | number
 
-const umengTrack = (
+if (process.env.NODE_ENV === 'development') {
+  ;(window as any)._czc = {
+    push: (args: any[]) => {
+      console.log(args)
+    },
+  }
+}
+
+export const umengTrack = (
   category: TrackCategory,
   action: TrackAction,
   label?: TrackLabel
 ) => {
   try {
-    if (process.env.NODE_ENV === 'development') return
-    ;(window as any)._czc.push('_trackEvent', category, action, label)
+    // if (process.env.NODE_ENV === 'development') return
+    const args: any[] = [
+      '_trackEvent',
+      categories[category] || category,
+      actions[action],
+    ]
+    if (label) {
+      args.push(label)
+    }
+    ;(window as any)._czc.push(args)
   } catch {
     // ignore
   }
@@ -175,14 +191,33 @@ export const useTrackDidMount = (
   })
 }
 
-export const useTrackClick = (
+export const useTrackEvent = (
   category: TrackCategory,
   action: TrackAction,
   label?: TrackLabel,
   cb: Function = noop
 ) => {
-  return async (e: any) => {
+  return async (e?: any) => {
     await cb?.(e)
     umengTrack(category, action, label)
   }
+}
+
+export const useTrackClick = (
+  category: TrackCategory,
+  action: TrackAction,
+  cb: Function = noop
+) => {
+  return async (label?: TrackLabel) => {
+    umengTrack(category, action, label)
+  }
+}
+
+export const trackRank = (
+  page: string,
+  action: TrackAction,
+  label?: TrackLabel
+) => {
+  const cat = `秘宝-首页-排行榜模块-${page}单页` as any
+  umengTrack(cat, action, label)
 }

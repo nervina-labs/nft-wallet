@@ -7,6 +7,7 @@ import { RoutePath } from '../../routes'
 import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
 import { getNFTQueryParams, isSupportWebp } from '../../utils'
+import { trackLabels, useTrackClick } from '../../hooks/useTrack'
 export interface CardProps {
   token: NFTToken
   isClass: boolean
@@ -111,6 +112,10 @@ export const Card: React.FC<CardProps> = ({
     ? `/class/${token.class_uuid}`
     : `/nft/${token.token_uuid}`
 
+  const trackClick = useTrackClick(
+    isClass ? 'go-nft-from-home-holder' : 'go-nft-from-home-like',
+    'click'
+  )
   return (
     <Box position="relative" w="100%" mb="35px" px="20px">
       <Label address={address} nft={token} />
@@ -158,6 +163,7 @@ export const Card: React.FC<CardProps> = ({
             return
           }
           history.push(href)
+          trackClick(trackLabels.home['to-nft'])
         }}
       />
     </Box>

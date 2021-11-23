@@ -12,6 +12,7 @@ import { Info } from './info'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { Appbar } from './components/appbar'
 import { NftList } from './components/nftList'
+import { useTrackDidMount } from '../../hooks/useTrack'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -38,6 +39,8 @@ export const NFTs: React.FC = () => {
     }
     return !user?.guide_finished
   }, [user, isUserLoading])
+
+  useTrackDidMount('home')
 
   if (!isLogined && !isHolder) {
     return <Redirect to={RoutePath.Explore} />

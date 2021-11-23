@@ -35,6 +35,11 @@ import Slide1 from '../../assets/img/login/slide-1.png'
 import Slide2 from '../../assets/img/login/slide-2.png'
 import Slide3 from '../../assets/img/login/slide-3.png'
 import classNames from 'classnames'
+import {
+  trackLabels,
+  useTrackEvent,
+  useTrackDidMount,
+} from '../../hooks/useTrack'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -285,6 +290,22 @@ export const Login: React.FC = () => {
     [login, redirectUrl, onConfirm, t, history]
   )
 
+  useTrackDidMount('login')
+
+  const loginUnipass = useTrackEvent(
+    'login',
+    'click',
+    trackLabels.login.unipass,
+    loginBtnOnClick.bind(null, WalletType.Unipass)
+  )
+
+  const loginEth = useTrackEvent(
+    'login',
+    'click',
+    trackLabels.login.eth,
+    loginBtnOnClick.bind(null, WalletType.Metamask)
+  )
+
   const slides = [
     {
       src: Slide1,
@@ -398,7 +419,7 @@ export const Login: React.FC = () => {
             disabled={
               isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
             }
-            onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+            onClick={loginUnipass}
             variant={IS_IMTOKEN ? 'outline' : 'solid'}
           >
             {t('login.connect.unipass')}
@@ -409,7 +430,7 @@ export const Login: React.FC = () => {
               isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
             }
             isLoading={isMetamaskLoging}
-            onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+            onClick={loginEth}
             variant={!IS_IMTOKEN ? 'outline' : 'solid'}
           >
             {IS_IMTOKEN ? (

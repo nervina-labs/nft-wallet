@@ -9,6 +9,7 @@ import { useAPI } from '../../../hooks/useAccount'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { Card } from '../card'
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from '@mibao-ui/components'
+import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 
 const ListTypeSet = ['owned', 'liked', 'follow'] as const
 type ListType = typeof ListTypeSet[number]
@@ -59,6 +60,8 @@ export const NftList: React.FC<{
     [address, api]
   )
 
+  const trackTab = useTrackClick('home', 'switchover')
+
   return (
     <section className="list">
       <Tabs index={filterIndex} align="space-between" colorScheme="black">
@@ -68,9 +71,30 @@ export const NftList: React.FC<{
           top={!isHolder ? '0' : `${HEADER_HEIGHT}px`}
           position="sticky"
         >
-          <Tab onClick={() => setListType('owned')}>{t('nfts.owned')}</Tab>
-          <Tab onClick={() => setListType('liked')}>{t('nfts.liked')}</Tab>
-          <Tab onClick={() => setListType('follow')}>{t('follow.follow')}</Tab>
+          <Tab
+            onClick={() => {
+              setListType('owned')
+              trackTab(trackLabels.home.switch.hold)
+            }}
+          >
+            {t('nfts.owned')}
+          </Tab>
+          <Tab
+            onClick={() => {
+              setListType('liked')
+              trackTab(trackLabels.home.switch.like)
+            }}
+          >
+            {t('nfts.liked')}
+          </Tab>
+          <Tab
+            onClick={() => {
+              setListType('follow')
+              trackTab(trackLabels.home.switch.follow)
+            }}
+          >
+            {t('follow.follow')}
+          </Tab>
         </TabList>
         <TabPanels pt="20px">
           <TabPanel p={0}>

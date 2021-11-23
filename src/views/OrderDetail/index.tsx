@@ -31,6 +31,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Loading } from '../../components/Loading'
 import { Contact } from '../../components/Contact'
 import { IS_WEXIN } from '../../constants'
+import { useTrackDidMount } from '../../hooks/useTrack'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -155,7 +156,7 @@ const Jumbotron: React.FC<JumbotronProps> = ({ order, id }) => {
 
 export const OrderDetail: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
-
+  useTrackDidMount('order-detail')
   const api = useAPI()
   const { id } = useParams<{ id: string }>()
   const getAuth = useGetAndSetAuth()

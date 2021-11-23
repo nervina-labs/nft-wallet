@@ -19,6 +19,11 @@ import styled from 'styled-components'
 import { useFirstOpenScrollToTop } from '../../hooks/useFirstOpenScrollToTop'
 import { RoutePath } from '../../routes'
 import { useLike } from '../../hooks/useLikeStatus'
+import {
+  trackLabels,
+  useTrackClick,
+  useTrackDidMount,
+} from '../../hooks/useTrack'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -36,8 +41,15 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
     uuid: token.uuid,
   })
 
+  const trackGoToNFT = useTrackClick('go-nft-from-explore-recommend', 'click')
+
   return (
-    <Link to={`/class/${token.uuid}`}>
+    <Link
+      to={`/class/${token.uuid}`}
+      onClick={() => {
+        trackGoToNFT(trackLabels.explore['recommend-to-nft'])
+      }}
+    >
       <NFTCard
         src={token.bg_image_url === null ? '' : token.bg_image_url}
         type={token.renderer_type}
@@ -82,6 +94,7 @@ export const Collection: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const goBack = useHistoryBack()
+  useTrackDidMount('explore-rank')
   const { data, failureCount, error } = useQuery(
     [Query.CollectionDetail, api, id],
     async () => {

@@ -8,13 +8,20 @@ import { HiddenBar, HiddenBarFill } from '../../components/HiddenBar'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import LogoPath from '../../assets/svg/explore-logo.svg'
+import { useTrackEvent, useTrackDidMount } from '../../hooks/useTrack'
 
 export const Explore: React.FC = () => {
   const [mode, setMode] = useRouteQuerySearch<'pro' | 'lite'>('mode', 'pro')
+  const clickLite = useTrackEvent('explore', 'click', 'Lite')
   const onChangeMode = useCallback(() => {
     setMode(mode === 'lite' ? 'pro' : 'lite')
-  }, [mode, setMode])
+    if (mode !== 'lite') {
+      clickLite()
+    }
+  }, [mode, setMode, clickLite])
   useScrollRestoration()
+
+  useTrackDidMount('explore')
 
   return (
     <MainContainer>

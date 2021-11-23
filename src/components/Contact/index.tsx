@@ -8,6 +8,7 @@ import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { useTranslation } from 'react-i18next'
 import * as clipboard from 'clipboard-polyfill/text'
 import { useToast } from '../../hooks/useToast'
+import { trackLabels, useTrackClick } from '../../hooks/useTrack'
 
 const Container = styled(Center)`
   background: linear-gradient(
@@ -26,6 +27,7 @@ const Container = styled(Center)`
 export const Contact: React.FC = () => {
   const bodyRef = useRef(document.body)
   const bodyWidth = useWidth(bodyRef)
+  const trackClick = useTrackClick('orders', 'click')
 
   const right = useMemo(() => {
     if (bodyWidth == null) {
@@ -47,6 +49,7 @@ export const Contact: React.FC = () => {
       right={right}
       cursor="pointer"
       onClick={() => {
+        trackClick(trackLabels.orders.help)
         confirmDialog({
           type: 'success',
           title: (

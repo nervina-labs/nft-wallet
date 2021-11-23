@@ -11,6 +11,7 @@ import { Footer } from './components/footer'
 import { OrderDrawer } from '../../components/OrderDrawer'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { useFirstOpenScrollToTop } from '../../hooks/useFirstOpenScrollToTop'
+import { useTrackDidMount } from '../../hooks/useTrack'
 
 const Container = styled(MainContainer)`
   position: relative;
@@ -31,6 +32,8 @@ export const NFT: React.FC = () => {
   useFirstOpenScrollToTop()
   const isNotFound =
     failureCount >= 3 || detail?.is_class_banned || detail?.is_issuer_banned
+
+  useTrackDidMount('nft-detail', id)
 
   if (isNotFound) {
     return <Redirect to={RoutePath.NotFound} />

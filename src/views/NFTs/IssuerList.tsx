@@ -13,6 +13,7 @@ import { useAPI } from '../../hooks/useAccount'
 import { Issuer as RawIssuer, Text } from '@mibao-ui/components'
 import { InfiniteList } from '../../components/InfiniteList'
 import { useHistory, useRouteMatch } from 'react-router'
+import { trackLabels, useTrackClick } from '../../hooks/useTrack'
 
 interface IssuerProps {
   issuer: IIssuer
@@ -39,7 +40,7 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle, isHome }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
   const href = `${RoutePath.Issuer}/${issuer.uuid}`
-
+  const trackClick = useTrackClick('go-issuer-from-home-follow', 'click')
   return (
     <IssuerContainer>
       <RawIssuer
@@ -58,6 +59,7 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle, isHome }) => {
         onClick={(e) => {
           e.preventDefault()
           history.push(href)
+          trackClick(trackLabels.home['to-issuer'])
         }}
       />
       {isHome ? (

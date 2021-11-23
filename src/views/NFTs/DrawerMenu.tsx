@@ -16,6 +16,7 @@ import { LocalCache } from '../../cache'
 import { getHelpCenterUrl } from '../../data/help'
 import { useLogout } from '../../hooks/useAccount'
 import { Drawer, Stack, StackDivider, Text, Flex } from '@mibao-ui/components'
+import { trackLabels, useTrackClick } from '../../hooks/useTrack'
 
 const DrawerContainer = styled.div`
   background-color: white;
@@ -71,22 +72,33 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
     return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
   }, [bodyWidth])
 
+  const trackList = useTrackClick('home-icon', 'click')
+
   const list = useMemo(() => {
     return [
       {
         text: t('menu.order'),
         icon: <OrderSvg />,
-        onClick: () => history.push(RoutePath.Orders),
+        onClick: () => {
+          history.push(RoutePath.Orders)
+          trackList(trackLabels.home.orders)
+        },
       },
       {
         text: t('menu.profile'),
         icon: <ProfileSvg />,
-        onClick: () => history.push(RoutePath.Profile),
+        onClick: () => {
+          history.push(RoutePath.Profile)
+          trackList(trackLabels.home.profile)
+        },
       },
       {
         text: t('menu.txs'),
         icon: <TxSvg />,
-        onClick: () => history.push(RoutePath.Transactions),
+        onClick: () => {
+          history.push(RoutePath.Transactions)
+          trackList(trackLabels.home.txs)
+        },
       },
       {
         text: t('menu.language'),
@@ -94,22 +106,28 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
         onClick: () => {
           close()
           setShowAction(true)
+          trackList(trackLabels.home.language)
         },
       },
       {
         text: t('menu.help'),
         icon: <HelpSvg />,
-        onClick: () =>
+        onClick: () => {
           history.push(
             `${RoutePath.Help}?url=${encodeURIComponent(
               getHelpCenterUrl(i18n.language)
             )}`
-          ),
+          )
+          trackList(trackLabels.home.help)
+        },
       },
       {
         text: t('menu.logout'),
         icon: <LogoutSvg />,
-        onClick: () => logout(history),
+        onClick: () => {
+          logout(history)
+          trackList(trackLabels.home.logout)
+        },
       },
     ]
     // eslint-disable-next-line react-hooks/exhaustive-deps

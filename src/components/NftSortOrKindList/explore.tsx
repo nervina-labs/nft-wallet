@@ -21,6 +21,7 @@ import { TokenClass } from '../../models/class-list'
 import { useLike } from '../../hooks/useLikeStatus'
 import { isSupportWebp } from '../../utils'
 import styled from '@emotion/styled'
+import { useTrackClick, useTrackEvent } from '../../hooks/useTrack'
 
 const tabProps: TabProps = {
   py: '4px',
@@ -62,8 +63,15 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
     uuid: token.uuid,
   })
 
+  const trackClick = useTrackClick('go-nft-from-explore-explore', 'click')
+  const trackLike = useTrackEvent(
+    'explore-explore',
+    'like',
+    undefined,
+    toggleLike
+  )
   return (
-    <Link to={`/class/${token.uuid}`}>
+    <Link to={`/class/${token.uuid}`} onClick={async () => await trackClick()}>
       <Box w="full" pb="20px">
         <NftImage
           src={token.bg_image_url === null ? '' : token.bg_image_url}
@@ -100,7 +108,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
             likeCount={likeCount}
             isLiked={isLiked}
             isLoading={isLikeLoading}
-            onClick={toggleLike}
+            onClick={trackLike}
             whiteSpace="nowrap"
           />
         </HStack>
