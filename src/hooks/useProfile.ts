@@ -1,13 +1,13 @@
 import { useAtom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithStorage, useAtomCallback } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
 import { UnipassConfig } from '../utils'
 import {
+  providerAtom,
   useAccount,
   useAPI,
-  useProvider,
   useSignMessage,
   WalletType,
 } from './useAccount'
@@ -67,33 +67,38 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
   const { profile, setProfile } = useProfile()
   const signMessage = useSignMessage()
   const { address, walletType } = useAccount()
-  const provider = useProvider()
 
-  return useCallback(async () => {
-    let signature = profile?.[address]?.auth
-    if (!signature) {
-      UnipassConfig.setRedirectUri(location.pathname + location.search)
-      signature = await signMessage(address)
-      // we don't need set unipass profile auth in here
-      if (signature.includes('N/A') || walletType === WalletType.Unipass) {
-        throw new Error('signing: user denied')
-      } else {
-        setProfile({
-          auth: signature,
-        })
-      }
-    }
+  return useAtomCallback(
+    useCallback(
+      async (get) => {
+        const provider = get(providerAtom)
+        let signature = profile?.[address]?.auth
+        if (!signature) {
+          UnipassConfig.setRedirectUri(location.pathname + location.search)
+          signature = await signMessage(address)
+          // we don't need set unipass profile auth in here
+          if (signature.includes('N/A') || walletType === WalletType.Unipass) {
+            throw new Error('signing: user denied')
+          } else {
+            setProfile({
+              auth: signature,
+            })
+          }
+        }
 
-    const addr =
-      walletType === WalletType.Unipass
-        ? address
-        : (provider?.address?.addressString as string)
-    return {
-      address: addr,
-      message: address,
-      signature,
-    }
-  }, [signMessage, walletType, address, profile, setProfile, provider])
+        const addr =
+          walletType === WalletType.Unipass
+            ? address
+            : (provider?.address?.addressString as string)
+        return {
+          address: addr,
+          message: address,
+          signature,
+        }
+      },
+      [signMessage, walletType, address, profile, setProfile]
+    )
+  )
 }
 
 export function useToggleLike() {
