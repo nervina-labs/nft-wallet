@@ -28,6 +28,7 @@ export const RedeemLabel: React.FC<LabelProps> = ({ type }) => {
       textAlign="center"
       fontSize="12px"
       color="white"
+      px="4px"
     >
       {text}
     </Box>

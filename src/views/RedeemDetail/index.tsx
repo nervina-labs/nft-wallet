@@ -21,7 +21,6 @@ import { Footer } from './Footer'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { SubmitInfo } from './SubmitInfo'
 import { useAPI } from '../../hooks/useAccount'
-import { useRoute } from '../../hooks/useRoute'
 import {
   Issuer,
   Progress,
@@ -125,7 +124,6 @@ export const RedeemDetail: React.FC = () => {
 
   const isClosed = data?.state === RedeemStatus.Closed
   const isDone = data?.state === RedeemStatus.Done
-  const { from } = useRoute()
 
   const [tabType, setTabType] = useRouteQuerySearch<TabType>(
     'type',
@@ -153,16 +151,7 @@ export const RedeemDetail: React.FC = () => {
   return (
     <Container>
       <Box position="relative" zIndex={1}>
-        <Appbar
-          transparent
-          title={t('exchange.event.title')}
-          onLeftClick={() =>
-            history.replace(
-              from === location.pathname ? RoutePath.Redeem : from
-            )
-          }
-          right={<></>}
-        />
+        <Appbar transparent title={t('exchange.event.title')} />
       </Box>
 
       <Box

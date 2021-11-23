@@ -396,6 +396,7 @@
         "redeemable": "Redeemable"
       },
       "actions": {
+        "view-prizes": "View prizes",
         "redeem": "Redeem",
         "insufficient": "Cannot redeem"
       },

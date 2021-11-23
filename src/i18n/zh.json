@@ -396,6 +396,7 @@
         "redeemable": "可兑换"
       },
       "actions": {
+        "view-prizes": "查看奖品",
         "redeem": "立即兑换",
         "insufficient": "条件不足无法兑换"
       },

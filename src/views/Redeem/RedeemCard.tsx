@@ -122,7 +122,7 @@ const ExchangeAction: React.FC<ActionProps> = ({
       </Box>
       <Stack my="auto" spacing="12px" direction="row">
         <Button size="sm" fontSize="12px">
-          查看奖品
+          {t('exchange.actions.view-prizes')}
         </Button>
         <Button
           size="sm"
