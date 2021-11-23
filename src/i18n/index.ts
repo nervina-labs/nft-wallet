@@ -20,4 +20,8 @@ i18n.use(initReactI18next).init({
   cache: localStorage,
 })
 
+if (browserLanguage === 'en') {
+  document.title = 'Mibao'
+}
+
 export default i18n
