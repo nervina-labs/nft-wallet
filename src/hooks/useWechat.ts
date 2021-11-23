@@ -53,16 +53,16 @@ export const useInitWechat = () => {
       const signature = data?.signature
       return await new Promise<void>((resolve, reject) => {
         wx.config({
-          debug: true,
+          debug: false,
           appId: WECHAT_APP_ID,
           signature,
           nonceStr: wxSignConfig.nonce_str,
           timestamp: wxSignConfig.timestamp,
           jsApiList: [
-            'chooseImage',
-            'showMenuItems',
             'updateAppMessageShareData',
             'updateTimelineShareData',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
           ],
           openTagList: ['wx-open-launch-weapp'],
         })
@@ -114,8 +114,16 @@ export const useWechatShare = () => {
         }
       }
       await initWechat()
-      wx.updateAppMessageShareData(data)
-      wx.updateTimelineShareData(data)
+      wx.showMenuItems({
+        menuList: ['menuItem:share:appMessage', 'menuItem:share:timeline'],
+      })
+      if (wx.onMenuShareAppMessage) {
+        wx.onMenuShareAppMessage(data)
+        wx.onMenuShareTimeline(data)
+      } else {
+        wx.updateAppMessageShareData(data)
+        wx.updateTimelineShareData(data)
+      }
     },
     [
       t,
