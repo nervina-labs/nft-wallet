@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { useLocation, useParams } from 'react-router'
+import { useHistory, useLocation, useParams } from 'react-router'
 import { Loading } from '../../components/Loading'
 import { TransferState } from '../../hooks/useRedeem'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
@@ -50,6 +50,7 @@ const Result: React.FC<ResultProps> = ({ type, title, time, desc }) => {
 
 export const RedeemResult: React.FC = () => {
   const api = useAPI()
+  const { replace } = useHistory()
   const resultFlag = useRouteQuery<ResultFlag>('result', ResultFlag.None)
   const { id } = useParams<{ id: string }>()
   const location = useLocation<TransferState>()
@@ -108,7 +109,12 @@ export const RedeemResult: React.FC = () => {
   return (
     <RainbowBackground px="24px">
       <AppbarSticky position="absolute" top="0" zIndex={2}>
-        <Appbar transparent />
+        <Appbar
+          transparent
+          onLeftClick={() => {
+            replace(isSucceed ? RoutePath.MyRedeem : RoutePath.Redeem)
+          }}
+        />
       </AppbarSticky>
 
       <Flex
@@ -122,6 +128,7 @@ export const RedeemResult: React.FC = () => {
         direction="column"
         textAlign="center"
         mt="auto"
+        px="30px"
       >
         {!isLoading ? (
           <>
@@ -133,7 +140,7 @@ export const RedeemResult: React.FC = () => {
       </Flex>
 
       <Box mt="30px" w="full">
-        <Link to={isSucceed ? RoutePath.MyRedeem : RoutePath.Redeem}>
+        <Link to={isSucceed ? RoutePath.MyRedeem : RoutePath.Redeem} replace>
           <Button variant="solid" isFullWidth colorScheme="primary">
             {isSucceed
               ? hasCustomData
