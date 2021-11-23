@@ -97,7 +97,12 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
             dispatch({ key: 'address', value: e.target.value })
           }
         />
-        <Alert mt="10px" borderRadius="8px">
+        <Alert
+          mt="10px"
+          borderRadius="8px"
+          bg="rgba(255, 206, 166, 0.1)"
+          color="#FF5C00"
+        >
           {t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`)}
         </Alert>
       </div>
@@ -105,6 +110,7 @@ export const SubmitAddress: React.FC<SubmitAddressProps> = ({
         status={status}
         isRedeemable
         isInDialog
+        inDrawer
         willDestroyed={willDestroyed}
         isLoading={isRedeeming}
         onClick={() => {

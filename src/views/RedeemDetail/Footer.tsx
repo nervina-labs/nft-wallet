@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, BoxProps } from '@chakra-ui/react'
 import { Button, ButtonProps } from '@mibao-ui/components'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,6 +13,7 @@ export interface FooterProps extends ButtonProps {
   isRedeemable: boolean
   willDestroyed: boolean
   isInDialog?: boolean
+  inDrawer?: boolean
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -20,6 +21,7 @@ export const Footer: React.FC<FooterProps> = ({
   status,
   willDestroyed,
   isInDialog,
+  inDrawer,
   ...props
 }) => {
   const [t] = useTranslation('translations')
@@ -62,10 +64,15 @@ export const Footer: React.FC<FooterProps> = ({
     return false
   }, [props.disabled, isRedeemable, isLogined])
 
+  const containerProps: BoxProps = inDrawer ? { left: '0px' } : {}
+
   return (
     <>
       <Box
         as="footer"
+        left="unset"
+        right="unset"
+        {...containerProps}
         position="fixed"
         bottom="-40px"
         transform="translateY(calc(0px - var(--safe-area-inset-bottom)))"
@@ -78,8 +85,6 @@ export const Footer: React.FC<FooterProps> = ({
         mt="auto"
         mb="0"
         w="100%"
-        left="unset"
-        right="unset"
         maxW="500px"
         borderTop="1px solid #e1e1e1"
         zIndex={5}
