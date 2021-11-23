@@ -53,7 +53,7 @@ export const useInitWechat = () => {
       const signature = data?.signature
       return await new Promise<void>((resolve, reject) => {
         wx.config({
-          debug: false,
+          debug: true,
           appId: WECHAT_APP_ID,
           signature,
           nonceStr: wxSignConfig.nonce_str,
