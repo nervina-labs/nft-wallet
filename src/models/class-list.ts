@@ -52,6 +52,9 @@ export interface TokenClass extends VipInfo, ClassLikes, CardBack {
   product_price?: string
 }
 
+export function isTokenClass(data: any): data is TokenClass {
+  return Object.hasOwnProperty.call(data, 'product_price')
+}
 export interface ClassList {
   class_list: TokenClass[]
   meta: ListMeta

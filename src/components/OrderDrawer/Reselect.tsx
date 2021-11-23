@@ -47,7 +47,9 @@ export const Reselect = () => {
             IS_DESKTOP ? PaymentChannel.AlipayPC : PaymentChannel.AlipayMobile
           }
         />
-        {IS_DESKTOP ? null : (
+        {IS_DESKTOP ? (
+          <Item channel={PaymentChannel.WechatScan} />
+        ) : (
           <Item
             channel={
               IS_WEXIN ? PaymentChannel.WechatPub : PaymentChannel.WechatMobile

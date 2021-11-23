@@ -57,6 +57,7 @@ import {
 } from '../models/order'
 import { RoutePath } from '../routes'
 import { RankingListResponse } from '../models/rank'
+import { PaymentChannel } from '../hooks/useOrder'
 
 function randomid(length = 10): string {
   let result = ''
@@ -690,12 +691,18 @@ export class ServerWalletAPI {
     const headers: { auth?: string } = {
       auth: JSON.stringify(auth),
     }
+    let callbackUrl = this.orderCallbackURL
+    if (props.channel === PaymentChannel.WechatMobile) {
+      callbackUrl = `${location.origin}${RoutePath.OrderStatus}/${
+        props.uuid as string
+      }`
+    }
     return await this.axios.post(
       '/token_orders',
       {
         token_order: {
           ...props,
-          callback_url: this.orderCallbackURL,
+          callback_url: callbackUrl,
           cancel_url: location.href,
         },
         auth,
@@ -746,19 +753,25 @@ export class ServerWalletAPI {
     if (auth) {
       headers.auth = JSON.stringify(auth)
     }
+    let callbackUrl = this.orderCallbackURL
+    if (channel === PaymentChannel.WechatMobile) {
+      callbackUrl = `${location.origin}${
+        RoutePath.OrderStatus
+      }/${uuid}?redirect_from=${encodeURIComponent(location.pathname)}`
+    }
     return await this.axios.put(
       `/token_orders/${uuid}`,
       {
         channel,
         address: this.address,
-        callback_url: this.orderCallbackURL,
+        callback_url: callbackUrl,
         cancel_url: location.href,
       },
       {
         params: {
           channel,
           address: this.address,
-          callback_url: this.orderCallbackURL,
+          callback_url: callbackUrl,
           cancel_url: location.href,
         },
         headers,
