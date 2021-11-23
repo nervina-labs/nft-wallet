@@ -45,7 +45,7 @@ export const MyRedeem: React.FC = () => {
     async ({ pageParam = 1 }) => {
       const { data } = await api.getMyRedeemEvents(
         pageParam,
-        isWait ? RedeemListType.UserWaittingRedeem : RedeemListType.UserRedeemed
+        isWait ? RedeemListType.UserWaitingRedeem : RedeemListType.UserRedeemed
       )
 
       return {

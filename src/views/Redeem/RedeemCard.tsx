@@ -92,6 +92,13 @@ const ExchangeAction: React.FC<ActionProps> = ({
     if (status === RedeemStatus.Done) {
       return t('exchange.event.end')
     }
+    if (userState === UserRedeemState.WaitingRedeem) {
+      return (
+        <Box as="span" color="#FD6A3C">
+          {t('exchange.check.wait')}
+        </Box>
+      )
+    }
     if (userState === UserRedeemState.AllowRedeem) {
       return ''
     }
@@ -102,6 +109,9 @@ const ExchangeAction: React.FC<ActionProps> = ({
   }, [status, t, userState, matchMyRedeem])
 
   const { onRedeem } = useSignRedeem()
+  const isGotoPrize =
+    userState === UserRedeemState.Redeemed ||
+    userState === UserRedeemState.WaitingRedeem
 
   return (
     <Flex justify="space-between" h="45px" px="15px">
@@ -118,9 +128,20 @@ const ExchangeAction: React.FC<ActionProps> = ({
         {text}
       </Box>
       <Stack my="auto" spacing="12px" direction="row">
-        <Button size="sm" fontSize="12px">
-          {t('exchange.actions.view-prizes')}
-        </Button>
+        {isGotoPrize ? (
+          <Link to={`/redeem-prize/${prizeId}`}>
+            <Button size="sm" fontSize="12px">
+              {userState === UserRedeemState.Redeemed
+                ? t('exchange.check.comment')
+                : t('exchange.check.price')}
+            </Button>
+          </Link>
+        ) : (
+          <Button size="sm" fontSize="12px">
+            {t('exchange.check.price')}
+          </Button>
+        )}
+
         {status === RedeemStatus.Open && !matchMyRedeem ? (
           <Button
             size="sm"
