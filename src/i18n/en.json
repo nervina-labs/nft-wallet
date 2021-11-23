@@ -425,8 +425,12 @@
         }
       },
       "alert": {
+        "normal-title": "Redemption will not destroy the NFT you participate in redemption",
+        "destroy-title": "Redemption will destroy your NFT participating in the redemption",
+        "normal-desc": "It will be marked, and the marked NFT cannot participate in other exchanges again.",
+        "destroy-desc": "This operation is irreversible and cannot be retrieved once destroyed.",
         "normal": "The NFT(s) participating in the activity will be still owned by redeemer but marked as redeemed on chain. Redeemed NFT cannot be involved in other redeem activities anymore.",
-      "destroy": "The NFT(s) participating in the activity will be destroyed and cannot be retrieved once destroyed.",
+        "destroy": "The NFT(s) participating in the activity will be destroyed and cannot be retrieved once destroyed.",
         "confirm": "Confirm",
         "cancel": "Cancel"
       },
