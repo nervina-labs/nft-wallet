@@ -27,6 +27,7 @@ import { OrderSuccess } from '../views/OrderSuccess'
 import { OrderDetail } from '../views/OrderDetail'
 import { Ranking } from '../views/Ranking'
 import { ExploreAll } from '../views/ExploreAll'
+import { OrderStatus } from '../views/OrderStatus'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -226,6 +227,13 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'OrderSuccess',
     path: RoutePath.OrderSuccess,
+  },
+  {
+    component: OrderStatus,
+    exact: true,
+    key: 'OrderStatus',
+    path: RoutePath.OrderStatus,
+    params: '/:id',
   },
   {
     component: OrderDetail,
