@@ -91,7 +91,7 @@ export const useWechatShare = () => {
   const initWechat = useInitWechat()
 
   return useCallback(
-    (d?: WechatShareData) => {
+    async (d?: WechatShareData) => {
       if (!IS_WEXIN) {
         return
       }
@@ -113,18 +113,9 @@ export const useWechatShare = () => {
           return
         }
       }
-      initWechat(() => {
-        wx.showMenuItems({
-          menuList: ['menuItem:share:appMessage', 'menuItem:share:timeline'],
-        })
-        if (wx.onMenuShareAppMessage) {
-          wx.onMenuShareAppMessage(data)
-          wx.onMenuShareTimeline(data)
-        } else {
-          wx.updateAppMessageShareData(data)
-          wx.updateTimelineShareData(data)
-        }
-      })
+      await initWechat()
+      wx.updateAppMessageShareData(data)
+      wx.updateTimelineShareData(data)
     },
     [
       t,
