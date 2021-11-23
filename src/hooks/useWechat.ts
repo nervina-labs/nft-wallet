@@ -63,8 +63,9 @@ export const useInitWechat = () => {
             'updateTimelineShareData',
             'onMenuShareTimeline',
             'onMenuShareAppMessage',
+            'showMenuItems',
           ],
-          openTagList: ['wx-open-launch-weapp'],
+          openTagList: [],
         })
         wx.ready(() => {
           cb?.()
@@ -113,6 +114,8 @@ export const useWechatShare = () => {
           return
         }
       }
+      // wx.updateAppMessageShareData(data)
+      // wx.updateTimelineShareData(data)
       await initWechat()
       wx.showMenuItems({
         menuList: ['menuItem:share:appMessage', 'menuItem:share:timeline'],
