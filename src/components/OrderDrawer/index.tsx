@@ -1,5 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react'
-// import { useTranslation } from 'react-i18next'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import { useWidth } from '../../hooks/useWidth'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
@@ -7,6 +6,7 @@ import { Drawer } from '@mibao-ui/components'
 import {
   isDrawerOpenAtom,
   OrderStep,
+  useCloseWechatScanModal,
   useOrderStep,
   useResetOrderState,
 } from '../../hooks/useOrder'
@@ -16,6 +16,7 @@ import { ConfirmPayment } from './ConfirmPayment'
 import { useAtom } from 'jotai'
 import { Reselect } from './Reselect'
 import { useTranslation } from 'react-i18next'
+import { WechatScanModal } from './WechatScanModal'
 
 const DrawerContainer = styled.div`
   display: flex;
@@ -57,33 +58,43 @@ export const OrderDrawer: React.FC = () => {
 
   const [isOpen, setOpen] = useAtom(isDrawerOpenAtom)
   const resetOrder = useResetOrderState()
+  const closeWechatModal = useCloseWechatScanModal()
 
   const reset = useCallback(() => {
     resetOrder()
     setOpen(false)
-  }, [resetOrder, setOpen])
+    closeWechatModal()
+  }, [resetOrder, setOpen, closeWechatModal])
+
+  useEffect(() => {
+    return () => reset()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
-    <Drawer
-      placement="bottom"
-      isOpen={isOpen}
-      hasOverlay
-      onClose={reset}
-      rounded="lg"
-      autoFocus={false}
-      contentProps={{
-        width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
-        style: {
-          left: drawerLeft,
-        },
-        height: i18n.language === 'en' ? '380px' : '350px',
-        borderRadius: '20px',
-        borderBottomRadius: 0,
-      }}
-    >
-      <DrawerContainer>
-        <CurrentComp />
-      </DrawerContainer>
-    </Drawer>
+    <>
+      <Drawer
+        placement="bottom"
+        isOpen={isOpen}
+        hasOverlay
+        onClose={reset}
+        rounded="lg"
+        autoFocus={false}
+        contentProps={{
+          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
+          style: {
+            left: drawerLeft,
+          },
+          height: i18n.language === 'en' ? '380px' : '350px',
+          borderRadius: '20px',
+          borderBottomRadius: 0,
+        }}
+      >
+        <DrawerContainer>
+          <CurrentComp />
+        </DrawerContainer>
+      </Drawer>
+      <WechatScanModal />
+    </>
   )
 }

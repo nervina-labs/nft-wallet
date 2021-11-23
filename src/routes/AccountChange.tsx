@@ -10,6 +10,7 @@ import {
   useCloseConfirmDialog,
   useConfirmDialog,
 } from '../hooks/useConfirmDialog'
+import { useWechatShare } from '../hooks/useWechat'
 
 const allowWithoutAuthList = new Set([
   RoutePath.Unipass,
@@ -51,6 +52,16 @@ export const AccountChange: React.FC = ({ children }) => {
   const onOpenConfirm = useConfirmDialog()
   const onCloseConfirm = useCloseConfirmDialog()
   const [t] = useTranslation('translations')
+  const wechatShare = useWechatShare()
+  useEffect(() => {
+    wechatShare()
+    const unlisten = history.listen(() => {
+      wechatShare()
+    })
+
+    return unlisten
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     const pathInForceAuthList = forceAuthList.has(
