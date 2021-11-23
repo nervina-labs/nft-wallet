@@ -8,16 +8,15 @@ import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { Query } from '../../models'
 import { ReactComponent as SuccessSvg } from '../../assets/svg/order-success.svg'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { RoutePath } from '../../routes'
 import { formatTime } from '../../utils'
 import { useAPI } from '../../hooks/useAccount'
 import { RainbowBackground } from '../../components/RainbowBackground'
-import { Box, Center, Flex, Heading, Link } from '@chakra-ui/react'
-import { Appbar, AppbarButton, AppbarSticky } from '../../components/Appbar'
-import { useHistoryBack } from '../../hooks/useHistoryBack'
+import { AspectRatio, Box, Center, Flex, Heading } from '@chakra-ui/react'
+import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { Button } from '@mibao-ui/components'
 import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
+import { Link } from 'react-router-dom'
 
 export enum ResultFlag {
   None = 'none',
@@ -35,14 +34,13 @@ interface ResultProps {
 const Result: React.FC<ResultProps> = ({ type, title, time, desc }) => {
   return (
     <>
-      <Center mb="20px">
-        {type === ResultFlag.Success ? <SuccessSvg /> : null}
-        {type === ResultFlag.Fail ? <FailSvg /> : null}
-      </Center>
-      <Heading fontSize="30px" mb="8px">
+      <AspectRatio ratio={1 / 1} w="70px" h="70px" mb="20px" mx="auto">
+        {type === ResultFlag.Success ? <SuccessSvg /> : <FailSvg />}
+      </AspectRatio>
+      <Heading fontSize="30px" mb="10px">
         {title}
       </Heading>
-      <Box fontSize="12px">{time}</Box>
+      <Box fontSize="14px">{time}</Box>
       <Box fontSize="16px" color="#FD6A3C" whiteSpace="pre-line" mt="80px">
         {desc}
       </Box>
@@ -75,7 +73,6 @@ export const RedeemResult: React.FC = () => {
     })
     return data
   }, [id, api, location?.state])
-  const onBack = useHistoryBack()
   const { data, isError, isLoading } = useQuery(
     [Query.SendRedeem, id, api, resultFlag],
     transfer,
@@ -111,14 +108,7 @@ export const RedeemResult: React.FC = () => {
   return (
     <RainbowBackground px="24px">
       <AppbarSticky position="absolute" top="0" zIndex={2}>
-        <Appbar
-          left={
-            <AppbarButton onClick={onBack}>
-              <BackSvg />
-            </AppbarButton>
-          }
-          transparent
-        />
+        <Appbar transparent />
       </AppbarSticky>
 
       <Flex
