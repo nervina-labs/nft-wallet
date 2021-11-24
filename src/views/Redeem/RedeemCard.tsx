@@ -27,6 +27,7 @@ import {
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import FALLBACK from '../../assets/img/nft-fallback.png'
+import { isSupportWebp } from '../../utils'
 
 const Container = styled(Link)`
   box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);
@@ -274,6 +275,8 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
               h="70px"
               minW="70px"
               rounded="16px"
+              resizeScale={300}
+              webp={isSupportWebp()}
               key={i}
               fallbackSrc={FALLBACK}
             />

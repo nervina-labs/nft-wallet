@@ -4,6 +4,8 @@ import { NormalRewardInfo } from '../../models/redeem'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Box, Flex, Limited, Image } from '@mibao-ui/components'
+import FALLBACK from '../../assets/img/nft-fallback.png'
+import { isSupportWebp } from '../../utils'
 
 const Container = styled(Link)`
   display: flex;
@@ -42,6 +44,9 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
         }
         w="50px"
         h="50px"
+        resizeScale={300}
+        webp={isSupportWebp()}
+        fallbackSrc={FALLBACK}
         rounded="8px"
       />
       <Flex justify="center" direction="column" pl="10px">

@@ -18,6 +18,8 @@ import {
   useDisclosure,
   AspectRatio,
 } from '@mibao-ui/components'
+import FALLBACK from '../../assets/img/nft-fallback.png'
+import { isSupportWebp } from '../../utils'
 
 export interface PriceCardProps {
   info: RewardInfo
@@ -136,12 +138,23 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
             minW="140px"
             h="140px"
             mr="8px"
+            resizeScale={300}
+            webp={isSupportWebp()}
+            fallbackSrc={FALLBACK}
             onClick={() => {
               setPreviewImage(image)
               onOpen()
             }}
           >
-            <Image src={image} rounded="8px" w="full" h="full" />
+            <Image
+              src={image}
+              rounded="8px"
+              w="full"
+              h="full"
+              resizeScale={300}
+              webp={isSupportWebp()}
+              fallbackSrc={FALLBACK}
+            />
           </AspectRatio>
         ))}
       </Flex>

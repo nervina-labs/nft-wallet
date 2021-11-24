@@ -77,13 +77,13 @@ export const Condition: React.FC<ConditionProps> = ({ detail }) => {
         <Tbody>
           {detail.rule_info.options.map((option, i) => (
             <Tr key={i}>
-              <Td textAlign="left">
+              <Td p="4px" textAlign="left">
                 <NFTCard info={option} />
               </Td>
-              <Td textAlign="center" fontSize="12px">
+              <Td p="4px" textAlign="center" fontSize="12px">
                 {t('exchange.count', { count: option.item_count })}
               </Td>
-              <Td fontSize="12px" textAlign="right" pr="8px">
+              <Td p="4px" fontSize="12px" textAlign="right" pr="8px">
                 <span
                   style={{
                     color:
