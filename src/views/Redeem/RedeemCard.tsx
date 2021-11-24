@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   CustomRewardType,
@@ -192,6 +192,9 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
         : t.class_bg_image_url
     })
   }, [item.reward_info])
+  const stopPropagation = useCallback((e) => {
+    e?.stopPropagation()
+  }, [])
 
   return (
     <Container
@@ -261,6 +264,8 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
           overflowX="auto"
           direction="row"
           spacing="6px"
+          onScroll={stopPropagation}
+          onTouchMove={stopPropagation}
         >
           {rewardUrls.map((url, i) => (
             <Image
