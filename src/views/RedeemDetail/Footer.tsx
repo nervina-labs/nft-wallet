@@ -101,7 +101,7 @@ export const Footer: React.FC<FooterProps> = ({
           {text}
         </Button>
       </Box>
-      <Box h="124px" />
+      <Box h="calc(60px + var(--safe-area-inset-bottom))" mt="20px" />
     </>
   )
 }
