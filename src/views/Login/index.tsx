@@ -3,7 +3,12 @@ import styled from 'styled-components'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { CONTAINER_MAX_WIDTH, IS_IMTOKEN, IS_WEBKIT } from '../../constants'
+import {
+  CONTAINER_MAX_WIDTH,
+  IS_DESKTOP,
+  IS_IMTOKEN,
+  IS_WEBKIT,
+} from '../../constants'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
@@ -378,7 +383,7 @@ export const Login: React.FC = () => {
         </Swiper>
       </div>
       <LoginButton
-        mt={IS_WEBKIT ? '5%' : '15%'}
+        mt={!IS_DESKTOP || i18n.language === 'en' ? '5%' : '15%'}
         onClick={() => {
           if (!isLicenseChecked) {
             toast(t('license.warn'), {

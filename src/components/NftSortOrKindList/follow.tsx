@@ -149,7 +149,7 @@ export const Follow: React.FC<{
             <UnFollowSvg />
           </Center>
           <Box color="#777E90" mb="16px">
-            {t('follow.no-data')}
+            {t('follow.no-on-sale')}
           </Box>
           <Link to={RoutePath.Explore} style={{ textDecoration: 'underline' }}>
             {t('follow.let-s-go-to-explore')}

@@ -15,6 +15,9 @@ import { PosterType } from '../../../components/Share/share.interface'
 import { NFTDetail } from '../../../models'
 import { TokenClass } from '../../../models/class-list'
 import { useShareDisclosure } from '../../../hooks/useShareDisclosure'
+import { useRouteQuery } from '../../../hooks/useRouteQuery'
+import { useHistory } from 'react-router'
+import { RoutePath } from '../../../routes'
 import { addParamsToUrl } from '../../../utils'
 import { useTranslation } from 'react-i18next'
 import { useTrackClick } from '../../../hooks/useTrack'
@@ -44,6 +47,9 @@ export const Appbar: React.FC<{
     )
   )
 
+  const history = useHistory()
+
+  const isFromWechat = useRouteQuery('from_wechat', '')
   const shareBgImageUrl = useMemo(() => {
     if (!detail?.bg_image_url) return ''
     const tid = (detail as NFTDetail)?.n_token_id
@@ -63,7 +69,15 @@ export const Appbar: React.FC<{
         <RowAppbar
           transparent
           left={
-            <AppbarButton onClick={goBack}>
+            <AppbarButton
+              onClick={() => {
+                if (isFromWechat) {
+                  history.replace(RoutePath.NFTs)
+                } else {
+                  goBack()
+                }
+              }}
+            >
               <BackSvg />
             </AppbarButton>
           }
