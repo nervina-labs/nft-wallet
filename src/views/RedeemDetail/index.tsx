@@ -33,6 +33,7 @@ import {
   Tabs,
 } from '@mibao-ui/components'
 import { Alert } from '../../components/Alert'
+import { useTrackDidMount } from '../../hooks/useTrack'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -197,6 +198,8 @@ export const RedeemDetail: React.FC = () => {
       retry: false,
     }
   )
+
+  useTrackDidMount('redeem-detail', id)
 
   const isClosed = data?.state === RedeemStatus.Closed
   const isDone = data?.state === RedeemStatus.Done

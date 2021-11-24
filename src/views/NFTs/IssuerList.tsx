@@ -40,7 +40,10 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle, isHome }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
   const href = `${RoutePath.Issuer}/${issuer.uuid}`
-  const trackClick = useTrackClick('go-issuer-from-home-follow', 'click')
+  const trackClick = useTrackClick(
+    isHome ? 'go-issuer-from-home-follow' : 'go-issuer-from-collector-follow',
+    'click'
+  )
   return (
     <IssuerContainer>
       <RawIssuer

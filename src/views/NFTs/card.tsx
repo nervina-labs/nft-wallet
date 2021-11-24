@@ -12,6 +12,7 @@ export interface CardProps {
   token: NFTToken
   isClass: boolean
   address: string
+  isHolder: boolean
   showTokenID: boolean
 }
 
@@ -104,6 +105,7 @@ export const Card: React.FC<CardProps> = ({
   isClass,
   address,
   showTokenID,
+  isHolder,
 }) => {
   const { t, i18n } = useTranslation('translations')
   const isBanned = token.is_issuer_banned || token.is_class_banned
@@ -112,8 +114,14 @@ export const Card: React.FC<CardProps> = ({
     ? `/class/${token.class_uuid}`
     : `/nft/${token.token_uuid}`
 
+  const holderTrackName = isClass
+    ? 'go-nft-from-collector-holder'
+    : 'go-nft-from-collector-like'
+  const collectorTrackName = isClass
+    ? 'go-nft-from-home-holder'
+    : 'go-nft-from-home-like'
   const trackClick = useTrackClick(
-    isClass ? 'go-nft-from-home-holder' : 'go-nft-from-home-like',
+    isHolder ? holderTrackName : collectorTrackName,
     'click'
   )
   return (

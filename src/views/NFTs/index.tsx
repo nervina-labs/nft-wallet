@@ -40,7 +40,7 @@ export const NFTs: React.FC = () => {
     return !user?.guide_finished
   }, [user, isUserLoading])
 
-  useTrackDidMount('home')
+  useTrackDidMount(isHolder ? 'home' : 'collector')
 
   if (!isLogined && !isHolder) {
     return <Redirect to={RoutePath.Explore} />

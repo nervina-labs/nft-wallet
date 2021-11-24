@@ -44,7 +44,7 @@ export const categories = {
   collector: '秘宝-收藏者主页',
   'go-nft-from-collector-holder': '秘宝-个人中心-持有-点击进入NFT',
   'go-nft-from-collector-like': '秘宝-个人中心-赞过-点击进入NFT',
-  'go-nft-from-collector-follow': '秘宝-个人中心-关注-点击进入NFT',
+  'go-issuer-from-collector-follow': '秘宝-个人中心-关注-点击进入创作者页面',
   apps: '秘宝-应用页',
   redeem: '秘宝-应用页-兑换页',
   'redeem-detail': '兑换活动详情页',

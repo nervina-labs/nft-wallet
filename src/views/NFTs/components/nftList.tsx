@@ -60,7 +60,7 @@ export const NftList: React.FC<{
     [address, api]
   )
 
-  const trackTab = useTrackClick('home', 'switchover')
+  const trackTab = useTrackClick(isHolder ? 'home' : 'collector', 'switchover')
 
   return (
     <section className="list">
@@ -121,6 +121,7 @@ export const NftList: React.FC<{
                       address={address}
                       isClass={false}
                       showTokenID
+                      isHolder={isHolder}
                     />
                   ))
                 }}
@@ -151,6 +152,7 @@ export const NftList: React.FC<{
                       address={address}
                       isClass
                       showTokenID={false}
+                      isHolder={isHolder}
                     />
                   ))
                 }}
