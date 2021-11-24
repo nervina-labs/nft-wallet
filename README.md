@@ -30,7 +30,7 @@ $ yarn dev
 
 * [React Router](https://reactrouter.com/), router
 
-* [Material UI](https://material-ui.com/zh/), UI Components
+* [Chakra UI](https://chakra-ui.com/), UI Components
 
 * [Create React App](https://github.com/facebook/create-react-app)/[craco](https://github.com/gsoft-inc/craco), Bundle tool
 
