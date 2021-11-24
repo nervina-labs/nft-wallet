@@ -84,9 +84,6 @@ const ExchangeAction: React.FC<ActionProps> = ({
   const [t] = useTranslation('translations')
   const matchMyRedeem = useRouteMatch(RoutePath.MyRedeem)
   const text = useMemo(() => {
-    if (userState === UserRedeemState.Redeemed) {
-      return t('exchange.exchanged')
-    }
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
     }
@@ -102,6 +99,9 @@ const ExchangeAction: React.FC<ActionProps> = ({
     }
     if (userState === UserRedeemState.AllowRedeem) {
       return ''
+    }
+    if (userState === UserRedeemState.Redeemed) {
+      return t('exchange.exchanged')
     }
     if (matchMyRedeem) {
       return ''
