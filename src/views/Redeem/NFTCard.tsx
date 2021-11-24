@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { NormalRewardInfo } from '../../models/redeem'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Box, Flex, Limited, NftImage } from '@mibao-ui/components'
+import { Box, Flex, Limited, Image } from '@mibao-ui/components'
 
 const Container = styled(Link)`
   display: flex;
@@ -34,13 +34,15 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
 
   return (
     <Container to={to}>
-      <NftImage
+      <Image
         src={
           isBaned || info.class_bg_image_url === null
             ? ''
             : info.class_bg_image_url
         }
         w="50px"
+        h="50px"
+        rounded="8px"
       />
       <Flex justify="center" direction="column" pl="10px">
         <Box
