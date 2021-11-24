@@ -228,7 +228,8 @@ export const RedeemDetail: React.FC = () => {
                   {t('exchange.exchanged')}: {data?.progress.claimed}
                 </Box>
                 <Box>
-                  {t('exchange.remain')}: {data?.progress.total}
+                  {t('exchange.remain')}:{' '}
+                  {data?.progress.total - data?.progress.claimed}
                 </Box>
               </Flex>
             </Box>
