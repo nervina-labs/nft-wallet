@@ -33,7 +33,7 @@ export class IntryUrl {
 export const buildWechatShareData = (data: WechatShareData) => {
   return {
     ...data,
-    // imgUrl: `${location.origin}/logo64.png`,
+    imgUrl: `${location.origin}/logo64.png`,
   }
 }
 
