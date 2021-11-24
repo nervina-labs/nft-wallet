@@ -12,7 +12,6 @@ import {
 import { RedeemLabel } from './Label'
 import { useHistory, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
-import { Media } from './Media'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import {
   Issuer,
@@ -23,9 +22,11 @@ import {
   Flex,
   Button,
   Center,
+  Image,
 } from '@mibao-ui/components'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import FALLBACK from '../../assets/img/nft-fallback.png'
 
 const Container = styled(Link)`
   box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);
@@ -174,19 +175,21 @@ const ExchangeAction: React.FC<ActionProps> = ({
 export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
   const [t] = useTranslation('translations')
   const history = useHistory()
-  const rewards = useMemo(() => {
+  const rewardUrls = useMemo(() => {
     if (isCustomReward(item.reward_info)) {
-      return item.reward_info.images.slice(0, 4).map((src, i) => {
-        return <Media src={src} key={i} />
+      return item.reward_info.images.map((src, i) => {
+        return src === null ? '' : src
       })
     }
     const tokens = isBlindReward(item.reward_info)
       ? item.reward_info.options
       : item.reward_info
 
-    return tokens.slice(0, 4).map((t, i) => {
+    return tokens.map((t, i) => {
       const isBaned = t.is_banned || t.is_class_banned || t.is_issuer_banned
-      return <Media src={isBaned ? '' : t.class_bg_image_url} key={i} />
+      return t.class_bg_image_url === null || isBaned
+        ? ''
+        : t.class_bg_image_url
     })
   }, [item.reward_info])
 
@@ -249,16 +252,28 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
           <RedeemLabel type={item.reward_type} />
         </Center>
       </Flex>
-      {rewards.length ? (
-        <Flex
+      {rewardUrls.length ? (
+        <Stack
           px="16px"
           py="8px"
           alignItems="center"
           overflowY="hidden"
           overflowX="auto"
+          direction="row"
+          spacing="6px"
         >
-          {rewards}
-        </Flex>
+          {rewardUrls.map((url, i) => (
+            <Image
+              src={url}
+              w="70px"
+              h="70px"
+              minW="70px"
+              rounded="16px"
+              key={i}
+              fallbackSrc={FALLBACK}
+            />
+          ))}
+        </Stack>
       ) : null}
       <Progress exchanged={item.progress.claimed} total={item.progress.total} />
       <Divider />
