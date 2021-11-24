@@ -110,8 +110,6 @@ export const useWechatShare = () => {
       ) {
         if (d) {
           data = buildWechatShareData(d)
-        } else {
-          return
         }
       }
       wx.updateAppMessageShareData(data)
