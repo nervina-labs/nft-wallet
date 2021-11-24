@@ -482,6 +482,7 @@
         }
       },
       "exchanged": "已兑换",
+      "remain": "剩余",
       "issuer": "发起人",
       "issue-time": "发起时间：",
       "event": {

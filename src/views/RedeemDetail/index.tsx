@@ -224,8 +224,12 @@ export const RedeemDetail: React.FC = () => {
                 height="8px"
               />
               <Flex fontSize="12px" justify="space-between">
-                <Box>已兑换: {data?.progress.claimed}</Box>
-                <Box>剩余: {data?.progress.total}</Box>
+                <Box>
+                  {t('exchange.exchanged')}: {data?.progress.claimed}
+                </Box>
+                <Box>
+                  {t('exchange.remain')}: {data?.progress.total}
+                </Box>
               </Flex>
             </Box>
 

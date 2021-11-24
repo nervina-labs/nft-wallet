@@ -482,6 +482,7 @@
         }
       },
       "exchanged": "Redeemed",
+      "remain": "Remain",
       "issuer": "Organizer",
       "issue-time": "Time: ",
       "event": {
