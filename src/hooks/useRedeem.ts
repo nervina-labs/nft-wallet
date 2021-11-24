@@ -87,7 +87,7 @@ export const useSignRedeem = () => {
           )
           return
         } else {
-          history.push(`${RoutePath.RedeemResult}/${id}`, {
+          history.replace(`${RoutePath.RedeemResult}/${id}`, {
             tx: signTx,
             customData,
           })
@@ -124,7 +124,7 @@ export const useSignRedeem = () => {
         return
       }
       if (deliverType && deliverType !== CustomRewardType.None) {
-        history.push(
+        history.replace(
           `${reactLocation.pathname}${reactLocation.search ?? ''}${
             reactLocation.search?.length > 0 ? '&' : '?'
           }deliverType=${deliverType}`,
