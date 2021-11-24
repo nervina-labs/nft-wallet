@@ -18,12 +18,15 @@ export const useRoute = (): Routes => {
 export const RouterProvider: React.FC = ({ children }) => {
   const location = useLocation()
   const [route, setRoute] = useState<Routes>({
-    to: location.pathname,
-    from: location.pathname,
+    to: location.pathname + location.search,
+    from: location.pathname + location.search,
   })
 
   useEffect(() => {
-    setRoute((prev) => ({ to: location.pathname, from: prev.to }))
+    setRoute((prev) => ({
+      to: location.pathname + location.search,
+      from: prev.to,
+    }))
   }, [location])
 
   return (
