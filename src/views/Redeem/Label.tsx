@@ -29,6 +29,7 @@ export const RedeemLabel: React.FC<LabelProps> = ({ type }) => {
       fontSize="12px"
       color="white"
       px="4px"
+      whiteSpace="nowrap"
     >
       {text}
     </Box>
