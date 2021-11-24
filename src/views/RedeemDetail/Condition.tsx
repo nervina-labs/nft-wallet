@@ -55,7 +55,12 @@ export const Condition: React.FC<ConditionProps> = ({ detail }) => {
       <Table variant="unstyled">
         <Thead>
           <Tr>
-            <Th textAlign="left" roundedTopLeft="4px" roundedBottomLeft="4px">
+            <Th
+              textAlign="left"
+              roundedTopLeft="4px"
+              roundedBottomLeft="4px"
+              pl="8px"
+            >
               {t('exchange.condition.nft')}
             </Th>
             <Th textAlign="center">{t('exchange.condition.needed')}</Th>
@@ -63,6 +68,7 @@ export const Condition: React.FC<ConditionProps> = ({ detail }) => {
               textAlign="right"
               roundedTopRight="4px"
               roundedBottomRight="4px"
+              pr="8px"
             >
               {t('exchange.condition.held')}
             </Th>
@@ -74,10 +80,10 @@ export const Condition: React.FC<ConditionProps> = ({ detail }) => {
               <Td textAlign="left">
                 <NFTCard info={option} />
               </Td>
-              <Td align="right" fontSize="12px" textAlign="right">
+              <Td textAlign="center" fontSize="12px">
                 {t('exchange.count', { count: option.item_count })}
               </Td>
-              <Td align="right" fontSize="12px" textAlign="right">
+              <Td fontSize="12px" textAlign="right" pr="8px">
                 <span
                   style={{
                     color:
