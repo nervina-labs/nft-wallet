@@ -87,7 +87,7 @@ export const useSignRedeem = () => {
           )
           return
         } else {
-          history.push(`${RoutePath.RedeemResult}/${id}`, {
+          history.replace(`${RoutePath.RedeemResult}/${id}`, {
             tx: signTx,
             customData,
           })
@@ -124,7 +124,7 @@ export const useSignRedeem = () => {
         return
       }
       if (deliverType && deliverType !== CustomRewardType.None) {
-        history.push(
+        history.replace(
           `${reactLocation.pathname}${reactLocation.search ?? ''}${
             reactLocation.search?.length > 0 ? '&' : '?'
           }deliverType=${deliverType}`,
@@ -132,8 +132,13 @@ export const useSignRedeem = () => {
         )
       } else {
         confirmDialog({
-          type: 'warning',
-          title: t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`),
+          type: 'warning', // "error" | "success" | "warning" | "info"
+          title: willDestroyed
+            ? t('exchange.alert.destroy-title')
+            : t('exchange.alert.normal-title'),
+          description: willDestroyed
+            ? t('exchange.alert.destroy-desc')
+            : t('exchange.alert.normal-desc'),
           onConfirm: async () => {
             await confirmRedeem({
               id,

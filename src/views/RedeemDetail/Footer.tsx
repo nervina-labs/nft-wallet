@@ -1,39 +1,27 @@
+import { Box, BoxProps } from '@chakra-ui/react'
+import { Button, ButtonProps } from '@mibao-ui/components'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory, useLocation } from 'react-router'
-import styled from 'styled-components'
 import { useAccountStatus } from '../../hooks/useAccount'
 import { RedeemStatus } from '../../models/redeem'
 import { RoutePath } from '../../routes'
 import { UnipassConfig } from '../../utils'
-import { Button, ButtonProps } from '../Reedem/Button'
-
-const Container = styled.footer`
-  background: #ffffff;
-  width: 100%;
-  max-width: 500px;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  padding: 12px 0;
-  position: fixed;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
 
 export interface FooterProps extends ButtonProps {
   status: RedeemStatus
-  isReedemable: boolean
+  isRedeemable: boolean
   willDestroyed: boolean
   isInDialog?: boolean
+  inDrawer?: boolean
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  isReedemable,
+  isRedeemable,
   status,
   willDestroyed,
   isInDialog,
+  inDrawer,
   ...props
 }) => {
   const [t] = useTranslation('translations')
@@ -46,17 +34,18 @@ export const Footer: React.FC<FooterProps> = ({
     }
     if (status === RedeemStatus.Closed) {
       return t('exchange.event.closed')
-    } else if (status === RedeemStatus.Done) {
+    }
+    if (status === RedeemStatus.Done) {
       return t('exchange.event.end')
     }
-    if (isReedemable) {
+    if (isRedeemable) {
       return t('exchange.actions.redeem')
     }
     return t('exchange.actions.insufficient')
-  }, [isReedemable, status, t, isLogined])
+  }, [isRedeemable, status, t, isLogined])
 
   const onClick = useCallback(
-    (e: any) => {
+    (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!isLogined) {
         UnipassConfig.setRedirectUri(location.pathname)
         history.replace(RoutePath.Login, {
@@ -70,15 +59,49 @@ export const Footer: React.FC<FooterProps> = ({
 
   const disabled = useMemo(() => {
     if (isLogined) {
-      return props.disabled || !isReedemable
+      return props.disabled || !isRedeemable
     }
     return false
-  }, [props.disabled, isReedemable, isLogined])
+  }, [props.disabled, isRedeemable, isLogined])
+
+  const containerProps: BoxProps = inDrawer ? { left: '0px' } : {}
+
   return (
-    <Container style={isInDialog ? { left: 0 } : undefined}>
-      <Button {...props} onClick={onClick} disabled={disabled}>
-        {text}
-      </Button>
-    </Container>
+    <>
+      <Box
+        as="footer"
+        left="unset"
+        right="unset"
+        {...containerProps}
+        position="fixed"
+        bottom="-40px"
+        transform="translateY(calc(0px - var(--safe-area-inset-bottom)))"
+        transition="transform 100ms"
+        h="100px"
+        bg="white"
+        px="20px"
+        pt="10px"
+        pb="50px"
+        mt="auto"
+        mb="0"
+        w="100%"
+        maxW="500px"
+        borderTop="1px solid #e1e1e1"
+        zIndex={5}
+      >
+        <Button
+          {...props}
+          onClick={onClick}
+          disabled={disabled}
+          w="full"
+          mx="0"
+          colorScheme="primary"
+          variant="solid"
+        >
+          {text}
+        </Button>
+      </Box>
+      <Box h="calc(60px + var(--safe-area-inset-bottom))" mt="20px" />
+    </>
   )
 }

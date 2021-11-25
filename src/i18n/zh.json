@@ -405,11 +405,11 @@
       "redeemed": "已兑",
       "nft-prize": "奖品包含下面所有秘宝",
       "blind-prize": "奖品随机包含下面的 {{count}} 个秘宝",
-      "othder-prize": "发起人会在您提交兑换后根据您提供的接收信息进行承兑",
+      "other-prize": "发起人会在您提交兑换后根据您提供的接收信息进行承兑",
       "redeem-time": "兑换时间：",
       "type": {
-        "token": "NFT",
-        "blind_box": "NFT 盲盒",
+        "token": "秘宝",
+        "blind_box": "秘宝盲盒",
         "custom": "其他"
       },
       "progress": "兑换进度",
@@ -418,6 +418,7 @@
         "redeemable": "可兑换"
       },
       "actions": {
+        "view-prizes": "查看奖品",
         "redeem": "立即兑换",
         "insufficient": "条件不足无法兑换"
       },
@@ -447,8 +448,12 @@
         }
       },
       "alert": {
-        "normal": "兑换不会销毁您参与兑换的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他兑换",
-        "destroy": "兑换将会销毁您参与兑换的NFT，该操作不可逆，一经销毁将无法找回",
+        "normal-title": "兑换不会销毁您参与兑换的秘宝",
+        "destroy-title": "兑换将会销毁您参与兑换的秘宝",
+        "normal-desc": "会对其进行标记，标记过的秘宝 无法再次参与其他兑换",
+        "destroy-desc": "该操作不可逆，一经销毁将无法找回",
+        "normal": "兑换不会销毁您参与兑换的秘宝，但会对其进行标记，标记过的秘宝无法再次参与其他兑换",
+        "destroy": "兑换将会销毁您参与兑换的秘宝，该操作不可逆，一经销毁将无法找回",
         "confirm": "确认兑换",
         "cancel": "取消"
       },
@@ -477,6 +482,7 @@
         }
       },
       "exchanged": "已兑换",
+      "remain": "剩余",
       "issuer": "发起人",
       "issue-time": "发起时间：",
       "event": {
@@ -491,7 +497,7 @@
         "condition": "同时持有以下秘宝的用户才可参与兑换"
       },
       "condition": {
-        "nft": "NFT",
+        "nft": "秘宝",
         "needed": "需持有",
         "held": "当前可兑换"
       },
@@ -515,7 +521,8 @@
         "confirm": "确认",
         "go-back": "返回兑换中心",
         "error": "请检查当前网络情况或兑换条件",
-        "redeeming": "兑换中..."
+        "redeeming": "兑换中...",
+        "succeed-desc": "您已兑换成功\n点击按钮可查看兑换的秘宝"
       }
     },
     "orders": {
