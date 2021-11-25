@@ -31,6 +31,7 @@ import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 import { isSupportWebp } from '../../../utils'
 import { Tag, TagLabel } from '@chakra-ui/react'
 import { RoutePath } from '../../../routes'
+import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -67,6 +68,8 @@ const NftDetailTab: React.FC<{
     [location.pathname, replace]
   )
 
+  const trackTab = useTrackClick('nft-detail', 'switchover')
+
   return (
     <Tabs
       align="space-between"
@@ -85,9 +88,27 @@ const NftDetailTab: React.FC<{
         zIndex={3}
       >
         <TabList px="20px">
-          <Tab>{t('nft.desc')}</Tab>
-          <Tab>{t('nft.transaction-history')}</Tab>
-          <Tab>{t('nft.holder')}</Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.nftDetail.switch.desc)
+            }
+          >
+            {t('nft.desc')}
+          </Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.nftDetail.switch.tx)
+            }
+          >
+            {t('nft.transaction-history')}
+          </Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.nftDetail.switch.collector)
+            }
+          >
+            {t('nft.holder')}
+          </Tab>
         </TabList>
       </Skeleton>
       <TabPanels minH="200px">
@@ -143,6 +164,8 @@ export const NftDetail: React.FC<{
     !detail?.is_class_banned &&
     !detail?.is_issuer_banned &&
     detail?.verified_info?.is_verified
+
+  const trackFollow = useTrackClick('nft-detail-follow', 'click')
 
   return (
     <Box py="20px">
@@ -234,7 +257,10 @@ export const NftDetail: React.FC<{
             <Follow
               followed={detail?.issuer_info?.issuer_followed === true}
               uuid={detail?.issuer_info?.uuid ?? ''}
-              afterToggle={refetch}
+              afterToggle={async () => {
+                trackFollow(uuid)
+                await refetch()
+              }}
               isPrimary
             />
           </Skeleton>

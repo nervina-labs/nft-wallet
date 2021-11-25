@@ -16,6 +16,7 @@ import { Query } from '../../../models'
 import { useAPI } from '../../../hooks/useAccount'
 import { useQuery } from 'react-query'
 import { useShareDisclosure } from '../../../hooks/useShareDisclosure'
+import { useTrackClick } from '../../../hooks/useTrack'
 import { useObservable } from 'rxjs-hooks'
 import { fromEvent, map, merge } from 'rxjs'
 
@@ -46,6 +47,7 @@ export const Appbar: React.FC = () => {
       refetchOnWindowFocus: false,
     }
   )
+  const trackShare = useTrackClick('issuer', 'click')
   const appbarBgOpacity = useObservable(
     () =>
       merge(fromEvent(window, 'scroll'), fromEvent(window, 'touchmove')).pipe(
@@ -70,7 +72,13 @@ export const Appbar: React.FC = () => {
             </AppbarButton>
           }
           right={
-            <AppbarButton transparent onClick={onOpenShare}>
+            <AppbarButton
+              transparent
+              onClick={() => {
+                onOpenShare()
+                trackShare('share')
+              }}
+            >
               <ShareSvg />
             </AppbarButton>
           }

@@ -12,6 +12,7 @@ import { Info } from './info'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { Appbar } from './components/appbar'
 import { NftList } from './components/nftList'
+import { useTrackDidMount } from '../../hooks/useTrack'
 import { useWechatShare } from '../../hooks/useWechat'
 import { useTranslation } from 'react-i18next'
 
@@ -52,6 +53,8 @@ export const NFTs: React.FC = () => {
     }
     return !user?.guide_finished
   }, [user, isUserLoading])
+
+  useTrackDidMount(isHolder ? 'home' : 'collector')
 
   if (!isLogined && !isHolder) {
     return <Redirect to={RoutePath.Explore} />

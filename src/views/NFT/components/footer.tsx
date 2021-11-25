@@ -20,6 +20,7 @@ import { RoutePath } from '../../../routes'
 import { UnipassConfig } from '../../../utils'
 import { Query } from '../../../models'
 import { useQuery } from 'react-query'
+import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -61,10 +62,13 @@ const TranferOrBuy: React.FC<{
     }
   )
 
+  const trackBuy = useTrackClick('nft-detail', 'click')
+
   const orderOnClick = useCallback(async () => {
     if (!detail?.product_on_sale_uuid) {
       return
     }
+    trackBuy(trackLabels.nftDetail.buy + uuid)
     if (!isLogined) {
       UnipassConfig.setRedirectUri(location.pathname)
       history.push(RoutePath.Login)
@@ -100,6 +104,8 @@ const TranferOrBuy: React.FC<{
     history,
     isLogined,
     user,
+    trackBuy,
+    uuid,
   ])
 
   const isSoldout = Number(detail?.product_count) === 0
@@ -160,6 +166,8 @@ export const Footer: React.FC<{
     uuid: (detail as NFTDetail)?.class_uuid ?? uuid,
   })
 
+  const trackLike = useTrackClick('nft-detail', 'click')
+
   return (
     <>
       <Grid
@@ -189,7 +197,10 @@ export const Footer: React.FC<{
           likeCount={likeCount}
           isLiked={isLiked}
           isLoading={isLikeLoading}
-          onClick={toggleLike}
+          onClick={async (e) => {
+            await toggleLike(e)
+            trackLike(trackLabels.nftDetail.like)
+          }}
           my="auto"
         />
 

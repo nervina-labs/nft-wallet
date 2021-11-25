@@ -30,6 +30,11 @@ import TwitterSvg from '../../../assets/svg/issuer-twitter.svg'
 import styled from 'styled-components'
 import { Redirect } from 'react-router-dom'
 import { RoutePath } from '../../../routes'
+import {
+  trackLabels,
+  useTrackClick,
+  useTrackDidMount,
+} from '../../../hooks/useTrack'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 
 const IssuerIcon = styled.div`
@@ -87,6 +92,8 @@ export const IssuerInfo: React.FC = () => {
   const gotoMetaUrl = useCallback((url: string) => {
     window.location.href = url
   }, [])
+  useTrackDidMount('issuer', id)
+  const trackSNS = useTrackClick('issuer', 'click')
   const socialMediaIcons = useMemo(() => {
     return data?.social_media?.map((media, i) => (
       <Center
@@ -97,7 +104,10 @@ export const IssuerInfo: React.FC = () => {
         bg="var(--input-bg-color)"
         textAlign="center"
         lineHeight="30px"
-        onClick={() => gotoMetaUrl(media.url)}
+        onClick={() => {
+          trackSNS(media.social_type)
+          gotoMetaUrl(media.url)
+        }}
         key={i}
       >
         <img
@@ -107,7 +117,9 @@ export const IssuerInfo: React.FC = () => {
         />
       </Center>
     ))
-  }, [data?.social_media, gotoMetaUrl])
+  }, [data?.social_media, gotoMetaUrl, trackSNS])
+
+  const trackFollow = useTrackClick('issuer-follow', 'click')
 
   if (error && failureCount >= 3) {
     return <Redirect to={RoutePath.NotFound} />
@@ -164,7 +176,10 @@ export const IssuerInfo: React.FC = () => {
                 <Follow
                   followed={data?.issuer_followed === true}
                   uuid={id}
-                  afterToggle={refetch}
+                  afterToggle={async () => {
+                    trackFollow(trackLabels.issuer.follow)
+                    await refetch()
+                  }}
                   isPrimary
                 />
               </Skeleton>

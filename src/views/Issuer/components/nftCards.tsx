@@ -23,6 +23,11 @@ import { isSupportWebp } from '../../../utils'
 import FALLBACK from '../../../assets/img/nft-fallback.png'
 import { Empty } from './empty'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
+import {
+  trackLabels,
+  useTrackClick,
+  useTrackEvent,
+} from '../../../hooks/useTrack'
 
 interface CardProps {
   token: IssuerTokenClass
@@ -38,6 +43,12 @@ const Card: React.FC<CardProps> = ({ token, locale, gotoClass }) => {
     uuid: token.uuid,
   })
   const href = `/class/${token.uuid}`
+  const trackLike = useTrackEvent(
+    'issuer-on-sell',
+    'click',
+    trackLabels.issuer.like,
+    toggleLike
+  )
   return (
     <Box overflow="hidden" mb="24px" px="20px">
       <NFTCard
@@ -46,7 +57,7 @@ const Card: React.FC<CardProps> = ({ token, locale, gotoClass }) => {
           isLiked,
           likeCount,
           isLoading: isLikeLoading,
-          onClick: toggleLike,
+          onClick: trackLike,
         }}
         href={href}
         locale={locale}
@@ -80,6 +91,8 @@ export const NftCards: React.FC = () => {
   const [index, setIndex] = useState(
     PRODUCT_STATUE_SET.findIndex((item) => item === productState) || 0
   )
+  const trackTab = useTrackClick('issuer', 'switchover')
+
   const onChange = useCallback(
     (index) => {
       setProductState(PRODUCT_STATUE_SET[index])
@@ -87,11 +100,16 @@ export const NftCards: React.FC = () => {
     },
     [setProductState]
   )
+
+  const trackGoToClass = useTrackClick('go-nft-from-issuer-on-sell', 'click')
   const gotoClass = useCallback(
-    (classId: string) => {
+    (classId: string, track = true) => {
       push(`/class/${classId}`)
+      if (track) {
+        trackGoToClass(trackLabels.issuer['to-nft'])
+      }
     },
-    [push]
+    [push, trackGoToClass]
   )
   const queryFn = useCallback(
     async ({ pageParam = 1 }) => {
@@ -103,6 +121,8 @@ export const NftCards: React.FC = () => {
     [api, id, productState]
   )
   const clientIsSupportWebp = useMemo(() => isSupportWebp(), [])
+
+  const trackCreatorClick = useTrackClick('go-nft-from-issuer', 'click')
 
   return (
     <Box w="full">
@@ -118,8 +138,20 @@ export const NftCards: React.FC = () => {
           zIndex={99}
           bg={'white'}
         >
-          <Tab>{t('issuer.created')}</Tab>
-          <Tab>{t('issuer.selling')}</Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.issuer.switch.creartor)
+            }
+          >
+            {t('issuer.created')}
+          </Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.issuer.switch.onsell)
+            }
+          >
+            {t('issuer.selling')}
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -141,7 +173,10 @@ export const NftCards: React.FC = () => {
                   return group.token_classes.map((token, j: number) => (
                     <AspectRatio
                       key={`${i}-${j}`}
-                      onClick={() => gotoClass(token.uuid)}
+                      onClick={() => {
+                        gotoClass(token.uuid, false)
+                        trackCreatorClick(trackLabels.issuer['to-nft'])
+                      }}
                       ratio={i === 0 && j === 0 ? 1 : 9 / 12}
                       mb="10px"
                     >

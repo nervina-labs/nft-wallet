@@ -6,6 +6,7 @@ import { ReactComponent as QrcodeSvg } from '../../assets/svg/qrcode.svg'
 import { RoutePath } from '../../routes'
 import { copyFallback, truncateMiddle } from '../../utils'
 import { useToast } from '../../hooks/useToast'
+import { trackLabels, useTrackClick } from '../../hooks/useTrack'
 
 const Container = styled.div`
   height: 32px;
@@ -50,6 +51,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
   const history = useHistory()
   const toast = useToast()
   const [t] = useTranslation('translations')
+  const trackCopy = useTrackClick('home', 'click')
   return (
     <Container className="address-bar">
       <div
@@ -57,6 +59,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
         onClick={() => {
           copyFallback(address)
           toast(t('info.copied'))
+          trackCopy(trackLabels.home.copy)
         }}
       >
         {truncateMiddle(address, 8, 5)}
@@ -65,6 +68,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
         className="qrcode"
         onClick={() => {
           history.push(RoutePath.Account + '/' + address)
+          trackCopy(trackLabels.home.qrcode)
         }}
       >
         <QrcodeSvg fill="#5065E5" />

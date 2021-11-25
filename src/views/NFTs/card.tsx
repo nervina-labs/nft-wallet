@@ -7,10 +7,12 @@ import { RoutePath } from '../../routes'
 import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
 import { getNFTQueryParams, isSupportWebp } from '../../utils'
+import { trackLabels, useTrackClick } from '../../hooks/useTrack'
 export interface CardProps {
   token: NFTToken
   isClass: boolean
   address: string
+  isHolder: boolean
   showTokenID: boolean
 }
 
@@ -103,6 +105,7 @@ export const Card: React.FC<CardProps> = ({
   isClass,
   address,
   showTokenID,
+  isHolder,
 }) => {
   const { t, i18n } = useTranslation('translations')
   const isBanned = token.is_issuer_banned || token.is_class_banned
@@ -111,6 +114,16 @@ export const Card: React.FC<CardProps> = ({
     ? `/class/${token.class_uuid}`
     : `/nft/${token.token_uuid}`
 
+  const holderTrackName = isClass
+    ? 'go-nft-from-collector-holder'
+    : 'go-nft-from-collector-like'
+  const collectorTrackName = isClass
+    ? 'go-nft-from-home-holder'
+    : 'go-nft-from-home-like'
+  const trackClick = useTrackClick(
+    isHolder ? holderTrackName : collectorTrackName,
+    'click'
+  )
   return (
     <Box position="relative" w="100%" mb="35px" px="20px">
       <Label address={address} nft={token} />
@@ -158,6 +171,7 @@ export const Card: React.FC<CardProps> = ({
             return
           }
           history.push(href)
+          trackClick(trackLabels.home['to-nft'])
         }}
       />
     </Box>

@@ -18,6 +18,7 @@ import {
 } from './useAccount'
 import { useConfirmDialog } from './useConfirmDialog'
 import { useToast } from './useToast'
+import { trackLabels, useTrackClick } from './useTrack'
 
 export interface onRedeemProps {
   deliverType?: CustomRewardType
@@ -111,6 +112,8 @@ export const useSignRedeem = () => {
     ]
   )
 
+  const trackReedeem = useTrackClick('redeem', 'click')
+
   const onRedeem = useCallback(
     ({
       deliverType,
@@ -123,6 +126,7 @@ export const useSignRedeem = () => {
       if (!isAllow) {
         return
       }
+      trackReedeem(trackLabels.apps.redeem)
       if (deliverType && deliverType !== CustomRewardType.None) {
         history.replace(
           `${reactLocation.pathname}${reactLocation.search ?? ''}${

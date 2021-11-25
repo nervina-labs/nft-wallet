@@ -26,6 +26,8 @@ import { isSupportWebp } from '../../../utils'
 import { useTilt } from '../hooks/useTilt'
 import { useToast } from '../../../hooks/useToast'
 import { LoadableComponent } from '../../../components/GlobalLoader'
+import { trackLabels, useTrackEvent } from '../../../hooks/useTrack'
+import { useParams } from 'react-router'
 
 const ThreeDPreview = lazy(
   async () => await import('../../../components/ThreeDPreview')
@@ -237,6 +239,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const hasCardback = Boolean(
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   )
+  const { id } = useParams<{ id?: string }>()
   const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
   const {
     isOpen: isOpenPreview,
@@ -249,14 +252,17 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       toast(t('resource.fail'))
     }
   }, [t, toast, isOpenPreview])
+  const trackCardBack = useTrackEvent('nft-detail-cardback', 'click')
+  const trackPreview = useTrackEvent('nft-detail', 'click')
   const onPreview = useCallback(
     (e) => {
       if (!showCardBackContent) {
         onOpenPreview()
       }
       e.stopPropagation()
+      trackPreview(trackLabels.nftDetail.check + id)
     },
-    [onOpenPreview, showCardBackContent]
+    [onOpenPreview, showCardBackContent, trackPreview, id]
   )
   const hasPlayIcon =
     detail?.renderer_type === NftType.Audio ||
@@ -392,7 +398,12 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             cursor="pointer"
             userSelect="none"
             pr="6px"
-            onClick={() => setShowCardBackContent((bool) => !bool)}
+            onClick={() => {
+              if (!showCardBackContent) {
+                trackCardBack(id)
+              }
+              setShowCardBackContent((bool) => !bool)
+            }}
           >
             <CardbackSvg />
             {t('nft.show-card-back')}

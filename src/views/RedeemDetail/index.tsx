@@ -36,6 +36,7 @@ import {
   Text,
 } from '@mibao-ui/components'
 import { Alert } from '../../components/Alert'
+import { useTrackDidMount } from '../../hooks/useTrack'
 import { RedeemLabel } from '../Redeem/Label'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 
@@ -119,6 +120,8 @@ export const RedeemDetail: React.FC = () => {
       retry: false,
     }
   )
+
+  useTrackDidMount('redeem-detail', id)
 
   const isClosed = data?.state === RedeemStatus.Closed
   const isDone = data?.state === RedeemStatus.Done
