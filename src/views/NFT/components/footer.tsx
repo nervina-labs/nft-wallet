@@ -195,7 +195,7 @@ export const Footer: React.FC<{
 
         <TranferOrBuy uuid={uuid} detail={detail} isClass={isClass} />
       </Grid>
-      <Box h="60px" />
+      <Box h="94px" />
     </>
   )
 }
