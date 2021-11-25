@@ -16,6 +16,9 @@ import { Query } from '../../../models'
 import { useAPI } from '../../../hooks/useAccount'
 import { useQuery } from 'react-query'
 import { useShareDisclosure } from '../../../hooks/useShareDisclosure'
+import { useTrackClick } from '../../../hooks/useTrack'
+import { useObservable } from 'rxjs-hooks'
+import { fromEvent, map, merge } from 'rxjs'
 
 const Share = lazy(async () => await import('../../../components/Share'))
 
@@ -44,20 +47,38 @@ export const Appbar: React.FC = () => {
       refetchOnWindowFocus: false,
     }
   )
+  const trackShare = useTrackClick('issuer', 'click')
+  const appbarBgOpacity = useObservable(
+    () =>
+      merge(fromEvent(window, 'scroll'), fromEvent(window, 'touchmove')).pipe(
+        map(() => Math.min(window.scrollY / 150, 1))
+      ),
+    Math.min(window.scrollY / 150, 1)
+  )
   const bgImageUrl = listData?.pages?.[0]?.token_classes?.[0]?.bg_image_url
   const posterCoverImage = bgImageUrl ? getImagePreviewUrl(bgImageUrl, 300) : ''
 
   return (
     <>
-      <AppbarSticky>
+      <AppbarSticky
+        position="fixed"
+        bg={`rgba(255, 255, 255, ${appbarBgOpacity})`}
+      >
         <RowAppbar
+          transparent
           left={
             <AppbarButton onClick={goBack}>
               <BackSvg />
             </AppbarButton>
           }
           right={
-            <AppbarButton transparent onClick={onOpenShare}>
+            <AppbarButton
+              transparent
+              onClick={() => {
+                onOpenShare()
+                trackShare('share')
+              }}
+            >
               <ShareSvg />
             </AppbarButton>
           }

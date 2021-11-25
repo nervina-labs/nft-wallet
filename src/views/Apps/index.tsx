@@ -18,6 +18,11 @@ import { RED_ENVELOP_APP_URL, TICKET_APP_URL } from '../../constants'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router-dom'
 import { useAccount } from '../../hooks/useAccount'
+import {
+  trackLabels,
+  useTrackClick,
+  useTrackDidMount,
+} from '../../hooks/useTrack'
 
 const Container = styled(MainContainer)`
   padding-top: 20px;
@@ -181,6 +186,7 @@ export const Apps: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const { pubkey, email } = useAccount()
   const history = useHistory()
+  useTrackDidMount('apps')
   const getAppUrl = useCallback(
     (baseUrl: string): string => {
       const url = `${baseUrl}`
@@ -200,6 +206,7 @@ export const Apps: React.FC = () => {
     },
     [pubkey, email]
   )
+  const trackClick = useTrackClick('apps', 'click')
   const data: ItemProps[] = [
     {
       title: t('apps.exchange.title'),
@@ -209,6 +216,7 @@ export const Apps: React.FC = () => {
       available: true,
       onClick: () => {
         history.push(RoutePath.Redeem)
+        trackClick(trackLabels.apps.redeem)
       },
     },
     {
@@ -219,6 +227,7 @@ export const Apps: React.FC = () => {
       available: true,
       onClick: () => {
         location.href = getAppUrl(RED_ENVELOP_APP_URL)
+        trackClick(trackLabels.apps.pocket)
       },
     },
     {
@@ -229,6 +238,7 @@ export const Apps: React.FC = () => {
       color: '#F7FFF0',
       onClick: () => {
         location.href = getAppUrl(TICKET_APP_URL)
+        trackClick(trackLabels.apps.ticket)
       },
     },
     {
@@ -237,6 +247,9 @@ export const Apps: React.FC = () => {
       desc: t('apps.dao.desc'),
       bg: DAO,
       available: false,
+      onClick: () => {
+        trackClick(trackLabels.apps.dao)
+      },
     },
     {
       title: t('apps.exhibition.title'),
@@ -244,6 +257,9 @@ export const Apps: React.FC = () => {
       bg: Exhibition,
       color: '#E5FFF6',
       available: false,
+      onClick: () => {
+        trackClick(trackLabels.apps.hall)
+      },
     },
     {
       title: t('apps.vip.title'),
@@ -251,6 +267,9 @@ export const Apps: React.FC = () => {
       color: '#FFF9E8',
       bg: Vip,
       available: false,
+      onClick: () => {
+        trackClick(trackLabels.apps.vip)
+      },
     },
   ]
 

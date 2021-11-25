@@ -11,6 +11,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useObservable } from 'rxjs-hooks'
 import { fromEvent, scan, tap, throttleTime } from 'rxjs'
+import { trackLabels, useTrackClick } from '../../hooks/useTrack'
 
 const Container = styled(Stack)`
   position: fixed;
@@ -120,7 +121,7 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
     }
   }, [alwaysShow])
   const { location } = useHistory()
-
+  const trackClick = useTrackClick('narbar', 'click')
   return (
     <Container spacing="50px" direction="row" className={isHide ? 'hide' : ''}>
       {items.map((item, i) => (
@@ -134,6 +135,22 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
           }}
           className={`item ${item.routeMatch ? 'active' : ''}`}
           key={i}
+          onClick={() => {
+            switch (i) {
+              case 0:
+                trackClick(trackLabels.navbar.explore)
+                break
+              case 1:
+                trackClick(trackLabels.navbar.categories)
+                break
+              case 2:
+                trackClick(trackLabels.navbar.home)
+                break
+              case 3:
+                trackClick(trackLabels.navbar.apps)
+                break
+            }
+          }}
         >
           {item.icon}
         </Link>

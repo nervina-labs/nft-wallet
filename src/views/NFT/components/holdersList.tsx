@@ -55,10 +55,14 @@ export const HolderList: React.FC<{
               }
               type={item.holder_info.avatar_type}
               fallbackSrc={FallbackAvatarSrc}
-              srcQueryParams={{
-                tid: item.n_token_id,
-                locale: i18n.language,
-              }}
+              srcQueryParams={
+                typeof item.holder_info.avatar_tid === 'number'
+                  ? {
+                      tid: item.holder_info.avatar_tid,
+                      locale: i18n.language,
+                    }
+                  : undefined
+              }
               resizeScale={100}
               webp={isSupportWebp()}
             />

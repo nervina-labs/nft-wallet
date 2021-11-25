@@ -31,6 +31,7 @@ import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 import { isSupportWebp } from '../../../utils'
 import { Tag, TagLabel } from '@chakra-ui/react'
 import { RoutePath } from '../../../routes'
+import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 
 const NftDetailName = styled.div`
   width: 100%;
@@ -67,6 +68,8 @@ const NftDetailTab: React.FC<{
     [location.pathname, replace]
   )
 
+  const trackTab = useTrackClick('nft-detail', 'switchover')
+
   return (
     <Tabs
       align="space-between"
@@ -85,9 +88,27 @@ const NftDetailTab: React.FC<{
         zIndex={3}
       >
         <TabList px="20px">
-          <Tab>{t('nft.desc')}</Tab>
-          <Tab>{t('nft.transaction-history')}</Tab>
-          <Tab>{t('nft.holder')}</Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.nftDetail.switch.desc)
+            }
+          >
+            {t('nft.desc')}
+          </Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.nftDetail.switch.tx)
+            }
+          >
+            {t('nft.transaction-history')}
+          </Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.nftDetail.switch.collector)
+            }
+          >
+            {t('nft.holder')}
+          </Tab>
         </TabList>
       </Skeleton>
       <TabPanels minH="200px">
@@ -144,6 +165,8 @@ export const NftDetail: React.FC<{
     !detail?.is_issuer_banned &&
     detail?.verified_info?.is_verified
 
+  const trackFollow = useTrackClick('nft-detail-follow', 'click')
+
   return (
     <Box py="20px">
       <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={2} px="20px">
@@ -194,40 +217,50 @@ export const NftDetail: React.FC<{
             </Center>
           ) : null}
         </Box>
-        <SkeletonText
-          isLoaded={!isLoading}
-          noOfLines={2}
-          spacing={3}
-          ml="18px"
-          pt="4px"
-          onClick={gotoIssuer}
-        >
-          <Box
-            fontSize="14px"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-            overflow="hidden"
-            fontWeight="500"
-          >
-            {detail?.issuer_info?.name}
-          </Box>
-          <Box
-            fontSize="12px"
-            color="#777E90"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-            overflow="hidden"
-          >
-            {detail?.verified_info?.verified_title}
-          </Box>
-        </SkeletonText>
+
+        {isLoading ? (
+          <SkeletonText
+            noOfLines={2}
+            spacing={3}
+            ml="18px"
+            pt="4px"
+            onClick={gotoIssuer}
+            h="full"
+          />
+        ) : (
+          <Flex justify="center" direction="column" h="100%" ml="18px">
+            <Box
+              fontSize="14px"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+              overflow="hidden"
+              fontWeight="500"
+            >
+              {detail?.issuer_info?.name}
+            </Box>
+            {detail?.verified_info?.verified_title && (
+              <Box
+                fontSize="12px"
+                color="#777E90"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                overflow="hidden"
+              >
+                {detail?.verified_info?.verified_title}
+              </Box>
+            )}
+          </Flex>
+        )}
 
         <Flex justifyContent="flex-end">
           <Skeleton isLoaded={!isLoading} borderRadius="12px" my="auto">
             <Follow
               followed={detail?.issuer_info?.issuer_followed === true}
               uuid={detail?.issuer_info?.uuid ?? ''}
-              afterToggle={refetch}
+              afterToggle={async () => {
+                trackFollow(uuid)
+                await refetch()
+              }}
               isPrimary
             />
           </Skeleton>

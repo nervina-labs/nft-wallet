@@ -26,6 +26,8 @@ import { isSupportWebp } from '../../../utils'
 import { useTilt } from '../hooks/useTilt'
 import { useToast } from '../../../hooks/useToast'
 import { LoadableComponent } from '../../../components/GlobalLoader'
+import { trackLabels, useTrackEvent } from '../../../hooks/useTrack'
+import { useParams } from 'react-router'
 
 const ThreeDPreview = lazy(
   async () => await import('../../../components/ThreeDPreview')
@@ -103,6 +105,18 @@ const TiltContainer = styled(Tilt)`
   }
 `
 
+const BgImage = styled(Box)`
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  transform: translate3d(0, 0, 0);
+  transform: translateZ(0);
+  filter: blur(50px) contrast(1);
+`
+
 const CardBack: React.FC<{
   content?: string
   clickable: boolean
@@ -124,7 +138,7 @@ const CardBack: React.FC<{
         left="0"
         width="100%"
         height="100%"
-        zIndex={2}
+        zIndex={3}
         transform="rotateY(180deg)"
         bg="rgba(222, 222, 222, 0.6)"
         overflow="hidden"
@@ -181,11 +195,10 @@ const CardBack: React.FC<{
       <Modal isOpen={isFullScreen} onClose={unFullScreen}>
         <ModalOverlay />
         <ModalContent
-          bg="rgba(255, 255, 255, 0.9)"
+          bg="rgba(255, 255, 255, 0.95)"
           p="20px"
           pt="40px"
           rounded="30px"
-          backdropFilter="blur(10px)"
           w="95%"
           minH="70%"
         >
@@ -225,6 +238,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const hasCardback = Boolean(
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   )
+  const { id } = useParams<{ id?: string }>()
   const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
   const {
     isOpen: isOpenPreview,
@@ -237,14 +251,17 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       toast(t('resource.fail'))
     }
   }, [t, toast, isOpenPreview])
+  const trackCardBack = useTrackEvent('nft-detail-cardback', 'click')
+  const trackPreview = useTrackEvent('nft-detail', 'click')
   const onPreview = useCallback(
     (e) => {
       if (!showCardBackContent) {
         onOpenPreview()
       }
       e.stopPropagation()
+      trackPreview(trackLabels.nftDetail.check + id)
     },
-    [onOpenPreview, showCardBackContent]
+    [onOpenPreview, showCardBackContent, trackPreview, id]
   )
   const hasPlayIcon =
     detail?.renderer_type === NftType.Audio ||
@@ -282,7 +299,11 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           }`}
           opacity={typeof detail?.bg_image_url === 'undefined' ? 0 : 1}
         >
-          <Box position="relative" className="flip-card-img">
+          <Box
+            position="relative"
+            className="flip-card-img"
+            pointerEvents={showCardBackContent ? 'none' : undefined}
+          >
             <Image
               maxH="300px"
               src={imgUrl}
@@ -290,12 +311,13 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               m="auto"
               webp={isSupportWebp()}
               fallbackSrc={FALLBACK_SRC}
-              zIndex={3}
+              zIndex={2}
               srcQueryParams={
                 typeof tid !== 'undefined' ? { tid, locale: i18n.language } : {}
               }
               minW="100px"
               minH="100px"
+              cursor="pointer"
             />
             {hasPlayIcon ? (
               <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
@@ -349,7 +371,14 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         />
       ) : null}
 
-      <Box position="absolute" top={0} left={0} w="100%" h="100%" zIndex={0}>
+      <BgImage
+        position="absolute"
+        top={0}
+        left={0}
+        w="100%"
+        h="100%"
+        zIndex={0}
+      >
         <Image
           src={imgUrl}
           w="110%"
@@ -357,10 +386,9 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           opacity={0.8}
           webp={isSupportWebp()}
           transform="translate(-5%, -5%)"
-          filter="blur(50px) contrast(1)"
           fallbackSrc={FALLBACK_SRC}
         />
-      </Box>
+      </BgImage>
 
       {hasCardBack ? (
         <Center position="absolute" bottom="20px" w="full" transition="0.2s">
@@ -374,7 +402,12 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             cursor="pointer"
             userSelect="none"
             pr="6px"
-            onClick={() => setShowCardBackContent((bool) => !bool)}
+            onClick={() => {
+              if (!showCardBackContent) {
+                trackCardBack(id)
+              }
+              setShowCardBackContent((bool) => !bool)
+            }}
           >
             <CardbackSvg />
             {t('nft.show-card-back')}

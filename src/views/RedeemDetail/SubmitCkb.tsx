@@ -110,14 +110,20 @@ export const SubmitCkb: React.FC<SubmitAddressProps> = ({
             {t('exchange.form.ckb.fill')}
           </Button>
         </Flex>
-        <Alert mt="10px">
+        <Alert
+          mt="10px"
+          borderRadius="8px"
+          bg="rgba(255, 206, 166, 0.1)"
+          color="#FF5C00"
+        >
           {t(`exchange.warning${willDestroyed ? '-destroyed' : ''}`)}
         </Alert>
       </div>
       <Footer
         status={status}
-        isReedemable
+        isRedeemable
         isInDialog
+        inDrawer
         willDestroyed={willDestroyed}
         isLoading={isRedeeming}
         onClick={() =>

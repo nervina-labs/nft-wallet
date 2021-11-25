@@ -20,6 +20,7 @@ import { useHistory } from 'react-router'
 import { RoutePath } from '../../../routes'
 import { addParamsToUrl } from '../../../utils'
 import { useTranslation } from 'react-i18next'
+import { useTrackClick } from '../../../hooks/useTrack'
 
 const Share = lazy(async () => await import('../../../components/Share'))
 
@@ -37,6 +38,8 @@ export const Appbar: React.FC<{
   const [appbarBgOpacity, setAppbarBgOpacity] = useState(
     Math.min(window.scrollY / 400, 1)
   )
+
+  const trackShare = useTrackClick('nft-detail', 'click')
 
   useObservable(() =>
     merge(fromEvent(window, 'scroll'), fromEvent(window, 'touchmove')).pipe(
@@ -79,7 +82,13 @@ export const Appbar: React.FC<{
             </AppbarButton>
           }
           right={
-            <AppbarButton transparent onClick={onOpenShare}>
+            <AppbarButton
+              transparent
+              onClick={() => {
+                onOpenShare()
+                trackShare('share')
+              }}
+            >
               <ShareSvg />
             </AppbarButton>
           }

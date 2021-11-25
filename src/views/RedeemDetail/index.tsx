@@ -1,151 +1,71 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { Redirect, useHistory, useParams } from 'react-router'
 import styled from 'styled-components'
-import { Appbar, AppbarSticky } from '../../components/Appbar'
+import { Appbar } from '../../components/Appbar'
 import { Loading } from '../../components/Loading'
 import { Query } from '../../models'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { useTranslation } from 'react-i18next'
 import { formatTime } from '../../utils'
-import classNames from 'classnames'
 import {
   isCustomReward,
   RedeemDetailModel,
   RedeemStatus,
   UserRedeemState,
 } from '../../models/redeem'
-import { Prize } from '../Reedem/Prize'
+import { Prize } from '../Redeem/Prize'
 import { Condition } from './Condition'
 import { Footer } from './Footer'
 import { useSignRedeem } from '../../hooks/useRedeem'
 import { SubmitInfo } from './SubmitInfo'
 import { useAPI } from '../../hooks/useAccount'
-import { useRoute } from '../../hooks/useRoute'
 import {
   Issuer,
   Progress,
   Box,
-  Divider,
   Tab,
   TabList,
   Tabs,
+  AspectRatio,
+  Flex,
+  Stack,
+  Center,
+  Heading,
+  Text,
 } from '@mibao-ui/components'
 import { Alert } from '../../components/Alert'
+import { useTrackDidMount } from '../../hooks/useTrack'
+import { RedeemLabel } from '../Redeem/Label'
+import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 
 const Container = styled(MainContainer)`
   display: flex;
   flex-direction: column;
-  background: #f6f6f6;
   min-height: 100%;
-  main {
-    .MuiAlert-root {
-      font-size: 12px;
-      margin: 8px 20px;
-      margin-bottom: 80px;
-    }
-    .tab {
-      font-size: 14px;
-    }
-    background: #f6f6f6;
-    flex: 1;
-    .article {
-      height: 135px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: rgb(245, 175, 55);
-      .box {
-        width: 100%;
-        margin: 0 20px;
-        padding: 16px 20px;
-        background-color: white;
-        border-radius: 20px;
-        .status {
-          color: #ff8201;
-          text-align: center;
-          font-size: 15px;
-          font-weight: bold;
-          margin-bottom: 18px;
-          &.closed {
-            color: #666666;
-          }
-        }
-        .MuiLinearProgress-bar {
-          background-color: #ff8201;
-        }
-        .closed {
-          .MuiLinearProgress-bar {
-            background-color: #999999;
-          }
-        }
-        .progress {
-          display: flex;
-          justify-content: space-between;
-          font-size: 12px;
-          &.closed {
-            color: #666666;
-          }
-          .exchanged {
-            color: #777e91;
-          }
-        }
-      }
-    }
-    .issue-time {
-      padding: 6px 20px;
-      font-size: 12px;
-    }
-    .title {
-      font-weight: bolder;
-      font-size: 16px;
-      margin: 16px 20px;
-    }
-    .desc {
-      font-size: 14px;
-      margin: 16px 20px;
-      color: #666666;
-      white-space: pre-line;
-    }
-    .issue {
-      margin-left: 20px;
-      margin-bottom: 16px;
-      margin-right: 20px;
-      .issuer {
-        margin-top: 8px;
-        color: #999999;
-        font-size: 12px;
-      }
-    }
+  position: relative;
 
-    .tabs {
-      max-width: 500px;
-      width: 100%;
-      font-size: 14px;
-      color: #8e8e93;
-      display: flex;
-      .tab {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50%;
-        &.active {
-          font-weight: 500;
-          color: #000000;
-        }
-        position: relative;
-        .active-line {
-          background: #ff5c00;
-          border-radius: 10px;
-          position: absolute;
-          height: 3px;
-          width: 28px;
-          top: 22px;
-        }
-      }
-    }
+  .bg-part-1 {
+    position: absolute;
+    width: 155px;
+    height: 155px;
+    right: 50px;
+    top: -30px;
+    background: #ffeb90;
+    filter: blur(80px);
+    z-index: 1;
+  }
+
+  .bg-part-2 {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    right: -30px;
+    top: 20px;
+    background: #ffa4e0;
+    filter: blur(80px);
+    z-index: 1;
   }
 `
 
@@ -160,7 +80,7 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ data }) => {
     <Footer
       status={data.state}
       willDestroyed={data?.rule_info?.will_destroyed}
-      isReedemable={
+      isRedeemable={
         data.user_redeemed_state === UserRedeemState.AllowRedeem &&
         data?.state === RedeemStatus.Open
       }
@@ -177,6 +97,9 @@ const CustomFooter: React.FC<CustomFooterProps> = ({ data }) => {
     />
   )
 }
+
+const TAB_TYPE_SET = ['prize', 'condition'] as const
+type TabType = typeof TAB_TYPE_SET[number]
 
 export const RedeemDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -198,9 +121,19 @@ export const RedeemDetail: React.FC = () => {
     }
   )
 
+  useTrackDidMount('redeem-detail', id)
+
   const isClosed = data?.state === RedeemStatus.Closed
   const isDone = data?.state === RedeemStatus.Done
-  const { from } = useRoute()
+
+  const [tabType, setTabType] = useRouteQuerySearch<TabType>(
+    'type',
+    TAB_TYPE_SET[0]
+  )
+  const tabIndex = useMemo(() => {
+    const i = TAB_TYPE_SET.indexOf(tabType)
+    return i === -1 ? 0 : i
+  }, [tabType])
 
   const status = useMemo(() => {
     const status = data?.state
@@ -211,7 +144,6 @@ export const RedeemDetail: React.FC = () => {
     }
     return t('exchange.event.on-going')
   }, [data?.state, t])
-  const [showPrize, setShowPrice] = useState(true)
 
   if (isError) {
     return <Redirect to={RoutePath.NotFound} />
@@ -219,53 +151,104 @@ export const RedeemDetail: React.FC = () => {
 
   return (
     <Container>
-      <AppbarSticky>
-        <Appbar
-          title={t('exchange.event.title')}
-          onLeftClick={() =>
-            history.replace(
-              from === location.pathname ? RoutePath.Redeem : from
-            )
-          }
-          right={<></>}
-        />
-      </AppbarSticky>
-      <main>
+      <Box position="relative" zIndex={1}>
+        <Appbar transparent title={t('exchange.event.title')} />
+      </Box>
+
+      <Box
+        position="absolute"
+        h="280px"
+        top="0"
+        left="0"
+        w="full"
+        overflow="hidden"
+        zIndex={0}
+      >
+        <AspectRatio
+          bg="linear-gradient(192.04deg, #DAF1FF 44.62%, #FFF0DF 100%)"
+          radio={1 / 1}
+          position="absolute"
+          w="200%"
+          rounded="100%"
+          bottom="0"
+          left="-50%"
+        >
+          <Box />
+        </AspectRatio>
+        <Box className="bg-part-1" />
+        <Box className="bg-part-2" />
+      </Box>
+      <Box position="relative" zIndex={1}>
         {data == null ? (
           <Loading />
         ) : (
           <>
-            <div className="article">
-              <div className="box">
-                <div className={classNames('status', { closed: isClosed })}>
-                  {status}
-                </div>
-                <Progress
-                  value={
-                    isDone
-                      ? 100
-                      : (data?.progress.claimed / data?.progress.total) * 100
+            <Flex h="110px" justify="space-between" px="20px">
+              <Stack spacing="4px" my="auto">
+                <Heading
+                  fontSize="26px"
+                  fontWeight="500"
+                  color={
+                    data.state === RedeemStatus.Closed ? '#777E90' : undefined
                   }
-                  colorScheme={isClosed ? 'gray' : 'orange'}
-                  mb="8px"
-                />
-                <div className={classNames('progress', { closed: isClosed })}>
-                  <span>{t('exchange.progress')}</span>
-                  <span>
-                    <span className="exchanged">{data?.progress.claimed}</span>/
-                    <span>{data?.progress.total}</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="issue-time">
-              {t('exchange.issue-time')}
-              {formatTime(data.start_timestamp, i18n.language)}
-            </div>
-            <Divider size="1px" />
-            <div className="title">{data.name}</div>
-            <div className="desc">{data.description}</div>
-            <div className="issue">
+                >
+                  {status}
+                </Heading>
+                <Box fontSize="12px">
+                  {t('exchange.issue-time')}
+                  {formatTime(data.start_timestamp, i18n.language)}
+                </Box>
+              </Stack>
+              <Center>
+                <RedeemLabel type={data.reward_type} />
+              </Center>
+            </Flex>
+            <Box
+              px="15px"
+              py="20px"
+              bg="white"
+              shadow="0px 4px 16px rgba(0, 0, 0, 0.08)"
+              rounded="20px"
+              mx="20px"
+            >
+              <Box fontSize="16px" mb="16px">
+                {t('exchange.progress')}
+              </Box>
+              <Progress
+                value={
+                  isDone
+                    ? 100
+                    : (data?.progress.claimed / data?.progress.total) * 100
+                }
+                colorScheme={isClosed ? 'gray' : 'process'}
+                mb="8px"
+                height="8px"
+              />
+              <Flex fontSize="12px" justify="space-between">
+                <Box>
+                  {t('exchange.exchanged')}: {data?.progress.claimed}
+                </Box>
+                <Box>
+                  {t('exchange.remain')}:{' '}
+                  {data?.progress.total - data?.progress.claimed}
+                </Box>
+              </Flex>
+            </Box>
+
+            <Heading fontSize="16px" m="20px" mb="10px">
+              {data.name}
+            </Heading>
+
+            <Text
+              mx="20px"
+              fontSize="14px"
+              color="#777E90"
+              whiteSpace="pre-line"
+            >
+              {data.description}
+            </Text>
+
+            <Box m="20px">
               <Issuer
                 isBanned={data?.issuer_info?.is_issuer_banned}
                 src={data.issuer_info.avatar_url}
@@ -275,6 +258,7 @@ export const RedeemDetail: React.FC = () => {
                     ? false
                     : data?.verified_info?.is_verified
                 }
+                verifiedTitle={t('exchange.issuer')}
                 href={`${RoutePath.Issuer}/${
                   data.issuer_info?.issuer_id ?? data.issuer_info?.uuid
                 }`}
@@ -287,31 +271,35 @@ export const RedeemDetail: React.FC = () => {
                     }`
                   )
                 }}
-                size="25px"
+                size="40px"
               />
-              <div className="issuer">{t('exchange.issuer')}</div>
-            </div>
+            </Box>
+
             <Tabs
-              index={showPrize ? 0 : 1}
+              index={tabIndex}
               colorScheme="black"
               align="space-around"
+              mb="auto"
             >
               <TabList px="20px">
-                <Tab onClick={() => setShowPrice(true)}>
+                <Tab onClick={() => setTabType('prize')}>
                   {t('exchange.event.tabs.price')}
                 </Tab>
-                <Tab onClick={() => setShowPrice(false)}>
+                <Tab onClick={() => setTabType('condition')}>
                   {t('exchange.event.tabs.requirement')}
                 </Tab>
               </TabList>
             </Tabs>
-            {showPrize ? (
-              <Prize prizes={data.reward_info} type={data.reward_type} />
-            ) : (
-              <Condition detail={data} />
-            )}
-            <Box px="20px" mb="80px" mt="8px">
-              <Alert borderRadius="8px">
+            <Box my="20px">
+              {tabIndex === 0 ? <Prize prizes={data.reward_info} /> : null}
+              {tabIndex === 1 ? <Condition detail={data} /> : null}
+            </Box>
+            <Box px="20px" mt="auto">
+              <Alert
+                borderRadius="8px"
+                bg="rgba(255, 206, 166, 0.1)"
+                color="#FF5C00"
+              >
                 {t(
                   `exchange.warning${
                     data?.rule_info?.will_destroyed ? '-destroyed' : ''
@@ -323,7 +311,7 @@ export const RedeemDetail: React.FC = () => {
             <SubmitInfo data={data} />
           </>
         )}
-      </main>
+      </Box>
     </Container>
   )
 }

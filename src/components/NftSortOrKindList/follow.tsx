@@ -19,6 +19,7 @@ import { ReactComponent as EmptySvg } from '../../assets/svg/follow-empty.svg'
 import { ReactComponent as UnFollowSvg } from '../../assets/svg/unfollow.svg'
 import { isSupportWebp } from '../../utils'
 import { RoutePath } from '../../routes'
+import { useTrackEvent } from '../../hooks/useTrack'
 
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { t, i18n } = useTranslation('translations')
@@ -31,6 +32,13 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
       push(`/issuer/${token.issuer_info?.uuid}`)
     }
   }, [push, token.issuer_info?.uuid])
+
+  const trackGoto = useTrackEvent(
+    'go-nft-from-explore-follow',
+    'click',
+    undefined,
+    gotoClass
+  )
 
   return (
     <Box key={token.uuid} w="full" pb="30px" cursor="pointer">
@@ -45,7 +53,7 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
         imageProps={{
           webp: isSupportWebp(),
         }}
-        onClick={gotoClass}
+        onClick={trackGoto}
         rounded="30px"
       />
       <Grid
@@ -141,7 +149,9 @@ export const Follow: React.FC<{
             <UnFollowSvg />
           </Center>
           <Box color="#777E90" mb="16px">
-            {t('follow.no-on-sale')}
+            {sort === SortType.OnSale
+              ? t('follow.no-on-sale')
+              : t('follow.no-data')}
           </Box>
           <Link to={RoutePath.Explore} style={{ textDecoration: 'underline' }}>
             {t('follow.let-s-go-to-explore')}

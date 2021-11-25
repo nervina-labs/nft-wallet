@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { ReactComponent as MenuArrowSvg } from '../../assets/svg/menu-arrow.svg'
 import { useFirstOpenScrollToTop } from '../../hooks/useFirstOpenScrollToTop'
+import { trackLabels, useTrackClick } from '../../hooks/useTrack'
 
 interface SortWithLabel {
   value: SortType
@@ -84,6 +85,11 @@ export const NftSortOrKindList: React.FC<{
   }, [listType, types])
   useFirstOpenScrollToTop({ enable: isFirstOpenScrollToTop })
 
+  const trackMenu = useTrackClick(
+    listType === 'follow' ? 'explore-follow' : 'explore-explore',
+    'switchover'
+  )
+  const trackSwitchFollow = useTrackClick('explore-explore', 'switchover')
   return (
     <Box mt="10px" userSelect="none" position="relative" minHeight="628px">
       <Box position="absolute" right="0" top="4px" zIndex={3}>
@@ -117,7 +123,10 @@ export const NftSortOrKindList: React.FC<{
                   _focus={{ bg: 'rgba(0, 0, 0, 0)' }}
                   value={sort.value}
                   key={i}
-                  onClick={() => onChangeSort(sort)}
+                  onClick={() => {
+                    onChangeSort(sort)
+                    trackMenu(sort.label)
+                  }}
                   whiteSpace="nowrap"
                   fontSize="13px"
                   lineHeight="24px"
@@ -147,6 +156,11 @@ export const NftSortOrKindList: React.FC<{
               mr="15px"
               fontWeight="200"
               _selected={{ fontWeight: 'normal' }}
+              onClick={() => {
+                if (type.value === 'follow') {
+                  trackSwitchFollow(trackLabels.explore['switch-follow'])
+                }
+              }}
             >
               {type.label}
             </Tab>
