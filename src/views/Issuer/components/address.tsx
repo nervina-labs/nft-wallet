@@ -18,7 +18,6 @@ export const Address: React.FC<{ content: string }> = ({ content }) => {
       whiteSpace="nowrap"
       onClick={onCopy}
       cursor="pointer"
-      maxW="260px"
       w="100%"
     >
       ID:

@@ -105,6 +105,18 @@ const TiltContainer = styled(Tilt)`
   }
 `
 
+const BgImage = styled(Box)`
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  transform: translate3d(0, 0, 0);
+  transform: translateZ(0);
+  filter: blur(50px) contrast(1);
+`
+
 const CardBack: React.FC<{
   content?: string
   clickable: boolean
@@ -355,7 +367,14 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         />
       ) : null}
 
-      <Box position="absolute" top={0} left={0} w="100%" h="100%" zIndex={0}>
+      <BgImage
+        position="absolute"
+        top={0}
+        left={0}
+        w="100%"
+        h="100%"
+        zIndex={0}
+      >
         <Image
           src={imgUrl}
           w="110%"
@@ -363,10 +382,9 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           opacity={0.8}
           webp={isSupportWebp()}
           transform="translate(-5%, -5%)"
-          filter="blur(50px) contrast(1)"
           fallbackSrc={FALLBACK_SRC}
         />
-      </Box>
+      </BgImage>
 
       {hasCardBack ? (
         <Center position="absolute" bottom="20px" w="full" transition="0.2s">

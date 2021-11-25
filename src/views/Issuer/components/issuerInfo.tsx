@@ -8,6 +8,7 @@ import {
   SkeletonCircle,
   SkeletonText,
   Stack,
+  Image,
 } from '@mibao-ui/components'
 import React, { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router'
@@ -34,6 +35,7 @@ import {
   useTrackClick,
   useTrackDidMount,
 } from '../../../hooks/useTrack'
+import { HEADER_HEIGHT } from '../../../components/Appbar'
 
 const IssuerIcon = styled.div`
   display: inline-block;
@@ -45,6 +47,7 @@ const IssuerIcon = styled.div`
   color: white;
   border-radius: 5px;
   padding: 0 5px;
+  margin: auto 0;
 `
 
 const SocialMediaIconMap: { [key in SocialMediaType]: string } = {
@@ -92,7 +95,7 @@ export const IssuerInfo: React.FC = () => {
   useTrackDidMount('issuer', id)
   const trackSNS = useTrackClick('issuer', 'click')
   const socialMediaIcons = useMemo(() => {
-    return data?.social_media?.map((media) => (
+    return data?.social_media?.map((media, i) => (
       <Center
         w="30px"
         h="30px"
@@ -105,6 +108,7 @@ export const IssuerInfo: React.FC = () => {
           trackSNS(media.social_type)
           gotoMetaUrl(media.url)
         }}
+        key={i}
       >
         <img
           src={SocialMediaIconMap[media.social_type]}
@@ -122,19 +126,69 @@ export const IssuerInfo: React.FC = () => {
   }
 
   return (
-    <Stack py="22px" px="16px" spacing="16px">
-      <Grid templateColumns="60px calc(100% - 76px - 80px) auto">
-        <Box w="60px">
-          <Avatar
-            src={data?.avatar_url}
-            isVerified={data?.verified_info?.is_verified}
-            isBanned={data?.is_issuer_banned}
-            size="60px"
-            border="3px solid var(--input-bg-color)"
-          />
-        </Box>
-        <Box mx="16px">
-          <SkeletonText isLoaded={!isLoading} noOfLines={3} spacing={2}>
+    <Box py={`${HEADER_HEIGHT - 60}px`} pb="22px">
+      <Image
+        src={data?.cover_image_url === null ? '' : data?.cover_image_url}
+        w="100%"
+        h="200px"
+        fallback={<Box h="80px" />}
+        containerProps={{ w: '100%', h: 'auto' }}
+      />
+      <Stack spacing="16px" px="16px" mt="12px">
+        <Grid templateColumns="60px calc(100% - 76px)" h="32px">
+          <Box w="60px" position="relative">
+            <Box position="absolute" bottom="0">
+              <Avatar
+                src={data?.avatar_url}
+                isVerified={data?.verified_info?.is_verified}
+                isBanned={data?.is_issuer_banned}
+                size="60px"
+                border="3px solid var(--input-bg-color)"
+              />
+            </Box>
+          </Box>
+          <Grid templateColumns="calc(100% - 80px) auto">
+            <SkeletonText
+              isLoaded={!isLoading}
+              noOfLines={1}
+              mx="16px"
+              h="32px"
+            >
+              <Box
+                color="#777E90"
+                textOverflow="ellipsis"
+                overflow="hidden"
+                fontSize="12px"
+                whiteSpace="nowrap"
+                h="18px"
+                my="auto"
+              >
+                <IssuerIcon>{t('common.creator')}</IssuerIcon>
+                {data?.verified_info?.verified_title && (
+                  <Box as="span" ml="6px">
+                    {data?.verified_info?.verified_title}
+                  </Box>
+                )}
+              </Box>
+            </SkeletonText>
+            <Flex justifyContent="flex-end">
+              <Skeleton isLoaded={!isLoading} borderRadius="12px">
+                <Follow
+                  followed={data?.issuer_followed === true}
+                  uuid={id}
+                  afterToggle={async () => {
+                    trackFollow(trackLabels.issuer.follow)
+                    await refetch()
+                  }}
+                  isPrimary
+                />
+              </Skeleton>
+            </Flex>
+          </Grid>
+        </Grid>
+
+        <Box>
+          <Skeleton isLoaded={!isLoading} w="200px" h="20px">
             <Box
               textOverflow="ellipsis"
               overflow="hidden"
@@ -144,53 +198,31 @@ export const IssuerInfo: React.FC = () => {
             >
               {data?.name}
             </Box>
-            {data?.issuer_id && <Address content={data?.issuer_id} />}
-            <Box
-              color="#777E90"
-              textOverflow="ellipsis"
-              overflow="hidden"
-              fontSize="12px"
-              whiteSpace="nowrap"
-            >
-              <IssuerIcon>{t('common.creator')}</IssuerIcon>
-              {data?.verified_info?.verified_title && (
-                <Box as="span" ml="6px">
-                  {data?.verified_info?.verified_title}
-                </Box>
-              )}
-            </Box>
-          </SkeletonText>
-        </Box>
-        <Flex justifyContent="flex-end">
-          <Skeleton isLoaded={!isLoading} borderRadius="12px" my="auto">
-            <Follow
-              followed={data?.issuer_followed === true}
-              uuid={id}
-              afterToggle={async () => {
-                trackFollow(trackLabels.issuer.follow)
-                await refetch()
-              }}
-              isPrimary
-            />
           </Skeleton>
-        </Flex>
-      </Grid>
-      <SkeletonText isLoaded={!isLoading} noOfLines={3} spacing={4}>
-        {data?.description ? <Description content={data?.description} /> : null}
-      </SkeletonText>
-      <Skeleton isLoaded={!isLoading} borderRadius="22px">
-        <FollowerWithLike
-          likes={data?.issuer_likes ?? 0}
-          follows={data?.issuer_follows ?? 0}
-        />
-      </Skeleton>
+          <Skeleton isLoaded={!isLoading} h="16px" mt="6px">
+            {data?.issuer_id && <Address content={data?.issuer_id} />}
+          </Skeleton>
+        </Box>
+        <SkeletonText isLoaded={!isLoading} noOfLines={3} spacing={4}>
+          {data?.description ? (
+            <Description content={data?.description} />
+          ) : null}
+        </SkeletonText>
 
-      <Stack align="center" direction="row" justify="center">
-        {isLoading && !socialMediaIcons && (
-          <SkeletonCircle size="30px" isLoaded={!isLoading} />
-        )}
-        {socialMediaIcons}
+        <Skeleton isLoaded={!isLoading} borderRadius="22px">
+          <FollowerWithLike
+            likes={data?.issuer_likes ?? 0}
+            follows={data?.issuer_follows ?? 0}
+          />
+        </Skeleton>
+
+        <Stack align="center" direction="row" justify="center">
+          {isLoading && !socialMediaIcons && (
+            <SkeletonCircle size="30px" isLoaded={!isLoading} />
+          )}
+          {socialMediaIcons}
+        </Stack>
       </Stack>
-    </Stack>
+    </Box>
   )
 }

@@ -68,9 +68,14 @@ export const ConfirmDialog: React.FC = () => {
               bg="white"
             >
               {type !== 'text' ? (
-                <AlertIcon boxSize="70px" mr={0} mb={4} />
+                <AlertIcon
+                  boxSize="70px"
+                  mr={0}
+                  mb={4}
+                  {...(type === 'warning' ? { color: '#FFA940' } : {})}
+                />
               ) : null}
-              <AlertTitle mb={2} mx={0} fontSize="17px" fontWeight="normal">
+              <AlertTitle mb={2} mx={0} fontSize="16px" fontWeight="normal">
                 {title}
               </AlertTitle>
               <AlertDescription

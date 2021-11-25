@@ -27,7 +27,7 @@ export const Routers: React.FC = () => {
   useEffect(() => {
     if (isLogined && walletType && walletType !== WalletType.Unipass) {
       login(walletType).catch((e) => {
-        console.log('login-error', e)
+        console.error('login-error', e)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,6 +55,11 @@ export const Routers: React.FC = () => {
       },
       fonts: {
         body: font,
+      },
+      colors: {
+        process: {
+          500: '#02C2C6',
+        },
       },
     })
   }, [t])

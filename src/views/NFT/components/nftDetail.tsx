@@ -217,33 +217,40 @@ export const NftDetail: React.FC<{
             </Center>
           ) : null}
         </Box>
-        <SkeletonText
-          isLoaded={!isLoading}
-          noOfLines={2}
-          spacing={3}
-          ml="18px"
-          pt="4px"
-          onClick={gotoIssuer}
-        >
-          <Box
-            fontSize="14px"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-            overflow="hidden"
-            fontWeight="500"
-          >
-            {detail?.issuer_info?.name}
-          </Box>
-          <Box
-            fontSize="12px"
-            color="#777E90"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-            overflow="hidden"
-          >
-            {detail?.verified_info?.verified_title}
-          </Box>
-        </SkeletonText>
+
+        {isLoading ? (
+          <SkeletonText
+            noOfLines={2}
+            spacing={3}
+            ml="18px"
+            pt="4px"
+            onClick={gotoIssuer}
+            h="full"
+          />
+        ) : (
+          <Flex justify="center" direction="column" h="100%" ml="18px">
+            <Box
+              fontSize="14px"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+              overflow="hidden"
+              fontWeight="500"
+            >
+              {detail?.issuer_info?.name}
+            </Box>
+            {detail?.verified_info?.verified_title && (
+              <Box
+                fontSize="12px"
+                color="#777E90"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                overflow="hidden"
+              >
+                {detail?.verified_info?.verified_title}
+              </Box>
+            )}
+          </Flex>
+        )}
 
         <Flex justifyContent="flex-end">
           <Skeleton isLoaded={!isLoading} borderRadius="12px" my="auto">
