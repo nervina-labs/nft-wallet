@@ -59,12 +59,13 @@ export const useInitWechat = () => {
           nonceStr: wxSignConfig.nonce_str,
           timestamp: wxSignConfig.timestamp,
           jsApiList: [
-            'chooseImage',
-            'showMenuItems',
             'updateAppMessageShareData',
             'updateTimelineShareData',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'showMenuItems',
           ],
-          openTagList: ['wx-open-launch-weapp'],
+          openTagList: [],
         })
         wx.ready(() => {
           cb?.()
@@ -91,7 +92,7 @@ export const useWechatShare = () => {
   const initWechat = useInitWechat()
 
   return useCallback(
-    (d?: WechatShareData) => {
+    async (d?: WechatShareData) => {
       if (!IS_WEXIN) {
         return
       }
@@ -109,10 +110,10 @@ export const useWechatShare = () => {
       ) {
         if (d) {
           data = buildWechatShareData(d)
-        } else {
-          return
         }
       }
+      wx.updateAppMessageShareData(data)
+      wx.updateTimelineShareData(data)
       initWechat(() => {
         wx.showMenuItems({
           menuList: ['menuItem:share:appMessage', 'menuItem:share:timeline'],
@@ -120,9 +121,6 @@ export const useWechatShare = () => {
         if (wx.onMenuShareAppMessage) {
           wx.onMenuShareAppMessage(data)
           wx.onMenuShareTimeline(data)
-        } else {
-          wx.updateAppMessageShareData(data)
-          wx.updateTimelineShareData(data)
         }
       })
     },

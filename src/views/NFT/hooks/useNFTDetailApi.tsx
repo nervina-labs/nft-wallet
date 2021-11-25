@@ -4,7 +4,6 @@ import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useWechatShare } from '../../../hooks/useWechat'
 import { Query } from '../../../models'
-import { isTokenClass } from '../../../models/class-list'
 
 export function useNFTDetailApi(
   uuid: string,
@@ -32,9 +31,7 @@ export function useNFTDetailApi(
         wechatShare({
           title: d.name,
           desc: t('common.share.wx.nft.desc'),
-          link: `${location.origin}/class/${
-            isTokenClass(d) ? uuid : d.class_uuid
-          }`,
+          link: location.href,
         })
       },
     }
