@@ -207,6 +207,14 @@ const Container = styled(MainContainer)`
   }
 `
 
+const CheckBoxStyled = styled(Checkbox)`
+  .chakra-checkbox__control {
+    border: 1px solid #23262f;
+    border-radius: 1px;
+    background-color: #e6e8ec;
+  }
+`
+
 enum ErrorMsg {
   NotSupport = 'not-support',
   Imtoken = 'refuse',
@@ -463,7 +471,7 @@ export const Login: React.FC = () => {
       </Drawer>
 
       <div className="license">
-        <Checkbox
+        <CheckBoxStyled
           isChecked={isLicenseChecked}
           size="sm"
           iconSize="12px"
@@ -488,7 +496,7 @@ export const Login: React.FC = () => {
               ),
             }}
           />
-        </Checkbox>
+        </CheckBoxStyled>
       </div>
       {i18n.language !== 'en' ? (
         <footer className={classNames('beian', { normal: IS_WEBKIT })}>
