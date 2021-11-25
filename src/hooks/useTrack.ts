@@ -153,13 +153,13 @@ export type TrackCategory = keyof typeof categories
 export type TrackAction = keyof typeof actions
 export type TrackLabel = string | undefined | number
 
-if (process.env.NODE_ENV === 'development') {
-  ;(window as any)._czc = {
-    push: (args: any[]) => {
-      console.log(args)
-    },
-  }
-}
+// if (process.env.NODE_ENV === 'development') {
+//   ;(window as any)._czc = {
+//     push: (args: any[]) => {
+//       console.log(args)
+//     },
+//   }
+// }
 
 export const umengTrack = (
   category: TrackCategory,
