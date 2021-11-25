@@ -20,6 +20,7 @@ import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { Tab, TabList, Tabs } from '@mibao-ui/components'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { InfiniteList } from '../../components/InfiniteList'
+import { useTrackDidMount } from '../../hooks/useTrack'
 
 export const RedeemContainer = styled(MainContainer)`
   display: flex;
@@ -50,6 +51,8 @@ export const Redeem: React.FC = () => {
     const i = TabTypeSet.indexOf(tabType)
     return i === -1 ? 0 : i
   }, [tabType])
+
+  useTrackDidMount('redeem')
 
   const api = useAPI()
   const { isLogined } = useAccountStatus()
