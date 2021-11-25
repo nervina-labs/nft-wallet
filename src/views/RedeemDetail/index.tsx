@@ -34,8 +34,6 @@ import {
   Center,
   Heading,
   Text,
-  TabPanels,
-  TabPanel,
 } from '@mibao-ui/components'
 import { Alert } from '../../components/Alert'
 import { RedeemLabel } from '../Redeem/Label'
@@ -288,16 +286,11 @@ export const RedeemDetail: React.FC = () => {
                   {t('exchange.event.tabs.requirement')}
                 </Tab>
               </TabList>
-              <TabPanels>
-                <TabPanel px="0">
-                  <Prize prizes={data.reward_info} />
-                </TabPanel>
-                <TabPanel px="0">
-                  <Condition detail={data} />
-                </TabPanel>
-              </TabPanels>
             </Tabs>
-
+            <Box my="20px">
+              {tabIndex === 0 ? <Prize prizes={data.reward_info} /> : null}
+              {tabIndex === 1 ? <Condition detail={data} /> : null}
+            </Box>
             <Box px="20px" mt="auto">
               <Alert
                 borderRadius="8px"

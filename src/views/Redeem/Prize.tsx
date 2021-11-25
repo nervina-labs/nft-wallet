@@ -98,6 +98,14 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
   const [previewImage, setPreviewImage] = useState('')
   return (
     <Box>
+      <Preview
+        isOpen={isOpen}
+        onClose={onClose}
+        renderer={previewImage}
+        bgImgUrl={previewImage}
+        type="image"
+        render3D={() => null}
+      />
       {showLabel ? (
         <Box
           bg="#E5E8FA"
@@ -158,14 +166,6 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
           </AspectRatio>
         ))}
       </Flex>
-      <Preview
-        isOpen={isOpen}
-        onClose={onClose}
-        renderer={previewImage}
-        bgImgUrl={previewImage}
-        type="image"
-        render3D={() => null}
-      />
     </Box>
   )
 }
