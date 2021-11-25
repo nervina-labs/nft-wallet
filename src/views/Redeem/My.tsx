@@ -9,7 +9,7 @@ import { Query } from '../../models'
 import { IS_WEXIN, PER_ITEM_LIMIT } from '../../constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Loading } from '../../components/Loading'
-import { ReedemCard } from './RedeemCard'
+import { RedeemCard } from './RedeemCard'
 import { RedeemContainer } from '.'
 import { RedeemListType } from '../../models/redeem'
 import { useAccount, useAPI } from '../../hooks/useAccount'
@@ -45,7 +45,7 @@ export const MyRedeem: React.FC = () => {
     async ({ pageParam = 1 }) => {
       const { data } = await api.getMyRedeemEvents(
         pageParam,
-        isWait ? RedeemListType.UserWaittingRedeem : RedeemListType.UserRedeemed
+        isWait ? RedeemListType.UserWaitingRedeem : RedeemListType.UserRedeemed
       )
 
       return {
@@ -140,7 +140,7 @@ export const MyRedeem: React.FC = () => {
               return (
                 <React.Fragment key={i}>
                   {group.record_list.map((e, j: number) => {
-                    return <ReedemCard item={e} key={`${i}+${j}`} />
+                    return <RedeemCard item={e} key={`${i}+${j}`} />
                   })}
                 </React.Fragment>
               )

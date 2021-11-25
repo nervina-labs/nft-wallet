@@ -12,6 +12,7 @@ export interface TokenClassUuidHolder {
     address: string
     nickname: string
     avatar_url: string
+    avatar_tid?: number | null
     avatar_type: AvatarType
   }
 }

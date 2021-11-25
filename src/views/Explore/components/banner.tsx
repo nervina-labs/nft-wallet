@@ -13,6 +13,7 @@ import {
 } from '@mibao-ui/components'
 import styled from '@emotion/styled'
 import { useCallback } from 'react'
+import { useTrackClick } from '../../../hooks/useTrack'
 
 const Container = styled.div`
   .swiper {
@@ -43,13 +44,21 @@ export const Banner: React.FC = () => {
       refetchOnMount: false,
     }
   )
-  const gotoLink = useCallback((link: string) => {
-    return () => {
-      if (link) {
-        window.location.href = link
+
+  const trackGoLink = useTrackClick('explore-banner', 'click')
+  const trackSwiperSlide = useTrackClick('explore-slider', 'didmount')
+  const trackSwiperClick = useTrackClick('explore-slider', 'click')
+  const gotoLink = useCallback(
+    (link: string, n: number) => {
+      return () => {
+        if (link) {
+          window.location.href = link
+          trackGoLink(n)
+        }
       }
-    }
-  }, [])
+    },
+    [trackGoLink]
+  )
 
   const banners = data?.['Notification::Banner']
 
@@ -67,11 +76,17 @@ export const Banner: React.FC = () => {
               delay: 5000,
               disableOnInteraction: false,
             }}
+            onSlideChange={(s) => {
+              trackSwiperSlide(s.realIndex + 1)
+            }}
           >
             {banners?.map((banner, i) => (
               <SwiperSlide key={i}>
                 <a
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    trackSwiperClick(i)
+                  }}
                   target="_blank"
                   style={{
                     textDecoration: 'none',
@@ -96,7 +111,7 @@ export const Banner: React.FC = () => {
                 overflow="hidden"
                 rounded="22px"
                 roundedBottomRight="0"
-                onClick={gotoLink(data['Notification::News'][0].link)}
+                onClick={gotoLink(data['Notification::News'][0].link, 1)}
               >
                 <Image
                   src={data['Notification::News'][0].content}
@@ -113,7 +128,7 @@ export const Banner: React.FC = () => {
                 overflow="hidden"
                 rounded="22px"
                 roundedTopLeft="0"
-                onClick={gotoLink(data['Notification::Interview'][0].link)}
+                onClick={gotoLink(data['Notification::Interview'][0].link, 2)}
               >
                 <Image
                   src={data['Notification::Interview'][0].content}
@@ -130,7 +145,7 @@ export const Banner: React.FC = () => {
                 overflow="hidden"
                 rounded="22px"
                 roundedBottomLeft="0"
-                onClick={gotoLink(data['Notification::Activity'][0]?.link)}
+                onClick={gotoLink(data['Notification::Activity'][0]?.link, 3)}
               >
                 <Image
                   src={data['Notification::Activity'][0].content}

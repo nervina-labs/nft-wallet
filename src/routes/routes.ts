@@ -13,10 +13,10 @@ import { AddressCollector } from '../views/AddressCollector'
 import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
-import { Redeem } from '../views/Reedem'
+import { Redeem } from '../views/Redeem'
 import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
-import { MyRedeem } from '../views/Reedem/My'
+import { MyRedeem } from '../views/Redeem/My'
 import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
@@ -27,6 +27,7 @@ import { OrderSuccess } from '../views/OrderSuccess'
 import { OrderDetail } from '../views/OrderDetail'
 import { Ranking } from '../views/Ranking'
 import { ExploreAll } from '../views/ExploreAll'
+import { OrderStatus } from '../views/OrderStatus'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -177,21 +178,21 @@ export const routes: MibaoRouterProps[] = [
   {
     component: RedeemDetail,
     exact: false,
-    key: 'ReedemDetail',
+    key: 'RedeemDetail',
     path: RoutePath.Redeem,
     params: '/:id',
   },
   {
     component: RedeemPrize,
     exact: true,
-    key: 'ReedemPrize',
+    key: 'RedeemPrize',
     path: RoutePath.RedeemPrize,
     params: '/:id',
   },
   {
     component: RedeemResult,
     exact: true,
-    key: 'ReedemResult',
+    key: 'RedeemResult',
     path: RoutePath.RedeemResult,
     params: '/:id',
   },
@@ -226,6 +227,13 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'OrderSuccess',
     path: RoutePath.OrderSuccess,
+  },
+  {
+    component: OrderStatus,
+    exact: true,
+    key: 'OrderStatus',
+    path: RoutePath.OrderStatus,
+    params: '/:id',
   },
   {
     component: OrderDetail,

@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
 import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
+import { useWechatShare } from '../../../hooks/useWechat'
 import { Query } from '../../../models'
 
 export function useNFTDetailApi(
@@ -12,7 +14,8 @@ export function useNFTDetailApi(
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
   const { isLogined } = useAccountStatus()
-
+  const wechatShare = useWechatShare()
+  const { t } = useTranslation('translations')
   const { data: detail, failureCount, isLoading, refetch } = useQuery(
     [Query.NFTDetail, uuid, api, isLogined],
     async () => {
@@ -22,7 +25,16 @@ export function useNFTDetailApi(
         : await api.getNFTDetail(uuid, auth)
       return data
     },
-    { enabled: Boolean(uuid) }
+    {
+      enabled: Boolean(uuid),
+      onSuccess(d) {
+        wechatShare({
+          title: d.name,
+          desc: t('common.share.wx.nft.desc'),
+          link: location.href,
+        })
+      },
+    }
   )
 
   return {

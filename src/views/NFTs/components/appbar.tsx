@@ -19,6 +19,7 @@ import { Query } from '../../../models'
 import { useAPI } from '../../../hooks/useAccount'
 import { useShareDisclosure } from '../../../hooks/useShareDisclosure'
 import { useDisclosure } from '@chakra-ui/react'
+import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 
 const Share = lazy(async () => await import('../../../components/Share'))
 
@@ -71,6 +72,7 @@ export const Appbar: React.FC<{
       })
     : ''
 
+  const trackSetting = useTrackClick('home', 'click')
   return (
     <>
       <AppbarSticky position={isHolder ? 'sticky' : 'relative'}>
@@ -80,7 +82,15 @@ export const Appbar: React.FC<{
               onClick={isHolder ? goBack : openDrawer}
               className={isHolder ? '' : 'setting'}
             >
-              {isHolder ? <BackSvg /> : <SettingsSvg />}
+              {isHolder ? (
+                <BackSvg />
+              ) : (
+                <SettingsSvg
+                  onClick={() => {
+                    trackSetting(trackLabels.home.settings)
+                  }}
+                />
+              )}
             </AppbarButton>
           }
           right={

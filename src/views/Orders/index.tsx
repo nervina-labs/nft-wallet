@@ -9,6 +9,11 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router'
 import { OrderList, MatchRoute } from './OrderList'
 import { OrderDrawer } from '../../components/OrderDrawer'
 import { Contact } from '../../components/Contact'
+import {
+  trackLabels,
+  useTrackClick,
+  useTrackDidMount,
+} from '../../hooks/useTrack'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -28,6 +33,7 @@ export const Orders: React.FC = () => {
   const matchPlacedOrders = useRouteMatch(RoutePath.PlacedOrders)
   const matchPaidOrders = useRouteMatch(RoutePath.PaidOrders)
   const matchDoneOrders = useRouteMatch(RoutePath.DoneOrders)
+  useTrackDidMount('orders')
 
   const matchRoute: MatchRoute = [
     matchAllOrders?.isExact,
@@ -39,16 +45,19 @@ export const Orders: React.FC = () => {
   const history = useHistory()
   const location = useLocation()
 
+  const trackTab = useTrackClick('orders', 'switchover')
+
   const go = useCallback(
-    (path: RoutePath) => {
+    (path: string, label: string) => {
       return () => {
         if (location.pathname === path) {
           return
         }
         history.replace(path)
+        trackTab(label)
       }
     },
-    [history, location.pathname]
+    [history, location.pathname, trackTab]
   )
 
   return (
@@ -67,14 +76,31 @@ export const Orders: React.FC = () => {
           bg="white"
         >
           <TabList px="20px">
-            <Tab onClick={go(RoutePath.Orders)}>{t('orders.tabs.all')}</Tab>
-            <Tab onClick={go(RoutePath.PlacedOrders)}>
+            <Tab onClick={go(RoutePath.Orders, trackLabels.orders.switch.all)}>
+              {t('orders.tabs.all')}
+            </Tab>
+            <Tab
+              onClick={go(
+                RoutePath.PlacedOrders,
+                trackLabels.orders.switch.wait
+              )}
+            >
               {t('orders.tabs.placed')}
             </Tab>
-            <Tab onClick={go(RoutePath.PaidOrders)}>
+            <Tab
+              onClick={go(
+                RoutePath.PaidOrders,
+                trackLabels.orders.switch.sending
+              )}
+            >
               {t('orders.tabs.paid')}
             </Tab>
-            <Tab onClick={go(RoutePath.DoneOrders)}>
+            <Tab
+              onClick={go(
+                RoutePath.DoneOrders,
+                trackLabels.orders.switch.received
+              )}
+            >
               {t('orders.tabs.done')}
             </Tab>
           </TabList>
