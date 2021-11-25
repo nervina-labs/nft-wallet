@@ -136,7 +136,7 @@ const CardBack: React.FC<{
         left="0"
         width="100%"
         height="100%"
-        zIndex={2}
+        zIndex={3}
         transform="rotateY(180deg)"
         bg="rgba(222, 222, 222, 0.6)"
         overflow="hidden"
@@ -193,11 +193,10 @@ const CardBack: React.FC<{
       <Modal isOpen={isFullScreen} onClose={unFullScreen}>
         <ModalOverlay />
         <ModalContent
-          bg="rgba(255, 255, 255, 0.9)"
+          bg="rgba(255, 255, 255, 0.95)"
           p="20px"
           pt="40px"
           rounded="30px"
-          backdropFilter="blur(10px)"
           w="95%"
           minH="70%"
         >
@@ -294,7 +293,11 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           }`}
           opacity={typeof detail?.bg_image_url === 'undefined' ? 0 : 1}
         >
-          <Box position="relative" className="flip-card-img">
+          <Box
+            position="relative"
+            className="flip-card-img"
+            pointerEvents={showCardBackContent ? 'none' : undefined}
+          >
             <Image
               maxH="300px"
               src={imgUrl}
@@ -302,12 +305,13 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               m="auto"
               webp={isSupportWebp()}
               fallbackSrc={FALLBACK_SRC}
-              zIndex={3}
+              zIndex={2}
               srcQueryParams={
                 typeof tid !== 'undefined' ? { tid, locale: i18n.language } : {}
               }
               minW="100px"
               minH="100px"
+              cursor="pointer"
             />
             {hasPlayIcon ? (
               <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
