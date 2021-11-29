@@ -1,5 +1,13 @@
+import { CloseIcon } from '@chakra-ui/icons'
 import styled from '@emotion/styled'
-import { Box, Flex, FlexProps, Input, InputProps } from '@mibao-ui/components'
+import {
+  Box,
+  Center,
+  Flex,
+  FlexProps,
+  Input,
+  InputProps,
+} from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as SearchIconSvg } from '../../assets/svg/search.svg'
 
@@ -13,11 +21,15 @@ const StyledSearchIconSvg = styled(SearchIconSvg)`
 export interface SearchProps extends InputProps {
   containerProps?: FlexProps
   noInput?: boolean
+  hiddenCleanButton?: boolean
+  onClean?: () => void
 }
 
 export const Search: React.FC<SearchProps> = ({
   containerProps,
   noInput,
+  onClean,
+  hiddenCleanButton,
   ...props
 }) => {
   const { t } = useTranslation('translations')
@@ -32,6 +44,7 @@ export const Search: React.FC<SearchProps> = ({
       rounded="8px"
       fontSize="14px"
       whiteSpace="nowrap"
+      position="relative"
       {...containerProps}
     >
       <StyledSearchIconSvg />
@@ -41,7 +54,7 @@ export const Search: React.FC<SearchProps> = ({
         </Box>
       ) : (
         <Input
-          color="#777e90"
+          color="#23262F"
           h="full"
           w="full"
           bg="none"
@@ -57,6 +70,23 @@ export const Search: React.FC<SearchProps> = ({
           {...props}
         />
       )}
+      {onClean && !hiddenCleanButton ? (
+        <Center
+          as="a"
+          position="absolute"
+          top="50%"
+          right="8px"
+          bg="rgba(145, 145, 166, 0.1)"
+          h="20px"
+          w="20px"
+          rounded="full"
+          transform="translateY(-50%)"
+          onClick={onClean}
+          cursor="pointer"
+        >
+          <CloseIcon w="6px" h="6px" />
+        </Center>
+      ) : null}
     </Flex>
   )
 }
