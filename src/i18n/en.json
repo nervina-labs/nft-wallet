@@ -79,6 +79,10 @@
       "card-back": "Include card back content which can only be revealed by the owner of this collection",
       "show-detail": "Show Detail"
     },
+    "search": {
+      "search-placeholder": "Search by Digital Collection or Creator",
+      "cancel": "Cancel"
+    },
     "login": {
       "title": "MIBAO",
       "select": "Log in with",

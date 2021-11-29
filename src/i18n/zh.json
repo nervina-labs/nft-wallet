@@ -79,6 +79,10 @@
       "card-back": "该秘宝卡背设置有信息，仅持有人可见",
       "show-detail": "查看详情"
     },
+    "search": {
+      "search-placeholder": "搜索秘宝名称/创作者",
+      "cancel": "取消"
+    },
     "login": {
       "title": "秘宝账户",
       "select": "选择您的登录方式",
