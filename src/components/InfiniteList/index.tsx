@@ -172,11 +172,13 @@ export function InfiniteList<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
+  const loaderEl = useMemo(() => loader || <Loading />, [loader])
+
   return (
     <>
-      {isRefetching ? <Loading /> : null}
+      {isRefetching ? loaderEl : null}
       {data === undefined && status === 'loading' ? (
-        <Loading />
+        loaderEl
       ) : (
         <InfiniteScroll
           pullDownToRefresh={!IS_WEXIN}
@@ -200,7 +202,7 @@ export function InfiniteList<
           next={fetchNextPage}
           hasMore={hasNextPage === true}
           scrollThreshold={scrollThreshold}
-          loader={loader ?? <Loading />}
+          loader={loaderEl}
           endMessage={
             <ListDesciption>
               {dataLength <= 5 ? ' ' : noMoreElement}

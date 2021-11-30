@@ -81,7 +81,11 @@
     },
     "search": {
       "search-placeholder": "Search by Digital Collection or Creator",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "issuer": "Issuer",
+      "token-class": "Digital Collection",
+      "more-token-class": "More Digital Collection",
+      "more-issuer": "More Issuer"
     },
     "login": {
       "title": "MIBAO",

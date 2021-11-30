@@ -34,6 +34,7 @@ export const Search: React.FC<SearchProps> = ({
 }) => {
   const { t } = useTranslation('translations')
   const placeholderText = t('search.search-placeholder')
+  const hasCleanIcon = onClean && !hiddenCleanButton
 
   return (
     <Flex
@@ -60,6 +61,7 @@ export const Search: React.FC<SearchProps> = ({
           bg="none"
           border="none"
           p="0"
+          pr={hasCleanIcon ? '28px' : undefined}
           _placeholder={{
             color: 'rgba(119, 126, 144, 0.5)',
           }}
@@ -70,7 +72,7 @@ export const Search: React.FC<SearchProps> = ({
           {...props}
         />
       )}
-      {onClean && !hiddenCleanButton ? (
+      {hasCleanIcon ? (
         <Center
           as="a"
           position="absolute"

@@ -6,6 +6,8 @@ import {
   NFTDetail,
   NFTTransaction,
   ProductState,
+  SearchOptions,
+  SearchResponse,
   SpecialCategories,
   Transaction,
   TransactionLogResponse,
@@ -838,5 +840,14 @@ export class ServerWalletAPI {
         type: 'base64',
       },
     })
+  }
+
+  async search<O extends SearchOptions>(keyword: string, options?: O) {
+    return await this.axios.get<SearchResponse<O>>(
+      `/api/wallet/v1/searches/${keyword}`,
+      {
+        params: options,
+      }
+    )
   }
 }
