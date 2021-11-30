@@ -49,7 +49,7 @@ export const Issuer: React.FC<{ keyword: string }> = ({ keyword }) => {
       columnCount={2}
       renderItems={(group, i) => {
         return group.issuer_list.map((issuer, j: number) => (
-          <LinkContainer to={`/class/${issuer.uuid}`}>
+          <LinkContainer to={`/issuer/${issuer.uuid}`}>
             <AvatarWithName
               key={`${i}-${j}`}
               name={issuer.name}

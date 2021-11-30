@@ -47,7 +47,7 @@ export const NoType: React.FC<{ keyword: string }> = ({ keyword }) => {
           <Title>{t('search.issuer')}</Title>
           <VStack spacing="20px">
             {data?.issuer_list.map((issuer, i) => (
-              <LinkContainer to={`/class/${issuer.uuid}`}>
+              <LinkContainer to={`/issuer/${issuer.uuid}`}>
                 <Issuer
                   key={i}
                   name={issuer.name}
