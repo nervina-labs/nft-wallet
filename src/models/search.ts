@@ -7,8 +7,7 @@ export type SearchListMetaType = 'issuer' | 'token' | null
 
 export interface SearchOptions extends PaginationOptions {
   type?: SearchType
-  isIssuerId?: boolean
-  isTokenClassId?: boolean
+  isUuid?: boolean
 }
 
 export interface SearchIssuer extends VipInfo {
@@ -46,18 +45,12 @@ export interface SearchTokenClassIdReturn {
   }
 }
 
-interface IsSearchTokenClassId {
-  isIssuerId: true
+export type SearchUuidReturn = SearchIssuerIdReturn | SearchTokenClassIdReturn
+
+interface IsSearchUuid {
+  isUuid: true
 }
 
-interface IsSearchIssuerId {
-  isTokenClassId: true
-}
-
-export type SearchResponse<
-  O extends SearchOptions
-> = O extends IsSearchTokenClassId
-  ? SearchTokenClassIdReturn
-  : O extends IsSearchIssuerId
-  ? SearchIssuerIdReturn
+export type SearchResponse<O extends SearchOptions> = O extends IsSearchUuid
+  ? SearchUuidReturn
   : SearchReturn
