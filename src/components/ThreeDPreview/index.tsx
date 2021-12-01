@@ -118,7 +118,6 @@ const ThreeDPreviewWithLoading: React.FC<{
   }, [])
 
   const [isClosedTips, setIsClosedTips] = useState(false)
-  console.log(isClosedTips)
 
   return (
     <ThreeDPreviewContainer>
