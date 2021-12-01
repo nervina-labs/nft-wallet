@@ -77,7 +77,11 @@
       "description": "View and manage your Digital Collections anytime, anywhere",
       "img-lost": "Image lost",
       "card-back": "Include card back content which can only be revealed by the owner of this collection",
-      "show-detail": "Show Detail"
+      "show-detail": "Show Detail",
+      "3d": {
+        "tips-title": "TIPS: ",
+        "tips-desc": "Click on the  [...] , use an external browser to open the page for a better browsing experience!"
+      }
     },
     "login": {
       "title": "MIBAO",

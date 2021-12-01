@@ -77,7 +77,11 @@
       "description": "随时随地查看并管理你的秘宝",
       "img-lost": "图片失联",
       "card-back": "该秘宝卡背设置有信息，仅持有人可见",
-      "show-detail": "查看详情"
+      "show-detail": "查看详情",
+      "3d": {
+        "tips-title": "温馨提示：",
+        "tips-desc": "点击右上角【...】使用外部浏览器打开，获得更好浏览体验！"
+      }
     },
     "login": {
       "title": "秘宝账户",
