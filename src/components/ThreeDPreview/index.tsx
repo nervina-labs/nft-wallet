@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import '@google/model-viewer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ReactComponent as ThreeDLoadingSvg } from '../../assets/svg/loading.svg'
+import { IS_ANDROID, IS_WEXIN } from '../../constants'
 
 interface ThreeDPreviewProps {
   src: string
@@ -103,6 +104,23 @@ const ThreeDPreviewWithLoading: React.FC<{
 
   return (
     <ThreeDPreviewContainer>
+      {IS_ANDROID && IS_WEXIN ? (
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          w="100%"
+          h="48px"
+          lineHeight="48px"
+          textAlign="center"
+          bg="rgba(0, 0, 0, 0.2)"
+          color="white"
+          fontSize="13px"
+        >
+          使用外部浏览器浏览体验更佳
+        </Box>
+      ) : null}
+
       {src ? (
         <ThreeDPreview src={src} onLoad={onLoad} onError={onError} />
       ) : null}
