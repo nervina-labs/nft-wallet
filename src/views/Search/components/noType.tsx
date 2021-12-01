@@ -7,10 +7,8 @@ import {
   VStack,
 } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from 'react-query'
-import { useAPI } from '../../../hooks/useAccount'
-import { Query, SearchResponse } from '../../../models'
 import { isSupportWebp } from '../../../utils'
+import { useSearchAPI } from '../hooks/useSearchAPI'
 import { useType } from '../hooks/useType'
 import { LinkContainer } from './linkContainer'
 import { Loading } from './loading'
@@ -18,18 +16,8 @@ import { NoData } from './noData'
 import { Title } from './title'
 
 export const NoType: React.FC<{ keyword: string }> = ({ keyword }) => {
+  const { data, isLoading } = useSearchAPI(keyword)
   const { t } = useTranslation('translations')
-  const api = useAPI()
-  const { data, isLoading } = useQuery(
-    [Query.Search, keyword],
-    async (): Promise<SearchResponse<{}>> => {
-      const { data } = await api.search(keyword)
-      return data
-    },
-    {
-      enabled: !!keyword,
-    }
-  )
   const [, setType] = useType()
   const isEmpty =
     !isLoading &&
