@@ -1,18 +1,10 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Issuer,
-  NftImage,
-  VStack,
-} from '@mibao-ui/components'
+import { Box, Button } from '@mibao-ui/components'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SearchType } from '../../../models'
-import { isSupportWebp } from '../../../utils'
 import { useNoTypeSearchAPI } from '../hooks/useSearchAPI'
 import { useType } from '../hooks/useType'
-import { LinkContainer } from './linkContainer'
+import { IssuerItem, TokenClassItem } from './item'
 import { Loading } from './loading'
 import { NoData } from './noData'
 import { Title } from './title'
@@ -21,6 +13,12 @@ export const NoType: React.FC<{ keyword: string }> = ({ keyword }) => {
   const { data, isLoading } = useNoTypeSearchAPI(keyword)
   const { t } = useTranslation('translations')
   const [, setType] = useType()
+  const goToSearchIssuer = useCallback(() => {
+    setType(SearchType.Issuer)
+  }, [setType])
+  const goToSearchTokenClass = useCallback(() => {
+    setType(SearchType.TokenClass)
+  }, [setType])
   const isEmpty =
     !isLoading &&
     !data?.issuersData.issuers.length &&
@@ -31,12 +29,6 @@ export const NoType: React.FC<{ keyword: string }> = ({ keyword }) => {
   const hasTokenClasses =
     data?.tokenClassesData.token_classes &&
     data?.tokenClassesData.token_classes.length > 0
-  const goToSearchIssuer = useCallback(() => {
-    setType(SearchType.Issuer)
-  }, [setType])
-  const goToSearchTokenClass = useCallback(() => {
-    setType(SearchType.TokenClass)
-  }, [setType])
 
   return (
     <>
@@ -46,24 +38,11 @@ export const NoType: React.FC<{ keyword: string }> = ({ keyword }) => {
       {hasIssuers ? (
         <>
           <Title>{t('search.issuer')}</Title>
-          <VStack>
+          <Box>
             {data?.issuersData.issuers.map((issuer, i) => (
-              <LinkContainer to={`/issuer/${issuer.uuid}`} key={i}>
-                <Issuer
-                  name={issuer.name}
-                  src={issuer.avatar_url === null ? '' : issuer.avatar_url}
-                  verifiedTitle={issuer.verified_info?.verified_title}
-                  isVerified={issuer.verified_info?.is_verified}
-                  webp={isSupportWebp()}
-                  resizeScale={100}
-                  size="48px"
-                  containerProps={{
-                    w: '100%',
-                  }}
-                />
-              </LinkContainer>
+              <IssuerItem key={i} issuer={issuer} />
             ))}
-          </VStack>
+          </Box>
           <Button
             as="a"
             variant="link"
@@ -83,18 +62,11 @@ export const NoType: React.FC<{ keyword: string }> = ({ keyword }) => {
       {hasTokenClasses ? (
         <>
           <Title mt="32px">{t('search.token-class')}</Title>
-          <VStack spacing="20px">
+          <Box>
             {data?.tokenClassesData.token_classes?.map((tokenClass, i) => (
-              <LinkContainer to={`/class/${tokenClass.uuid}`} key={i}>
-                <Flex w="full" alignItems="center">
-                  <NftImage src={tokenClass.bg_image_url} w="48px" />
-                  <Box fontSize="14px" ml="16px">
-                    {tokenClass.name}
-                  </Box>
-                </Flex>
-              </LinkContainer>
+              <TokenClassItem tokenClass={tokenClass} key={i} />
             ))}
-          </VStack>
+          </Box>
           <Button
             as="a"
             variant="link"
