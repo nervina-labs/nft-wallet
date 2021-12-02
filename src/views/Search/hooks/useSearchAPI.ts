@@ -21,19 +21,24 @@ function IsIssuersResponse<
   return field in data
 }
 
-function useRedirectToTarget<T extends SearchType>(keyword: string, type: T) {
+function useRedirectToTarget(keyword: string) {
   const { push } = useHistory()
   return useCallback(
     (data: SearchIssuersResponse | SearchTokenClassesResponse) => {
+      console.log(isIssuerId(keyword), isTokenClassId(keyword))
       if (!isIssuerId(keyword) && !isTokenClassId(keyword)) {
         return false
       }
-      if (IsIssuersResponse<SearchIssuersResponse>(data, 'issuers')) {
+      if (
+        IsIssuersResponse<SearchIssuersResponse>(data, 'issuers') &&
+        data.issuers.length === 1
+      ) {
         push(`/issuer/${data.issuers[0].uuid}`)
         return true
       }
       if (
-        IsIssuersResponse<SearchTokenClassesResponse>(data, 'token_classes')
+        IsIssuersResponse<SearchTokenClassesResponse>(data, 'token_classes') &&
+        data.token_classes.length === 1
       ) {
         push(`/class/${data.token_classes[0].uuid}`)
         return true
@@ -49,7 +54,7 @@ export function useSearchAPICallback<T extends SearchType>(
   type: T
 ) {
   const api = useAPI()
-  const tryRedirectToTarget = useRedirectToTarget(keyword, type)
+  const tryRedirectToTarget = useRedirectToTarget(keyword)
   const queryFn = useCallback(
     async ({ pageParam = 1 }) => {
       const { data } = await api.search(keyword, type, {
@@ -65,6 +70,7 @@ export function useSearchAPICallback<T extends SearchType>(
 
 export function useNoTypeSearchAPI(keyword: string) {
   const api = useAPI()
+  const tryRedirectToTarget = useRedirectToTarget(keyword)
   return useQuery(
     [Query.Search, keyword],
     async () => {
@@ -82,6 +88,8 @@ export function useNoTypeSearchAPI(keyword: string) {
           limit: NO_TYPE_LIMIT,
         }
       )
+      tryRedirectToTarget(issuersData)
+      tryRedirectToTarget(tokenClassesData)
       return {
         issuersData,
         tokenClassesData,
