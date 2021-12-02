@@ -4,77 +4,91 @@ import { useHistory } from 'react-router-dom'
 import { useAPI } from '../../../hooks/useAccount'
 import {
   Query,
+  SearchIssuersResponse,
+  SearchTokenClassesResponse,
   SearchType,
-  SearchUuidReturn,
-  SearchIssuerIdReturn,
-  SearchTokenClassIdReturn,
-  SearchReturn,
 } from '../../../models'
-import { isUuid } from '../../../utils'
+import { isIssuerId, isTokenClassId } from '../../../utils'
 
-function isSearchUuid<R extends SearchUuidReturn | SearchReturn>(
-  data: SearchUuidReturn | SearchReturn,
-  field: keyof R
-): data is R {
+const NO_TYPE_LIMIT = 3
+
+function IsIssuersResponse<
+  D extends SearchIssuersResponse | SearchTokenClassesResponse
+>(
+  data: SearchIssuersResponse | SearchTokenClassesResponse,
+  field: keyof D
+): data is D {
   return field in data
 }
 
-function isSearchIssuerIdReturn<R extends SearchUuidReturn>(
-  data: SearchUuidReturn,
-  field: keyof R
-): data is R {
-  return field in data
-}
-
-function useRedirectToTarget() {
+function useRedirectToTarget<T extends SearchType>(keyword: string, type: T) {
   const { push } = useHistory()
   return useCallback(
-    (data: SearchUuidReturn | SearchReturn) => {
-      if (
-        isSearchUuid(data, 'issuer') &&
-        isSearchIssuerIdReturn<SearchIssuerIdReturn>(data, 'issuer')
-      ) {
-        push(`/issuer/${data.issuer.uuid}`)
+    (data: SearchIssuersResponse | SearchTokenClassesResponse) => {
+      if (!isIssuerId(keyword) && !isTokenClassId(keyword)) {
+        return false
+      }
+      if (IsIssuersResponse<SearchIssuersResponse>(data, 'issuers')) {
+        push(`/issuer/${data.issuers[0].uuid}`)
         return true
       }
       if (
-        isSearchUuid(data, 'token_class') &&
-        isSearchIssuerIdReturn<SearchTokenClassIdReturn>(data, 'token_class')
+        IsIssuersResponse<SearchTokenClassesResponse>(data, 'token_classes')
       ) {
-        push(`/class/${data.token_class.uuid}`)
+        push(`/class/${data.token_classes[0].uuid}`)
         return true
       }
       return false
     },
-    [push]
+    [keyword, push]
   )
 }
 
-export function useSearchAPICallback(
+export function useSearchAPICallback<T extends SearchType>(
   keyword: string,
-  options?: { type?: SearchType }
+  type: T
 ) {
   const api = useAPI()
-  const tryRedirectToTarget = useRedirectToTarget()
+  const tryRedirectToTarget = useRedirectToTarget(keyword, type)
   const queryFn = useCallback(
     async ({ pageParam = 1 }) => {
-      const isResultUuid = isUuid(keyword)
-      const { data } = await api.search(keyword, {
-        type: options?.type,
+      const { data } = await api.search(keyword, type, {
         page: pageParam,
-        isUuid: isResultUuid,
       })
       tryRedirectToTarget(data)
       return data
     },
-    [api, keyword, options?.type, tryRedirectToTarget]
+    [api, keyword, tryRedirectToTarget, type]
   )
   return queryFn
 }
 
-export function useSearchAPI(keyword: string, options?: { type?: SearchType }) {
-  const queryFn = useSearchAPICallback(keyword, options)
-  return useQuery([Query.Search, keyword], queryFn, {
-    enabled: !!keyword,
-  })
+export function useNoTypeSearchAPI(keyword: string) {
+  const api = useAPI()
+  return useQuery(
+    [Query.Search, keyword],
+    async () => {
+      const { data: issuersData } = await api.search(
+        keyword,
+        SearchType.Issuer,
+        {
+          limit: NO_TYPE_LIMIT,
+        }
+      )
+      const { data: tokenClassesData } = await api.search(
+        keyword,
+        SearchType.TokenClass,
+        {
+          limit: NO_TYPE_LIMIT,
+        }
+      )
+      return {
+        issuersData,
+        tokenClassesData,
+      }
+    },
+    {
+      enabled: !!keyword,
+    }
+  )
 }

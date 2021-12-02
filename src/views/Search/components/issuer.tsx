@@ -1,16 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
-import { Query } from '../../../models'
-import { NoData } from './noData'
+import { Query, SearchType } from '../../../models'
 import { Issuer as AvatarWithName } from '@mibao-ui/components'
 import { isSupportWebp } from '../../../utils'
-import { Loading } from './loading'
 import { LinkContainer } from './linkContainer'
 import { useSearchAPICallback } from '../hooks/useSearchAPI'
+import { Loading } from './loading'
+import { NoData } from './noData'
 
 export const Issuer: React.FC<{ keyword: string }> = ({ keyword }) => {
   const { t } = useTranslation('translations')
-  const queryFn = useSearchAPICallback(keyword, { type: 'issuer' })
+  const queryFn = useSearchAPICallback(keyword, SearchType.Issuer)
 
   return (
     <InfiniteList
@@ -21,17 +21,12 @@ export const Issuer: React.FC<{ keyword: string }> = ({ keyword }) => {
       loader={<Loading />}
       noMoreElement={t('common.actions.pull-to-down')}
       calcDataLength={(data) =>
-        data?.pages.reduce(
-          (acc, token) => token?.issuer_list?.length + acc,
-          0
-        ) ?? 0
+        data?.pages.reduce((acc, token) => token?.issuers?.length + acc, 0) ?? 0
       }
-      columnCount={2}
       renderItems={(group, i) => {
-        return group?.issuer_list?.map((issuer, j: number) => (
-          <LinkContainer to={`/issuer/${issuer.uuid}`}>
+        return group?.issuers?.map((issuer, j: number) => (
+          <LinkContainer to={`/issuer/${issuer.uuid}`} key={`${i}-${j}`}>
             <AvatarWithName
-              key={`${i}-${j}`}
               name={issuer.name}
               src={issuer.avatar_url === null ? '' : issuer.avatar_url}
               verifiedTitle={issuer.verified_info?.verified_title}
@@ -42,7 +37,6 @@ export const Issuer: React.FC<{ keyword: string }> = ({ keyword }) => {
               containerProps={{
                 w: '100%',
               }}
-              mb="20px"
             />
           </LinkContainer>
         ))

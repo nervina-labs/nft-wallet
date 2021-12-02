@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/indent */
-import { ListMeta, PaginationOptions } from '.'
 import { VipInfo } from './class-list'
+import { ListMeta, PaginationOptions } from '.'
 
-export type SearchType = 'issuer' | 'token_class'
-export type SearchListMetaType = 'issuer' | 'token' | null
-
-export interface SearchOptions extends PaginationOptions {
-  type?: SearchType
-  isUuid?: boolean
+export enum SearchType {
+  Issuer = 'issuer',
+  TokenClass = 'token_class',
 }
+
+export interface SearchOptions extends PaginationOptions {}
 
 export interface SearchIssuer extends VipInfo {
   uuid: string
@@ -24,33 +23,22 @@ export interface SearchTokenClass {
 }
 
 export interface SearchListMeta extends ListMeta {
-  type: SearchListMetaType
+  type: SearchType
 }
 
-export interface SearchReturn {
+interface SearchResponseMeta {
   meta: SearchListMeta
-  issuer_list: SearchIssuer[]
-  token_class_list: SearchTokenClass[]
 }
 
-export interface SearchIssuerIdReturn {
-  issuer: {
-    uuid: string
-  }
+export interface SearchIssuersResponse extends SearchResponseMeta {
+  issuers: SearchIssuer[]
+}
+export interface SearchTokenClassesResponse extends SearchResponseMeta {
+  token_classes: SearchTokenClass[]
 }
 
-export interface SearchTokenClassIdReturn {
-  token_class: {
-    uuid: string
-  }
-}
-
-export type SearchUuidReturn = SearchIssuerIdReturn | SearchTokenClassIdReturn
-
-interface IsSearchUuid {
-  isUuid: true
-}
-
-export type SearchResponse<O extends SearchOptions> = O extends IsSearchUuid
-  ? SearchUuidReturn
-  : SearchReturn
+export type SearchResponse<T extends SearchType> = T extends SearchType.Issuer
+  ? SearchIssuersResponse
+  : T extends SearchType.TokenClass
+  ? SearchTokenClassesResponse
+  : never

@@ -4,4 +4,5 @@ import styled from 'styled-components'
 export const LinkContainer = styled(Link)`
   width: 100%;
   display: block;
+  margin-bottom: 20px;
 `

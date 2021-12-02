@@ -8,6 +8,7 @@ import {
   ProductState,
   SearchOptions,
   SearchResponse,
+  SearchType,
   SpecialCategories,
   Transaction,
   TransactionLogResponse,
@@ -842,12 +843,17 @@ export class ServerWalletAPI {
     })
   }
 
-  async search<O extends SearchOptions>(keyword: string, options?: O) {
-    return await this.axios.get<SearchResponse<O>>(
-      `/api/wallet/v1/searches/${keyword}`,
-      {
-        params: options,
-      }
-    )
+  async search<T extends SearchType>(
+    keyword: string,
+    type: T,
+    options?: SearchOptions
+  ): Promise<AxiosResponse<SearchResponse<T>>> {
+    return await this.axios.get<SearchResponse<T>>('/searches', {
+      params: {
+        keyword,
+        type,
+        ...options,
+      },
+    })
   }
 }

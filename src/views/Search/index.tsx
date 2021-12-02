@@ -10,8 +10,12 @@ import { useType } from './hooks/useType'
 import { TokenClass } from './components/tokenClass'
 import { Back } from './components/back'
 import { Issuer } from './components/issuer'
+import { SearchType } from '../../models'
 
-const TYPE_SET = new Set(['token_class', 'issuer'])
+const TYPE_SET = new Set<SearchType | ''>([
+  SearchType.TokenClass,
+  SearchType.Issuer,
+])
 
 export const Search: React.FC = () => {
   const { t } = useTranslation('translations')
@@ -20,6 +24,7 @@ export const Search: React.FC = () => {
   const searchKeyword = useDebounce(keyword, 300)
   const [type, setType] = useType()
   const isNoType = !TYPE_SET.has(type)
+  console.log(type)
 
   return (
     <MainContainer>
@@ -52,8 +57,10 @@ export const Search: React.FC = () => {
       </Flex>
 
       <Box w="full" mt="28px" px="20px" userSelect="none">
-        {type === 'token_class' ? <TokenClass keyword={searchKeyword} /> : null}
-        {type === 'issuer' ? <Issuer keyword={searchKeyword} /> : null}
+        {type === SearchType.TokenClass ? (
+          <TokenClass keyword={searchKeyword} />
+        ) : null}
+        {type === SearchType.Issuer ? <Issuer keyword={searchKeyword} /> : null}
         {isNoType ? <NoType keyword={searchKeyword} /> : null}
       </Box>
     </MainContainer>
