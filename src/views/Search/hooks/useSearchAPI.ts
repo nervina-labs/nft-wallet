@@ -25,7 +25,6 @@ function useRedirectToTarget(keyword: string) {
   const { push } = useHistory()
   return useCallback(
     (data: SearchIssuersResponse | SearchTokenClassesResponse) => {
-      console.log(isIssuerId(keyword), isTokenClassId(keyword))
       if (!isIssuerId(keyword) && !isTokenClassId(keyword)) {
         return false
       }
