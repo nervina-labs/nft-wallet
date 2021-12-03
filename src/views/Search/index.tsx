@@ -39,7 +39,7 @@ export const Search: React.FC = () => {
         py="8px"
         alignItems="center"
         userSelect="none"
-        position="fixed"
+        position="sticky"
         top="0"
         bg="white"
         zIndex={5}
@@ -70,7 +70,6 @@ export const Search: React.FC = () => {
           {t('search.cancel')}
         </Button>
       </Flex>
-      <Box h="48px" />
 
       <Box w="full" mt="28px" px="20px" userSelect="none">
         {isNoType ? (
