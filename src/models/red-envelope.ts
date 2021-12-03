@@ -1,0 +1,41 @@
+export enum RedEnvelopeState {
+  Ongoing = 'ongoing',
+  Closed = 'closed',
+  Done = 'done',
+  Expired = 'expired',
+}
+
+export enum RuleType {
+  password = 'password',
+  puzzle = 'puzzle',
+}
+
+export interface RewardRecord {
+  address: string
+  rewarded_at: string
+  is_hidden_model: boolean
+}
+
+export interface RedEnvelopeResponse {
+  uuid: string
+  name: string
+  cover_image_url: string
+  greegings: string
+  promotion_copy: string
+  promotion_link: string
+  state: RedEnvelopeState
+  progress: {
+    claimed: number
+    total: number
+  }
+  user_claimed: boolean
+  issuer_info: {
+    name: string
+    email: string
+    uuid: string
+  }
+  rule_info: {
+    rule_type: RuleType
+  }
+  reward_records: RewardRecord[]
+}

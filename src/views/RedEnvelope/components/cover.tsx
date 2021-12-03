@@ -20,9 +20,10 @@ const RiddleTitle = styled(Flex)`
 
 export interface CoverProps {
   isRiddle?: boolean
+  open?: () => void
 }
 
-export const Cover: React.FC<CoverProps> = ({ isRiddle }) => {
+export const Cover: React.FC<CoverProps> = ({ isRiddle, open }) => {
   const [inputValue, setInputValue] = useState('')
   return (
     <Flex
@@ -82,6 +83,7 @@ export const Cover: React.FC<CoverProps> = ({ isRiddle }) => {
         }}
         size="lg"
         fontSize="16px"
+        onClick={open}
       >
         马上领取
       </Button>

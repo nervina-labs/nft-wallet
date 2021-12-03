@@ -5,7 +5,9 @@ import { MainContainer } from '../../styles'
 import DEFAULT_RED_ENVELOPE_COVER_PATH from '../../assets/svg/red-envelope-cover.svg'
 import { useThemeColor } from '../../hooks/useThemeColor'
 import { useInnerSize } from '../../hooks/useInnerSize'
+import { useState } from 'react'
 import { Cover } from './components/cover'
+import { Records } from './components/records'
 
 const Container = styled(MainContainer)`
   background-color: #e15f4c;
@@ -18,21 +20,21 @@ const Container = styled(MainContainer)`
 export const RedEnvelope: React.FC = () => {
   useThemeColor('#E94030')
   const { height } = useInnerSize()
+  const [isOpened, setIsOpened] = useState(false)
 
   return (
     <Container minH={height}>
       <Box
         w="100%"
-        h="30%"
+        h={isOpened ? '80px' : '30%'}
+        flex={isOpened ? undefined : 1}
+        minH={isOpened ? '80px' : '200px'}
         overflow="hidden"
         position="sticky"
         top="0"
-        transition="200ms"
+        transition="300ms"
         zIndex={5}
-        flex="1"
-        minH="200px"
         transform="translate3d(0, 0, 0)"
-        perspective="1000"
       >
         <AspectRatio
           rounded="full"
@@ -57,7 +59,7 @@ export const RedEnvelope: React.FC = () => {
           </Flex>
         </AspectRatio>
       </Box>
-      <Cover />
+      {isOpened ? <Records /> : <Cover open={() => setIsOpened(true)} />}
     </Container>
   )
 }
