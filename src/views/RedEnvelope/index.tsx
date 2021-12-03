@@ -1,18 +1,39 @@
 import styled from '@emotion/styled'
-import { AspectRatio, Box } from '@mibao-ui/components'
-import { Flex, Image } from '@chakra-ui/react'
+import { AspectRatio } from '@mibao-ui/components'
+import { Box, Flex, Image } from '@chakra-ui/react'
 import { MainContainer } from '../../styles'
 import DEFAULT_RED_ENVELOPE_COVER_PATH from '../../assets/svg/red-envelope-cover.svg'
+import { useThemeColor } from '../../hooks/useThemeColor'
+import { useInnerSize } from '../../hooks/useInnerSize'
+import { Cover } from './components/cover'
 
 const Container = styled(MainContainer)`
   background-color: #e15f4c;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: 200ms;
+  position: relative;
 `
 
 export const RedEnvelope: React.FC = () => {
+  useThemeColor('#E94030')
+  const { height } = useInnerSize()
+
   return (
-    <Container>
-      <Box w="100%" h="400px" overflow="hidden" position="relative">
+    <Container minH={height}>
+      <Box
+        w="100%"
+        h="30%"
+        overflow="hidden"
+        position="sticky"
+        top="0"
+        transition="200ms"
+        zIndex={5}
+        flex="1"
+        minH="200px"
+        transform="translate3d(0, 0, 0)"
+        perspective="1000"
+      >
         <AspectRatio
           rounded="full"
           position="absolute"
@@ -28,14 +49,15 @@ export const RedEnvelope: React.FC = () => {
           <Flex>
             <Image
               src={DEFAULT_RED_ENVELOPE_COVER_PATH}
-              w="33.3%"
-              h="full"
-              m="auto"
+              w="35%"
+              h="35%"
+              mt="auto"
               objectFit="cover"
             />
           </Flex>
         </AspectRatio>
       </Box>
+      <Cover />
     </Container>
   )
 }
