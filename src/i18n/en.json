@@ -2,7 +2,7 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
-      "login": "Login",
+      "login": "Connect to the identity manager",
       "actions": {
         "confirm": "Confirm",
         "cancel": "Cancel",
@@ -85,9 +85,10 @@
     },
     "login": {
       "title": "MIBAO",
-      "select": "Log in with",
+      "select": "Select your connection method",
       "connect": {
         "unipass": "Connect to UniPass",
+        "or-use-email": "(or Register by Email)",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
         "connect": "Connect to"

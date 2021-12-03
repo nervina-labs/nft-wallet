@@ -2,7 +2,7 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
-      "login": "登录",
+      "login": "连接身份管理器",
       "actions": {
         "confirm": "确认",
         "cancel": "取消",
@@ -85,9 +85,10 @@
     },
     "login": {
       "title": "秘宝账户",
-      "select": "选择您的登录方式",
+      "select": "选择您的连接方式",
       "connect": {
         "unipass": "连接 UniPass",
+        "or-use-email": "（或通过Email注册）",
         "metamask": "连接以太坊环境",
         "wallet-connect": "连接 Wallet Connect",
         "connect": "连接"
