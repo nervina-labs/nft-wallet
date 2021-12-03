@@ -52,6 +52,7 @@ export const Search: React.FC = () => {
           hiddenCleanButton={!keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onClean={() => setKeyword('')}
+          fontSize="14px"
         />
         <Button
           as="a"
@@ -66,6 +67,7 @@ export const Search: React.FC = () => {
           w="auto"
           flexShrink={0}
           color="black"
+          fontSize="14px"
         >
           {t('search.cancel')}
         </Button>
