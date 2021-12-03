@@ -88,7 +88,7 @@
       "select": "选择您的连接方式",
       "connect": {
         "unipass": "连接 UniPass",
-        "or-use-email": "（或通过Email注册）",
+        "or-use-email": "（或通过 Email 注册）",
         "metamask": "连接以太坊环境",
         "wallet-connect": "连接 Wallet Connect",
         "connect": "连接"
@@ -293,7 +293,7 @@
     },
     "help": {
       "title": "帮助中心",
-      "question": "对 UniPass/以太坊环境有问题？"
+      "question": "对Unipass环境或以太坊环境有问题？"
     },
     "guide": {
       "one": {
