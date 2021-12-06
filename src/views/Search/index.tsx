@@ -105,7 +105,7 @@ export const Search: React.FC = () => {
           <InfiniteList
             enableQuery={!!keyword}
             queryFn={queryFn}
-            queryKey={[Query.Issuers, keyword]}
+            queryKey={[Query.Issuers, keyword, type]}
             loader={<Loading />}
             emptyElement={keyword ? <NoData /> : ''}
             noMoreElement={''}
