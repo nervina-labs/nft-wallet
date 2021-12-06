@@ -15,6 +15,8 @@ import { NoData } from './components/noData'
 import { Loading } from './components/loading'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { IssuerItem, TokenClassItem } from './components/item'
+import { Title } from './components/title'
+import { useMemo } from 'react'
 
 const TYPE_SET = new Set<SearchType | ''>([
   SearchType.TokenClass,
@@ -30,6 +32,15 @@ export const Search: React.FC = () => {
   const queryFn = useSearchAPICallback(keyword, type || SearchType.Issuer)
   useScrollRestoration()
   const isNoType = !TYPE_SET.has(type)
+  const placeholderText = useMemo(() => {
+    if (type === SearchType.Issuer) {
+      return t('search.search-placeholder-issuer')
+    }
+    if (type === SearchType.TokenClass) {
+      return t('search.search-placeholder-token-class')
+    }
+    return t('search.search-placeholder')
+  }, [t, type])
 
   return (
     <MainContainer position="relative">
@@ -53,6 +64,7 @@ export const Search: React.FC = () => {
           onChange={(e) => setKeyword(e.target.value)}
           onClean={() => setKeyword('')}
           fontSize="14px"
+          placeholder={placeholderText}
         />
         <Button
           as="a"
@@ -73,7 +85,20 @@ export const Search: React.FC = () => {
         </Button>
       </Flex>
 
-      <Box w="full" mt="28px" px="20px" userSelect="none">
+      <Box
+        w="full"
+        mt="15px"
+        px="20px"
+        userSelect="none"
+        pb="calc(20px + var(--safe-area-inset-bottom))"
+      >
+        {!isNoType ? (
+          <Title>
+            {type === SearchType.Issuer ? t('search.issuer') : null}
+            {type === SearchType.TokenClass ? t('search.token-class') : null}
+          </Title>
+        ) : null}
+
         {isNoType ? (
           <NoType keyword={searchKeyword} />
         ) : (
@@ -83,7 +108,7 @@ export const Search: React.FC = () => {
             queryKey={[Query.Issuers, keyword]}
             loader={<Loading />}
             emptyElement={keyword ? <NoData /> : ''}
-            noMoreElement={t('common.actions.pull-to-down')}
+            noMoreElement={''}
             calcDataLength={(data) =>
               data?.pages.reduce((acc, token) => {
                 if ('issuers' in token) {

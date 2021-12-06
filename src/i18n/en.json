@@ -85,6 +85,8 @@
     },
     "search": {
       "search-placeholder": "Search by Digital Collection or Creator",
+      "search-placeholder-issuer": "Search Creator",
+      "search-placeholder-token-class": "Search Digital Collection",
       "cancel": "Cancel",
       "issuer": "Issuer",
       "token-class": "Digital Collection",

@@ -43,19 +43,21 @@ export const NoType: React.FC<{ keyword: string }> = ({ keyword }) => {
               <IssuerItem key={i} issuer={issuer} />
             ))}
           </Box>
-          <Button
-            as="a"
-            variant="link"
-            w="100%"
-            fontSize="12px"
-            color="primary.500"
-            mt="25px"
-            textAlign="center"
-            textDecoration="underline"
-            onClick={goToSearchIssuer}
-          >
-            {t('search.more-issuer')}
-          </Button>
+          {data && data.issuersData.meta.total_count > 3 ? (
+            <Button
+              as="a"
+              variant="link"
+              w="100%"
+              fontSize="12px"
+              color="primary.500"
+              mt="25px"
+              textAlign="center"
+              textDecoration="underline"
+              onClick={goToSearchIssuer}
+            >
+              {t('search.more-issuer')}
+            </Button>
+          ) : null}
         </>
       ) : null}
 
@@ -67,19 +69,22 @@ export const NoType: React.FC<{ keyword: string }> = ({ keyword }) => {
               <TokenClassItem tokenClass={tokenClass} key={i} />
             ))}
           </Box>
-          <Button
-            as="a"
-            variant="link"
-            w="100%"
-            fontSize="12px"
-            color="primary.500"
-            mt="25px"
-            textAlign="center"
-            textDecoration="underline"
-            onClick={goToSearchTokenClass}
-          >
-            {t('search.more-token-class')}
-          </Button>
+
+          {data && data.tokenClassesData.meta.total_count > 3 ? (
+            <Button
+              as="a"
+              variant="link"
+              w="100%"
+              fontSize="12px"
+              color="primary.500"
+              mt="25px"
+              textAlign="center"
+              textDecoration="underline"
+              onClick={goToSearchTokenClass}
+            >
+              {t('search.more-token-class')}
+            </Button>
+          ) : null}
         </>
       ) : null}
     </>

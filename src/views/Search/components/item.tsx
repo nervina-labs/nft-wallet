@@ -7,7 +7,9 @@ import { isSupportWebp } from '../../../utils'
 export const LinkContainer = styled(Link)`
   width: 100%;
   display: block;
-  margin-bottom: 20px;
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
 `
 
 export const IssuerItem: React.FC<{ issuer: SearchIssuer }> = ({ issuer }) => {
