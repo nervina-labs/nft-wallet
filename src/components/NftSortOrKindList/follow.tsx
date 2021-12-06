@@ -125,7 +125,7 @@ export const Follow: React.FC<{
   if (!isAuthenticated) {
     return (
       <Center>
-        <Box textAlign="center" mt="100px">
+        <Box textAlign="center" mt="100px" px="20px" w="full">
           <StyledEmptySvg />
           <Box color="#777E90" fontSize="14px">
             {t('follow.login.desc-1')}

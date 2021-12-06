@@ -616,8 +616,8 @@
       "count": "• Following {{count}} creators",
       "end": "The end~",
       "login": {
-        "desc-1": "Oops ~ You have not connected to your identity manager",
-        "desc-2": "Please connect to MIBAO and enjoy the collections you following",
+        "desc-1": "Oops ~ You have not connected to your identity manager, please connect to MIBAO and enjoy the collections you following",
+        "desc-2": "",
         "login": "Connect"
       },
       "no-data": "You haven't followed any creators",
