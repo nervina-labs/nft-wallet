@@ -20,6 +20,11 @@ import { ReactComponent as UnFollowSvg } from '../../assets/svg/unfollow.svg'
 import { isSupportWebp } from '../../utils'
 import { RoutePath } from '../../routes'
 import { useTrackEvent } from '../../hooks/useTrack'
+import styled from '@emotion/styled'
+
+const StyledEmptySvg = styled(EmptySvg)`
+  margin: 0 auto;
+`
 
 const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
   const { t, i18n } = useTranslation('translations')
@@ -121,7 +126,7 @@ export const Follow: React.FC<{
     return (
       <Center>
         <Box textAlign="center" mt="100px">
-          <EmptySvg />
+          <StyledEmptySvg />
           <Box color="#777E90" fontSize="14px">
             {t('follow.login.desc-1')}
           </Box>
