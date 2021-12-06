@@ -293,7 +293,7 @@
     },
     "help": {
       "title": "帮助中心",
-      "question": "对Unipass环境或以太坊环境有问题？"
+      "question": "对 Unipass 环境或以太坊环境有问题？"
     },
     "guide": {
       "one": {
@@ -382,7 +382,7 @@
     },
     "claim": {
       "tips": "您有一个秘宝待领取",
-      "login": "请先链接秘宝",
+      "login": "请先连接秘宝",
       "last-step": "您离领取还差最后一步",
       "error": "领取码错误",
       "confirm": "确认领取",
