@@ -58,7 +58,10 @@ import {
 import { RoutePath } from '../routes'
 import { RankingListResponse } from '../models/rank'
 import { PaymentChannel } from '../hooks/useOrder'
-import { RedEnvelopeResponse } from '../models/red-envelope'
+import {
+  OpenRedEnvelopeResponse,
+  RedEnvelopeResponse,
+} from '../models/red-envelope'
 
 function randomid(length = 10): string {
   let result = ''
@@ -841,7 +844,7 @@ export class ServerWalletAPI {
     })
   }
 
-  async getRedEnvelopeEventByUuid(
+  async getRedEnvelopeEvent(
     uuid: string,
     options?: {
       address?: string
@@ -853,6 +856,22 @@ export class ServerWalletAPI {
         params: {
           wallet_address: options?.address,
         },
+      }
+    )
+  }
+
+  async openRedEnvelopeEvent(
+    uuid: string,
+    address: string,
+    options?: {
+      input?: string
+    }
+  ) {
+    return await this.axios.post<OpenRedEnvelopeResponse>(
+      `/redpack_events/${uuid}/records`,
+      {
+        wallet_address: address,
+        user_input: options?.input,
       }
     )
   }

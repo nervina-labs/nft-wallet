@@ -39,3 +39,8 @@ export interface RedEnvelopeResponse {
   }
   reward_records: RewardRecord[]
 }
+
+export interface OpenRedEnvelopeResponse {
+  record_uuid: string
+  is_special_model: boolean
+}
