@@ -852,6 +852,7 @@ export class ServerWalletAPI {
       params: {
         keyword,
         type,
+        limit: PER_ITEM_LIMIT,
         ...options,
       },
     })
