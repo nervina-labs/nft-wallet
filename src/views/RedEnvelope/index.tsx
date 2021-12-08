@@ -48,7 +48,7 @@ export const RedEnvelope: React.FC = () => {
   const { height } = useInnerSize()
 
   const api = useAPI()
-  const { address, email } = useAccount()
+  const { address } = useAccount()
   const { data, error, refetch, isLoading } = useQuery<
     RedEnvelopeResponse,
     AxiosError
@@ -132,7 +132,6 @@ export const RedEnvelope: React.FC = () => {
               />
             ) : (
               <Cover
-                email={email}
                 address={address}
                 uuid={id}
                 data={data}

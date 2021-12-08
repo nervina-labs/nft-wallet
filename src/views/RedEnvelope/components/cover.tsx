@@ -10,7 +10,7 @@ import { useToast } from '../../../hooks/useToast'
 import { AxiosError } from 'axios'
 import { useHistory } from 'react-router-dom'
 import { RoutePath } from '../../../routes'
-import { UnipassConfig } from '../../../utils'
+import { ellipsisString, UnipassConfig } from '../../../utils'
 
 const RiddleTitle = styled(Flex)`
   ::before,
@@ -31,7 +31,6 @@ export interface CoverProps {
   data?: RedEnvelopeResponse
   address: string
   uuid: string
-  email?: string
   opening?: boolean
   onOpen?: () => void
 }
@@ -40,7 +39,6 @@ export const Cover: React.FC<CoverProps> = ({
   address,
   uuid,
   data,
-  email,
   opening,
   onOpen,
 }) => {
@@ -167,8 +165,8 @@ export const Cover: React.FC<CoverProps> = ({
       <Box color="white" fontSize="16px" mb="6px" mt="auto">
         {t('red-envelope.bottom-text')}
       </Box>
-      <Box h="28px" mb="calc(10px + var(--safe-area-inset-bottom))">
-        {email ? (
+      <Box h="28px" mb="calc(30px + var(--safe-area-inset-bottom))">
+        {address ? (
           <Box
             border="1px solid #F9E0B7"
             color="#F9E0B7"
@@ -177,8 +175,10 @@ export const Cover: React.FC<CoverProps> = ({
             h="28px"
             px="10px"
             fontSize="12px"
+            whiteSpace="nowrap"
           >
-            {t('red-envelope.current-account')} {email}
+            {t('red-envelope.current-account')}{' '}
+            {ellipsisString(address, [11, 8])}
           </Box>
         ) : null}
       </Box>

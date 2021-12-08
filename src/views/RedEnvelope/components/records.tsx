@@ -126,7 +126,7 @@ export const Records: React.FC<RecordsProps> = ({
             bg={address === record.address ? '#E47767' : undefined}
           >
             <Flex justify="center" direction="column">
-              <Box w="full">{ellipsisString(record.address, [5, 5])}</Box>
+              <Box w="full">{ellipsisString(record.address, [8, 5])}</Box>
               <Box fontSize="12px" w="full">
                 {dayjs(record.rewarded_at).format('HH : mm')}
               </Box>
