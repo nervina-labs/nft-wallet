@@ -863,6 +863,7 @@ export class ServerWalletAPI {
   async openRedEnvelopeEvent(
     uuid: string,
     address: string,
+    auth: Auth,
     options?: {
       input?: string
     }
@@ -872,6 +873,11 @@ export class ServerWalletAPI {
       {
         wallet_address: address,
         user_input: options?.input,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
       }
     )
   }

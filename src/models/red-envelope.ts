@@ -13,7 +13,7 @@ export enum RuleType {
 export interface RewardRecord {
   address: string
   rewarded_at: string
-  is_hidden_model: boolean
+  is_special_model: boolean
 }
 
 export interface RedEnvelopeResponse {
@@ -36,7 +36,7 @@ export interface RedEnvelopeResponse {
   }
   rule_info: {
     rule_type: RuleType
-  }
+  } | null
   reward_records: RewardRecord[]
 }
 

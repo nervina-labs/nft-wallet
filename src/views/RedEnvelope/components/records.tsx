@@ -1,29 +1,22 @@
 import { Box, Button, Divider, Flex } from '@chakra-ui/react'
 import { Image } from '@mibao-ui/components'
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ReactComponent as RedEnvelopeHiddenModelIcon } from '../../../assets/svg/red-envelope-hidden-model.svg'
+import { RedEnvelopeResponse } from '../../../models'
+import { ellipsisString } from '../../../utils'
 
-export const Records: React.FC<{
-  isHiddenModel?: boolean
-  userClaimed?: boolean
-  status?: 'done' | 'closed' | 'expired'
-}> = ({ status, isHiddenModel, userClaimed }) => {
+interface RecordsProps {
+  data?: RedEnvelopeResponse
+  address?: string
+}
+
+export const Records: React.FC<RecordsProps> = ({ data, address }) => {
+  const { t } = useTranslation('translations')
   const statusText = useMemo(() => {
-    if (isHiddenModel) {
-      return '恭喜您抽到隐藏款'
-    }
-    if (userClaimed) {
-      return '恭喜您领取成功!' || '您已领取过了'
-    }
-    if (status) {
-      return {
-        done: '来晚了，被抢光了',
-        closed: '该红包已被发起者关闭',
-        expired: '该红包已失效',
-      }[status]
-    }
     return '恭喜您领取成功!'
-  }, [isHiddenModel, status, userClaimed])
+  }, [])
 
   return (
     <Flex
@@ -33,29 +26,35 @@ export const Records: React.FC<{
       textAlign="center"
     >
       <Box color="white" fontSize="12px" mb="10px" mt="50px">
-        来自 test@nervina.io 分享的秘宝红包
+        {t('red-envelope.from-red-envelope', {
+          email: data?.issuer_info.name ?? data?.issuer_info.email,
+        })}
       </Box>
       <Box color="#F9E0B7" fontSize="18px" fontWeight="bold">
         {statusText}
       </Box>
 
       <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="50px">
-        大吉大利今晚吃鸡
+        {data?.promotion_copy}
       </Box>
-      <Button
-        variant="solid"
-        bg="#F9E0B7"
-        w="150px"
-        _hover={{
-          bg: '#F9E0B7',
-        }}
-        _active={{
-          bg: '#dac4a0',
-          transition: '0s',
-        }}
-      >
-        点击去看看
-      </Button>
+      {data?.promotion_link ? (
+        <Button
+          as="a"
+          variant="solid"
+          bg="#F9E0B7"
+          w="150px"
+          _hover={{
+            bg: '#F9E0B7',
+          }}
+          _active={{
+            bg: '#dac4a0',
+            transition: '0s',
+          }}
+          href={data?.promotion_link}
+        >
+          {t('red-envelope.promotion-link')}
+        </Button>
+      ) : null}
 
       <Divider
         borderBottomColor="rgba(239, 239, 239, 0.2)"
@@ -63,61 +62,54 @@ export const Records: React.FC<{
         w="calc(100% - 40px)"
       />
 
-      <Box
-        color="rgba(255, 255, 255, 0.5)"
-        h="32px"
-        lineHeight="32px"
-        fontSize="12px"
-        textAlign="left"
-        w="calc(100% - 40px)"
-      >
-        共 2 个秘宝，已被领取 1 个，还剩 1 个
-      </Box>
+      {data ? (
+        <Box
+          color="rgba(255, 255, 255, 0.5)"
+          h="32px"
+          lineHeight="32px"
+          fontSize="12px"
+          textAlign="left"
+          w="calc(100% - 40px)"
+        >
+          {t('red-envelope.record-count-text', {
+            total: data.progress.total,
+            claimed: data.progress.claimed,
+            remain: data.progress.total - data.progress.claimed,
+          })}
+        </Box>
+      ) : null}
 
       <Box w="full" mt="15px" mb="60px">
-        <Flex
-          justify="space-between"
-          alignItems="center"
-          color="white"
-          fontSize="14px"
-          w="full"
-          px="20px"
-          textAlign="left"
-          h="48px"
-        >
-          <Flex justify="center" direction="column">
-            <Box w="full">ckb1q3s5...hs6tl</Box>
-            <Box fontSize="12px" w="full">
-              14 : 34
-            </Box>
+        {data?.reward_records.map((record, i) => (
+          <Flex
+            key={i}
+            justify="space-between"
+            alignItems="center"
+            color="white"
+            fontSize="14px"
+            w="full"
+            px="20px"
+            textAlign="left"
+            h="48px"
+            bg={address === record.address ? '#E47767' : undefined}
+          >
+            <Flex justify="center" direction="column">
+              <Box w="full">{ellipsisString(record.address, [5, 5])}</Box>
+              <Box fontSize="12px" w="full">
+                {dayjs(record.rewarded_at).format('HH : mm')}
+              </Box>
+            </Flex>
+            {record.is_special_model ? (
+              <Flex lineHeight="48px" alignItems="center" fontSize="12px">
+                <RedEnvelopeHiddenModelIcon />
+                <Box as="span" ml="6px">
+                  {t('red-envelope.hidden-model')}
+                </Box>
+              </Flex>
+            ) : null}
+            <Image src="" w="38px" h="38px" rounded="8px" />
           </Flex>
-          <Image src="" w="38px" h="38px" rounded="8px" />
-        </Flex>
-        <Flex
-          justify="space-between"
-          alignItems="center"
-          color="white"
-          fontSize="14px"
-          w="full"
-          px="20px"
-          textAlign="left"
-          h="48px"
-          bg="#E47767"
-        >
-          <Flex justify="center" direction="column">
-            <Box w="full">ckb1q3s5...hs6tl</Box>
-            <Box fontSize="12px" w="full">
-              14 : 34
-            </Box>
-          </Flex>
-          <Flex lineHeight="48px" alignItems="center" fontSize="12px">
-            <RedEnvelopeHiddenModelIcon />
-            <Box as="span" ml="6px">
-              隐藏款
-            </Box>
-          </Flex>
-          <Image src="" w="38px" h="38px" rounded="8px" />
-        </Flex>
+        ))}
       </Box>
     </Flex>
   )

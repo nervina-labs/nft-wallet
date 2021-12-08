@@ -1,7 +1,13 @@
 import { Box, Flex, Heading, Input } from '@chakra-ui/react'
 import { Button } from '@mibao-ui/components'
 import styled from '@emotion/styled'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { RedEnvelopeResponse, RuleType } from '../../../models'
+import { useAPI } from '../../../hooks/useAccount'
+import { useTranslation } from 'react-i18next'
+import { useGetAndSetAuth } from '../../../hooks/useProfile'
+import { useToast } from '../../../hooks/useToast'
+import { AxiosError } from 'axios'
 
 const RiddleTitle = styled(Flex)`
   ::before,
@@ -19,30 +25,63 @@ const RiddleTitle = styled(Flex)`
 `
 
 export interface CoverProps {
-  isRiddle?: boolean
-  open?: () => void
+  data?: RedEnvelopeResponse
+  address: string
+  uuid: string
+  email?: string
+  onOpen?: () => void
 }
 
-export const Cover: React.FC<CoverProps> = ({ isRiddle, open }) => {
+export const Cover: React.FC<CoverProps> = ({
+  address,
+  uuid,
+  data,
+  email,
+  onOpen,
+}) => {
+  const { t } = useTranslation('translations')
   const [inputValue, setInputValue] = useState('')
+  const isPuzzle = data?.rule_info?.rule_type === RuleType.puzzle
+  const getAuth = useGetAndSetAuth()
+  const api = useAPI()
+  const toast = useToast()
+
+  const onOpenTheRedEnvelope = useCallback(async () => {
+    const auth = await getAuth()
+    await api
+      .openRedEnvelopeEvent(uuid, address, auth)
+      .catch((err: AxiosError) => {
+        if (err.response?.status === 400) {
+          toast(t('red-envelope.not-conditions'))
+        }
+        return err
+      })
+    onOpen?.()
+  }, [address, api, getAuth, onOpen, t, toast, uuid])
+
   return (
     <Flex
       direction="column"
       textAlign="center"
       alignItems="center"
       px="40px"
-      minH={isRiddle ? '500px' : '350px'}
+      minH={isPuzzle ? '500px' : '350px'}
       h="70%"
       flex="1"
     >
       <Heading fontSize="16px" color="white" mb="10px" mt="25px">
-        您有一个数字藏品盲盒红包待领取
+        {t('red-envelope.title-1')}
       </Heading>
-      <Heading fontSize="24px" color="#F9E0B7">
-        大吉大利，好运连连！
+      <Heading
+        fontSize="24px"
+        color="#F9E0B7"
+        textOverflow="ellipsis"
+        noOfLines={2}
+      >
+        {data?.name}
       </Heading>
 
-      {isRiddle ? (
+      {data?.rule_info?.rule_type === RuleType.puzzle ? (
         <>
           <RiddleTitle mt="40px">谜题</RiddleTitle>
           <Heading fontSize="24px" color="white" mb="10px" mt="25px">
@@ -52,26 +91,29 @@ export const Cover: React.FC<CoverProps> = ({ isRiddle, open }) => {
         </>
       ) : null}
 
-      <Input
-        placeholder={isRiddle ? '猜谜底，领数字藏品' : '输入红包口令立即领取'}
-        textAlign="center"
-        bg="white"
-        outline="none"
-        _focus={{
-          outline: 'none',
-        }}
-        _placeholder={{
-          color: 'rgba(119, 126, 144, 0.5)',
-        }}
-        fontSize="16px"
-        size="lg"
-        mt={isRiddle ? '10px' : '30px'}
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
+      {data?.rule_info !== null ? (
+        <Input
+          placeholder={isPuzzle ? '猜谜底，领数字藏品' : '输入红包口令立即领取'}
+          textAlign="center"
+          bg="white"
+          outline="none"
+          _focus={{
+            outline: 'none',
+          }}
+          _placeholder={{
+            color: 'rgba(119, 126, 144, 0.5)',
+          }}
+          fontSize="16px"
+          size="lg"
+          mt={isPuzzle ? '10px' : '30px'}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+      ) : null}
+
       <Button
         isFullWidth
-        mt="14px"
+        mt={data?.rule_info !== null ? '14px' : '30px'}
         color="#F9E0B7"
         borderColor="#F9E0B7"
         _hover={{
@@ -83,26 +125,27 @@ export const Cover: React.FC<CoverProps> = ({ isRiddle, open }) => {
         }}
         size="lg"
         fontSize="16px"
-        onClick={open}
+        onClick={onOpenTheRedEnvelope}
       >
         马上领取
       </Button>
-
       <Box color="white" fontSize="16px" mb="6px" mt="auto">
         领取秘宝盲盒红包
       </Box>
-      <Box
-        border="1px solid #F9E0B7"
-        color="#F9E0B7"
-        rounded="50px"
-        lineHeight="28px"
-        h="28px"
-        px="10px"
-        fontSize="12px"
-        mb="calc(10px + var(--safe-area-inset-bottom))"
-      >
-        当前帐号：test@nervina.io
-      </Box>
+      {email ? (
+        <Box
+          border="1px solid #F9E0B7"
+          color="#F9E0B7"
+          rounded="50px"
+          lineHeight="28px"
+          h="28px"
+          px="10px"
+          fontSize="12px"
+          mb="calc(10px + var(--safe-area-inset-bottom))"
+        >
+          当前帐号：{email}
+        </Box>
+      ) : null}
     </Flex>
   )
 }

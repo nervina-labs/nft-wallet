@@ -622,6 +622,14 @@
       "no-data": "尚未关注任何创作者",
       "no-on-sale": "没有秘宝正在销售",
       "let-s-go-to-explore": "去探索页面"
+    },
+    "red-envelope": {
+      "title-1": "您有一个数字藏品盲盒红包待领取",
+      "not-conditions": "领取条件不足",
+      "hidden-model": "隐藏款",
+      "from-red-envelope": "来自 {{email}} 分享的秘宝红包",
+      "promotion-link": "点击去看看",
+      "record-count-text": "共 {{total}} 个秘宝，已被领取 {{claimed}} 个，还剩 {{remain}} 个"
     }
   }
 }

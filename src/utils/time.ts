@@ -33,9 +33,12 @@ const TIME_FORMAT_EN = 'MMM DD, YYYY HH:mm:ss'
 export function formatTime(
   timestamp: string,
   lang: string,
-  skipNumber = false
+  skipNumber = false,
+  options?: {
+    template?: string
+  }
 ) {
   return dayjs(skipNumber ? timestamp : Number(timestamp + '000')).format(
-    lang !== 'en' ? TIME_FORMAT_CN : TIME_FORMAT_EN
+    options?.template || (lang !== 'en' ? TIME_FORMAT_CN : TIME_FORMAT_EN)
   )
 }
