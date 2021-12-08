@@ -73,3 +73,6 @@ export const DAS_INDEXER_URL =
   process.env.REACT_APP_DAS_INDEXER_URL ?? 'https://das.nervina.cn'
 
 export const HOST = location.origin
+
+export const ISSUER_ID_REG = /^ISSUER-.{40}$/
+export const TOKEN_CLASS_ID_REG = /^0x.{48}$/

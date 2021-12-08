@@ -1,4 +1,5 @@
 import { RedEnvelope } from './../views/RedEnvelope/index'
+import { Search } from './../views/Search/index'
 import { RouteProps } from 'react-router-dom'
 import { Login } from '../views/Login'
 import { NFT } from '../views/NFT'
@@ -249,5 +250,11 @@ export const routes: MibaoRouterProps[] = [
     key: 'RedEnvelop',
     path: RoutePath.RedEnvelope,
     params: '/:id',
+  },
+  {
+    component: Search,
+    exact: false,
+    key: 'Search',
+    path: RoutePath.Search,
   },
 ]

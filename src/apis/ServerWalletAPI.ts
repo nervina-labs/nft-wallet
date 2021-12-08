@@ -6,6 +6,9 @@ import {
   NFTDetail,
   NFTTransaction,
   ProductState,
+  SearchOptions,
+  SearchResponse,
+  SearchType,
   SpecialCategories,
   Transaction,
   TransactionLogResponse,
@@ -880,5 +883,20 @@ export class ServerWalletAPI {
         },
       }
     )
+  }
+
+  async search<T extends SearchType>(
+    keyword: string,
+    type: T,
+    options?: SearchOptions
+  ): Promise<AxiosResponse<SearchResponse<T>>> {
+    return await this.axios.get<SearchResponse<T>>('/searches', {
+      params: {
+        keyword,
+        type,
+        limit: PER_ITEM_LIMIT,
+        ...options,
+      },
+    })
   }
 }
