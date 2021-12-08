@@ -31,7 +31,7 @@ import {
   Flex,
   Heading,
 } from '@mibao-ui/components'
-import { AspectRatio, Checkbox } from '@chakra-ui/react'
+import { AspectRatio, Box, Checkbox } from '@chakra-ui/react'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js'
@@ -434,8 +434,12 @@ export const Login: React.FC = () => {
             }
             onClick={loginUnipass}
             variant={IS_IMTOKEN ? 'outline' : 'solid'}
+            size="lg"
           >
-            {t('login.connect.unipass')}
+            <Box py="8px">
+              <Box fontSize="16px">{t('login.connect.unipass')}</Box>
+              <Box fontSize="12px">{t('login.connect.or-use-email')}</Box>
+            </Box>
           </LoginButton>
           <LoginButton
             className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}

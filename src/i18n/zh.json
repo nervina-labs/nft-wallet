@@ -2,7 +2,7 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
-      "login": "登录",
+      "login": "连接身份管理器",
       "actions": {
         "confirm": "确认",
         "cancel": "取消",
@@ -85,9 +85,10 @@
     },
     "login": {
       "title": "秘宝账户",
-      "select": "选择您的登录方式",
+      "select": "选择您的连接方式",
       "connect": {
         "unipass": "连接 UniPass",
+        "or-use-email": "（或通过 Email 注册）",
         "metamask": "连接以太坊环境",
         "wallet-connect": "连接 Wallet Connect",
         "connect": "连接"
@@ -286,13 +287,13 @@
       "txs": "流转记录",
       "language": "语言设置",
       "help": "帮助支持",
-      "logout": "退出登录",
+      "logout": "退出",
       "zh": "中文",
       "en": "英文"
     },
     "help": {
       "title": "帮助中心",
-      "question": "对 UniPass/以太坊环境有问题？"
+      "question": "对 Unipass 环境或以太坊环境有问题？"
     },
     "guide": {
       "one": {
@@ -381,7 +382,7 @@
     },
     "claim": {
       "tips": "您有一个秘宝待领取",
-      "login": "请先登录秘宝",
+      "login": "请先连接秘宝",
       "last-step": "您离领取还差最后一步",
       "error": "领取码错误",
       "confirm": "确认领取",
@@ -615,9 +616,9 @@
       "count": "• 已关注 {{count}} 人",
       "end": "已经拉到底啦~",
       "login": {
-        "desc-1": "啊哦～您还未登录",
-        "desc-2": "请登录秘宝，查看您关注的精彩内容",
-        "login": "登录"
+        "desc-1": "啊哦～您还未连接你的身份管理器",
+        "desc-2": "请连接秘宝后，查看您关注的精彩内容",
+        "login": "连接"
       },
       "no-data": "尚未关注任何创作者",
       "no-on-sale": "没有秘宝正在销售",

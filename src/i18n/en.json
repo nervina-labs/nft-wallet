@@ -2,7 +2,7 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
-      "login": "Login",
+      "login": "Connect to the identity manager",
       "actions": {
         "confirm": "Confirm",
         "cancel": "Cancel",
@@ -85,9 +85,10 @@
     },
     "login": {
       "title": "MIBAO",
-      "select": "Log in with",
+      "select": "Select your connection method",
       "connect": {
         "unipass": "Connect to UniPass",
+        "or-use-email": "(or Register by Email)",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
         "connect": "Connect to"
@@ -286,7 +287,7 @@
       "txs": "Activity",
       "language": "Language",
       "help": "Help",
-      "logout": "Log Out",
+      "logout": "Disconnect",
       "zh": "Chinese",
       "en": "English"
     },
@@ -615,9 +616,9 @@
       "count": "• Following {{count}} creators",
       "end": "The end~",
       "login": {
-        "desc-1": "Opps~ please log in first",
-        "desc-2": "Log in and view your following content",
-        "login": "Log In"
+        "desc-1": "Oops ~ You have not connected to your identity manager, please connect to MIBAO and enjoy the collections you following",
+        "desc-2": "",
+        "login": "Connect"
       },
       "no-data": "You haven't followed any creators",
       "no-on-sale": "There are no collections on sale",
