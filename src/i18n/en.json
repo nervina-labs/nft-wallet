@@ -91,7 +91,7 @@
       "issuer": "Creator",
       "token-class": "Digital Collection",
       "more-token-class": "More Digital Collections",
-      "more-issuer": "More Issuer"
+      "more-issuer": "More Creators"
     },
     "login": {
       "title": "MIBAO",
