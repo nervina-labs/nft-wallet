@@ -59,6 +59,8 @@ export const Records: React.FC<RecordsProps> = ({
     return t('red-envelope.message-succeed')
   }, [data, isAlreadyOpened, isSpecialModel, t])
 
+  const fromUsername = data?.issuer_info.name || data?.issuer_info.email || ''
+
   return (
     <Flex
       direction="column"
@@ -68,7 +70,10 @@ export const Records: React.FC<RecordsProps> = ({
     >
       <Box color="white" fontSize="12px" mb="10px" mt="50px" px="20px">
         {t('red-envelope.from-red-envelope', {
-          email: data?.issuer_info.name ?? data?.issuer_info.email,
+          username:
+            fromUsername.length > 10
+              ? `${fromUsername.substring(0, 10)}…`
+              : fromUsername,
         })}
       </Box>
       <Box color="#F9E0B7" fontSize="18px" fontWeight="bold" px="20px">

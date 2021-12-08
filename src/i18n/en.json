@@ -638,7 +638,7 @@
     "red-envelope": {
       "title-1": "You have a Digital Collection blind box Red Packet to collect.",
       "hidden-model": "Special Edition",
-      "from-red-envelope": "The Red Packet from bow {{email}}",
+      "from-red-envelope": "The Red Packet from bow {{username}}",
       "promotion-link": "Click to have a look",
       "record-count-text": "Total {{total}}, collected {{claimed}}, left {{remain}}",
       "puzzle-title": "Riddles",
