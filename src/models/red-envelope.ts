@@ -23,6 +23,7 @@ export interface RewardRecord {
   address: string
   rewarded_at: string
   is_special_model: boolean
+  bg_image_url?: string | null
 }
 
 export interface RedEnvelopeResponse {

@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as RedEnvelopeHiddenModelIcon } from '../../../assets/svg/red-envelope-hidden-model.svg'
 import { RedEnvelopeResponse, RedEnvelopeState } from '../../../models'
-import { ellipsisString } from '../../../utils'
+import { ellipsisString, isSupportWebp } from '../../../utils'
 
 interface RecordsProps {
   data?: RedEnvelopeResponse
@@ -139,7 +139,18 @@ export const Records: React.FC<RecordsProps> = ({
                 </Box>
               </Flex>
             ) : null}
-            <Image src="" w="38px" h="38px" rounded="8px" />
+            <Image
+              src={
+                record.bg_image_url === null || !record.bg_image_url
+                  ? ''
+                  : record.bg_image_url
+              }
+              w="38px"
+              h="38px"
+              rounded="8px"
+              resizeScale={100}
+              webp={isSupportWebp()}
+            />
           </Flex>
         ))}
       </Box>
