@@ -108,7 +108,7 @@ export const Cover: React.FC<CoverProps> = ({
         textOverflow="ellipsis"
         noOfLines={2}
       >
-        {data?.name}
+        {data?.greegings}
       </Heading>
 
       {data?.rule_info?.rule_type === RuleType.puzzle ? (
