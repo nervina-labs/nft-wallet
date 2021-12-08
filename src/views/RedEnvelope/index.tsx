@@ -7,14 +7,23 @@ import DEFAULT_RED_ENVELOPE_COVER_PATH from '../../assets/svg/red-envelope-cover
 import { useThemeColor } from '../../hooks/useThemeColor'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { Cover } from './components/cover'
-import { Redirect, useParams } from 'react-router-dom'
+import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
-import { useAccount, useAPI } from '../../hooks/useAccount'
-import { Query, RedEnvelopeResponse, RedEnvelopeState } from '../../models'
+import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
+import {
+  Query,
+  RedEnvelopeResponse,
+  RedEnvelopeState,
+  RuleType,
+} from '../../models'
 import { RoutePath } from '../../routes'
 import { AxiosError } from 'axios'
 import { Records } from './components/records'
 import { useCallback, useState } from 'react'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
+import { useTranslation } from 'react-i18next'
+import { UnipassConfig } from '../../utils'
+import { useToast } from '../../hooks/useToast'
 
 const Container = styled(MainContainer)`
   background-color: #e15f4c;
@@ -43,12 +52,18 @@ const Container = styled(MainContainer)`
 `
 
 export const RedEnvelope: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
   useThemeColor('#E94030')
+  const { id } = useParams<{ id: string }>()
+  const { t } = useTranslation('translations')
   const { height } = useInnerSize()
-
   const api = useAPI()
   const { address } = useAccount()
+  const [isRefetching, setIsRefetching] = useState(false)
+  const [isRefetch, setIsRefetch] = useState(false)
+  const toast = useToast()
+  const { isLogined } = useAccountStatus()
+  const getAuth = useGetAndSetAuth()
+  const { push } = useHistory()
   const { data, error, refetch, isLoading } = useQuery<
     RedEnvelopeResponse,
     AxiosError
@@ -64,18 +79,51 @@ export const RedEnvelope: React.FC = () => {
       retry: 2,
     }
   )
-  const [isRefetching, setIsRefetching] = useState(false)
-  const [isRefetch, setIsRefetch] = useState(false)
+  const onOpenTheRedEnvelope = useCallback(
+    async (input?: string) => {
+      if (!isLogined) {
+        UnipassConfig.setRedirectUri(location.pathname)
+        push(RoutePath.Login)
+        return
+      }
+      setIsRefetching(true)
+      const auth = await getAuth()
+      await api
+        .openRedEnvelopeEvent(id, address, auth, {
+          input,
+        })
+        .catch((err: AxiosError) => {
+          if (data?.rule_info?.rule_type === RuleType.password) {
+            toast(t('red-envelope.error-password'))
+          } else if (data?.rule_info?.rule_type === RuleType.puzzle) {
+            toast(t('red-envelope.error-puzzle'))
+          } else if (err.response?.status === 400) {
+            toast(t('red-envelope.error-conditions'))
+          }
+          throw err
+        })
+        .then(async () => await refetch())
+        .finally(() => {
+          setIsRefetch(true)
+          setIsRefetching(false)
+        })
+    },
+    [
+      address,
+      api,
+      data?.rule_info?.rule_type,
+      getAuth,
+      id,
+      isLogined,
+      push,
+      refetch,
+      t,
+      toast,
+    ]
+  )
+
   const isOpened =
     data?.user_claimed || (data && data?.state !== RedEnvelopeState.Ongoing)
-
-  const onReload = useCallback(async () => {
-    setIsRefetching(true)
-    await refetch().finally(() => {
-      setIsRefetching(false)
-    })
-    setIsRefetch(true)
-  }, [refetch])
 
   if (error?.response?.status === 404) {
     return <Redirect to={RoutePath.NotFound} />
@@ -136,10 +184,9 @@ export const RedEnvelope: React.FC = () => {
             ) : (
               <Cover
                 address={address}
-                uuid={id}
                 data={data}
-                onOpen={onReload}
-                opening={isRefetching}
+                onOpen={onOpenTheRedEnvelope}
+                isOpening={isRefetching}
               />
             )}
           </Flex>

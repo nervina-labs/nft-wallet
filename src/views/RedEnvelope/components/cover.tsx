@@ -1,16 +1,10 @@
 import { Box, Flex, Heading, Input } from '@chakra-ui/react'
 import { Button } from '@mibao-ui/components'
 import styled from '@emotion/styled'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { RedEnvelopeResponse, RuleType } from '../../../models'
-import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useTranslation } from 'react-i18next'
-import { useGetAndSetAuth } from '../../../hooks/useProfile'
-import { useToast } from '../../../hooks/useToast'
-import { AxiosError } from 'axios'
-import { useHistory } from 'react-router-dom'
-import { RoutePath } from '../../../routes'
-import { ellipsisString, UnipassConfig } from '../../../utils'
+import { ellipsisString } from '../../../utils'
 
 const RiddleTitle = styled(Flex)`
   ::before,
@@ -30,69 +24,19 @@ const RiddleTitle = styled(Flex)`
 export interface CoverProps {
   data?: RedEnvelopeResponse
   address: string
-  uuid: string
-  opening?: boolean
-  onOpen?: () => void
+  isOpening?: boolean
+  onOpen?: (input?: string) => void
 }
 
 export const Cover: React.FC<CoverProps> = ({
   address,
-  uuid,
   data,
-  opening,
+  isOpening,
   onOpen,
 }) => {
   const { t } = useTranslation('translations')
   const [inputValue, setInputValue] = useState('')
   const isPuzzle = data?.rule_info?.rule_type === RuleType.puzzle
-  const getAuth = useGetAndSetAuth()
-  const { isLogined } = useAccountStatus()
-  const api = useAPI()
-  const toast = useToast()
-  const { push } = useHistory()
-  const [isOpeningRedEnvelope, setIsOpeningRedEnvelope] = useState(false)
-
-  const onOpenTheRedEnvelope = useCallback(async () => {
-    if (!isLogined) {
-      UnipassConfig.setRedirectUri(location.pathname)
-      push(RoutePath.Login)
-      return
-    }
-    setIsOpeningRedEnvelope(true)
-    const auth = await getAuth()
-    await api
-      .openRedEnvelopeEvent(uuid, address, auth, {
-        input: inputValue,
-      })
-      .then(() => {
-        onOpen?.()
-      })
-      .catch((err: AxiosError) => {
-        if (data?.rule_info?.rule_type === RuleType.password) {
-          toast(t('red-envelope.error-password'))
-        } else if (data?.rule_info?.rule_type === RuleType.puzzle) {
-          toast(t('red-envelope.error-puzzle'))
-        } else if (err.response?.status === 400) {
-          toast(t('red-envelope.error-conditions'))
-        }
-        return err
-      })
-      .finally(() => {
-        setIsOpeningRedEnvelope(false)
-      })
-  }, [
-    address,
-    api,
-    data?.rule_info?.rule_type,
-    getAuth,
-    inputValue,
-    isLogined,
-    onOpen,
-    push,
-    t,
-    toast,
-    uuid,
-  ])
 
   return (
     <Flex
@@ -164,8 +108,8 @@ export const Cover: React.FC<CoverProps> = ({
         }}
         size="lg"
         fontSize="16px"
-        onClick={onOpenTheRedEnvelope}
-        isLoading={isOpeningRedEnvelope || opening}
+        onClick={() => onOpen?.(inputValue)}
+        isLoading={isOpening}
       >
         {t('red-envelope.submit')}
       </Button>
