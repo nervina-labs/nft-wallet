@@ -84,14 +84,14 @@
       }
     },
     "search": {
-      "search-placeholder": "Search by Digital Collection or Creator",
+      "search-placeholder": "Search Digital Collection or Creator",
       "search-placeholder-issuer": "Search Creator",
       "search-placeholder-token-class": "Search Digital Collection",
       "cancel": "Cancel",
-      "issuer": "Issuer",
+      "issuer": "Creator",
       "token-class": "Digital Collection",
-      "more-token-class": "More Digital Collection",
-      "more-issuer": "More Issuer",
+      "more-token-class": "More Digital Collections",
+      "more-issuer": "More Creators",
       "no-data": "No data"
     },
     "login": {
