@@ -88,7 +88,7 @@ export const Records: React.FC<RecordsProps> = ({
           as="a"
           variant="solid"
           bg="#F9E0B7"
-          w="150px"
+          minW="150px"
           _hover={{
             bg: '#F9E0B7',
           }}

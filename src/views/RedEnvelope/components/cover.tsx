@@ -50,6 +50,7 @@ export const Cover: React.FC<CoverProps> = ({
   const api = useAPI()
   const toast = useToast()
   const { push } = useHistory()
+  const [isOpeningRedEnvelope, setIsOpeningRedEnvelope] = useState(false)
 
   const onOpenTheRedEnvelope = useCallback(async () => {
     if (!isLogined) {
@@ -57,10 +58,14 @@ export const Cover: React.FC<CoverProps> = ({
       push(RoutePath.Login)
       return
     }
+    setIsOpeningRedEnvelope(true)
     const auth = await getAuth()
     await api
       .openRedEnvelopeEvent(uuid, address, auth, {
         input: inputValue,
+      })
+      .then(() => {
+        onOpen?.()
       })
       .catch((err: AxiosError) => {
         if (data?.rule_info?.rule_type === RuleType.password) {
@@ -72,7 +77,9 @@ export const Cover: React.FC<CoverProps> = ({
         }
         return err
       })
-    onOpen?.()
+      .finally(() => {
+        setIsOpeningRedEnvelope(false)
+      })
   }, [
     address,
     api,
@@ -158,7 +165,7 @@ export const Cover: React.FC<CoverProps> = ({
         size="lg"
         fontSize="16px"
         onClick={onOpenTheRedEnvelope}
-        isLoading={opening}
+        isLoading={isOpeningRedEnvelope || opening}
       >
         {t('red-envelope.submit')}
       </Button>

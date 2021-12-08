@@ -71,8 +71,9 @@ export const RedEnvelope: React.FC = () => {
 
   const onReload = useCallback(async () => {
     setIsRefetching(true)
-    await refetch()
-    setIsRefetching(false)
+    await refetch().finally(() => {
+      setIsRefetching(false)
+    })
     setIsRefetch(true)
   }, [refetch])
 
