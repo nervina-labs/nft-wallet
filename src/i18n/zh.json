@@ -83,6 +83,17 @@
         "tips-desc": "点击右上角【...】使用外部浏览器打开，获得更好浏览体验！"
       }
     },
+    "search": {
+      "search-placeholder": "搜索秘宝名称/创作者",
+      "search-placeholder-issuer": "搜索创作者",
+      "search-placeholder-token-class": "搜索秘宝名称",
+      "cancel": "取消",
+      "issuer": "创作者",
+      "token-class": "秘宝",
+      "more-token-class": "更多秘宝",
+      "more-issuer": "更多创作者",
+      "no-data": "啊哦～暂无任何信息"
+    },
     "login": {
       "title": "秘宝账户",
       "select": "选择您的连接方式",

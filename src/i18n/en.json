@@ -83,6 +83,17 @@
         "tips-desc": "Click on the  [...] , use an external browser to open the page for a better browsing experience!"
       }
     },
+    "search": {
+      "search-placeholder": "Search Digital Collection or Creator",
+      "search-placeholder-issuer": "Search Creator",
+      "search-placeholder-token-class": "Search Digital Collection",
+      "cancel": "Cancel",
+      "issuer": "Creator",
+      "token-class": "Digital Collection",
+      "more-token-class": "More Digital Collections",
+      "more-issuer": "More Creators",
+      "no-data": "No data"
+    },
     "login": {
       "title": "MIBAO",
       "select": "Select your connection method",

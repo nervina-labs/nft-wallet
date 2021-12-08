@@ -36,6 +36,7 @@ export enum RoutePath {
   OrderDetail = '/order',
   OrderSuccess = '/order-success',
   OrderStatus = '/order-status',
+  Search = '/search',
 }
 
 export enum ProfilePath {
