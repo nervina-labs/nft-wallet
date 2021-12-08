@@ -114,7 +114,7 @@ export const RedEnvelope: React.FC = () => {
             >
               <Flex>
                 <Image
-                  src={DEFAULT_RED_ENVELOPE_COVER_PATH}
+                  src={data?.cover_image_url ?? DEFAULT_RED_ENVELOPE_COVER_PATH}
                   w="35%"
                   h="35%"
                   mt="auto"
