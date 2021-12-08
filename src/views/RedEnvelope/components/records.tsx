@@ -4,19 +4,50 @@ import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as RedEnvelopeHiddenModelIcon } from '../../../assets/svg/red-envelope-hidden-model.svg'
-import { RedEnvelopeResponse } from '../../../models'
+import { RedEnvelopeResponse, RedEnvelopeState } from '../../../models'
 import { ellipsisString } from '../../../utils'
 
 interface RecordsProps {
   data?: RedEnvelopeResponse
   address?: string
+  isAlreadyOpened?: boolean
 }
 
-export const Records: React.FC<RecordsProps> = ({ data, address }) => {
+export const Records: React.FC<RecordsProps> = ({
+  data,
+  address,
+  isAlreadyOpened,
+}) => {
   const { t } = useTranslation('translations')
   const statusText = useMemo(() => {
-    return '恭喜您领取成功!'
-  }, [])
+    const isHiddenModel = Boolean(
+      data?.reward_records.find((record) => record.address === address)
+        ?.is_special_model
+    )
+    if (isHiddenModel) {
+      return t('red-envelope.message-hidden-model')
+    }
+    if (data?.state === RedEnvelopeState.Ongoing && isAlreadyOpened) {
+      return (
+        <Box as="span" color="white">
+          {t('red-envelope.message-already-opened')}
+        </Box>
+      )
+    }
+    const textMap: { [key in RedEnvelopeState]?: string } = {
+      [RedEnvelopeState.Closed]: t('red-envelope.message-closed'),
+      [RedEnvelopeState.Expired]: t('red-envelope.message-expired'),
+      [RedEnvelopeState.Done]: t('red-envelope.message-empty'),
+    }
+    if (data?.state && textMap[data.state]) {
+      return (
+        <Box as="span" color="white">
+          {textMap[data.state]}
+        </Box>
+      )
+    }
+    return t('red-envelope.message-succeed')
+  }, [address, data?.reward_records, data?.state, isAlreadyOpened, t])
 
   return (
     <Flex
@@ -51,6 +82,7 @@ export const Records: React.FC<RecordsProps> = ({ data, address }) => {
             transition: '0s',
           }}
           href={data?.promotion_link}
+          target="_blank"
         >
           {t('red-envelope.promotion-link')}
         </Button>

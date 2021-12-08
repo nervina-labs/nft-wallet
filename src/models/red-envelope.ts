@@ -10,6 +10,15 @@ export enum RuleType {
   puzzle = 'puzzle',
 }
 
+export interface RulePuzzleInfo {
+  rule_type: RuleType.puzzle
+  question: string
+}
+
+export interface RulePasswordInfo {
+  rule_type: RuleType.password
+}
+
 export interface RewardRecord {
   address: string
   rewarded_at: string
@@ -34,9 +43,7 @@ export interface RedEnvelopeResponse {
     email: string
     uuid: string
   }
-  rule_info: {
-    rule_type: RuleType
-  } | null
+  rule_info: RulePuzzleInfo | RulePasswordInfo | null
   reward_records: RewardRecord[]
 }
 

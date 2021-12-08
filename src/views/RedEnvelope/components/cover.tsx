@@ -29,6 +29,7 @@ export interface CoverProps {
   address: string
   uuid: string
   email?: string
+  opening?: boolean
   onOpen?: () => void
 }
 
@@ -37,6 +38,7 @@ export const Cover: React.FC<CoverProps> = ({
   uuid,
   data,
   email,
+  opening,
   onOpen,
 }) => {
   const { t } = useTranslation('translations')
@@ -49,15 +51,31 @@ export const Cover: React.FC<CoverProps> = ({
   const onOpenTheRedEnvelope = useCallback(async () => {
     const auth = await getAuth()
     await api
-      .openRedEnvelopeEvent(uuid, address, auth)
+      .openRedEnvelopeEvent(uuid, address, auth, {
+        input: inputValue,
+      })
       .catch((err: AxiosError) => {
-        if (err.response?.status === 400) {
-          toast(t('red-envelope.not-conditions'))
+        if (data?.rule_info?.rule_type === RuleType.password) {
+          toast(t('red-envelope.error-password'))
+        } else if (data?.rule_info?.rule_type === RuleType.puzzle) {
+          toast(t('red-envelope.error-puzzle'))
+        } else if (err.response?.status === 400) {
+          toast(t('red-envelope.error-conditions'))
         }
         return err
       })
     onOpen?.()
-  }, [address, api, getAuth, onOpen, t, toast, uuid])
+  }, [
+    address,
+    api,
+    data?.rule_info?.rule_type,
+    getAuth,
+    inputValue,
+    onOpen,
+    t,
+    toast,
+    uuid,
+  ])
 
   return (
     <Flex
@@ -83,17 +101,21 @@ export const Cover: React.FC<CoverProps> = ({
 
       {data?.rule_info?.rule_type === RuleType.puzzle ? (
         <>
-          <RiddleTitle mt="40px">谜题</RiddleTitle>
+          <RiddleTitle mt="40px">{t('red-envelope.puzzle-title')}</RiddleTitle>
           <Heading fontSize="24px" color="white" mb="10px" mt="25px">
-            恭喜发财
+            {data?.rule_info.question}
           </Heading>
-          <RiddleTitle>谜底</RiddleTitle>
+          <RiddleTitle>{t('red-envelope.puzzle-answer')}</RiddleTitle>
         </>
       ) : null}
 
       {data?.rule_info !== null ? (
         <Input
-          placeholder={isPuzzle ? '猜谜底，领数字藏品' : '输入红包口令立即领取'}
+          placeholder={
+            isPuzzle
+              ? t('red-envelope.puzzle-placeholder')
+              : t('red-envelope.password-placeholder')
+          }
           textAlign="center"
           bg="white"
           outline="none"
@@ -126,11 +148,12 @@ export const Cover: React.FC<CoverProps> = ({
         size="lg"
         fontSize="16px"
         onClick={onOpenTheRedEnvelope}
+        isLoading={opening}
       >
-        马上领取
+        {t('red-envelope.submit')}
       </Button>
       <Box color="white" fontSize="16px" mb="6px" mt="auto">
-        领取秘宝盲盒红包
+        {t('red-envelope.bottom-text')}
       </Box>
       {email ? (
         <Box
@@ -143,7 +166,7 @@ export const Cover: React.FC<CoverProps> = ({
           fontSize="12px"
           mb="calc(10px + var(--safe-area-inset-bottom))"
         >
-          当前帐号：{email}
+          {t('red-envelope.current-account')} {email}
         </Box>
       ) : null}
     </Flex>
