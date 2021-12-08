@@ -128,7 +128,9 @@ export const RedEnvelope: React.FC = () => {
               <Records
                 data={data}
                 address={address}
-                isAlreadyOpened={!isRefetch}
+                isAlreadyOpened={
+                  !isRefetch && data?.state === RedEnvelopeState.Ongoing
+                }
               />
             ) : (
               <Cover

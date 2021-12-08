@@ -27,21 +27,23 @@ export const Records: React.FC<RecordsProps> = ({
     if (isHiddenModel) {
       return t('red-envelope.message-hidden-model')
     }
-    if (
-      (data?.state === RedEnvelopeState.Ongoing ||
-        data?.state === RedEnvelopeState.Done) &&
-      isAlreadyOpened
-    ) {
+    if (isAlreadyOpened) {
       return (
         <Box as="span" color="white">
           {t('red-envelope.message-already-opened')}
         </Box>
       )
     }
+    if (!data?.user_claimed && data?.state === RedEnvelopeState.Done) {
+      return (
+        <Box as="span" color="white">
+          {t('red-envelope.message-empty')}
+        </Box>
+      )
+    }
     const textMap: { [key in RedEnvelopeState]?: string } = {
       [RedEnvelopeState.Closed]: t('red-envelope.message-closed'),
       [RedEnvelopeState.Expired]: t('red-envelope.message-expired'),
-      [RedEnvelopeState.Done]: t('red-envelope.message-empty'),
     }
     if (data?.state && textMap[data.state]) {
       return (
@@ -51,7 +53,14 @@ export const Records: React.FC<RecordsProps> = ({
       )
     }
     return t('red-envelope.message-succeed')
-  }, [address, data?.reward_records, data?.state, isAlreadyOpened, t])
+  }, [
+    address,
+    data?.reward_records,
+    data?.state,
+    data?.user_claimed,
+    isAlreadyOpened,
+    t,
+  ])
 
   return (
     <Flex
@@ -130,13 +139,18 @@ export const Records: React.FC<RecordsProps> = ({
             bg={address === record.address ? '#E47767' : undefined}
           >
             <Flex justify="center" direction="column">
-              <Box w="full">{ellipsisString(record.address, [8, 5])}</Box>
+              <Box w="full">{ellipsisString(record.address, [11, 8])}</Box>
               <Box fontSize="12px" w="full">
                 {dayjs(record.rewarded_at).format('HH : mm')}
               </Box>
             </Flex>
             {record.is_special_model ? (
-              <Flex lineHeight="48px" alignItems="center" fontSize="12px">
+              <Flex
+                lineHeight="48px"
+                alignItems="center"
+                fontSize="12px"
+                whiteSpace="nowrap"
+              >
                 <RedEnvelopeHiddenModelIcon />
                 <Box as="span" ml="6px">
                   {t('red-envelope.hidden-model')}
@@ -151,6 +165,7 @@ export const Records: React.FC<RecordsProps> = ({
               }
               w="38px"
               h="38px"
+              minW="38px"
               rounded="8px"
               resizeScale={100}
               webp={isSupportWebp()}
