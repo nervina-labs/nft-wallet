@@ -56,7 +56,7 @@ export const Records: React.FC<RecordsProps> = ({
       h="calc(100% - 60px)"
       textAlign="center"
     >
-      <Box color="white" fontSize="12px" mb="10px" mt="50px">
+      <Box color="white" fontSize="12px" mb="10px" mt="50px" px="20px">
         {t('red-envelope.from-red-envelope', {
           email: data?.issuer_info.name ?? data?.issuer_info.email,
         })}
@@ -65,7 +65,7 @@ export const Records: React.FC<RecordsProps> = ({
         {statusText}
       </Box>
 
-      <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="50px">
+      <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="50px" px="20px">
         {data?.promotion_copy}
       </Box>
       {data?.promotion_link ? (
