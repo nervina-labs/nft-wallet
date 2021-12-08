@@ -61,7 +61,7 @@ export const Records: React.FC<RecordsProps> = ({
           email: data?.issuer_info.name ?? data?.issuer_info.email,
         })}
       </Box>
-      <Box color="#F9E0B7" fontSize="18px" fontWeight="bold">
+      <Box color="#F9E0B7" fontSize="18px" fontWeight="bold" px="20px">
         {statusText}
       </Box>
 
