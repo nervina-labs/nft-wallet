@@ -19,12 +19,16 @@ export const Records: React.FC<RecordsProps> = ({
   isAlreadyOpened,
 }) => {
   const { t } = useTranslation('translations')
+  const isSpecialModel = useMemo(
+    () =>
+      Boolean(
+        data?.reward_records.find((record) => record.address === address)
+          ?.is_special_model
+      ),
+    [address, data?.reward_records]
+  )
   const statusText = useMemo(() => {
-    const isHiddenModel = Boolean(
-      data?.reward_records.find((record) => record.address === address)
-        ?.is_special_model
-    )
-    if (isHiddenModel) {
+    if (isSpecialModel) {
       return t('red-envelope.message-hidden-model')
     }
     if (isAlreadyOpened) {
@@ -53,14 +57,7 @@ export const Records: React.FC<RecordsProps> = ({
       )
     }
     return t('red-envelope.message-succeed')
-  }, [
-    address,
-    data?.reward_records,
-    data?.state,
-    data?.user_claimed,
-    isAlreadyOpened,
-    t,
-  ])
+  }, [data, isAlreadyOpened, isSpecialModel, t])
 
   return (
     <Flex
@@ -139,7 +136,7 @@ export const Records: React.FC<RecordsProps> = ({
             bg={address === record.address ? '#E47767' : undefined}
           >
             <Flex justify="center" direction="column">
-              <Box w="full">{ellipsisString(record.address, [11, 8])}</Box>
+              <Box w="full">{ellipsisString(record.address, [8, 5])}</Box>
               <Box fontSize="12px" w="full">
                 {dayjs(record.rewarded_at).format('HH : mm')}
               </Box>

@@ -30,7 +30,7 @@ export interface RedEnvelopeResponse {
   uuid: string
   name: string
   cover_image_url: string
-  greegings: string
+  greetings: string
   promotion_copy: string
   promotion_link: string
   state: RedEnvelopeState
