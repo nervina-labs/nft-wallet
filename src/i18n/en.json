@@ -91,7 +91,8 @@
       "issuer": "Issuer",
       "token-class": "Digital Collection",
       "more-token-class": "More Digital Collection",
-      "more-issuer": "More Issuer"
+      "more-issuer": "More Issuer",
+      "no-data": "No data"
     },
     "login": {
       "title": "MIBAO",
