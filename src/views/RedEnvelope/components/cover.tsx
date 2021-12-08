@@ -167,20 +167,21 @@ export const Cover: React.FC<CoverProps> = ({
       <Box color="white" fontSize="16px" mb="6px" mt="auto">
         {t('red-envelope.bottom-text')}
       </Box>
-      {email ? (
-        <Box
-          border="1px solid #F9E0B7"
-          color="#F9E0B7"
-          rounded="50px"
-          lineHeight="28px"
-          h="28px"
-          px="10px"
-          fontSize="12px"
-          mb="calc(10px + var(--safe-area-inset-bottom))"
-        >
-          {t('red-envelope.current-account')} {email}
-        </Box>
-      ) : null}
+      <Box h="28px" mb="calc(10px + var(--safe-area-inset-bottom))">
+        {email ? (
+          <Box
+            border="1px solid #F9E0B7"
+            color="#F9E0B7"
+            rounded="50px"
+            lineHeight="28px"
+            h="28px"
+            px="10px"
+            fontSize="12px"
+          >
+            {t('red-envelope.current-account')} {email}
+          </Box>
+        ) : null}
+      </Box>
     </Flex>
   )
 }
