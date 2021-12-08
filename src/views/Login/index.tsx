@@ -208,10 +208,9 @@ const Container = styled(MainContainer)`
 `
 
 const CheckBoxStyled = styled(Checkbox)`
-  .chakra-checkbox__control {
+  .chakra-checkbox__control:not([data-checked]) {
     border: 1px solid #23262f;
     border-radius: 1px;
-    background-color: #e6e8ec;
   }
 `
 
