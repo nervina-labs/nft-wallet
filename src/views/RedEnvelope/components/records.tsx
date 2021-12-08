@@ -27,7 +27,11 @@ export const Records: React.FC<RecordsProps> = ({
     if (isHiddenModel) {
       return t('red-envelope.message-hidden-model')
     }
-    if (data?.state === RedEnvelopeState.Ongoing && isAlreadyOpened) {
+    if (
+      (data?.state === RedEnvelopeState.Ongoing ||
+        data?.state === RedEnvelopeState.Done) &&
+      isAlreadyOpened
+    ) {
       return (
         <Box as="span" color="white">
           {t('red-envelope.message-already-opened')}
