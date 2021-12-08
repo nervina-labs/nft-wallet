@@ -3,11 +3,14 @@ import { Button } from '@mibao-ui/components'
 import styled from '@emotion/styled'
 import { useCallback, useState } from 'react'
 import { RedEnvelopeResponse, RuleType } from '../../../models'
-import { useAPI } from '../../../hooks/useAccount'
+import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useTranslation } from 'react-i18next'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useToast } from '../../../hooks/useToast'
 import { AxiosError } from 'axios'
+import { useHistory } from 'react-router-dom'
+import { RoutePath } from '../../../routes'
+import { UnipassConfig } from '../../../utils'
 
 const RiddleTitle = styled(Flex)`
   ::before,
@@ -45,10 +48,17 @@ export const Cover: React.FC<CoverProps> = ({
   const [inputValue, setInputValue] = useState('')
   const isPuzzle = data?.rule_info?.rule_type === RuleType.puzzle
   const getAuth = useGetAndSetAuth()
+  const { isLogined } = useAccountStatus()
   const api = useAPI()
   const toast = useToast()
+  const { push } = useHistory()
 
   const onOpenTheRedEnvelope = useCallback(async () => {
+    if (!isLogined) {
+      UnipassConfig.setRedirectUri(location.pathname)
+      push(RoutePath.Login)
+      return
+    }
     const auth = await getAuth()
     await api
       .openRedEnvelopeEvent(uuid, address, auth, {
@@ -71,7 +81,9 @@ export const Cover: React.FC<CoverProps> = ({
     data?.rule_info?.rule_type,
     getAuth,
     inputValue,
+    isLogined,
     onOpen,
+    push,
     t,
     toast,
     uuid,
