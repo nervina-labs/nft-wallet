@@ -83,7 +83,9 @@ export const RedEnvelope: React.FC = () => {
     async (input?: string) => {
       if (!isLogined) {
         UnipassConfig.setRedirectUri(location.pathname)
-        push(RoutePath.Login)
+        push(RoutePath.Login, {
+          redirect: location.pathname,
+        })
         return
       }
       setIsRefetching(true)
