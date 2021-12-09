@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import styled from '@emotion/styled'
-import { AspectRatio } from '@mibao-ui/components'
-import { Box, Center, Flex, Image, Spinner } from '@chakra-ui/react'
+import { AspectRatio, Box } from '@mibao-ui/components'
+import { Center, Flex, Image, Spinner } from '@chakra-ui/react'
 import { MainContainer } from '../../styles'
 import DEFAULT_RED_ENVELOPE_COVER_PATH from '../../assets/svg/red-envelope-cover.svg'
 import { useThemeColor } from '../../hooks/useThemeColor'
@@ -129,6 +129,8 @@ export const RedEnvelope: React.FC = () => {
     return <Redirect to={RoutePath.NotFound} />
   }
 
+  const coverHeight = `${Math.max(Math.floor(height * 0.3), 200)}px`
+
   return (
     <Container minH={height}>
       {isLoading ? (
@@ -139,15 +141,17 @@ export const RedEnvelope: React.FC = () => {
         <>
           <Box
             w="100%"
-            h={isOpened ? '80px' : '30%'}
             minH={isOpened ? '80px' : '200px'}
             overflow="hidden"
-            position="sticky"
             top="0"
             transition="300ms"
             zIndex={5}
             transform="translate3d(0, 0, 0)"
             animation="show-down 0.2s"
+            style={{
+              height: isOpened ? '80px' : coverHeight,
+              position: isOpened ? 'sticky' : undefined,
+            }}
           >
             <AspectRatio
               rounded="full"
@@ -164,10 +168,12 @@ export const RedEnvelope: React.FC = () => {
               <Flex>
                 <Image
                   src={data?.cover_image_url || DEFAULT_RED_ENVELOPE_COVER_PATH}
-                  w="35%"
-                  h="35%"
-                  mt="auto"
+                  w="calc(100% / 3 + 2px)"
+                  h={coverHeight}
                   objectFit="cover"
+                  mt="auto"
+                  transition="300ms"
+                  top={`calc(100% - ${coverHeight})`}
                 />
               </Flex>
             </AspectRatio>
