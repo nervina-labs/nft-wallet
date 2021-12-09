@@ -21,12 +21,18 @@ const Container = styled(MainContainer)`
   user-select: none;
 `
 
+interface RouteParams {
+  id: string
+  tid?: string
+}
+
 export const NFT: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
+  const { id, tid } = useParams<RouteParams>()
   const matchTokenClass = useRouteMatch(RoutePath.TokenClass)
   const isClass = matchTokenClass?.isExact
   const { detail, failureCount, isLoading, refetch } = useNFTDetailApi(id, {
     isClass,
+    tid,
   })
   useScrollRestoration()
   useFirstOpenScrollToTop()
@@ -39,18 +45,25 @@ export const NFT: React.FC = () => {
     return <Redirect to={RoutePath.NotFound} />
   }
 
+  const uuid = detail?.uuid || id
+
   return (
     <Container>
       <Appbar detail={detail} />
       <Renderer detail={detail} />
       <NftDetail
-        uuid={id}
+        uuid={uuid}
         detail={detail}
         isLoading={isLoading}
         refetch={refetch}
         isClass={isClass}
       />
-      <Footer uuid={id} detail={detail} hidden={isLoading} isClass={isClass} />
+      <Footer
+        uuid={uuid}
+        detail={detail}
+        hidden={isLoading}
+        isClass={isClass}
+      />
       <OrderDrawer />
     </Container>
   )

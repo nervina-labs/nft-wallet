@@ -2,7 +2,7 @@ export enum RoutePath {
   Launch = '/',
   Login = '/login',
   Account = '/account',
-  NFT = '/nft/:id',
+  NFT = '/nft',
   TokenClass = '/class/:id',
   NFTs = '/home',
   NotFound = '/404',
