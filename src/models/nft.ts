@@ -75,3 +75,8 @@ export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
   product_price: string
   product_price_currency: string
 }
+
+export interface RedirectToTokenClass {
+  is_token_class: true
+  token_class_uuid: string
+}

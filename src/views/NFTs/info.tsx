@@ -18,7 +18,7 @@ import {
 } from '@mibao-ui/components'
 import { addParamsToUrl, getNFTQueryParams, isSupportWebp } from '../../utils'
 import { ProfilePath } from '../../routes'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { Query } from '../../models'
 import { useAPI } from '../../hooks/useAccount'
 import { useQuery } from 'react-query'
@@ -76,12 +76,16 @@ export const Info: React.FC<{
   } = useDisclosure()
 
   const api = useAPI()
-
+  const { push } = useHistory()
   const { data: nft } = useQuery(
     [Query.NFTDetail, user?.avatar_token_uuid, api],
     async () => {
       const id = user?.avatar_token_uuid as string
       const { data } = await api.getNFTDetail(id)
+      if ('is_token_class' in data) {
+        push(`/class/${data.token_class_uuid}`)
+        return
+      }
       return data
     },
     {
