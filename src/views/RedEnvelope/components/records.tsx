@@ -143,7 +143,7 @@ export const Records: React.FC<RecordsProps> = ({
             <Flex justify="center" direction="column">
               <Box w="full">{ellipsisString(record.address, [8, 5])}</Box>
               <Box fontSize="12px" w="full">
-                {dayjs(record.rewarded_at).format('HH : mm')}
+                {dayjs(record.rewarded_at).format('HH:mm')}
               </Box>
             </Flex>
             {record.is_special_model ? (
