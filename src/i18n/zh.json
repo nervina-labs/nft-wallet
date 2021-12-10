@@ -656,7 +656,8 @@
       "message-already-opened": "您已领取过了",
       "error-conditions": "领取条件不足",
       "error-password": "口令错误哦，再试试",
-      "error-puzzle": "谜底错误哦，再猜猜看"
+      "error-puzzle": "谜底错误哦，再猜猜看",
+      "default-promotion-copy": "查看领取的数字藏品"
     }
   }
 }

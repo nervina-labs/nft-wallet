@@ -656,7 +656,8 @@
       "message-already-opened": "You have collect it.",
       "error-conditions": "does not meet the redpack conditions",
       "error-password": "The secret signal is wrong. Try it again.",
-      "error-puzzle": "The answer is wrong. Guess it again."
+      "error-puzzle": "The answer is wrong. Guess it again.",
+      "default-promotion-copy": "Look my collected digital collections"
     }
   }
 }

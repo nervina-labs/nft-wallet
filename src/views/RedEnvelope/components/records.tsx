@@ -1,10 +1,13 @@
 import { Box, Button, Divider, Flex } from '@chakra-ui/react'
+import styled from '@emotion/styled'
 import { Image } from '@mibao-ui/components'
 import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { ReactComponent as RedEnvelopeHiddenModelIcon } from '../../../assets/svg/red-envelope-hidden-model.svg'
 import { RedEnvelopeResponse, RedEnvelopeState } from '../../../models'
+import { RoutePath } from '../../../routes'
 import { ellipsisString, isSupportWebp } from '../../../utils'
 
 interface RecordsProps {
@@ -12,6 +15,20 @@ interface RecordsProps {
   address?: string
   isAlreadyOpened?: boolean
 }
+
+const LinkStyled = styled(Link)`
+  display: block;
+  background-color: #f9e0b7;
+  min-width: 150px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  border-radius: 8px;
+  :active {
+    background-color: #dac4a0;
+    transition: 0s;
+  }
+`
 
 export const Records: React.FC<RecordsProps> = ({
   data,
@@ -60,6 +77,8 @@ export const Records: React.FC<RecordsProps> = ({
   }, [data, isAlreadyOpened, isSpecialModel, t])
 
   const fromUsername = data?.issuer_info.name || data?.issuer_info.email || ''
+  const promotionCopy =
+    data?.promotion_copy || t('red-envelope.default-promotion-copy')
 
   return (
     <Flex
@@ -81,7 +100,7 @@ export const Records: React.FC<RecordsProps> = ({
       </Box>
 
       <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="50px" px="20px">
-        {data?.promotion_copy}
+        {promotionCopy}
       </Box>
       {data?.promotion_link ? (
         <Button
@@ -96,12 +115,16 @@ export const Records: React.FC<RecordsProps> = ({
             bg: '#dac4a0',
             transition: '0s',
           }}
-          href={data?.promotion_link}
+          href={data.promotion_link}
           target="_blank"
         >
           {t('red-envelope.promotion-link')}
         </Button>
-      ) : null}
+      ) : (
+        <LinkStyled to={RoutePath.NFTs}>
+          {t('red-envelope.promotion-link')}
+        </LinkStyled>
+      )}
 
       <Divider
         borderBottomColor="rgba(239, 239, 239, 0.2)"
