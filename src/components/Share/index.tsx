@@ -25,7 +25,7 @@ import { Holder } from './components/posters/holder'
 import styled from '@emotion/styled'
 import { PosterType, ShareProps } from './share.interface'
 import { useHistory } from 'react-router-dom'
-import { IS_WEXIN } from '../../constants'
+import { IS_ANDROID, IS_WEXIN } from '../../constants'
 
 const IconContainer = styled(RowImage)`
   &.loading {
@@ -65,6 +65,7 @@ export const Share: React.FC<ShareProps> = ({
   )
   const { imgSrc, reload, onRender } = useHtml2Canvas({
     onError: onRenderError,
+    toBlob: !(IS_ANDROID && IS_WEXIN),
   })
   useEffect(() => {
     if (imgSrc) {
