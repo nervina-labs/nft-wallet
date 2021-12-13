@@ -164,19 +164,30 @@ export const RedEnvelope: React.FC = () => {
               ratio={1 / 1}
               shadow="0 2px 4px rgba(0, 0, 0, 0.25)"
               border="2px solid #F9E0B7"
-              bg="#E94030"
               overflow="hidden"
+              bgColor="#E94030"
             >
               <Flex>
                 <Image
-                  src={data?.cover_image_url || DEFAULT_RED_ENVELOPE_COVER_PATH}
+                  src={DEFAULT_RED_ENVELOPE_COVER_PATH}
+                  position="absolute"
                   w="calc(100% / 3 + 2px)"
                   h={coverHeight}
-                  objectFit="cover"
-                  mt="auto"
-                  transition="300ms"
-                  top={`calc(100% - ${coverHeight})`}
+                  bottom="0"
+                  zIndex={0}
                 />
+                {data?.cover_image_url ? (
+                  <Image
+                    src={data?.cover_image_url}
+                    w="calc(100% / 3 + 2px)"
+                    h={coverHeight}
+                    objectFit="cover"
+                    mt="auto"
+                    transition="300ms"
+                    top={`calc(100% - ${coverHeight})`}
+                    zIndex={1}
+                  />
+                ) : null}
               </Flex>
             </AspectRatio>
           </Box>
