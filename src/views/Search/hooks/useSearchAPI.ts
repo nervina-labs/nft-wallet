@@ -22,9 +22,9 @@ function IsIssuersResponse<
 }
 
 function useRedirectToTarget(keyword: string) {
-  const { push } = useHistory()
+  const { replace } = useHistory()
   return useCallback(
-    (data: SearchIssuersResponse | SearchTokenClassesResponse) => {
+    (data: SearchIssuersResponse | SearchTokenClassesResponse): boolean => {
       if (!isIssuerId(keyword) && !isTokenClassId(keyword)) {
         return false
       }
@@ -32,19 +32,19 @@ function useRedirectToTarget(keyword: string) {
         IsIssuersResponse<SearchIssuersResponse>(data, 'issuers') &&
         data.issuers.length === 1
       ) {
-        push(`/issuer/${data.issuers[0].uuid}`)
+        replace(`/issuer/${data.issuers[0].uuid}`)
         return true
       }
       if (
         IsIssuersResponse<SearchTokenClassesResponse>(data, 'token_classes') &&
         data.token_classes.length === 1
       ) {
-        push(`/class/${data.token_classes[0].uuid}`)
+        replace(`/class/${data.token_classes[0].uuid}`)
         return true
       }
       return false
     },
-    [keyword, push]
+    [keyword, replace]
   )
 }
 
