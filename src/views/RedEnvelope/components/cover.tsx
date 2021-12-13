@@ -26,6 +26,7 @@ export interface CoverProps {
   address: string
   isOpening?: boolean
   onOpen?: (input?: string) => void
+  isLogined?: boolean
 }
 
 export const Cover: React.FC<CoverProps> = ({
@@ -33,6 +34,7 @@ export const Cover: React.FC<CoverProps> = ({
   data,
   isOpening,
   onOpen,
+  isLogined,
 }) => {
   const { t } = useTranslation('translations')
   const [inputValue, setInputValue] = useState('')
@@ -91,6 +93,7 @@ export const Cover: React.FC<CoverProps> = ({
           mt={isPuzzle ? '10px' : '30px'}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          disabled={!isLogined}
         />
       ) : null}
 
@@ -111,7 +114,9 @@ export const Cover: React.FC<CoverProps> = ({
         onClick={() => onOpen?.(inputValue)}
         isLoading={isOpening}
       >
-        {t('red-envelope.submit')}
+        {isLogined
+          ? t('red-envelope.submit')
+          : t('red-envelope.connect-and-open-it')}
       </Button>
       <Box color="white" fontSize="16px" mb="6px" mt="auto">
         {t('red-envelope.bottom-text')}
