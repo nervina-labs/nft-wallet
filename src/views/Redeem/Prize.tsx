@@ -104,6 +104,9 @@ export const OtherPrice: React.FC<OtherPriceProps> = ({
         renderer={previewImage}
         bgImgUrl={previewImage}
         type="image"
+        imagePreviewProps={{
+          centerZoomedOut: false,
+        }}
         render3D={() => null}
       />
       {showLabel ? (
