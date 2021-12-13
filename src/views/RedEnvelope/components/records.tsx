@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Spinner } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { Image } from '@mibao-ui/components'
 import dayjs from 'dayjs'
@@ -279,6 +279,7 @@ export const Records: React.FC<RecordsProps> = ({
           pullDownToRefresh={false}
           queryKey={[Query.RedEnvelopeRecords, api, uuid]}
           queryFn={queryFn}
+          loader={<Spinner color="#F9E0B7" />}
           noMoreElement={null}
           emptyElement={''}
           calcDataLength={(data) =>

@@ -22,7 +22,7 @@ import { Records } from './components/records'
 import { useCallback, useState } from 'react'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { useTranslation } from 'react-i18next'
-import { UnipassConfig } from '../../utils'
+import { sleep, UnipassConfig } from '../../utils'
 import { useToast } from '../../hooks/useToast'
 
 const Container = styled(MainContainer)`
@@ -79,6 +79,10 @@ export const RedEnvelope: React.FC = () => {
       retry: 2,
     }
   )
+  const isOpened =
+    !isLoading &&
+    (data?.current_user_reward_record !== null ||
+      data?.state !== RedEnvelopeState.Ongoing)
   const onOpenTheRedEnvelope = useCallback(
     async (input?: string) => {
       if (!isLogined) {
@@ -94,17 +98,42 @@ export const RedEnvelope: React.FC = () => {
         .openRedEnvelopeEvent(id, address, auth, {
           input,
         })
-        .catch((err: AxiosError) => {
-          if (data?.rule_info?.rule_type === RuleType.password) {
-            toast(t('red-envelope.error-password'))
-          } else if (data?.rule_info?.rule_type === RuleType.puzzle) {
-            toast(t('red-envelope.error-puzzle'))
-          } else if (err.response?.status === 400) {
-            toast(t('red-envelope.error-conditions'))
+        .then(async () => {
+          if (isOpened) return
+          let i = 0
+          for (; i < 3; i++) {
+            const res = await refetch()
+            const isPolling =
+              res.data?.current_user_reward_record === null &&
+              res.data?.state === RedEnvelopeState.Ongoing
+            if (!isPolling) break
+            await sleep(1000)
           }
+          setIsRefetching(false)
+          if (i >= 3) {
+            throw new Error('try it again')
+          }
+        })
+        .catch((err: AxiosError) => {
+          const ignoreCodeSet = new Set([1069, 1070, 1071])
+          const response =
+            err.request && typeof err?.request?.response === 'string'
+              ? JSON.parse(err.request.response)
+              : err?.request?.response
+          if (!ignoreCodeSet.has(response?.code)) {
+            if (data?.rule_info?.rule_type === RuleType.password) {
+              toast(t('red-envelope.error-password'))
+            } else if (data?.rule_info?.rule_type === RuleType.puzzle) {
+              toast(t('red-envelope.error-puzzle'))
+            } else if (err.response?.status === 400) {
+              toast(t('red-envelope.error-conditions'))
+            } else {
+              toast(t('red-envelope.try-again'))
+            }
+          }
+          setIsRefetching(false)
           throw err
         })
-        .then(async () => await refetch())
         .finally(() => {
           setIsRefetch(true)
           setIsRefetching(false)
@@ -117,15 +146,13 @@ export const RedEnvelope: React.FC = () => {
       getAuth,
       id,
       isLogined,
+      isOpened,
       push,
       refetch,
       t,
       toast,
     ]
   )
-
-  const isOnGoing = data?.state === RedEnvelopeState.Ongoing
-  const isOpened = data?.current_user_reward_record !== null || !isOnGoing
 
   if (error?.response?.status === 404) {
     return <Redirect to={RoutePath.NotFound} />
