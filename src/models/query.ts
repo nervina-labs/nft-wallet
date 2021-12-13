@@ -27,5 +27,6 @@ export enum Query {
   OrderDetail = 'OrderDetail',
   RankingList = 'RankingList',
   RedEnvelope = 'RedEnvelope',
+  RedEnvelopeRecords = 'RedEnvelopeRecords',
   Search = 'Search',
 }

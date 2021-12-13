@@ -5,6 +5,7 @@ import {
   NFT,
   NFTDetail,
   NFTTransaction,
+  PaginationOptions,
   ProductState,
   SearchOptions,
   SearchResponse,
@@ -63,6 +64,7 @@ import { RankingListResponse } from '../models/rank'
 import { PaymentChannel } from '../hooks/useOrder'
 import {
   OpenRedEnvelopeResponse,
+  RedEnvelopeRecords,
   RedEnvelopeResponse,
 } from '../models/red-envelope'
 
@@ -858,6 +860,18 @@ export class ServerWalletAPI {
       {
         params: {
           wallet_address: options?.address,
+        },
+      }
+    )
+  }
+
+  async getRedEnvelopeRecords(uuid: string, options?: PaginationOptions) {
+    return await this.axios.get<RedEnvelopeRecords>(
+      `/redpack_events/${uuid}/records`,
+      {
+        params: {
+          limit: PER_ITEM_LIMIT,
+          ...options,
         },
       }
     )

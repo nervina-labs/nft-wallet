@@ -1,3 +1,5 @@
+import { ListMeta } from '.'
+
 export enum RedEnvelopeState {
   Ongoing = 'ongoing',
   Closed = 'closed',
@@ -19,11 +21,16 @@ export interface RulePasswordInfo {
   rule_type: RuleType.password
 }
 
-export interface RewardRecord {
-  address: string
-  rewarded_at: string
+export interface RecordItem {
   is_special_model: boolean
-  bg_image_url?: string | null
+  bg_image_url: string | null
+}
+
+export interface RedEnvelopeRecord {
+  uuid: string
+  address: string
+  created_at: string
+  record_items: RecordItem[]
 }
 
 export interface RedEnvelopeResponse {
@@ -38,14 +45,22 @@ export interface RedEnvelopeResponse {
     claimed: number
     total: number
   }
-  user_claimed: boolean
   issuer_info: {
     name: string
     email: string
     uuid: string
   }
   rule_info: RulePuzzleInfo | RulePasswordInfo | null
-  reward_records: RewardRecord[]
+  current_user_reward_record: {
+    address: string
+    created_at: string
+    record_items: RecordItem[]
+  } | null
+}
+
+export interface RedEnvelopeRecords {
+  records: RedEnvelopeRecord[]
+  meta: ListMeta
 }
 
 export interface OpenRedEnvelopeResponse {

@@ -2,15 +2,24 @@ import { Box, Button, Divider, Flex } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { Image } from '@mibao-ui/components'
 import dayjs from 'dayjs'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ReactComponent as RedEnvelopeHiddenModelIcon } from '../../../assets/svg/red-envelope-hidden-model.svg'
-import { RedEnvelopeResponse, RedEnvelopeState } from '../../../models'
+import { InfiniteList } from '../../../components/InfiniteList'
+import { useAPI } from '../../../hooks/useAccount'
+import {
+  Query,
+  RecordItem,
+  RedEnvelopeRecord,
+  RedEnvelopeResponse,
+  RedEnvelopeState,
+} from '../../../models'
 import { RoutePath } from '../../../routes'
 import { ellipsisString, isSupportWebp } from '../../../utils'
 
 interface RecordsProps {
+  uuid: string
   data?: RedEnvelopeResponse
   address?: string
   isAlreadyOpened?: boolean
@@ -30,52 +39,171 @@ const LinkStyled = styled(Link)`
   }
 `
 
+const StatusText: React.FC<{
+  data?: RedEnvelopeResponse
+  isAlreadyOpened?: boolean
+}> = ({ data, isAlreadyOpened }) => {
+  const { t } = useTranslation('translations')
+  const isSpecialModel = useMemo(
+    () =>
+      Boolean(
+        data?.current_user_reward_record?.record_items.find(
+          (record) => record.is_special_model
+        )
+      ),
+    [data?.current_user_reward_record]
+  )
+  const baseProps = {
+    color: '#F9E0B7',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    px: '20px',
+  }
+  if (isSpecialModel) {
+    return <Box {...baseProps}>{t('red-envelope.message-hidden-model')}</Box>
+  }
+  if (isAlreadyOpened) {
+    return (
+      <Box {...baseProps} color="white">
+        {t('red-envelope.message-already-opened')}
+      </Box>
+    )
+  }
+  if (
+    data &&
+    data.state === RedEnvelopeState.Done &&
+    !('current_user_reward_record' in data)
+  ) {
+    return (
+      <Box {...baseProps} color="white">
+        {t('red-envelope.message-empty')}
+      </Box>
+    )
+  }
+  const textMap: { [key in RedEnvelopeState]?: string } = {
+    [RedEnvelopeState.Closed]: t('red-envelope.message-closed'),
+    [RedEnvelopeState.Expired]: t('red-envelope.message-expired'),
+  }
+  if (data?.state && textMap[data.state]) {
+    return (
+      <Box {...baseProps} color="white">
+        {textMap[data.state]}
+      </Box>
+    )
+  }
+  return <Box {...baseProps}>{t('red-envelope.message-succeed')}</Box>
+}
+
+const RewardRecord: React.FC<{
+  address?: string
+  data: RedEnvelopeRecord
+}> = ({ address, data }) => {
+  const { t } = useTranslation('translations')
+  const [imageUrl, hasSpecialModel, specialCount] = useMemo(() => {
+    const { specialRecord, specialCount } = data.record_items.reduce<{
+      specialRecord?: RecordItem
+      specialCount: number
+    }>(
+      (acc, record) => ({
+        specialRecord:
+          acc.specialRecord || (record.is_special_model ? record : undefined),
+        specialCount: record.is_special_model
+          ? acc.specialCount + 1
+          : acc.specialCount,
+      }),
+      {
+        specialCount: 0,
+      }
+    )
+    return [
+      specialRecord
+        ? specialRecord.bg_image_url
+        : data.record_items[0].bg_image_url,
+      Boolean(specialRecord),
+      specialCount,
+    ]
+  }, [data])
+
+  return (
+    <Flex
+      justify="space-between"
+      alignItems="center"
+      color="white"
+      fontSize="14px"
+      w="full"
+      px="20px"
+      textAlign="left"
+      h="48px"
+      position="relative"
+      bg={address === data.address ? '#E47767' : undefined}
+      userSelect="none"
+    >
+      <Flex justify="center" direction="column">
+        <Box w="full">{ellipsisString(data.address, [8, 5])}</Box>
+        <Box fontSize="12px" w="full">
+          {dayjs(data.created_at).format('HH:mm')}
+        </Box>
+      </Flex>
+      {hasSpecialModel ? (
+        <Flex
+          lineHeight="48px"
+          alignItems="center"
+          fontSize="12px"
+          whiteSpace="nowrap"
+        >
+          <RedEnvelopeHiddenModelIcon />
+          <Box as="span" ml="6px">
+            {t('red-envelope.hidden-model')}X{specialCount}
+          </Box>
+        </Flex>
+      ) : null}
+      <Image
+        src={imageUrl === null || !imageUrl ? '' : imageUrl}
+        w="38px"
+        h="38px"
+        minW="38px"
+        rounded="10px"
+        resizeScale={100}
+        webp={isSupportWebp()}
+        border={hasSpecialModel ? '2px solid #FFDCA2' : undefined}
+      />
+      <Box
+        position="absolute"
+        right="18px"
+        top="2px"
+        rounded="full"
+        bg="#FF5C00"
+        border="1px solid #FFDCA2"
+        zIndex={1}
+        w="15px"
+        h="15px"
+        lineHeight="13px"
+        textAlign="center"
+        fontSize="12px"
+      >
+        {data.record_items.length}
+      </Box>
+    </Flex>
+  )
+}
+
 export const Records: React.FC<RecordsProps> = ({
+  uuid,
   data,
   address,
   isAlreadyOpened,
 }) => {
   const { t } = useTranslation('translations')
-  const isSpecialModel = useMemo(
-    () =>
-      Boolean(
-        data?.reward_records.find((record) => record.address === address)
-          ?.is_special_model
-      ),
-    [address, data?.reward_records]
+  const api = useAPI()
+  const queryFn = useCallback(
+    async ({ pageParam = 1 }) => {
+      const { data } = await api.getRedEnvelopeRecords(uuid, {
+        page: pageParam,
+      })
+      return data
+    },
+    [api, uuid]
   )
-  const statusText = useMemo(() => {
-    if (isSpecialModel) {
-      return t('red-envelope.message-hidden-model')
-    }
-    if (isAlreadyOpened) {
-      return (
-        <Box as="span" color="white">
-          {t('red-envelope.message-already-opened')}
-        </Box>
-      )
-    }
-    if (!data?.user_claimed && data?.state === RedEnvelopeState.Done) {
-      return (
-        <Box as="span" color="white">
-          {t('red-envelope.message-empty')}
-        </Box>
-      )
-    }
-    const textMap: { [key in RedEnvelopeState]?: string } = {
-      [RedEnvelopeState.Closed]: t('red-envelope.message-closed'),
-      [RedEnvelopeState.Expired]: t('red-envelope.message-expired'),
-    }
-    if (data?.state && textMap[data.state]) {
-      return (
-        <Box as="span" color="white">
-          {textMap[data.state]}
-        </Box>
-      )
-    }
-    return t('red-envelope.message-succeed')
-  }, [data, isAlreadyOpened, isSpecialModel, t])
-
   const fromUsername = data?.issuer_info.name || data?.issuer_info.email || ''
   const promotionCopy =
     data?.promotion_copy || t('red-envelope.default-promotion-copy')
@@ -95,10 +223,7 @@ export const Records: React.FC<RecordsProps> = ({
               : fromUsername,
         })}
       </Box>
-      <Box color="#F9E0B7" fontSize="18px" fontWeight="bold" px="20px">
-        {statusText}
-      </Box>
-
+      <StatusText data={data} isAlreadyOpened={isAlreadyOpened} />
       <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="50px" px="20px">
         {promotionCopy}
       </Box>
@@ -150,53 +275,21 @@ export const Records: React.FC<RecordsProps> = ({
       ) : null}
 
       <Box w="full" mt="15px" mb="60px">
-        {data?.reward_records.map((record, i) => (
-          <Flex
-            key={i}
-            justify="space-between"
-            alignItems="center"
-            color="white"
-            fontSize="14px"
-            w="full"
-            px="20px"
-            textAlign="left"
-            h="48px"
-            bg={address === record.address ? '#E47767' : undefined}
-          >
-            <Flex justify="center" direction="column">
-              <Box w="full">{ellipsisString(record.address, [8, 5])}</Box>
-              <Box fontSize="12px" w="full">
-                {dayjs(record.rewarded_at).format('HH:mm')}
-              </Box>
-            </Flex>
-            {record.is_special_model ? (
-              <Flex
-                lineHeight="48px"
-                alignItems="center"
-                fontSize="12px"
-                whiteSpace="nowrap"
-              >
-                <RedEnvelopeHiddenModelIcon />
-                <Box as="span" ml="6px">
-                  {t('red-envelope.hidden-model')}
-                </Box>
-              </Flex>
-            ) : null}
-            <Image
-              src={
-                record.bg_image_url === null || !record.bg_image_url
-                  ? ''
-                  : record.bg_image_url
-              }
-              w="38px"
-              h="38px"
-              minW="38px"
-              rounded="8px"
-              resizeScale={100}
-              webp={isSupportWebp()}
-            />
-          </Flex>
-        ))}
+        <InfiniteList
+          pullDownToRefresh={false}
+          queryKey={[Query.RedEnvelopeRecords, api, uuid]}
+          queryFn={queryFn}
+          noMoreElement={null}
+          emptyElement={''}
+          calcDataLength={(data) =>
+            data?.pages.reduce((acc, page) => page.records.length + acc, 0) ?? 0
+          }
+          renderItems={(items, i) => {
+            return items.records.map((item, j) => (
+              <RewardRecord key={`${i}-${j}`} data={item} address={address} />
+            ))
+          }}
+        />
       </Box>
     </Flex>
   )

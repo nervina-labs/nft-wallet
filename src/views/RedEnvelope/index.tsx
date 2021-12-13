@@ -124,8 +124,8 @@ export const RedEnvelope: React.FC = () => {
     ]
   )
 
-  const isOpened =
-    data?.user_claimed || (data && data?.state !== RedEnvelopeState.Ongoing)
+  const isOnGoing = data?.state === RedEnvelopeState.Ongoing
+  const isOpened = data?.current_user_reward_record !== null || !isOnGoing
 
   if (error?.response?.status === 404) {
     return <Redirect to={RoutePath.NotFound} />
@@ -194,6 +194,7 @@ export const RedEnvelope: React.FC = () => {
           <Flex direction="column" animation="show 0.2s" h="70%" flex={1}>
             {isOpened ? (
               <Records
+                uuid={id}
                 data={data}
                 address={address}
                 isAlreadyOpened={
