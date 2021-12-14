@@ -360,16 +360,17 @@ export const Claim: React.FC = () => {
         <Button
           className="connect recommend"
           onClick={() => {
-            history.push(
-              submitStatus === SubmitStatus.Success
-                ? RoutePath.NFTs
-                : RoutePath.Explore
-            )
+            if (submitStatus === SubmitStatus.Success) {
+              history.push(RoutePath.NFTs)
+            } else {
+              setCode('')
+              setSubmitStatus(SubmitStatus.Claiming)
+            }
           }}
         >
           {t(
             `claim.${
-              submitStatus === SubmitStatus.Success ? 'go-home' : 'go-explore'
+              submitStatus === SubmitStatus.Success ? 'go-home' : 'claim-other'
             }`
           )}
         </Button>
