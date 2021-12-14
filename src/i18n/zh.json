@@ -3,7 +3,7 @@
     "404": {
       "title": "页面丢失",
       "not-found": "您所寻找的页面不存在",
-      "back": "返回我的 NFT"
+      "back": "返回我的数字藏品"
     },
     "common": {
       "beian": "浙ICP备2021006943号-3",
@@ -13,7 +13,7 @@
         "comfirm": "确认",
         "cancel": "取消",
         "loading": "加载中",
-        "pull-to-down": "暂无更多 NFT ~",
+        "pull-to-down": "暂无更多数字藏品~",
         "pull-down-refresh": " 下拉刷新",
         "release-refresh": " 下拉刷新"
       },
@@ -35,20 +35,20 @@
         "weibo-no-desc": "微博认证"
       },
       "baned": {
-        "nft": "该 NFT 暂不予显示",
+        "nft": "该数字藏品暂不予显示",
         "issuer": "该创作者暂不予显示"
       },
       "colon": "：",
       "title": "秘宝账户",
-      "description": "随时随地查看并管理你的 NFT",
+      "description": "随时随地查看并管理你的数字藏品",
       "img-lost": "图片失联",
-      "card-back": "该 NFT 卡背设置有信息，仅持有人可见",
+      "card-back": "该数字藏品卡背设置有信息，仅持有人可见",
       "show-detail": "查看详情"
     },
     "login": {
       "title": "秘宝账户",
       "connect": {
-        "unipass": "连接 UniPass",
+        "unipass": "连接 UniPass（邮箱登录）",
         "metamask": "连接以太坊环境",
         "wallet-connect": "连接 Wallet Connect",
         "connect": "连接"
@@ -58,10 +58,10 @@
         "refuse": "用户拒绝授权，请重新打开页面进行授权"
       },
       "desc-1": "随时随地查看",
-      "desc-2": "并管理你持有的 NFT"
+      "desc-2": "并管理你持有的数字藏品"
     },
     "nfts": {
-      "title": "我的 NFT",
+      "title": "我的数字藏品",
       "owned": "持有",
       "liked": "赞过",
       "status": {
@@ -69,11 +69,11 @@
         "receiving": "接收中",
         "tranferring": "赠予中"
       },
-      "no-data": "啊喔...尚未拥有任何 NFT",
-      "no-likes": "尚未赞过任何 NFT",
-      "link": "探索 NFT 的广阔宇宙",
-      "welcome": "欢迎来到 NFT 宇宙",
-      "hi": "Hi  NFT 收藏家",
+      "no-data": "啊喔...尚未拥有任何数字藏品",
+      "no-likes": "尚未赞过任何数字藏品",
+      "link": "探索数字藏品的广阔宇宙",
+      "welcome": "欢迎来到数字藏品宇宙",
+      "hi": "Hi 数字藏品收藏家",
       "share": "分享"
     },
     "transfer": {
@@ -87,10 +87,10 @@
       "error": {
         "eth": "请输入正确的以太坊地址",
         "ckb": "请输入正确的 CKB 地址",
-        "self": "无法赠予 NFT 给自己",
+        "self": "无法赠予数字藏品给自己",
         "das": "请输入 DAS 地址并选择一个解析结果",
-        "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「 NFT 账户」应用，方可查看收到的 NFT",
-        "short-address": "当前接收方地址不是在 NFT 应用生成的地址，请提醒接收方，除 NFT 应用外，目前仅 Neuron 钱包生成的地址支持接收 NFT 。切勿使用交易所等其他应用生成的 CKB 地址",
+        "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「数字藏品账户」应用，方可查看收到的数字藏品",
+        "short-address": "当前接收方地址不是在数字藏品应用生成的地址，请提醒接收方，除数字藏品应用外，目前仅 Neuron 钱包生成的地址支持接收数字藏品。切勿使用交易所等其他应用生成的 CKB 地址",
         "common": "请输入正确的 CKB 地址/以太坊地址/DAS 账户",
         "sign-fail": "签名失败，请重新签名",
         "tranfer-fail": "发送失败，请检查当前网络情况，重新发送",
@@ -101,7 +101,7 @@
       },
       "das": {
         "not-register": "当前 DAS 还未注册",
-        "empty": "当前 DAS 账户下未检测到可接收 NFT 的地址",
+        "empty": "当前 DAS 账户下未检测到可接收数字藏品的地址",
         "single-result": "解析结果",
         "multi-result": "存在多个解析结果，请选择"
       },
@@ -126,15 +126,15 @@
       }
     },
     "info": {
-      "title": "NFT 接收地址",
+      "title": "数字藏品接收地址",
       "copy": "复制地址到剪贴板",
       "copied": "复制成功"
     },
     "nft": {
-      "title": "NFT 细节",
+      "title": "数字藏品细节",
       "transfer": "赠予",
-      "desc": "NFT 简介",
-      "lock": "只有该 NFT 的持有者才能解锁该内容",
+      "desc": "数字藏品简介",
+      "lock": "只有该数字藏品的持有者才能解锁该内容",
       "no-desc": "无简介",
       "no-holder": "无收藏者",
       "holder": "收藏者"
@@ -144,8 +144,8 @@
       "info": "基本信息",
       "transactions": "流转记录",
       "warning": "该地址仅用于接收 CKB 链上资产，切勿转入其他链上资产",
-      "qrcode": "扫描二维码，快速接收 NFT",
-      "address": "NFT 接收地址"
+      "qrcode": "扫描二维码，快速接收数字藏品",
+      "address": "数字藏品接收地址"
     },
     "holder": {
       "user-name-empty": "未设置昵称",
@@ -186,7 +186,7 @@
       "avatar": {
         "camera": "拍照",
         "photo-lib": "图片库",
-        "nft": "选择 NFT 做头像"
+        "nft": "选择数字藏品做头像"
       },
       "save": "保存",
       "cancel": "取消",
@@ -209,8 +209,8 @@
       "latest": "最新创作",
       "most-liked": "获赞最多",
       "recommended": "推荐",
-      "hotest": "最热 NFT",
-      "collections": "NFT 精选",
+      "hotest": "最热数字藏品",
+      "collections": "数字藏品精选",
       "issuers": "最受欢迎创作者",
       "home": "首页"
     },
@@ -225,16 +225,16 @@
     },
     "help": {
       "title": "帮助中心",
-      "question": "对 UniPass/以太坊环境有问题？"
+      "question": "对 UniPass 有问题？"
     },
     "guide": {
       "one": {
         "title": "1. 查看CKB地址",
-        "desc": "点击查看地址，发送方可通过您的 CKB 地址将 NFT 发送给您"
+        "desc": "点击查看地址，发送方可通过您的 CKB 地址将数字藏品发送给您"
       },
       "two": {
-        "title": "2. 查看我的 NFT",
-        "desc": "在这里可以查看您本人持有的 NFT 和您赞过的 NFT"
+        "title": "2. 查看我的数字藏品",
+        "desc": "在这里可以查看您本人持有的数字藏品和您赞过的数字藏品"
       },
       "three": {
         "title": "3. 查看更多信息和功能",
@@ -248,26 +248,26 @@
       "done": "开始使用"
     },
     "apps": {
-      "welcome": "欢迎开发者入驻，共建 NFT 生态",
+      "welcome": "欢迎开发者入驻，共建数字藏品生态",
       "shop": {
-        "title": "NFT 店铺",
-        "desc": "购买数字收藏品就到 NFT 店铺"
+        "title": "数字藏品店铺",
+        "desc": "购买数字收藏品就到数字藏品店铺"
       },
       "red-envelope": {
         "title": "UniPass 红包",
-        "desc": "为朋友发送随机 NFT 红包，没有账户也能收"
+        "desc": "为朋友发送随机数字藏品红包，没有账户也能收"
       },
       "ticket": {
         "title": "UniPass 门票",
-        "desc": "出示 NFT 门票，彰显 VIP 身份，还能获得后续权益"
+        "desc": "出示数字藏品门票，彰显 VIP 身份，还能获得后续权益"
       },
       "dao": {
         "title": "秘·DAO",
-        "desc": "使用 NFT 实现去中心化组织集体决策"
+        "desc": "使用数字藏品实现去中心化组织集体决策"
       },
       "exchange": {
         "title": "兑换",
-        "desc": "收集 NFT 兑换其他商品或者限量版 NFT"
+        "desc": "收集数字藏品兑换其他商品或者限量版数字藏品"
       },
       "exhibition": {
         "title": "虚拟展厅",
@@ -275,7 +275,7 @@
       },
       "vip": {
         "title": "VIP 社区",
-        "desc": "持有特殊 NFT 才能访问的高质量社区"
+        "desc": "持有特殊数字藏品才能访问的高质量社区"
       }
     },
     "resource": {
@@ -291,7 +291,7 @@
       "submited": "地址已提交成功，感谢您的参与！",
       "duplicate": "地址已经提交，请勿重复提交",
       "continue": "您还可以继续操作",
-      "explore": "探索 NFT",
+      "explore": "探索数字藏品",
       "select": "请选择一种提交方式（连接成功即自动提交)",
       "errors": {
         "not-support": "当前环境不支持连接以太坊",
@@ -301,27 +301,27 @@
     },
     "auth": {
       "title": "授权确认",
-      "content": "我们将请求一个针对 NFT 地址的数字签名，从而保护您的隐私数据不会被泄露和篡改，如个人信息，点赞数据等。",
+      "content": "我们将请求一个针对数字藏品地址的数字签名，从而保护您的隐私数据不会被泄露和篡改，如个人信息，点赞数据等。",
       "ok": "继续"
     },
     "shop": {
-      "title": "NFT 店铺",
+      "title": "数字藏品店铺",
       "scan": "微信扫一扫",
-      "desc": "进入 NFT 店铺微信小程序",
+      "desc": "进入数字藏品店铺微信小程序",
       "save": "保存图片",
       "buy": "购买"
     },
     "claim": {
-      "tips": "您有一个 NFT 待领取",
-      "login": "请先登录 NFT",
+      "tips": "您有一个数字藏品待领取",
+      "login": "请先登录",
       "last-step": "您离领取还差最后一步",
       "error": "领取码错误",
       "confirm": "确认领取",
       "continue": "您还可以继续操作",
       "success": "领取成功",
-      "claimed": "Opps～ NFT 已被领走",
-      "go-home": "进入 NFT 查看",
-      "go-explore": "发现更多 NFT",
+      "claimed": "Opps～数字藏品已被领走",
+      "go-home": "进入数字藏品查看",
+      "go-explore": "发现更多数字藏品",
       "placeholder": "请输入领取密码"
     },
     "issuer": {
@@ -332,19 +332,19 @@
       "like": "获赞",
       "no-data": "无数据",
       "more": "更多",
-      "no-on-sale": "无在售 NFT"
+      "no-on-sale": "无在售数字藏品"
     },
     "exchange": {
       "title": "兑换中心",
       "count": "{{count}} 个",
       "redeemed": "已兑",
-      "nft-prize": "奖品包含下面所有 NFT",
-      "blind-prize": "奖品随机包含下面的 {{count}} 个 NFT",
+      "nft-prize": "奖品包含下面所有数字藏品",
+      "blind-prize": "奖品随机包含下面的 {{count}} 个数字藏品",
       "othder-prize": "发起人会在您提交兑换后根据您提供的接收信息进行承兑",
       "redeem-time": "兑换时间：",
       "type": {
         "token": "NFT",
-        "blind_box": "NFT 盲盒",
+        "blind_box": "数字藏品盲盒",
         "custom": "其他"
       },
       "progress": "兑换进度",
@@ -382,7 +382,7 @@
         }
       },
       "alert": {
-        "normal": "兑换不会销毁您参与兑换的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他兑换",
+        "normal": "兑换不会销毁您参与兑换的数字藏品，但会对其进行标记，标记过的数字藏品无法再次参与其他兑换",
         "destroy": "兑换将会销毁您参与兑换的NFT，该操作不可逆，一经销毁将无法找回",
         "confirm": "确认兑换",
         "cancel": "取消"
@@ -423,15 +423,15 @@
           "price": "活动奖品",
           "requirement": "兑换条件"
         },
-        "condition": "同时持有以下 NFT 的用户才可参与兑换"
+        "condition": "同时持有以下数字藏品的用户才可参与兑换"
       },
       "condition": {
         "nft": "NFT",
         "needed": "需持有",
         "held": "当前可兑换"
       },
-      "warning": "兑换不会销毁您持有的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他任何兑换活动。",
-      "warning-destroyed": "兑换将会销毁您参与兑换的 NFT ，该操作不可逆，一经销毁将无法找回",
+      "warning": "兑换不会销毁您持有的数字藏品，但会对其进行标记，标记过的数字藏品无法再次参与其他任何兑换活动。",
+      "warning-destroyed": "兑换将会销毁您参与兑换的数字藏品，该操作不可逆，一经销毁将无法找回",
       "check": {
         "price": "查看奖品",
         "comment": "查看奖品和留言",
@@ -446,7 +446,7 @@
         "time": "提交时间：",
         "fail": "兑换失败",
         "custom": "活动发起人会根据您提供的接收信息进行承兑",
-        "check": "查看兑换的 NFT",
+        "check": "查看兑换的数字藏品",
         "confirm": "确认",
         "go-back": "返回兑换中心",
         "error": "请检查当前网络情况或兑换条件",
@@ -463,7 +463,7 @@
       "end": "已经拉到底啦~",
       "login": {
         "desc-1": "啊哦～您还未登录",
-        "desc-2": "请登录 NFT ，查看您关注的精彩内容",
+        "desc-2": "请登录数字藏品，查看您关注的精彩内容",
         "login": "登录"
       },
       "no-data": "尚未关注任何创作者"

@@ -13,7 +13,7 @@ import { Unipass } from '../views/Unipass'
 // import { Apps } from '../views/Apps'
 // import { AddressCollector } from '../views/AddressCollector'
 // import { Collection } from '../views/Collection'
-// import { Claim } from '../views/Claim'
+import { Claim } from '../views/Claim'
 // import { Issuer } from '../views/Issuer'
 // import { Shop } from '../views/Shop'
 // import { Redeem } from '../views/Reedem'
@@ -128,12 +128,12 @@ export const routes: MibaoRouterProps[] = [
   //   key: 'Apps',
   //   path: RoutePath.Apps,
   // },
-  // {
-  //   component: Claim,
-  //   exact: true,
-  //   key: 'claim',
-  //   path: RoutePath.Claim,
-  // },
+  {
+    component: Claim,
+    exact: true,
+    key: 'claim',
+    path: RoutePath.Claim,
+  },
   // {
   //   component: Claim,
   //   exact: true,

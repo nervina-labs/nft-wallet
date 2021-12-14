@@ -1,25 +1,20 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../../assets/img/login.png'
-import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { IS_IMTOKEN } from '../../constants'
 import Button from '@material-ui/core/Button'
-import { CircularProgress, FormControlLabel, Checkbox } from '@material-ui/core'
+import { CircularProgress } from '@material-ui/core'
 import { LazyLoadImage } from '../../components/Image'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
-import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory, useLocation } from 'react-router'
-import { useTranslation, Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
-import { getLicenseUrl } from '../../data/license'
-import { UnipassConfig } from '../../utils'
-import { useSnackbar } from '../../hooks/useSnackbar'
 import { useAccountStatus, useLogin, WalletType } from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
@@ -164,14 +159,6 @@ const Container = styled(MainContainer)`
   }
 `
 
-const Title = styled.h2`
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 28px;
-  color: #000000;
-  margin: 0;
-`
-
 enum ErrorMsg {
   NotSupport = 'not-support',
   Imtoken = 'refuse',
@@ -185,9 +172,7 @@ export const Login: React.FC = () => {
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
-  const [isLicenseChecked, setIsLicenseChecked] = useState(false)
   const [errorStatus, setErrorMsg] = useState(ErrorMsg.NotSupport)
-  const { snackbar } = useSnackbar()
   const history = useHistory()
   const location = useLocation<{ redirect?: string }>()
   const redirectUrl = location?.state?.redirect
@@ -224,10 +209,6 @@ export const Login: React.FC = () => {
   }
   const loginBtnOnClick = useCallback(
     async (walletType = WalletType.Unipass) => {
-      if (!isLicenseChecked) {
-        snackbar(t('license.warn'))
-        return
-      }
       setLoading(true, walletType)
       try {
         if (walletType === WalletType.Metamask) {
@@ -253,7 +234,7 @@ export const Login: React.FC = () => {
         }
       }
     },
-    [login, isLicenseChecked, snackbar, t, redirectUrl, history]
+    [login, redirectUrl, history]
   )
 
   if (isLogined && redirectUrl == null) {
@@ -262,18 +243,6 @@ export const Login: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
-      <div
-        className="close"
-        onClick={() => {
-          UnipassConfig.clear()
-          history.replace(RoutePath.Explore)
-        }}
-      >
-        <CloseSvg />
-      </div>
-      <div className="header">
-        <Title style={{ marginRight: '8px' }}>{t('login.title')}</Title>
-      </div>
       <div className="logo">
         <LazyLoadImage src={Logo} width={width} height={width * 1.091} />
       </div>
@@ -300,26 +269,6 @@ export const Login: React.FC = () => {
           <CircularProgress className="loading" size="1em" />
         ) : null}
       </Button>
-      <Button
-        className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}
-        disabled={
-          isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-        }
-        onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
-      >
-        {IS_IMTOKEN ? (
-          <>
-            {t('login.connect.connect')}
-            <ImtokenSvg className="imtoken" />
-          </>
-        ) : (
-          t('login.connect.metamask')
-        )}
-        &nbsp;
-        {isMetamaskLoging ? (
-          <CircularProgress className="loading" size="1em" />
-        ) : null}
-      </Button>
       <div
         className="question"
         onClick={() => {
@@ -333,51 +282,6 @@ export const Login: React.FC = () => {
         <QuestionSvg />
         <span>{t('help.question')}</span>
       </div>
-      <div className="license">
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isLicenseChecked}
-              onChange={() => setIsLicenseChecked(!isLicenseChecked)}
-              color="default"
-              name="license"
-              size="small"
-            />
-          }
-          label={
-            <Trans
-              ns="translations"
-              i18nKey="license.agree"
-              t={t}
-              components={{
-                a: (
-                  <span
-                    style={{ color: '#D8B340' }}
-                    onClick={() => {
-                      history.push(
-                        `${RoutePath.License}?url=${encodeURIComponent(
-                          getLicenseUrl(i18n.language)
-                        )}`
-                      )
-                    }}
-                  />
-                ),
-              }}
-            />
-          }
-        />
-      </div>
-      {i18n.language !== 'en' ? (
-        <div className="beian">
-          <a
-            href="https://beian.miit.gov.cn/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('common.beian')}
-          </a>
-        </div>
-      ) : null}
       {/* <Button
           disabled={
             isUnipassLogining || isMetamaskLoging || isWalletConnectLoging

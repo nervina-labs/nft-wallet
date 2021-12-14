@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
-import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
+import AddrSuccess from '../../assets/img/claim.png'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-success.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
@@ -12,7 +12,6 @@ import { IS_IMTOKEN } from '../../constants'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { CircularProgress } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
-import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { getHelpUnipassUrl } from '../../data/help'
@@ -30,12 +29,13 @@ import {
 } from '../../hooks/useAccount'
 
 const Container = styled(MainContainer)`
-  padding-top: 10px;
-  min-height: calc(100% - 10px);
+  padding: 0;
+  min-height: 100%;
   max-width: 500px;
   flex-direction: column;
   display: flex;
   .bg {
+    img,
     svg {
       width: 100%;
       max-width: 100%;
@@ -280,7 +280,7 @@ export const Claim: React.FC = () => {
 
   const imgs = {
     [SubmitStatus.Unlogin]: <AddressesSvg />,
-    [SubmitStatus.Claiming]: <AddrSuccess />,
+    [SubmitStatus.Claiming]: <img src={AddrSuccess} />,
     [SubmitStatus.Claimed]: <AddrDup />,
     [SubmitStatus.Success]: <ClaimSuccessSvg />,
   }
@@ -300,24 +300,6 @@ export const Claim: React.FC = () => {
           >
             {t('login.connect.unipass')}&nbsp;
             {isUnipassLogining ? (
-              <CircularProgress className="loading" size="1em" />
-            ) : null}
-          </Button>
-          <Button
-            className={'metamask connect'}
-            disabled={isUnipassLogining || isMetamaskLoging}
-            onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
-          >
-            {IS_IMTOKEN ? (
-              <>
-                {t('login.connect.connect')}
-                <ImtokenSvg className="imtoken" />
-              </>
-            ) : (
-              t('login.connect.metamask')
-            )}
-            &nbsp;
-            {isMetamaskLoging ? (
               <CircularProgress className="loading" size="1em" />
             ) : null}
           </Button>
