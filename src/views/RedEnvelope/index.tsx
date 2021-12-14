@@ -87,6 +87,7 @@ export const RedEnvelope: React.FC = () => {
       data?.state !== RedEnvelopeState.Ongoing)
   const onOpenTheRedEnvelope = useCallback(
     async (input?: string) => {
+      if (isRefetching) return
       if (!isLogined) {
         const redirectUri = `${location.pathname}?open=true`
         UnipassConfig.setRedirectUri(redirectUri)
@@ -150,6 +151,7 @@ export const RedEnvelope: React.FC = () => {
       id,
       isLogined,
       isOpened,
+      isRefetching,
       push,
       refetch,
       t,
@@ -158,10 +160,10 @@ export const RedEnvelope: React.FC = () => {
   )
 
   useEffect(() => {
-    if (isAutoOpen === 'true' && data?.rule_info === null) {
+    if (isAutoOpen === 'true' && data?.rule_info === null && !isOpened) {
       onOpenTheRedEnvelope()
     }
-  }, [data?.rule_info, isAutoOpen, onOpenTheRedEnvelope])
+  }, [data?.rule_info, isAutoOpen, isOpened, onOpenTheRedEnvelope])
 
   if (error?.response?.status === 404) {
     return <Redirect to={RoutePath.NotFound} />
