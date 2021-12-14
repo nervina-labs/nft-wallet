@@ -640,7 +640,7 @@
       "hidden-model": "隐藏款",
       "from-red-envelope": "来自 {{username}} 分享的数字藏品红包",
       "promotion-link": "点击去看看",
-      "record-count-text": "共 {{total}} 个秘宝，已被领取 {{claimed}} 个，还剩 {{remain}} 个",
+      "record-count-text": "共 {{total}} 个红包，已被领取 {{claimed}} 个，还剩 {{remain}} 个",
       "puzzle-title": "谜题",
       "puzzle-answer": "谜底",
       "submit": "马上领取",
