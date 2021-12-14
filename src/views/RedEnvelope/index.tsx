@@ -234,6 +234,7 @@ export const RedEnvelope: React.FC = () => {
                 data={data}
                 onOpen={onOpenTheRedEnvelope}
                 isOpening={isRefetching}
+                isLogined={isLogined}
               />
             )}
           </Flex>
