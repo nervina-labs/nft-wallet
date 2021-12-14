@@ -49,15 +49,18 @@ export const Cover: React.FC<CoverProps> = ({
   const [inputValue, setInputValue] = useState('')
   const isPuzzle = data?.rule_info?.rule_type === RuleType.puzzle
   const getAuth = useGetAndSetAuth()
+  const [isGetAuthLoading, setIsGetAuthLoading] = useState(false)
   const [auth, setAuth] = useState<Auth | null>(null)
 
   useEffect(() => {
-    if (autoGetAuth && !auth && isLogined) {
+    if (autoGetAuth && !auth && isLogined && !isGetAuthLoading) {
       ;(async () => {
+        setIsGetAuthLoading(true)
         setAuth(await getAuth())
+        setIsGetAuthLoading(false)
       })()
     }
-  }, [auth, autoGetAuth, getAuth, isLogined])
+  }, [auth, autoGetAuth, getAuth, isGetAuthLoading, isLogined])
 
   return (
     <Flex
