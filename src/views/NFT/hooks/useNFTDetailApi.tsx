@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { useHistory } from 'react-router-dom'
 import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useWechatShare } from '../../../hooks/useWechat'
@@ -28,7 +27,6 @@ export function useNFTDetailApi(
   const { isLogined } = useAccountStatus()
   const wechatShare = useWechatShare()
   const { t } = useTranslation('translations')
-  const { push } = useHistory()
   const { data: detail, failureCount, isLoading, refetch } = useQuery(
     [Query.NFTDetail, uuid, api, isLogined],
     async () => {
@@ -42,10 +40,6 @@ export function useNFTDetailApi(
         hasTid && options?.tid
           ? await api.getNFTDetailByClassUuidAndTid(uuid, options.tid, { auth })
           : await api.getNFTDetail(uuid, auth)
-      if ('is_token_class' in data) {
-        push(`/class/${data.token_class_uuid}`)
-        return
-      }
       return data
     },
     {

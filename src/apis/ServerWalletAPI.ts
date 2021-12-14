@@ -6,7 +6,6 @@ import {
   NFTDetail,
   NFTTransaction,
   ProductState,
-  RedirectToTokenClass,
   SearchOptions,
   SearchResponse,
   SearchType,
@@ -137,7 +136,7 @@ export class ServerWalletAPI {
   async getNFTDetail(
     uuid: string,
     auth?: Auth
-  ): Promise<AxiosResponse<NFTDetail | RedirectToTokenClass>> {
+  ): Promise<AxiosResponse<NFTDetail>> {
     const params: Record<string, unknown> = {
       include_submitting: true,
     }
@@ -148,13 +147,10 @@ export class ServerWalletAPI {
     if (auth) {
       headers.auth = JSON.stringify(auth)
     }
-    return await this.axios.get<RedirectToTokenClass | NFTDetail>(
-      `/tokens/${uuid}`,
-      {
-        params,
-        headers,
-      }
-    )
+    return await this.axios.get<NFTDetail>(`/tokens/${uuid}`, {
+      params,
+      headers,
+    })
   }
 
   async getNFTDetailByClassUuidAndTid(

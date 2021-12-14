@@ -354,16 +354,11 @@ export const Transfer: React.FC = () => {
   }, [])
 
   const getAuth = useGetAndSetAuth()
-  const { push } = useHistory()
   const { data: remoteNftDetail, failureCount } = useQuery(
     [Query.NFTDetail, id, api, getAuth],
     async () => {
       const auth = await getAuth()
       const { data } = await api.getNFTDetail(id, auth)
-      if ('is_token_class' in data) {
-        push(`/class/${data.token_class_uuid}`)
-        return
-      }
       return data
     },
     { enabled: id != null && routerLocation.state?.nftDetail == null }
