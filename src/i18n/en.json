@@ -646,7 +646,7 @@
       "submit": "Open it",
       "current-account": "Current Account: ",
       "bottom-text": "Receive the blind box Red Packet",
-      "puzzle-placeholder": "猜谜底，领数字藏品",
+      "puzzle-placeholder": "Enter the answer to get it now",
       "password-placeholder": "Enter the secret signal to get it now",
       "message-hidden-model": "Congratulations on collecting the special edition.",
       "message-closed": "The Red Packet has been closed by the generator.",
