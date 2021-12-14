@@ -33,6 +33,7 @@ const LinkStyled = styled(Link)`
   line-height: 48px;
   text-align: center;
   border-radius: 8px;
+  padding: 0 20px;
   :active {
     background-color: #dac4a0;
     transition: 0s;
