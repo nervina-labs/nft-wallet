@@ -1,7 +1,6 @@
 import { Box, Button, Divider, Flex, Spinner } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { Image } from '@mibao-ui/components'
-import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -16,7 +15,7 @@ import {
   RedEnvelopeState,
 } from '../../../models'
 import { RoutePath } from '../../../routes'
-import { ellipsisString, isSupportWebp } from '../../../utils'
+import { ellipsisString, formatTime, isSupportWebp } from '../../../utils'
 
 interface RecordsProps {
   uuid: string
@@ -99,7 +98,7 @@ const RewardRecord: React.FC<{
   address?: string
   data: RedEnvelopeRecord
 }> = ({ address, data }) => {
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const [imageUrl, hasSpecialModel, specialCount] = useMemo(() => {
     const { specialRecord, specialCount } = data.record_items.reduce<{
       specialRecord?: RecordItem
@@ -142,7 +141,7 @@ const RewardRecord: React.FC<{
       <Flex justify="center" direction="column">
         <Box w="full">{ellipsisString(data.address, [8, 5])}</Box>
         <Box fontSize="12px" w="full">
-          {dayjs(data.created_at).format('HH:mm')}
+          {formatTime(data.created_at, i18n.language, true)}
         </Box>
       </Flex>
       {hasSpecialModel ? (
