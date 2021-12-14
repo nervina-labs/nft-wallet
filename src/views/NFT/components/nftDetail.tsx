@@ -18,12 +18,11 @@ import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as OwnedSealSvg } from '../../../assets/svg/owned-seal.svg'
 import { ReactComponent as OwnedSealENSvg } from '../../../assets/svg/owned-seal-en.svg'
 import { ReactComponent as AvatarVerifiedSvg } from '../../../assets/svg/avatar-verified.svg'
-import styled from 'styled-components'
 import { Follow } from '../../../components/Follow'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuery } from '../../../hooks/useRouteQuery'
 import { useCallback, useState } from 'react'
-import { useHistory, useRouteMatch } from 'react-router-dom'
+import { Link, useHistory, useRouteMatch } from 'react-router-dom'
 import { NftTxLogsList } from './nftTxLogList'
 import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
@@ -32,17 +31,10 @@ import { isSupportWebp } from '../../../utils'
 import { Tag, TagLabel } from '@chakra-ui/react'
 import { RoutePath } from '../../../routes'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
+import styled from 'styled-components'
 
-const NftDetailName = styled.div`
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  font-size: 18px;
-  -webkit-line-clamp: 2;
-  margin-right: 10px;
-  margin-bottom: 5px;
+const LinkFlex = styled(Link)`
+  display: flex;
 `
 
 const TAB_PARAM_SET = ['desc', 'tx_logs', 'holders'] as const
@@ -154,7 +146,6 @@ export const NftDetail: React.FC<{
   refetch: (params?: any) => Promise<any>
 }> = ({ detail, isLoading, refetch, isClass, uuid }) => {
   const { t, i18n } = useTranslation('translations')
-  const { push } = useHistory()
   const isOwned =
     typeof detail?.card_back_content !== 'undefined' ||
     typeof detail?.class_card_back_content !== 'undefined'
@@ -162,12 +153,6 @@ export const NftDetail: React.FC<{
     detail?.issuer_info?.avatar_url === null
       ? ''
       : detail?.issuer_info?.avatar_url
-
-  const gotoIssuer = useCallback(() => {
-    if (detail?.issuer_info?.uuid) {
-      push(`/issuer/${detail?.issuer_info?.uuid}`)
-    }
-  }, [detail?.issuer_info?.uuid, push])
   const matchNFT = useRouteMatch(RoutePath.NFT + '/:id')
   const matchNFTWithTid = useRouteMatch(RoutePath.NFT + '/:id/:tid')
   const isNft = matchNFT?.isExact || matchNFTWithTid?.isExact
@@ -183,7 +168,16 @@ export const NftDetail: React.FC<{
       <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={2} px="20px">
         <Flex justify="space-between">
           <Box pr="10px">
-            <NftDetailName>{detail?.name}</NftDetailName>
+            <Box
+              textOverflow="ellipsis"
+              overflow="hidden"
+              noOfLines={2}
+              fontSize="18px"
+              mr="10px"
+              mb="5px"
+            >
+              {detail?.name}
+            </Box>
             <Flex lineHeight="20px">
               <Limited
                 count={detail?.total ?? 0}
@@ -208,61 +202,69 @@ export const NftDetail: React.FC<{
       </SkeletonText>
 
       <Grid
-        templateColumns="48px calc(100% - 48px - 100px) auto"
+        templateColumns="calc(100% - 100px) auto"
         mt="25px"
         px="20px"
         cursor="pointer"
       >
-        <Box position="relative">
-          <Avatar
-            src={avatarUrl}
-            size="48px"
-            fallbackSrc={FallbackAvatarSrc}
-            onClick={gotoIssuer}
-            webp={isSupportWebp()}
-            resizeScale={100}
-          />
-          {showAvatarVerified ? (
-            <Center position="absolute" right="0" bottom="0" zIndex={2}>
-              <AvatarVerifiedSvg />
-            </Center>
-          ) : null}
-        </Box>
+        <LinkFlex
+          to={detail ? `/issuer/${detail?.issuer_info?.uuid ?? ''}` : ''}
+        >
+          <Box position="relative">
+            <Avatar
+              src={avatarUrl}
+              size="48px"
+              minW="48px"
+              fallbackSrc={FallbackAvatarSrc}
+              webp={isSupportWebp()}
+              resizeScale={100}
+            />
+            {showAvatarVerified ? (
+              <Center position="absolute" right="0" bottom="0" zIndex={2}>
+                <AvatarVerifiedSvg />
+              </Center>
+            ) : null}
+          </Box>
 
-        {isLoading ? (
-          <SkeletonText
-            noOfLines={2}
-            spacing={3}
-            ml="18px"
-            pt="4px"
-            onClick={gotoIssuer}
-            h="full"
-          />
-        ) : (
-          <Flex justify="center" direction="column" h="100%" ml="18px">
-            <Box
-              fontSize="14px"
-              textOverflow="ellipsis"
-              whiteSpace="nowrap"
-              overflow="hidden"
-              fontWeight="500"
+          {isLoading ? (
+            <SkeletonText
+              noOfLines={2}
+              spacing={3}
+              ml="18px"
+              pt="4px"
+              h="full"
+            />
+          ) : (
+            <Flex
+              justify="center"
+              direction="column"
+              h="100%"
+              ml="18px"
+              w="calc(100% - 48px - 18px)"
             >
-              {detail?.issuer_info?.name}
-            </Box>
-            {detail?.verified_info?.verified_title && (
               <Box
-                fontSize="12px"
-                color="#777E90"
+                fontSize="14px"
                 textOverflow="ellipsis"
                 whiteSpace="nowrap"
                 overflow="hidden"
+                fontWeight="500"
               >
-                {detail?.verified_info?.verified_title}
+                {detail?.issuer_info?.name}
               </Box>
-            )}
-          </Flex>
-        )}
-
+              {detail?.verified_info?.verified_title && (
+                <Box
+                  fontSize="12px"
+                  color="#777E90"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                >
+                  {detail?.verified_info?.verified_title}
+                </Box>
+              )}
+            </Flex>
+          )}
+        </LinkFlex>
         <Flex justifyContent="flex-end">
           <Skeleton isLoaded={!isLoading} borderRadius="12px" my="auto">
             <Follow
