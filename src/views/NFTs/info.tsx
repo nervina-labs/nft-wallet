@@ -26,7 +26,6 @@ import { useQuery } from 'react-query'
 const InfoContainer = styled(Center)`
   padding: 24px;
   padding-top: 0;
-  flex-direction: row;
   text-align: center;
   margin-top: 8px;
 `
