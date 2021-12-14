@@ -320,7 +320,7 @@
       "continue": "您还可以继续操作",
       "success": "领取成功",
       "claimed": "Opps～数字藏品已被领走",
-      "go-home": "进入数字藏品查看",
+      "go-home": "查看领取的数字藏品",
       "go-explore": "发现更多数字藏品",
       "placeholder": "请输入领取密码"
     },
