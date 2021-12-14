@@ -1,10 +1,12 @@
 import { Box, Flex, Heading, Input } from '@chakra-ui/react'
 import { Button } from '@mibao-ui/components'
 import styled from '@emotion/styled'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RedEnvelopeResponse, RuleType } from '../../../models'
 import { useTranslation } from 'react-i18next'
 import { ellipsisString } from '../../../utils'
+import { useGetAndSetAuth } from '../../../hooks/useProfile'
+import { Auth } from '../../../models/user'
 
 const RiddleTitle = styled(Flex)`
   ::before,
@@ -21,12 +23,18 @@ const RiddleTitle = styled(Flex)`
   color: white;
 `
 
+export interface OnOpenOptions {
+  input?: string
+  auth?: Auth | null
+}
+
 export interface CoverProps {
   data?: RedEnvelopeResponse
   address: string
   isOpening?: boolean
-  onOpen?: (input?: string) => void
+  onOpen?: (options?: OnOpenOptions) => void
   isLogined?: boolean
+  autoGetAuth?: boolean
 }
 
 export const Cover: React.FC<CoverProps> = ({
@@ -35,10 +43,21 @@ export const Cover: React.FC<CoverProps> = ({
   isOpening,
   onOpen,
   isLogined,
+  autoGetAuth,
 }) => {
   const { t } = useTranslation('translations')
   const [inputValue, setInputValue] = useState('')
   const isPuzzle = data?.rule_info?.rule_type === RuleType.puzzle
+  const getAuth = useGetAndSetAuth()
+  const [auth, setAuth] = useState<Auth | null>(null)
+
+  useEffect(() => {
+    if (autoGetAuth && !auth && isLogined) {
+      ;(async () => {
+        setAuth(await getAuth())
+      })()
+    }
+  }, [auth, autoGetAuth, getAuth, isLogined])
 
   return (
     <Flex
@@ -111,7 +130,7 @@ export const Cover: React.FC<CoverProps> = ({
         }}
         size="lg"
         fontSize="16px"
-        onClick={() => onOpen?.(inputValue)}
+        onClick={() => onOpen?.({ input: inputValue, auth })}
         isLoading={isOpening}
       >
         {isLogined
