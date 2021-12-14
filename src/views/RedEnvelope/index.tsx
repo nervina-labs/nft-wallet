@@ -19,11 +19,12 @@ import {
 import { RoutePath } from '../../routes'
 import { AxiosError } from 'axios'
 import { Records } from './components/records'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { useTranslation } from 'react-i18next'
 import { sleep, UnipassConfig } from '../../utils'
 import { useToast } from '../../hooks/useToast'
+import { useRouteQuery } from '../../hooks/useRouteQuery'
 
 const Container = styled(MainContainer)`
   background-color: #e15f4c;
@@ -57,6 +58,7 @@ export const RedEnvelope: React.FC = () => {
   const { t } = useTranslation('translations')
   const { height } = useInnerSize()
   const api = useAPI()
+  const isAutoOpen = useRouteQuery<'true' | 'false'>('open', 'false')
   const { address } = useAccount()
   const [isRefetching, setIsRefetching] = useState(false)
   const [isRefetch, setIsRefetch] = useState(false)
@@ -86,9 +88,10 @@ export const RedEnvelope: React.FC = () => {
   const onOpenTheRedEnvelope = useCallback(
     async (input?: string) => {
       if (!isLogined) {
-        UnipassConfig.setRedirectUri(location.pathname)
+        const redirectUri = `${location.pathname}?open=true`
+        UnipassConfig.setRedirectUri(redirectUri)
         push(RoutePath.Login, {
-          redirect: location.pathname,
+          redirect: redirectUri,
         })
         return
       }
@@ -153,6 +156,12 @@ export const RedEnvelope: React.FC = () => {
       toast,
     ]
   )
+
+  useEffect(() => {
+    if (isAutoOpen === 'true' && data?.rule_info === null) {
+      onOpenTheRedEnvelope()
+    }
+  }, [data?.rule_info, isAutoOpen, onOpenTheRedEnvelope])
 
   if (error?.response?.status === 404) {
     return <Redirect to={RoutePath.NotFound} />
