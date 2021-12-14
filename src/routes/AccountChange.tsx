@@ -27,8 +27,6 @@ const allowWithoutAuthList = new Set([
   RoutePath.TokenClass,
 ])
 
-const metamaskAllowWithoutAuthList = new Set([RoutePath.RedEnvelope])
-
 const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
 
 export const AccountChange: React.FC = ({ children }) => {
@@ -72,9 +70,6 @@ export const AccountChange: React.FC = ({ children }) => {
     const pathInAllowList = [...allowWithoutAuthList].some((p) =>
       location.pathname.startsWith(p)
     )
-    const pathInMetamaskAllowList = [
-      ...metamaskAllowWithoutAuthList,
-    ].some((p) => location.pathname.startsWith(p))
     if (
       isLogined &&
       !isAuthenticated &&
@@ -83,7 +78,7 @@ export const AccountChange: React.FC = ({ children }) => {
     ) {
       if (
         (WalletType.Unipass === walletType && pubkey) ||
-        (WalletType.Metamask === walletType && !pathInMetamaskAllowList)
+        WalletType.Metamask === walletType
       ) {
         isSigning.current = true
         onOpenConfirm({

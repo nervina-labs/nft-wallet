@@ -9,12 +9,7 @@ import { useInnerSize } from '../../hooks/useInnerSize'
 import { Cover, OnOpenOptions } from './components/cover'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
-import {
-  useAccount,
-  useAccountStatus,
-  useAPI,
-  WalletType,
-} from '../../hooks/useAccount'
+import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import {
   Query,
   RedEnvelopeResponse,
@@ -25,7 +20,7 @@ import { RoutePath } from '../../routes'
 import { AxiosError } from 'axios'
 import { Records } from './components/records'
 import { useCallback, useEffect, useState } from 'react'
-import { useGetAndSetAuth } from '../../hooks/useProfile'
+import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { useTranslation } from 'react-i18next'
 import { sleep, UnipassConfig } from '../../utils'
 import { useToast } from '../../hooks/useToast'
@@ -64,12 +59,13 @@ export const RedEnvelope: React.FC = () => {
   const { height } = useInnerSize()
   const api = useAPI()
   const isAutoOpen = useRouteQuery<'true' | 'false'>('open', 'false')
-  const { address, walletType } = useAccount()
+  const { address } = useAccount()
   const [isRefetching, setIsRefetching] = useState(false)
   const [isRefetch, setIsRefetch] = useState(false)
   const toast = useToast()
   const { isLogined } = useAccountStatus()
   const getAuth = useGetAndSetAuth()
+  const { isAuthenticated } = useProfile()
   const { push } = useHistory()
   const { data, error, refetch, isLoading } = useQuery<
     RedEnvelopeResponse,
@@ -102,7 +98,10 @@ export const RedEnvelope: React.FC = () => {
         return
       }
       setIsRefetching(true)
-      const auth = options?.auth || (await getAuth())
+      const auth = await getAuth().catch((err) => {
+        setIsRefetching(false)
+        throw err
+      })
       await api
         .openRedEnvelopeEvent(id, address, auth, {
           input: options?.input,
@@ -165,10 +164,23 @@ export const RedEnvelope: React.FC = () => {
   )
 
   useEffect(() => {
-    if (isAutoOpen === 'true' && data?.rule_info === null && !isOpened) {
+    if (
+      isAutoOpen === 'true' &&
+      data?.rule_info === null &&
+      !isOpened &&
+      isAuthenticated
+    ) {
       onOpenTheRedEnvelope()
     }
-  }, [data?.rule_info, getAuth, isAutoOpen, isOpened, onOpenTheRedEnvelope])
+  }, [
+    address,
+    data?.rule_info,
+    getAuth,
+    isAutoOpen,
+    isOpened,
+    isAuthenticated,
+    onOpenTheRedEnvelope,
+  ])
 
   if (error?.response?.status === 404) {
     return <Redirect to={RoutePath.NotFound} />
@@ -251,7 +263,6 @@ export const RedEnvelope: React.FC = () => {
                 onOpen={onOpenTheRedEnvelope}
                 isOpening={isRefetching}
                 isLogined={isLogined}
-                autoGetAuth={walletType === WalletType.Metamask}
               />
             )}
           </Flex>
