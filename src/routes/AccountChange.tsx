@@ -13,7 +13,7 @@ const allowWithoutAuthList = new Set([
   RoutePath.Explore,
   RoutePath.Apps,
   RoutePath.AddressCollector,
-  RoutePath.Claim,
+  // RoutePath.Claim,
   RoutePath.NotFound,
   RoutePath.Redeem,
   RoutePath.RedeemPrize,
@@ -22,7 +22,10 @@ const allowWithoutAuthList = new Set([
   RoutePath.Login,
 ])
 
-const forceAuthList = new Set([`${RoutePath.Explore}?tag=follow`])
+const forceAuthList = new Set([
+  `${RoutePath.Explore}?tag=follow`,
+  RoutePath.Claim,
+])
 
 export const AccountChange: React.FC = ({ children }) => {
   const { address, walletType, pubkey } = useAccount()

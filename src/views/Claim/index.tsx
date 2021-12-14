@@ -27,6 +27,8 @@ import {
   useLogin,
   WalletType,
 } from '../../hooks/useAccount'
+import { UnipassAction } from '../../models/unipass'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
 
 const Container = styled(MainContainer)`
   padding: 0;
@@ -169,7 +171,7 @@ export const Claim: React.FC = () => {
   }, [errorStatus, t])
   const { login } = useLogin()
   const api = useAPI()
-  const { walletType } = useAccount()
+  const { walletType, pubkey } = useAccount()
   const { isLogined } = useAccountStatus()
   const { id } = useParams<{ id: string }>()
   const history = useHistory()
@@ -286,6 +288,30 @@ export const Claim: React.FC = () => {
   }
 
   const [code, setCode] = useState(id ?? '')
+  const getAuth = useGetAndSetAuth()
+  const onSuccess = useCallback(async () => {
+    if (submitStatus === SubmitStatus.Success) {
+      const url = new URL(`${location.origin}/unipass`)
+      url.searchParams.set('action', UnipassAction.Sign)
+      const auth = await getAuth()
+      url.searchParams.set(
+        'unipass_ret',
+        JSON.stringify({
+          code: 200,
+          data: {
+            pubkey,
+            sig: auth.signature.replace(/^0x01/i, '0x'),
+          },
+        })
+      )
+
+      console.log(url.href)
+      location.href = url.href
+    } else {
+      setCode('')
+      setSubmitStatus(SubmitStatus.Claiming)
+    }
+  }, [submitStatus, pubkey, getAuth])
 
   const actions = useMemo(() => {
     if (SubmitStatus.Unlogin === submitStatus) {
@@ -357,19 +383,10 @@ export const Claim: React.FC = () => {
         {submitStatus === SubmitStatus.Success ? (
           <p>{t('claim.continue')}</p>
         ) : null}
-        <Button
-          className="connect recommend"
-          onClick={() => {
-            history.push(
-              submitStatus === SubmitStatus.Success
-                ? RoutePath.NFTs
-                : RoutePath.Explore
-            )
-          }}
-        >
+        <Button className="connect recommend" onClick={onSuccess}>
           {t(
             `claim.${
-              submitStatus === SubmitStatus.Success ? 'go-home' : 'go-explore'
+              submitStatus === SubmitStatus.Success ? 'go-home' : 'claim-other'
             }`
           )}
         </Button>
@@ -387,6 +404,7 @@ export const Claim: React.FC = () => {
     code,
     isClaiming,
     isClaimError,
+    onSuccess,
   ])
 
   if (claimCodeError) {

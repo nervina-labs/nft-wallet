@@ -322,7 +322,8 @@
       "claimed": "Opps～数字藏品已被领走",
       "go-home": "查看领取的数字藏品",
       "go-explore": "发现更多数字藏品",
-      "placeholder": "请输入领取密码"
+      "placeholder": "请输入领取密码",
+      "claim-other": "领取其他数字藏品"
     },
     "issuer": {
       "created": "已创作",

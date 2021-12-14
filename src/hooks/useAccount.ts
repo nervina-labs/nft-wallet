@@ -31,7 +31,7 @@ export interface UnipassAccount {
 
 const providerAtom = atom<Provider | null>(null)
 
-const accountAtom = atomWithStorage<UnipassAccount | null>(
+export const accountAtom = atomWithStorage<UnipassAccount | null>(
   UNIPASS_ACCOUNT_KEY,
   null
 )

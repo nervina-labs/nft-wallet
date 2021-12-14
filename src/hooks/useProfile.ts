@@ -1,9 +1,10 @@
 import { useAtom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithStorage, useAtomCallback } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
 import {
+  accountAtom,
   useAccount,
   useAPI,
   useProvider,
@@ -31,21 +32,24 @@ export interface Auths {
 const profileAtom = atomWithStorage<Auths | null>('mibao_account_profile', null)
 
 export function useProfile() {
-  const { address } = useAccount()
   const [profile, _setProfile] = useAtom(profileAtom)
+  const { address } = useAccount()
 
-  const setProfile = useCallback(
-    (p: Partial<Profile>) => {
-      return _setProfile((pp) => {
-        return {
-          ...pp,
-          ...{
-            [address]: p,
-          },
-        }
-      })
-    },
-    [_setProfile, address]
+  const setProfile = useAtomCallback(
+    useCallback(
+      (get, set, p: Partial<Profile>) => {
+        const address = get(accountAtom)?.address ?? ''
+        return _setProfile((pp) => {
+          return {
+            ...pp,
+            ...{
+              [address]: p,
+            },
+          }
+        })
+      },
+      [_setProfile]
+    )
   )
 
   const isAuthenticated = useMemo(() => {
