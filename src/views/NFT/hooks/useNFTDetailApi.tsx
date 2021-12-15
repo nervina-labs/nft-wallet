@@ -5,10 +5,21 @@ import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useWechatShare } from '../../../hooks/useWechat'
 import { Query } from '../../../models'
 
+export interface RouteParamsNftId {
+  id: string
+}
+export interface RouteParamsNftWhitClassIdTokenId {
+  class_id: string
+  token_id: string
+}
+
+export type RouteParams = RouteParamsNftId | RouteParamsNftWhitClassIdTokenId
+
 export function useNFTDetailApi(
   uuid: string,
   options?: {
     isClass?: boolean
+    tid?: string
   }
 ) {
   const api = useAPI()
@@ -20,16 +31,22 @@ export function useNFTDetailApi(
     [Query.NFTDetail, uuid, api, isLogined],
     async () => {
       const auth = isLogined ? await getAuth() : undefined
-      const { data } = options?.isClass
-        ? await api.getTokenClass(uuid, auth)
-        : await api.getNFTDetail(uuid, auth)
+      const hasTid = typeof options?.tid !== 'undefined'
+      if (options?.isClass && !hasTid) {
+        const { data } = await api.getTokenClass(uuid, auth)
+        return data
+      }
+      const { data } =
+        hasTid && options?.tid
+          ? await api.getNFTDetailByClassUuidAndTid(uuid, options.tid, { auth })
+          : await api.getNFTDetail(uuid, auth)
       return data
     },
     {
       enabled: Boolean(uuid),
       onSuccess(d) {
         wechatShare({
-          title: d.name,
+          title: d?.name || '',
           desc: t('common.share.wx.nft.desc'),
           link: location.href,
         })

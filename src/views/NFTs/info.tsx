@@ -76,7 +76,6 @@ export const Info: React.FC<{
   } = useDisclosure()
 
   const api = useAPI()
-
   const { data: nft } = useQuery(
     [Query.NFTDetail, user?.avatar_token_uuid, api],
     async () => {

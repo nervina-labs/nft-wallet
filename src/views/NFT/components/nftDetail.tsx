@@ -117,11 +117,20 @@ const NftDetailTab: React.FC<{
           </SkeletonText>
         </TabPanel>
         <TabPanel p="20px" opacity={isLoading ? 0 : 1}>
-          {tabIndex === 1 && <NftTxLogsList uuid={uuid} isClass={isClass} />}
+          {tabIndex === 1 && (
+            <NftTxLogsList
+              uuid={uuid}
+              isClass={isClass}
+              isLoading={isLoading}
+            />
+          )}
         </TabPanel>
         <TabPanel p="0" pt="8px" opacity={isLoading ? 0 : 1}>
           {tabIndex === 2 && (
-            <HolderList uuid={(detail as NFTDetail)?.class_uuid ?? uuid} />
+            <HolderList
+              uuid={(detail as NFTDetail)?.class_uuid ?? uuid}
+              isLoading={isLoading}
+            />
           )}
         </TabPanel>
       </TabPanels>
@@ -144,7 +153,9 @@ export const NftDetail: React.FC<{
     detail?.issuer_info?.avatar_url === null
       ? ''
       : detail?.issuer_info?.avatar_url
-  const matchNFT = useRouteMatch(RoutePath.NFT)
+  const matchNFT = useRouteMatch(RoutePath.NFT + '/:id')
+  const matchNFTWithTid = useRouteMatch(RoutePath.NFT + '/:id/:tid')
+  const isNft = matchNFT?.isExact || matchNFTWithTid?.isExact
   const showAvatarVerified =
     !detail?.is_class_banned &&
     !detail?.is_issuer_banned &&
@@ -182,7 +193,7 @@ export const NftDetail: React.FC<{
               ) : null}
             </Flex>
           </Box>
-          {isOwned && matchNFT?.isExact ? (
+          {isOwned && isNft ? (
             <Center w="50px">
               {i18n.language === 'en' ? <OwnedSealENSvg /> : <OwnedSealSvg />}
             </Center>

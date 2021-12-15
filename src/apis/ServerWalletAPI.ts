@@ -147,10 +147,36 @@ export class ServerWalletAPI {
     if (auth) {
       headers.auth = JSON.stringify(auth)
     }
-    return await this.axios.get(`/tokens/${uuid}`, {
+    return await this.axios.get<NFTDetail>(`/tokens/${uuid}`, {
       params,
       headers,
     })
+  }
+
+  async getNFTDetailByClassUuidAndTid(
+    uuid: string,
+    tid: number | string,
+    options?: {
+      auth?: Auth
+    }
+  ) {
+    const params: Record<string, unknown> = {
+      include_submitting: true,
+    }
+    if (this.address) {
+      params.address = this.address
+    }
+    const headers: { auth?: string } = {}
+    if (options?.auth) {
+      headers.auth = JSON.stringify(options.auth)
+    }
+    return await this.axios.get<NFTDetail>(
+      `/token_classes/${uuid}/tokens/${tid}`,
+      {
+        params,
+        headers,
+      }
+    )
   }
 
   async getTransactions(page: number): Promise<AxiosResponse<Transaction>> {

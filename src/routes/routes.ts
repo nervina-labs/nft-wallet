@@ -61,7 +61,15 @@ export const routes: MibaoRouterProps[] = [
   {
     component: NFT,
     exact: true,
+    key: 'NFTWithTokenId',
+    params: '/:id/:tid',
+    path: RoutePath.NFT,
+  },
+  {
+    component: NFT,
+    exact: true,
     key: 'NFT',
+    params: '/:id',
     path: RoutePath.NFT,
   },
   {
