@@ -43,7 +43,7 @@
     "login": {
       "title": "NFT Account",
       "connect": {
-        "unipass": "Connect to UniPass",
+        "unipass": "Connect to UniPass(via Email)",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
         "connect": "Connect to"
@@ -225,7 +225,7 @@
     },
     "help": {
       "title": "Help center",
-      "question": "Have questions about the UniPass/Ethereum environment?"
+      "question": "Have questions about the UniPass?"
     },
     "guide": {
       "one": {
@@ -320,7 +320,7 @@
       "continue": "You can continue",
       "success": "Claimed successfully",
       "claimed": "Opps～this NFT has already been claimed",
-      "go-home": "View in Mibao",
+      "go-home": "View claimed NFTs",
       "go-explore": "Discover more NFTs",
       "placeholder": "Please enter the claim code"
     },
