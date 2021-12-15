@@ -70,9 +70,8 @@ const StatusText: React.FC<{
     )
   }
   if (
-    data &&
-    data.state === RedEnvelopeState.Done &&
-    !('current_user_reward_record' in data)
+    data?.state === RedEnvelopeState.Done &&
+    data?.current_user_reward_record === null
   ) {
     return (
       <Box {...baseProps} color="white">
