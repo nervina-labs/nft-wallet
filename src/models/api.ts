@@ -56,6 +56,11 @@ export interface SpecialCategories {
 export const PRODUCT_STATUE_SET = ['product_state', 'on_sale'] as const
 export type ProductState = typeof PRODUCT_STATUE_SET[number]
 
+export interface PaginationOptions {
+  page?: number
+  limit?: number
+}
+
 export interface NFTWalletAPI {
   getNFTs: (
     page: number,

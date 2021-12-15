@@ -2,7 +2,7 @@ export enum RoutePath {
   Launch = '/',
   Login = '/login',
   Account = '/account',
-  NFT = '/nft/:id',
+  NFT = '/nft',
   TokenClass = '/class/:id',
   NFTs = '/home',
   NotFound = '/404',
@@ -36,6 +36,8 @@ export enum RoutePath {
   OrderDetail = '/order',
   OrderSuccess = '/order-success',
   OrderStatus = '/order-status',
+  RedEnvelope = '/red-envelope',
+  Search = '/search',
 }
 
 export enum ProfilePath {

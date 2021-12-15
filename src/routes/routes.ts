@@ -1,3 +1,5 @@
+import { RedEnvelope } from './../views/RedEnvelope/index'
+import { Search } from './../views/Search/index'
 import { RouteProps } from 'react-router-dom'
 import { Login } from '../views/Login'
 import { NFT } from '../views/NFT'
@@ -60,7 +62,15 @@ export const routes: MibaoRouterProps[] = [
   {
     component: NFT,
     exact: true,
+    key: 'NFTWithTokenId',
+    params: '/:id/:tid',
+    path: RoutePath.NFT,
+  },
+  {
+    component: NFT,
+    exact: true,
     key: 'NFT',
+    params: '/:id',
     path: RoutePath.NFT,
   },
   {
@@ -241,5 +251,18 @@ export const routes: MibaoRouterProps[] = [
     key: 'OrderDetail',
     path: RoutePath.OrderDetail,
     params: '/:id',
+  },
+  {
+    component: RedEnvelope,
+    exact: true,
+    key: 'RedEnvelop',
+    path: RoutePath.RedEnvelope,
+    params: '/:id',
+  },
+  {
+    component: Search,
+    exact: false,
+    key: 'Search',
+    path: RoutePath.Search,
   },
 ]

@@ -5,7 +5,11 @@ import {
   NFT,
   NFTDetail,
   NFTTransaction,
+  PaginationOptions,
   ProductState,
+  SearchOptions,
+  SearchResponse,
+  SearchType,
   SpecialCategories,
   Transaction,
   TransactionLogResponse,
@@ -58,6 +62,11 @@ import {
 import { RoutePath } from '../routes'
 import { RankingListResponse } from '../models/rank'
 import { PaymentChannel } from '../hooks/useOrder'
+import {
+  OpenRedEnvelopeResponse,
+  RedEnvelopeRecords,
+  RedEnvelopeResponse,
+} from '../models/red-envelope'
 
 function randomid(length = 10): string {
   let result = ''
@@ -144,10 +153,36 @@ export class ServerWalletAPI {
     if (auth) {
       headers.auth = JSON.stringify(auth)
     }
-    return await this.axios.get(`/tokens/${uuid}`, {
+    return await this.axios.get<NFTDetail>(`/tokens/${uuid}`, {
       params,
       headers,
     })
+  }
+
+  async getNFTDetailByClassUuidAndTid(
+    uuid: string,
+    tid: number | string,
+    options?: {
+      auth?: Auth
+    }
+  ) {
+    const params: Record<string, unknown> = {
+      include_submitting: true,
+    }
+    if (this.address) {
+      params.address = this.address
+    }
+    const headers: { auth?: string } = {}
+    if (options?.auth) {
+      headers.auth = JSON.stringify(options.auth)
+    }
+    return await this.axios.get<NFTDetail>(
+      `/token_classes/${uuid}/tokens/${tid}`,
+      {
+        params,
+        headers,
+      }
+    )
   }
 
   async getTransactions(page: number): Promise<AxiosResponse<Transaction>> {
@@ -836,6 +871,71 @@ export class ServerWalletAPI {
       params: {
         url: encodeURI(url),
         type: 'base64',
+      },
+    })
+  }
+
+  async getRedEnvelopeEvent(
+    uuid: string,
+    options?: {
+      address?: string
+    }
+  ) {
+    return await this.axios.get<RedEnvelopeResponse>(
+      `/redpack_events/${uuid}`,
+      {
+        params: {
+          wallet_address: options?.address,
+        },
+      }
+    )
+  }
+
+  async getRedEnvelopeRecords(uuid: string, options?: PaginationOptions) {
+    return await this.axios.get<RedEnvelopeRecords>(
+      `/redpack_events/${uuid}/records`,
+      {
+        params: {
+          limit: PER_ITEM_LIMIT,
+          ...options,
+        },
+      }
+    )
+  }
+
+  async openRedEnvelopeEvent(
+    uuid: string,
+    address: string,
+    auth: Auth,
+    options?: {
+      input?: string
+    }
+  ) {
+    return await this.axios.post<OpenRedEnvelopeResponse>(
+      `/redpack_events/${uuid}/records`,
+      {
+        wallet_address: address,
+        user_input: options?.input,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+      }
+    )
+  }
+
+  async search<T extends SearchType>(
+    keyword: string,
+    type: T,
+    options?: SearchOptions
+  ): Promise<AxiosResponse<SearchResponse<T>>> {
+    return await this.axios.get<SearchResponse<T>>('/searches', {
+      params: {
+        keyword,
+        type,
+        limit: PER_ITEM_LIMIT,
+        ...options,
       },
     })
   }

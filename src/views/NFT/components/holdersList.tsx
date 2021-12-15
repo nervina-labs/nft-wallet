@@ -10,7 +10,8 @@ import { isSupportWebp } from '../../../utils'
 
 export const HolderList: React.FC<{
   uuid: string
-}> = ({ uuid }) => {
+  isLoading?: boolean
+}> = ({ uuid, isLoading }) => {
   const { t, i18n } = useTranslation('translations')
   const { push } = useHistory()
   const api = useAPI()
@@ -26,6 +27,7 @@ export const HolderList: React.FC<{
 
   return (
     <InfiniteList
+      enableQuery={!isLoading}
       queryKey={[Query.NftHolderList, api, uuid]}
       queryFn={queryFn}
       noMoreElement={t('nft.no-more-holder')}

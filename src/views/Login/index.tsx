@@ -31,7 +31,7 @@ import {
   Flex,
   Heading,
 } from '@mibao-ui/components'
-import { AspectRatio, Checkbox } from '@chakra-ui/react'
+import { AspectRatio, Box, Checkbox } from '@chakra-ui/react'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js'
@@ -208,10 +208,9 @@ const Container = styled(MainContainer)`
 `
 
 const CheckBoxStyled = styled(Checkbox)`
-  .chakra-checkbox__control {
+  .chakra-checkbox__control:not([data-checked]) {
     border: 1px solid #23262f;
     border-radius: 1px;
-    background-color: #e6e8ec;
   }
 `
 
@@ -434,8 +433,12 @@ export const Login: React.FC = () => {
             }
             onClick={loginUnipass}
             variant={IS_IMTOKEN ? 'outline' : 'solid'}
+            size="lg"
           >
-            {t('login.connect.unipass')}
+            <Box py="8px">
+              <Box fontSize="16px">{t('login.connect.unipass')}</Box>
+              <Box fontSize="12px">{t('login.connect.or-use-email')}</Box>
+            </Box>
           </LoginButton>
           <LoginButton
             className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}

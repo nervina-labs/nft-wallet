@@ -368,6 +368,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           }}
           type={detail?.renderer_type}
           onError={onRendererError}
+          imagePreviewProps={{ centerZoomedOut: false }}
         />
       ) : null}
 

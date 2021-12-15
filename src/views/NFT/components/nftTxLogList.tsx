@@ -168,7 +168,8 @@ const NftTxLog: React.FC<{ log: TransactionLog }> = ({ log }) => {
 export const NftTxLogsList: React.FC<{
   uuid: string
   isClass?: boolean
-}> = ({ uuid, isClass }) => {
+  isLoading?: boolean
+}> = ({ uuid, isClass, isLoading }) => {
   const { t } = useTranslation('translations')
   const api = useAPI()
   const queryFn = useCallback(
@@ -183,6 +184,7 @@ export const NftTxLogsList: React.FC<{
 
   return (
     <InfiniteList
+      enableQuery={!isLoading}
       queryKey={[Query.NFTTransactions, api, isClass, uuid]}
       queryFn={queryFn}
       noMoreElement={t('nft.no-more-transaction-history')}

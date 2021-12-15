@@ -8,7 +8,7 @@ import {
   useSetOrderStep,
 } from '../../hooks/useOrder'
 import { ReactComponent as NextStepSvg } from '../../assets/svg/next-step.svg'
-import { IS_DESKTOP, IS_WEXIN } from '../../constants'
+import { IS_DESKTOP } from '../../constants'
 import { Payment } from './Payment'
 
 interface ItemProps {
@@ -47,7 +47,7 @@ export const Reselect = () => {
             IS_DESKTOP ? PaymentChannel.AlipayPC : PaymentChannel.AlipayMobile
           }
         />
-        {IS_DESKTOP ? (
+        {/* {IS_DESKTOP ? (
           <Item channel={PaymentChannel.WechatScan} />
         ) : (
           <Item
@@ -55,7 +55,7 @@ export const Reselect = () => {
               IS_WEXIN ? PaymentChannel.WechatPub : PaymentChannel.WechatMobile
             }
           />
-        )}
+        )} */}
         <Item channel={PaymentChannel.Paypal} />
       </Stack>
     </>
