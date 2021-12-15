@@ -44,22 +44,13 @@ const StatusText: React.FC<{
   isAlreadyOpened?: boolean
 }> = ({ data, isAlreadyOpened }) => {
   const { t } = useTranslation('translations')
-  const isSpecialModel = useMemo(
-    () =>
-      Boolean(
-        data?.current_user_reward_record?.record_items.find(
-          (record) => record.is_special_model
-        )
-      ),
-    [data?.current_user_reward_record]
-  )
   const baseProps = {
     color: '#F9E0B7',
     fontSize: '18px',
     fontWeight: 'bold',
     px: '20px',
   }
-  if (isSpecialModel) {
+  if (data?.is_claimed_special_model) {
     return <Box {...baseProps}>{t('red-envelope.message-hidden-model')}</Box>
   }
   if (isAlreadyOpened) {
@@ -69,10 +60,7 @@ const StatusText: React.FC<{
       </Box>
     )
   }
-  if (
-    data?.state === RedEnvelopeState.Done &&
-    data?.current_user_reward_record === null
-  ) {
+  if (data?.state === RedEnvelopeState.Done && !data?.is_current_user_claimed) {
     return (
       <Box {...baseProps} color="white">
         {t('red-envelope.message-empty')}
@@ -152,7 +140,7 @@ const RewardRecord: React.FC<{
         >
           <RedEnvelopeHiddenModelIcon />
           <Box as="span" ml="6px">
-            {t('red-envelope.hidden-model')}X{specialCount}
+            {t('red-envelope.hidden-model')} × {specialCount}
           </Box>
         </Flex>
       ) : null}

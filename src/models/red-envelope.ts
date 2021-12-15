@@ -51,11 +51,8 @@ export interface RedEnvelopeResponse {
     uuid: string
   }
   rule_info: RulePuzzleInfo | RulePasswordInfo | null
-  current_user_reward_record: {
-    address: string
-    created_at: string
-    record_items: RecordItem[]
-  } | null
+  is_current_user_claimed: boolean
+  is_claimed_special_model: boolean
 }
 
 export interface RedEnvelopeRecords {

@@ -84,8 +84,7 @@ export const RedEnvelope: React.FC = () => {
   )
   const isOpened =
     !isLoading &&
-    (data?.current_user_reward_record !== null ||
-      data?.state !== RedEnvelopeState.Ongoing)
+    (data?.is_current_user_claimed || data?.state !== RedEnvelopeState.Ongoing)
   const onOpenTheRedEnvelope = useCallback<(o?: OnOpenOptions) => void>(
     async (options) => {
       if (isRefetching) return
@@ -112,7 +111,7 @@ export const RedEnvelope: React.FC = () => {
           for (; i < 3; i++) {
             const res = await refetch()
             const isPolling =
-              res.data?.current_user_reward_record === null &&
+              !res.data?.is_current_user_claimed &&
               res.data?.state === RedEnvelopeState.Ongoing
             if (!isPolling) break
             await sleep(1000)
