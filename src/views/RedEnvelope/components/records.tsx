@@ -140,7 +140,7 @@ const RewardRecord: React.FC<{
         >
           <RedEnvelopeHiddenModelIcon />
           <Box as="span" ml="6px">
-            {t('red-envelope.hidden-model')}X{specialCount}
+            {t('red-envelope.hidden-model')} × {specialCount}
           </Box>
         </Flex>
       ) : null}
