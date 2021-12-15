@@ -65,6 +65,9 @@ const Item: React.FC<RankingItem> = ({
               resizeScale={100}
               webp={isSupportWebp()}
               fallbackSrc={FALLBACK}
+              customizedSize={{
+                fixed: 'small',
+              }}
             />
             <Box
               whiteSpace="nowrap"
