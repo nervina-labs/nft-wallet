@@ -134,13 +134,13 @@ export const routes: MibaoRouterProps[] = [
     key: 'claim',
     path: RoutePath.Claim,
   },
-  // {
-  //   component: Claim,
-  //   exact: true,
-  //   key: 'claim-with-id',
-  //   path: RoutePath.Claim,
-  //   params: '/:id',
-  // },
+  {
+    component: Claim,
+    exact: true,
+    key: 'claim-with-id',
+    path: RoutePath.Claim,
+    params: '/:id',
+  },
   // {
   //   component: Collection,
   //   exact: true,
