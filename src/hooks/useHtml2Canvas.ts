@@ -1,10 +1,14 @@
 import { useCallback, useState } from 'react'
 import html2canvas from 'html2canvas-objectfit-fix'
 
-export function useHtml2Canvas(options?: { onError?: <E>(error: E) => void }) {
+export function useHtml2Canvas(options?: {
+  onError?: <E>(error: E) => void
+  toBlob?: boolean
+}) {
   const [imgSrc, setImgSrc] = useState<string | undefined>()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<any>()
+  const toBlob = options?.toBlob === undefined ? true : options.toBlob
 
   const reload = useCallback(() => {
     setImgSrc(undefined)
@@ -29,13 +33,18 @@ export function useHtml2Canvas(options?: { onError?: <E>(error: E) => void }) {
         scale: 3,
       })
         .then(async (canvas) => {
-          canvas.toBlob((blob) => {
-            if (!blob) {
-              throw new Error('not blob')
-            }
-            const url = URL.createObjectURL(blob)
+          if (toBlob) {
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                throw new Error('not blob')
+              }
+              const url = URL.createObjectURL(blob)
+              setImgSrc(url)
+            })
+          } else {
+            const url = canvas.toDataURL()
             setImgSrc(url)
-          })
+          }
         })
         .catch((err) => {
           setError(err)
@@ -48,7 +57,7 @@ export function useHtml2Canvas(options?: { onError?: <E>(error: E) => void }) {
           setIsLoading(false)
         })
     },
-    [options]
+    [options, toBlob]
   )
 
   return {
