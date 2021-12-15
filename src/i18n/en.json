@@ -2,7 +2,7 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
-      "login": "Login",
+      "login": "Connect to the identity manager",
       "actions": {
         "confirm": "Confirm",
         "cancel": "Cancel",
@@ -83,11 +83,23 @@
         "tips-desc": "Click on the  [...] , use an external browser to open the page for a better browsing experience!"
       }
     },
+    "search": {
+      "search-placeholder": "Search Digital Collection or Creator",
+      "search-placeholder-issuer": "Search Creator",
+      "search-placeholder-token-class": "Search Digital Collection",
+      "cancel": "Cancel",
+      "issuer": "Creator",
+      "token-class": "Digital Collection",
+      "more-token-class": "More Digital Collections",
+      "more-issuer": "More Creators",
+      "no-data": "No data"
+    },
     "login": {
       "title": "MIBAO",
-      "select": "Log in with",
+      "select": "Select your connection method",
       "connect": {
         "unipass": "Connect to UniPass",
+        "or-use-email": "(or Register by Email)",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
         "connect": "Connect to"
@@ -286,7 +298,7 @@
       "txs": "Activity",
       "language": "Language",
       "help": "Help",
-      "logout": "Log Out",
+      "logout": "Disconnect",
       "zh": "Chinese",
       "en": "English"
     },
@@ -615,13 +627,39 @@
       "count": "• Following {{count}} creators",
       "end": "The end~",
       "login": {
-        "desc-1": "Opps~ please log in first",
-        "desc-2": "Log in and view your following content",
-        "login": "Log In"
+        "desc-1": "Oops ~ You have not connected to your identity manager, please connect to MIBAO and enjoy the collections you following",
+        "desc-2": "",
+        "login": "Connect"
       },
       "no-data": "You haven't followed any creators",
       "no-on-sale": "There are no collections on sale",
       "let-s-go-to-explore": "Let's go to explore"
+    },
+    "red-envelope": {
+      "title-1": "Open your Digital Collection Red Packet",
+      "hidden-model": "Special Edition",
+      "from-red-envelope": "The Red Packet from {{username}}",
+      "promotion-link": "Click to have a look",
+      "record-count-text": "{{total}} in total, {{claimed}} claimed, {{remain}} left",
+      "puzzle-title": "Riddle",
+      "puzzle-answer": "Answer",
+      "submit": "Open it",
+      "current-account": "Current Account: ",
+      "bottom-text": "Grab the Red Packet",
+      "puzzle-placeholder": "Enter the answer to get it now",
+      "password-placeholder": "Enter the secret signal to get it now",
+      "message-hidden-model": "Congratulations! You got the special edition.",
+      "message-closed": "The Red Packet has been closed by the generator.",
+      "message-expired": "The Red Packet is no longer valid.",
+      "message-empty": "Came too late, good luck next time",
+      "message-succeed": "Congratulations! You got the digital collection",
+      "message-already-opened": "You have already grabbed this red packet",
+      "error-conditions": "Does not meet the requirement",
+      "error-password": "The secret signal is wrong. Try it again.",
+      "error-puzzle": "The answer is wrong. Guess it again.",
+      "default-promotion-copy": "View my collected digital collections",
+      "try-again": "Oops.. an error occurred. Try it again.",
+      "connect-and-open-it": "Connect and open it"
     }
   }
 }

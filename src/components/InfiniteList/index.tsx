@@ -41,6 +41,7 @@ export interface InfiniteListProps<
     TQueryFnData,
     TQueryKey
   >
+  pullDownToRefresh?: boolean
   emptyElement?: React.ReactNode
   noMoreElement: React.ReactNode
   loader?: React.ReactNode
@@ -122,6 +123,7 @@ export function InfiniteList<
   pullDownToRefreshContent,
   releaseToRefreshContent,
   scrollThreshold = '250px',
+  pullDownToRefresh = !IS_WEXIN,
   pullDownToRefreshThreshold = 80,
   enableQuery,
   columnCount = 1,
@@ -172,14 +174,16 @@ export function InfiniteList<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
+  const loaderEl = useMemo(() => loader || <Loading />, [loader])
+
   return (
     <>
-      {isRefetching ? <Loading /> : null}
+      {isRefetching ? loaderEl : null}
       {data === undefined && status === 'loading' ? (
-        <Loading />
+        loaderEl
       ) : (
         <InfiniteScroll
-          pullDownToRefresh={!IS_WEXIN}
+          pullDownToRefresh={pullDownToRefresh}
           refreshFunction={refresh}
           pullDownToRefreshContent={
             pullDownToRefreshContent ?? (
@@ -200,7 +204,7 @@ export function InfiniteList<
           next={fetchNextPage}
           hasMore={hasNextPage === true}
           scrollThreshold={scrollThreshold}
-          loader={loader ?? <Loading />}
+          loader={loaderEl}
           endMessage={
             <ListDesciption>
               {dataLength <= 5 ? ' ' : noMoreElement}

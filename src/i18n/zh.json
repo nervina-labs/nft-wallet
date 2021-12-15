@@ -2,7 +2,7 @@
   "translations": {
     "common": {
       "beian": "浙ICP备2021006943号-3",
-      "login": "登录",
+      "login": "连接身份管理器",
       "actions": {
         "confirm": "确认",
         "cancel": "取消",
@@ -83,11 +83,23 @@
         "tips-desc": "点击右上角【...】使用外部浏览器打开，获得更好浏览体验！"
       }
     },
+    "search": {
+      "search-placeholder": "搜索秘宝名称/创作者",
+      "search-placeholder-issuer": "搜索创作者",
+      "search-placeholder-token-class": "搜索秘宝名称",
+      "cancel": "取消",
+      "issuer": "创作者",
+      "token-class": "秘宝",
+      "more-token-class": "更多秘宝",
+      "more-issuer": "更多创作者",
+      "no-data": "啊哦～暂无任何信息"
+    },
     "login": {
       "title": "秘宝账户",
-      "select": "选择您的登录方式",
+      "select": "选择您的连接方式",
       "connect": {
         "unipass": "连接 UniPass",
+        "or-use-email": "（或通过 Email 注册）",
         "metamask": "连接以太坊环境",
         "wallet-connect": "连接 Wallet Connect",
         "connect": "连接"
@@ -286,13 +298,13 @@
       "txs": "流转记录",
       "language": "语言设置",
       "help": "帮助支持",
-      "logout": "退出登录",
+      "logout": "退出",
       "zh": "中文",
       "en": "英文"
     },
     "help": {
       "title": "帮助中心",
-      "question": "对 UniPass/以太坊环境有问题？"
+      "question": "对 Unipass 环境或以太坊环境有问题？"
     },
     "guide": {
       "one": {
@@ -381,7 +393,7 @@
     },
     "claim": {
       "tips": "您有一个秘宝待领取",
-      "login": "请先登录秘宝",
+      "login": "请先连接秘宝",
       "last-step": "您离领取还差最后一步",
       "error": "领取码错误",
       "confirm": "确认领取",
@@ -615,13 +627,39 @@
       "count": "• 已关注 {{count}} 人",
       "end": "已经拉到底啦~",
       "login": {
-        "desc-1": "啊哦～您还未登录",
-        "desc-2": "请登录秘宝，查看您关注的精彩内容",
-        "login": "登录"
+        "desc-1": "啊哦～您还未连接你的身份管理器",
+        "desc-2": "请连接秘宝后，查看您关注的精彩内容",
+        "login": "连接"
       },
       "no-data": "尚未关注任何创作者",
       "no-on-sale": "没有秘宝正在销售",
       "let-s-go-to-explore": "去探索页面"
+    },
+    "red-envelope": {
+      "title-1": "您有一个数字藏品红包待领取",
+      "hidden-model": "隐藏款",
+      "from-red-envelope": "来自 {{username}} 分享的数字藏品红包",
+      "promotion-link": "点击去看看",
+      "record-count-text": "共 {{total}} 个红包，已被领取 {{claimed}} 个，还剩 {{remain}} 个",
+      "puzzle-title": "谜题",
+      "puzzle-answer": "谜底",
+      "submit": "马上领取",
+      "current-account": "当前帐号：",
+      "bottom-text": "领取数字藏品红包",
+      "puzzle-placeholder": "猜谜底，领数字藏品红包",
+      "password-placeholder": "输入红包口令立即领取",
+      "message-hidden-model": "恭喜您抽到隐藏款",
+      "message-closed": "该红包已被发起者关闭",
+      "message-expired": "该红包已失效",
+      "message-empty": "来晚了，被抢光了",
+      "message-succeed": "恭喜您领取成功!",
+      "message-already-opened": "您已领取过了",
+      "error-conditions": "领取条件不足",
+      "error-password": "口令错误哦，再试试",
+      "error-puzzle": "谜底错误哦，再猜猜看",
+      "default-promotion-copy": "查看领取的数字藏品",
+      "try-again": "领取失败，再试一次吧",
+      "connect-and-open-it": "连接身份后领取"
     }
   }
 }
