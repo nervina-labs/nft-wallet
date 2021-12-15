@@ -653,7 +653,7 @@
       "message-expired": "The Red Packet is no longer valid.",
       "message-empty": "Came too late, good luck next time",
       "message-succeed": "Congratulations! You got the digital collection",
-      "message-already-opened": "You have already grabbed this red envelope.",
+      "message-already-opened": "You have already grabbed this red packet",
       "error-conditions": "Does not meet the requirement",
       "error-password": "The secret signal is wrong. Try it again.",
       "error-puzzle": "The answer is wrong. Guess it again.",
