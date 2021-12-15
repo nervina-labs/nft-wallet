@@ -4,9 +4,9 @@ import styled from 'styled-components'
 import { ActionDialog } from '../../components/ActionDialog'
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
-import AddrSuccess from '../../assets/img/claim.png'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-success.svg'
+import { ReactComponent as AddrSuccessSvg } from '../../assets/svg/addr-success.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN } from '../../constants'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
@@ -280,7 +280,7 @@ export const Claim: React.FC = () => {
 
   const imgs = {
     [SubmitStatus.Unlogin]: <AddressesSvg />,
-    [SubmitStatus.Claiming]: <img src={AddrSuccess} />,
+    [SubmitStatus.Claiming]: <AddrSuccessSvg />,
     [SubmitStatus.Claimed]: <AddrDup />,
     [SubmitStatus.Success]: <ClaimSuccessSvg />,
   }
