@@ -173,8 +173,7 @@ export const Claim: React.FC = () => {
   const getAuth = useGetAndSetAuth()
   const onSuccess = useCallback(async () => {
     if (submitStatus === SubmitStatus.Success) {
-      const baseURL =
-        'https://nft-wallet-git-lite-with-unipass-nervina.vercel.app/'
+      const baseURL = 'https://nft-wallet-git-yantie-nervina.vercel.app'
       const url = new URL(`${baseURL}/unipass`)
       url.searchParams.set('action', UnipassAction.Sign)
       const auth = await getAuth()
