@@ -313,7 +313,7 @@
     },
     "claim": {
       "tips": "You have a NFT to be claimed",
-      "login": "Please log in to Mibao first",
+      "login": "Please log in",
       "last-step": "Only one step left to claim a NFT",
       "error": "Claim code error",
       "confirm": "Confirm",
