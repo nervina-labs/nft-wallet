@@ -1,3 +1,4 @@
+import { RedEnvelope } from './../views/RedEnvelope/index'
 import { Search } from './../views/Search/index'
 import { RouteProps } from 'react-router-dom'
 import { Login } from '../views/Login'
@@ -249,6 +250,13 @@ export const routes: MibaoRouterProps[] = [
     exact: false,
     key: 'OrderDetail',
     path: RoutePath.OrderDetail,
+    params: '/:id',
+  },
+  {
+    component: RedEnvelope,
+    exact: true,
+    key: 'RedEnvelop',
+    path: RoutePath.RedEnvelope,
     params: '/:id',
   },
   {

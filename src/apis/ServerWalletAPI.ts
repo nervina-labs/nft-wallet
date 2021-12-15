@@ -5,6 +5,7 @@ import {
   NFT,
   NFTDetail,
   NFTTransaction,
+  PaginationOptions,
   ProductState,
   SearchOptions,
   SearchResponse,
@@ -61,6 +62,11 @@ import {
 import { RoutePath } from '../routes'
 import { RankingListResponse } from '../models/rank'
 import { PaymentChannel } from '../hooks/useOrder'
+import {
+  OpenRedEnvelopeResponse,
+  RedEnvelopeRecords,
+  RedEnvelopeResponse,
+} from '../models/red-envelope'
 
 function randomid(length = 10): string {
   let result = ''
@@ -867,6 +873,56 @@ export class ServerWalletAPI {
         type: 'base64',
       },
     })
+  }
+
+  async getRedEnvelopeEvent(
+    uuid: string,
+    options?: {
+      address?: string
+    }
+  ) {
+    return await this.axios.get<RedEnvelopeResponse>(
+      `/redpack_events/${uuid}`,
+      {
+        params: {
+          wallet_address: options?.address,
+        },
+      }
+    )
+  }
+
+  async getRedEnvelopeRecords(uuid: string, options?: PaginationOptions) {
+    return await this.axios.get<RedEnvelopeRecords>(
+      `/redpack_events/${uuid}/records`,
+      {
+        params: {
+          limit: PER_ITEM_LIMIT,
+          ...options,
+        },
+      }
+    )
+  }
+
+  async openRedEnvelopeEvent(
+    uuid: string,
+    address: string,
+    auth: Auth,
+    options?: {
+      input?: string
+    }
+  ) {
+    return await this.axios.post<OpenRedEnvelopeResponse>(
+      `/redpack_events/${uuid}/records`,
+      {
+        wallet_address: address,
+        user_input: options?.input,
+      },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+      }
+    )
   }
 
   async search<T extends SearchType>(

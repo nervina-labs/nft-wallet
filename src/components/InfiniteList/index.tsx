@@ -41,6 +41,7 @@ export interface InfiniteListProps<
     TQueryFnData,
     TQueryKey
   >
+  pullDownToRefresh?: boolean
   emptyElement?: React.ReactNode
   noMoreElement: React.ReactNode
   loader?: React.ReactNode
@@ -122,6 +123,7 @@ export function InfiniteList<
   pullDownToRefreshContent,
   releaseToRefreshContent,
   scrollThreshold = '250px',
+  pullDownToRefresh = !IS_WEXIN,
   pullDownToRefreshThreshold = 80,
   enableQuery,
   columnCount = 1,
@@ -181,7 +183,7 @@ export function InfiniteList<
         loaderEl
       ) : (
         <InfiniteScroll
-          pullDownToRefresh={!IS_WEXIN}
+          pullDownToRefresh={pullDownToRefresh}
           refreshFunction={refresh}
           pullDownToRefreshContent={
             pullDownToRefreshContent ?? (

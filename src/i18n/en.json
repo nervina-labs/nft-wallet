@@ -634,6 +634,32 @@
       "no-data": "You haven't followed any creators",
       "no-on-sale": "There are no collections on sale",
       "let-s-go-to-explore": "Let's go to explore"
+    },
+    "red-envelope": {
+      "title-1": "Open your Digital Collection Red Packet",
+      "hidden-model": "Special Edition",
+      "from-red-envelope": "The Red Packet from {{username}}",
+      "promotion-link": "Click to have a look",
+      "record-count-text": "{{total}} in total, {{claimed}} claimed, {{remain}} left",
+      "puzzle-title": "Riddle",
+      "puzzle-answer": "Answer",
+      "submit": "Open it",
+      "current-account": "Current Account: ",
+      "bottom-text": "Grab the Red Packet",
+      "puzzle-placeholder": "Enter the answer to get it now",
+      "password-placeholder": "Enter the secret signal to get it now",
+      "message-hidden-model": "Congratulations! You got the special edition.",
+      "message-closed": "The Red Packet has been closed by the generator.",
+      "message-expired": "The Red Packet is no longer valid.",
+      "message-empty": "Came too late, good luck next time",
+      "message-succeed": "Congratulations! You got the digital collection",
+      "message-already-opened": "You have already grabbed this red packet",
+      "error-conditions": "Does not meet the requirement",
+      "error-password": "The secret signal is wrong. Try it again.",
+      "error-puzzle": "The answer is wrong. Guess it again.",
+      "default-promotion-copy": "View my collected digital collections",
+      "try-again": "Oops.. an error occurred. Try it again.",
+      "connect-and-open-it": "Connect and open it"
     }
   }
 }
