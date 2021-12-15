@@ -80,6 +80,9 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           resizeScale={300}
           webp={isSupportWebp()}
           rounded="22px"
+          customizedSize={{
+            fixed: 'large',
+          }}
         />
         <Box
           fontSize="16px"
