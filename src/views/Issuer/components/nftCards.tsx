@@ -190,6 +190,9 @@ export const NftCards: React.FC = () => {
                         resizeScale={300}
                         webp={clientIsSupportWebp}
                         fallbackSrc={FALLBACK}
+                        customizedSize={{
+                          fixed: 'large',
+                        }}
                       />
                     </AspectRatio>
                   ))
