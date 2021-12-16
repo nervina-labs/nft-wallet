@@ -42,6 +42,9 @@ export const TokenClassItem: React.FC<{ tokenClass: SearchTokenClass }> = ({
           w="48px"
           webp={isSupportWebp()}
           resizeScale={100}
+          customizedSize={{
+            fixed: 'large',
+          }}
         />
         <Box fontSize="14px" ml="16px">
           {tokenClass.name}
