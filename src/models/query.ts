@@ -29,4 +29,5 @@ export enum Query {
   RedEnvelope = 'RedEnvelope',
   RedEnvelopeRecords = 'RedEnvelopeRecords',
   Search = 'Search',
+  TokenClassExternalProductInfo = 'TokenClassExternalProductInfo',
 }

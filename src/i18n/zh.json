@@ -210,7 +210,13 @@
       "holder": "收藏者",
       "show-card-back": "翻转",
       "no-more-holder": "没有更多收藏者了",
-      "no-more-transaction-history": "没有更多记录了"
+      "no-more-transaction-history": "没有更多记录了",
+      "external-product": {
+        "go-to-see": "去看看",
+        "not-official-website": "非秘宝官方网页，请确认是否继续访问",
+        "upcoming-visit": "即将访问",
+        "go-to-link": "确认访问"
+      }
     },
     "account": {
       "title": "我的帐号",

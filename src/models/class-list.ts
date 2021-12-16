@@ -1,5 +1,6 @@
 import { Follower } from './issuer'
 import { ListMeta, NftType, CardBack } from './nft'
+
 export interface Tag {
   uuid: string
   name: string
@@ -63,4 +64,10 @@ export interface ClassList {
 export interface FollowClassList {
   token_classes: TokenClass[]
   meta: ListMeta
+}
+
+export interface TokenClassExternalProductInfo {
+  token_class_uuid: string
+  url: string
+  price?: string
 }

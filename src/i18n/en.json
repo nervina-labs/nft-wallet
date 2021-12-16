@@ -210,7 +210,13 @@
       "holder": "Collectors",
       "show-card-back": "Show Cardback",
       "no-more-holder": "No more collectors",
-      "no-more-transaction-history": "No more logs"
+      "no-more-transaction-history": "No more logs",
+      "external-product": {
+        "go-to-see": "Go to see",
+        "not-official-website": "It is not the official website of Mibao. Please confirm whether to continue to visit.",
+        "upcoming-visit": "Upcoming visit",
+        "go-to-link": "Confirm access"
+      }
     },
     "account": {
       "title": "My Account",
