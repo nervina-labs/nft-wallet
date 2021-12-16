@@ -48,6 +48,9 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
         webp={isSupportWebp()}
         fallbackSrc={FALLBACK}
         rounded="8px"
+        customizedSize={{
+          fixed: 'x-small',
+        }}
       />
       <Flex justify="center" direction="column" pl="10px">
         <Box
