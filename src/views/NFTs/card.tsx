@@ -156,6 +156,9 @@ export const Card: React.FC<CardProps> = ({
         }}
         imageProps={{
           webp: isSupportWebp(),
+          customizedSize: {
+            fixed: 'xx-large',
+          },
         }}
         limitProps={{
           count: token.class_total,
