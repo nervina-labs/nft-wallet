@@ -365,9 +365,7 @@ export const useContinueOrder = () => {
       setProps({
         count,
         uuid,
-        channel:
-          channel ||
-          (IS_DESKTOP ? PaymentChannel.AlipayPC : PaymentChannel.AlipayMobile),
+        channel: channel || PaymentChannel.Paypal,
       })
       setDrawerVisable(true)
       setStep(OrderStep.ConfirmOrder)
