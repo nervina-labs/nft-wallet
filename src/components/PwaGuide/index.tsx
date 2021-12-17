@@ -1,8 +1,8 @@
 import { Box, Flex, Image } from '@chakra-ui/react'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import EyePath from '../../assets/img/ios-pwa-guide-eye.png'
-import { ReactComponent as IosPwaGuideAddSvg } from '../../assets/svg/ios-pwa-guide-add-icon.svg'
-import { ReactComponent as IosPwaGuideShareSvg } from '../../assets/svg/ios-pwa-guide-share-icon.svg'
+import { ReactComponent as PwaGuideAddSvg } from '../../assets/svg/ios-pwa-guide-add-icon.svg'
+import { ReactComponent as PwaGuideShareSvg } from '../../assets/svg/ios-pwa-guide-share-icon.svg'
 import styled from '@emotion/styled'
 import { Button } from '@mibao-ui/components'
 import { CloseIcon } from '@chakra-ui/icons'
@@ -19,22 +19,22 @@ const Tips = styled(Box)`
   }
 `
 
-export const IosPwaGuide: React.FC = () => {
+export const PwaGuide: React.FC = () => {
   const [
-    isClosedIosPwaGuideFromLocal,
-    setIsClosedIosPwaGuideFromLocal,
+    isClosedPwaGuideFromLocal,
+    setIsClosedPwaGuideFromLocal,
   ] = useLocalStorage(
     'is_closed_ios_pwa_guide_from_local',
     !(!isInStandaloneMode() && IS_IPHONE && IS_SAFARI)
   )
-  const [isClosedIosPwaGuide, setIsClosedIosPwaGuide] = useState(
-    isClosedIosPwaGuideFromLocal
+  const [isClosedPwaGuide, setIsClosedPwaGuide] = useState(
+    isClosedPwaGuideFromLocal
   )
   useEffect(() => {
-    setIsClosedIosPwaGuide(isClosedIosPwaGuideFromLocal)
-  }, [isClosedIosPwaGuideFromLocal])
+    setIsClosedPwaGuide(isClosedPwaGuideFromLocal)
+  }, [isClosedPwaGuideFromLocal])
 
-  if (isClosedIosPwaGuide) {
+  if (isClosedPwaGuide) {
     return null
   }
 
@@ -62,7 +62,7 @@ export const IosPwaGuide: React.FC = () => {
         right="20px"
         w="10px"
         h="10px"
-        onClick={() => setIsClosedIosPwaGuideFromLocal(true)}
+        onClick={() => setIsClosedPwaGuide(true)}
       />
       <Image
         src={EyePath}
@@ -76,17 +76,17 @@ export const IosPwaGuide: React.FC = () => {
       <Tips fontWeight="300" mt="10px">
         <Box as="span" mr="10px">
           1.点击下方
-          <IosPwaGuideShareSvg />
+          <PwaGuideShareSvg />
         </Box>
         2.点击
-        <IosPwaGuideAddSvg />
+        <PwaGuideAddSvg />
         即可
       </Tips>
       <Button
         variant="link"
         ml="auto"
         color="#616DD6"
-        onClick={() => setIsClosedIosPwaGuide(true)}
+        onClick={() => setIsClosedPwaGuideFromLocal(true)}
       >
         知道了
       </Button>
