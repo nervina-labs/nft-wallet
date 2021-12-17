@@ -69,9 +69,3 @@ export interface FollowClassList {
   token_classes: TokenClass[]
   meta: ListMeta
 }
-
-export interface TokenClassExternalProductInfo {
-  token_class_uuid: string
-  url: string
-  price?: string
-}

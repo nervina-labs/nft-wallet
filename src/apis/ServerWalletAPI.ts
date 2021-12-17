@@ -29,7 +29,6 @@ import {
   FollowClassList,
   Tag,
   TokenClass,
-  TokenClassExternalProductInfo,
 } from '../models/class-list'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import {
@@ -939,11 +938,5 @@ export class ServerWalletAPI {
         ...options,
       },
     })
-  }
-
-  async getTokenClassExternalProductInfo(uuid: string) {
-    return await this.axios.get<TokenClassExternalProductInfo>(
-      `/token_classes/${uuid}/external_product`
-    )
   }
 }
