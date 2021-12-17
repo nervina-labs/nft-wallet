@@ -74,6 +74,7 @@ const TranferOrBuy: React.FC<{
     },
     {
       enabled: isTokenClassExternalProductInfoEnable,
+      retry: false,
     }
   )
 
