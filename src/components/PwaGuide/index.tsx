@@ -9,6 +9,7 @@ import { CloseIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from 'react'
 import { isInStandaloneMode } from '../../utils'
 import { IS_IPHONE, IS_SAFARI } from '../../constants'
+import { useTranslation } from 'react-i18next'
 
 const Tips = styled(Box)`
   svg {
@@ -20,6 +21,7 @@ const Tips = styled(Box)`
 `
 
 export const PwaGuide: React.FC = () => {
+  const { t } = useTranslation('translations')
   const [
     isClosedPwaGuideFromLocal,
     setIsClosedPwaGuideFromLocal,
@@ -72,15 +74,15 @@ export const PwaGuide: React.FC = () => {
         w="128px"
         transform="translate(-30px, -30px)"
       />
-      将我们添加到桌面吧，获得最佳观赏体验，不再错过这些独一无二的艺术品。
+      {t('pwa-guide.desc')}
       <Tips fontWeight="300" mt="10px">
         <Box as="span" mr="10px">
-          1.点击下方
+          {t('pwa-guide.step-1')}
           <PwaGuideShareSvg />
         </Box>
-        2.点击
+        {t('pwa-guide.step-2.1')}
         <PwaGuideAddSvg />
-        即可
+        {t('pwa-guide.step-2.2')}
       </Tips>
       <Button
         variant="link"
@@ -88,7 +90,7 @@ export const PwaGuide: React.FC = () => {
         color="#616DD6"
         onClick={() => setIsClosedPwaGuideFromLocal(true)}
       >
-        知道了
+        {t('pwa-guide.ok')}
       </Button>
     </Flex>
   )
