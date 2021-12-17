@@ -9,7 +9,6 @@ import 'swiper/swiper.min.css'
 import 'swiper/modules/autoplay/autoplay.min.css'
 import 'swiper/modules/pagination/pagination.min.css'
 import i18n from './i18n'
-import { PwaGuide } from './components/PwaGuide'
 
 IntryUrl.set(location.href.split('#')[0])
 const App: React.FC = () => {
@@ -22,7 +21,6 @@ const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <JotaiProvider>
           <Routers />
-          <PwaGuide />
         </JotaiProvider>
       </QueryClientProvider>
     </I18nextProvider>

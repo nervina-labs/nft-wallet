@@ -65,6 +65,7 @@ export const PwaGuide: React.FC = () => {
         w="10px"
         h="10px"
         onClick={() => setIsClosedPwaGuide(true)}
+        color="primary.600"
       />
       <Image
         src={EyePath}
@@ -87,7 +88,9 @@ export const PwaGuide: React.FC = () => {
       <Button
         variant="link"
         ml="auto"
-        color="#616DD6"
+        colorScheme="primary"
+        fontSize="14px"
+        mt="5px"
         onClick={() => setIsClosedPwaGuideFromLocal(true)}
       >
         {t('pwa-guide.ok')}
