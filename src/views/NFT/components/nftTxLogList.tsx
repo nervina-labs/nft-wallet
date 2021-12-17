@@ -78,6 +78,9 @@ const UserWithAddress: React.FC<{
         }
         webp={isSupportWebp()}
         resizeScale={100}
+        customizedSize={{
+          fixed: 'small',
+        }}
       />
       <Stack ml="8px" spacing="4px" h="30px">
         {nickname ? (
