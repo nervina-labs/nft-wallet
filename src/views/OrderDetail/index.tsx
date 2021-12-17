@@ -184,6 +184,7 @@ export const OrderDetail: React.FC = () => {
       count: Number(order?.product_count),
       currency: order?.currency as string,
       price: order?.product_price as string,
+      amount: order?.order_amount_total as string,
     })
   }, [continueOrder, order])
   const deleteOrder = useDeleteOrder()
