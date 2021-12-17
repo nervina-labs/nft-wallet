@@ -664,9 +664,9 @@
     "pwa-guide": {
       "desc": "Add MIBAO to the desktop for the best experience and no longer miss these unique artworks.",
       "ok": "OK",
-      "step-1": "1.Click below",
+      "step-1": "1.click the",
       "step-2": {
-        "1": "2.Click it",
+        "1": "2.click",
         "2": ""
       }
     }
