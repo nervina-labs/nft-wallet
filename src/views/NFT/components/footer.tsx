@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Drawer, Grid, Like, useDisclosure } from '@mibao-ui/components'
+import { Box, Grid, Like } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { useLike } from '../../../hooks/useLikeStatus'
-import { TokenClass } from '../../../models/class-list'
+import { isTokenClass, TokenClass } from '../../../models/class-list'
 import { NFTDetail } from '../../../models/nft'
 import { useHistory } from 'react-router-dom'
 import { useCallback } from 'react'
@@ -16,14 +15,14 @@ import {
 import { useUpdateAtom } from 'jotai/utils'
 import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
-import { CONTAINER_MAX_WIDTH, IS_WEXIN } from '../../../constants'
+import { IS_WEXIN } from '../../../constants'
 import { RoutePath } from '../../../routes'
 import { UnipassConfig } from '../../../utils'
 import { Query } from '../../../models'
 import { useQuery } from 'react-query'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
-import { useInnerSize } from '../../../hooks/useInnerSize'
 import { Button } from '@chakra-ui/react'
+import { OffSiteProductInfoButton } from './offSiteProductInfoButton'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -50,8 +49,6 @@ const TranferOrBuy: React.FC<{
   const getAuth = useGetAndSetAuth()
   const { isLogined } = useAccountStatus()
   const history = useHistory()
-  const isTokenClassExternalProductInfoEnable =
-    isClass && detail && !detail?.product_price
 
   const { data: user } = useQuery(
     [Query.Tags, api],
@@ -64,17 +61,6 @@ const TranferOrBuy: React.FC<{
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       enabled: IS_WEXIN,
-    }
-  )
-  const { data: tokenClassExternalProductInfo } = useQuery(
-    [Query.TokenClassExternalProductInfo, api, uuid],
-    async () => {
-      const { data } = await api.getTokenClassExternalProductInfo(uuid)
-      return data
-    },
-    {
-      enabled: isTokenClassExternalProductInfoEnable,
-      retry: false,
     }
   )
 
@@ -125,84 +111,8 @@ const TranferOrBuy: React.FC<{
   ])
 
   const isSoldout = Number(detail?.product_count) === 0
-  const {
-    isOpen: isOpenExternalProductLinkDialog,
-    onOpen: onOpenExternalProductLinkDialog,
-    onClose: onCloseExternalProductLinkDialog,
-  } = useDisclosure()
-  const { width } = useInnerSize()
-  if (isTokenClassExternalProductInfoEnable && tokenClassExternalProductInfo) {
-    return (
-      <>
-        <Drawer
-          placement="bottom"
-          isOpen={isOpenExternalProductLinkDialog}
-          onClose={onCloseExternalProductLinkDialog}
-          hasCloseBtn
-          hasOverlay
-          contentProps={{
-            w: '100%',
-            pt: '60px',
-            pb: 'calc(10px + var(--safe-area-inset-bottom))',
-            style: {
-              left: `calc(50% - calc(${Math.min(
-                width,
-                CONTAINER_MAX_WIDTH
-              )}px / 2))`,
-              transform: 'translateX(0px) translateY(-50%) translateZ(0px)',
-              maxWidth: `${CONTAINER_MAX_WIDTH}px`,
-              borderRadius: '20px 20px 0 0',
-            },
-          }}
-        >
-          <Box textAlign="center" fontSize="18px">
-            {t('nft.external-product.upcoming-visit')}
-          </Box>
-          <Box bg="#F6F9FC" fontSize="12px" p="12px" my="15px">
-            {tokenClassExternalProductInfo.url}
-          </Box>
-          <Box fontSize="12px" color="primary.600" textAlign="center">
-            {t('nft.external-product.not-official-website')}
-          </Box>
-          <Button
-            variant="solid"
-            isFullWidth
-            colorScheme="primary"
-            size="lg"
-            mt="30px"
-          >
-            {t('nft.external-product.go-to-link')}
-          </Button>
-        </Drawer>
-        {tokenClassExternalProductInfo?.price ? (
-          <Box
-            as="span"
-            color="primary.600"
-            fontSize="12px"
-            h="40px"
-            lineHeight="40px"
-            mr="5px"
-          >
-            ¥{tokenClassExternalProductInfo.price}
-          </Box>
-        ) : null}
-        <Button
-          as="a"
-          colorScheme="primary"
-          variant="solid"
-          my="auto"
-          mr="0"
-          fontWeight="normal"
-          fontSize="14px"
-          onClick={onOpenExternalProductLinkDialog}
-          href={tokenClassExternalProductInfo?.url}
-          target="_blank"
-          cursor="pointer"
-        >
-          {t('nft.go-to-see')}
-        </Button>
-      </>
-    )
+  if (detail && isTokenClass(detail) && detail?.off_site_product_info) {
+    return <OffSiteProductInfoButton info={detail.off_site_product_info} />
   }
 
   if (isClass && detail?.product_on_sale_uuid) {
@@ -266,7 +176,7 @@ export const Footer: React.FC<{
   return (
     <>
       <Grid
-        templateColumns="calc(100% - 120px) 120px"
+        templateColumns="calc(100% - 150px) 150px"
         position="fixed"
         bottom="-40px"
         opacity={hidden ? 0 : 1}
