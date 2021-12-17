@@ -24,7 +24,7 @@ import {
 import {
   IS_ANDROID,
   IS_CHROME,
-  IS_DESKTOP,
+  // IS_DESKTOP,
   IS_WEBKIT,
   IS_WEXIN,
 } from '../constants'
