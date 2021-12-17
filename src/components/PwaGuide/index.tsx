@@ -26,7 +26,7 @@ export const PwaGuide: React.FC = () => {
     isClosedPwaGuideFromLocal,
     setIsClosedPwaGuideFromLocal,
   ] = useLocalStorage(
-    'is_closed_ios_pwa_guide_from_local',
+    'is_closed_pwa_guide_from_local',
     !(!isInStandaloneMode() && IS_IPHONE && IS_SAFARI)
   )
   const [isClosedPwaGuide, setIsClosedPwaGuide] = useState(
