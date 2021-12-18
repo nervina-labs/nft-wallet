@@ -39,14 +39,14 @@
         "issuer": "该创作者暂不予显示"
       },
       "colon": "：",
-      "title": "秘宝账户",
+      "title": "",
       "description": "随时随地查看并管理你的数字藏品",
       "img-lost": "图片失联",
       "card-back": "该数字藏品卡背设置有信息，仅持有人可见",
       "show-detail": "查看详情"
     },
     "login": {
-      "title": "秘宝账户",
+      "title": "",
       "connect": {
         "unipass": "连接 UniPass（邮箱登录）",
         "metamask": "连接以太坊环境",
