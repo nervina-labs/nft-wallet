@@ -52,6 +52,7 @@ const Container = styled(RainbowBackground)`
   align-items: center;
   flex-direction: column;
   overflow-x: hidden;
+  min-height: 100vh;
 
   .close {
     width: 24px;
@@ -199,7 +200,7 @@ export const Login: React.FC = () => {
 
   const containerRef = useRef(null)
 
-  const { width, height } = useInnerSize()
+  const { width } = useInnerSize()
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
       case WalletType.Metamask:
@@ -289,7 +290,7 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <Container ref={containerRef} minH={`${height}px`}>
+    <Container ref={containerRef}>
       <div className="header">
         <Appbar
           transparent
