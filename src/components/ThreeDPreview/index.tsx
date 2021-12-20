@@ -106,7 +106,7 @@ const ThreeDPreviewWithLoading: React.FC<{
   src: string
   onError?: () => void
   loader?: string
-}> = ({ src, onError, loader }) => {
+}> = ({ src, onError, loader, children }) => {
   const { t } = useTranslation('translations')
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
@@ -157,7 +157,14 @@ const ThreeDPreviewWithLoading: React.FC<{
       ) : null}
 
       {src ? (
-        <ThreeDPreview src={src} onLoad={onLoad} onError={onError} />
+        <ThreeDPreview
+          src={src}
+          onLoad={onLoad}
+          onError={onError}
+          ios-src={src}
+        >
+          {children}
+        </ThreeDPreview>
       ) : null}
       {isLoading
         ? loader ?? <ThreeDLoadingSvg className="three-d-loading" />

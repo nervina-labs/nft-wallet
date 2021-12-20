@@ -138,3 +138,8 @@ export async function toDataUrl(
     }
   })
 }
+
+export function isUsdz(url?: string) {
+  if (!url) return url
+  return /.usdz$/.test(url)
+}
