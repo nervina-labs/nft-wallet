@@ -79,11 +79,15 @@ export const OffSiteProductInfoButton: React.FC<{
         <Box
           as="span"
           color="primary.600"
-          fontSize="12px"
+          fontSize="13px"
           h="40px"
           lineHeight="40px"
           mr="6px"
           fontWeight="500"
+          whiteSpace="nowrap"
+          flex={1}
+          textOverflow="ellipsis"
+          // maxW="calc(100% - 200px)"
         >
           ¥{info.price}
         </Box>
@@ -97,6 +101,7 @@ export const OffSiteProductInfoButton: React.FC<{
         fontSize="14px"
         onClick={onOpen}
         cursor="pointer"
+        flexShrink={0}
       >
         {t('nft.external-product.go-to-see')}
       </Button>

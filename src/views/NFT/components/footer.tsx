@@ -1,4 +1,4 @@
-import { Box, Grid, Like } from '@mibao-ui/components'
+import { Box, Like } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { isTokenClass, TokenClass } from '../../../models/class-list'
@@ -21,7 +21,7 @@ import { UnipassConfig } from '../../../utils'
 import { Query } from '../../../models'
 import { useQuery } from 'react-query'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
-import { Button } from '@chakra-ui/react'
+import { Button, Flex } from '@chakra-ui/react'
 import { OffSiteProductInfoButton } from './offSiteProductInfoButton'
 
 const TranferOrBuy: React.FC<{
@@ -175,9 +175,9 @@ export const Footer: React.FC<{
 
   return (
     <>
-      <Grid
-        templateColumns="calc(100% - 150px) 150px"
+      <Flex
         position="fixed"
+        justify="space-between"
         bottom="-40px"
         opacity={hidden ? 0 : 1}
         transform={`translateY(${
@@ -210,7 +210,7 @@ export const Footer: React.FC<{
         />
 
         <TranferOrBuy uuid={uuid} detail={detail} isClass={isClass} />
-      </Grid>
+      </Flex>
       <Box h="94px" />
     </>
   )

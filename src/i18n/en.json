@@ -212,10 +212,10 @@
       "no-more-holder": "No more collectors",
       "no-more-transaction-history": "No more logs",
       "external-product": {
-        "go-to-see": "Go to see",
-        "not-official-website": "It is not the official website of Mibao. Please confirm whether to continue to visit.",
-        "upcoming-visit": "Upcoming visit",
-        "go-to-link": "Confirm access"
+        "go-to-see": "Take a look",
+        "not-official-website": "This is not an official MIBAO page，confirm that you want to visit this page.",
+        "upcoming-visit": "You're going to visit this page.",
+        "go-to-link": "Continue"
       }
     },
     "account": {
