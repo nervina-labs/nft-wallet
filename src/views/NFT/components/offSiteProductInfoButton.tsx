@@ -79,7 +79,7 @@ export const OffSiteProductInfoButton: React.FC<{
         <Box
           as="span"
           color="primary.600"
-          fontSize="13px"
+          fontSize="16px"
           h="40px"
           lineHeight="40px"
           mr="6px"
@@ -87,9 +87,11 @@ export const OffSiteProductInfoButton: React.FC<{
           whiteSpace="nowrap"
           flex={1}
           textOverflow="ellipsis"
-          // maxW="calc(100% - 200px)"
         >
-          ¥{info.price}
+          <Box as="span" fontSize="12px">
+            ¥
+          </Box>
+          {info.price}
         </Box>
       ) : null}
       <Button
