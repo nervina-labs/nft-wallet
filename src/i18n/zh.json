@@ -213,7 +213,8 @@
       "no-more-transaction-history": "没有更多记录了",
       "no-support-ar": "当前环境不支持 AR 模式查看",
       "only-support-ios": "当前仅支持 IOS 设备\n进入 AR 模式查看",
-      "copy-to-browser": "请复制链接到浏览器中打开\n然后再进入 AR 模式查看"
+      "copy-to-browser": "请复制链接到浏览器中打开\n然后再进入 AR 模式查看",
+      "no-support-usdz-ok": "好吧"
     },
     "account": {
       "title": "我的帐号",

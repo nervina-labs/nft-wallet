@@ -38,7 +38,7 @@ export const ArButton = forwardRef<HTMLAnchorElement, { href?: string }>(
                 </Box>
               ),
               description: dialogDescription,
-              okText: '好吧',
+              okText: t('nft.no-support-usdz-ok'),
               okButtonProps: {
                 variant: 'outline',
                 colorScheme: 'gray',
