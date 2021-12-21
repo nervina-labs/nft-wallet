@@ -67,6 +67,9 @@ export const HolderList: React.FC<{
               }
               resizeScale={100}
               webp={isSupportWebp()}
+              customizedSize={{
+                fixed: 'small',
+              }}
             />
             <Box
               ml="18px"
