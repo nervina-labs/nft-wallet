@@ -93,6 +93,8 @@ const ThreeDPreview: React.FC<ThreeDPreviewProps> = ({
       camera-controls
       auto-rotate
       loading="lazy"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
       style={{
         width: '100%',
         height: '100%',
@@ -157,12 +159,7 @@ const ThreeDPreviewWithLoading: React.FC<{
       ) : null}
 
       {src ? (
-        <ThreeDPreview
-          src={src}
-          onLoad={onLoad}
-          onError={onError}
-          ios-src={src}
-        >
+        <ThreeDPreview src={src} onLoad={onLoad} onError={onError}>
           {children}
         </ThreeDPreview>
       ) : null}
