@@ -24,7 +24,7 @@ import {
 import {
   IS_ANDROID,
   IS_CHROME,
-  // IS_DESKTOP,
+  IS_DESKTOP,
   IS_WEBKIT,
   IS_WEXIN,
 } from '../constants'
@@ -368,7 +368,9 @@ export const useContinueOrder = () => {
       setProps({
         count,
         uuid,
-        channel: channel || PaymentChannel.Paypal,
+        channel:
+          channel ||
+          (IS_DESKTOP ? PaymentChannel.AlipayPC : PaymentChannel.AlipayMobile),
       })
       setDrawerVisable(true)
       setStep(OrderStep.ConfirmOrder)
