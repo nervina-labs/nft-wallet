@@ -64,6 +64,9 @@ const Issuer: React.FC<IssuerProps> = ({ issuer, afterToggle, isHome }) => {
           history.push(href)
           trackClick(trackLabels.home['to-issuer'])
         }}
+        customizedSize={{
+          fixed: 'small',
+        }}
       />
       {isHome ? (
         <Follow

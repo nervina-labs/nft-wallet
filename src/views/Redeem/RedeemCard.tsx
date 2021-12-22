@@ -282,6 +282,9 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
               webp={isSupportWebp()}
               key={i}
               fallbackSrc={FALLBACK}
+              customizedSize={{
+                fixed: 'large',
+              }}
             />
           ))}
         </Stack>
