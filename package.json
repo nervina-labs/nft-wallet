@@ -27,7 +27,7 @@
     "@google/model-viewer": "^1.9.2",
     "@lay2/pw-core": "0.4.0-alpha.8",
     "@metamask/detect-provider": "^1.2.0",
-    "@mibao-ui/components": "0.0.30",
+    "@mibao-ui/components": "0.0.31",
     "@nervosnetwork/ckb-sdk-core": "^0.40.0",
     "@sentry/react": "^6.9.0",
     "@sentry/tracing": "^6.9.0",
