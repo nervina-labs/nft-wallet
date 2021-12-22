@@ -26,6 +26,9 @@ export const IssuerItem: React.FC<{ issuer: SearchIssuer }> = ({ issuer }) => {
         containerProps={{
           w: '100%',
         }}
+        customizedSize={{
+          fixed: 'small',
+        }}
       />
     </LinkContainer>
   )

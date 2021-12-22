@@ -153,6 +153,9 @@ export const Card: React.FC<CardProps> = ({
           },
           webp: isSupportWebp(),
           resizeScale: 100,
+          customizedSize: {
+            fixed: 'small',
+          },
         }}
         imageProps={{
           webp: isSupportWebp(),

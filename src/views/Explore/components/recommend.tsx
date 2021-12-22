@@ -129,6 +129,9 @@ const Item: React.FC<SpecialAssets> = ({
                 isVerified={tokenClass?.verified_info?.is_verified}
                 resizeScale={100}
                 webp={isSupportWebp()}
+                customizedSize={{
+                  fixed: 'small',
+                }}
               />
             </Flex>
           </Grid>

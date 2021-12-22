@@ -227,6 +227,9 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
             )
           }}
           size="25px"
+          customizedSize={{
+            fixed: 'small',
+          }}
         />
         <Box
           as="span"

@@ -103,6 +103,9 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
             history.push(issuerHref)
           }}
           isVerified={order.verified_info?.is_verified}
+          customizedSize={{
+            fixed: 'small',
+          }}
         />
         {status}
       </Flex>

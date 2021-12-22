@@ -106,6 +106,9 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
             isVerified={token.verified_info?.is_verified}
             onClick={gotoIssuer}
             webp={isSupportWebp()}
+            customizedSize={{
+              fixed: 'small',
+            }}
           />
           <Like
             likeCount={likeCount}
