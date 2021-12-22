@@ -283,7 +283,7 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
               key={i}
               fallbackSrc={FALLBACK}
               customizedSize={{
-                fixed: 'large',
+                fixed: 'x-small',
               }}
             />
           ))}
