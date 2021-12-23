@@ -210,7 +210,11 @@
       "holder": "Collectors",
       "show-card-back": "Show Cardback",
       "no-more-holder": "No more collectors",
-      "no-more-transaction-history": "No more logs"
+      "no-more-transaction-history": "No more logs",
+      "no-support-ar": "The current environment does not support viewing in AR mode",
+      "only-support-ios": "only iOS devices are supported enter the AR mode currently",
+      "copy-to-browser": "Please copy the link and open it in your browser to view",
+      "no-support-usdz-ok": "OK"
     },
     "account": {
       "title": "My Account",
