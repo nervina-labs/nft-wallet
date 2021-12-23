@@ -24,7 +24,7 @@ jobs:
           remote-branch: 'master'
 
       - name: set env
-        run: echo "::set-env name=NOW::v$(date +'%Y%m%d.%H%M%S')"
+        run: echo "::set-env name=NOW::v$(date +'%Y%m%d-%H%M%S')"
 
       - name: Bump version and push tag
         id: tag_version
