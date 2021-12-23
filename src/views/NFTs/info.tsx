@@ -111,6 +111,9 @@ export const Info: React.FC<{
                 onPreviewOpen()
               }
             }}
+            customizedSize={{
+              fixed: 'small',
+            }}
           />
           <Heading
             mt="8px"

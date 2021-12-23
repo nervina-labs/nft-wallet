@@ -204,6 +204,11 @@ export const Ranking: React.FC = () => {
                       }
                       size={v === 0 ? '60px' : '48px'}
                       border="none"
+                      webp={isSupportWebp()}
+                      resizeScale={300}
+                      customizedSize={{
+                        fixed: 'small',
+                      }}
                     />
                   </RankBorderBox>
                   <Box
@@ -266,6 +271,9 @@ export const Ranking: React.FC = () => {
                   resizeScale={300}
                   webp={isSupportWebp()}
                   fallbackSrc={FALLBACK}
+                  customizedSize={{
+                    fixed: 'large',
+                  }}
                 />
                 <Box
                   h="50px"
@@ -301,6 +309,9 @@ export const Ranking: React.FC = () => {
                 resizeScale={300}
                 isVerified={issuer.verified_info?.is_verified}
                 webp={isSupportWebp()}
+                customizedSize={{
+                  fixed: 'small',
+                }}
               />
               <Flex h="50px" justify="center" direction="column" px="10px">
                 <Box

@@ -69,6 +69,9 @@ const Card: React.FC<CardProps> = ({ token, locale, gotoClass }) => {
         resizeScale={600}
         imageProps={{
           webp: isSupportWebp(),
+          customizedSize: {
+            fixed: 'small',
+          },
         }}
         onClick={(e) => {
           e.preventDefault()
@@ -190,6 +193,9 @@ export const NftCards: React.FC = () => {
                         resizeScale={300}
                         webp={clientIsSupportWebp}
                         fallbackSrc={FALLBACK}
+                        customizedSize={{
+                          fixed: 'large',
+                        }}
                       />
                     </AspectRatio>
                   ))

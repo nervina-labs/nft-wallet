@@ -243,6 +243,9 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
                     imageProps={{
                       border: isSelected ? '4px solid #5065E5' : undefined,
                       fallbackSrc: Fallback,
+                      customizedSize: {
+                        fixed: 'large',
+                      },
                     }}
                     issuerProps={{
                       name: token.issuer_name as string,
@@ -250,6 +253,9 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
                       bannedText: t('common.baned.issuer'),
                       width: '25px',
                       isVerified: token.verified_info?.is_verified,
+                      customizedSize: {
+                        fixed: 'small',
+                      },
                     }}
                     titleProps={{ noOfLines: 2 }}
                     onClick={() => {

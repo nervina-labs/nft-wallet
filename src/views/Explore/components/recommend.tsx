@@ -39,6 +39,9 @@ const Item: React.FC<SpecialAssets> = ({
               w="full"
               h="full"
               resizeScale={100}
+              customizedSize={{
+                fixed: 'small',
+              }}
               webp={isSupportWebp()}
               containerProps={{
                 w: i === 1 ? '90px' : '70px',
@@ -100,6 +103,9 @@ const Item: React.FC<SpecialAssets> = ({
                 webp={isSupportWebp()}
                 rounded="22px"
                 fallbackSrc={FALLBACK}
+                customizedSize={{
+                  fixed: 'small',
+                }}
               />
             </AspectRatio>
             <Flex direction="column" py="5px" pl="10px" justify="center">
@@ -123,6 +129,9 @@ const Item: React.FC<SpecialAssets> = ({
                 isVerified={tokenClass?.verified_info?.is_verified}
                 resizeScale={100}
                 webp={isSupportWebp()}
+                customizedSize={{
+                  fixed: 'small',
+                }}
               />
             </Flex>
           </Grid>

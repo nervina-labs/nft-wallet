@@ -65,6 +65,9 @@ const Item: React.FC<RankingItem> = ({
               resizeScale={100}
               webp={isSupportWebp()}
               fallbackSrc={FALLBACK}
+              customizedSize={{
+                fixed: 'small',
+              }}
             />
             <Box
               whiteSpace="nowrap"
@@ -88,6 +91,9 @@ const Item: React.FC<RankingItem> = ({
               isVerified={issuer.verified_info?.is_verified}
               webp={isSupportWebp()}
               resizeScale={150}
+              customizedSize={{
+                fixed: 'small',
+              }}
             />
             <Flex direction="column" mx="10px" justify="center">
               <Box
