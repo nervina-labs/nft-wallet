@@ -211,6 +211,12 @@
       "show-card-back": "Show Cardback",
       "no-more-holder": "No more collectors",
       "no-more-transaction-history": "No more logs",
+      "external-product": {
+        "go-to-see": "Take a look",
+        "not-official-website": "This is not an official MIBAO page，confirm that you want to visit this page.",
+        "upcoming-visit": "You're going to visit this page.",
+        "go-to-link": "Continue"
+      },
       "no-support-ar": "The current environment does not support viewing in AR mode",
       "only-support-ios": "only iOS devices are supported enter the AR mode currently",
       "copy-to-browser": "Please copy the link and open it in your browser to view",
