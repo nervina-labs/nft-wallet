@@ -8,7 +8,7 @@ import { Button } from '@mibao-ui/components'
 import { CloseIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from 'react'
 import { isInStandaloneMode } from '../../utils'
-import { IS_IPHONE, IS_SAFARI } from '../../constants'
+import { IS_IMTOKEN, IS_IPHONE, IS_SAFARI, IS_WEXIN } from '../../constants'
 import { useTranslation } from 'react-i18next'
 
 const Tips = styled(Box)`
@@ -27,7 +27,13 @@ export const PwaGuide: React.FC = () => {
     setIsClosedPwaGuideFromLocal,
   ] = useLocalStorage(
     'is_closed_pwa_guide_from_local',
-    !(!isInStandaloneMode() && IS_IPHONE && IS_SAFARI)
+    !(
+      !isInStandaloneMode() &&
+      IS_IPHONE &&
+      IS_SAFARI &&
+      !IS_WEXIN &&
+      !IS_IMTOKEN
+    )
   )
   const [isClosedPwaGuide, setIsClosedPwaGuide] = useState(
     isClosedPwaGuideFromLocal
