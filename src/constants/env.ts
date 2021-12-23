@@ -76,6 +76,5 @@ export const HOST = location.origin
 
 export const ISSUER_ID_REG = /^ISSUER-.{40}$/
 export const TOKEN_CLASS_ID_REG = /^0x.{48}$/
-
 export const IS_SUPPORT_AR =
   !IS_WEXIN && document.createElement('a').relList.supports('ar')
