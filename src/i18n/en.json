@@ -660,6 +660,15 @@
       "default-promotion-copy": "View my collected digital collections",
       "try-again": "Oops.. an error occurred. Try it again.",
       "connect-and-open-it": "Connect and open it"
+    },
+    "pwa-guide": {
+      "desc": "Add MIBAO to the desktop for the best experience and no longer miss these unique artworks.",
+      "ok": "OK",
+      "step-1": "1.click the",
+      "step-2": {
+        "1": "2.click",
+        "2": ""
+      }
     }
   }
 }
