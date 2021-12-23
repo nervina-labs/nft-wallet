@@ -119,6 +119,9 @@ export const Profile: React.FC = () => {
             size="72px"
             onClick={() => setShowAvatarAction(true)}
             srcQueryParams={getNFTQueryParams(user?.avatar_tid, i18n.language)}
+            customizedSize={{
+              fixed: 'small',
+            }}
           />
           <CameraSvg className="cam" />
         </Center>

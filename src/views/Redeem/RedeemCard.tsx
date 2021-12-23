@@ -227,6 +227,9 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
             )
           }}
           size="25px"
+          customizedSize={{
+            fixed: 'small',
+          }}
         />
         <Box
           as="span"
@@ -279,6 +282,9 @@ export const RedeemCard: React.FC<ExchangeEventProps> = ({ item }) => {
               webp={isSupportWebp()}
               key={i}
               fallbackSrc={FALLBACK}
+              customizedSize={{
+                fixed: 'x-small',
+              }}
             />
           ))}
         </Stack>

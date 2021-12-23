@@ -1,5 +1,6 @@
 import { Follower } from './issuer'
 import { ListMeta, NftType, CardBack } from './nft'
+
 export interface Tag {
   uuid: string
   name: string
@@ -50,6 +51,11 @@ export interface TokenClass extends VipInfo, ClassLikes, CardBack {
   product_count: number
   product_price_currency: string
   product_price?: string
+  off_site_product_info?: {
+    price: string
+    url: string
+  }
+  thumbnail_url?: string
 }
 
 export function isTokenClass(data: any): data is TokenClass {

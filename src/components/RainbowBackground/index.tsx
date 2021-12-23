@@ -1,13 +1,9 @@
 import { Box, BoxProps } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import React from 'react'
+import { forwardRef } from 'react'
 import { MainContainer } from '../../styles'
 
 const Container = styled(MainContainer)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   height: 100%;
   width: 100%;
   position: relative;
@@ -34,34 +30,33 @@ const Circular = styled(Box)`
   }
 `
 
-export const RainbowBackground: React.FC<BoxProps> = ({
-  children,
-  ...props
-}) => {
-  return (
-    <Container {...props}>
-      <Circular
-        position="absolute"
-        top="20px"
-        right="20%"
-        w="166px"
-        h="166px"
-        bg="#FFA4E0"
-        filter="blur(70px)"
-        zIndex={1}
-      />
-      <Box
-        position="absolute"
-        top="10px"
-        left="20%"
-        w="214px"
-        h="214px"
-        bg="#FFEB90"
-        filter="blur(120px)"
-        speed={10}
-        zIndex={1}
-      />
-      {children}
-    </Container>
-  )
-}
+export const RainbowBackground = forwardRef<HTMLDivElement, BoxProps>(
+  ({ children, ...props }, ref) => {
+    return (
+      <Container {...props} ref={ref}>
+        <Circular
+          position="absolute"
+          top="20px"
+          right="20%"
+          w="166px"
+          h="166px"
+          bg="#FFA4E0"
+          filter="blur(70px)"
+          zIndex={1}
+        />
+        <Circular
+          position="absolute"
+          top="10px"
+          left="20%"
+          w="214px"
+          h="214px"
+          bg="#FFEB90"
+          filter="blur(120px)"
+          speed={10}
+          zIndex={1}
+        />
+        {children}
+      </Container>
+    )
+  }
+)

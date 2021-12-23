@@ -153,6 +153,9 @@ const RewardRecord: React.FC<{
         resizeScale={100}
         webp={isSupportWebp()}
         border={hasSpecialModel ? '2px solid #FFDCA2' : undefined}
+        customizedSize={{
+          fixed: 'small',
+        }}
       />
       <Box
         position="absolute"

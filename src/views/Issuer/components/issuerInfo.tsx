@@ -14,7 +14,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router'
 import { useIssuerInfo } from '../hooks/useIssuerInfo'
 import { Follow } from '../../../components/Follow'
-import { formatCount } from '../../../utils'
+import { formatCount, isSupportWebp } from '../../../utils'
 import { useTranslation } from 'react-i18next'
 import { SocialMediaType } from '../../../models/issuer'
 import { Description } from './description'
@@ -144,6 +144,11 @@ export const IssuerInfo: React.FC = () => {
                 isBanned={data?.is_issuer_banned}
                 size="60px"
                 border="3px solid var(--input-bg-color)"
+                resizeScale={100}
+                webp={isSupportWebp()}
+                customizedSize={{
+                  fixed: 'small',
+                }}
               />
             </Box>
           </Box>

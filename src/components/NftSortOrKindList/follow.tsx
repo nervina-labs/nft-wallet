@@ -57,6 +57,9 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
         resizeScale={500}
         imageProps={{
           webp: isSupportWebp(),
+          customizedSize: {
+            fixed: 'large',
+          },
         }}
         onClick={trackGoto}
         rounded="30px"

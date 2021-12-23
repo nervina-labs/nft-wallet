@@ -40,6 +40,7 @@ export const ConfirmDialog: React.FC = () => {
     modalContentProps,
     modalProps,
     showCloseButton = type !== 'text',
+    okButtonProps,
   } = options
   const [t] = useTranslation('translations')
 
@@ -103,6 +104,7 @@ export const ConfirmDialog: React.FC = () => {
               isLoading={isLoading}
               onClick={onConfirm}
               fontWeight="normal"
+              {...okButtonProps}
             >
               {okText ?? t('common.actions.confirm')}
             </Button>

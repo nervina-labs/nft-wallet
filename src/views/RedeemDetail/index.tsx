@@ -272,6 +272,9 @@ export const RedeemDetail: React.FC = () => {
                   )
                 }}
                 size="40px"
+                customizedSize={{
+                  fixed: 'small',
+                }}
               />
             </Box>
 

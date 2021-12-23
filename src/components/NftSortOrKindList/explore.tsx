@@ -80,6 +80,9 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
           resizeScale={300}
           webp={isSupportWebp()}
           rounded="22px"
+          customizedSize={{
+            fixed: 'large',
+          }}
         />
         <Box
           fontSize="16px"
@@ -103,6 +106,9 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
             isVerified={token.verified_info?.is_verified}
             onClick={gotoIssuer}
             webp={isSupportWebp()}
+            customizedSize={{
+              fixed: 'small',
+            }}
           />
           <Like
             likeCount={likeCount}

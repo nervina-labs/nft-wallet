@@ -32,8 +32,8 @@ export class IntryUrl {
 
 export const buildWechatShareData = (data: WechatShareData) => {
   return {
-    ...data,
     imgUrl: `${location.origin}/logo64.png`,
+    ...data,
   }
 }
 
@@ -41,6 +41,7 @@ export interface WechatShareData {
   title: string
   desc: string
   link: string
+  imgUrl?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

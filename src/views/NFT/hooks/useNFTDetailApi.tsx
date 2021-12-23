@@ -49,6 +49,7 @@ export function useNFTDetailApi(
           title: d?.name || '',
           desc: t('common.share.wx.nft.desc'),
           link: location.href,
+          imgUrl: d?.thumbnail_url,
         })
       },
     }

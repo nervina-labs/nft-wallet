@@ -51,6 +51,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
         count: Number(order.product_count),
         currency: order.currency as string,
         price: order.product_price as string,
+        amount: order.order_amount_total as string,
       })
     },
     [continueOrder, order]
@@ -103,6 +104,9 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
             history.push(issuerHref)
           }}
           isVerified={order.verified_info?.is_verified}
+          customizedSize={{
+            fixed: 'small',
+          }}
         />
         {status}
       </Flex>
@@ -117,6 +121,9 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, isInList }) => {
           borderRadius="22px"
           cursor={order.token_class_uuid ? 'pointer' : undefined}
           onClick={gotoClassDetail}
+          customizedSize={{
+            fixed: 'small',
+          }}
         />
         <Flex flex={1} ml="16px" flexDirection="column">
           <Flex flex={1}>
