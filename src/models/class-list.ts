@@ -55,6 +55,7 @@ export interface TokenClass extends VipInfo, ClassLikes, CardBack {
     price: string
     url: string
   }
+  thumbnail_url?: string
 }
 
 export function isTokenClass(data: any): data is TokenClass {

@@ -6,6 +6,7 @@ import {
   Box,
   Center,
   Flex,
+  HStack,
   Image,
   Modal,
   ModalContent,
@@ -20,14 +21,16 @@ import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
 import { ReactComponent as ThreeDSvg } from '../../../assets/svg/3D.svg'
 import { useTranslation } from 'react-i18next'
 import FALLBACK_SRC from '../../../assets/img/nft-fallback.png'
-import React, { lazy, useCallback, useState } from 'react'
+import React, { lazy, useCallback, useRef, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
-import { isSupportWebp } from '../../../utils'
+import { isSupportWebp, isUsdz } from '../../../utils'
 import { useTilt } from '../hooks/useTilt'
 import { useToast } from '../../../hooks/useToast'
 import { LoadableComponent } from '../../../components/GlobalLoader'
 import { trackLabels, useTrackEvent } from '../../../hooks/useTrack'
 import { useParams } from 'react-router'
+import { IS_SUPPORT_AR } from '../../../constants'
+import { ArButton } from './arButton'
 
 const ThreeDPreview = lazy(
   async () => await import('../../../components/ThreeDPreview')
@@ -115,6 +118,13 @@ const BgImage = styled(Box)`
   transform: translate3d(0, 0, 0);
   transform: translateZ(0);
   filter: blur(50px) contrast(1);
+`
+
+const BottomButton = styled(Center)`
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
 `
 
 const CardBack: React.FC<{
@@ -268,6 +278,8 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     detail?.renderer_type === NftType.Video
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
   const tid = (detail as NFTDetail)?.n_token_id
+  const arButtonRef = useRef<HTMLAnchorElement>(null)
+  const isRendererUsdz = isUsdz(detail?.renderer)
 
   return (
     <Flex
@@ -354,13 +366,20 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           renderer={detail.renderer}
           isOpen={isOpenPreview}
           onClose={onClosePreview}
-          render3D={(renderer) =>
-            isOpenPreview ? (
-              <LoadableComponent>
-                <ThreeDPreview src={renderer} onError={onRendererError} />
-              </LoadableComponent>
-            ) : null
-          }
+          render3D={(renderer) => {
+            if (isRendererUsdz) {
+              arButtonRef?.current?.click()
+              onClosePreview()
+              return
+            }
+            if (isOpenPreview) {
+              return (
+                <LoadableComponent>
+                  <ThreeDPreview src={renderer} onError={onRendererError} />
+                </LoadableComponent>
+              )
+            }
+          }}
           bgImageOnError={() => {
             if (detail?.renderer_type === NftType.Picture) {
               onRendererError()
@@ -391,17 +410,32 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         />
       </BgImage>
 
-      {hasCardBack ? (
-        <Center position="absolute" bottom="20px" w="full" transition="0.2s">
-          <Center
-            zIndex={2}
-            position="relative"
-            color="white"
-            fontSize="12px"
+      <HStack
+        position="absolute"
+        bottom="20px"
+        w="full"
+        justify="center"
+        fontSize="12px"
+        color="white"
+        zIndex={2}
+        lineHeight="25px"
+        spacing="8px"
+      >
+        {isRendererUsdz ? (
+          <BottomButton
             bg="rgba(0, 0, 0, 0.2)"
             rounded="8px"
             cursor="pointer"
-            userSelect="none"
+            pr="6px"
+            whiteSpace="nowrap"
+            opacity={IS_SUPPORT_AR ? 1 : 0.5}
+          >
+            <ArButton href={detail?.renderer} ref={arButtonRef} />
+          </BottomButton>
+        ) : null}
+
+        {hasCardBack ? (
+          <BottomButton
             pr="6px"
             onClick={() => {
               if (!showCardBackContent) {
@@ -412,9 +446,9 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           >
             <CardbackSvg />
             {t('nft.show-card-back')}
-          </Center>
-        </Center>
-      ) : null}
+          </BottomButton>
+        ) : null}
+      </HStack>
     </Flex>
   )
 }

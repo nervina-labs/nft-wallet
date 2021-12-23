@@ -107,7 +107,13 @@ export const RedeemResult: React.FC = () => {
       }
 
   return (
-    <RainbowBackground px="24px">
+    <RainbowBackground
+      px="24px"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+    >
       <AppbarSticky position="absolute" top="0" zIndex={2}>
         <Appbar
           transparent

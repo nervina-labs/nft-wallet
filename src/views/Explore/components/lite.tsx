@@ -59,6 +59,9 @@ export const Lite: React.FC = () => {
                 resizeScale={300}
                 webp={isSupportWebp()}
                 fallbackSrc={FALLBACK}
+                customizedSize={{
+                  fixed: 'large',
+                }}
               />
             </AspectRatio>
           ))

@@ -216,7 +216,11 @@
         "not-official-website": "This is not an official MIBAO page，confirm that you want to visit this page.",
         "upcoming-visit": "You're going to visit this page.",
         "go-to-link": "Continue"
-      }
+      },
+      "no-support-ar": "The current environment does not support viewing in AR mode",
+      "only-support-ios": "only iOS devices are supported enter the AR mode currently",
+      "copy-to-browser": "Please copy the link and open it in your browser to view",
+      "no-support-usdz-ok": "OK"
     },
     "account": {
       "title": "My Account",
@@ -666,6 +670,15 @@
       "default-promotion-copy": "View my collected digital collections",
       "try-again": "Oops.. an error occurred. Try it again.",
       "connect-and-open-it": "Connect and open it"
+    },
+    "pwa-guide": {
+      "desc": "Add MIBAO to the desktop for the best experience and no longer miss these unique artworks.",
+      "ok": "OK",
+      "step-1": "1.click the",
+      "step-2": {
+        "1": "2.click",
+        "2": ""
+      }
     }
   }
 }

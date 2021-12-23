@@ -57,6 +57,11 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
         title={token.name}
         hasCardback={token.card_back_content_exist}
         titleProps={{ fontWeight: 'normal' }}
+        imageProps={{
+          customizedSize: {
+            fixed: 'large',
+          },
+        }}
         issuerProps={{
           name: token.issuer_info?.name ?? '',
           src:
@@ -69,6 +74,9 @@ const Card: React.FC<{ token: TokenClass }> = ({ token }) => {
             push(`/issuer/${token.issuer_info?.uuid ?? ''}`)
             e.stopPropagation()
             e.preventDefault()
+          },
+          customizedSize: {
+            fixed: 'small',
           },
         }}
         limitProps={{

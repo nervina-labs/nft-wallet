@@ -216,7 +216,11 @@
         "not-official-website": "非秘宝官方网页，请确认是否继续访问",
         "upcoming-visit": "即将访问",
         "go-to-link": "确认访问"
-      }
+      },
+      "no-support-ar": "当前环境不支持 AR 模式查看",
+      "only-support-ios": "当前仅支持 iOS 设备\n进入 AR 模式查看",
+      "copy-to-browser": "请复制链接到浏览器中打开\n然后再进入 AR 模式查看",
+      "no-support-usdz-ok": "好吧"
     },
     "account": {
       "title": "我的帐号",
@@ -666,6 +670,15 @@
       "default-promotion-copy": "查看领取的数字藏品",
       "try-again": "领取失败，再试一次吧",
       "connect-and-open-it": "连接身份后领取"
+    },
+    "pwa-guide": {
+      "desc": "将我们添加到桌面吧，获得最佳观赏体验，不再错过这些独一无二的艺术品。",
+      "ok": "知道了",
+      "step-1": "1.点击下方",
+      "step-2": {
+        "1": "2.点击",
+        "2": "即可"
+      }
     }
   }
 }

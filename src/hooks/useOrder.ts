@@ -44,6 +44,7 @@ export interface CurrentOrder {
   name?: string
   coverUrl?: string
   hasCardback?: boolean
+  amount?: string
 }
 
 export enum PaymentChannel {
@@ -349,6 +350,7 @@ export interface ContinueOrderProps {
   count: number
   currency: string
   channel?: PaymentChannel
+  amount: string
 }
 
 export const useContinueOrder = () => {
@@ -357,10 +359,11 @@ export const useContinueOrder = () => {
   const setOrderInfo = useUpdateAtom(currentOrderInfoAtom)
   const setStep = useSetOrderStep()
   return useCallback(
-    ({ uuid, price, count, currency, channel }: ContinueOrderProps) => {
+    ({ uuid, price, count, currency, channel, amount }: ContinueOrderProps) => {
       setOrderInfo({
         price,
         currency,
+        amount,
       })
       setProps({
         count,
@@ -382,7 +385,10 @@ export const useOrderPrice = () => {
   const [prime, decimal] = useMemo(() => {
     const price = order.price
     const count = orderProps.count
-    const tp = formatCurrency(Number(price) * Number(count), order.currency)
+    const tp = formatCurrency(
+      order.amount ? order.amount : Number(price) * Number(count),
+      order.currency
+    )
     return tp.split('.')
   }, [order, orderProps])
 
