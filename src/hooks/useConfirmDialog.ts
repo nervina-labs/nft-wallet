@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/indent */
-import type { ModalProps, ModalBodyProps } from '@mibao-ui/components'
+import type {
+  ModalProps,
+  ModalBodyProps,
+  ButtonProps,
+} from '@mibao-ui/components'
 import { atom } from 'jotai'
 import { selectAtom, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import React, { useCallback } from 'react'
@@ -23,6 +27,7 @@ export interface ConfirmDialogOptions {
   modalContentProps?: ModalContentProps
   modalBodyProps?: ModalBodyProps
   showCloseButton?: boolean
+  okButtonProps?: ButtonProps
 }
 
 export interface ConfirmDialogProps extends ConfirmDialogOptions {

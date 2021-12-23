@@ -66,3 +66,11 @@ export const downloadCardBackPDF = (selector: string) => {
     })
   })
 }
+
+export function isInStandaloneMode() {
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as any).standalone ||
+    document.referrer.includes('android-app://')
+  )
+}

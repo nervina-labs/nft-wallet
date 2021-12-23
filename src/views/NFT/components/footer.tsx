@@ -1,7 +1,7 @@
-import { Box, Button, Grid, Like } from '@mibao-ui/components'
+import { Box, Like } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { useLike } from '../../../hooks/useLikeStatus'
-import { TokenClass } from '../../../models/class-list'
+import { isTokenClass, TokenClass } from '../../../models/class-list'
 import { NFTDetail } from '../../../models/nft'
 import { useHistory } from 'react-router-dom'
 import { useCallback } from 'react'
@@ -21,6 +21,8 @@ import { UnipassConfig } from '../../../utils'
 import { Query } from '../../../models'
 import { useQuery } from 'react-query'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
+import { Button, Flex } from '@chakra-ui/react'
+import { OffSiteProductInfoButton } from './offSiteProductInfoButton'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -109,9 +111,12 @@ const TranferOrBuy: React.FC<{
   ])
 
   const isSoldout = Number(detail?.product_count) === 0
+  if (detail && isTokenClass(detail) && detail?.off_site_product_info) {
+    return <OffSiteProductInfoButton info={detail.off_site_product_info} />
+  }
 
-  if (isClass) {
-    return detail?.product_on_sale_uuid ? (
+  if (isClass && detail?.product_on_sale_uuid) {
+    return (
       <Button
         colorScheme="primary"
         variant="solid"
@@ -127,7 +132,7 @@ const TranferOrBuy: React.FC<{
         </Box>
         <BuySvg />
       </Button>
-    ) : null
+    )
   }
 
   if (!ownCurrentToken) {
@@ -170,9 +175,9 @@ export const Footer: React.FC<{
 
   return (
     <>
-      <Grid
-        templateColumns="calc(100% - 120px) 120px"
+      <Flex
         position="fixed"
+        justify="space-between"
         bottom="-40px"
         opacity={hidden ? 0 : 1}
         transform={`translateY(${
@@ -205,7 +210,7 @@ export const Footer: React.FC<{
         />
 
         <TranferOrBuy uuid={uuid} detail={detail} isClass={isClass} />
-      </Grid>
+      </Flex>
       <Box h="94px" />
     </>
   )

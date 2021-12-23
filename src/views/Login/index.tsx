@@ -1,8 +1,7 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
-import { MainContainer } from '../../styles'
 import {
   CONTAINER_MAX_WIDTH,
   IS_DESKTOP,
@@ -13,7 +12,6 @@ import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
 import { useTranslation, Trans } from 'react-i18next'
-import { useWidth } from '../../hooks/useWidth'
 import { getHelpUnipassUrl } from '../../data/help'
 import { getLicenseUrl } from '../../data/license'
 import { UnipassConfig } from '../../utils'
@@ -45,55 +43,17 @@ import {
   useTrackEvent,
   useTrackDidMount,
 } from '../../hooks/useTrack'
+import { RainbowBackground } from '../../components/RainbowBackground'
+import { useInnerSize } from '../../hooks/useInnerSize'
 
-const Container = styled(MainContainer)`
+const Container = styled(RainbowBackground)`
+  justify-content: flex-start;
   display: flex;
   align-items: center;
   flex-direction: column;
-  background: linear-gradient(192.04deg, #e2e3ff 50.5%, #eadeff 100%);
-  position: relative;
   overflow-x: hidden;
+  min-height: 100vh;
 
-  &:before,
-  &:after {
-    content: '';
-    display: block;
-    filter: blur(100px);
-    position: absolute;
-    z-index: 0;
-    border-radius: 100%;
-  }
-  &:before {
-    width: 166px;
-    height: 166px;
-    right: 30px;
-    top: 104px;
-    background: #ffa4e0;
-    animation: run-bg-animation 5s infinite alternate;
-  }
-
-  &:after {
-    width: 214px;
-    height: 214px;
-    left: 60px;
-    top: 25px;
-    background: #ffeb90;
-    animation: run-bg-animation 10s infinite alternate;
-  }
-
-  @keyframes run-bg-animation {
-    0% {
-      transform: translate(0, 0);
-    }
-    50% {
-      transform: translate(50%, 0);
-    }
-    100% {
-      transform: translate(-50%, 0);
-    }
-  }
-
-  min-height: 100%;
   .close {
     width: 24px;
     height: 24px;
@@ -240,18 +200,7 @@ export const Login: React.FC = () => {
 
   const containerRef = useRef(null)
 
-  const bodyRef = useRef(document.body)
-  const bodyWidth = useWidth(bodyRef)
-  const drawerLeft = useMemo(() => {
-    if (bodyWidth == null) {
-      return 0
-    }
-    if (bodyWidth <= CONTAINER_MAX_WIDTH) {
-      return 0
-    }
-    return `${(bodyWidth - CONTAINER_MAX_WIDTH) / 2}px`
-  }, [bodyWidth])
-
+  const { width } = useInnerSize()
   const setLoading = (loading: boolean, walletType: WalletType): void => {
     switch (walletType) {
       case WalletType.Metamask:
@@ -414,11 +363,15 @@ export const Login: React.FC = () => {
         hasOverlay
         rounded="lg"
         contentProps={{
-          width: drawerLeft === 0 ? '100%' : `${CONTAINER_MAX_WIDTH}px`,
-          style: {
-            left: drawerLeft,
-          },
+          width: '100%',
           overflow: 'hidden',
+          style: {
+            left: `calc(50% - calc(${Math.min(
+              width,
+              CONTAINER_MAX_WIDTH
+            )}px / 2))`,
+            maxWidth: `${CONTAINER_MAX_WIDTH}px`,
+          },
         }}
       >
         <Center flexDirection="column" my="24px">

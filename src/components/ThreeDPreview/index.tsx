@@ -93,6 +93,8 @@ const ThreeDPreview: React.FC<ThreeDPreviewProps> = ({
       camera-controls
       auto-rotate
       loading="lazy"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
       style={{
         width: '100%',
         height: '100%',
@@ -106,7 +108,7 @@ const ThreeDPreviewWithLoading: React.FC<{
   src: string
   onError?: () => void
   loader?: string
-}> = ({ src, onError, loader }) => {
+}> = ({ src, onError, loader, children }) => {
   const { t } = useTranslation('translations')
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
@@ -157,7 +159,9 @@ const ThreeDPreviewWithLoading: React.FC<{
       ) : null}
 
       {src ? (
-        <ThreeDPreview src={src} onLoad={onLoad} onError={onError} />
+        <ThreeDPreview src={src} onLoad={onLoad} onError={onError}>
+          {children}
+        </ThreeDPreview>
       ) : null}
       {isLoading
         ? loader ?? <ThreeDLoadingSvg className="three-d-loading" />

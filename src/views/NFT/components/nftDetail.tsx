@@ -217,6 +217,9 @@ export const NftDetail: React.FC<{
               minW="48px"
               fallbackSrc={FallbackAvatarSrc}
               webp={isSupportWebp()}
+              customizedSize={{
+                fixed: 'small',
+              }}
               resizeScale={100}
             />
             {showAvatarVerified ? (

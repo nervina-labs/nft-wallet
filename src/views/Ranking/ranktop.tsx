@@ -30,6 +30,9 @@ export const RankTop: React.FC<{
             resizeScale={100}
             webp={isSupportWebp()}
             src={bgImageUrl === null ? '' : bgImageUrl}
+            customizedSize={{
+              fixed: 'large',
+            }}
           />
         </RankBorderBox>
         <Box
