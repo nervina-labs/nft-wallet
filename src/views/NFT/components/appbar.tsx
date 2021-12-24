@@ -18,7 +18,7 @@ import { useShareDisclosure } from '../../../hooks/useShareDisclosure'
 import { useRouteQuery } from '../../../hooks/useRouteQuery'
 import { useHistory } from 'react-router'
 import { RoutePath } from '../../../routes'
-import { addParamsToUrl } from '../../../utils'
+import { addParamsToUrl, hasTid } from '../../../utils'
 import { useTranslation } from 'react-i18next'
 import { useTrackClick } from '../../../hooks/useTrack'
 
@@ -53,13 +53,12 @@ export const Appbar: React.FC<{
   const shareBgImageUrl = useMemo(() => {
     if (!detail?.bg_image_url) return ''
     const tid = (detail as NFTDetail)?.n_token_id
-    const params: { [key in string]: string } =
-      typeof tid !== 'undefined'
-        ? {
-            tid: `${tid}`,
-            locale: i18n.language,
-          }
-        : {}
+    const params: { [key in string]: string } = hasTid(tid)
+      ? {
+          tid: `${tid}`,
+          locale: i18n.language,
+        }
+      : {}
     return addParamsToUrl(detail?.bg_image_url, params)
   }, [detail, i18n.language])
 
