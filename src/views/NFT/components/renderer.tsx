@@ -23,7 +23,12 @@ import { useTranslation } from 'react-i18next'
 import FALLBACK_SRC from '../../../assets/img/nft-fallback.png'
 import React, { lazy, useCallback, useRef, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
-import { addParamsToUrl, hasTid, isSupportWebp, isUsdz } from '../../../utils'
+import {
+  addParamsToUrl,
+  getNFTQueryParams,
+  isSupportWebp,
+  isUsdz,
+} from '../../../utils'
 import { useTilt } from '../hooks/useTilt'
 import { useToast } from '../../../hooks/useToast'
 import { LoadableComponent } from '../../../components/GlobalLoader'
@@ -277,9 +282,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     detail?.renderer_type === NftType.Audio ||
     detail?.renderer_type === NftType.Video
   const tid = (detail as NFTDetail)?.n_token_id
-  const tidParams: { [key: string]: string } = hasTid(tid)
-    ? { tid: `${tid}`, locale: i18n.language }
-    : {}
+  const tidParams = getNFTQueryParams(tid, i18n.language) ?? {}
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
   const arButtonRef = useRef<HTMLAnchorElement>(null)
   const isRendererUsdz = isUsdz(detail?.renderer)

@@ -11,7 +11,12 @@ import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
 import { Query, TransactionLog } from '../../../models'
-import { ellipsisString, formatTime, isSupportWebp } from '../../../utils'
+import {
+  ellipsisString,
+  formatTime,
+  getNFTQueryParams,
+  isSupportWebp,
+} from '../../../utils'
 import TransactionsArrowSvg from '../../../assets/svg/transactions-arrow.svg'
 import { Center, Image, useClipboard } from '@chakra-ui/react'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
@@ -68,14 +73,7 @@ const UserWithAddress: React.FC<{
         border={avatarType === 'token' ? undefined : '1px solid #f6f6f6'}
         fallbackSrc={FallbackAvatarSrc}
         isVerified={isVerified}
-        srcQueryParams={
-          typeof avatarTid === 'number'
-            ? {
-                tid: avatarTid,
-                locale: i18n.language,
-              }
-            : undefined
-        }
+        srcQueryParams={getNFTQueryParams(avatarTid, i18n.language)}
         webp={isSupportWebp()}
         resizeScale={100}
         customizedSize={{

@@ -35,7 +35,7 @@ export function isSupportWebp(): boolean {
 
 export function addParamsToUrl<U extends string | undefined>(
   url: U,
-  params: { [key: string]: string },
+  params: { [key: string]: string | number },
   options?: {
     ignoreDuplicates?: boolean
   }
@@ -48,7 +48,7 @@ export function addParamsToUrl<U extends string | undefined>(
     const urlSearchParams = urlObj.searchParams
     Object.keys(params).forEach((key) => {
       if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
-        urlSearchParams.set(key, params[key])
+        urlSearchParams.set(key, `${params[key]}`)
       }
     })
     return decodeURIComponent(urlObj.toString()) as U
@@ -80,7 +80,10 @@ export function getImagePreviewUrl<U extends string | undefined>(
   return addParamsToUrl(url, params) as any
 }
 
-export const getNFTQueryParams = (tid?: number, locale = i18n.language) => {
+export const getNFTQueryParams = (
+  tid?: number | null,
+  locale = i18n.language
+) => {
   if (typeof tid === 'number' || typeof tid === 'string') {
     return {
       tid,

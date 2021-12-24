@@ -66,7 +66,3 @@ export function isIssuerId(str: string): boolean {
 export function isTokenClassId(str: string): boolean {
   return TOKEN_CLASS_ID_REG.test(str)
 }
-
-export function hasTid(tid?: number | null) {
-  return typeof tid !== 'undefined' && tid !== null
-}
