@@ -33,24 +33,28 @@ export function isSupportWebp(): boolean {
   return !!BOWSER_BROWSER.satisfies(supportedBrowsers)
 }
 
-export function addParamsToUrl(
-  url: string,
+export function addParamsToUrl<U extends string | undefined>(
+  url: U,
   params: { [key: string]: string },
   options?: {
     ignoreDuplicates?: boolean
   }
-): string {
+): U {
   if (!url) {
     return url
   }
-  const urlObj = new URL(url)
-  const urlSearchParams = urlObj.searchParams
-  Object.keys(params).forEach((key) => {
-    if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
-      urlSearchParams.set(key, params[key])
-    }
-  })
-  return decodeURIComponent(urlObj.toString())
+  try {
+    const urlObj = new URL(url)
+    const urlSearchParams = urlObj.searchParams
+    Object.keys(params).forEach((key) => {
+      if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
+        urlSearchParams.set(key, params[key])
+      }
+    })
+    return decodeURIComponent(urlObj.toString()) as U
+  } catch {
+    return url
+  }
 }
 
 export function getImagePreviewUrl<U extends string | undefined>(
