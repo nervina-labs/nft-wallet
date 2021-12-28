@@ -14,6 +14,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
+  Skeleton,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
@@ -24,8 +25,8 @@ import { useQuery } from 'react-query'
 import { useAccount, useAccountStatus, useLogin } from '../../hooks/useAccount'
 import { useToast } from '../../hooks/useToast'
 import { MainContainer } from '../../styles'
-import { UnipassConfig } from '../../utils'
-import { PoetrySort, PoetryVoteCounts } from './api.interface'
+import { sleep, UnipassConfig } from '../../utils'
+import { Poetry, PoetrySort, PoetryVoteCounts } from './api.interface'
 import { Title } from './components/title'
 import ListBgSvgPath from './assets/list-bg.svg'
 import { BottomLogo } from './components/bottomLogo'
@@ -33,13 +34,9 @@ import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 
 type VoteType = 'normal' | 'special'
 
+const IS_MOCK = true
+
 export const Poem: React.FC = () => {
-  // TODO: should remove
-  const poemList = new Array(15).fill(0).map((_, i) => ({
-    name: '《爱你就等于爱自己》',
-    author: '李荣浩',
-    count: i * 100,
-  }))
   const { address } = useAccount()
   const { isLogined } = useAccountStatus()
   const { login } = useLogin()
@@ -79,17 +76,29 @@ export const Poem: React.FC = () => {
     [toast]
   )
 
-  const { data: poetryVotesData } = useQuery(
+  const {
+    data: poetryVotesData,
+    isLoading: isLoadingPoetryVotesData,
+  } = useQuery(
     ['/api/wallet/v1/poetries', voteSort],
     async () => {
-      const { data } = await axios.get<PoetryVoteCounts>(
-        '/api/wallet/v1/poetries',
-        {
-          params: {
-            sort: voteSort,
-          },
+      if (IS_MOCK) {
+        await sleep(1000)
+        return {
+          poetries: new Array(13).fill(0).map((_, i) => ({
+            uuid: 'fake_uuid',
+            name: 'fake_name' + i,
+            reciter_name: 'fake_username' + i,
+            votes_count: 100 + i * 100,
+            serial_no: i + 1,
+          })),
         }
-      )
+      }
+      const { data } = await axios.get<Poetry>('/api/wallet/v1/poetries', {
+        params: {
+          sort: voteSort,
+        },
+      })
       return data
     },
     {}
@@ -111,7 +120,7 @@ export const Poem: React.FC = () => {
   console.log(poetryVotesData, poetryVotesCountData) // TODO: should remove
 
   return (
-    <MainContainer bg="#1a1a1a" py="60px" color="#fff">
+    <MainContainer bg="#1a1a1a" py="60px" color="#fff" minH="100vh">
       <Title />
 
       <Grid
@@ -230,39 +239,48 @@ export const Poem: React.FC = () => {
         bgSize="100% auto"
         px="20px"
       >
-        {poemList.map((item, i) => (
-          <Flex
-            key={i}
-            justify="space-between"
-            align="center"
-            borderBottom="1px solid rgba(245, 197, 123, 0.4)"
-            py="16px"
-          >
-            <Flex direction="column">
-              <Box fontSize="15px">
-                {i + 1}. {item.name}
-              </Box>
-              <Box pl="25px" fontSize="14px" mt="8px">
-                {item.author}
-
-                <Box as="span" color="#F5C57B" ml="15px">
-                  {item.count}票
-                </Box>
-              </Box>
-            </Flex>
-
-            <Button
-              onClick={onClickVoteMiddleware}
-              variant="link"
-              textDecoration="underline"
-              color="#F5C57B"
-              mt="auto"
-              fontSize="14px"
+        {isLoadingPoetryVotesData ? (
+          <VStack spacing="10px">
+            <Skeleton h="70px" w="full" />
+            <Skeleton h="70px" w="full" />
+            <Skeleton h="70px" w="full" />
+            <Skeleton h="70px" w="full" />
+          </VStack>
+        ) : (
+          poetryVotesData?.poetries.map((item, i) => (
+            <Flex
+              key={i}
+              justify="space-between"
+              align="center"
+              borderBottom="1px solid rgba(245, 197, 123, 0.4)"
+              py="16px"
             >
-              去投票
-            </Button>
-          </Flex>
-        ))}
+              <Flex direction="column">
+                <Box fontSize="15px">
+                  {item.serial_no}. {item.name}
+                </Box>
+                <Box pl="25px" fontSize="14px" mt="8px">
+                  {item.reciter_name}
+
+                  <Box as="span" color="#F5C57B" ml="15px">
+                    {item.votes_count}票
+                  </Box>
+                </Box>
+              </Flex>
+
+              <Button
+                onClick={onClickVoteMiddleware}
+                variant="link"
+                textDecoration="underline"
+                color="#F5C57B"
+                mt="auto"
+                fontSize="14px"
+              >
+                去投票
+              </Button>
+            </Flex>
+          ))
+        )}
       </Box>
 
       <BottomLogo />
