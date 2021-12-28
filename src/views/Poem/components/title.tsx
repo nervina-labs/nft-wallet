@@ -16,7 +16,7 @@ export const StyledMoonSvg = styled(MoonSvg)`
   transform: translateX(
     ${({ center }: { center?: boolean }) => (center ? '-50%' : '-20%')}
   );
-  transition: 200ms;
+  transition: 400ms;
 `
 
 export const StyledLogoSvg = styled(LogoSvg)`
@@ -33,6 +33,10 @@ export const StyledBgTextSvg = styled(BgTextSvg)`
   height: auto;
   left: 20px;
   z-index: 2;
+  transition: 100ms;
+  transform: translateY(
+    ${({ offsetY }: { offsetY?: number }) => offsetY ?? 0}px
+  );
 `
 
 export const StyledHomeTextSvg = styled(HomeTextSvg)`
@@ -46,7 +50,7 @@ export const StyledHomeTextSvg = styled(HomeTextSvg)`
 
 export const StyledRankTextSvg = styled(RankTextSvg)`
   position: absolute;
-  margin-top: 50px;
+  margin-top: 20px;
   width: 80%;
   height: auto;
   left: 20px;
@@ -59,11 +63,15 @@ export const Title: React.FC<{
   isRank?: boolean
 }> = ({ isRank }) => {
   return (
-    <Box position="relative">
-      <Box position="relative" h={isRank ? '300px' : '340px'} overflow="hidden">
+    <Box
+      position="relative"
+      h={isRank ? '270px' : 'calc(340px + 105px)'}
+      transition="200ms"
+    >
+      <Box position="relative" h={isRank ? '270px' : '340px'} overflow="hidden">
         <StyledLogoSvg />
         <StyledMoonSvg center={isRank} />
-        <StyledBgTextSvg />
+        <StyledBgTextSvg offsetY={isRank ? -30 : 0} />
         <StyledRankTextSvg hide={!isRank} />
         <StyledHomeTextSvg hide={isRank} />
       </Box>
