@@ -117,8 +117,6 @@ export const Poem: React.FC = () => {
     }
   )
 
-  console.log(poetryVotesData, poetryVotesCountData) // TODO: should remove
-
   return (
     <MainContainer bg="#1a1a1a" py="60px" color="#fff" minH="100vh">
       <Title />
