@@ -6,9 +6,6 @@ import {
   Box,
   Button,
   Flex,
-  Grid,
-  List,
-  ListItem,
   Modal,
   ModalBody,
   ModalContent,
@@ -119,110 +116,12 @@ export const Poem: React.FC = () => {
 
   return (
     <MainContainer bg="#1a1a1a" py="60px" color="#fff" minH="100vh">
-      <Title />
-
-      <Grid
-        templateColumns="51px calc(100% - 51px)"
-        h="105px"
-        mx="20px"
-        position="relative"
-        userSelect="none"
-        _after={{
-          content: '" "',
-          w: '30px',
-          h: '30px',
-          bg: '#1a1a1a',
-          position: 'absolute',
-          left: '36px',
-          rounded: 'full',
-          top: '-15px',
-        }}
-        _before={{
-          content: '" "',
-          w: '30px',
-          h: '30px',
-          bg: '#1a1a1a',
-          position: 'absolute',
-          left: '36px',
-          rounded: 'full',
-          bottom: '-15px',
-        }}
-      >
-        <Flex
-          bg="#F5C57B"
-          color="#484848"
-          fontWeight="bold"
-          fontSize="18px"
-          textAlign="center"
-          alignItems="center"
-          justify="center"
-        >
-          <Box>
-            规<br />则
-          </Box>
-        </Flex>
-        <Flex
-          direction="column"
-          bg="#fff"
-          py="8px"
-          color="#000"
-          textAlign="center"
-          fontSize="14px"
-          lineHeight="22px"
-        >
-          <Box fontSize="16px" fontWeight="600">
-            本次诗歌节采用 NFT 进行投票
-          </Box>
-          <List w="160px" mx="auto" whiteSpace="nowrap">
-            <ListItem
-              position="relative"
-              _before={{
-                content: '" "',
-                width: '5px',
-                height: '5px',
-                rounded: 'full',
-                display: 'block',
-                position: 'absolute',
-                top: 'calc(50% - 2.5px)',
-                left: '-10px',
-                bg: '#F5C57B',
-              }}
-            >
-              投出一个诗人 NFT{' '}
-              <Box as="span" color="#F5C57B">
-                计3票
-              </Box>
-            </ListItem>
-            <ListItem
-              position="relative"
-              _before={{
-                content: '" "',
-                width: '5px',
-                height: '5px',
-                rounded: 'full',
-                display: 'block',
-                position: 'absolute',
-                top: 'calc(50% - 2.5px)',
-                left: '-10px',
-                bg: '#F5C57B',
-              }}
-            >
-              投出一个普通 NFT{' '}
-              <Box as="span" color="#F5C57B">
-                计1票
-              </Box>
-            </ListItem>
-          </List>
-          <Box>快去投出你喜欢的诗歌吧！</Box>
-        </Flex>
-      </Grid>
-
+      <Title isRank={voteSort === 'votes'} />
       <Flex justify="flex-end" pt="35px" mb="30px" px="20px">
         <Button
           variant="link"
           textDecoration="underline"
           color="#F5C57B"
-          mb="16px"
           fontSize="16px"
           onClick={() => setVoteSort(voteSort === 'votes' ? '' : 'votes')}
         >
