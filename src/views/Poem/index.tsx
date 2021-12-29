@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Flex,
+  Grid,
   Modal,
   ModalBody,
   ModalContent,
@@ -27,7 +28,7 @@ import {
 } from '../../hooks/useAccount'
 import { useToast } from '../../hooks/useToast'
 import { MainContainer } from '../../styles'
-import { sleep, UnipassConfig } from '../../utils'
+import { UnipassConfig } from '../../utils'
 import {
   Poetry,
   PoetrySort,
@@ -39,10 +40,9 @@ import ListBgSvgPath from './assets/list-bg.svg'
 import { BottomLogo } from './components/bottomLogo'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
+import { SERVER_URL } from '../../constants'
 
 type VoteType = 'normal' | 'special'
-
-const IS_MOCK = true
 
 export const Poem: React.FC = () => {
   const { address } = useAccount()
@@ -85,7 +85,7 @@ export const Poem: React.FC = () => {
         auth: JSON.stringify(auth),
       }
       const unsignedTx = await axios
-        .get<UnSignedTx>('/api/wallet/v1/poem_votes', { headers })
+        .get<UnSignedTx>(SERVER_URL + '/poem_votes', { headers })
         .then((res) => res.data.unsigned_tx)
 
       const signTx = await signTransaction(unsignedTx as any)
@@ -100,21 +100,9 @@ export const Poem: React.FC = () => {
     data: poetryVotesData,
     isLoading: isLoadingPoetryVotesData,
   } = useQuery(
-    ['/api/wallet/v1/poetries', voteSort],
+    ['/poems', voteSort],
     async () => {
-      if (IS_MOCK) {
-        await sleep(1000)
-        return {
-          poetries: new Array(13).fill(0).map((_, i) => ({
-            uuid: 'fake_uuid',
-            name: 'fake_name' + i,
-            reciter_name: 'fake_username' + i,
-            votes_count: 100 + i * 100,
-            serial_no: i + 1,
-          })),
-        }
-      }
-      const { data } = await axios.get<Poetry>('/api/wallet/v1/poetries', {
+      const { data } = await axios.get<Poetry>(SERVER_URL + '/poems', {
         params: {
           sort: voteSort,
         },
@@ -125,10 +113,10 @@ export const Poem: React.FC = () => {
   )
 
   const { data: poetryVotesCountData } = useQuery(
-    `/api/wallet/v1/poetry_votes/${address}`,
+    `/poetry_votes/${address}`,
     async () => {
       const { data } = await axios.get<PoetryVoteCounts>(
-        `/api/wallet/v1/poetry_votes/${address}`
+        SERVER_URL + `/poetry_votes/${address}`
       )
       return data
     },
@@ -160,45 +148,44 @@ export const Poem: React.FC = () => {
         px="20px"
       >
         {isLoadingPoetryVotesData ? (
-          <VStack spacing="10px">
-            <Skeleton h="70px" w="full" />
-            <Skeleton h="70px" w="full" />
-            <Skeleton h="70px" w="full" />
-            <Skeleton h="70px" w="full" />
+          <VStack spacing="6px">
+            <Skeleton h="55px" w="full" />
+            <Skeleton h="55px" w="full" />
+            <Skeleton h="55px" w="full" />
+            <Skeleton h="55px" w="full" />
           </VStack>
         ) : (
-          poetryVotesData?.poetries.map((item, i) => (
-            <Flex
+          poetryVotesData?.poems.map((item, i) => (
+            <Grid
               key={i}
-              justify="space-between"
+              templateColumns="60% 20% 20%"
               align="center"
               borderBottom="1px solid rgba(245, 197, 123, 0.4)"
-              py="16px"
+              fontSize="14px"
+              h="60px"
+              lineHeight="60px"
             >
-              <Flex direction="column">
-                <Box fontSize="15px">
-                  {item.serial_no}. {item.name}
-                </Box>
-                <Box pl="25px" fontSize="14px" mt="8px">
-                  {item.reciter_name}
-
-                  <Box as="span" color="#F5C57B" ml="15px">
-                    {item.votes_count}票
-                  </Box>
-                </Box>
-              </Flex>
+              <Box
+                textAlign="left"
+                whiteSpace="nowrap"
+                textOverflow="ellipsis"
+                overflow="hidden"
+              >
+                {item.reciter_name}
+              </Box>
+              <Box color="#F5C57B">{item.votes_count}票</Box>
 
               <Button
                 onClick={onClickVoteMiddleware}
                 variant="link"
                 textDecoration="underline"
                 color="#F5C57B"
-                mt="auto"
                 fontSize="14px"
+                my="auto"
               >
                 去投票
               </Button>
-            </Flex>
+            </Grid>
           ))
         )}
       </Box>

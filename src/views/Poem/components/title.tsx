@@ -105,7 +105,17 @@ export const Title: React.FC<{
         px="10px"
         border="2px solid #F5C57B"
         borderTop="6px solid #F5C57B"
+        position="relative"
       >
+        <Box
+          position="absolute"
+          top="-4px"
+          left="0"
+          w="100%"
+          h="4px"
+          bg="linear-gradient(90deg, #E9C081 0.96%, rgb(74 67 52) 100%)"
+          zIndex={1}
+        />
         <Box
           color="#F5C57B"
           fontSize="14px"

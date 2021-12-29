@@ -1,3 +1,5 @@
+import { ListMeta } from '../../models'
+
 export interface PoetryVoteCounts {
   poetry_vote: {
     normal_count: number
@@ -6,13 +8,13 @@ export interface PoetryVoteCounts {
 }
 
 export interface Poetry {
-  poetries: Array<{
+  poems: Array<{
     uuid: string
-    name: string
     reciter_name: string
     votes_count: number
     serial_no: number
   }>
+  meta: ListMeta
 }
 
 export interface UnSignedTx {
