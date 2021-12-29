@@ -15,11 +15,11 @@ export const StyledMoonSvg = styled(MoonSvg)`
   width: 258px;
   height: 258px;
   position: absolute;
-  transform: translate(
-    ${({ center }: { center?: boolean }) =>
-      `${center ? '-50%' : '-20%'}, ${center ? '100px' : '0'}`}
-  );
   transition: 400ms;
+  transform: translate(-20%, 0);
+  &.center {
+    transform: translate(-50%, 100px);
+  }
 `
 
 export const StyledLogoSvg = styled(LogoSvg)`
@@ -35,8 +35,10 @@ export const StyledJointUnitSvg = styled(JointUnitSvg)`
   top: 30px;
   position: absolute;
   left: 20px;
-  opacity: ${({ hide }: { hide?: boolean }) => (hide ? 0 : 1)};
   transition: 200ms;
+  &.hide {
+    opacity: 0;
+  }
 `
 
 export const StyledChooseYourFavouriteSvg = styled(ChooseYourFavouriteSvg)`
@@ -50,7 +52,9 @@ export const StyledHomeTextSvg = styled(HomeTextSvg)`
   left: 20px;
   z-index: 3;
   transition: 200ms;
-  opacity: ${({ hide }: { hide?: boolean }) => (hide ? 0 : 1)};
+  &.hide {
+    opacity: 0;
+  }
 `
 
 export const StyledRuleBgSvg = styled(Box)`
@@ -69,7 +73,9 @@ export const StyledRankTextSvg = styled(RankTextSvg)`
   transition: 200ms;
   transform: translateX(-50%);
   top: 40px;
-  opacity: ${({ hide }: { hide?: boolean }) => (hide ? 0 : 1)};
+  &.hide {
+    opacity: 0;
+  }
 `
 
 export const Title: React.FC<{
@@ -79,8 +85,8 @@ export const Title: React.FC<{
     <Box position="relative" transition="200ms">
       <Box position="relative" h="270px" overflow="hidden">
         <StyledLogoSvg />
-        <StyledJointUnitSvg hide={isRank} />
-        <StyledMoonSvg center={isRank} />
+        <StyledJointUnitSvg className={isRank ? 'hide' : ''} />
+        <StyledMoonSvg className={isRank ? 'center' : ''} />
         <Image
           src={BgTextPath}
           position="absolute"
@@ -95,8 +101,8 @@ export const Title: React.FC<{
             transform: `translateY(${isRank ? 120 : 0}px)`,
           }}
         />
-        <StyledRankTextSvg hide={!isRank} />
-        <StyledHomeTextSvg hide={isRank} />
+        <StyledRankTextSvg className={isRank ? '' : 'hide'} />
+        <StyledHomeTextSvg className={isRank ? 'hide' : ''} />
       </Box>
       <Box
         w="calc(100% - 40px)"
