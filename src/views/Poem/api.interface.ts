@@ -1,7 +1,6 @@
 import { ListMeta } from '../../models'
-
 export interface PoetryVoteCounts {
-  poetry_vote: {
+  poem_vote: {
     normal_count: number
     special_count: number
   }
@@ -18,7 +17,7 @@ export interface Poetry {
 }
 
 export interface UnSignedTx {
-  unsigned_tx: string
+  unsigned_tx: RPC.RawTransaction
 }
 
 export type PoetrySort = '' | 'votes'

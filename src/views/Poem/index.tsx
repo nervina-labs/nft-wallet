@@ -5,20 +5,22 @@ import {
   AlertTitle,
   Box,
   Button,
+  Center,
   Flex,
   Grid,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalOverlay,
-  Skeleton,
+  Spinner,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
 import { Drawer, ModalCloseButton } from '@mibao-ui/components'
 import axios from 'axios'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import {
   useAccount,
@@ -28,7 +30,7 @@ import {
 } from '../../hooks/useAccount'
 import { useToast } from '../../hooks/useToast'
 import { MainContainer } from '../../styles'
-import { UnipassConfig } from '../../utils'
+import { generateUnipassUrl, UnipassConfig } from '../../utils'
 import {
   Poetry,
   PoetrySort,
@@ -40,12 +42,33 @@ import ListBgSvgPath from './assets/list-bg.svg'
 import { BottomLogo } from './components/bottomLogo'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
-import { SERVER_URL } from '../../constants'
+import { PER_ITEM_LIMIT, SERVER_URL } from '../../constants'
+import { rawTransactionToPWTransaction } from '../../pw/toPwTransaction'
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { useHistory, useLocation } from 'react-router-dom'
+import { RoutePath } from '../../routes'
+import { UnipassAction } from '../../models/unipass'
+import {
+  normalizers,
+  Reader,
+  SerializeWitnessArgs,
+  transformers,
+  WitnessArgs,
+} from '@lay2/pw-core'
 
 type VoteType = 'normal' | 'special'
 
+interface RouteState {
+  signature?: string
+  prevState?: {
+    vote_type: VoteType
+    poem_uuid: string
+    rawTx: string
+  }
+}
+
 export const Poem: React.FC = () => {
-  const { address } = useAccount()
+  const { pubkey } = useAccount()
   const { isLogined } = useAccountStatus()
   const getAuth = useGetAndSetAuth()
   const signTransaction = useSignTransaction()
@@ -60,63 +83,71 @@ export const Poem: React.FC = () => {
     onOpen: onOpenVoteDialog,
     onClose: onCloseVoteDialog,
   } = useDisclosure()
+  const {
+    isOpen: isVoting,
+    onOpen: onOpenVoting,
+    onClose: onCloseVoting,
+  } = useDisclosure()
+  const [activeUuid, setActiveUuid] = useState<string | undefined>(undefined)
+  const [page, setPage] = useRouteQuerySearch<string>('page', '1')
+  const [pageIndex, setPageIndex] = useState<string>(page)
+  const [pageCount, setPageCount] = useState<number>(1)
   const [voteSort, setVoteSort] = useRouteQuerySearch<PoetrySort>('sort', '')
+  const [isUsedVotingCallback, setIsUsedVotingCallback] = useState(false)
   const toast = useToast()
+  const { replace } = useHistory()
+  const location = useLocation<RouteState | undefined>()
 
-  const onClickVoteMiddleware = useCallback(() => {
-    if (isLogined) {
-      console.log('开启投票的对话框')
-      onOpenVoteDialog()
-    } else {
-      console.log('开启登录的对话框')
-      onOpenLoginDialog()
-    }
-  }, [isLogined, onOpenLoginDialog, onOpenVoteDialog])
+  const onClickVoteMiddleware = useCallback(
+    (uuid?: string) => {
+      setActiveUuid(uuid)
+      if (isLogined) {
+        onOpenVoteDialog()
+      } else {
+        onOpenLoginDialog()
+      }
+    },
+    [isLogined, onOpenLoginDialog, onOpenVoteDialog]
+  )
 
   const onLogin = useCallback(async () => {
     UnipassConfig.setRedirectUri(location.pathname + location.search)
     await login()
-  }, [login])
-
-  const onVote = useCallback(
-    async (type: VoteType) => {
-      const auth = await getAuth()
-      const headers = {
-        auth: JSON.stringify(auth),
-      }
-      const unsignedTx = await axios
-        .get<UnSignedTx>(SERVER_URL + '/poem_votes', { headers })
-        .then((res) => res.data.unsigned_tx)
-
-      const signTx = await signTransaction(unsignedTx as any)
-
-      console.log(type, signTx)
-      toast('投票成功')
-    },
-    [getAuth, signTransaction, toast]
-  )
+  }, [location.pathname, location.search, login])
 
   const {
     data: poetryVotesData,
     isLoading: isLoadingPoetryVotesData,
+    refetch: refetchPoetryVotesData,
   } = useQuery(
-    ['/poems', voteSort],
+    ['/poems', voteSort, page],
     async () => {
       const { data } = await axios.get<Poetry>(SERVER_URL + '/poems', {
         params: {
           sort: voteSort,
+          limit: PER_ITEM_LIMIT,
+          page,
         },
       })
+      setPageCount(Math.round((data?.meta.total_count ?? 1) / PER_ITEM_LIMIT))
       return data
     },
     {}
   )
 
-  const { data: poetryVotesCountData } = useQuery(
-    `/poetry_votes/${address}`,
+  const {
+    data: poetryVotesCountData,
+    refetch: refetchPoetryVotesCountData,
+  } = useQuery(
+    '/poem_vote',
     async () => {
+      const auth = await getAuth()
+      const headers = {
+        auth: JSON.stringify(auth),
+      }
       const { data } = await axios.get<PoetryVoteCounts>(
-        SERVER_URL + `/poetry_votes/${address}`
+        SERVER_URL + '/poem_vote',
+        { headers }
       )
       return data
     },
@@ -124,6 +155,112 @@ export const Poem: React.FC = () => {
       enabled: isLogined,
     }
   )
+
+  const onVote = useCallback(
+    async (type: VoteType, poemUuid: string) => {
+      const auth = await getAuth()
+      const config = {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+        params: {
+          poem_uuid: poemUuid,
+          vote_type: type,
+        },
+      }
+      try {
+        onOpenVoting()
+        const unsignedTx = await axios
+          .get<UnSignedTx>(SERVER_URL + '/poem_vote/new', config)
+          .then(
+            async (res) =>
+              await rawTransactionToPWTransaction(res.data.unsigned_tx)
+          )
+        const signTx = await signTransaction(unsignedTx)
+        const url = `${window.location.origin}${RoutePath.Unipass}`
+        if (!location?.state?.signature) {
+          window.location.href = generateUnipassUrl(
+            UnipassAction.Poem,
+            url,
+            url,
+            pubkey,
+            signTx,
+            {
+              poem_uuid: poemUuid as string,
+              vote_type: type,
+              rawTx: JSON.stringify(unsignedTx),
+            }
+          )
+          return
+        }
+        const rawTx = transformers.TransformTransaction(unsignedTx) as any
+        const witnessArgs: WitnessArgs = {
+          lock: location?.state.signature,
+          input_type: '',
+          output_type: '',
+        }
+        const witness = new Reader(
+          SerializeWitnessArgs(normalizers.NormalizeWitnessArgs(witnessArgs))
+        ).serializeJson()
+        rawTx.witnesses[0] = witness
+        await axios.post<{ tx_hash: string }>(
+          SERVER_URL + '/poem_vote',
+          {
+            poem_uuid: location.state?.prevState?.poem_uuid,
+            vote_type: location.state?.prevState?.vote_type,
+            signed_tx: JSON.stringify(rawTx),
+          },
+          {
+            headers: {
+              auth: JSON.stringify(auth),
+            },
+          }
+        )
+        await refetchPoetryVotesData()
+        await refetchPoetryVotesCountData()
+        onCloseVoting()
+        toast('投票成功')
+      } catch (e) {
+        onCloseVoting()
+        toast('投票失败' + e)
+      }
+      replace(location.pathname + location.search, {})
+      setActiveUuid(undefined)
+      onCloseVoteDialog()
+    },
+    [
+      getAuth,
+      location.pathname,
+      location.search,
+      location.state?.prevState?.poem_uuid,
+      location.state?.prevState?.vote_type,
+      location.state?.signature,
+      onCloseVoteDialog,
+      onCloseVoting,
+      onOpenVoting,
+      pubkey,
+      refetchPoetryVotesCountData,
+      refetchPoetryVotesData,
+      replace,
+      signTransaction,
+      toast,
+    ]
+  )
+
+  useEffect(() => {
+    if (
+      isUsedVotingCallback ||
+      !location.state?.signature ||
+      !location.state?.prevState
+    ) {
+      return
+    }
+    setIsUsedVotingCallback(true)
+    onVote(
+      location.state.prevState.vote_type,
+      location.state.prevState.poem_uuid
+    )
+  }, [getAuth, isUsedVotingCallback, location.state, onVote])
 
   return (
     <MainContainer bg="#1a1a1a" py="60px" color="#fff" minH="100vh">
@@ -146,14 +283,12 @@ export const Poem: React.FC = () => {
         bg={`url(${ListBgSvgPath})`}
         bgSize="100% auto"
         px="20px"
+        minH="1200px"
       >
         {isLoadingPoetryVotesData ? (
-          <VStack spacing="6px">
-            <Skeleton h="55px" w="full" />
-            <Skeleton h="55px" w="full" />
-            <Skeleton h="55px" w="full" />
-            <Skeleton h="55px" w="full" />
-          </VStack>
+          <Center>
+            <Spinner color="#F5C57B" />
+          </Center>
         ) : (
           poetryVotesData?.poems.map((item, i) => (
             <Grid
@@ -176,12 +311,13 @@ export const Poem: React.FC = () => {
               <Box color="#F5C57B">{item.votes_count}票</Box>
 
               <Button
-                onClick={onClickVoteMiddleware}
+                onClick={() => onClickVoteMiddleware(item.uuid)}
                 variant="link"
                 textDecoration="underline"
                 color="#F5C57B"
                 fontSize="14px"
                 my="auto"
+                ml="auto"
               >
                 去投票
               </Button>
@@ -189,6 +325,66 @@ export const Poem: React.FC = () => {
           ))
         )}
       </Box>
+
+      <Center mt="20px">
+        <Button
+          size="sm"
+          ml="20px"
+          onClick={() => {
+            const n = Number(pageIndex)
+            if (n <= 1) return
+            const v = `${n - 1}`
+            setPage(v)
+            setPageIndex(v)
+          }}
+          variant="link"
+          color="#F5C57B"
+          fontSize="14px"
+        >
+          <ChevronLeftIcon />
+        </Button>
+        <Input
+          value={pageIndex}
+          onChange={(e) => setPageIndex(e.target.value)}
+          size="sm"
+          w="45px"
+          _focus={{
+            outline: 'none',
+          }}
+          rounded="8px"
+        />
+        <Box ml="10px">
+          {' / '}
+          {pageCount}
+        </Box>
+        <Button
+          size="sm"
+          ml="20px"
+          onClick={() => setPage(pageIndex)}
+          variant="link"
+          textDecoration="underline"
+          color="#F5C57B"
+          fontSize="14px"
+        >
+          跳转
+        </Button>
+        <Button
+          size="sm"
+          ml="20px"
+          onClick={() => {
+            const n = Number(pageIndex)
+            if (n >= pageCount) return
+            const v = `${n + 1}`
+            setPage(v)
+            setPageIndex(v)
+          }}
+          variant="link"
+          color="#F5C57B"
+          fontSize="14px"
+        >
+          <ChevronRightIcon />
+        </Button>
+      </Center>
 
       <BottomLogo />
 
@@ -242,8 +438,8 @@ export const Poem: React.FC = () => {
             >
               <AlertIcon boxSize="70px" mr={0} mb={4} color="#FFA940" />
               <AlertTitle mb={2} mx={0} fontSize="16px" fontWeight="normal">
-                您当前有 {poetryVotesCountData?.poetry_vote.special_count}{' '}
-                张专家票，{poetryVotesCountData?.poetry_vote.normal_count}{' '}
+                您当前有 {poetryVotesCountData?.poem_vote.special_count}{' '}
+                张诗人票，{poetryVotesCountData?.poem_vote.normal_count}{' '}
                 张普通票
               </AlertTitle>
               <AlertDescription
@@ -259,25 +455,58 @@ export const Poem: React.FC = () => {
             </Alert>
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter mb="10px">
             <VStack spacing="8px" w="full">
-              <Button
-                isFullWidth
-                onClick={async () => await onVote('special')}
-                colorScheme="primary"
-              >
-                投诗人票
-              </Button>
-              <Button
-                isFullWidth
-                onClick={async () => await onVote('normal')}
-                variant="outline"
-              >
-                投普通票
-              </Button>
+              {(poetryVotesCountData?.poem_vote.special_count || 0) > 0 ? (
+                <Button
+                  isFullWidth
+                  onClick={async () =>
+                    await onVote('special', activeUuid as string)
+                  }
+                  colorScheme="primary"
+                >
+                  投诗人票
+                </Button>
+              ) : null}
+              {(poetryVotesCountData?.poem_vote.normal_count || 0) > 0 ? (
+                <Button
+                  isFullWidth
+                  onClick={async () =>
+                    await onVote('normal', activeUuid as string)
+                  }
+                  variant="outline"
+                >
+                  投普通票
+                </Button>
+              ) : null}
             </VStack>
           </ModalFooter>
         </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={isVoting}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+        onClose={onCloseVoting}
+      >
+        <Flex
+          direction="column"
+          position="fixed"
+          top="50%"
+          left="50%"
+          bg="rgba(0, 0, 0, 0.8)"
+          color="#fff"
+          pt="20px"
+          pb="10px"
+          px="15px"
+          zIndex="calc(var(--chakra-zIndices-modal) + 1)"
+          transform="translate(-50%, -50%)"
+          rounded="10px"
+        >
+          <Spinner color="white" mx="auto" mb="10px" />
+          <Box textAlign="center">投票中</Box>
+        </Flex>
       </Modal>
     </MainContainer>
   )
