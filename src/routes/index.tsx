@@ -26,7 +26,7 @@ export const Routers: React.FC = () => {
   const { isLogined } = useAccountStatus()
   const { login } = useLogin()
   useEffect(() => {
-    if (isLogined && walletType && walletType !== WalletType.Unipass) {
+    if (isLogined && walletType && walletType === WalletType.Metamask) {
       login(walletType).catch((e) => {
         console.error('login-error', e)
       })

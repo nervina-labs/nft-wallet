@@ -9,7 +9,11 @@ import UnipassProvider from '../pw/UnipassProvider'
 import { UNIPASS_URL } from '../constants'
 import { Web3Provider } from '../pw/Web3Provider'
 import { RoutePath } from '../routes'
-import { generateUnipassLoginUrl, generateUnipassSignUrl } from '../utils'
+import {
+  generateUnipassLoginUrl,
+  generateUnipassSignUrl,
+  generateFlashsignerLoginUrl,
+} from '../utils'
 import UnipassSigner from '../pw/UnipassSigner'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 
@@ -17,6 +21,7 @@ export enum WalletType {
   Unipass = 'Unipass',
   Metamask = 'Metamask',
   WalletConnect = 'WalletConnect',
+  Flashsigner = 'flashsigner',
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
@@ -188,6 +193,13 @@ export function useLogin() {
           return await new Promise<Provider>((resolve) => {
             const url = `${location.origin}${RoutePath.Unipass}`
             location.href = generateUnipassLoginUrl(url, url)
+            resolve(provider as Provider)
+          })
+        case WalletType.Flashsigner:
+          return await new Promise<Provider>((resolve) => {
+            const url = `${location.origin}${RoutePath.Flashsigner}`
+            const href = generateFlashsignerLoginUrl(url, url)
+            location.href = href
             resolve(provider as Provider)
           })
         case WalletType.Metamask:

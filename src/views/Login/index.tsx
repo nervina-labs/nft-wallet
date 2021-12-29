@@ -384,6 +384,21 @@ export const Login: React.FC = () => {
             disabled={
               isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
             }
+            onClick={async () => await loginBtnOnClick(WalletType.Flashsigner)}
+            variant={IS_IMTOKEN ? 'outline' : 'solid'}
+            size="lg"
+          >
+            <Box py="8px">
+              <Box fontSize="16px">{t('login.connect.flashsigner')}</Box>
+              <Box fontSize="12px">{t('login.connect.or-use-phone')}</Box>
+            </Box>
+          </LoginButton>
+          <LoginButton
+            className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
+            isLoading={isUnipassLogining}
+            disabled={
+              isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+            }
             onClick={loginUnipass}
             variant={IS_IMTOKEN ? 'outline' : 'solid'}
             size="lg"

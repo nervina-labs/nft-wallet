@@ -58,6 +58,10 @@ export const UNIPASS_URL = IS_MAINNET
   ? 'https://unipass.xyz'
   : 'https://t.unipass.xyz'
 
+export const FLASH_SIGNER_URL = IS_MAINNET
+  ? 'https://flashsigner.com'
+  : 'http://localhost:3000'
+
 export const RED_ENVELOP_APP_URL = IS_MAINNET
   ? 'https://gift.unipass.xyz'
   : 'https://t.gift.unipass.xyz'

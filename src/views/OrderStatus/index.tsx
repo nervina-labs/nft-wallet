@@ -56,7 +56,7 @@ export const OrderStatus: React.FC = () => {
   const { data: order, isError } = useQuery(
     [Query.OrderDetail, id, api],
     async () => {
-      if (isLogined && walletType && walletType !== WalletType.Unipass) {
+      if (isLogined && walletType && walletType === WalletType.Metamask) {
         await login(walletType)
       }
       const auth = await getAuth()

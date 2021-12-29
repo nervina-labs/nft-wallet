@@ -13,7 +13,7 @@
     "yarn": "1.22"
   },
   "scripts": {
-    "dev": "craco start",
+    "dev": "HTTPS=true PORT=443 craco start",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 craco build",
     "lint": "eslint src",
     "start": "serve -s build",
@@ -28,7 +28,7 @@
     "@lay2/pw-core": "0.4.0-alpha.8",
     "@metamask/detect-provider": "^1.2.0",
     "@mibao-ui/components": "0.0.31",
-    "@nervosnetwork/ckb-sdk-core": "^0.40.0",
+    "@nervosnetwork/ckb-sdk-core": "^0.101.0",
     "@sentry/react": "^6.9.0",
     "@sentry/tracing": "^6.9.0",
     "@types/qrcode.react": "^1.0.1",

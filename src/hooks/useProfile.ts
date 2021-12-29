@@ -36,12 +36,12 @@ export function useProfile() {
   const [profile, _setProfile] = useAtom(profileAtom)
 
   const setProfile = useCallback(
-    (p: Partial<Profile>) => {
+    (p: Partial<Profile>, addr = '') => {
       return _setProfile((pp) => {
         return {
           ...pp,
           ...{
-            [address]: p,
+            [address || addr]: p,
           },
         }
       })
