@@ -69,6 +69,7 @@ export const Routers: React.FC = () => {
     <MibaoProvider theme={theme}>
       <BrowserRouter>
         <RouterProvider>
+          <PwaGuide />
           <AccountChange>
             <LoadableComponent>
               <Switch>
@@ -97,7 +98,6 @@ export const Routers: React.FC = () => {
           </AccountChange>
         </RouterProvider>
       </BrowserRouter>
-      <PwaGuide />
     </MibaoProvider>
   )
 }
