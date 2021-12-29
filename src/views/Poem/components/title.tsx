@@ -85,11 +85,11 @@ export const Title: React.FC<{
           src={BgTextPath}
           position="absolute"
           top="60px"
-          width="calc(100% - 40px)"
+          width="calc(100% + 40px)"
           height="auto"
-          left="20px"
+          left="-20px"
           zIndex={2}
-          transition="100ms"
+          transition="300ms"
           px="10px"
           style={{
             transform: `translateY(${isRank ? 120 : 0}px)`,
