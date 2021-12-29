@@ -55,6 +55,7 @@ import {
   transformers,
   WitnessArgs,
 } from '@lay2/pw-core'
+import { RankIcon } from '../../components/RankIcon'
 
 type VoteType = 'normal' | 'special'
 
@@ -290,46 +291,55 @@ export const Poem: React.FC = () => {
             <Spinner color="#F5C57B" />
           </Center>
         ) : (
-          poetryVotesData?.poems.map((item, i) => (
-            <Grid
-              key={i}
-              templateColumns="60% 20% 20%"
-              align="center"
-              borderBottom="1px solid rgba(245, 197, 123, 0.4)"
-              fontSize="14px"
-              h="60px"
-              lineHeight="60px"
-            >
-              <Box
-                textAlign="left"
-                whiteSpace="nowrap"
-                textOverflow="ellipsis"
-                overflow="hidden"
-              >
-                {poetryVotesData && voteSort === 'votes'
-                  ? `${
-                      (poetryVotesData.meta.current_page - 1) * PER_ITEM_LIMIT +
-                      i +
-                      1
-                    }. `
-                  : null}
-                {item.reciter_name}
-              </Box>
-              <Box color="#F5C57B">{item.votes_count}票</Box>
-
-              <Button
-                onClick={() => onClickVoteMiddleware(item.uuid)}
-                variant="link"
-                textDecoration="underline"
-                color="#F5C57B"
+          poetryVotesData?.poems.map((item, i) => {
+            const rankNumber =
+              (poetryVotesData.meta.current_page - 1) * PER_ITEM_LIMIT + i + 1
+            return (
+              <Grid
+                key={i}
+                templateColumns="60% 20% 20%"
+                align="center"
+                borderBottom="1px solid rgba(245, 197, 123, 0.4)"
                 fontSize="14px"
-                my="auto"
-                ml="auto"
+                h="60px"
+                lineHeight="60px"
               >
-                去投票
-              </Button>
-            </Grid>
-          ))
+                <Box
+                  textAlign="left"
+                  whiteSpace="nowrap"
+                  textOverflow="ellipsis"
+                  overflow="hidden"
+                >
+                  {poetryVotesData && voteSort === 'votes'
+                    ? `${rankNumber}. `
+                    : null}
+                  {item.reciter_name}
+                  {rankNumber <= 3 && voteSort === 'votes' ? (
+                    <RankIcon
+                      rank={rankNumber - 1}
+                      variant="trophy"
+                      display="inline-flex"
+                      ml="15px"
+                      verticalAlign="middle"
+                    />
+                  ) : null}
+                </Box>
+                <Box color="#F5C57B">{item.votes_count}票</Box>
+
+                <Button
+                  onClick={() => onClickVoteMiddleware(item.uuid)}
+                  variant="link"
+                  textDecoration="underline"
+                  color="#F5C57B"
+                  fontSize="14px"
+                  my="auto"
+                  ml="auto"
+                >
+                  去投票
+                </Button>
+              </Grid>
+            )
+          })
         )}
       </Box>
 
