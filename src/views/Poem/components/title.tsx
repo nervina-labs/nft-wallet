@@ -34,6 +34,7 @@ export const StyledBgTextSvg = styled(BgTextSvg)`
   left: 20px;
   z-index: 2;
   transition: 100ms;
+  padding: 0 10px;
   transform: translateY(
     ${({ offsetY }: { offsetY?: number }) => offsetY ?? 0}px
   );
@@ -71,7 +72,7 @@ export const Title: React.FC<{
       <Box position="relative" h={isRank ? '270px' : '340px'} overflow="hidden">
         <StyledLogoSvg />
         <StyledMoonSvg center={isRank} />
-        <StyledBgTextSvg offsetY={isRank ? -30 : 0} />
+        <StyledBgTextSvg offsetY={isRank ? -40 : 0} />
         <StyledRankTextSvg hide={!isRank} />
         <StyledHomeTextSvg hide={isRank} />
       </Box>
