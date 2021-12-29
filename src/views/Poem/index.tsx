@@ -272,7 +272,11 @@ export const Poem: React.FC = () => {
           textDecoration="underline"
           color="#F5C57B"
           fontSize="16px"
-          onClick={() => setVoteSort(voteSort === 'votes' ? '' : 'votes')}
+          onClick={() => {
+            setVoteSort(voteSort === 'votes' ? '' : 'votes')
+            setPage('1')
+            setPageIndex('1')
+          }}
         >
           {voteSort === 'votes' ? '返回默认列表' : '查看排名'}
         </Button>
