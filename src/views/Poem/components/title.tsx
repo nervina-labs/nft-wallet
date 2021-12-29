@@ -124,7 +124,7 @@ export const Title: React.FC<{
           w="full"
           textAlign="center"
         >
-          活动将采用 NFT 投票的方式评选出2021年度诗人
+          活动将采用 NFT 投票的方式评选出 2021 年度诗人
         </Box>
         <List fontSize="14px">
           <ListItem display="flex">
@@ -145,7 +145,7 @@ export const Title: React.FC<{
               1
             </Box>
             <Box>
-              向参与本次活动的339名诗人发放339张 NFT 票，每张票的权重是3票
+              向参与本次活动的 339 名诗人发放 339 张 NFT 票，每张票的权重是 3 票
             </Box>
           </ListItem>
           <ListItem display="flex">
@@ -165,7 +165,7 @@ export const Title: React.FC<{
             >
               2
             </Box>
-            <Box>发行普通 NFT 票6000张，每张票的权重是1票</Box>
+            <Box>发行普通 NFT 票 6000 张，每张票的权重是 1 票</Box>
           </ListItem>
         </List>
       </Box>

@@ -124,7 +124,7 @@ export const Poem: React.FC = () => {
     async () => {
       const { data } = await axios.get<Poetry>(SERVER_URL + '/poems', {
         params: {
-          sort: voteSort,
+          sort_by: voteSort,
           limit: PER_ITEM_LIMIT,
           page,
         },
@@ -306,6 +306,13 @@ export const Poem: React.FC = () => {
                 textOverflow="ellipsis"
                 overflow="hidden"
               >
+                {poetryVotesData && voteSort === 'votes'
+                  ? `${
+                      (poetryVotesData.meta.current_page - 1) * PER_ITEM_LIMIT +
+                      i +
+                      1
+                    }. `
+                  : null}
                 {item.reciter_name}
               </Box>
               <Box color="#F5C57B">{item.votes_count}票</Box>
