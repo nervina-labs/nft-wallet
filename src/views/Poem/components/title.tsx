@@ -1,10 +1,12 @@
-import { Box, Flex, Grid, List, ListItem } from '@chakra-ui/react'
+import { Box, Image, List, ListItem } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { ReactComponent as LogoSvg } from '../assets/logo.svg'
 import { ReactComponent as MoonSvg } from '../assets/moon.svg'
 import { ReactComponent as HomeTextSvg } from '../assets/home-text.svg'
-import { ReactComponent as BgTextSvg } from '../assets/bg-text-en.svg'
 import { ReactComponent as RankTextSvg } from '../assets/rank-text.svg'
+import { ReactComponent as ChooseYourFavouriteSvg } from '../assets/choose-your-favourite.svg'
+import { ReactComponent as JointUnitSvg } from '../assets/joint-unit.svg'
+import BgTextPath from '../assets/bg-text.png'
 
 export const StyledMoonSvg = styled(MoonSvg)`
   top: 6px;
@@ -13,50 +15,60 @@ export const StyledMoonSvg = styled(MoonSvg)`
   width: 258px;
   height: 258px;
   position: absolute;
-  transform: translateX(
-    ${({ center }: { center?: boolean }) => (center ? '-50%' : '-20%')}
+  transform: translate(
+    ${({ center }: { center?: boolean }) =>
+      `${center ? '-50%' : '-20%'}, ${center ? '100px' : '0'}`}
   );
   transition: 400ms;
 `
 
 export const StyledLogoSvg = styled(LogoSvg)`
+  height: 25px;
+  width: auto;
   top: 0;
   left: 20px;
   position: absolute;
   z-index: 3;
 `
 
-export const StyledBgTextSvg = styled(BgTextSvg)`
+export const StyledJointUnitSvg = styled(JointUnitSvg)`
+  top: 30px;
   position: absolute;
-  top: 200px;
-  width: calc(100% - 40px);
-  height: auto;
   left: 20px;
-  z-index: 2;
-  transition: 100ms;
-  padding: 0 10px;
-  transform: translateY(
-    ${({ offsetY }: { offsetY?: number }) => offsetY ?? 0}px
-  );
+  opacity: ${({ hide }: { hide?: boolean }) => (hide ? 0 : 1)};
+  transition: 200ms;
+`
+
+export const StyledChooseYourFavouriteSvg = styled(ChooseYourFavouriteSvg)`
+  width: calc(100% - 40px);
+  margin: 15px auto 0;
 `
 
 export const StyledHomeTextSvg = styled(HomeTextSvg)`
   position: absolute;
-  top: 29px;
+  top: 120px;
   left: 20px;
   z-index: 3;
   transition: 200ms;
   opacity: ${({ hide }: { hide?: boolean }) => (hide ? 0 : 1)};
 `
 
+export const StyledRuleBgSvg = styled(Box)`
+  width: calc(100% - 40px);
+  margin: 0 auto;
+`
+
 export const StyledRankTextSvg = styled(RankTextSvg)`
   position: absolute;
   margin-top: 20px;
   width: 80%;
+  max-width: 250px;
   height: auto;
-  left: 20px;
+  left: 50%;
   z-index: 3;
   transition: 200ms;
+  transform: translateX(-50%);
+  top: 40px;
   opacity: ${({ hide }: { hide?: boolean }) => (hide ? 0 : 1)};
 `
 
@@ -64,115 +76,90 @@ export const Title: React.FC<{
   isRank?: boolean
 }> = ({ isRank }) => {
   return (
-    <Box
-      position="relative"
-      h={isRank ? '270px' : 'calc(340px + 105px)'}
-      transition="200ms"
-    >
-      <Box position="relative" h={isRank ? '270px' : '340px'} overflow="hidden">
+    <Box position="relative" transition="200ms">
+      <Box position="relative" h="270px" overflow="hidden">
         <StyledLogoSvg />
+        <StyledJointUnitSvg hide={isRank} />
         <StyledMoonSvg center={isRank} />
-        <StyledBgTextSvg offsetY={isRank ? -40 : 0} />
+        <Image
+          src={BgTextPath}
+          position="absolute"
+          top="60px"
+          width="calc(100% - 40px)"
+          height="auto"
+          left="20px"
+          zIndex={2}
+          transition="100ms"
+          px="10px"
+          style={{
+            transform: `translateY(${isRank ? 120 : 0}px)`,
+          }}
+        />
         <StyledRankTextSvg hide={!isRank} />
         <StyledHomeTextSvg hide={isRank} />
       </Box>
-      {!isRank ? (
-        <Grid
-          templateColumns="51px calc(100% - 51px)"
-          h="105px"
-          mx="20px"
-          position="relative"
-          userSelect="none"
-          _after={{
-            content: '" "',
-            w: '30px',
-            h: '30px',
-            bg: '#1a1a1a',
-            position: 'absolute',
-            left: '36px',
-            rounded: 'full',
-            top: '-15px',
-          }}
-          _before={{
-            content: '" "',
-            w: '30px',
-            h: '30px',
-            bg: '#1a1a1a',
-            position: 'absolute',
-            left: '36px',
-            rounded: 'full',
-            bottom: '-15px',
-          }}
+      <Box
+        w="calc(100% - 40px)"
+        mx="auto"
+        py="15px"
+        px="10px"
+        border="2px solid #F5C57B"
+        borderTop="6px solid #F5C57B"
+      >
+        <Box
+          color="#F5C57B"
+          fontSize="14px"
+          mb="15px"
+          fontWeight="bold"
+          w="full"
+          textAlign="center"
         >
-          <Flex
-            bg="#F5C57B"
-            color="#484848"
-            fontWeight="bold"
-            fontSize="18px"
-            textAlign="center"
-            alignItems="center"
-            justify="center"
-          >
+          活动将采用 NFT 投票的方式评选出2021年度诗人
+        </Box>
+        <List fontSize="14px">
+          <ListItem display="flex">
+            <Box
+              bg="linear-gradient(129.81deg, #FFFFFF 12.45%, rgba(255, 255, 255, 0) 84.78%)"
+              w="12px"
+              minW="12px"
+              h="12px"
+              lineHeight="12px"
+              textAlign="center"
+              fontSize="12px"
+              rounded="full"
+              mt="4px"
+              mb="auto"
+              mr="5px"
+              color="#000"
+            >
+              1
+            </Box>
             <Box>
-              规<br />则
+              向参与本次活动的339名诗人发放339张 NFT 票，每张票的权重是3票
             </Box>
-          </Flex>
-          <Flex
-            direction="column"
-            bg="#fff"
-            py="8px"
-            color="#000"
-            textAlign="center"
-            fontSize="14px"
-            lineHeight="22px"
-          >
-            <Box fontSize="16px" fontWeight="600">
-              本次诗歌节采用 NFT 进行投票
+          </ListItem>
+          <ListItem display="flex">
+            <Box
+              bg="linear-gradient(129.81deg, #FFFFFF 12.45%, rgba(255, 255, 255, 0) 84.78%)"
+              w="12px"
+              minW="12px"
+              h="12px"
+              lineHeight="12px"
+              textAlign="center"
+              fontSize="12px"
+              rounded="full"
+              mt="4px"
+              mb="auto"
+              mr="5px"
+              color="#000"
+            >
+              2
             </Box>
-            <List w="160px" mx="auto" whiteSpace="nowrap">
-              <ListItem
-                position="relative"
-                _before={{
-                  content: '" "',
-                  width: '5px',
-                  height: '5px',
-                  rounded: 'full',
-                  display: 'block',
-                  position: 'absolute',
-                  top: 'calc(50% - 2.5px)',
-                  left: '-10px',
-                  bg: '#F5C57B',
-                }}
-              >
-                投出一个诗人 NFT{' '}
-                <Box as="span" color="#F5C57B">
-                  计3票
-                </Box>
-              </ListItem>
-              <ListItem
-                position="relative"
-                _before={{
-                  content: '" "',
-                  width: '5px',
-                  height: '5px',
-                  rounded: 'full',
-                  display: 'block',
-                  position: 'absolute',
-                  top: 'calc(50% - 2.5px)',
-                  left: '-10px',
-                  bg: '#F5C57B',
-                }}
-              >
-                投出一个普通 NFT{' '}
-                <Box as="span" color="#F5C57B">
-                  计1票
-                </Box>
-              </ListItem>
-            </List>
-            <Box>快去投出你喜欢的诗歌吧！</Box>
-          </Flex>
-        </Grid>
-      ) : null}
+            <Box>发行普通 NFT 票6000张，每张票的权重是1票</Box>
+          </ListItem>
+        </List>
+      </Box>
+      <StyledChooseYourFavouriteSvg />
     </Box>
   )
 }

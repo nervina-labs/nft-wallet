@@ -19,15 +19,26 @@ import { Drawer, ModalCloseButton } from '@mibao-ui/components'
 import axios from 'axios'
 import { useCallback } from 'react'
 import { useQuery } from 'react-query'
-import { useAccount, useAccountStatus, useLogin } from '../../hooks/useAccount'
+import {
+  useAccount,
+  useAccountStatus,
+  useLogin,
+  useSignTransaction,
+} from '../../hooks/useAccount'
 import { useToast } from '../../hooks/useToast'
 import { MainContainer } from '../../styles'
 import { sleep, UnipassConfig } from '../../utils'
-import { Poetry, PoetrySort, PoetryVoteCounts } from './api.interface'
+import {
+  Poetry,
+  PoetrySort,
+  PoetryVoteCounts,
+  UnSignedTx,
+} from './api.interface'
 import { Title } from './components/title'
 import ListBgSvgPath from './assets/list-bg.svg'
 import { BottomLogo } from './components/bottomLogo'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
 
 type VoteType = 'normal' | 'special'
 
@@ -36,6 +47,8 @@ const IS_MOCK = true
 export const Poem: React.FC = () => {
   const { address } = useAccount()
   const { isLogined } = useAccountStatus()
+  const getAuth = useGetAndSetAuth()
+  const signTransaction = useSignTransaction()
   const { login } = useLogin()
   const {
     isOpen: isOpenLoginDialog,
@@ -66,11 +79,21 @@ export const Poem: React.FC = () => {
   }, [login])
 
   const onVote = useCallback(
-    (type: VoteType) => {
-      console.log(type)
+    async (type: VoteType) => {
+      const auth = await getAuth()
+      const headers = {
+        auth: JSON.stringify(auth),
+      }
+      const unsignedTx = await axios
+        .get<UnSignedTx>('/api/wallet/v1/poem_votes', { headers })
+        .then((res) => res.data.unsigned_tx)
+
+      const signTx = await signTransaction(unsignedTx as any)
+
+      console.log(type, signTx)
       toast('投票成功')
     },
-    [toast]
+    [getAuth, signTransaction, toast]
   )
 
   const {
@@ -253,14 +276,14 @@ export const Poem: React.FC = () => {
             <VStack spacing="8px" w="full">
               <Button
                 isFullWidth
-                onClick={() => onVote('special')}
+                onClick={async () => await onVote('special')}
                 colorScheme="primary"
               >
                 投诗人票
               </Button>
               <Button
                 isFullWidth
-                onClick={() => onVote('normal')}
+                onClick={async () => await onVote('normal')}
                 variant="outline"
               >
                 投普通票

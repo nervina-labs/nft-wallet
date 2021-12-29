@@ -15,4 +15,8 @@ export interface Poetry {
   }>
 }
 
+export interface UnSignedTx {
+  unsigned_tx: string
+}
+
 export type PoetrySort = '' | 'votes'
