@@ -1,7 +1,6 @@
 import {
   Alert,
   AlertDescription,
-  AlertIcon,
   AlertTitle,
   Box,
   Button,
@@ -457,7 +456,6 @@ export const Poem: React.FC = () => {
               textAlign="center"
               bg="white"
             >
-              <AlertIcon boxSize="70px" mr={0} mb={4} color="#FFA940" />
               <AlertTitle mb={2} mx={0} fontSize="16px" fontWeight="normal">
                 您当前有 {poetryVotesCountData?.poem_vote.special_count}{' '}
                 张诗人票，{poetryVotesCountData?.poem_vote.normal_count}{' '}
