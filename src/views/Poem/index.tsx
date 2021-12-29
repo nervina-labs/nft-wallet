@@ -444,7 +444,7 @@ export const Poem: React.FC = () => {
         isCentered
       >
         <ModalOverlay />
-        <ModalContent borderRadius="24px" pt="80px" w="90vw">
+        <ModalContent borderRadius="24px" pt="60px" w="90vw">
           <ModalCloseButton zIndex="2" />
           <ModalBody>
             <Alert
@@ -456,10 +456,12 @@ export const Poem: React.FC = () => {
               textAlign="center"
               bg="white"
             >
-              <AlertTitle mb={2} mx={0} fontSize="16px" fontWeight="normal">
-                您当前有 {poetryVotesCountData?.poem_vote.special_count}{' '}
-                张诗人票，{poetryVotesCountData?.poem_vote.normal_count}{' '}
-                张普通票
+              <AlertTitle mb={2} mx={0} fontSize="16px" fontWeight="bold">
+                您当前有 <br />
+                <Box as="span" whiteSpace="nowrap">
+                  {poetryVotesCountData?.poem_vote.special_count} 张诗人 NFT，
+                  {poetryVotesCountData?.poem_vote.normal_count} 张普通 NFT
+                </Box>
               </AlertTitle>
               <AlertDescription
                 maxWidth="sm"
