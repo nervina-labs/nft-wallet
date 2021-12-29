@@ -41,6 +41,15 @@ export const IS_SAFARI =
 
 export const IS_WEBKIT = BOWSER_BROWSER.getEngineName() === 'WebKit'
 
+const w = window as any
+
+export const IS_MOBILE =
+  navigator.userAgent.match(
+    /Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i
+  ) !== null
+
+export const IS_MOBILE_ETH_WALLET = (w.ethereum || w.web3) && IS_MOBILE
+
 export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 
 export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE

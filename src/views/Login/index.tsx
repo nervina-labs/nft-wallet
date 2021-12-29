@@ -6,6 +6,7 @@ import {
   CONTAINER_MAX_WIDTH,
   IS_DESKTOP,
   IS_IMTOKEN,
+  IS_MOBILE_ETH_WALLET,
   IS_WEBKIT,
 } from '../../constants'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
@@ -186,6 +187,7 @@ export const Login: React.FC = () => {
   const onConfirm = useConfirmDialog()
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
+  const [isFlashsignerLogin, setIsFlashsignerLogin] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
   const [isLicenseChecked, setIsLicenseChecked] = useState(false)
   const toast = useToast()
@@ -211,6 +213,9 @@ export const Login: React.FC = () => {
         break
       case WalletType.WalletConnect:
         setIsWalletConnectLoging(loading)
+        break
+      case WalletType.Flashsigner:
+        setIsFlashsignerLogin(loading)
         break
       default:
         setIsUnipassLoging(loading)
@@ -378,26 +383,36 @@ export const Login: React.FC = () => {
           <Text fontSize="16px" mb="32px">
             {t('login.select')}
           </Text>
+          {IS_MOBILE_ETH_WALLET ? null : (
+            <LoginButton
+              className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
+              isLoading={isUnipassLogining}
+              disabled={
+                isUnipassLogining ||
+                isMetamaskLoging ||
+                isWalletConnectLoging ||
+                isFlashsignerLogin
+              }
+              onClick={async () =>
+                await loginBtnOnClick(WalletType.Flashsigner)
+              }
+              variant={IS_IMTOKEN ? 'outline' : 'solid'}
+              size="lg"
+            >
+              <Box py="8px">
+                <Box fontSize="16px">{t('login.connect.flashsigner')}</Box>
+                <Box fontSize="12px">{t('login.connect.or-use-phone')}</Box>
+              </Box>
+            </LoginButton>
+          )}
           <LoginButton
-            className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
-            isLoading={isUnipassLogining}
+            className={'connect'}
+            isLoading={isFlashsignerLogin}
             disabled={
-              isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
-            }
-            onClick={async () => await loginBtnOnClick(WalletType.Flashsigner)}
-            variant={IS_IMTOKEN ? 'outline' : 'solid'}
-            size="lg"
-          >
-            <Box py="8px">
-              <Box fontSize="16px">{t('login.connect.flashsigner')}</Box>
-              <Box fontSize="12px">{t('login.connect.or-use-phone')}</Box>
-            </Box>
-          </LoginButton>
-          <LoginButton
-            className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
-            isLoading={isUnipassLogining}
-            disabled={
-              isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+              isUnipassLogining ||
+              isMetamaskLoging ||
+              isWalletConnectLoging ||
+              isFlashsignerLogin
             }
             onClick={loginUnipass}
             variant={IS_IMTOKEN ? 'outline' : 'solid'}
@@ -411,7 +426,10 @@ export const Login: React.FC = () => {
           <LoginButton
             className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}
             disabled={
-              isUnipassLogining || isMetamaskLoging || isWalletConnectLoging
+              isUnipassLogining ||
+              isMetamaskLoging ||
+              isWalletConnectLoging ||
+              isFlashsignerLogin
             }
             isLoading={isMetamaskLoging}
             onClick={loginEth}
