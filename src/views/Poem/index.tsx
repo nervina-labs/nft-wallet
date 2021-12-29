@@ -89,10 +89,13 @@ export const Poem: React.FC = () => {
     onClose: onCloseVoting,
   } = useDisclosure()
   const [activeUuid, setActiveUuid] = useState<string | undefined>(undefined)
-  const [page, setPage] = useRouteQuerySearch<string>('page', '1')
-  const [pageIndex, setPageIndex] = useState<string>(page)
+  const [voteSort] = useRouteQuerySearch<PoetrySort>('sort', '')
+  const [routePageIndex, setRoutePageIndex] = useRouteQuerySearch<string>(
+    'page',
+    '1'
+  )
+  const [pageIndex, setPageIndex] = useState<string>(routePageIndex)
   const [pageCount, setPageCount] = useState<number>(1)
-  const [voteSort, setVoteSort] = useRouteQuerySearch<PoetrySort>('sort', '')
   const [isUsedVotingCallback, setIsUsedVotingCallback] = useState(false)
   const toast = useToast()
   const { replace } = useHistory()
@@ -115,20 +118,37 @@ export const Poem: React.FC = () => {
     await login()
   }, [location.pathname, location.search, login])
 
+  useEffect(() => {
+    if (isNaN(parseInt(routePageIndex))) {
+      setRoutePageIndex('1')
+      setPageIndex('1')
+    } else {
+      setPageIndex(routePageIndex)
+    }
+  }, [routePageIndex, setRoutePageIndex])
+
   const {
     data: poetryVotesData,
     isLoading: isLoadingPoetryVotesData,
     refetch: refetchPoetryVotesData,
   } = useQuery(
-    ['/poems', voteSort, page],
+    ['/poems', voteSort, routePageIndex],
     async () => {
-      const { data } = await axios.get<Poetry>(SERVER_URL + '/poems', {
+      const body = {
         params: {
           sort_by: voteSort,
           limit: PER_ITEM_LIMIT,
-          page,
+          page: parseInt(routePageIndex) || 1,
         },
-      })
+      }
+      const { data } = await axios
+        .get<Poetry>(SERVER_URL + '/poems', body)
+        .catch((err) => {
+          if (err.response.data.code === 1003) {
+            setRoutePageIndex('1')
+          }
+          throw err
+        })
       setPageCount(Math.round((data?.meta.total_count ?? 1) / PER_ITEM_LIMIT))
       return data
     },
@@ -272,9 +292,9 @@ export const Poem: React.FC = () => {
           color="#F5C57B"
           fontSize="16px"
           onClick={() => {
-            setVoteSort(voteSort === 'votes' ? '' : 'votes')
-            setPage('1')
-            setPageIndex('1')
+            replace(
+              `${location.pathname}${voteSort === 'votes' ? '' : '?sort=votes'}`
+            )
           }}
         >
           {voteSort === 'votes' ? '返回默认列表' : '查看排名'}
@@ -353,9 +373,7 @@ export const Poem: React.FC = () => {
           onClick={() => {
             const n = Number(pageIndex)
             if (n <= 1) return
-            const v = `${n - 1}`
-            setPage(v)
-            setPageIndex(v)
+            setRoutePageIndex(`${n - 1}`)
           }}
           variant="link"
           color="#F5C57B"
@@ -365,7 +383,21 @@ export const Poem: React.FC = () => {
         </Button>
         <Input
           value={pageIndex}
-          onChange={(e) => setPageIndex(e.target.value)}
+          onChange={(e) => {
+            const { value } = e.currentTarget
+            if (!value) {
+              setPageIndex('')
+              return
+            }
+            if (!/^\d*$/.test(value)) {
+              return
+            }
+            const p = +value
+            if (Number.isNaN(p) || p < 1 || p > pageCount) {
+              return
+            }
+            setPageIndex(`${p}`)
+          }}
           size="sm"
           w="45px"
           _focus={{
@@ -380,7 +412,15 @@ export const Poem: React.FC = () => {
         <Button
           size="sm"
           ml="20px"
-          onClick={() => setPage(pageIndex)}
+          onClick={() => {
+            const n = parseInt(pageIndex)
+            if (isNaN(parseInt(pageIndex)) || n <= 1) {
+              setRoutePageIndex('1')
+              setPageIndex('1')
+            } else {
+              setRoutePageIndex(pageIndex)
+            }
+          }}
           variant="link"
           textDecoration="underline"
           color="#F5C57B"
@@ -394,9 +434,7 @@ export const Poem: React.FC = () => {
           onClick={() => {
             const n = Number(pageIndex)
             if (n >= pageCount) return
-            const v = `${n + 1}`
-            setPage(v)
-            setPageIndex(v)
+            setRoutePageIndex(`${n + 1}`)
           }}
           variant="link"
           color="#F5C57B"
