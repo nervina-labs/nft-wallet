@@ -69,6 +69,7 @@ export const Routers: React.FC = () => {
     <MibaoProvider theme={theme}>
       <BrowserRouter>
         <RouterProvider>
+          <PwaGuide />
           <AccountChange>
             <LoadableComponent>
               <Switch>
@@ -79,11 +80,7 @@ export const Routers: React.FC = () => {
                     path={`${route.path}${route.params ?? ''}`}
                   />
                 ))}
-                <Redirect
-                  exact
-                  from={RoutePath.Launch}
-                  to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
-                />
+                <Redirect exact from={RoutePath.Launch} to={RoutePath.Poem} />
                 <Redirect
                   exact
                   from="/nfts"
@@ -97,7 +94,6 @@ export const Routers: React.FC = () => {
           </AccountChange>
         </RouterProvider>
       </BrowserRouter>
-      <PwaGuide />
     </MibaoProvider>
   )
 }
