@@ -61,6 +61,7 @@ interface RouteState {
   prevState?: {
     vote_type: VoteType
     poem_uuid: string
+    rawTx: string
   }
 }
 
@@ -210,6 +211,7 @@ export const Poem: React.FC = () => {
             {
               poem_uuid: poemUuid as string,
               vote_type: type,
+              rawTx: JSON.stringify(unsignedTx),
             }
           )
           return
