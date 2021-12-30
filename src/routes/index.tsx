@@ -80,11 +80,7 @@ export const Routers: React.FC = () => {
                     path={`${route.path}${route.params ?? ''}`}
                   />
                 ))}
-                <Redirect
-                  exact
-                  from={RoutePath.Launch}
-                  to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
-                />
+                <Redirect exact from={RoutePath.Launch} to={RoutePath.Poem} />
                 <Redirect
                   exact
                   from="/nfts"
