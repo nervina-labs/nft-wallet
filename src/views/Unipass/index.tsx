@@ -80,20 +80,6 @@ export const Unipass: React.FC = () => {
         })
         break
       }
-      case UnipassAction.Poem: {
-        if (code !== 200) {
-          history.replace('/poem', {
-            prevState,
-          })
-          break
-        }
-        const data = unipassInfo?.data as UnipassSignData
-        history.replace('/poem', {
-          signature: `0x01${data.sig.replace('0x', '')}`,
-          prevState,
-        })
-        break
-      }
       case UnipassAction.Redeem: {
         const id = prevState.uuid as string
         const prevPath = prevState.prevPathname as string

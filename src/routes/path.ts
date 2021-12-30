@@ -38,7 +38,6 @@ export enum RoutePath {
   OrderStatus = '/order-status',
   RedEnvelope = '/red-envelope',
   Search = '/search',
-  Poem = '/poem',
 }
 
 export enum ProfilePath {
