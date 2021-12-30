@@ -7,6 +7,7 @@ import { ReactComponent as RankTextSvg } from '../assets/rank-text.svg'
 import { ReactComponent as ChooseYourFavouriteSvg } from '../assets/choose-your-favourite.svg'
 import { ReactComponent as JointUnitSvg } from '../assets/joint-unit.svg'
 import BgTextPath from '../assets/bg-text.png'
+import { NFT_EXPLORER_URL } from '../../../constants'
 
 export const StyledMoonSvg = styled(MoonSvg)`
   top: 6px;
@@ -80,7 +81,9 @@ export const StyledRankTextSvg = styled(RankTextSvg)`
 
 export const Title: React.FC<{
   isRank?: boolean
-}> = ({ isRank }) => {
+  specialClassUuid?: string
+  normalClassUuid?: string
+}> = ({ isRank, specialClassUuid = '', normalClassUuid = '' }) => {
   return (
     <Box position="relative" transition="200ms">
       <Box position="relative" h="270px" overflow="hidden">
@@ -151,7 +154,16 @@ export const Title: React.FC<{
               1
             </Box>
             <Box>
-              向参与本次活动的 339 名诗人发放 339 张 NFT 票，每张票的权重是 3 票
+              向参与本次活动的 339 名诗人发放 339 张
+              <a
+                href={`${NFT_EXPLORER_URL}/nft/${specialClassUuid}`}
+                style={{
+                  textDecoration: 'underline',
+                }}
+              >
+                诗人 NFT 票
+              </a>
+              ，每张票的权重是 3 票
             </Box>
           </ListItem>
           <ListItem display="flex">
@@ -171,7 +183,18 @@ export const Title: React.FC<{
             >
               2
             </Box>
-            <Box>发行普通 NFT 票 6000 张，每张票的权重是 1 票</Box>
+            <Box>
+              发行
+              <a
+                href={`${NFT_EXPLORER_URL}/nft/${normalClassUuid}`}
+                style={{
+                  textDecoration: 'underline',
+                }}
+              >
+                普通 NFT 票
+              </a>{' '}
+              6000 张，每张票的权重是 1 票
+            </Box>
           </ListItem>
         </List>
       </Box>

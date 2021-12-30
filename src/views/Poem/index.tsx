@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react'
 import { Drawer, ModalCloseButton } from '@mibao-ui/components'
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import {
   useAccount,
@@ -38,10 +38,9 @@ import {
 } from './api.interface'
 import { Title } from './components/title'
 import ListBgSvgPath from './assets/list-bg.svg'
-import { BottomLogo } from './components/bottomLogo'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
-import { PER_ITEM_LIMIT, SERVER_URL } from '../../constants'
+import { NFT_EXPLORER_URL, PER_ITEM_LIMIT, SERVER_URL } from '../../constants'
 import { rawTransactionToPWTransaction } from '../../pw/toPwTransaction'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -54,7 +53,6 @@ import {
   transformers,
   WitnessArgs,
 } from '@lay2/pw-core'
-import { RankIcon } from '../../components/RankIcon'
 
 type VoteType = 'normal' | 'special'
 
@@ -282,9 +280,34 @@ export const Poem: React.FC = () => {
     )
   }, [getAuth, isUsedVotingCallback, location.state, onVote])
 
+  const poemVote = poetryVotesCountData?.poem_vote
+  const noNftTicket =
+    poemVote && poemVote.special_count <= 0 && poemVote.normal_count <= 0
+  const ticketText = useMemo(() => {
+    if (!poemVote) {
+      return ''
+    }
+    const { special_count: specialCount, normal_count: normalCount } = poemVote
+    return (
+      <>
+        您当前有 <br />
+        <Box as="span" whiteSpace="nowrap">
+          {specialCount > 0
+            ? ` ${specialCount} 张诗人 NFT${normalCount > 0 ? '，' : ''}`
+            : ''}
+          {normalCount > 0 ? ` ${normalCount} 张普通 NFT` : ''}
+        </Box>
+      </>
+    )
+  }, [poemVote])
+
   return (
     <MainContainer bg="#1a1a1a" py="60px" color="#fff" minH="100vh">
-      <Title isRank={voteSort === 'votes'} />
+      <Title
+        isRank={voteSort === 'votes'}
+        specialClassUuid={poetryVotesData?.meta.special_class_uuid}
+        normalClassUuid={poetryVotesData?.meta.normal_class_uuid}
+      />
       <Flex justify="flex-end" pt="35px" mb="30px" px="20px">
         <Button
           variant="link"
@@ -337,17 +360,16 @@ export const Poem: React.FC = () => {
                     ? `${rankNumber}. `
                     : null}
                   {item.reciter_name}
-                  {rankNumber <= 3 && voteSort === 'votes' ? (
-                    <RankIcon
-                      rank={rankNumber - 1}
-                      variant="trophy"
-                      display="inline-flex"
-                      ml="15px"
-                      verticalAlign="middle"
-                    />
-                  ) : null}
                 </Box>
-                <Box color="#F5C57B">{item.votes_count}票</Box>
+                <Box color="#F5C57B" textDecoration="underline">
+                  <a
+                    href={`${NFT_EXPLORER_URL}/holder/tokens/${
+                      item.address as string
+                    }`}
+                  >
+                    {item.votes_count}票
+                  </a>
+                </Box>
 
                 <Button
                   onClick={() => onClickVoteMiddleware(item.uuid)}
@@ -444,8 +466,6 @@ export const Poem: React.FC = () => {
         </Button>
       </Center>
 
-      <BottomLogo />
-
       <Drawer
         onClose={onCloseLoginDialog}
         placement="bottom"
@@ -495,11 +515,7 @@ export const Poem: React.FC = () => {
               bg="white"
             >
               <AlertTitle mb={2} mx={0} fontSize="16px" fontWeight="bold">
-                您当前有 <br />
-                <Box as="span" whiteSpace="nowrap">
-                  {poetryVotesCountData?.poem_vote.special_count} 张诗人 NFT，
-                  {poetryVotesCountData?.poem_vote.normal_count} 张普通 NFT
-                </Box>
+                {noNftTicket ? '您当前没有 NFT 票' : ticketText}
               </AlertTitle>
               <AlertDescription
                 maxWidth="sm"
@@ -524,7 +540,7 @@ export const Poem: React.FC = () => {
                   }
                   colorScheme="primary"
                 >
-                  投诗人票
+                  投诗人 NFT
                 </Button>
               ) : null}
               {(poetryVotesCountData?.poem_vote.normal_count || 0) > 0 ? (
@@ -534,8 +550,9 @@ export const Poem: React.FC = () => {
                     await onVote('normal', activeUuid as string)
                   }
                   variant="outline"
+                  colorScheme="primary"
                 >
-                  投普通票
+                  投普通 NFT
                 </Button>
               ) : null}
             </VStack>

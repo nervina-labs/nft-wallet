@@ -12,8 +12,12 @@ export interface Poetry {
     reciter_name: string
     votes_count: number
     serial_no: number
+    address: string
   }>
-  meta: ListMeta
+  meta: ListMeta & {
+    normal_class_uuid: string
+    special_class_uuid: string
+  }
 }
 
 export interface UnSignedTx {
