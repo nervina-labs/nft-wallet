@@ -208,7 +208,7 @@ export const Title: React.FC<{
         mx="auto"
         mt="15px"
       >
-        {eventState === 'ongoing' ? '请投票支持您喜欢的诗人吧！' : '活动关闭'}
+        {eventState === 'closed' ? '活动关闭' : '请投票支持您喜欢的诗人吧！'}
       </Box>
     </Box>
   )
