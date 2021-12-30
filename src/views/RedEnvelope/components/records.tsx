@@ -165,13 +165,15 @@ const RewardRecord: React.FC<{
         bg="#FF5C00"
         border="1px solid #FFDCA2"
         zIndex={1}
-        w="15px"
+        minW="15px"
         h="15px"
         lineHeight="13px"
         textAlign="center"
         fontSize="12px"
+        whiteSpace="nowrap"
+        px="3px"
       >
-        {data.record_items.length}
+        {data.record_items.length > 99 ? '99+' : data.record_items.length}
       </Box>
     </Flex>
   )
