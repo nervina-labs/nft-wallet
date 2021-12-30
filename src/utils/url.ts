@@ -33,24 +33,28 @@ export function isSupportWebp(): boolean {
   return !!BOWSER_BROWSER.satisfies(supportedBrowsers)
 }
 
-export function addParamsToUrl(
-  url: string,
-  params: { [key: string]: string },
+export function addParamsToUrl<U extends string | undefined>(
+  url: U,
+  params: { [key: string]: string | number },
   options?: {
     ignoreDuplicates?: boolean
   }
-): string {
+): U {
   if (!url) {
     return url
   }
-  const urlObj = new URL(url)
-  const urlSearchParams = urlObj.searchParams
-  Object.keys(params).forEach((key) => {
-    if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
-      urlSearchParams.set(key, params[key])
-    }
-  })
-  return decodeURIComponent(urlObj.toString())
+  try {
+    const urlObj = new URL(url)
+    const urlSearchParams = urlObj.searchParams
+    Object.keys(params).forEach((key) => {
+      if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
+        urlSearchParams.set(key, `${params[key]}`)
+      }
+    })
+    return decodeURIComponent(urlObj.toString()) as U
+  } catch {
+    return url
+  }
 }
 
 export function getImagePreviewUrl<U extends string | undefined>(
@@ -76,7 +80,10 @@ export function getImagePreviewUrl<U extends string | undefined>(
   return addParamsToUrl(url, params) as any
 }
 
-export const getNFTQueryParams = (tid?: number, locale = i18n.language) => {
+export const getNFTQueryParams = (
+  tid?: number | null,
+  locale = i18n.language
+) => {
   if (typeof tid === 'number' || typeof tid === 'string') {
     return {
       tid,
