@@ -4,10 +4,11 @@ import { ReactComponent as LogoSvg } from '../assets/logo.svg'
 import { ReactComponent as MoonSvg } from '../assets/moon.svg'
 import { ReactComponent as HomeTextSvg } from '../assets/home-text.svg'
 import { ReactComponent as RankTextSvg } from '../assets/rank-text.svg'
-import { ReactComponent as ChooseYourFavouriteSvg } from '../assets/choose-your-favourite.svg'
+import BannerTextSvgPath from '../assets/banner-text.svg'
 import { ReactComponent as JointUnitSvg } from '../assets/joint-unit.svg'
 import BgTextPath from '../assets/bg-text.png'
 import { NFT_EXPLORER_URL } from '../../../constants'
+import { EventState } from '../api.interface'
 
 export const StyledMoonSvg = styled(MoonSvg)`
   top: 6px;
@@ -40,11 +41,6 @@ export const StyledJointUnitSvg = styled(JointUnitSvg)`
   &.hide {
     opacity: 0;
   }
-`
-
-export const StyledChooseYourFavouriteSvg = styled(ChooseYourFavouriteSvg)`
-  width: calc(100% - 40px);
-  margin: 15px auto 0;
 `
 
 export const StyledHomeTextSvg = styled(HomeTextSvg)`
@@ -81,9 +77,10 @@ export const StyledRankTextSvg = styled(RankTextSvg)`
 
 export const Title: React.FC<{
   isRank?: boolean
+  eventState?: EventState
   specialClassUuid?: string
   normalClassUuid?: string
-}> = ({ isRank, specialClassUuid = '', normalClassUuid = '' }) => {
+}> = ({ isRank, eventState, specialClassUuid = '', normalClassUuid = '' }) => {
   return (
     <Box position="relative" transition="200ms">
       <Box position="relative" h="270px" overflow="hidden">
@@ -198,7 +195,21 @@ export const Title: React.FC<{
           </ListItem>
         </List>
       </Box>
-      <StyledChooseYourFavouriteSvg />
+      <Box
+        bg={`url(${BannerTextSvgPath})`}
+        bgRepeat="no-repeat"
+        bgSize="100% auto"
+        fontSize="14px"
+        color="#000"
+        textAlign="center"
+        w="230px"
+        h="30px"
+        lineHeight="26px"
+        mx="auto"
+        mt="15px"
+      >
+        {eventState === 'ongoing' ? '请投票支持您喜欢的诗人吧！' : '活动关闭'}
+      </Box>
     </Box>
   )
 }

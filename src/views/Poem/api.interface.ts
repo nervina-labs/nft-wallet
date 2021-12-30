@@ -17,6 +17,7 @@ export interface Poetry {
   meta: ListMeta & {
     normal_class_uuid: string
     special_class_uuid: string
+    event_state: EventState
   }
 }
 
@@ -25,3 +26,5 @@ export interface UnSignedTx {
 }
 
 export type PoetrySort = '' | 'votes'
+
+export type EventState = 'ongoing' | 'closed'

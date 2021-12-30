@@ -170,7 +170,7 @@ export const Poem: React.FC = () => {
       return data
     },
     {
-      enabled: isLogined,
+      enabled: isLogined && poetryVotesData?.meta.event_state === 'ongoing',
     }
   )
 
@@ -307,6 +307,7 @@ export const Poem: React.FC = () => {
         isRank={voteSort === 'votes'}
         specialClassUuid={poetryVotesData?.meta.special_class_uuid}
         normalClassUuid={poetryVotesData?.meta.normal_class_uuid}
+        eventState={poetryVotesData?.meta.event_state}
       />
       <Flex justify="flex-end" pt="35px" mb="30px" px="20px">
         <Button
@@ -340,10 +341,15 @@ export const Poem: React.FC = () => {
           poetryVotesData?.poems.map((item, i) => {
             const rankNumber =
               (poetryVotesData.meta.current_page - 1) * PER_ITEM_LIMIT + i + 1
+            const templateColumns = `${
+              poetryVotesData?.meta.event_state === 'ongoing'
+                ? '60% 20% 20%'
+                : '80% 20%'
+            }`
             return (
               <Grid
                 key={i}
-                templateColumns="60% 20% 20%"
+                templateColumns={templateColumns}
                 align="center"
                 borderBottom="1px solid rgba(245, 197, 123, 0.4)"
                 fontSize="14px"
@@ -361,7 +367,15 @@ export const Poem: React.FC = () => {
                     : null}
                   {item.reciter_name}
                 </Box>
-                <Box color="#F5C57B" textDecoration="underline">
+                <Box
+                  color="#F5C57B"
+                  textDecoration="underline"
+                  textAlign={
+                    poetryVotesData?.meta.event_state === 'ongoing'
+                      ? 'center'
+                      : 'right'
+                  }
+                >
                   <a
                     href={`${NFT_EXPLORER_URL}/holder/tokens/${
                       item.address as string
@@ -371,17 +385,19 @@ export const Poem: React.FC = () => {
                   </a>
                 </Box>
 
-                <Button
-                  onClick={() => onClickVoteMiddleware(item.uuid)}
-                  variant="link"
-                  textDecoration="underline"
-                  color="#F5C57B"
-                  fontSize="14px"
-                  my="auto"
-                  ml="auto"
-                >
-                  去投票
-                </Button>
+                {poetryVotesData?.meta.event_state === 'ongoing' ? (
+                  <Button
+                    onClick={() => onClickVoteMiddleware(item.uuid)}
+                    variant="link"
+                    textDecoration="underline"
+                    color="#F5C57B"
+                    fontSize="14px"
+                    my="auto"
+                    ml="auto"
+                  >
+                    去投票
+                  </Button>
+                ) : null}
               </Grid>
             )
           })
