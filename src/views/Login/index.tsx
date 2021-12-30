@@ -415,7 +415,7 @@ export const Login: React.FC = () => {
               isFlashsignerLogin
             }
             onClick={loginUnipass}
-            variant={IS_IMTOKEN ? 'outline' : 'solid'}
+            variant={'outline'}
             size="lg"
           >
             <Box py="8px">

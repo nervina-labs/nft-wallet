@@ -431,6 +431,7 @@
       "title": "Redeem Center",
       "count": "{{count}}",
       "redeemed": "Redeemed",
+      "flashsigner": "Flashsigner users are not supported to participate in the redemption for now. Please pay attention to the community notice as it will be supported in the near future.",
       "nft-prize": "The prize includes all the following Digital Collections",
       "blind-prize": "The prize randomly includes {{count}} Digital Collections below",
       "other-prize": "The organizer will give out the prize after you submit the redeem",

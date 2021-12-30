@@ -126,6 +126,13 @@ export const useSignRedeem = () => {
       if (!isAllow) {
         return
       }
+      if (walletType === WalletType.Flashsigner) {
+        confirmDialog({
+          type: 'warning',
+          title: t('exchange.flashsigner'),
+        })
+        return
+      }
       trackReedeem(trackLabels.apps.redeem)
       if (deliverType && deliverType !== CustomRewardType.None) {
         history.replace(
@@ -153,7 +160,7 @@ export const useSignRedeem = () => {
         })
       }
     },
-    [confirmRedeem, t, confirmDialog, reactLocation, history]
+    [confirmRedeem, t, confirmDialog, reactLocation, history, trackReedeem]
   )
 
   return {

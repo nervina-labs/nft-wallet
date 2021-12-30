@@ -6,7 +6,7 @@ import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-success.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { IS_IMTOKEN } from '../../constants'
+import { IS_IMTOKEN, IS_MOBILE_ETH_WALLET } from '../../constants'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
@@ -26,6 +26,7 @@ import {
 } from '../../hooks/useAccount'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
+import { Box } from '@chakra-ui/layout'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -159,6 +160,7 @@ enum ErrorMsg {
 export const Claim: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
+  const [isFlashsignerLogin, setIsFlashsignerLogin] = useState(false)
   const onConfirm = useConfirmDialog()
   const { t, i18n } = useTranslation('translations')
   const { login } = useLogin()
@@ -178,6 +180,9 @@ export const Claim: React.FC = () => {
         break
       case WalletType.Unipass:
         setIsUnipassLoging(loading)
+        break
+      case WalletType.Flashsigner:
+        setIsFlashsignerLogin(loading)
         break
       default:
         setIsUnipassLoging(loading)
@@ -291,6 +296,25 @@ export const Claim: React.FC = () => {
         <>
           <p className="desc">{t('claim.tips')}</p>
           <p>{t('claim.login')}</p>
+          {IS_MOBILE_ETH_WALLET ? null : (
+            <LoginButton
+              className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
+              isLoading={isUnipassLogining}
+              disabled={
+                isUnipassLogining || isMetamaskLoging || isFlashsignerLogin
+              }
+              onClick={async () =>
+                await loginBtnOnClick(WalletType.Flashsigner)
+              }
+              variant={IS_IMTOKEN ? 'outline' : 'solid'}
+              size="lg"
+            >
+              <Box py="8px">
+                <Box fontSize="16px">{t('login.connect.flashsigner')}</Box>
+                <Box fontSize="12px">{t('login.connect.or-use-phone')}</Box>
+              </Box>
+            </LoginButton>
+          )}
           <LoginButton
             isLoading={isUnipassLogining}
             disabled={isUnipassLogining || isMetamaskLoging}
@@ -394,6 +418,7 @@ export const Claim: React.FC = () => {
     code,
     isClaiming,
     isClaimError,
+    isFlashsignerLogin,
   ])
 
   if (claimCodeError) {

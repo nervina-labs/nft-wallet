@@ -431,6 +431,7 @@
       "title": "兑换中心",
       "count": "{{count}} 个",
       "redeemed": "已兑",
+      "flashsigner": "Flashsigner 用户目前暂时不支持参与兑换。近期会支持，请关注社区通知",
       "nft-prize": "奖品包含下面所有秘宝",
       "blind-prize": "奖品随机包含下面的 {{count}} 个秘宝",
       "other-prize": "发起人会在您提交兑换后根据您提供的接收信息进行承兑",
