@@ -67,6 +67,7 @@ export const RedEnvelope: React.FC = () => {
   const getAuth = useGetAndSetAuth()
   const { isAuthenticated } = useProfile()
   const { push } = useHistory()
+  const [isOpenedWithError, setIsOpenedWithError] = useState(false)
   const { data, error, refetch, isLoading } = useQuery<
     RedEnvelopeResponse,
     AxiosError
@@ -139,6 +140,7 @@ export const RedEnvelope: React.FC = () => {
             }
           }
           setIsRefetching(false)
+          setIsOpenedWithError(true)
           throw err
         })
         .finally(() => {
@@ -167,7 +169,8 @@ export const RedEnvelope: React.FC = () => {
       isAutoOpen === 'true' &&
       data?.rule_info === null &&
       !isOpened &&
-      isAuthenticated
+      isAuthenticated &&
+      !isOpenedWithError
     ) {
       onOpenTheRedEnvelope()
     }
@@ -179,6 +182,7 @@ export const RedEnvelope: React.FC = () => {
     isOpened,
     isAuthenticated,
     onOpenTheRedEnvelope,
+    isOpenedWithError,
   ])
 
   if (error?.response?.status === 404) {
