@@ -6,14 +6,10 @@ import { ReactComponent as PwaGuideShareSvg } from '../../assets/svg/ios-pwa-gui
 import styled from '@emotion/styled'
 import { Button } from '@mibao-ui/components'
 import { CloseIcon } from '@chakra-ui/icons'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { isInStandaloneMode } from '../../utils'
 import { IS_IMTOKEN, IS_IPHONE, IS_SAFARI, IS_WEXIN } from '../../constants'
 import { useTranslation } from 'react-i18next'
-import { RoutePath } from '../../routes/path'
-import { useLocation } from 'react-router-dom'
-
-const pathInDisabledList = new Set([RoutePath.Poem, RoutePath.RedEnvelope])
 
 const Tips = styled(Box)`
   svg {
@@ -25,7 +21,6 @@ const Tips = styled(Box)`
 `
 
 export const PwaGuide: React.FC = () => {
-  const location = useLocation()
   const { t } = useTranslation('translations')
   const [
     isClosedPwaGuideFromLocal,
@@ -47,11 +42,7 @@ export const PwaGuide: React.FC = () => {
     setIsClosedPwaGuide(isClosedPwaGuideFromLocal)
   }, [isClosedPwaGuideFromLocal])
 
-  const isDisabledByCurrentPath = useMemo(
-    () => [...pathInDisabledList].some((p) => location.pathname.startsWith(p)),
-    [location.pathname]
-  )
-  if (isClosedPwaGuide || isDisabledByCurrentPath) {
+  if (isClosedPwaGuide) {
     return null
   }
 
