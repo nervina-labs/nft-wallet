@@ -160,7 +160,7 @@ export const Title: React.FC<{
               >
                 诗人 NFT 票
               </a>
-              ，每张票的权重是 3 票
+              ，每张票的权重是 5 票
             </Box>
           </ListItem>
           <ListItem display="flex">
@@ -203,7 +203,7 @@ export const Title: React.FC<{
         color="#000"
         textAlign="center"
         w="230px"
-        h="30px"
+        h="31px"
         lineHeight="26px"
         mx="auto"
         mt="15px"
