@@ -6,7 +6,7 @@ import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
 import { Query } from '../../../models'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
-import { isSupportWebp } from '../../../utils'
+import { getNFTQueryParams, isSupportWebp } from '../../../utils'
 
 export const HolderList: React.FC<{
   uuid: string
@@ -57,14 +57,10 @@ export const HolderList: React.FC<{
               }
               type={item.holder_info.avatar_type}
               fallbackSrc={FallbackAvatarSrc}
-              srcQueryParams={
-                typeof item.holder_info.avatar_tid === 'number'
-                  ? {
-                      tid: item.holder_info.avatar_tid,
-                      locale: i18n.language,
-                    }
-                  : undefined
-              }
+              srcQueryParams={getNFTQueryParams(
+                item.holder_info.avatar_tid,
+                i18n.language
+              )}
               resizeScale={100}
               webp={isSupportWebp()}
               customizedSize={{
