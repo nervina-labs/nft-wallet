@@ -547,7 +547,7 @@ export const Poem: React.FC = () => {
                 whiteSpace="pre-wrap"
               >
                 注意：投票会将你的 NFT
-                临时转入一个计票地址，2022.01.04号计票结束后，NFT
+                临时转入一个计票地址，2022.01.05号计票结束后，NFT
                 将返回到您的账户
               </AlertDescription>
             </Alert>
