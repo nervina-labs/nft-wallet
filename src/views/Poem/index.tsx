@@ -65,6 +65,8 @@ interface RouteState {
   }
 }
 
+const EVENT_CLOSED_TIME = new Date('2021-12-30 12:00')
+
 export const Poem: React.FC = () => {
   const { pubkey } = useAccount()
   const { isLogined } = useAccountStatus()
@@ -87,7 +89,10 @@ export const Poem: React.FC = () => {
     onClose: onCloseVoting,
   } = useDisclosure()
   const [activeUuid, setActiveUuid] = useState<string | undefined>(undefined)
-  const [voteSort] = useRouteQuerySearch<PoetrySort>('sort', '')
+  const [voteSort] = useRouteQuerySearch<PoetrySort>(
+    'sort',
+    new Date().getTime() > EVENT_CLOSED_TIME.getTime() ? 'votes' : ''
+  )
   const [routePageIndex, setRoutePageIndex] = useRouteQuerySearch<string>(
     'page',
     '1'
@@ -317,7 +322,9 @@ export const Poem: React.FC = () => {
           fontSize="16px"
           onClick={() => {
             replace(
-              `${location.pathname}${voteSort === 'votes' ? '' : '?sort=votes'}`
+              `${location.pathname}${
+                voteSort === 'votes' ? '?sort=' : '?sort=votes'
+              }`
             )
           }}
         >
