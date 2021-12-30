@@ -43,14 +43,18 @@ export function addParamsToUrl(
   if (!url) {
     return url
   }
-  const urlObj = new URL(url)
-  const urlSearchParams = urlObj.searchParams
-  Object.keys(params).forEach((key) => {
-    if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
-      urlSearchParams.set(key, params[key])
-    }
-  })
-  return decodeURIComponent(urlObj.toString())
+  try {
+    const urlObj = new URL(url)
+    const urlSearchParams = urlObj.searchParams
+    Object.keys(params).forEach((key) => {
+      if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
+        urlSearchParams.set(key, params[key])
+      }
+    })
+    return decodeURIComponent(urlObj.toString())
+  } catch (error) {
+    return ''
+  }
 }
 
 export function getImagePreviewUrl<U extends string | undefined>(

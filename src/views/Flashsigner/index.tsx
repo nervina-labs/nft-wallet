@@ -55,6 +55,7 @@ export const Flashsigner: React.FC = () => {
         setProfile(
           {
             auth: data.sig,
+            message: data.message,
           },
           addr
         )

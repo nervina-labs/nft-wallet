@@ -282,7 +282,10 @@ export const AddressCollector: React.FC = () => {
       ) {
         submit(walletType).catch(Boolean)
       }
-      if (walletType === WalletType.Unipass) {
+      if (
+        walletType === WalletType.Unipass ||
+        walletType === WalletType.Flashsigner
+      ) {
         submit(walletType).catch(Boolean)
       }
     }

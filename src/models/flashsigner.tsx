@@ -11,6 +11,7 @@ export interface FlashsignerData {
 
 export interface FlashsignerLoginData extends FlashsignerData {
   sig: string
+  message: string
 }
 
 export interface FlashsignerSignData extends FlashsignerData {

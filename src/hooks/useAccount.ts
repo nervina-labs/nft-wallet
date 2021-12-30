@@ -36,7 +36,7 @@ export interface UnipassAccount {
 
 export const providerAtom = atom<Provider | null>(null)
 
-const accountAtom = atomWithStorage<UnipassAccount | null>(
+export const accountAtom = atomWithStorage<UnipassAccount | null>(
   UNIPASS_ACCOUNT_KEY,
   null
 )
@@ -140,7 +140,7 @@ export function useLogin() {
   const [provider, setProvider] = useAtom(providerAtom)
   const web3WalletAddressOnChange = useCallback(
     (addr?: Address) => {
-      if (walletType === WalletType.Unipass) {
+      if (walletType !== WalletType.Metamask) {
         return
       }
       if (!addr) {
