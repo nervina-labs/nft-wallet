@@ -18,6 +18,7 @@ import { extendTheme } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import NFTFallbackImg from '../assets/img/nft-fallback.png'
 import { PwaGuide } from '../components/PwaGuide'
+import { HiddenBarContainer } from '../components/HiddenBar'
 export * from './path'
 
 export const Routers: React.FC = () => {
@@ -94,6 +95,7 @@ export const Routers: React.FC = () => {
               </Switch>
             </LoadableComponent>
             <ConfirmDialog />
+            <HiddenBarContainer />
           </AccountChange>
         </RouterProvider>
       </BrowserRouter>
