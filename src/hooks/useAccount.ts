@@ -19,7 +19,7 @@ export enum WalletType {
   WalletConnect = 'WalletConnect',
 }
 
-export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
+export const UNIPASS_ACCOUNT_KEY = 'unipass_poem_account_key'
 
 export interface UnipassAccount {
   address: string
