@@ -25,7 +25,7 @@ export const Explore: React.FC = () => {
 
   return (
     <MainContainer>
-      <Flex justify="space-between" pt="8px" pb="14px" h="50px" px="20px">
+      <Flex justify="space-between" pt="18px" pb="8px" h="60px" px="20px">
         <RowImage src={LogoPath} h="21px" w="auto" my="auto" />
 
         <Flex mt="auto">
