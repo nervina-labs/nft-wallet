@@ -64,7 +64,7 @@ interface RouteState {
   }
 }
 
-const EVENT_CLOSED_TIME = new Date('2022-1-5 10:00')
+const EVENT_CLOSED_TIME = new Date('2022-01-05 10:00:00 GMT+0800')
 
 export const Poem: React.FC = () => {
   const { pubkey } = useAccount()
