@@ -39,7 +39,7 @@ const TranferOrBuy: React.FC<{
   const { address } = useAccount()
 
   const ownCurrentToken =
-    !isTokenClass(detail) && detail?.to_address === address
+    detail && !isTokenClass(detail) && detail?.to_address === address
 
   const { openOrderDrawer } = useOrderDrawer()
   const setProductId = useSetProductId()
