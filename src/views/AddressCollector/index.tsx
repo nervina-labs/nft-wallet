@@ -5,7 +5,7 @@ import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
 import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { IS_IMTOKEN } from '../../constants'
+import { IS_IMTOKEN, IS_MOBILE_ETH_WALLET } from '../../constants'
 import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
@@ -26,6 +26,7 @@ import {
 } from '../../hooks/useAccount'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
+import { Box } from '@chakra-ui/layout'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -140,6 +141,7 @@ export const AddressCollector: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(SubmitStatus.None)
+  const [isFlashsignerLogin, setIsFlashsignerLogin] = useState(false)
   const onConfirm = useConfirmDialog()
   const { t, i18n } = useTranslation('translations')
 
@@ -160,6 +162,9 @@ export const AddressCollector: React.FC = () => {
         break
       case WalletType.Unipass:
         setIsUnipassLoging(loading)
+        break
+      case WalletType.Flashsigner:
+        setIsFlashsignerLogin(loading)
         break
       default:
         setIsUnipassLoging(loading)
@@ -282,7 +287,10 @@ export const AddressCollector: React.FC = () => {
       ) {
         submit(walletType).catch(Boolean)
       }
-      if (walletType === WalletType.Unipass) {
+      if (
+        walletType === WalletType.Unipass ||
+        walletType === WalletType.Flashsigner
+      ) {
         submit(walletType).catch(Boolean)
       }
     }
@@ -315,6 +323,25 @@ export const AddressCollector: React.FC = () => {
         <>
           <p className="desc">{desc[submitStatus]}</p>
           <p>{t('addresses.select')}</p>
+          {IS_MOBILE_ETH_WALLET ? null : (
+            <LoginButton
+              className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
+              isLoading={isUnipassLogining}
+              disabled={
+                isUnipassLogining || isMetamaskLoging || isFlashsignerLogin
+              }
+              onClick={async () =>
+                await loginBtnOnClick(WalletType.Flashsigner)
+              }
+              variant={IS_IMTOKEN ? 'outline' : 'solid'}
+              size="lg"
+            >
+              <Box py="8px">
+                <Box fontSize="16px">{t('login.connect.flashsigner')}</Box>
+                <Box fontSize="12px">{t('login.connect.or-use-phone')}</Box>
+              </Box>
+            </LoginButton>
+          )}
           <LoginButton
             isLoading={isUnipassLogining}
             disabled={isUnipassLogining || isMetamaskLoging}
@@ -376,6 +403,7 @@ export const AddressCollector: React.FC = () => {
     loginBtnOnClick,
     i18n,
     desc,
+    isFlashsignerLogin,
   ])
 
   if (isNotFound || isAddressPackageExist === false || isError) {

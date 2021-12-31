@@ -51,6 +51,8 @@ export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
   description: string
   bg_image_url: string
   class_uuid: string
+  class_id: string
+  n_issuer_id: string
   is_redeemed?: boolean
   product_qr_code?: string
   issuer_info: {

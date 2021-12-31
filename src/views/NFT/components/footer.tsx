@@ -37,9 +37,8 @@ const TranferOrBuy: React.FC<{
     })
   }, [push, uuid, detail])
 
-  const ownCurrentToken =
-    typeof detail?.class_card_back_content !== 'undefined' ||
-    typeof detail?.card_back_content !== 'undefined'
+  // FIXME: can be own if sigature is valid
+  const ownCurrentToken = true
 
   const { openOrderDrawer } = useOrderDrawer()
   const setProductId = useSetProductId()

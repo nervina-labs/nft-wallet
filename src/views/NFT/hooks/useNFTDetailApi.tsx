@@ -28,7 +28,7 @@ export function useNFTDetailApi(
   const wechatShare = useWechatShare()
   const { t } = useTranslation('translations')
   const { data: detail, failureCount, isLoading, refetch } = useQuery(
-    [Query.NFTDetail, uuid, api, isLogined],
+    [Query.NFTDetail, uuid, api, isLogined, getAuth],
     async () => {
       const auth = isLogined ? await getAuth() : undefined
       const hasTid = typeof options?.tid !== 'undefined'
