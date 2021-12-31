@@ -13,7 +13,7 @@ import {
   useSetProductId,
 } from '../../../hooks/useOrder'
 import { useUpdateAtom } from 'jotai/utils'
-import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
+import { useAccount, useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { IS_WEXIN } from '../../../constants'
 import { RoutePath } from '../../../routes'
@@ -36,9 +36,10 @@ const TranferOrBuy: React.FC<{
       nftDetail: detail,
     })
   }, [push, uuid, detail])
+  const { address } = useAccount()
 
-  // FIXME: can be own if sigature is valid
-  const ownCurrentToken = true
+  const ownCurrentToken =
+    !isTokenClass(detail) && detail?.to_address === address
 
   const { openOrderDrawer } = useOrderDrawer()
   const setProductId = useSetProductId()
