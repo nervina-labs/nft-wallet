@@ -18,7 +18,7 @@ import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { IS_WEXIN } from '../../../constants'
 import { RoutePath } from '../../../routes'
 import { UnipassConfig } from '../../../utils'
-import { Query } from '../../../models'
+import { Query, TransactionStatus } from '../../../models'
 import { useQuery } from 'react-query'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 import { Button, Flex } from '@chakra-ui/react'
@@ -39,7 +39,10 @@ const TranferOrBuy: React.FC<{
   const { address } = useAccount()
 
   const ownCurrentToken =
-    detail && !isTokenClass(detail) && detail?.to_address === address
+    detail &&
+    !isTokenClass(detail) &&
+    detail?.to_address === address &&
+    detail.tx_state === TransactionStatus.Committed
 
   const { openOrderDrawer } = useOrderDrawer()
   const setProductId = useSetProductId()
