@@ -48,12 +48,12 @@ export function addParamsToUrl<U extends string | undefined>(
     const urlSearchParams = urlObj.searchParams
     Object.keys(params).forEach((key) => {
       if (!urlSearchParams.has(key) || options?.ignoreDuplicates) {
-        urlSearchParams.set(key, params[key])
+        urlSearchParams.set(key, `${params[key]}`)
       }
     })
-    return decodeURIComponent(urlObj.toString())
-  } catch (error) {
-    return ''
+    return decodeURIComponent(urlObj.toString()) as U
+  } catch {
+    return url
   }
 }
 
