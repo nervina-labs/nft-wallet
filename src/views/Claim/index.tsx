@@ -193,7 +193,7 @@ export const Claim: React.FC = () => {
   const loginBtnOnClick = useCallback(
     async (targetType = WalletType.Unipass) => {
       setLoading(true, targetType)
-      if (WalletType.Unipass === targetType) {
+      if (WalletType.Metamask !== targetType) {
         UnipassConfig.setRedirectUri(
           id ? `${RoutePath.Claim}/${id}` : RoutePath.Claim
         )

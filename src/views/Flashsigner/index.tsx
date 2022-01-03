@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { scriptToAddress } from '@nervosnetwork/ckb-sdk-utils'
+import { scriptToAddress } from '@nervosnetwork/ckb-sdk-utils/lib/address'
 import { useSetAccount, WalletType } from '../../hooks/useAccount'
 import { useProfile } from '../../hooks/useProfile'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
@@ -33,7 +33,7 @@ export const Flashsigner: React.FC = () => {
     switch (action) {
       case FlashsignerAction.Login: {
         UnipassConfig.clear()
-        if (code !== 200 && code !== 401) {
+        if (code !== 200) {
           history.replace(redirectUri || RoutePath.Login)
           break
         }
