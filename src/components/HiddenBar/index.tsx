@@ -12,7 +12,6 @@ import { Link } from 'react-router-dom'
 import { useObservable } from 'rxjs-hooks'
 import { fromEvent, scan, tap, throttleTime } from 'rxjs'
 import { trackLabels, useTrackClick } from '../../hooks/useTrack'
-import { useRouteQuery } from '../../hooks/useRouteQuery'
 
 const Container = styled(Stack)`
   position: fixed;
@@ -175,25 +174,6 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
       ))}
     </Container>
   )
-}
-
-export const HiddenBarContainer: React.FC = () => {
-  const bar = useRouteQuery<'' | 'hide'>('bar', '')
-  const [isStarted, setIsStarted] = useState(false)
-  const [isLite, setIsLite] = useState(false)
-  useEffect(() => {
-    setIsStarted(true)
-    if (isStarted) return
-    if (bar === 'hide') {
-      setIsLite(true)
-    }
-  }, [bar, isStarted])
-
-  if (isLite) {
-    return null
-  }
-
-  return <HiddenBar />
 }
 
 export const HiddenBarFill: React.FC<BoxProps> = (props) => {
