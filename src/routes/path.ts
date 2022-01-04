@@ -19,7 +19,7 @@ export enum RoutePath {
   License = '/license',
   AddressCollector = '/addresses',
   Claim = '/claim',
-  CNY2022 = 'cny2022',
+  CNY2022 = '/cny2022',
   Collection = '/explore/collection',
   RankingList = '/explore/ranking',
   Issuer = '/issuer',
