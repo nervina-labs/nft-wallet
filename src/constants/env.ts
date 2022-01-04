@@ -48,7 +48,13 @@ export const IS_MOBILE =
     /Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i
   ) !== null
 
-export const IS_MOBILE_ETH_WALLET = (w.ethereum || w.web3) && IS_MOBILE
+const IS_STANDALONE =
+  window.matchMedia('(display-mode: standalone)').matches ||
+  (window.navigator as any).standalone ||
+  document.referrer.includes('android-app://')
+
+export const IS_MOBILE_ETH_WALLET =
+  (w.ethereum || w.web3) && IS_MOBILE && IS_STANDALONE
 
 export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 
@@ -67,9 +73,14 @@ export const UNIPASS_URL = IS_MAINNET
   ? 'https://unipass.xyz'
   : 'https://t.unipass.xyz'
 
+const FLASH_SIGNER_DEV_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://flashsigner.work'
+
 export const FLASH_SIGNER_URL = IS_MAINNET
   ? 'https://flashsigner.com'
-  : 'https://flashsigner.work'
+  : FLASH_SIGNER_DEV_URL
 
 export const RED_ENVELOP_APP_URL = IS_MAINNET
   ? 'https://gift.unipass.xyz'

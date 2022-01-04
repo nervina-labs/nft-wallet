@@ -2211,7 +2211,7 @@
     axios "0.21.4"
     tslib "2.3.1"
 
-"@nervosnetwork/ckb-sdk-utils@0.101.0":
+"@nervosnetwork/ckb-sdk-utils@0.101.0", "@nervosnetwork/ckb-sdk-utils@^0.101.0":
   version "0.101.0"
   resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-sdk-utils/-/ckb-sdk-utils-0.101.0.tgz#f51b6dc6df9299544217984c2c3e29e09d050c60"
   integrity sha512-1Cm66rQ8XawavZ69TjMiPRECzX77ndRf8DPUskn0QXyy9YU9bDGNSWVgIBnt0T5Nxl4Y+itAWFukltoEWpzU3A==

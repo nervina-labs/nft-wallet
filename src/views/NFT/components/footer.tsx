@@ -13,12 +13,12 @@ import {
   useSetProductId,
 } from '../../../hooks/useOrder'
 import { useUpdateAtom } from 'jotai/utils'
-import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
+import { useAccount, useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { IS_WEXIN } from '../../../constants'
 import { RoutePath } from '../../../routes'
 import { UnipassConfig } from '../../../utils'
-import { Query } from '../../../models'
+import { Query, TransactionStatus } from '../../../models'
 import { useQuery } from 'react-query'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 import { Button, Flex } from '@chakra-ui/react'
@@ -36,9 +36,13 @@ const TranferOrBuy: React.FC<{
       nftDetail: detail,
     })
   }, [push, uuid, detail])
+  const { address } = useAccount()
 
-  // FIXME: can be own if sigature is valid
-  const ownCurrentToken = true
+  const ownCurrentToken =
+    detail &&
+    !isTokenClass(detail) &&
+    detail?.to_address === address &&
+    detail.tx_state === TransactionStatus.Committed
 
   const { openOrderDrawer } = useOrderDrawer()
   const setProductId = useSetProductId()

@@ -232,8 +232,12 @@ export const AddressCollector: React.FC = () => {
         await submit(targetType)
         return
       }
-      if (WalletType.Unipass === targetType) {
-        UnipassConfig.setRedirectUri(`${RoutePath.AddressCollector}/${id}`)
+      if (WalletType.Metamask !== targetType) {
+        UnipassConfig.setRedirectUri(
+          id
+            ? `${RoutePath.AddressCollector}/${id}`
+            : RoutePath.AddressCollector
+        )
       }
       try {
         if (targetType === WalletType.Metamask) {

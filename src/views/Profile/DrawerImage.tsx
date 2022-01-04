@@ -314,6 +314,9 @@ export const DrawerImage: React.FC<DrawerImageProps> = ({
           {
             content: (
               <Box
+                w="full"
+                h="full"
+                textAlign="center"
                 onClick={() => {
                   uploadInputRef.current?.click()
                 }}

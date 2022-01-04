@@ -15,7 +15,6 @@ import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import TextareaAutosize from 'react-textarea-autosize'
 import {
-  verifyEthContractAddress,
   verifyCkbAddress,
   verifyEthAddress,
   verifyDasAddress,
@@ -168,10 +167,6 @@ export const Transfer: React.FC = () => {
     return verifyAddress(ckbAddress, address)
   }, [ckbAddress, address])
 
-  const isEthAddress = useMemo(() => {
-    return ckbAddressType === AddressVerifiedType.eth
-  }, [ckbAddressType])
-
   const isDasAddress = useMemo(() => {
     return ckbAddressType === AddressVerifiedType.das
   }, [ckbAddressType])
@@ -234,24 +229,8 @@ export const Transfer: React.FC = () => {
     [confirmDialog, buildFailedMessage, history, t]
   )
   const transferOnClick = useCallback(async () => {
-    if (isEthAddress || (isDasAddress && verifyEthAddress(finalUsedAddress))) {
-      const isContract = await verifyEthContractAddress(finalUsedAddress)
-      if (isContract) {
-        confirmDialog({
-          type: 'warning',
-          title: buildFailedMessage(FailedMessage.ContractAddress),
-        })
-        return
-      }
-    }
     setIsDrawerOpen(true)
-  }, [
-    isEthAddress,
-    finalUsedAddress,
-    isDasAddress,
-    confirmDialog,
-    buildFailedMessage,
-  ])
+  }, [])
   const { id } = useParams<{ id: string }>()
 
   const getAuth = useGetAndSetAuth()
@@ -295,14 +274,14 @@ export const Transfer: React.FC = () => {
             '',
             {
               uuid: id,
-              ckbAddress: sentAddress,
+              ckbAddress,
             },
             {
               class_id: nftDetail?.class_id,
               issuer_id: nftDetail?.n_issuer_id,
               token_id: nftDetail?.n_token_id,
               from_address: address,
-              to_address: sentAddress,
+              to_address: ckbAddress,
             }
           )
         }
@@ -365,6 +344,7 @@ export const Transfer: React.FC = () => {
     stopTranfer,
     address,
     nftDetail,
+    ckbAddress,
   ])
 
   const closeDrawer = (): void => setIsDrawerOpen(false)
