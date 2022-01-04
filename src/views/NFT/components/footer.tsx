@@ -42,7 +42,8 @@ const TranferOrBuy: React.FC<{
     detail &&
     !isTokenClass(detail) &&
     detail?.to_address === address &&
-    detail.tx_state === TransactionStatus.Committed
+    (detail.tx_state === TransactionStatus.Submitting ||
+      detail.tx_state === TransactionStatus.Committed)
 
   const { openOrderDrawer } = useOrderDrawer()
   const setProductId = useSetProductId()
