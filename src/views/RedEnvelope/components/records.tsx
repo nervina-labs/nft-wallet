@@ -15,7 +15,12 @@ import {
   RedEnvelopeState,
 } from '../../../models'
 import { RoutePath } from '../../../routes'
-import { ellipsisString, formatTime, isSupportWebp } from '../../../utils'
+import {
+  ellipsisString,
+  formatTime,
+  isSupportWebp,
+  removeCurrentUrlOrigin,
+} from '../../../utils'
 
 interface RecordsProps {
   uuid: string
@@ -232,8 +237,12 @@ export const Records: React.FC<RecordsProps> = ({
             bg: '#dac4a0',
             transition: '0s',
           }}
-          href={data.promotion_link}
-          target="_blank"
+          href={removeCurrentUrlOrigin(data.promotion_link)}
+          target={
+            removeCurrentUrlOrigin(data.promotion_link) === data.promotion_link
+              ? '_blank'
+              : undefined
+          }
         >
           {t('red-envelope.promotion-link')}
         </Button>
