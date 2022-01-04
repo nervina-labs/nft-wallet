@@ -152,5 +152,13 @@ export function isUsdz(url?: string) {
 }
 
 export function removeCurrentUrlOrigin(url: string) {
-  return url.replace(location.origin, '')
+  try {
+    const urlObj = new URL(url)
+    if (urlObj.origin !== location.origin) {
+      return url
+    }
+    return urlObj.pathname + urlObj.search
+  } catch {
+    return url
+  }
 }

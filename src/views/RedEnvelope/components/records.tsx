@@ -204,6 +204,13 @@ export const Records: React.FC<RecordsProps> = ({
   const fromUsername = data?.issuer_info.name || data?.issuer_info.email || ''
   const promotionCopy =
     data?.promotion_copy || t('red-envelope.default-promotion-copy')
+  const promotionLink = useMemo(
+    () =>
+      data?.promotion_link
+        ? removeCurrentUrlOrigin(data.promotion_link)
+        : undefined,
+    [data?.promotion_link]
+  )
 
   return (
     <Flex
@@ -224,7 +231,7 @@ export const Records: React.FC<RecordsProps> = ({
       <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="50px" px="20px">
         {promotionCopy}
       </Box>
-      {data?.promotion_link ? (
+      {promotionLink ? (
         <Button
           as="a"
           variant="solid"
@@ -237,12 +244,8 @@ export const Records: React.FC<RecordsProps> = ({
             bg: '#dac4a0',
             transition: '0s',
           }}
-          href={removeCurrentUrlOrigin(data.promotion_link)}
-          target={
-            removeCurrentUrlOrigin(data.promotion_link) === data.promotion_link
-              ? '_blank'
-              : undefined
-          }
+          href={promotionLink}
+          target={promotionLink === data?.promotion_link ? '_blank' : undefined}
         >
           {t('red-envelope.promotion-link')}
         </Button>
