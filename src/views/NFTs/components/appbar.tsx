@@ -56,7 +56,7 @@ export const Appbar: React.FC<{
     async () => {
       const { data } = await api.getNFTs(1, {
         address,
-        exclude_banned: !isHolder,
+        exclude_banned: isHolder,
       })
       return { pages: [data] }
     },
