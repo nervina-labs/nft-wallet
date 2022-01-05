@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Box, Like } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { isTokenClass, TokenClass } from '../../../models/class-list'
 import { NFTDetail } from '../../../models/nft'
 import { useHistory } from 'react-router-dom'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { ReactComponent as BuySvg } from '../../../assets/svg/buy.svg'
 import { ReactComponent as TransferSvg } from '../../../assets/svg/transfer.svg'
 import {
@@ -17,12 +18,13 @@ import { useAccount, useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { IS_WEXIN } from '../../../constants'
 import { RoutePath } from '../../../routes'
-import { UnipassConfig } from '../../../utils'
+import { UnipassConfig, verifyCkbAddress } from '../../../utils'
 import { Query, TransactionStatus } from '../../../models'
 import { useQuery } from 'react-query'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 import { Button, Flex } from '@chakra-ui/react'
 import { OffSiteProductInfoButton } from './offSiteProductInfoButton'
+import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -38,11 +40,17 @@ const TranferOrBuy: React.FC<{
   }, [push, uuid, detail])
   const { address } = useAccount()
 
-  const ownCurrentToken =
-    detail &&
-    !isTokenClass(detail) &&
-    detail?.to_address === address &&
-    detail.tx_state === TransactionStatus.Committed
+  const ownCurrentToken = useMemo(() => {
+    return (
+      detail &&
+      !isTokenClass(detail) &&
+      verifyCkbAddress(detail.to_address!) &&
+      addressToScript(detail.to_address!).args ===
+        addressToScript(address).args &&
+      (detail.tx_state === TransactionStatus.Committed ||
+        detail.tx_state === TransactionStatus.Submitting)
+    )
+  }, [detail, address])
 
   const { openOrderDrawer } = useOrderDrawer()
   const setProductId = useSetProductId()
