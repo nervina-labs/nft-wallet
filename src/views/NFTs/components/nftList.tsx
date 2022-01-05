@@ -54,10 +54,13 @@ export const NftList: React.FC<{
 
   const getOwnedData = useCallback(
     async ({ pageParam = 1 }) => {
-      const { data } = await api.getNFTs(pageParam, { address })
+      const { data } = await api.getNFTs(pageParam, {
+        address,
+        exclude_banned: !isHolder,
+      })
       return data
     },
-    [address, api]
+    [address, api, isHolder]
   )
 
   const trackTab = useTrackClick(isHolder ? 'home' : 'collector', 'switchover')
