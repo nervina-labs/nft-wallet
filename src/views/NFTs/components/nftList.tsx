@@ -54,11 +54,9 @@ export const NftList: React.FC<{
 
   const getOwnedData = useCallback(
     async ({ pageParam = 1 }) => {
-      // eslint-disable-next-line no-debugger
-      debugger
       const { data } = await api.getNFTs(pageParam, {
         address,
-        exclude_banned: !isHolder,
+        exclude_banned: isHolder,
       })
       return data
     },
