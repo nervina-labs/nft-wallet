@@ -31,6 +31,7 @@ import { Ranking } from '../views/Ranking'
 import { ExploreAll } from '../views/ExploreAll'
 import { OrderStatus } from '../views/OrderStatus'
 import { Flashsigner } from '../views/Flashsigner'
+import { SendRedEnvelope } from '../views/SendRedEnvelope'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -259,6 +260,12 @@ export const routes: MibaoRouterProps[] = [
     key: 'RedEnvelop',
     path: RoutePath.RedEnvelope,
     params: '/:id',
+  },
+  {
+    component: SendRedEnvelope,
+    exact: true,
+    key: 'SendRedEnvelope',
+    path: RoutePath.RedEnvelope,
   },
   {
     component: Search,

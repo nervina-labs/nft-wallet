@@ -61,6 +61,9 @@ export const Routers: React.FC = () => {
         process: {
           500: '#02C2C6',
         },
+        sendRedEnvelope: {
+          600: '#CAA255',
+        },
       },
     })
   }, [t])
