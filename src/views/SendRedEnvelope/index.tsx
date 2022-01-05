@@ -7,6 +7,7 @@ import {
   BoxProps,
   Button,
   Flex,
+  Grid,
   Input,
   TabPanel,
   TabPanels,
@@ -28,11 +29,18 @@ const formItemProps: BoxProps = {
 }
 
 const RightIcon = styled(RightSvg)`
-  width: 25px;
-  height: 25px;
+  width: 14px;
+  height: 14px;
   position: absolute;
-  top: calc(50% - 12.5px);
-  right: 5px;
+  top: calc(50% - 7px);
+  transform: rotate(180deg);
+  right: 10px;
+`
+
+const LeftIcon = styled(RightSvg)`
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 `
 
 export const SendRedEnvelope: React.FC = () => {
@@ -94,10 +102,30 @@ export const SendRedEnvelope: React.FC = () => {
         <Drawer
           isOpen={isOpenNftList}
           onClose={onCloseNftList}
-          hasCloseBtn
           hasOverlay
           placement="bottom"
           rounded="md"
+          header={
+            <Grid
+              templateColumns="50px calc(100% - 100px) 50px"
+              textAlign="center"
+              lineHeight="30px"
+            >
+              <Flex align="center" onClick={onCloseNftList}>
+                <LeftIcon />
+              </Flex>
+              <Box fontSize="18px">请选择秘宝</Box>
+
+              <Box
+                className="left"
+                onClick={onCloseNftList}
+                fontSize="14px"
+                fontWeight="normal"
+              >
+                确定
+              </Box>
+            </Grid>
+          }
         >
           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
@@ -108,7 +136,7 @@ export const SendRedEnvelope: React.FC = () => {
           culpa qui officia deserunt mollit anim id est laborum.
         </Drawer>
         <Tabs colorScheme="sendRedEnvelope">
-          <TabList justifyContent="center" borderBottom="none" mb="20px">
+          <TabList justifyContent="center" borderBottom="none" mb="25px">
             <Tab px="0" mr="40px" fontSize="14px">
               普通红包
             </Tab>
