@@ -162,6 +162,19 @@ export const routes: MibaoRouterProps[] = [
     params: '/:id',
   },
   {
+    component: Claim,
+    exact: true,
+    key: 'cny2022',
+    path: RoutePath.CNY2022,
+  },
+  {
+    component: Claim,
+    exact: true,
+    key: 'cny2022-with-id',
+    path: RoutePath.CNY2022,
+    params: '/:id',
+  },
+  {
     component: Collection,
     exact: true,
     key: 'Collection',

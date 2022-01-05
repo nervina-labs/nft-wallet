@@ -30,7 +30,10 @@ export interface Auths {
   [key: string]: Profile
 }
 
-const profileAtom = atomWithStorage<Auths | null>('mibao_account_profile', null)
+const profileAtom = atomWithStorage<Auths | null>(
+  'mibao_account_profile_v2',
+  null
+)
 
 export function useProfile() {
   const { address } = useAccount()
