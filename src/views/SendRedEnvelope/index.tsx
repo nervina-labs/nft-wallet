@@ -14,6 +14,8 @@ import {
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { Drawer, Tab, TabList, Tabs } from '@mibao-ui/components'
+import { useInnerSize } from '../../hooks/useInnerSize'
+import { CONTAINER_MAX_WIDTH } from '../../constants'
 
 const formItemProps: BoxProps = {
   rounded: '8px',
@@ -39,6 +41,13 @@ export const SendRedEnvelope: React.FC = () => {
     onOpen: onOpenNftList,
     onClose: onCloseNftList,
   } = useDisclosure()
+  const {
+    isOpen: isOpenMore,
+    onOpen: onOpenMore,
+    onClose: onCloseMore,
+  } = useDisclosure()
+
+  const { width } = useInnerSize()
 
   return (
     <RainbowBackground>
@@ -47,11 +56,41 @@ export const SendRedEnvelope: React.FC = () => {
           transparent
           title="秘宝红包"
           right={
-            <AppbarButton transparent>
+            <AppbarButton transparent onClick={onOpenMore}>
               <MoreSvg />
             </AppbarButton>
           }
         />
+        <Drawer
+          placement="bottom"
+          isOpen={isOpenMore}
+          hasOverlay
+          onClose={onCloseMore}
+          rounded="lg"
+          contentProps={{
+            style: {
+              left: `calc(50% - ${width / 2}px + 20px)`,
+              bottom: '40px',
+              width: 'calc(100% - 40px)',
+              maxWidth: CONTAINER_MAX_WIDTH - 40 + 'px',
+            },
+            textAlign: 'center',
+            borderRadius: '20px',
+          }}
+        >
+          <Box
+            h="50px"
+            lineHeight="50px"
+            borderBottom="1px solid #E1E1E1"
+            fontSize="16px"
+          >
+            红包记录
+          </Box>
+          <Box h="50px" lineHeight="50px" fontSize="16px" onClick={onCloseMore}>
+            取消
+          </Box>
+        </Drawer>
+
         <Drawer
           isOpen={isOpenNftList}
           onClose={onCloseNftList}
