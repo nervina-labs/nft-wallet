@@ -33,11 +33,12 @@ const LinkStyled = styled(Link)`
   display: block;
   background-color: #f9e0b7;
   min-width: 150px;
-  height: 48px;
-  line-height: 48px;
+  height: 40px;
+  line-height: 40px;
   text-align: center;
   border-radius: 8px;
   padding: 0 20px;
+  font-weight: bold;
   :active {
     background-color: #dac4a0;
     transition: 0s;
@@ -231,7 +232,7 @@ export const Records: React.FC<RecordsProps> = ({
       <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="50px" px="20px">
         {promotionCopy}
       </Box>
-      {promotionLink ? (
+      {promotionLink === data?.promotion_link ? (
         <Button
           as="a"
           variant="solid"
@@ -245,12 +246,12 @@ export const Records: React.FC<RecordsProps> = ({
             transition: '0s',
           }}
           href={promotionLink}
-          target={promotionLink === data?.promotion_link ? '_blank' : undefined}
+          target="_blank"
         >
           {t('red-envelope.promotion-link')}
         </Button>
       ) : (
-        <LinkStyled to={RoutePath.NFTs}>
+        <LinkStyled to={promotionLink || RoutePath.NFTs}>
           {t('red-envelope.promotion-link')}
         </LinkStyled>
       )}
