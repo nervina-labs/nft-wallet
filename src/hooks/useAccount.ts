@@ -24,7 +24,7 @@ export enum WalletType {
   Flashsigner = 'flashsigner',
 }
 
-export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
+export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key_v2'
 
 export interface UnipassAccount {
   address: string
