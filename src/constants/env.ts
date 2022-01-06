@@ -78,9 +78,11 @@ const FLASH_SIGNER_DEV_URL =
     ? 'http://localhost:3000'
     : 'https://flashsigner.work'
 
-export const FLASH_SIGNER_URL = IS_MAINNET
-  ? 'https://flashsigner.com'
-  : FLASH_SIGNER_DEV_URL
+export const FLASH_SIGNER_URL =
+  process.env.REACT_APP_FLASH_SIGNER_URL ??
+  (IS_MAINNET && process.env.NODE_ENV !== 'development'
+    ? 'https://flashsigner.com'
+    : FLASH_SIGNER_DEV_URL)
 
 export const RED_ENVELOP_APP_URL = IS_MAINNET
   ? 'https://gift.unipass.xyz'
