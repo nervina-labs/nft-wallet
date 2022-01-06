@@ -44,6 +44,7 @@ export interface InfiniteListProps<
   pullDownToRefresh?: boolean
   emptyElement?: React.ReactNode
   noMoreElement: React.ReactNode
+  scrollableTarget?: React.ReactNode | string
   loader?: React.ReactNode
   pullDownToRefreshContent?: React.ReactNode
   releaseToRefreshContent?: React.ReactNode
@@ -126,6 +127,7 @@ export function InfiniteList<
   pullDownToRefresh = !IS_WEXIN,
   pullDownToRefreshThreshold = 80,
   enableQuery,
+  scrollableTarget,
   columnCount = 1,
   gap = '10px',
   style,
@@ -210,6 +212,7 @@ export function InfiniteList<
               {dataLength <= 5 ? ' ' : noMoreElement}
             </ListDesciption>
           }
+          scrollableTarget={scrollableTarget}
           style={style}
         >
           {columnCount === 1 ? (

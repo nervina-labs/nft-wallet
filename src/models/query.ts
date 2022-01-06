@@ -28,5 +28,6 @@ export enum Query {
   RankingList = 'RankingList',
   RedEnvelope = 'RedEnvelope',
   RedEnvelopeRecords = 'RedEnvelopeRecords',
+  SendableEnvelopeNfts = 'SendableEnvelopeNfts',
   Search = 'Search',
 }

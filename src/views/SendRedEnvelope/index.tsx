@@ -1,13 +1,12 @@
 import { Appbar, AppbarButton } from '../../components/Appbar'
 import { RainbowBackground } from '../../components/RainbowBackground'
 import { ReactComponent as MoreSvg } from '../../assets/svg/more.svg'
-import { ReactComponent as RightSvg } from '../../assets/svg/right.svg'
+import { ReactComponent as LeftSvg } from '../../assets/svg/left.svg'
 import {
   Box,
   BoxProps,
   Button,
   Flex,
-  Grid,
   Input,
   TabPanel,
   TabPanels,
@@ -17,6 +16,9 @@ import styled from '@emotion/styled'
 import { Drawer, Tab, TabList, Tabs } from '@mibao-ui/components'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
+import { NftListDrawer } from './components/nftListDrawer'
+import { useState } from 'react'
+import { limitNumberInput } from '../../utils'
 
 const formItemProps: BoxProps = {
   rounded: '8px',
@@ -28,19 +30,13 @@ const formItemProps: BoxProps = {
   fontSize: '16px',
 }
 
-const RightIcon = styled(RightSvg)`
+const RightIcon = styled(LeftSvg)`
   width: 14px;
   height: 14px;
   position: absolute;
   top: calc(50% - 7px);
   transform: rotate(180deg);
   right: 10px;
-`
-
-const LeftIcon = styled(RightSvg)`
-  width: 16px;
-  height: 16px;
-  object-fit: contain;
 `
 
 export const SendRedEnvelope: React.FC = () => {
@@ -54,8 +50,10 @@ export const SendRedEnvelope: React.FC = () => {
     onOpen: onOpenMore,
     onClose: onCloseMore,
   } = useDisclosure()
-
   const { width } = useInnerSize()
+  const modalLeft = `calc(50% - ${Math.min(width, CONTAINER_MAX_WIDTH) / 2}px)`
+  const [selectedNftUuids, setSelectedNftUuids] = useState<string[]>([])
+  const [redEnvelopeCount, setRedEnvelopeCount] = useState('')
 
   return (
     <RainbowBackground>
@@ -77,7 +75,7 @@ export const SendRedEnvelope: React.FC = () => {
           rounded="lg"
           contentProps={{
             style: {
-              left: `calc(50% - ${width / 2}px + 20px)`,
+              left: `calc(${modalLeft} + 20px)`,
               bottom: '40px',
               width: 'calc(100% - 40px)',
               maxWidth: CONTAINER_MAX_WIDTH - 40 + 'px',
@@ -99,42 +97,11 @@ export const SendRedEnvelope: React.FC = () => {
           </Box>
         </Drawer>
 
-        <Drawer
+        <NftListDrawer
           isOpen={isOpenNftList}
           onClose={onCloseNftList}
-          hasOverlay
-          placement="bottom"
-          rounded="md"
-          header={
-            <Grid
-              templateColumns="50px calc(100% - 100px) 50px"
-              textAlign="center"
-              lineHeight="30px"
-            >
-              <Flex align="center" onClick={onCloseNftList}>
-                <LeftIcon />
-              </Flex>
-              <Box fontSize="18px">请选择秘宝</Box>
-
-              <Box
-                className="left"
-                onClick={onCloseNftList}
-                fontSize="14px"
-                fontWeight="normal"
-              >
-                确定
-              </Box>
-            </Grid>
-          }
-        >
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </Drawer>
+          onChange={setSelectedNftUuids}
+        />
         <Tabs colorScheme="sendRedEnvelope">
           <TabList justifyContent="center" borderBottom="none" mb="25px">
             <Tab px="0" mr="40px" fontSize="14px">
@@ -162,6 +129,16 @@ export const SendRedEnvelope: React.FC = () => {
                 _focus={{
                   border: 'none',
                 }}
+                value={redEnvelopeCount}
+                onChange={(e) =>
+                  setRedEnvelopeCount(
+                    limitNumberInput(
+                      e,
+                      redEnvelopeCount,
+                      selectedNftUuids.length
+                    )
+                  )
+                }
               />
               个
             </Flex>
