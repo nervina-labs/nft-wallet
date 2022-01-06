@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { HiddenBar, HiddenBarFill } from '../../components/HiddenBar'
+import { HiddenBarFill } from '../../components/HiddenBar'
 import { MainContainer } from '../../styles'
 import Exhibition from '../../assets/img/exhibition2.png'
 import PlzWait from '../../assets/img/plz-wait.png'
@@ -297,7 +297,6 @@ export const Apps: React.FC = () => {
       <br />
       <br />
       <br />
-      <HiddenBar alwaysShow />
       <HiddenBarFill />
     </Container>
   )

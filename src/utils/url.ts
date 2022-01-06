@@ -150,3 +150,15 @@ export function isUsdz(url?: string) {
   if (!url) return url
   return /.usdz$/.test(url)
 }
+
+export function removeCurrentUrlOrigin(url: string) {
+  try {
+    const urlObj = new URL(url)
+    if (urlObj.origin !== location.origin) {
+      return url
+    }
+    return urlObj.pathname + urlObj.search
+  } catch {
+    return url
+  }
+}
