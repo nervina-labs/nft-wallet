@@ -67,6 +67,7 @@ import {
   RedEnvelopeRecords,
   RedEnvelopeResponse,
 } from '../models/red-envelope'
+import { isPwTransaction } from '../utils'
 
 function randomid(length = 10): string {
   let result = ''
@@ -371,11 +372,13 @@ export class ServerWalletAPI {
 
   async transfer(
     uuid: string,
-    tx: PwTransaction,
+    tx: PwTransaction | RPC.RawTransaction,
     toAddress: string,
     sig?: string
   ): Promise<AxiosResponse<{ message: number }>> {
-    const rawTx = transformers.TransformTransaction(tx) as any
+    const rawTx = isPwTransaction(tx)
+      ? (transformers.TransformTransaction(tx) as RPC.RawTransaction)
+      : tx
     if (sig) {
       const witnessArgs: WitnessArgs = {
         lock: sig,

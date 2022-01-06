@@ -61,7 +61,10 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
   )
   usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)
   const [issuerName] = useTextEllipsis(username, 300)
-  const [descEllipsis] = useTextEllipsis(desc ?? '', 900)
+  const [descEllipsis] = useTextEllipsis(
+    desc.split('\n').slice(0, 5).join('\n') ?? '',
+    800
+  )
   const [isCoverImageError, setIsCoverImageError] = useState(false)
 
   return (

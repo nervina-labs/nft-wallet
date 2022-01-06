@@ -30,6 +30,7 @@ import { OrderDetail } from '../views/OrderDetail'
 import { Ranking } from '../views/Ranking'
 import { ExploreAll } from '../views/ExploreAll'
 import { OrderStatus } from '../views/OrderStatus'
+import { Flashsigner } from '../views/Flashsigner'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -160,6 +161,19 @@ export const routes: MibaoRouterProps[] = [
     params: '/:id',
   },
   {
+    component: Claim,
+    exact: true,
+    key: 'cny2022',
+    path: RoutePath.CNY2022,
+  },
+  {
+    component: Claim,
+    exact: true,
+    key: 'cny2022-with-id',
+    path: RoutePath.CNY2022,
+    params: '/:id',
+  },
+  {
     component: Collection,
     exact: true,
     key: 'Collection',
@@ -264,5 +278,11 @@ export const routes: MibaoRouterProps[] = [
     exact: false,
     key: 'Search',
     path: RoutePath.Search,
+  },
+  {
+    component: Flashsigner,
+    exact: true,
+    key: 'Flashsigner',
+    path: RoutePath.Flashsigner,
   },
 ]

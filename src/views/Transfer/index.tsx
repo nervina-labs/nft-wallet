@@ -15,11 +15,11 @@ import { ReactComponent as ScanSvg } from '../../assets/svg/scan.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import TextareaAutosize from 'react-textarea-autosize'
 import {
-  verifyEthContractAddress,
   verifyCkbAddress,
   verifyEthAddress,
   verifyDasAddress,
   generateUnipassSignTxUrl,
+  generateFlashsignerSignTxUrl,
 } from '../../utils'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
@@ -64,6 +64,7 @@ export interface TransferState {
   nftDetail?: NFTDetail
   signature?: string
   prevState?: UnipassTransferNftState
+  tx?: RPC.RawTransaction
 }
 
 enum AlertLevel {
@@ -123,8 +124,11 @@ export const Transfer: React.FC = () => {
   const { address, walletType, pubkey } = useAccount()
   const provider = useProvider()
   const prevState = routerLocation.state?.prevState
-  const hasSignature = !!routerLocation.state?.signature
-  const [isDrawerOpen, setIsDrawerOpen] = useState(hasSignature ?? false)
+  const isRedirectFromSigner =
+    !!routerLocation.state?.signature || !!routerLocation.state?.tx
+  const [isDrawerOpen, setIsDrawerOpen] = useState(
+    isRedirectFromSigner ?? false
+  )
   const [ckbAddress, setCkbAddress] = useState(prevState?.ckbAddress ?? '')
   const [isSendingNFT, setIsSendingNFT] = useState(false)
   const [isSendDialogSuccess, setIsSendDialogSuccess] = useState(false)
@@ -162,10 +166,6 @@ export const Transfer: React.FC = () => {
   const ckbAddressType = useMemo(() => {
     return verifyAddress(ckbAddress, address)
   }, [ckbAddress, address])
-
-  const isEthAddress = useMemo(() => {
-    return ckbAddressType === AddressVerifiedType.eth
-  }, [ckbAddressType])
 
   const isDasAddress = useMemo(() => {
     return ckbAddressType === AddressVerifiedType.das
@@ -229,35 +229,64 @@ export const Transfer: React.FC = () => {
     [confirmDialog, buildFailedMessage, history, t]
   )
   const transferOnClick = useCallback(async () => {
-    if (isEthAddress || (isDasAddress && verifyEthAddress(finalUsedAddress))) {
-      const isContract = await verifyEthContractAddress(finalUsedAddress)
-      if (isContract) {
-        confirmDialog({
-          type: 'warning',
-          title: buildFailedMessage(FailedMessage.ContractAddress),
-        })
-        return
-      }
-    }
     setIsDrawerOpen(true)
-  }, [
-    isEthAddress,
-    finalUsedAddress,
-    isDasAddress,
-    confirmDialog,
-    buildFailedMessage,
-  ])
+  }, [])
   const { id } = useParams<{ id: string }>()
+
+  const getAuth = useGetAndSetAuth()
+  const { data: remoteNftDetail, failureCount } = useQuery(
+    [Query.NFTDetail, id, api, getAuth],
+    async () => {
+      const auth = await getAuth()
+      const { data } = await api.getNFTDetail(id, auth)
+      return data
+    },
+    { enabled: id != null && routerLocation.state?.nftDetail == null }
+  )
+
+  const nftDetail = useMemo(() => {
+    return routerLocation.state?.nftDetail ?? remoteNftDetail
+  }, [routerLocation.state, remoteNftDetail])
 
   const sendNFT = useCallback(async () => {
     setIsSendingNFT(true)
     try {
       const isFinalUsedAddressTypeEth =
         finalUsedAddressType === AddressVerifiedType.eth
-      const sentAddress = new Address(
-        finalUsedAddress,
-        isFinalUsedAddressTypeEth ? AddressType.eth : AddressType.ckb
-      ).toCKBAddress()
+      const sentAddress = isFinalUsedAddressTypeEth
+        ? new Address(finalUsedAddress, AddressType.eth).toCKBAddress()
+        : finalUsedAddress
+      if (walletType === WalletType.Flashsigner) {
+        const { tx } = routerLocation.state ?? {}
+        if (tx) {
+          await api.transfer(id, tx, sentAddress).catch((err) => {
+            stopTranfer(false, FailedMessage.TranferFail)
+            console.log(err)
+            throw err
+          })
+          stopTranfer(true)
+        } else {
+          const url = `${location.origin}${RoutePath.Flashsigner}`
+          location.href = generateFlashsignerSignTxUrl(
+            url,
+            url,
+            pubkey,
+            '',
+            {
+              uuid: id,
+              ckbAddress,
+            },
+            {
+              class_id: nftDetail?.class_id,
+              issuer_id: nftDetail?.n_issuer_id,
+              token_id: nftDetail?.n_token_id,
+              from_address: address,
+              to_address: ckbAddress,
+            }
+          )
+        }
+        return
+      }
       const { tx } = await api
         .getTransferNftTransaction(
           id,
@@ -313,6 +342,9 @@ export const Transfer: React.FC = () => {
     routerLocation.state,
     pubkey,
     stopTranfer,
+    address,
+    nftDetail,
+    ckbAddress,
   ])
 
   const closeDrawer = (): void => setIsDrawerOpen(false)
@@ -353,27 +385,12 @@ export const Transfer: React.FC = () => {
     }
   }, [])
 
-  const getAuth = useGetAndSetAuth()
-  const { data: remoteNftDetail, failureCount } = useQuery(
-    [Query.NFTDetail, id, api, getAuth],
-    async () => {
-      const auth = await getAuth()
-      const { data } = await api.getNFTDetail(id, auth)
-      return data
-    },
-    { enabled: id != null && routerLocation.state?.nftDetail == null }
-  )
-
-  const nftDetail = useMemo(() => {
-    return routerLocation.state?.nftDetail ?? remoteNftDetail
-  }, [routerLocation.state, remoteNftDetail])
-
   const initSending = useRef(false)
   useEffect(() => {
-    const { prevState, signature } = routerLocation.state ?? {}
+    const { prevState, signature, tx } = routerLocation.state ?? {}
     if (
       prevState &&
-      signature &&
+      (signature || tx) &&
       nftDetail &&
       isDrawerOpen &&
       !initSending.current
@@ -425,7 +442,8 @@ export const Transfer: React.FC = () => {
       }
       if (
         (addr.startsWith('ckt') || addr.startsWith('ckb')) &&
-        addr.length !== 95
+        addr.length !== 95 &&
+        addr.length !== 97
       ) {
         return [AlertLevel.info, t('transfer.error.short-address')]
       }
@@ -447,7 +465,9 @@ export const Transfer: React.FC = () => {
     const showAlert =
       (!valid && finalUsedAddress !== '') ||
       (finalUsedAddressType === AddressVerifiedType.eth && valid) ||
-      (valid && finalUsedAddress.length !== 95)
+      (valid &&
+        finalUsedAddress.length !== 95 &&
+        finalUsedAddress.length !== 97)
     let level = ''
     let alertMsg = ''
     if (showAlert) {

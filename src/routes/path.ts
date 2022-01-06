@@ -19,6 +19,7 @@ export enum RoutePath {
   License = '/license',
   AddressCollector = '/addresses',
   Claim = '/claim',
+  CNY2022 = '/cny2022',
   Collection = '/explore/collection',
   RankingList = '/explore/ranking',
   Issuer = '/issuer',
@@ -38,6 +39,7 @@ export enum RoutePath {
   OrderStatus = '/order-status',
   RedEnvelope = '/red-envelope',
   Search = '/search',
+  Flashsigner = '/flashsigner',
 }
 
 export enum ProfilePath {

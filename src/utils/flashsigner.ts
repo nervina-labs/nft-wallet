@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/no-extraneous-class */
-import { Transaction as PwTransaction } from '@lay2/pw-core'
-import { UNIPASS_URL } from '../constants'
-import { UnipassAction } from '../models/unipass'
+import { FLASH_SIGNER_URL } from '../constants'
+import { FlashsignerAction } from '../models/flashsigner'
 import i18n from '../i18n'
+import { UnipassConfig } from './unipass'
 
-export function generateUnipassUrl(
-  action: UnipassAction,
+export function generateFlashsignerUrl(
+  action: FlashsignerAction,
   successURL: string,
   failURL: string,
   pubkey?: string,
   message?: string,
-  state?: Record<string, string>
+  state?: Record<string, string>,
+  extra: Record<string, any> = {}
 ): string {
   const url = new URL(
-    `${UNIPASS_URL}/${
-      action === UnipassAction.Login ? UnipassAction.Login : UnipassAction.Sign
+    `${FLASH_SIGNER_URL}/${
+      action === FlashsignerAction.Login ? 'connect' : 'transfer-mnft'
     }`
   )
   const surl = new URL(successURL)
@@ -26,7 +27,10 @@ export function generateUnipassUrl(
     furl.searchParams.set('redirect', redirectUri)
     failURL = furl.href
   }
-  if (action === UnipassAction.SignTx || action === UnipassAction.Redeem) {
+  if (
+    action === FlashsignerAction.SignTx ||
+    action === FlashsignerAction.Redeem
+  ) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     surl.searchParams.set(
       'prev_state',
@@ -61,24 +65,36 @@ export function generateUnipassUrl(
   for (const key of Object.keys(params)) {
     url.searchParams.set(key, params[key])
   }
+  for (const key in extra) {
+    if (Object.prototype.hasOwnProperty.call(extra, key)) {
+      const val = extra[key]
+      url.searchParams.set(key, val)
+    }
+  }
+  url.searchParams.set(
+    'dapp_name',
+    i18n.t('common.title', { ns: 'translations' })
+  )
+  url.searchParams.set('dapp_logo', `${window.location.origin}/logo192.png`)
+  url.searchParams.set('locale', i18n.language)
   return url.href
 }
 
-export function generateUnipassLoginUrl(
+export function generateFlashsignerLoginUrl(
   successURL: string,
   failURL: string
 ): string {
-  return generateUnipassUrl(UnipassAction.Login, successURL, failURL)
+  return generateFlashsignerUrl(FlashsignerAction.Login, successURL, failURL)
 }
 
-export function generateUnipassSignUrl(
+export function generateFlashsignerSignUrl(
   successURL: string,
   failURL: string,
   pubkey?: string,
   message?: string
 ): string {
-  return generateUnipassUrl(
-    UnipassAction.Sign,
+  return generateFlashsignerUrl(
+    FlashsignerAction.Sign,
     successURL,
     failURL,
     pubkey,
@@ -86,56 +102,38 @@ export function generateUnipassSignUrl(
   )
 }
 
-export function generateUnipassSignTxUrl(
+export function generateFlashsignerSignTxUrl(
   successURL: string,
   failURL: string,
   pubkey?: string,
   message?: string,
-  state?: Record<string, string>
+  state?: Record<string, string>,
+  extra?: Record<string, any>
 ): string {
-  return generateUnipassUrl(
-    UnipassAction.SignTx,
+  return generateFlashsignerUrl(
+    FlashsignerAction.SignTx,
     successURL,
     failURL,
     pubkey,
     message,
-    state
+    state,
+    extra
   )
 }
 
-export function generateUnipassRedeemUrl(
+export function generateFlashsignerRedeemUrl(
   successURL: string,
   failURL: string,
   pubkey?: string,
   message?: string,
   state?: Record<string, string>
 ) {
-  return generateUnipassUrl(
-    UnipassAction.Redeem,
+  return generateFlashsignerUrl(
+    FlashsignerAction.Redeem,
     successURL,
     failURL,
     pubkey,
     message,
     state
   )
-}
-
-export class UnipassConfig {
-  static redirectUri: string | null = null
-
-  static setRedirectUri(path: string): void {
-    UnipassConfig.redirectUri = path
-  }
-
-  static getRedirectUri(): string | null {
-    return UnipassConfig.redirectUri
-  }
-
-  static clear(): void {
-    UnipassConfig.redirectUri = null
-  }
-}
-
-export function isPwTransaction(tx: any): tx is PwTransaction {
-  return tx?.raw != null
 }

@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Box, Like } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { useLike } from '../../../hooks/useLikeStatus'
 import { isTokenClass, TokenClass } from '../../../models/class-list'
 import { NFTDetail } from '../../../models/nft'
 import { useHistory } from 'react-router-dom'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { ReactComponent as BuySvg } from '../../../assets/svg/buy.svg'
 import { ReactComponent as TransferSvg } from '../../../assets/svg/transfer.svg'
 import {
@@ -13,16 +14,17 @@ import {
   useSetProductId,
 } from '../../../hooks/useOrder'
 import { useUpdateAtom } from 'jotai/utils'
-import { useAccountStatus, useAPI } from '../../../hooks/useAccount'
+import { useAccount, useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { IS_WEXIN } from '../../../constants'
 import { RoutePath } from '../../../routes'
-import { UnipassConfig } from '../../../utils'
-import { Query } from '../../../models'
+import { UnipassConfig, verifyCkbAddress } from '../../../utils'
+import { Query, TransactionStatus } from '../../../models'
 import { useQuery } from 'react-query'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 import { Button, Flex } from '@chakra-ui/react'
 import { OffSiteProductInfoButton } from './offSiteProductInfoButton'
+import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -36,10 +38,20 @@ const TranferOrBuy: React.FC<{
       nftDetail: detail,
     })
   }, [push, uuid, detail])
+  const { address } = useAccount()
 
-  const ownCurrentToken =
-    typeof detail?.class_card_back_content !== 'undefined' ||
-    typeof detail?.card_back_content !== 'undefined'
+  const ownCurrentToken = useMemo(() => {
+    return (
+      detail &&
+      address &&
+      !isTokenClass(detail) &&
+      verifyCkbAddress(detail.to_address!) &&
+      addressToScript(detail.to_address!).args ===
+        addressToScript(address).args &&
+      (detail.tx_state === TransactionStatus.Committed ||
+        detail.tx_state === TransactionStatus.Submitting)
+    )
+  }, [detail, address])
 
   const { openOrderDrawer } = useOrderDrawer()
   const setProductId = useSetProductId()

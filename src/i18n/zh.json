@@ -100,6 +100,8 @@
       "connect": {
         "unipass": "连接 UniPass",
         "or-use-email": "（或通过 Email 注册）",
+        "or-use-phone": "（或通过手机号注册）",
+        "flashsigner": "连接 Flashsigner",
         "metamask": "连接以太坊环境",
         "wallet-connect": "连接 Wallet Connect",
         "connect": "连接"
@@ -153,7 +155,7 @@
         "self": "无法转让秘宝给自己",
         "das": "请输入 DAS 地址并选择一个解析结果",
         "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「秘宝账户」应用，方可查看收到的秘宝",
-        "short-address": "当前接收方地址不是在 NFT 应用生成的地址，切勿使用交易所等应用生成的 CKB 地址",
+        "short-address": "当前接收方地址不是在秘宝应用生成的地址，切勿使用交易所等应用生成的 CKB 地址",
         "common": "请输入正确的 CKB 地址/以太坊地址/DAS 账户",
         "sign-fail": "签名失败，请重新签名",
         "tranfer-fail": "发送失败，请检查当前网络情况，重新发送",
@@ -429,6 +431,7 @@
       "title": "兑换中心",
       "count": "{{count}} 个",
       "redeemed": "已兑",
+      "flashsigner": "Flashsigner 用户目前暂时不支持参与兑换。近期会支持，请关注社区通知",
       "nft-prize": "奖品包含下面所有秘宝",
       "blind-prize": "奖品随机包含下面的 {{count}} 个秘宝",
       "other-prize": "发起人会在您提交兑换后根据您提供的接收信息进行承兑",
