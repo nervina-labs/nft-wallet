@@ -17,7 +17,7 @@ import { Drawer, Tab, TabList, Tabs } from '@mibao-ui/components'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { NftListDrawer } from './components/nftListDrawer'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { limitNumberInput } from '../../utils'
 
 const formItemProps: BoxProps = {
@@ -54,6 +54,27 @@ export const SendRedEnvelope: React.FC = () => {
   const modalLeft = `calc(50% - ${Math.min(width, CONTAINER_MAX_WIDTH) / 2}px)`
   const [selectedNftUuids, setSelectedNftUuids] = useState<string[]>([])
   const [redEnvelopeCount, setRedEnvelopeCount] = useState('')
+  const [greeting, setGreeting] = useState('')
+  const [puzzleQuestion, setPuzzleQuestion] = useState('')
+  const [puzzleAnswer, setPuzzleAnswer] = useState('')
+
+  const onSubmit = useCallback(() => {
+    // TODO: Validation data
+    // TODO: API
+    console.log({
+      selectedNftUuids,
+      redEnvelopeCount,
+      greeting,
+      puzzleQuestion,
+      puzzleAnswer,
+    })
+  }, [
+    greeting,
+    puzzleAnswer,
+    puzzleQuestion,
+    redEnvelopeCount,
+    selectedNftUuids,
+  ])
 
   return (
     <RainbowBackground>
@@ -156,6 +177,8 @@ export const SendRedEnvelope: React.FC = () => {
               _focus={{
                 border: 'none',
               }}
+              value={greeting}
+              onChange={(e) => setGreeting(e.currentTarget.value)}
             />
           </Flex>
           <TabPanels>
@@ -177,6 +200,8 @@ export const SendRedEnvelope: React.FC = () => {
                   outline: 'none',
                 }}
                 placeholder="红包谜题"
+                value={puzzleQuestion}
+                onChange={(e) => setPuzzleQuestion(e.currentTarget.value)}
               />
               <Box color="#777E90" fontSize="12px" mb="4px" mt="16px">
                 输入红包谜底
@@ -194,6 +219,8 @@ export const SendRedEnvelope: React.FC = () => {
                   outline: 'none',
                 }}
                 placeholder="红包谜底"
+                value={puzzleAnswer}
+                onChange={(e) => setPuzzleAnswer(e.currentTarget.value)}
               />
               <Box color="#777E90" fontSize="12px" mt="8px" textAlign="center">
                 好友输入谜底即可领取秘宝
@@ -209,6 +236,7 @@ export const SendRedEnvelope: React.FC = () => {
           h="48px"
           mt="auto"
           mb="calc(15px - var(--safe-area-inset-bottom))"
+          onClick={onSubmit}
         >
           生成秘宝红包
         </Button>
