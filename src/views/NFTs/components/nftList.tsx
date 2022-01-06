@@ -54,10 +54,13 @@ export const NftList: React.FC<{
 
   const getOwnedData = useCallback(
     async ({ pageParam = 1 }) => {
-      const { data } = await api.getNFTs(pageParam, {
+      const options: Record<string, any> = {
         address,
-        exclude_banned: isHolder,
-      })
+      }
+      if (isHolder) {
+        options.exclude_banned = true
+      }
+      const { data } = await api.getNFTs(pageParam, options)
       return data
     },
     [address, api, isHolder]
