@@ -54,10 +54,13 @@ export const Appbar: React.FC<{
   const { data } = useQuery(
     [Query.NFTList, address, 'owned'],
     async () => {
-      const { data } = await api.getNFTs(1, {
+      const options: Record<string, any> = {
         address,
-        exclude_banned: isHolder,
-      })
+      }
+      if (isHolder) {
+        options.exclude_banned = true
+      }
+      const { data } = await api.getNFTs(1, options)
       return { pages: [data] }
     },
     {
