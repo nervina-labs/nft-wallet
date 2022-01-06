@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 import { Query } from '../../models'
 import { Redirect, useParams, useRouteMatch } from 'react-router'
 import { RoutePath } from '../../routes'
-import { HiddenBar, HiddenBarFill } from '../../components/HiddenBar'
+import { HiddenBarFill } from '../../components/HiddenBar'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { Container } from './styled'
 import { Intro } from '../../components/Intro'
@@ -76,7 +76,6 @@ export const NFTs: React.FC = () => {
       {!isHolder && (
         <>
           <Intro show={showGuide} />
-          <HiddenBar />
           <HiddenBarFill />
         </>
       )}

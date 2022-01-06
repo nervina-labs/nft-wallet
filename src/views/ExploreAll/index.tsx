@@ -1,5 +1,5 @@
 import { MainContainer } from '../../styles'
-import { HiddenBar, HiddenBarFill } from '../../components/HiddenBar'
+import { HiddenBarFill } from '../../components/HiddenBar'
 import { NftSortOrKindList } from '../../components/NftSortOrKindList'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { Link } from 'react-router-dom'
@@ -20,7 +20,6 @@ export const ExploreAll: React.FC = () => {
         <Search noInput />
       </StyledLink>
       <NftSortOrKindList isFirstOpenScrollToTop />
-      <HiddenBar />
       <HiddenBarFill />
     </MainContainer>
   )

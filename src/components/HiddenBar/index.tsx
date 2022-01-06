@@ -122,8 +122,25 @@ export const HiddenBar: React.FC<{ alwaysShow?: boolean }> = ({
   }, [alwaysShow])
   const { location } = useHistory()
   const trackClick = useTrackClick('narbar', 'click')
+
+  const isAllowShowHiddenBar = useMemo(
+    () =>
+      [
+        RoutePath.Explore,
+        RoutePath.ExploreAll,
+        RoutePath.NFTs,
+        RoutePath.Apps,
+      ].some((p) => location.pathname.startsWith(p)),
+    [location.pathname]
+  )
+
+  const isHidden = isHide || !isAllowShowHiddenBar
   return (
-    <Container spacing="50px" direction="row" className={isHide ? 'hide' : ''}>
+    <Container
+      spacing="50px"
+      direction="row"
+      className={isHidden ? 'hide' : ''}
+    >
       {items.map((item, i) => (
         <Link
           to={{
