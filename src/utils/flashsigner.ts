@@ -75,7 +75,7 @@ export function generateFlashsignerUrl(
     'dapp_name',
     i18n.t('common.title', { ns: 'translations' })
   )
-  url.searchParams.set('dapp_logo', `${window.location.origin}/logo192.png`)
+  url.searchParams.set('dapp_logo', `${window.location.origin}/icons/192.png`)
   url.searchParams.set('locale', i18n.language)
   return url.href
 }
