@@ -40,7 +40,7 @@ export const AccountChange: React.FC = ({ children }) => {
       address &&
       prevAddress !== address &&
       walletType &&
-      walletType !== WalletType.Unipass
+      walletType === WalletType.Metamask
     ) {
       history.push(RoutePath.NFTs)
     }

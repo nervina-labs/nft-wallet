@@ -41,6 +41,21 @@ export const IS_SAFARI =
 
 export const IS_WEBKIT = BOWSER_BROWSER.getEngineName() === 'WebKit'
 
+const w = window as any
+
+export const IS_MOBILE =
+  navigator.userAgent.match(
+    /Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i
+  ) !== null
+
+const IS_STANDALONE =
+  window.matchMedia('(display-mode: standalone)').matches ||
+  (window.navigator as any).standalone ||
+  document.referrer.includes('android-app://')
+
+export const IS_MOBILE_ETH_WALLET =
+  (w.ethereum || w.web3) && IS_MOBILE && IS_STANDALONE
+
 export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 
 export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE
@@ -57,6 +72,17 @@ export const OSS_IMG_HOSTS = [
 export const UNIPASS_URL = IS_MAINNET
   ? 'https://unipass.xyz'
   : 'https://t.unipass.xyz'
+
+const FLASH_SIGNER_DEV_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://flashsigner.work'
+
+export const FLASH_SIGNER_URL =
+  process.env.REACT_APP_FLASH_SIGNER_URL ??
+  (IS_MAINNET && process.env.NODE_ENV !== 'development'
+    ? 'https://flashsigner.com'
+    : FLASH_SIGNER_DEV_URL)
 
 export const RED_ENVELOP_APP_URL = IS_MAINNET
   ? 'https://gift.unipass.xyz'

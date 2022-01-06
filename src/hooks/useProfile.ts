@@ -23,25 +23,33 @@ export interface Profile {
   description?: string
   avatar?: string
   auth?: string
+  message?: string
 }
 
 export interface Auths {
   [key: string]: Profile
 }
 
-const profileAtom = atomWithStorage<Auths | null>('mibao_account_profile', null)
+const profileAtom = atomWithStorage<Auths | null>(
+  'mibao_account_profile_v2',
+  null
+)
 
 export function useProfile() {
   const { address } = useAccount()
   const [profile, _setProfile] = useAtom(profileAtom)
 
   const setProfile = useCallback(
-    (p: Partial<Profile>) => {
-      return _setProfile((pp) => {
+    (p: Partial<Profile>, addr = '') => {
+      return _setProfile((prevProfile) => {
+        const auth = prevProfile?.[address || addr]
         return {
-          ...pp,
+          ...prevProfile,
           ...{
-            [address]: p,
+            [address || addr]: {
+              ...auth,
+              ...p,
+            },
           },
         }
       })
@@ -63,36 +71,51 @@ export function useProfile() {
   }
 }
 
+export function createMessage() {
+  return {
+    origin: location.origin,
+    timestamp: `${Date.now()}`,
+  }
+}
+
 export function useGetAndSetAuth(): () => Promise<Auth> {
   const { profile, setProfile } = useProfile()
   const signMessage = useSignMessage()
   const { address, walletType } = useAccount()
-
   return useAtomCallback(
     useCallback(
       async (get) => {
         const provider = get(providerAtom)
-        let signature = profile?.[address]?.auth
+        const auth = profile?.[address]
+        let signature = auth?.auth
+        let message = auth?.message
+        if (!message) {
+          message = JSON.stringify(createMessage())
+          setProfile({
+            message,
+          })
+        }
         if (!signature) {
           UnipassConfig.setRedirectUri(location.pathname + location.search)
-          signature = await signMessage(address)
+          signature = await signMessage(message)
           // we don't need set unipass profile auth in here
           if (signature.includes('N/A') || walletType === WalletType.Unipass) {
             throw new Error('signing: user denied')
           } else {
             setProfile({
               auth: signature,
+              message,
             })
           }
         }
 
         const addr =
-          walletType === WalletType.Unipass
+          walletType !== WalletType.Metamask
             ? address
             : (provider?.address?.addressString as string)
         return {
           address: addr,
-          message: address,
+          message,
           signature,
         }
       },

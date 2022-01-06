@@ -11,7 +11,7 @@ export const Footer: React.FC<{
   const { t } = useTranslation('translations')
   return (
     <Flex justify="space-between" mt="auto">
-      <Image src={Logo} w="40px" h="40px" />
+      <Image src={Logo} w="40px" h="40px" objectFit="contain" />
 
       <Box
         fontSize="12px"

@@ -39,6 +39,7 @@ export enum RoutePath {
   OrderStatus = '/order-status',
   RedEnvelope = '/red-envelope',
   Search = '/search',
+  Flashsigner = '/flashsigner',
 }
 
 export enum ProfilePath {
