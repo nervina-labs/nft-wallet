@@ -45,15 +45,23 @@ export const RouteSwitch: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    if (isLite && !isStarted) {
-      setStarted(true)
-      if (!isLogined) {
-        return replace(RoutePath.Login)
-      } else {
-        return replace(RoutePath.NFTs)
-      }
+    if (isLite && isStarted && !isLogined) {
+      setStarted(false)
     }
-  }, [isLite, isLogined, isStarted, replace])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLogined])
+
+  useEffect(() => {
+    if (!isLite) return
+    if (isStarted) return
+    setStarted(true)
+    if (!isLogined) {
+      return replace(RoutePath.Login)
+    } else {
+      return replace(RoutePath.NFTs)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLite, isLogined, isStarted])
 
   return (
     <>
