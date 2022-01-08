@@ -17,9 +17,10 @@ export enum WalletType {
   Unipass = 'Unipass',
   Metamask = 'Metamask',
   WalletConnect = 'WalletConnect',
+  Flashsigner = 'flashsigner',
 }
 
-export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key'
+export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key_v2'
 
 export interface UnipassAccount {
   address: string
@@ -29,9 +30,9 @@ export interface UnipassAccount {
   expireTime?: string
 }
 
-const providerAtom = atom<Provider | null>(null)
+export const providerAtom = atom<Provider | null>(null)
 
-const accountAtom = atomWithStorage<UnipassAccount | null>(
+export const accountAtom = atomWithStorage<UnipassAccount | null>(
   UNIPASS_ACCOUNT_KEY,
   null
 )
@@ -105,7 +106,7 @@ export function useSetAccount() {
           : {
               ...prevAccount,
               ...account,
-              expireTime: dayjs().add(1, 'day').toISOString(),
+              expireTime: dayjs().add(7, 'day').toISOString(),
             }
       })
     },
@@ -133,10 +134,9 @@ export function useLogin() {
   const { walletType } = useAccount()
   const setAccount = useSetAccount()
   const [provider, setProvider] = useAtom(providerAtom)
-
   const web3WalletAddressOnChange = useCallback(
     (addr?: Address) => {
-      if (walletType === WalletType.Unipass) {
+      if (walletType !== WalletType.Metamask) {
         return
       }
       if (!addr) {

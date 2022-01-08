@@ -1,16 +1,17 @@
 import { useAtom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithStorage, useAtomCallback } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import i18n from '../i18n'
 import { Auth, User } from '../models/user'
+import { UnipassConfig } from '../utils'
 import {
+  providerAtom,
   useAccount,
   useAPI,
-  useProvider,
   useSignMessage,
   WalletType,
 } from './useAccount'
-import { useSnackbar } from './useSnackbar'
+import { useToast } from './useToast'
 
 export type Gender = 'male' | 'female'
 
@@ -22,25 +23,33 @@ export interface Profile {
   description?: string
   avatar?: string
   auth?: string
+  message?: string
 }
 
 export interface Auths {
   [key: string]: Profile
 }
 
-const profileAtom = atomWithStorage<Auths | null>('mibao_account_profile', null)
+const profileAtom = atomWithStorage<Auths | null>(
+  'mibao_account_profile_v2',
+  null
+)
 
 export function useProfile() {
   const { address } = useAccount()
   const [profile, _setProfile] = useAtom(profileAtom)
 
   const setProfile = useCallback(
-    (p: Partial<Profile>) => {
-      return _setProfile((pp) => {
+    (p: Partial<Profile>, addr = '') => {
+      return _setProfile((prevProfile) => {
+        const auth = prevProfile?.[address || addr]
         return {
-          ...pp,
+          ...prevProfile,
           ...{
-            [address]: p,
+            [address || addr]: {
+              ...auth,
+              ...p,
+            },
           },
         }
       })
@@ -62,36 +71,57 @@ export function useProfile() {
   }
 }
 
+export function createMessage() {
+  return {
+    origin: location.origin,
+    timestamp: `${Date.now()}`,
+  }
+}
+
 export function useGetAndSetAuth(): () => Promise<Auth> {
   const { profile, setProfile } = useProfile()
   const signMessage = useSignMessage()
   const { address, walletType } = useAccount()
-  const provider = useProvider()
+  return useAtomCallback(
+    useCallback(
+      async (get) => {
+        const provider = get(providerAtom)
+        const auth = profile?.[address]
+        let signature = auth?.auth
+        let message = auth?.message
+        if (!message) {
+          message = JSON.stringify(createMessage())
+          setProfile({
+            message,
+          })
+        }
+        if (!signature) {
+          UnipassConfig.setRedirectUri(location.pathname + location.search)
+          signature = await signMessage(message)
+          // we don't need set unipass profile auth in here
+          if (signature.includes('N/A') || walletType === WalletType.Unipass) {
+            throw new Error('signing: user denied')
+          } else {
+            setProfile({
+              auth: signature,
+              message,
+            })
+          }
+        }
 
-  return useCallback(async () => {
-    let signature = profile?.[address]?.auth
-    if (!signature) {
-      signature = await signMessage(address)
-      // we don't need set unipass profile auth in here
-      if (signature.includes('N/A') || walletType === WalletType.Unipass) {
-        throw new Error('signing: user denied')
-      } else {
-        setProfile({
-          auth: signature,
-        })
-      }
-    }
-
-    const addr =
-      walletType === WalletType.Unipass
-        ? address
-        : (provider?.address?.addressString as string)
-    return {
-      address: addr,
-      message: address,
-      signature,
-    }
-  }, [signMessage, walletType, address, profile, setProfile, provider])
+        const addr =
+          walletType !== WalletType.Metamask
+            ? address
+            : (provider?.address?.addressString as string)
+        return {
+          address: addr,
+          message,
+          signature,
+        }
+      },
+      [signMessage, walletType, address, profile, setProfile]
+    )
+  )
 }
 
 export function useToggleLike() {
@@ -110,15 +140,15 @@ export function useToggleLike() {
 export function useSetServerProfile() {
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
-  const { snackbar } = useSnackbar()
+  const { toast } = useToast()
 
   return useCallback(
     async (user: Partial<User>, options?: { ext?: string }) => {
       const auth = await getAuth()
       await api.setProfile(user, { auth, ext: options?.ext })
-      snackbar(i18n.t('profile.success', { ns: 'translations' }))
+      toast(i18n.t('profile.success', { ns: 'translations' }))
     },
-    [getAuth, api, snackbar]
+    [getAuth, api, toast]
   )
 }
 
