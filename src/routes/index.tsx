@@ -1,11 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import {
-  BrowserRouter,
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-} from 'react-router-dom'
+import React, { useEffect, useMemo } from 'react'
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import { NotFound } from '../views/NotFound'
 import {
   useAccount,
@@ -33,8 +27,6 @@ export const RouteSwitch: React.FC = () => {
   const { isLogined } = useAccountStatus()
   const { login } = useLogin()
   const { isLite } = useLite()
-  const { replace } = useHistory()
-  const [isStarted, setStarted] = useState(false)
   useEffect(() => {
     if (isLogined && walletType && walletType === WalletType.Metamask) {
       login(walletType).catch((e) => {
@@ -43,17 +35,6 @@ export const RouteSwitch: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    if (isLite && !isStarted) {
-      setStarted(true)
-      if (!isLogined) {
-        return replace(RoutePath.Login)
-      } else {
-        return replace(RoutePath.NFTs)
-      }
-    }
-  }, [isLite, isLogined, isStarted, replace])
 
   return (
     <>
