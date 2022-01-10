@@ -27,15 +27,19 @@ export function useLite() {
   useEffect(() => {
     if (isLiteModeRouteQuery === 'true') {
       setIsLite(true)
-      if (!isLogined) {
-        return replace(RoutePath.Login)
-      } else {
+      if (isLogined) {
         return replace(RoutePath.NFTs)
+      } else {
+        return replace(RoutePath.Login)
       }
     }
-  }, [isLiteModeRouteQuery, setIsLite, replace, isLogined])
+  }, [isLiteModeRouteQuery, isLogined, replace, setIsLite])
 
   return {
     isLite,
   }
+}
+
+export function useIsLiteAtom() {
+  return useAtom(isLiteAtom)
 }
