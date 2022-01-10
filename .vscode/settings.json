@@ -1,8 +1,6 @@
 {
   "editor.suggest.preview": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.inlayHints.parameterNames.enabled": "all",
-  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
   "cSpell.words": [
     "Appbar",
     "behance",
