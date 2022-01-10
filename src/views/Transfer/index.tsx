@@ -274,14 +274,14 @@ export const Transfer: React.FC = () => {
             '',
             {
               uuid: id,
-              ckbAddress,
+              ckbAddress: finalUsedAddress,
             },
             {
               class_id: nftDetail?.class_id,
               issuer_id: nftDetail?.n_issuer_id,
               token_id: nftDetail?.n_token_id,
               from_address: address,
-              to_address: ckbAddress,
+              to_address: finalUsedAddress,
             }
           )
         }
@@ -344,7 +344,6 @@ export const Transfer: React.FC = () => {
     stopTranfer,
     address,
     nftDetail,
-    ckbAddress,
   ])
 
   const closeDrawer = (): void => setIsDrawerOpen(false)
