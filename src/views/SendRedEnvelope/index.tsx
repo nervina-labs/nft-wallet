@@ -122,6 +122,7 @@ export const SendRedEnvelope: React.FC = () => {
           isOpen={isOpenNftList}
           onClose={onCloseNftList}
           onChange={setSelectedNftUuids}
+          left={modalLeft}
         />
         <Tabs colorScheme="sendRedEnvelope">
           <TabList justifyContent="center" borderBottom="none" mb="25px">
