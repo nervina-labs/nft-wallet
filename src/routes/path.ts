@@ -40,6 +40,7 @@ export enum RoutePath {
   RedEnvelope = '/red-envelope',
   Search = '/search',
   Flashsigner = '/flashsigner',
+  AlbumPlayer = '/album-player',
 }
 
 export enum ProfilePath {
