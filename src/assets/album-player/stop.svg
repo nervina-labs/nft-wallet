@@ -1,20 +1,4 @@
-<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_b_2_3369)">
-<circle cx="50" cy="50" r="50" fill="url(#paint0_linear_2_3369)" fill-opacity="0.5"/>
-<circle cx="50" cy="50" r="49.5" stroke="#777E90"/>
-</g>
-<line x1="60" y1="37" x2="60" y2="64" stroke="#D8D8D8" stroke-width="2"/>
-<line x1="42" y1="37" x2="42" y2="64" stroke="#D8D8D8" stroke-width="2"/>
-<defs>
-<filter id="filter0_b_2_3369" x="-32" y="-32" width="164" height="164" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feGaussianBlur in="BackgroundImage" stdDeviation="16"/>
-<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_2_3369"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_2_3369" result="shape"/>
-</filter>
-<linearGradient id="paint0_linear_2_3369" x1="50" y1="0" x2="50" y2="100" gradientUnits="userSpaceOnUse">
-<stop stop-color="#23262F"/>
-<stop offset="1" stop-color="#23262F" stop-opacity="0"/>
-</linearGradient>
-</defs>
+<svg width="20" height="27" viewBox="0 0 20 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="19" y1="4.37114e-08" x2="19" y2="27" stroke="#D8D8D8" stroke-width="2"/>
+<line x1="1" y1="4.37114e-08" x2="0.999999" y2="27" stroke="#D8D8D8" stroke-width="2"/>
 </svg>

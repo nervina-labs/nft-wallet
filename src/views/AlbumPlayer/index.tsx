@@ -6,11 +6,14 @@ import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
 import { useEffect, useState } from 'react'
 import { CD } from './components/cd'
-// import BgPath from '../../assets/album-player/bg.png'
 import BrushedMetalPath from '../../assets/album-player/brushed-metal-bg.png'
 import LightPath from '../../assets/album-player/light.png'
 import DecorateControlPath from '../../assets/album-player/decorate-control.png'
 import StylusArmPath from '../../assets/album-player/stylus-arm.png'
+import { ReactComponent as PrevSvg } from '../../assets/album-player/prev.svg'
+import { ReactComponent as NextSvg } from '../../assets/album-player/next.svg'
+import { ReactComponent as PlaySvg } from '../../assets/album-player/play.svg'
+import { ReactComponent as StopSvg } from '../../assets/album-player/stop.svg'
 
 const StyledMainContainer = styled(MainContainer)`
   background-color: #000;
@@ -34,6 +37,29 @@ const StyledMainContainer = styled(MainContainer)`
     to {
       transform: rotate(360deg);
     }
+  }
+`
+
+const PlayButton = styled(Button)`
+  width: 66px;
+  height: 66px;
+  display: inline-flex;
+  justify-content: center;
+
+  svg {
+    transform: scale(0.6);
+  }
+
+  .play-icon {
+    transform: scale(0.6) translateX(2px);
+  }
+
+  &.playing {
+    background: linear-gradient(
+      180deg,
+      rgba(35, 38, 47, 0.5) 0%,
+      rgba(35, 38, 47, 0) 100%
+    );
   }
 `
 
@@ -206,8 +232,8 @@ export const AlbumPlayer: React.FC = () => {
         mt="auto"
         justify="center"
         spacing="10px"
-        py="30px"
         position="relative"
+        height="112px"
       >
         <Box
           position="absolute"
@@ -223,9 +249,21 @@ export const AlbumPlayer: React.FC = () => {
             transform: `scaleX(${Math.floor(progress * width)})`,
           }}
         />
-        <Button onClick={onPrev}>Prev</Button>
-        <Button onClick={onPlayToggle}>Play</Button>
-        <Button onClick={onNext}>Next</Button>
+        <PlayButton onClick={onPrev} variant="unstyled">
+          <PrevSvg />
+        </PlayButton>
+        <PlayButton
+          onClick={onPlayToggle}
+          variant="unstyled"
+          border="0.5px solid white"
+          rounded="full"
+          className={isPlaying ? 'playing' : ''}
+        >
+          {isPlaying ? <StopSvg /> : <PlaySvg className="play-icon" />}
+        </PlayButton>
+        <PlayButton onClick={onNext} variant="unstyled">
+          <NextSvg />
+        </PlayButton>
       </HStack>
     </StyledMainContainer>
   )
