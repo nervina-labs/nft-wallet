@@ -3,7 +3,8 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 export function useAudioPlayer(
   list: string[],
   options?: {
-    index: number // default is 0
+    index?: number // default is 0
+    onEnded?: () => void
   }
 ) {
   const [currentTime, setCurrentTime] = useState(0)
@@ -20,15 +21,21 @@ export function useAudioPlayer(
 
   const hasNext = list.length - 1 > index
 
+  const onChangeIndex = useCallback(
+    (i) => {
+      setIndex(i)
+      setTimeout(() => onPlay())
+    },
+    [onPlay]
+  )
+
   const onNext = useCallback(() => {
-    setIndex((i) => (hasNext ? i + 1 : i))
-    setTimeout(() => onPlay())
-  }, [hasNext, onPlay])
+    onChangeIndex(hasNext ? index + 1 : index)
+  }, [hasNext, index, onChangeIndex])
 
   const onPrev = useCallback(() => {
-    setIndex((i) => (i > 0 ? i - 1 : i))
-    setTimeout(() => onPlay())
-  }, [onPlay])
+    onChangeIndex(index > 0 ? index - 1 : index)
+  }, [index, onChangeIndex])
 
   const audioEl = useMemo(
     () => (
@@ -48,10 +55,12 @@ export function useAudioPlayer(
           } else {
             setIsPlaying(false)
           }
+
+          options?.onEnded?.()
         }}
       />
     ),
-    [hasNext, index, list, onNext]
+    [hasNext, index, list, onNext, options]
   )
 
   const onPlayToggle = useCallback(() => {
@@ -74,5 +83,6 @@ export function useAudioPlayer(
     onPrev,
     currentTime,
     duration,
+    onChangeIndex,
   }
 }
