@@ -23,6 +23,8 @@ const StyledMainContainer = styled(MainContainer)`
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  padding-bottom: 132px;
+  transition: 200ms;
 
   @keyframes arm-run {
     0% {
@@ -46,6 +48,7 @@ const StyledMainContainer = styled(MainContainer)`
 const StyledPlayingIconSvg = styled(PlayingIconSvg)`
   height: 14px;
   margin: auto 5px auto 0;
+  flex-shrink: 0;
 `
 
 const PlayButton = styled(Button)`
@@ -69,6 +72,14 @@ export const AlbumPlayer: React.FC = () => {
   const list = [
     'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=0',
     'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=1',
+    'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=2',
+    'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=3',
+    'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=4',
+    'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=5',
+    'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=6',
+    'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=7',
+    'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=8',
+    'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=9',
   ]
   const cover =
     'https://oss.jinse.cc/production/78e719bc-b653-4b1b-b4bf-ce276988e127.webp'
@@ -213,16 +224,7 @@ export const AlbumPlayer: React.FC = () => {
         />
       </Box>
       {audioEl}
-      <Stack
-        w="full"
-        color="white"
-        px="20px"
-        py="20px"
-        spacing="10px"
-        whiteSpace="nowrap"
-        textOverflow="ellipsis"
-        overflow="hidden"
-      >
+      <Stack w="full" color="white" px="20px" py="20px" spacing="10px">
         {list.map((_, i) => (
           <Flex
             key={i}
@@ -234,7 +236,9 @@ export const AlbumPlayer: React.FC = () => {
             style={{ color: i !== index ? '#666' : undefined }}
           >
             {i === index ? <StyledPlayingIconSvg /> : null}
-            测试曲目 {i}
+            <Box whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
+              测试曲目 {i}
+            </Box>
           </Flex>
         ))}
       </Stack>
@@ -243,8 +247,14 @@ export const AlbumPlayer: React.FC = () => {
         mt="auto"
         justify="center"
         spacing="10px"
-        position="relative"
+        position="fixed"
+        bottom="0"
         height="112px"
+        bg="#000"
+        transition="200ms"
+        style={{
+          width: `${width}px`,
+        }}
       >
         <ProgressBar
           progress={isNaN(progress) ? 0 : progress}
