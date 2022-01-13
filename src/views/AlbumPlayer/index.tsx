@@ -14,6 +14,7 @@ import { ReactComponent as PrevSvg } from '../../assets/album-player/prev.svg'
 import { ReactComponent as NextSvg } from '../../assets/album-player/next.svg'
 import { ReactComponent as PlaySvg } from '../../assets/album-player/play.svg'
 import { ReactComponent as StopSvg } from '../../assets/album-player/stop.svg'
+import { ProgressBar } from './components/progressBar'
 
 const StyledMainContainer = styled(MainContainer)`
   background-color: #000;
@@ -220,26 +221,21 @@ export const AlbumPlayer: React.FC = () => {
       </Box>
 
       <HStack
-        borderTop="1px solid white"
         mt="auto"
         justify="center"
         spacing="10px"
         position="relative"
         height="112px"
       >
-        <Box
+        <ProgressBar
+          progress={isNaN(progress) ? 0 : progress}
+          progressBarMaxWidth={width}
+          onChangeProgress={(e) => console.log('onChangeProgress', e)}
           position="absolute"
           top="0"
           left="0"
-          h="2px"
-          w="1px"
-          bg="white"
-          opacity={0.5}
-          transformOrigin="top left"
-          transition="200ms"
-          style={{
-            transform: `scaleX(${Math.floor(progress * width)})`,
-          }}
+          m="0"
+          zIndex={1}
         />
         <PlayButton onClick={onPrev} variant="unstyled">
           <PrevSvg />
