@@ -37,6 +37,13 @@ export function useAudioPlayer(
     onChangeIndex(index > 0 ? index - 1 : index)
   }, [index, onChangeIndex])
 
+  const onChangeProgress = useCallback((progress: number) => {
+    const el = audioRef.current
+    if (el) {
+      el.currentTime = progress * el.duration
+    }
+  }, [])
+
   const audioEl = useMemo(
     () => (
       <audio
@@ -84,5 +91,6 @@ export function useAudioPlayer(
     currentTime,
     duration,
     onChangeIndex,
+    onChangeProgress,
   }
 }

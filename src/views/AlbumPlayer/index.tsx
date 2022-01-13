@@ -79,6 +79,7 @@ export const AlbumPlayer: React.FC = () => {
     currentTime,
     duration,
     isPlaying,
+    onChangeProgress,
   } = useAudioPlayer(list)
 
   useEffect(() => {
@@ -230,7 +231,7 @@ export const AlbumPlayer: React.FC = () => {
         <ProgressBar
           progress={isNaN(progress) ? 0 : progress}
           progressBarMaxWidth={width}
-          onChangeProgress={(e) => console.log('onChangeProgress', e)}
+          onChangeProgress={onChangeProgress}
           position="absolute"
           top="0"
           left="0"
