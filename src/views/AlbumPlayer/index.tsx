@@ -89,6 +89,7 @@ export const AlbumPlayer: React.FC = () => {
   const scale = width / CONTAINER_MAX_WIDTH
   const {
     index,
+    willIndex,
     onChangeIndex,
     audioEl,
     onPlayToggle,
@@ -110,10 +111,12 @@ export const AlbumPlayer: React.FC = () => {
     }
   }, [isPlaying])
 
-  const progress = currentTime / duration
+  const progress = isNaN(currentTime / duration) ? 0 : currentTime / duration
+  const cdProgress = Number(
+    ((1 / list.length) * index + (1 / list.length) * progress).toFixed(5)
+  )
   const armRotate =
-    (ARM_RUN_RANGE[1] - ARM_RUN_RANGE[0]) * progress + ARM_RUN_RANGE[0]
-
+    (ARM_RUN_RANGE[1] - ARM_RUN_RANGE[0]) * cdProgress + ARM_RUN_RANGE[0]
   const albumTitle = '李健 - 依然'
 
   return (
@@ -230,12 +233,12 @@ export const AlbumPlayer: React.FC = () => {
             key={i}
             cursor="pointer"
             onClick={() => {
-              if (i === index) return
+              if (i === willIndex) return
               onChangeIndex(i)
             }}
-            style={{ color: i !== index ? '#666' : undefined }}
+            style={{ color: i !== willIndex ? '#666' : undefined }}
           >
-            {i === index ? <StyledPlayingIconSvg /> : null}
+            {i === willIndex ? <StyledPlayingIconSvg /> : null}
             <Box whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
               测试曲目 {i}
             </Box>
@@ -257,7 +260,7 @@ export const AlbumPlayer: React.FC = () => {
         }}
       >
         <ProgressBar
-          progress={isNaN(progress) ? 0 : progress}
+          progress={progress}
           progressBarMaxWidth={width}
           onChangeProgress={onChangeProgress}
           position="absolute"

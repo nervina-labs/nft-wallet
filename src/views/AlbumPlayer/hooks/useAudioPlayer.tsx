@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState, SyntheticEvent } from 'react'
 import { IS_IPHONE } from '../../../constants'
 
 export function useAudioPlayer(
@@ -11,16 +11,22 @@ export function useAudioPlayer(
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [willIndex, setWillIndex] = useState(options?.index || 0)
   const [index, setIndex] = useState(options?.index || 0)
+  const [src, setSrc] = useState(list[options?.index ?? 0] ?? '')
   const audioRef = useRef<HTMLAudioElement>(null)
+  const hasNext = list.length - 1 > index
 
-  const onSyncAudioState = useCallback(() => {
-    const el = audioRef.current
-    if (!el) return
-    setCurrentTime(el.currentTime)
-    setDuration(el.duration)
-    setIsPlaying(!el.paused)
-  }, [])
+  const onSyncAudioState = useCallback(
+    (event?: SyntheticEvent<HTMLAudioElement>) => {
+      const el = (event?.target as HTMLAudioElement) || audioRef.current
+      if (!el) return
+      setCurrentTime(el.currentTime)
+      setDuration(el.duration)
+      setIndex(willIndex)
+    },
+    [willIndex]
+  )
 
   const onPlay = useCallback(() => {
     const el = audioRef.current
@@ -28,17 +34,17 @@ export function useAudioPlayer(
     el.play()
   }, [])
 
-  const hasNext = list.length - 1 > index
-
   const onChangeIndex = useCallback(
     (i) => {
-      setIndex(i)
+      setWillIndex(i)
+      setSrc(list[i])
+      setIsPlaying(true)
       setTimeout(() => {
-        onPlay()
         onSyncAudioState()
+        onPlay()
       })
     },
-    [onPlay, onSyncAudioState]
+    [list, onPlay, onSyncAudioState]
   )
 
   const onNext = useCallback(() => {
@@ -66,10 +72,12 @@ export function useAudioPlayer(
   const audioEl = useMemo(
     () => (
       <audio
-        src={list[index]}
+        src={src}
         ref={audioRef}
         preload="metadata"
         onTimeUpdate={onSyncAudioState}
+        onCanPlay={onSyncAudioState}
+        onLoadedMetadata={onSyncAudioState}
         onPlay={() => setIsPlaying(true)}
         onPaste={() => setIsPlaying(false)}
         onEnded={() => {
@@ -83,7 +91,7 @@ export function useAudioPlayer(
         }}
       />
     ),
-    [hasNext, index, list, onNext, onSyncAudioState, options]
+    [hasNext, onNext, onSyncAudioState, options, src]
   )
 
   const onPlayToggle = useCallback(() => {
@@ -99,6 +107,7 @@ export function useAudioPlayer(
 
   return {
     index,
+    willIndex,
     isPlaying,
     audioEl,
     onPlayToggle,
