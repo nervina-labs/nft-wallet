@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { IS_IPHONE } from '../../../constants'
 
 export function useAudioPlayer(
   list: string[],
@@ -48,10 +49,17 @@ export function useAudioPlayer(
     onChangeIndex(index > 0 ? index - 1 : index)
   }, [index, onChangeIndex])
 
-  const onChangeProgress = useCallback((progress: number) => {
+  const onChangeProgress = useCallback(async (progress: number) => {
     const el = audioRef.current
     if (el) {
-      el.currentTime = progress * el.duration
+      if (IS_IPHONE) {
+        const isPaused = el.paused
+        if (!isPaused) await el.pause()
+        el.currentTime = progress * el.duration
+        if (!isPaused) await el.play()
+      } else {
+        el.currentTime = progress * el.duration
+      }
     }
   }, [])
 
@@ -60,10 +68,11 @@ export function useAudioPlayer(
       <audio
         src={list[index]}
         ref={audioRef}
+        preload="metadata"
         onTimeUpdate={onSyncAudioState}
         onPlay={() => setIsPlaying(true)}
         onPaste={() => setIsPlaying(false)}
-        onEnded={(e) => {
+        onEnded={() => {
           if (hasNext) {
             onNext()
           } else {
