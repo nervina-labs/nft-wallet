@@ -18,6 +18,7 @@ export function useAudioPlayer(
     if (!el) return
     setCurrentTime(el.currentTime)
     setDuration(el.duration)
+    setIsPlaying(!el.paused)
   }, [])
 
   const onPlay = useCallback(() => {

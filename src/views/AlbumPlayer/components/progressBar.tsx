@@ -3,6 +3,7 @@ import { Box, BoxProps } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { fromEvent, map, switchMap, takeUntil, tap } from 'rxjs'
 import { useEventCallback } from 'rxjs-hooks'
+import { CONTAINER_MAX_WIDTH } from '../../../constants'
 
 export interface ProgressBarProps extends BoxProps {
   progress: number
@@ -11,6 +12,7 @@ export interface ProgressBarProps extends BoxProps {
 }
 
 type ProgressTouchEvent = React.TouchEvent<HTMLDivElement>
+type ProgressMouseEvent = React.MouseEvent<HTMLDivElement>
 
 function getProgressBarValue(x: number, width: number) {
   return Math.min(x <= 0 ? 0 : x, width) / width
@@ -24,44 +26,71 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 }) => {
   const [isChanging, setIsChanging] = useState(false)
   const [currentProgress, setCurrentProgress] = useState(progress)
-  const [onChangeProgressCallback] = useEventCallback<
+  const onChangeCurrentProgress = (x: number) => {
+    const offsetX = Math.max((window.innerWidth - CONTAINER_MAX_WIDTH) / 2, 0)
+    const w = Math.min(window.innerWidth, CONTAINER_MAX_WIDTH)
+    const p = getProgressBarValue(x - offsetX, w)
+    setCurrentProgress(p)
+    return p
+  }
+
+  const [onChangeProgressByTouchstart] = useEventCallback<
     ProgressTouchEvent,
     number
   >(
     (event$) =>
       event$.pipe(
-        switchMap(() =>
-          fromEvent<ProgressTouchEvent>(window, 'touchmove', {
+        switchMap(() => {
+          setIsChanging(true)
+          return fromEvent<ProgressTouchEvent>(window, 'touchmove', {
             passive: false,
           }).pipe(
             map((event) => {
-              setIsChanging(true)
               if (event.cancelable) {
                 event.stopPropagation()
                 event.preventDefault()
               }
-              const p = getProgressBarValue(
-                event.changedTouches[0].clientX,
-                progressBarMaxWidth
-              )
-              setCurrentProgress(p)
-              return p
+              return onChangeCurrentProgress(event.changedTouches[0].clientX)
             }),
             takeUntil(
               fromEvent<ProgressTouchEvent>(window, 'touchend').pipe(
                 tap((event) => {
                   setIsChanging(false)
                   onChangeProgress?.(
-                    getProgressBarValue(
-                      event.changedTouches[0].clientX,
-                      progressBarMaxWidth
-                    )
+                    onChangeCurrentProgress(event.changedTouches[0].clientX)
                   )
                 })
               )
             )
           )
-        )
+        })
+      ),
+    progress
+  )
+
+  const [onChangeProgressByMouseDown] = useEventCallback<
+    ProgressMouseEvent,
+    number
+  >(
+    ($event) =>
+      $event.pipe(
+        switchMap((mouseDownEvent) => {
+          setIsChanging(true)
+          onChangeCurrentProgress(mouseDownEvent.clientX)
+          return fromEvent<ProgressMouseEvent>(window, 'mousemove').pipe(
+            map((event) => {
+              return onChangeCurrentProgress(event.clientX)
+            }),
+            takeUntil(
+              fromEvent<ProgressMouseEvent>(window, 'mouseup').pipe(
+                tap((event) => {
+                  setIsChanging(false)
+                  onChangeProgress?.(onChangeCurrentProgress(event.clientX))
+                })
+              )
+            )
+          )
+        })
       ),
     progress
   )
@@ -74,7 +103,24 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   }, [progress])
 
   return (
-    <Box w="full" h="1px" position="relative" {...props}>
+    <Box
+      w="full"
+      h="1px"
+      position="relative"
+      {...props}
+      _before={{
+        content: '" "',
+        display: 'block',
+        position: 'absolute',
+        top: 'calc(50% - 25px)',
+        left: '0',
+        h: '50px',
+        w: 'full',
+        rounded: 'full',
+        cursor: 'pointer',
+      }}
+      onMouseDown={onChangeProgressByMouseDown}
+    >
       <Box
         zIndex={0}
         bg="#777E90"
@@ -94,6 +140,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         top="0"
         left="0"
         style={{
+          transition: isChanging ? '0ms' : '100ms',
           transform: `scaleX(${currentProgress * progressBarMaxWidth})`,
         }}
       />
@@ -111,7 +158,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
             e.preventDefault()
             e.stopPropagation()
           }
-          onChangeProgressCallback(e)
+          onChangeProgressByTouchstart(e)
         }}
         _before={{
           content: '" "',
@@ -122,8 +169,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           h: '50px',
           w: '50px',
           rounded: 'full',
+          cursor: 'pointer',
         }}
         style={{
+          transition: isChanging ? '0ms' : '100ms',
           transform: `translateX(${currentProgress * progressBarMaxWidth}px)`,
         }}
       >
