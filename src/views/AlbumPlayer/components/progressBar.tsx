@@ -149,9 +149,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         h="6px"
         top="-2px"
         left="0"
-        bg="#19933B"
         position="absolute"
-        rounded="full"
         transformOrigin="center center"
         onTouchStart={(e) => {
           if (e.cancelable) {
@@ -172,7 +170,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           cursor: 'pointer',
         }}
         style={{
-          transition: isChanging ? '0ms' : '100ms',
+          transition: isChanging ? '0ms' : '50ms',
           transform: `translateX(${currentProgress * progressBarMaxWidth}px)`,
         }}
       >
@@ -180,11 +178,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           position="absolute"
           top="0"
           left="0"
-          h="6px"
-          w="6px"
+          h="full"
+          w="full"
           rounded="full"
           bg="#19933B"
           transition="200ms"
+          cursor="pointer"
           style={{
             transform: isChanging ? 'scale(5)' : undefined,
           }}
