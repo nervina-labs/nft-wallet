@@ -2192,6 +2192,11 @@
   resolved "https://registry.yarnpkg.com/@mibao-ui/components/-/components-0.0.34.tgz#b710d13f4634bfd2588795e5bf47c3126d2124f2"
   integrity sha512-2jp61zUuBtsGJKKI2My96O97VWpHyheWDOoAIVNc3p1lq02Kp5bR+7uqZhKU7qoa5jUxVeNvxx+U+/6mRUboLg==
 
+"@nervina-labs/flashsigner@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@nervina-labs/flashsigner/-/flashsigner-0.1.1.tgz#3823a5c48baf739e733038f9eaf313b2d2eb126e"
+  integrity sha512-CC9/bVZ/lX2Wkf/4dQjcx3xPmAn0PfL1SbTwT/SbE6hmyQw9uqJi8GUDb57w32WeRZJKjZn8wcZ//vfR7XYMQA==
+
 "@nervosnetwork/ckb-sdk-core@^0.101.0":
   version "0.101.0"
   resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-sdk-core/-/ckb-sdk-core-0.101.0.tgz#2168869938e46f19a7f5b82ecdf0cb1c8ddc66a6"

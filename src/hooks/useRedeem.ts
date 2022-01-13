@@ -1,8 +1,9 @@
-import { Transaction } from '@lay2/pw-core'
+import { Transaction, transformers } from '@lay2/pw-core'
 import { atom, useAtom } from 'jotai'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory, useLocation, useParams } from 'react-router'
+import { signTransactionWithRedirect } from '@nervina-labs/flashsigner'
 import {
   CustomRedeemParams,
   CustomRewardType,
@@ -42,6 +43,7 @@ export interface TransferState {
   signature?: string
   tx?: Transaction
   customData?: CustomRedeemParams
+  id?: string
 }
 
 export const useSignRedeem = () => {
@@ -65,6 +67,22 @@ export const useSignRedeem = () => {
             throw new Error(err)
           })
 
+        if (walletType === WalletType.Flashsigner) {
+          const url = `${location.origin}${RoutePath.Flashsigner}`
+          UnipassConfig.setRedirectUri(`${RoutePath.RedeemResult}/${id}`)
+          const state: Record<string, string> = {
+            prevPathname: reactLocation.pathname,
+            uuid: id,
+          }
+          if (customData) {
+            state.customData = encodeURIComponent(JSON.stringify(customData))
+          }
+          signTransactionWithRedirect(url, {
+            tx: transformers.TransformTransaction(tx) as any,
+            extra: state,
+          })
+          return
+        }
         const signTx = await signTransaction(tx).catch((err) => {
           throw new Error(err)
         })
@@ -124,13 +142,6 @@ export const useSignRedeem = () => {
       item,
     }: onRedeemProps) => {
       if (!isAllow) {
-        return
-      }
-      if (walletType === WalletType.Flashsigner) {
-        confirmDialog({
-          type: 'warning',
-          title: t('exchange.flashsigner'),
-        })
         return
       }
       trackReedeem(trackLabels.apps.redeem)
