@@ -53,14 +53,6 @@ const PlayButton = styled(Button)`
   .play-icon {
     transform: scale(0.6) translateX(2px);
   }
-
-  &.playing {
-    background: linear-gradient(
-      180deg,
-      rgba(35, 38, 47, 0.5) 0%,
-      rgba(35, 38, 47, 0) 100%
-    );
-  }
 `
 
 const ARM_RUN_RANGE = [17, 36] as const
@@ -257,7 +249,11 @@ export const AlbumPlayer: React.FC = () => {
           variant="unstyled"
           border="0.5px solid white"
           rounded="full"
-          className={isPlaying ? 'playing' : ''}
+          style={{
+            backgroundImage: isPlaying
+              ? 'radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)'
+              : undefined,
+          }}
         >
           {isPlaying ? <StopSvg /> : <PlaySvg className="play-icon" />}
         </PlayButton>
