@@ -13,6 +13,13 @@ export function useAudioPlayer(
   const [index, setIndex] = useState(options?.index || 0)
   const audioRef = useRef<HTMLAudioElement>(null)
 
+  const onSyncAudioState = useCallback(() => {
+    const el = audioRef.current
+    if (!el) return
+    setCurrentTime(el.currentTime)
+    setDuration(el.duration)
+  }, [])
+
   const onPlay = useCallback(() => {
     const el = audioRef.current
     if (!el) return
@@ -24,9 +31,12 @@ export function useAudioPlayer(
   const onChangeIndex = useCallback(
     (i) => {
       setIndex(i)
-      setTimeout(() => onPlay())
+      setTimeout(() => {
+        onPlay()
+        onSyncAudioState()
+      })
     },
-    [onPlay]
+    [onPlay, onSyncAudioState]
   )
 
   const onNext = useCallback(() => {
@@ -49,11 +59,7 @@ export function useAudioPlayer(
       <audio
         src={list[index]}
         ref={audioRef}
-        onTimeUpdate={(e) => {
-          const target = e.target as HTMLAudioElement
-          setCurrentTime(target.currentTime)
-          setDuration(target.duration)
-        }}
+        onTimeUpdate={onSyncAudioState}
         onPlay={() => setIsPlaying(true)}
         onPaste={() => setIsPlaying(false)}
         onEnded={(e) => {
@@ -67,7 +73,7 @@ export function useAudioPlayer(
         }}
       />
     ),
-    [hasNext, index, list, onNext, options]
+    [hasNext, index, list, onNext, onSyncAudioState, options]
   )
 
   const onPlayToggle = useCallback(() => {

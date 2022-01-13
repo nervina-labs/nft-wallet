@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { MainContainer } from '../../styles'
-import { Box, Image, Button, HStack } from '@chakra-ui/react'
+import { Box, Image, Button, HStack, Stack, Flex } from '@chakra-ui/react'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
@@ -14,6 +14,7 @@ import { ReactComponent as PrevSvg } from '../../assets/album-player/prev.svg'
 import { ReactComponent as NextSvg } from '../../assets/album-player/next.svg'
 import { ReactComponent as PlaySvg } from '../../assets/album-player/play.svg'
 import { ReactComponent as StopSvg } from '../../assets/album-player/stop.svg'
+import { ReactComponent as PlayingIconSvg } from '../../assets/album-player/playing-icon.svg'
 import { ProgressBar } from './components/progressBar'
 
 const StyledMainContainer = styled(MainContainer)`
@@ -40,6 +41,11 @@ const StyledMainContainer = styled(MainContainer)`
       transform: rotate(360deg);
     }
   }
+`
+
+const StyledPlayingIconSvg = styled(PlayingIconSvg)`
+  height: 14px;
+  margin: auto 5px auto 0;
 `
 
 const PlayButton = styled(Button)`
@@ -207,20 +213,31 @@ export const AlbumPlayer: React.FC = () => {
         />
       </Box>
       {audioEl}
-      <Box w="full" color="white">
+      <Stack
+        w="full"
+        color="white"
+        px="20px"
+        py="20px"
+        spacing="10px"
+        whiteSpace="nowrap"
+        textOverflow="ellipsis"
+        overflow="hidden"
+      >
         {list.map((_, i) => (
-          <Box
+          <Flex
             key={i}
-            opacity={index === i ? 1 : 0.5}
+            cursor="pointer"
             onClick={() => {
               if (i === index) return
               onChangeIndex(i)
             }}
+            style={{ color: i !== index ? '#666' : undefined }}
           >
+            {i === index ? <StyledPlayingIconSvg /> : null}
             测试曲目 {i}
-          </Box>
+          </Flex>
         ))}
-      </Box>
+      </Stack>
 
       <HStack
         mt="auto"

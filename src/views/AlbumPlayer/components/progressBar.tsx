@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import { Box, BoxProps } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { fromEvent, map, switchMap, takeUntil, tap } from 'rxjs'
 import { useEventCallback } from 'rxjs-hooks'
 
@@ -23,7 +23,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   ...props
 }) => {
   const [isChanging, setIsChanging] = useState(false)
-  const [onChangeProgressCallback, currentProgress] = useEventCallback<
+  const [currentProgress, setCurrentProgress] = useState(progress)
+  const [onChangeProgressCallback] = useEventCallback<
     ProgressTouchEvent,
     number
   >(
@@ -39,10 +40,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
                 event.stopPropagation()
                 event.preventDefault()
               }
-              return getProgressBarValue(
+              const p = getProgressBarValue(
                 event.changedTouches[0].clientX,
                 progressBarMaxWidth
               )
+              setCurrentProgress(p)
+              return p
             }),
             takeUntil(
               fromEvent<ProgressTouchEvent>(window, 'touchend').pipe(
@@ -62,6 +65,13 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       ),
     progress
   )
+
+  useEffect(() => {
+    if (progress && !isChanging) {
+      setCurrentProgress(progress)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [progress])
 
   return (
     <Box w="full" h="1px" position="relative" {...props}>
@@ -97,8 +107,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         rounded="full"
         transformOrigin="center center"
         onTouchStart={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
+          if (e.cancelable) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
           onChangeProgressCallback(e)
         }}
         _before={{
