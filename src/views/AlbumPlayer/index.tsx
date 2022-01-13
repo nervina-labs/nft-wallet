@@ -21,6 +21,7 @@ const StyledMainContainer = styled(MainContainer)`
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 
   @keyframes arm-run {
     0% {
