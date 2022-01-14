@@ -288,8 +288,9 @@ export const routes: MibaoRouterProps[] = [
   },
   {
     component: AlbumPlayer,
-    exact: true,
+    exact: false,
     key: 'AlbumPlayer',
     path: RoutePath.AlbumPlayer,
+    params: '/:id',
   },
 ]

@@ -14,7 +14,7 @@ import {
   Preview,
   useDisclosure,
 } from '@mibao-ui/components'
-import { TokenClass } from '../../../models/class-list'
+import { isTokenClass, TokenClass } from '../../../models/class-list'
 import { ReactComponent as CardbackSvg } from '../../../assets/svg/card-back.svg'
 import { ReactComponent as LockSvg } from '../../../assets/svg/lock.svg'
 import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
@@ -33,7 +33,7 @@ import { useTilt } from '../hooks/useTilt'
 import { useToast } from '../../../hooks/useToast'
 import { LoadableComponent } from '../../../components/GlobalLoader'
 import { trackLabels, useTrackEvent } from '../../../hooks/useTrack'
-import { useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { IS_SUPPORT_AR } from '../../../constants'
 import { ArButton } from './arButton'
 
@@ -286,6 +286,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
   const arButtonRef = useRef<HTMLAnchorElement>(null)
   const isRendererUsdz = isUsdz(detail?.renderer)
+  const { push } = useHistory()
 
   return (
     <Flex
@@ -305,7 +306,16 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         tiltEnable
         transitionSpeed={1000}
         tiltAngleYInitial={tiltAngleYInitial}
-        onClick={onPreview}
+        onClick={(e) => {
+          if (
+            !isTokenClass(detail) &&
+            detail?.renderer_type === NftType.Audio
+          ) {
+            push(`/album-player/${detail?.uuid}`)
+            return
+          }
+          onPreview(e)
+        }}
       >
         <Box
           m="auto"
