@@ -43,6 +43,36 @@ const StyledMainContainer = styled(MainContainer)`
       transform: rotate(360deg);
     }
   }
+
+  @keyframes open-cd-cover {
+    0%,
+    30% {
+      transform: translateY(50px) scale(1.1);
+    }
+
+    50%,
+    100% {
+      transform: translateY(-450px);
+    }
+  }
+
+  @keyframes open-cd {
+    0%,
+    30% {
+      transform: translateY(-60px) scale(1.1);
+      z-index: 3;
+    }
+    40% {
+      transform: translateY(-80px) scale(1.1);
+      z-index: 3;
+    }
+
+    70%,
+    100% {
+      transform: translateY(0);
+      z-index: 1;
+    }
+  }
 `
 
 const StyledPlayingIconSvg = styled(PlayingIconSvg)`
@@ -215,16 +245,40 @@ export const AlbumPlayer: React.FC = () => {
             draggable="false"
           />
         </Box>
-        <CD
+        <Image
           src={cover}
-          isPlaying={isCdPlaying}
+          shadow="0 4px 4px rgba(0, 0, 0, 0.7)"
+          position="absolute"
+          w="370px"
+          h="370px"
+          top="48px"
+          left="65px"
+          zIndex={4}
+          transformOrigin="center"
+          animation="open-cd-cover 3s forwards"
+        />
+        <Box
           position="absolute"
           top="194px"
           left="65px"
           w="370px"
           h="370px"
-          zIndex={1}
-        />
+          transformOrigin="center"
+          animation="open-cd 3s"
+        >
+          <CD
+            src={cover}
+            isPlaying={isCdPlaying}
+            w="full"
+            h="full"
+            // position="absolute"
+            // top="194px"
+            // left="65px"
+            // w="370px"
+            // h="370px"
+            zIndex={1}
+          />
+        </Box>
       </Box>
       {audioEl}
       <Stack w="full" color="white" px="20px" py="20px" spacing="10px">
