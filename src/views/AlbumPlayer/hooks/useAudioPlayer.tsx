@@ -1,4 +1,11 @@
-import { useCallback, useMemo, useRef, useState, SyntheticEvent } from 'react'
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  SyntheticEvent,
+  useEffect,
+} from 'react'
 import { IS_IPHONE } from '../../../constants'
 
 export function useAudioPlayer(
@@ -33,6 +40,11 @@ export function useAudioPlayer(
     if (!el) return
     el.play()
   }, [])
+
+  useEffect(() => {
+    setSrc(list[index])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [list])
 
   const onChangeIndex = useCallback(
     (i) => {

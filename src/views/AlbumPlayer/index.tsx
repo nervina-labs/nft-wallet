@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import { MainContainer } from '../../styles'
 import { Box, Image, Button, HStack, Stack, Flex } from '@chakra-ui/react'
+import { Image as MibaoImage } from '@mibao-ui/components'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CD } from './components/cd'
 import BrushedMetalPath from '../../assets/album-player/brushed-metal-bg.png'
 import LightPath from '../../assets/album-player/light.png'
@@ -16,6 +17,10 @@ import { ReactComponent as PlaySvg } from '../../assets/album-player/play.svg'
 import { ReactComponent as StopSvg } from '../../assets/album-player/stop.svg'
 import { ReactComponent as PlayingIconSvg } from '../../assets/album-player/playing-icon.svg'
 import { ProgressBar } from './components/progressBar'
+import { Redirect, useParams } from 'react-router-dom'
+import { useQueryNft } from './hooks/useQueryNft'
+import { NftType } from '../../models'
+import { RoutePath } from '../../routes'
 
 const StyledMainContainer = styled(MainContainer)`
   background-color: #000;
@@ -99,24 +104,18 @@ const PlayButton = styled(Button)`
 const ARM_RUN_RANGE = [17, 36] as const
 
 export const AlbumPlayer: React.FC = () => {
-  const list = [
-    'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=0',
-    'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=1',
-    'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=2',
-    'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=3',
-    'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=4',
-    'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=5',
-    'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=6',
-    'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=7',
-    'https://oss.jinse.cc/production/644b6076-af37-4934-a64f-011707efb53e.mp3?i=8',
-    'https://oss.jinse.cc/production/814df820-f4e9-4ebd-ab68-b70dfc3d4a84.mp3?i=9',
-  ]
-  const cover =
-    'https://oss.jinse.cc/production/78e719bc-b653-4b1b-b4bf-ce276988e127.webp'
+  const { id } = useParams<{ id: string }>()
+  const { data, isLoading } = useQueryNft(id)
   const [isCdPlaying, setIsCdPlaying] = useState(false)
   const { width: innerWidth, height } = useInnerSize()
   const width = Math.min(innerWidth, CONTAINER_MAX_WIDTH)
   const scale = width / CONTAINER_MAX_WIDTH
+
+  const list = useMemo(
+    () => data?.album_audios?.map((audio) => audio.url) || [],
+    [data?.album_audios]
+  )
+  console.log('list: ', data, list)
   const {
     index,
     willIndex,
@@ -147,10 +146,17 @@ export const AlbumPlayer: React.FC = () => {
   )
   const armRotate =
     (ARM_RUN_RANGE[1] - ARM_RUN_RANGE[0]) * cdProgress + ARM_RUN_RANGE[0]
-  const albumTitle = '李健 - 依然'
+
+  if (data && data?.renderer_type !== NftType.Audio) {
+    return <Redirect to={`${RoutePath.NFT}/${id}`} />
+  }
 
   return (
     <StyledMainContainer style={{ minHeight: `${height}px` }}>
+      {isLoading ? (
+        <Box position="absolute" top="0" left="0" w="100%" h="100%" bg="#000" />
+      ) : null}
+
       <Box
         position="relative"
         w={`${CONTAINER_MAX_WIDTH}px`}
@@ -181,7 +187,7 @@ export const AlbumPlayer: React.FC = () => {
           textOverflow="ellipsis"
           overflow="hidden"
         >
-          {albumTitle}
+          {data?.name}
         </Box>
         <Box
           position="absolute"
@@ -245,17 +251,19 @@ export const AlbumPlayer: React.FC = () => {
             draggable="false"
           />
         </Box>
-        <Image
-          src={cover}
+        <MibaoImage
+          src={data?.bg_image_url}
           shadow="0 4px 4px rgba(0, 0, 0, 0.7)"
-          position="absolute"
           w="370px"
           h="370px"
-          top="48px"
-          left="65px"
           zIndex={4}
           transformOrigin="center"
           animation="open-cd-cover 3s forwards"
+          containerProps={{
+            position: 'absolute',
+            top: '48px',
+            left: '65px',
+          }}
         />
         <Box
           position="absolute"
@@ -267,22 +275,18 @@ export const AlbumPlayer: React.FC = () => {
           animation="open-cd 3s"
         >
           <CD
-            src={cover}
+            src={data?.bg_image_url ?? ''}
             isPlaying={isCdPlaying}
             w="full"
             h="full"
-            // position="absolute"
-            // top="194px"
-            // left="65px"
-            // w="370px"
-            // h="370px"
             zIndex={1}
           />
         </Box>
       </Box>
       {audioEl}
       <Stack w="full" color="white" px="20px" py="20px" spacing="10px">
-        {list.map((_, i) => (
+        {data?.album_audios?.length}
+        {data?.album_audios?.map((audio, i) => (
           <Flex
             key={i}
             cursor="pointer"
@@ -294,7 +298,7 @@ export const AlbumPlayer: React.FC = () => {
           >
             {i === willIndex ? <StyledPlayingIconSvg /> : null}
             <Box whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
-              测试曲目 {i}
+              {audio.name}
             </Box>
           </Flex>
         ))}
