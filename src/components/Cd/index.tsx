@@ -1,6 +1,6 @@
 import { AspectRatio, Box, BoxProps, Image } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import CDPath from '../../../assets/album-player/cd.png'
+import CDPath from '../../assets/album-player/cd.png'
 
 const CDContainer = styled(Box)`
   @keyframes cd-run {

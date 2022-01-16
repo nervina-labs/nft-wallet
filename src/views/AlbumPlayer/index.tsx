@@ -1,12 +1,19 @@
 import styled from '@emotion/styled'
 import { MainContainer } from '../../styles'
-import { Box, Image, Button, HStack, Stack, Flex } from '@chakra-ui/react'
+import {
+  Box,
+  Image,
+  Button,
+  HStack,
+  Stack,
+  Flex,
+  AspectRatio,
+} from '@chakra-ui/react'
 import { Image as MibaoImage } from '@mibao-ui/components'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
 import { useEffect, useMemo, useState } from 'react'
-import { CD } from './components/cd'
 import BrushedMetalPath from '../../assets/album-player/brushed-metal-bg.png'
 import LightPath from '../../assets/album-player/light.png'
 import DecorateControlPath from '../../assets/album-player/decorate-control.png'
@@ -21,6 +28,7 @@ import { Redirect, useParams } from 'react-router-dom'
 import { useQueryNft } from './hooks/useQueryNft'
 import { NftType } from '../../models'
 import { RoutePath } from '../../routes'
+import { CD } from '../../components/Cd'
 
 const StyledMainContainer = styled(MainContainer)`
   background-color: #000;
@@ -33,10 +41,10 @@ const StyledMainContainer = styled(MainContainer)`
 
   @keyframes arm-run {
     0% {
-      transform: rotate(-0.05deg);
+      transform: rotate(-0.04deg);
     }
     100% {
-      transform: rotate(0.05deg);
+      transform: rotate(0.04deg);
     }
   }
 
@@ -52,29 +60,32 @@ const StyledMainContainer = styled(MainContainer)`
   @keyframes open-cd-cover {
     0%,
     30% {
-      transform: translateY(50px) scale(1.1);
+      width: 300px;
+      transform: translateY(50px) translateX(-50%) scale(1.1);
     }
 
     50%,
     100% {
-      transform: translateY(-450px);
+      width: 300px;
+      transform: translateY(-450px) translateX(-50%);
     }
   }
 
   @keyframes open-cd {
     0%,
     30% {
-      transform: translateY(-60px) scale(1.1);
+      width: 280px;
+      transform: translateY(-60px) translateX(-50%) scale(1.1);
       z-index: 3;
     }
     40% {
-      transform: translateY(-80px) scale(1.1);
+      transform: translateY(-80px) translateX(-50%) scale(1.1);
       z-index: 3;
     }
 
     70%,
     100% {
-      transform: translateY(0);
+      transform: translateY(0) translateX(-50%);
       z-index: 1;
     }
   }
@@ -109,7 +120,6 @@ export const AlbumPlayer: React.FC = () => {
   const [isCdPlaying, setIsCdPlaying] = useState(false)
   const { width: innerWidth, height } = useInnerSize()
   const width = Math.min(innerWidth, CONTAINER_MAX_WIDTH)
-  const scale = width / CONTAINER_MAX_WIDTH
 
   const list = useMemo(
     () => data?.album_audios?.map((audio) => audio.url) || [],
@@ -157,22 +167,12 @@ export const AlbumPlayer: React.FC = () => {
         <Box position="absolute" top="0" left="0" w="100%" h="100%" bg="#000" />
       ) : null}
 
-      <Box
-        position="relative"
-        w={`${CONTAINER_MAX_WIDTH}px`}
-        userSelect="none"
-        transformOrigin="top left"
-        transition="200ms"
-        style={{
-          transform: `scale(${scale})`,
-          height: `${Math.floor(scale * 620)}px`,
-        }}
-      >
+      <Box position="relative" w="full" userSelect="none">
         <Box
           position="absolute"
-          top="35px"
-          right="20px"
-          w="260px"
+          top="5%"
+          right="5%"
+          w="50%"
           h="40px"
           lineHeight="40px"
           bg="rgba(0, 0, 0, 1)"
@@ -191,11 +191,11 @@ export const AlbumPlayer: React.FC = () => {
         </Box>
         <Box
           position="absolute"
-          top="91.5px"
-          right="65px"
+          top="14.9%"
+          right="13%"
           zIndex={2}
-          width="10px"
-          height="5px"
+          width="2.1%"
+          height="0.6%"
           bg="rgb(255, 84, 0)"
           shadow="0 0 8px rgb(255, 84, 0)"
           rounded="1px"
@@ -203,6 +203,7 @@ export const AlbumPlayer: React.FC = () => {
             opacity: isPlaying ? 1 : 0,
             transition: isPlaying ? '0ms' : '200ms',
           }}
+          id="i123"
         />
         <Image
           src={LightPath}
@@ -210,8 +211,8 @@ export const AlbumPlayer: React.FC = () => {
           height="auto"
           draggable="false"
           position="absolute"
-          top="514px"
-          left="67px"
+          top="81%"
+          left="13%"
           zIndex={3}
           style={{
             opacity: isPlaying ? 1 : 0,
@@ -228,59 +229,63 @@ export const AlbumPlayer: React.FC = () => {
           draggable="false"
         />
         <Box
+          w="full"
           position="absolute"
-          top="80px"
-          left="40px"
-          w="400px"
-          zIndex={2}
-          transformOrigin="92px 32px"
+          top="0"
+          left="0"
+          transformOrigin="26.5% 57%"
           transition="200ms"
           style={{
             transform: isPlaying ? `rotate(${armRotate}deg)` : undefined,
           }}
+          zIndex={2}
         >
           <Image
             src={StylusArmPath}
-            transformOrigin="92px 32px"
+            w="80%"
+            ml="8%"
+            mt="16%"
+            transformOrigin="23% 28%"
+            userSelect="none"
+            draggable={false}
             style={{
               animation: `arm-run 0.2s infinite alternate ${
                 isCdPlaying ? 'running' : 'paused'
               }`,
             }}
-            w="full"
-            draggable="false"
           />
         </Box>
-        <MibaoImage
-          src={data?.bg_image_url}
-          shadow="0 4px 4px rgba(0, 0, 0, 0.7)"
-          w="370px"
-          h="370px"
-          zIndex={4}
-          transformOrigin="center"
+        <AspectRatio
+          position="absolute"
+          top="85px"
+          left="50%"
           animation="open-cd-cover 3s forwards"
-          containerProps={{
-            position: 'absolute',
-            top: '48px',
-            left: '65px',
-          }}
-        />
+          transformOrigin="center"
+          zIndex={4}
+          shadow="0 4px 4px rgba(0, 0, 0, 0.7)"
+          w="75%"
+          ratio={1 / 1}
+        >
+          <MibaoImage src={data?.bg_image_url} w="full" />
+        </AspectRatio>
         <Box
           position="absolute"
-          top="194px"
-          left="65px"
-          w="370px"
-          h="370px"
+          w="74%"
+          top="31.3%"
+          left="50%"
+          transform="translateX(-50%)"
           transformOrigin="center"
           animation="open-cd 3s"
         >
-          <CD
-            src={data?.bg_image_url ?? ''}
-            isPlaying={isCdPlaying}
-            w="full"
-            h="full"
-            zIndex={1}
-          />
+          <Box>
+            <CD
+              src={data?.bg_image_url ?? ''}
+              isPlaying={isCdPlaying}
+              w="full"
+              h="full"
+              zIndex={1}
+            />
+          </Box>
         </Box>
       </Box>
       {audioEl}
