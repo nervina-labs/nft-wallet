@@ -128,7 +128,6 @@ export const AlbumPlayer: React.FC = () => {
     () => data?.album_audios?.map((audio) => audio.url) || [],
     [data?.album_audios]
   )
-  console.log('list: ', data, list)
   const {
     index,
     willIndex,
@@ -160,7 +159,7 @@ export const AlbumPlayer: React.FC = () => {
   const armRotate =
     (ARM_RUN_RANGE[1] - ARM_RUN_RANGE[0]) * cdProgress + ARM_RUN_RANGE[0]
 
-  if (data && data?.renderer_type !== NftType.Audio) {
+  if (data && (data?.renderer_type !== NftType.Audio || !data?.album_audios)) {
     return <Redirect to={`${RoutePath.NFT}/${id}`} />
   }
 
@@ -210,12 +209,12 @@ export const AlbumPlayer: React.FC = () => {
         />
         <Image
           src={LightPath}
-          w="56px"
+          w="12%"
           height="auto"
           draggable="false"
           position="absolute"
-          top="81%"
-          left="13%"
+          top="82.2%"
+          left="13.4%"
           zIndex={3}
           style={{
             opacity: isPlaying ? 1 : 0,
