@@ -40,8 +40,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   >(
     (event$) =>
       event$.pipe(
-        switchMap(() => {
+        switchMap((touchStartEvent) => {
           setIsChanging(true)
+          onChangeCurrentProgress(touchStartEvent.changedTouches[0].clientX)
           return fromEvent<ProgressTouchEvent>(window, 'touchmove', {
             passive: false,
           }).pipe(
@@ -120,6 +121,13 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         cursor: 'pointer',
       }}
       onMouseDown={onChangeProgressByMouseDown}
+      onTouchStart={(e) => {
+        if (e.cancelable) {
+          e.preventDefault()
+          e.stopPropagation()
+        }
+        onChangeProgressByTouchstart(e)
+      }}
     >
       <Box
         zIndex={0}
@@ -151,13 +159,6 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         left="0"
         position="absolute"
         transformOrigin="center center"
-        onTouchStart={(e) => {
-          if (e.cancelable) {
-            e.preventDefault()
-            e.stopPropagation()
-          }
-          onChangeProgressByTouchstart(e)
-        }}
         _before={{
           content: '" "',
           display: 'block',
