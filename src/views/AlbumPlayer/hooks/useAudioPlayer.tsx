@@ -46,27 +46,6 @@ export function useAudioPlayer(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list])
 
-  const onChangeIndex = useCallback(
-    (i) => {
-      setWillIndex(i)
-      setSrc(list[i])
-      setIsPlaying(true)
-      setTimeout(() => {
-        onSyncAudioState()
-        onPlay()
-      })
-    },
-    [list, onPlay, onSyncAudioState]
-  )
-
-  const onNext = useCallback(() => {
-    onChangeIndex(hasNext ? index + 1 : index)
-  }, [hasNext, index, onChangeIndex])
-
-  const onPrev = useCallback(() => {
-    onChangeIndex(index > 0 ? index - 1 : index)
-  }, [index, onChangeIndex])
-
   const onChangeProgress = useCallback(async (progress: number) => {
     const el = audioRef.current
     if (el) {
@@ -80,6 +59,28 @@ export function useAudioPlayer(
       }
     }
   }, [])
+
+  const onChangeIndex = useCallback(
+    (i) => {
+      setWillIndex(i)
+      setSrc(list[i])
+      onChangeProgress(0)
+      setIsPlaying(true)
+      setTimeout(() => {
+        onSyncAudioState()
+        onPlay()
+      })
+    },
+    [list, onChangeProgress, onPlay, onSyncAudioState]
+  )
+
+  const onNext = useCallback(() => {
+    onChangeIndex(hasNext ? index + 1 : index)
+  }, [hasNext, index, onChangeIndex])
+
+  const onPrev = useCallback(() => {
+    onChangeIndex(index > 0 ? index - 1 : index)
+  }, [index, onChangeIndex])
 
   const audioEl = useMemo(
     () => (
