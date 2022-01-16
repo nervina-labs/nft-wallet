@@ -61,7 +61,7 @@ const StyledMainContainer = styled(MainContainer)`
     0%,
     30% {
       width: 300px;
-      transform: translateY(50px) translateX(-50%) scale(1.1);
+      transform: translateY(0) translateX(-50%) scale(1.1);
     }
 
     50%,
@@ -75,15 +75,18 @@ const StyledMainContainer = styled(MainContainer)`
     0%,
     30% {
       width: 280px;
-      transform: translateY(-60px) translateX(-50%) scale(1.1);
+      transform: translateY(-30px) translateX(-50%) scale(1.1);
       z-index: 3;
     }
     40% {
       transform: translateY(-80px) translateX(-50%) scale(1.1);
       z-index: 3;
     }
+    50% {
+      width: 74%;
+    }
 
-    70%,
+    60%,
     100% {
       transform: translateY(0) translateX(-50%);
       z-index: 1;
