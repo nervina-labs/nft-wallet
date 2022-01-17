@@ -301,7 +301,8 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             webp={isSupportWebp()}
             fallbackSrc={FALLBACK_SRC}
             srcQueryParams={tidParams}
-            zIndex={2}
+            zIndex={3}
+            position="relative"
           />
           <CD
             src={detail.renderer}
@@ -309,6 +310,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             w="full"
             left="0"
             position="absolute"
+            zIndex={2}
           />
           <Box
             position="absolute"
