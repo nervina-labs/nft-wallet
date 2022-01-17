@@ -31,6 +31,7 @@ import { RoutePath } from '../../routes'
 import { CD } from '../../components/Cd'
 import { useObservable } from 'rxjs-hooks'
 import { map, timer } from 'rxjs'
+import { Appbar, AppbarSticky } from '../../components/Appbar'
 
 const StyledMainContainer = styled(MainContainer)`
   background-color: #000;
@@ -169,6 +170,10 @@ export const AlbumPlayer: React.FC = () => {
       {isLoading ? (
         <Box position="absolute" top="0" left="0" w="100%" h="100%" bg="#000" />
       ) : null}
+
+      <AppbarSticky position="absolute" top="0" left="0" w="full">
+        <Appbar transparent />
+      </AppbarSticky>
 
       <Box position="relative" w="full" userSelect="none">
         <Box
