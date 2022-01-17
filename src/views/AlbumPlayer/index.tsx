@@ -86,7 +86,7 @@ const StyledMainContainer = styled(MainContainer)`
       z-index: 3;
     }
 
-    60%,
+    80%,
     100% {
       transform: translateY(0);
       z-index: 1;
@@ -161,6 +161,10 @@ export const AlbumPlayer: React.FC = () => {
   const armRotate =
     (ARM_RUN_RANGE[1] - ARM_RUN_RANGE[0]) * cdProgress + ARM_RUN_RANGE[0]
 
+  const isReleaseCdWidth = useObservable(
+    () => timer(1000).pipe(map(() => true)),
+    false
+  )
   const isClosedCoverAnimation = useObservable(
     () => timer(1500).pipe(map(() => true)),
     false
@@ -316,11 +320,11 @@ export const AlbumPlayer: React.FC = () => {
           transformOrigin="center"
           animation="open-cd 3s"
           style={{
-            width: !isClosedCoverAnimation ? '250px' : undefined,
+            width: !isReleaseCdWidth ? '250px' : undefined,
             left: `calc(50% - ${
-              (!isClosedCoverAnimation ? 250 : width * 0.74) / 2
+              (!isReleaseCdWidth ? 250 : width * 0.74) / 2
             }px)`,
-            transition: isClosedCoverCdAnimation ? '0ms' : '200ms',
+            transition: isClosedCoverCdAnimation ? '0ms' : '400ms',
           }}
         >
           <Box>
