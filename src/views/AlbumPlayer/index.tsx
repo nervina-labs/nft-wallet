@@ -14,15 +14,6 @@ import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
 import { useEffect, useMemo, useState } from 'react'
-import BrushedMetalPath from '../../assets/album-player/brushed-metal-bg.png'
-import LightPath from '../../assets/album-player/light.png'
-import DecorateControlPath from '../../assets/album-player/decorate-control.png'
-import StylusArmPath from '../../assets/album-player/stylus-arm.png'
-import { ReactComponent as PrevSvg } from '../../assets/album-player/prev.svg'
-import { ReactComponent as NextSvg } from '../../assets/album-player/next.svg'
-import { ReactComponent as PlaySvg } from '../../assets/album-player/play.svg'
-import { ReactComponent as StopSvg } from '../../assets/album-player/stop.svg'
-import { ReactComponent as PlayingIconSvg } from '../../assets/album-player/playing-icon.svg'
 import { ProgressBar } from './components/progressBar'
 import { Redirect, useParams } from 'react-router-dom'
 import { useQueryNft } from './hooks/useQueryNft'
@@ -32,6 +23,18 @@ import { CD } from '../../components/Cd'
 import { useObservable } from 'rxjs-hooks'
 import { map, timer } from 'rxjs'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
+import { getNFTQueryParams, isSupportWebp } from '../../utils'
+import { useTranslation } from 'react-i18next'
+import BrushedMetalPath from '../../assets/album-player/brushed-metal-bg.png'
+import LightPath from '../../assets/album-player/light.png'
+import DecorateControlPath from '../../assets/album-player/decorate-control.png'
+import StylusArmPath from '../../assets/album-player/stylus-arm.png'
+import { ReactComponent as PrevSvg } from '../../assets/album-player/prev.svg'
+import { ReactComponent as NextSvg } from '../../assets/album-player/next.svg'
+import { ReactComponent as PlaySvg } from '../../assets/album-player/play.svg'
+import { ReactComponent as StopSvg } from '../../assets/album-player/stop.svg'
+import { ReactComponent as PlayingIconSvg } from '../../assets/album-player/playing-icon.svg'
+import FALLBACK_SRC from '../../assets/img/nft-fallback.png'
 
 const StyledMainContainer = styled(MainContainer)`
   background-color: #000;
@@ -118,10 +121,11 @@ export const AlbumPlayer: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { data, isLoading } = useQueryNft(id)
   const [isCdPlaying, setIsCdPlaying] = useState(false)
-  const { width: innerWidth, height } = useInnerSize()
+  const { width: innerWidth, height } = useInnerSize({ dueTime: 0 })
   const width = Math.min(innerWidth, CONTAINER_MAX_WIDTH)
   const scale = width / CONTAINER_MAX_WIDTH
 
+  const { i18n } = useTranslation('translations')
   const list = useMemo(
     () => data?.album_audios?.map((audio) => audio.url) || [],
     [data?.album_audios]
@@ -161,13 +165,24 @@ export const AlbumPlayer: React.FC = () => {
     () => timer(1500).pipe(map(() => true)),
     false
   )
+  const isClosedCoverCdAnimation = useObservable(
+    () => timer(3000).pipe(map(() => true)),
+    false
+  )
+
+  const tidParams = getNFTQueryParams(data?.n_token_id, i18n.language) ?? {}
 
   if (data && (data?.renderer_type !== NftType.Audio || !data?.album_audios)) {
     return <Redirect to={`${RoutePath.NFT}/${id}`} />
   }
 
   return (
-    <StyledMainContainer style={{ minHeight: `${height}px` }}>
+    <StyledMainContainer
+      style={{
+        minHeight: `${height}px`,
+        pointerEvents: isClosedCoverAnimation ? undefined : 'none',
+      }}
+    >
       {isLoading ? (
         <Box position="absolute" top="0" left="0" w="100%" h="100%" bg="#000" />
       ) : null}
@@ -219,7 +234,6 @@ export const AlbumPlayer: React.FC = () => {
             opacity: isPlaying ? 1 : 0,
             transition: isPlaying ? '0ms' : '200ms',
           }}
-          id="i123"
         />
         <Image
           src={LightPath}
@@ -274,18 +288,24 @@ export const AlbumPlayer: React.FC = () => {
         {!isClosedCoverAnimation ? (
           <AspectRatio
             position="absolute"
-            top="85px"
+            top="110px"
             left="50%"
             transformOrigin="center"
             zIndex={4}
             shadow="0 4px 4px rgba(0, 0, 0, 0.7)"
             w="75%"
-            maxW="300px"
+            maxW="250px"
             ratio={1 / 1}
             transition="500ms"
             animation="open-cd-cover 3s"
           >
-            <MibaoImage src={data?.renderer} w="full" />
+            <MibaoImage
+              src={data?.renderer}
+              w="full"
+              webp={isSupportWebp()}
+              fallbackSrc={FALLBACK_SRC}
+              srcQueryParams={tidParams}
+            />
           </AspectRatio>
         ) : null}
         <Box
@@ -294,13 +314,13 @@ export const AlbumPlayer: React.FC = () => {
           top="31.3%"
           left="50%"
           transformOrigin="center"
-          transition="200ms"
           animation="open-cd 3s"
           style={{
-            width: !isClosedCoverAnimation ? '300px' : undefined,
+            width: !isClosedCoverAnimation ? '250px' : undefined,
             left: `calc(50% - ${
-              (!isClosedCoverAnimation ? 300 : width * 0.74) / 2
+              (!isClosedCoverAnimation ? 250 : width * 0.74) / 2
             }px)`,
+            transition: isClosedCoverCdAnimation ? '0ms' : '200ms',
           }}
         >
           <Box>
