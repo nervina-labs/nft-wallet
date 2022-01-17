@@ -120,6 +120,7 @@ export const AlbumPlayer: React.FC = () => {
   const [isCdPlaying, setIsCdPlaying] = useState(false)
   const { width: innerWidth, height } = useInnerSize()
   const width = Math.min(innerWidth, CONTAINER_MAX_WIDTH)
+  const scale = width / CONTAINER_MAX_WIDTH
 
   const list = useMemo(
     () => data?.album_audios?.map((audio) => audio.url) || [],
@@ -175,7 +176,14 @@ export const AlbumPlayer: React.FC = () => {
         <Appbar transparent />
       </AppbarSticky>
 
-      <Box position="relative" w="full" userSelect="none">
+      <Box
+        position="relative"
+        w="full"
+        userSelect="none"
+        style={{
+          height: `${Math.floor(620 * scale)}px`,
+        }}
+      >
         <Box
           position="absolute"
           top="5%"
