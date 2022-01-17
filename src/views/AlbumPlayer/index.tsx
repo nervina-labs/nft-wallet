@@ -29,6 +29,8 @@ import { useQueryNft } from './hooks/useQueryNft'
 import { NftType } from '../../models'
 import { RoutePath } from '../../routes'
 import { CD } from '../../components/Cd'
+import { useObservable } from 'rxjs-hooks'
+import { map, timer } from 'rxjs'
 
 const StyledMainContainer = styled(MainContainer)`
   background-color: #000;
@@ -60,13 +62,11 @@ const StyledMainContainer = styled(MainContainer)`
   @keyframes open-cd-cover {
     0%,
     30% {
-      width: 300px;
-      transform: translateY(0) translateX(-50%) scale(1.1);
+      transform: translateY(0) translateX(-50%);
     }
 
     50%,
     100% {
-      width: 300px;
       transform: translateY(-450px) translateX(-50%);
     }
   }
@@ -74,21 +74,17 @@ const StyledMainContainer = styled(MainContainer)`
   @keyframes open-cd {
     0%,
     30% {
-      width: 280px;
-      transform: translateY(-30px) translateX(-50%) scale(1.1);
+      transform: translateY(-30px);
       z-index: 3;
     }
-    40% {
-      transform: translateY(-80px) translateX(-50%) scale(1.1);
+    38% {
+      transform: translateY(-80px);
       z-index: 3;
-    }
-    50% {
-      width: 74%;
     }
 
     60%,
     100% {
-      transform: translateY(0) translateX(-50%);
+      transform: translateY(0);
       z-index: 1;
     }
   }
@@ -158,6 +154,11 @@ export const AlbumPlayer: React.FC = () => {
   )
   const armRotate =
     (ARM_RUN_RANGE[1] - ARM_RUN_RANGE[0]) * cdProgress + ARM_RUN_RANGE[0]
+
+  const isClosedCoverAnimation = useObservable(
+    () => timer(1500).pipe(map(() => true)),
+    false
+  )
 
   if (data && (data?.renderer_type !== NftType.Audio || !data?.album_audios)) {
     return <Redirect to={`${RoutePath.NFT}/${id}`} />
@@ -257,27 +258,37 @@ export const AlbumPlayer: React.FC = () => {
             }}
           />
         </Box>
-        <AspectRatio
-          position="absolute"
-          top="85px"
-          left="50%"
-          animation="open-cd-cover 3s forwards"
-          transformOrigin="center"
-          zIndex={4}
-          shadow="0 4px 4px rgba(0, 0, 0, 0.7)"
-          w="75%"
-          ratio={1 / 1}
-        >
-          <MibaoImage src={data?.bg_image_url} w="full" />
-        </AspectRatio>
+        {!isClosedCoverAnimation ? (
+          <AspectRatio
+            position="absolute"
+            top="85px"
+            left="50%"
+            transformOrigin="center"
+            zIndex={4}
+            shadow="0 4px 4px rgba(0, 0, 0, 0.7)"
+            w="75%"
+            maxW="300px"
+            ratio={1 / 1}
+            transition="500ms"
+            animation="open-cd-cover 3s"
+          >
+            <MibaoImage src={data?.bg_image_url} w="full" />
+          </AspectRatio>
+        ) : null}
         <Box
           position="absolute"
           w="74%"
           top="31.3%"
           left="50%"
-          transform="translateX(-50%)"
           transformOrigin="center"
+          transition="200ms"
           animation="open-cd 3s"
+          style={{
+            width: !isClosedCoverAnimation ? '300px' : undefined,
+            left: `calc(50% - ${
+              (!isClosedCoverAnimation ? 300 : width * 0.74) / 2
+            }px)`,
+          }}
         >
           <Box>
             <CD
