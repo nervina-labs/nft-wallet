@@ -14,7 +14,7 @@ import {
   Preview,
   useDisclosure,
 } from '@mibao-ui/components'
-import { isTokenClass, TokenClass } from '../../../models/class-list'
+import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as CardbackSvg } from '../../../assets/svg/card-back.svg'
 import { ReactComponent as LockSvg } from '../../../assets/svg/lock.svg'
 import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
@@ -288,7 +288,6 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
   const arButtonRef = useRef<HTMLAnchorElement>(null)
   const isRendererUsdz = isUsdz(detail?.renderer)
-  // const { push } = useHistory()
   const {
     isOpen: isOpenAlbumPlayer,
     onOpen: onOpenAlbumPlayer,
@@ -309,6 +308,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             srcQueryParams={tidParams}
             zIndex={3}
             position="relative"
+            bg="#000"
           />
           <CD
             src={detail.renderer}
@@ -380,7 +380,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       overflow="hidden"
       pb="60px"
     >
-      {detail && !isTokenClass(detail) ? (
+      {detail && 'album_audios' in detail ? (
         <AlbumPlayerDrawer
           isLoading={!detail}
           data={detail}
@@ -397,11 +397,10 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         tiltAngleYInitial={tiltAngleYInitial}
         onClick={(e) => {
           if (
-            !isTokenClass(detail) &&
-            detail?.renderer_type === NftType.Audio
+            detail?.renderer_type === NftType.Audio &&
+            'album_audios' in detail
           ) {
             onOpenAlbumPlayer()
-            // push(`/album-player/${detail?.uuid}`)
             return
           }
           onPreview(e)
