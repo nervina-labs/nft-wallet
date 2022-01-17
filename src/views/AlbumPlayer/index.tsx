@@ -44,10 +44,10 @@ const StyledMainContainer = styled(MainContainer)`
 
   @keyframes arm-run {
     0% {
-      transform: rotate(-0.04deg);
+      transform: rotate(-0.05deg);
     }
     100% {
-      transform: rotate(0.04deg);
+      transform: rotate(0.05deg);
     }
   }
 
@@ -277,7 +277,7 @@ export const AlbumPlayer: React.FC = () => {
             transition="500ms"
             animation="open-cd-cover 3s"
           >
-            <MibaoImage src={data?.bg_image_url} w="full" />
+            <MibaoImage src={data?.renderer} w="full" />
           </AspectRatio>
         ) : null}
         <Box
@@ -297,7 +297,7 @@ export const AlbumPlayer: React.FC = () => {
         >
           <Box>
             <CD
-              src={data?.bg_image_url ?? ''}
+              src={data?.renderer ?? ''}
               isPlaying={isCdPlaying}
               w="full"
               h="full"
