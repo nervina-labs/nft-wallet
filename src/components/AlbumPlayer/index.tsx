@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { MainContainer } from '../../styles'
 import {
   Box,
   Image,
@@ -15,14 +14,10 @@ import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
 import { useEffect, useMemo, useState } from 'react'
 import { ProgressBar } from './components/progressBar'
-import { Redirect, useParams } from 'react-router-dom'
-import { useQueryNft } from './hooks/useQueryNft'
-import { NftType } from '../../models'
-import { RoutePath } from '../../routes'
+import { NFTDetail } from '../../models'
 import { CD } from '../../components/Cd'
 import { useObservable } from 'rxjs-hooks'
 import { map, timer } from 'rxjs'
-import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { getNFTQueryParams, isSupportWebp } from '../../utils'
 import { useTranslation } from 'react-i18next'
 import BrushedMetalPath from '../../assets/album-player/brushed-metal-bg.png'
@@ -36,7 +31,7 @@ import { ReactComponent as StopSvg } from '../../assets/album-player/stop.svg'
 import { ReactComponent as PlayingIconSvg } from '../../assets/album-player/playing-icon.svg'
 import FALLBACK_SRC from '../../assets/img/nft-fallback.png'
 
-const StyledMainContainer = styled(MainContainer)`
+const StyledMainContainer = styled(Box)`
   background-color: #000;
   position: relative;
   display: flex;
@@ -117,9 +112,10 @@ const PlayButton = styled(Button)`
 
 const ARM_RUN_RANGE = [17, 36] as const
 
-export const AlbumPlayer: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
-  const { data, isLoading } = useQueryNft(id)
+export const AlbumPlayer: React.FC<{
+  data: NFTDetail
+  isLoading?: boolean
+}> = ({ data, isLoading = true }) => {
   const [isCdPlaying, setIsCdPlaying] = useState(false)
   const { width: innerWidth, height } = useInnerSize({ dueTime: 0 })
   const width = Math.min(innerWidth, CONTAINER_MAX_WIDTH)
@@ -176,10 +172,6 @@ export const AlbumPlayer: React.FC = () => {
 
   const tidParams = getNFTQueryParams(data?.n_token_id, i18n.language) ?? {}
 
-  if (data && (data?.renderer_type !== NftType.Audio || !data?.album_audios)) {
-    return <Redirect to={`${RoutePath.NFT}/${id}`} />
-  }
-
   return (
     <StyledMainContainer
       style={{
@@ -190,10 +182,6 @@ export const AlbumPlayer: React.FC = () => {
       {isLoading ? (
         <Box position="absolute" top="0" left="0" w="100%" h="100%" bg="#000" />
       ) : null}
-
-      <AppbarSticky position="absolute" top="0" left="0" w="full">
-        <Appbar transparent />
-      </AppbarSticky>
 
       <Box
         position="relative"

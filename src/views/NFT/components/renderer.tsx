@@ -33,10 +33,11 @@ import { useTilt } from '../hooks/useTilt'
 import { useToast } from '../../../hooks/useToast'
 import { LoadableComponent } from '../../../components/GlobalLoader'
 import { trackLabels, useTrackEvent } from '../../../hooks/useTrack'
-import { useHistory, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { IS_SUPPORT_AR } from '../../../constants'
 import { ArButton } from './arButton'
 import { CD } from '../../../components/Cd'
+import { AlbumPlayerDrawer } from './albumPlayerDrawer'
 
 const ThreeDPreview = lazy(
   async () => await import('../../../components/ThreeDPreview')
@@ -287,7 +288,12 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
   const arButtonRef = useRef<HTMLAnchorElement>(null)
   const isRendererUsdz = isUsdz(detail?.renderer)
-  const { push } = useHistory()
+  // const { push } = useHistory()
+  const {
+    isOpen: isOpenAlbumPlayer,
+    onOpen: onOpenAlbumPlayer,
+    onClose: onCloseAlbumPlayer,
+  } = useDisclosure()
 
   const imageEl = useMemo(() => {
     if (detail?.renderer_type === NftType.Audio) {
@@ -374,6 +380,14 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       overflow="hidden"
       pb="60px"
     >
+      {detail && !isTokenClass(detail) ? (
+        <AlbumPlayerDrawer
+          isLoading={!detail}
+          data={detail}
+          isOpen={isOpenAlbumPlayer}
+          onClose={onCloseAlbumPlayer}
+        />
+      ) : null}
       <TiltContainer
         adjustGyroscope
         gyroscope
@@ -386,7 +400,8 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             !isTokenClass(detail) &&
             detail?.renderer_type === NftType.Audio
           ) {
-            push(`/album-player/${detail?.uuid}`)
+            onOpenAlbumPlayer()
+            // push(`/album-player/${detail?.uuid}`)
             return
           }
           onPreview(e)

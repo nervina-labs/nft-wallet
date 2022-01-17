@@ -31,7 +31,6 @@ import { Ranking } from '../views/Ranking'
 import { ExploreAll } from '../views/ExploreAll'
 import { OrderStatus } from '../views/OrderStatus'
 import { Flashsigner } from '../views/Flashsigner'
-import { AlbumPlayer } from '../views/AlbumPlayer'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -285,12 +284,5 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Flashsigner',
     path: RoutePath.Flashsigner,
-  },
-  {
-    component: AlbumPlayer,
-    exact: false,
-    key: 'AlbumPlayer',
-    path: RoutePath.AlbumPlayer,
-    params: '/:id',
   },
 ]
