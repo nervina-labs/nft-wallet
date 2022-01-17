@@ -278,10 +278,10 @@ export const Transfer: React.FC = () => {
             issuerId: `${nftDetail?.n_issuer_id!}`,
             tokenId: `${nftDetail?.n_token_id!}`,
             fromAddress: address,
-            toAddress: ckbAddress,
+            toAddress: finalUsedAddress,
             extra: {
               uuid: id,
-              ckbAddress,
+              ckbAddress: finalUsedAddress,
             },
           })
           transferMnftWithRedirect(url, options as TransferMnftOptions)
@@ -345,7 +345,6 @@ export const Transfer: React.FC = () => {
     stopTranfer,
     address,
     nftDetail,
-    ckbAddress,
   ])
 
   const closeDrawer = (): void => setIsDrawerOpen(false)

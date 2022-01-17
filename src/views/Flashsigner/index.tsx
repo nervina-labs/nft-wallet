@@ -28,7 +28,7 @@ export const Flashsigner: React.FC = () => {
           },
           address
         )
-        history.replace(extra?.redirectUri || RoutePath.NFTs)
+        history.replace(extra?.redirect || RoutePath.NFTs)
       },
       onSignTransaction(result) {
         const { transaction } = result
