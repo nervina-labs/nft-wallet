@@ -615,7 +615,9 @@ export class ServerWalletAPI {
     customData,
     sig,
   }: RedeemParams): Promise<AxiosResponse<RedeemResultResponse>> {
-    const rawTx = transformers.TransformTransaction(tx) as any
+    const rawTx = isPwTransaction(tx)
+      ? (transformers.TransformTransaction(tx) as any)
+      : tx
     if (sig) {
       const witnessArgs: WitnessArgs = {
         lock: sig,

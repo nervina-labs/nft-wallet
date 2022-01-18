@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, {
   useCallback,
   useEffect,
@@ -7,6 +9,10 @@ import React, {
   lazy,
 } from 'react'
 import { Redirect, useHistory, useLocation, useParams } from 'react-router'
+import {
+  TransferMnftOptions,
+  transferMnftWithRedirect,
+} from '@nervina-labs/flashsigner'
 import classnames from 'classnames'
 import { Appbar } from '../../components/Appbar'
 import { NFTDetail, NftType, Query } from '../../models'
@@ -19,7 +25,7 @@ import {
   verifyEthAddress,
   verifyDasAddress,
   generateUnipassSignTxUrl,
-  generateFlashsignerSignTxUrl,
+  buildFlashsignerOptions,
 } from '../../utils'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
@@ -267,23 +273,18 @@ export const Transfer: React.FC = () => {
           stopTranfer(true)
         } else {
           const url = `${location.origin}${RoutePath.Flashsigner}`
-          location.href = generateFlashsignerSignTxUrl(
-            url,
-            url,
-            pubkey,
-            '',
-            {
+          const options = buildFlashsignerOptions({
+            classId: nftDetail?.class_id!,
+            issuerId: `${nftDetail?.n_issuer_id!}`,
+            tokenId: `${nftDetail?.n_token_id!}`,
+            fromAddress: address,
+            toAddress: finalUsedAddress,
+            extra: {
               uuid: id,
-              ckbAddress,
+              ckbAddress: finalUsedAddress,
             },
-            {
-              class_id: nftDetail?.class_id,
-              issuer_id: nftDetail?.n_issuer_id,
-              token_id: nftDetail?.n_token_id,
-              from_address: address,
-              to_address: ckbAddress,
-            }
-          )
+          })
+          transferMnftWithRedirect(url, options as TransferMnftOptions)
         }
         return
       }
@@ -344,7 +345,6 @@ export const Transfer: React.FC = () => {
     stopTranfer,
     address,
     nftDetail,
-    ckbAddress,
   ])
 
   const closeDrawer = (): void => setIsDrawerOpen(false)

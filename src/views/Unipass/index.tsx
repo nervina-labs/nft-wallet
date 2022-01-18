@@ -68,9 +68,7 @@ export const Unipass: React.FC = () => {
       case UnipassAction.SignTx: {
         const id = prevState.uuid as string
         if (code !== 200) {
-          history.replace(`/transfer/${id}`, {
-            prevState,
-          })
+          history.replace(`/transfer/${id}`)
           break
         }
         const data = unipassInfo?.data as UnipassSignData
