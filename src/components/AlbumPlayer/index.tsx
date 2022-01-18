@@ -165,11 +165,7 @@ export const AlbumPlayer: React.FC<{
     () => timer(1500).pipe(map(() => true)),
     false
   )
-  const isClosedCoverCdAnimation = useObservable(
-    () => timer(3000).pipe(map(() => true)),
-    false
-  )
-
+  const [coverCdTransition, setCoverCdTransition] = useState('500ms')
   const tidParams = getNFTQueryParams(data?.n_token_id, i18n.language) ?? {}
 
   return (
@@ -312,8 +308,9 @@ export const AlbumPlayer: React.FC<{
             left: `calc(50% - ${
               (!isReleaseCdWidth ? 250 : width * 0.74) / 2
             }px)`,
-            transition: isClosedCoverCdAnimation ? '0ms' : '400ms',
+            transition: coverCdTransition,
           }}
+          onAnimationEnd={() => setCoverCdTransition('0ms')}
         >
           <Box>
             <CD
