@@ -21,7 +21,7 @@ import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
 import { ReactComponent as ThreeDSvg } from '../../../assets/svg/3D.svg'
 import { useTranslation } from 'react-i18next'
 import FALLBACK_SRC from '../../../assets/img/nft-fallback.png'
-import React, { lazy, useCallback, useRef, useState } from 'react'
+import React, { lazy, useCallback, useMemo, useRef, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons'
 import {
   addParamsToUrl,
@@ -36,6 +36,8 @@ import { trackLabels, useTrackEvent } from '../../../hooks/useTrack'
 import { useParams } from 'react-router'
 import { IS_SUPPORT_AR } from '../../../constants'
 import { ArButton } from './arButton'
+import { CD } from '../../../components/Cd'
+import { AlbumPlayerDrawer } from './albumPlayerDrawer'
 
 const ThreeDPreview = lazy(
   async () => await import('../../../components/ThreeDPreview')
@@ -268,24 +270,124 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   }, [t, toast, isOpenPreview])
   const trackCardBack = useTrackEvent('nft-detail-cardback', 'click')
   const trackPreview = useTrackEvent('nft-detail', 'click')
-  const onPreview = useCallback(
-    (e) => {
-      if (!showCardBackContent) {
-        onOpenPreview()
-      }
-      e.stopPropagation()
-      trackPreview(trackLabels.nftDetail.check + id)
-    },
-    [onOpenPreview, showCardBackContent, trackPreview, id]
-  )
   const hasPlayIcon =
     detail?.renderer_type === NftType.Audio ||
     detail?.renderer_type === NftType.Video
   const tid = (detail as NFTDetail)?.n_token_id
-  const tidParams = getNFTQueryParams(tid, i18n.language) ?? {}
+  const tidParams = useMemo(() => getNFTQueryParams(tid, i18n.language) ?? {}, [
+    i18n.language,
+    tid,
+  ])
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
   const arButtonRef = useRef<HTMLAnchorElement>(null)
   const isRendererUsdz = isUsdz(detail?.renderer)
+  const {
+    isOpen: isOpenAlbumPlayer,
+    onOpen: onOpenAlbumPlayer,
+    onClose: onCloseAlbumPlayer,
+  } = useDisclosure()
+  const onPreview = useCallback(
+    (e) => {
+      e.stopPropagation()
+      if (!showCardBackContent) {
+        if (detail?.renderer_type === NftType.Audio) {
+          if ('album_audios' in detail) {
+            onOpenAlbumPlayer()
+          } else {
+            toast(t('nft.only-the-owner-can-play'))
+          }
+          return
+        }
+        onOpenPreview()
+      }
+      trackPreview(trackLabels.nftDetail.check + id)
+    },
+    [
+      detail,
+      showCardBackContent,
+      trackPreview,
+      id,
+      onOpenAlbumPlayer,
+      toast,
+      t,
+      onOpenPreview,
+    ]
+  )
+
+  const imageEl = useMemo(() => {
+    if (detail?.renderer_type === NftType.Audio) {
+      return (
+        <Box position="relative" w="250px" h="250px">
+          <Image
+            src={detail.renderer}
+            shadow="0 4px 4px rgba(0, 0, 0, 0.7)"
+            w="full"
+            h="250px"
+            webp={isSupportWebp()}
+            fallbackSrc={FALLBACK_SRC}
+            srcQueryParams={tidParams}
+            zIndex={3}
+            position="relative"
+            bg="#000"
+          />
+          <CD
+            src={detail.renderer}
+            top="45px"
+            w="full"
+            left="0"
+            position="absolute"
+            zIndex={2}
+          />
+          <Box
+            position="absolute"
+            bottom="-12.5px"
+            left={'calc(50% - 12.5px)'}
+            zIndex={4}
+          >
+            <NftPlaySvg />
+          </Box>
+        </Box>
+      )
+    }
+
+    return (
+      <>
+        <Image
+          maxH="300px"
+          src={imgUrl}
+          rounded="30px"
+          m="auto"
+          webp={isSupportWebp()}
+          fallbackSrc={FALLBACK_SRC}
+          zIndex={2}
+          srcQueryParams={tidParams}
+          minW="100px"
+          minH="100px"
+          cursor="pointer"
+        />
+        {hasPlayIcon ? (
+          <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
+            <NftPlaySvg />
+          </Box>
+        ) : null}
+        {detail?.renderer_type === NftType.ThreeD ? (
+          <Center
+            position="absolute"
+            bottom="10px"
+            right="10px"
+            zIndex={4}
+            rounded="100%"
+            w="25px"
+            h="25px"
+            border="1px solid var(--chakra-colors-gray-200)"
+            bg="linear-gradient(180deg, rgba(35, 38, 47, 0.5) 0%, rgba(35, 38, 47, 0) 100%)"
+          >
+            <ThreeDSvg />
+          </Center>
+        ) : null}
+      </>
+    )
+  }, [detail?.renderer, detail?.renderer_type, hasPlayIcon, imgUrl, tidParams])
 
   return (
     <Flex
@@ -298,6 +400,14 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
       overflow="hidden"
       pb="60px"
     >
+      {detail && 'album_audios' in detail ? (
+        <AlbumPlayerDrawer
+          isLoading={!detail}
+          data={detail}
+          isOpen={isOpenAlbumPlayer}
+          onClose={onCloseAlbumPlayer}
+        />
+      ) : null}
       <TiltContainer
         adjustGyroscope
         gyroscope
@@ -322,39 +432,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             className="flip-card-img"
             pointerEvents={showCardBackContent ? 'none' : undefined}
           >
-            <Image
-              maxH="300px"
-              src={imgUrl}
-              rounded="30px"
-              m="auto"
-              webp={isSupportWebp()}
-              fallbackSrc={FALLBACK_SRC}
-              zIndex={2}
-              srcQueryParams={tidParams}
-              minW="100px"
-              minH="100px"
-              cursor="pointer"
-            />
-            {hasPlayIcon ? (
-              <Box position="absolute" bottom="10px" right="10px" zIndex={4}>
-                <NftPlaySvg />
-              </Box>
-            ) : null}
-            {detail?.renderer_type === NftType.ThreeD ? (
-              <Center
-                position="absolute"
-                bottom="10px"
-                right="10px"
-                zIndex={4}
-                rounded="100%"
-                w="25px"
-                h="25px"
-                border="1px solid var(--chakra-colors-gray-200)"
-                bg="linear-gradient(180deg, rgba(35, 38, 47, 0.5) 0%, rgba(35, 38, 47, 0) 100%)"
-              >
-                <ThreeDSvg />
-              </Center>
-            ) : null}
+            {imageEl}
           </Box>
           {hasCardback ? (
             <CardBack
