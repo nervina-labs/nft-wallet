@@ -63,12 +63,12 @@ export function useAudioPlayer(
   )
 
   const onNext = useCallback(() => {
-    onChangeIndex(hasNext ? index + 1 : index)
+    onChangeIndex(hasNext ? index + 1 : 0)
   }, [hasNext, index, onChangeIndex])
 
   const onPrev = useCallback(() => {
-    onChangeIndex(index > 0 ? index - 1 : index)
-  }, [index, onChangeIndex])
+    onChangeIndex(index > 0 ? index - 1 : list.length - 1)
+  }, [index, list.length, onChangeIndex])
 
   const audioEl = useMemo(
     () => (
@@ -82,17 +82,12 @@ export function useAudioPlayer(
         onPlay={() => setIsPlaying(true)}
         onPaste={() => setIsPlaying(false)}
         onEnded={() => {
-          if (hasNext) {
-            onNext()
-          } else {
-            setIsPlaying(false)
-          }
-
+          onNext()
           options?.onEnded?.()
         }}
       />
     ),
-    [hasNext, onNext, onSyncAudioState, options, src]
+    [onNext, onSyncAudioState, options, src]
   )
 
   const onPlayToggle = useCallback(() => {
