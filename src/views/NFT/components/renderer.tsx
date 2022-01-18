@@ -289,17 +289,16 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   const onPreview = useCallback(
     (e) => {
       e.stopPropagation()
-      if (detail?.renderer_type === NftType.Audio) {
-        if ('album_audios' in detail) {
-          onOpenAlbumPlayer()
-        } else {
-          toast(t('nft.only-the-owner-can-play'))
-        }
-        return
-      }
-
       if (!showCardBackContent) {
         onOpenPreview()
+        if (detail?.renderer_type === NftType.Audio) {
+          if ('album_audios' in detail) {
+            onOpenAlbumPlayer()
+          } else {
+            toast(t('nft.only-the-owner-can-play'))
+          }
+          return
+        }
       }
       trackPreview(trackLabels.nftDetail.check + id)
     },
