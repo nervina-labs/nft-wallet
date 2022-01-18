@@ -270,21 +270,14 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   }, [t, toast, isOpenPreview])
   const trackCardBack = useTrackEvent('nft-detail-cardback', 'click')
   const trackPreview = useTrackEvent('nft-detail', 'click')
-  const onPreview = useCallback(
-    (e) => {
-      if (!showCardBackContent) {
-        onOpenPreview()
-      }
-      e.stopPropagation()
-      trackPreview(trackLabels.nftDetail.check + id)
-    },
-    [onOpenPreview, showCardBackContent, trackPreview, id]
-  )
   const hasPlayIcon =
     detail?.renderer_type === NftType.Audio ||
     detail?.renderer_type === NftType.Video
   const tid = (detail as NFTDetail)?.n_token_id
-  const tidParams = getNFTQueryParams(tid, i18n.language) ?? {}
+  const tidParams = useMemo(() => getNFTQueryParams(tid, i18n.language) ?? {}, [
+    i18n.language,
+    tid,
+  ])
   const imgUrl = detail?.bg_image_url === null ? '' : detail?.bg_image_url
   const arButtonRef = useRef<HTMLAnchorElement>(null)
   const isRendererUsdz = isUsdz(detail?.renderer)
@@ -293,6 +286,34 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     onOpen: onOpenAlbumPlayer,
     onClose: onCloseAlbumPlayer,
   } = useDisclosure()
+  const onPreview = useCallback(
+    (e) => {
+      e.stopPropagation()
+      if (detail?.renderer_type === NftType.Audio) {
+        if ('album_audios' in detail) {
+          onOpenAlbumPlayer()
+        } else {
+          toast(t('nft.only-the-owner-can-play'))
+        }
+        return
+      }
+
+      if (!showCardBackContent) {
+        onOpenPreview()
+      }
+      trackPreview(trackLabels.nftDetail.check + id)
+    },
+    [
+      detail,
+      showCardBackContent,
+      trackPreview,
+      id,
+      onOpenAlbumPlayer,
+      toast,
+      t,
+      onOpenPreview,
+    ]
+  )
 
   const imageEl = useMemo(() => {
     if (detail?.renderer_type === NftType.Audio) {
@@ -395,16 +416,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         tiltEnable
         transitionSpeed={1000}
         tiltAngleYInitial={tiltAngleYInitial}
-        onClick={(e) => {
-          if (
-            detail?.renderer_type === NftType.Audio &&
-            'album_audios' in detail
-          ) {
-            onOpenAlbumPlayer()
-            return
-          }
-          onPreview(e)
-        }}
+        onClick={onPreview}
       >
         <Box
           m="auto"
