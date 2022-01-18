@@ -51,7 +51,7 @@ export function useAudioPlayer(
   }, [])
 
   const onChangeIndex = useCallback(
-    (i) => {
+    (i: number) => {
       setWillIndex(i)
       onChangeProgress(0)
       setIsPlaying(true)
