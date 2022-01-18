@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-  SyntheticEvent,
-  useEffect,
-} from 'react'
+import { useCallback, useMemo, useRef, useState, SyntheticEvent } from 'react'
 import { IS_IPHONE } from '../../../constants'
 
 export function useAudioPlayer(
@@ -20,9 +13,10 @@ export function useAudioPlayer(
   const [isPlaying, setIsPlaying] = useState(false)
   const [willIndex, setWillIndex] = useState(options?.index || 0)
   const [index, setIndex] = useState(options?.index || 0)
-  const [src, setSrc] = useState(list[options?.index ?? 0] ?? '')
   const audioRef = useRef<HTMLAudioElement>(null)
   const hasNext = list.length - 1 > index
+
+  const src = useMemo(() => list[willIndex], [list, willIndex])
 
   const onSyncAudioState = useCallback(
     (event?: SyntheticEvent<HTMLAudioElement>) => {
@@ -41,11 +35,6 @@ export function useAudioPlayer(
     el.play()
   }, [])
 
-  useEffect(() => {
-    setSrc(list[index])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [list])
-
   const onChangeProgress = useCallback(async (progress: number) => {
     const el = audioRef.current
     if (el) {
@@ -63,7 +52,6 @@ export function useAudioPlayer(
   const onChangeIndex = useCallback(
     (i) => {
       setWillIndex(i)
-      setSrc(list[i])
       onChangeProgress(0)
       setIsPlaying(true)
       setTimeout(() => {
@@ -71,7 +59,7 @@ export function useAudioPlayer(
         onPlay()
       })
     },
-    [list, onChangeProgress, onPlay, onSyncAudioState]
+    [onChangeProgress, onPlay, onSyncAudioState]
   )
 
   const onNext = useCallback(() => {
