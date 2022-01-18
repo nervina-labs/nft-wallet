@@ -47,9 +47,7 @@ export const Flashsigner: React.FC = () => {
       },
       onError(_, action, extra) {
         if (action === FlashsignerAction.TransferMnft) {
-          history.replace(`/transfer/${extra?.uuid as string}`, {
-            prevState: extra,
-          })
+          history.replace(`/transfer/${extra?.uuid as string}`)
         } else if (action === FlashsignerAction.SignTransaction) {
           history.replace(extra?.prevPath || RoutePath.NFTs)
         } else {
