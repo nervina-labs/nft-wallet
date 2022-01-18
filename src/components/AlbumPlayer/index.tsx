@@ -1,14 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  Box,
-  Image,
-  Button,
-  HStack,
-  Stack,
-  Flex,
-  AspectRatio,
-} from '@chakra-ui/react'
-import { Image as MibaoImage } from '@mibao-ui/components'
+import { Box, Image, Button, HStack, Stack, Flex } from '@chakra-ui/react'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
@@ -18,8 +9,6 @@ import { NFTDetail } from '../../models'
 import { CD } from '../../components/Cd'
 import { useObservable } from 'rxjs-hooks'
 import { map, timer } from 'rxjs'
-import { getNFTQueryParams, isSupportWebp } from '../../utils'
-import { useTranslation } from 'react-i18next'
 import BrushedMetalPath from '../../assets/album-player/brushed-metal-bg.png'
 import LightPath from '../../assets/album-player/light.png'
 import DecorateControlPath from '../../assets/album-player/decorate-control.png'
@@ -29,7 +18,6 @@ import { ReactComponent as NextSvg } from '../../assets/album-player/next.svg'
 import { ReactComponent as PlaySvg } from '../../assets/album-player/play.svg'
 import { ReactComponent as StopSvg } from '../../assets/album-player/stop.svg'
 import { ReactComponent as PlayingIconSvg } from '../../assets/album-player/playing-icon.svg'
-import FALLBACK_SRC from '../../assets/img/nft-fallback.png'
 
 const StyledMainContainer = styled(Box)`
   background-color: #000;
@@ -58,22 +46,10 @@ const StyledMainContainer = styled(Box)`
     }
   }
 
-  @keyframes open-cd-cover {
-    0%,
-    30% {
-      transform: translateY(0) translateX(-50%);
-    }
-
-    50%,
-    100% {
-      transform: translateY(-450px) translateX(-50%);
-    }
-  }
-
   @keyframes open-cd {
     0%,
     30% {
-      transform: translateY(-30px);
+      transform: translateY(-40px);
       z-index: 3;
     }
     38% {
@@ -111,6 +87,7 @@ const PlayButton = styled(Button)`
 `
 
 const ARM_RUN_RANGE = [17, 36] as const
+const STYLUS_ARM_TRANSITION = 200
 
 export const AlbumPlayer: React.FC<{
   data: NFTDetail
@@ -120,8 +97,6 @@ export const AlbumPlayer: React.FC<{
   const { width: innerWidth, height } = useInnerSize({ dueTime: 0 })
   const width = Math.min(innerWidth, CONTAINER_MAX_WIDTH)
   const scale = width / CONTAINER_MAX_WIDTH
-
-  const { i18n } = useTranslation('translations')
   const list = useMemo(
     () => data?.album_audios?.map((audio) => audio.url) || [],
     [data?.album_audios]
@@ -142,9 +117,10 @@ export const AlbumPlayer: React.FC<{
 
   useEffect(() => {
     if (isPlaying) {
+      // wait the arm animation
       setTimeout(() => {
         setIsCdPlaying(true)
-      }, 200)
+      }, STYLUS_ARM_TRANSITION)
     } else {
       setIsCdPlaying(false)
     }
@@ -166,7 +142,6 @@ export const AlbumPlayer: React.FC<{
     false
   )
   const [coverCdTransition, setCoverCdTransition] = useState('500ms')
-  const tidParams = getNFTQueryParams(data?.n_token_id, i18n.language) ?? {}
 
   return (
     <StyledMainContainer
@@ -252,7 +227,7 @@ export const AlbumPlayer: React.FC<{
           top="0"
           left="0"
           transformOrigin="26.5% 57%"
-          transition="200ms"
+          transition={`${STYLUS_ARM_TRANSITION}ms`}
           style={{
             transform: isPlaying ? `rotate(${armRotate}deg)` : undefined,
           }}
@@ -273,29 +248,6 @@ export const AlbumPlayer: React.FC<{
             }}
           />
         </Box>
-        {!isClosedCoverAnimation ? (
-          <AspectRatio
-            position="absolute"
-            top="110px"
-            left="50%"
-            transformOrigin="center"
-            zIndex={4}
-            shadow="0 4px 4px rgba(0, 0, 0, 0.7)"
-            w="75%"
-            maxW="250px"
-            ratio={1 / 1}
-            transition="500ms"
-            animation="open-cd-cover 3s"
-          >
-            <MibaoImage
-              src={data?.renderer}
-              w="full"
-              webp={isSupportWebp()}
-              fallbackSrc={FALLBACK_SRC}
-              srcQueryParams={tidParams}
-            />
-          </AspectRatio>
-        ) : null}
         <Box
           position="absolute"
           w="74%"
@@ -304,9 +256,9 @@ export const AlbumPlayer: React.FC<{
           transformOrigin="center"
           animation="open-cd 3s"
           style={{
-            width: !isReleaseCdWidth ? '250px' : undefined,
+            width: !isReleaseCdWidth ? '80%' : undefined,
             left: `calc(50% - ${
-              (!isReleaseCdWidth ? 250 : width * 0.74) / 2
+              (!isReleaseCdWidth ? width * 0.8 : width * 0.74) / 2
             }px)`,
             transition: coverCdTransition,
           }}
