@@ -16,7 +16,7 @@ export const AlbumPlayerDrawer: React.FC<{
   isOpen: boolean
   onClose: () => void
 }> = ({ isLoading, data, isOpen, onClose }) => {
-  const { width: innerWidth } = useInnerSize()
+  const { width: innerWidth } = useInnerSize({ dueTime: 0 })
   const width = Math.min(innerWidth, CONTAINER_MAX_WIDTH)
 
   return (
@@ -24,9 +24,10 @@ export const AlbumPlayerDrawer: React.FC<{
       <DrawerOverlay />
       <DrawerContent
         bg="#000"
-        w={`${width}px`}
-        h="100%"
+        w="full"
+        h="full"
         style={{
+          maxWidth: `${CONTAINER_MAX_WIDTH}px`,
           left: `calc(50% - ${width / 2}px)`,
         }}
       >
