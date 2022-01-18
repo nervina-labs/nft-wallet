@@ -373,7 +373,7 @@ export const AlbumPlayer: React.FC<{
         <PlayButton
           onClick={onPlayToggle}
           variant="unstyled"
-          border="0.5px solid white"
+          border="1px solid white"
           rounded="full"
           style={{
             backgroundImage: isPlaying
