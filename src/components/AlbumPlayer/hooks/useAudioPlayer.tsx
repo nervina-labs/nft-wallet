@@ -38,13 +38,14 @@ export function useAudioPlayer(
   const onChangeProgress = useCallback(async (progress: number) => {
     const el = audioRef.current
     if (el) {
+      const currentTime = Math.floor(progress * el.duration)
       if (IS_IPHONE) {
         const isPaused = el.paused
         if (!isPaused) await el.pause()
-        el.currentTime = progress * el.duration
+        el.currentTime = isNaN(currentTime) ? 0 : currentTime
         if (!isPaused) await el.play()
       } else {
-        el.currentTime = progress * el.duration
+        el.currentTime = isNaN(currentTime) ? 0 : currentTime
       }
     }
   }, [])

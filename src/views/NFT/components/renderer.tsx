@@ -290,7 +290,6 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
     (e) => {
       e.stopPropagation()
       if (!showCardBackContent) {
-        onOpenPreview()
         if (detail?.renderer_type === NftType.Audio) {
           if ('album_audios' in detail) {
             onOpenAlbumPlayer()
@@ -299,6 +298,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           }
           return
         }
+        onOpenPreview()
       }
       trackPreview(trackLabels.nftDetail.check + id)
     },
