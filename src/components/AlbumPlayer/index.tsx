@@ -305,9 +305,10 @@ export const AlbumPlayer: React.FC<{
         height="112px"
         bg="#000"
         transition="200ms"
-        style={{
-          width: `${width}px`,
-        }}
+        maxW={`${CONTAINER_MAX_WIDTH}px`}
+        w="full"
+        left="50%"
+        transform="translateX(-50%)"
       >
         <ProgressBar
           progress={progress}
