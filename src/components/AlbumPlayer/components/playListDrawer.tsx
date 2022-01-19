@@ -63,8 +63,15 @@ export const PlayListDrawer: React.FC<PlayListDrawerProps> = ({
       }}
     >
       <Flex justify="space-between" align="baseline" h="22px">
-        <Box fontSize="18px">{data?.name}</Box>
-        <Box color="#999" fontSize="14px">
+        <Box
+          fontSize="18px"
+          whiteSpace="nowrap"
+          textOverflow="ellipsis"
+          overflow="hidden"
+        >
+          {data?.name}
+        </Box>
+        <Box color="#999" fontSize="14px" whiteSpace="nowrap">
           {t('nft.song')} {data?.album_audios?.length}
         </Box>
       </Flex>
