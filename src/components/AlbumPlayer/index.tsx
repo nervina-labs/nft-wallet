@@ -303,7 +303,7 @@ export const AlbumPlayer: React.FC<{
         height="180px"
         bg="#000"
         transition="200ms"
-        maxW={`${CONTAINER_MAX_WIDTH}px`}
+        maxW={`calc(${CONTAINER_MAX_WIDTH}px + var(--removed-body-scroll-bar-size))`}
         w="full"
         left="50%"
         transform="translateX(-50%)"
@@ -321,7 +321,9 @@ export const AlbumPlayer: React.FC<{
           <Box ml="15px" mr="10px">
             <PlayingIcon />
           </Box>
-          {data?.album_audios?.[willIndex]?.name}
+          <Box whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+            {data?.album_audios?.[willIndex]?.name}
+          </Box>
           <Box ml="auto" mr="15px">
             <StyledPlayListSvg />
           </Box>

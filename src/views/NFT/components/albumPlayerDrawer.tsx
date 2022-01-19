@@ -27,8 +27,10 @@ export const AlbumPlayerDrawer: React.FC<{
         w="full"
         h="full"
         style={{
-          maxWidth: `${CONTAINER_MAX_WIDTH}px`,
-          left: `calc(50% - ${width / 2}px)`,
+          maxWidth: `calc(${CONTAINER_MAX_WIDTH}px + var(--removed-body-scroll-bar-size))`,
+          left: `calc(50% - ${
+            width / 2
+          }px - var(--removed-body-scroll-bar-size))`,
         }}
       >
         <DrawerBody p="0" position="relative">
