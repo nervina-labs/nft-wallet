@@ -1,6 +1,7 @@
 import { Box, Drawer, Flex, Stack } from '@mibao-ui/components'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { CONTAINER_MAX_WIDTH } from '../../../constants'
 import { NFTDetail } from '../../../models'
 import { PlayingIcon } from './playingIcon'
 
@@ -46,22 +47,27 @@ export const PlayListDrawer: React.FC<PlayListDrawerProps> = ({
       onClose={onClose}
       placement="bottom"
       isOpen={isOpen}
-      hasCloseBtn
       contentProps={{
         height: '40%',
         minHeight: '200px',
         style: {
-          width: `${width}px`,
-          left: `calc(50% - ${width / 2}px)`,
+          width: '100%',
+          maxWidth: `calc(${CONTAINER_MAX_WIDTH}px + var(--removed-body-scroll-bar-size))`,
+          left: `calc(50% - ${
+            width / 2
+          }px - var(--removed-body-scroll-bar-size))`,
         },
         overflowX: 'hidden',
         overflowY: 'auto',
-        py: '15px',
+        py: '10px',
       }}
     >
-      <Box color="#999" fontSize="14px" h="22px">
-        {t('nft.song')} {data?.album_audios?.length}
-      </Box>
+      <Flex justify="space-between" align="baseline" h="22px">
+        <Box fontSize="18px">{data?.name}</Box>
+        <Box color="#999" fontSize="14px">
+          {t('nft.song')} {data?.album_audios?.length}
+        </Box>
+      </Flex>
       <Stack
         w="full"
         h="calc(100% - 22px)"
