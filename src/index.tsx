@@ -1,3 +1,6 @@
+/* eslint-disable import/first */
+require('object.fromentries/auto')
+require('array.prototype.flat/auto')
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
@@ -24,4 +27,4 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-sw.unregister()
+sw.register()

@@ -77,4 +77,8 @@ export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
   product_price: string
   product_price_currency: string
   thumbnail_url?: string
+  album_audios?: Array<{
+    name: string
+    url: string
+  }>
 }
