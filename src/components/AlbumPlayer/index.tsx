@@ -1,14 +1,16 @@
 import styled from '@emotion/styled'
-import { Box, Image, Button, HStack, Stack, Flex } from '@chakra-ui/react'
+import { Box, Image, Button, Flex, useDisclosure } from '@chakra-ui/react'
+import { useEffect, useMemo, useState } from 'react'
+import { useObservable } from 'rxjs-hooks'
+import { map, timer } from 'rxjs'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
-import { useEffect, useMemo, useState } from 'react'
-import { ProgressBar } from './components/progressBar'
 import { NFTDetail } from '../../models'
 import { CD } from '../../components/Cd'
-import { useObservable } from 'rxjs-hooks'
-import { map, timer } from 'rxjs'
+import { PlayListDrawer } from './components/playListDrawer'
+import { PlayingIcon } from './components/playingIcon'
+import { ProgressBar } from './components/progressBar'
 import BrushedMetalPath from '../../assets/album-player/brushed-metal-bg.png'
 import LightPath from '../../assets/album-player/light.png'
 import DecorateControlPath from '../../assets/album-player/decorate-control.png'
@@ -17,15 +19,15 @@ import { ReactComponent as PrevSvg } from '../../assets/album-player/prev.svg'
 import { ReactComponent as NextSvg } from '../../assets/album-player/next.svg'
 import { ReactComponent as PlaySvg } from '../../assets/album-player/play.svg'
 import { ReactComponent as StopSvg } from '../../assets/album-player/stop.svg'
-import { ReactComponent as PlayingIconSvg } from '../../assets/album-player/playing-icon.svg'
+import { ReactComponent as PlayListSvg } from '../../assets/album-player/play-list.svg'
 
-const StyledMainContainer = styled(Box)`
+const Container = styled(Box)`
   background-color: #000;
   position: relative;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  padding-bottom: 132px;
+  padding-bottom: 200px;
   transition: 200ms;
 
   @keyframes arm-run {
@@ -65,9 +67,9 @@ const StyledMainContainer = styled(Box)`
   }
 `
 
-const StyledPlayingIconSvg = styled(PlayingIconSvg)`
+const StyledPlayListSvg = styled(PlayListSvg)`
   height: 14px;
-  margin: auto 5px auto 0;
+  margin: auto 5px auto auto;
   flex-shrink: 0;
 `
 
@@ -133,6 +135,12 @@ export const AlbumPlayer: React.FC<{
   const armRotate =
     (ARM_RUN_RANGE[1] - ARM_RUN_RANGE[0]) * cdProgress + ARM_RUN_RANGE[0]
 
+  const {
+    isOpen: isOpenList,
+    onOpen: onOpenList,
+    onClose: onCloseList,
+  } = useDisclosure()
+
   const isReleaseCdWidth = useObservable(
     () => timer(1000).pipe(map(() => true)),
     false
@@ -144,7 +152,7 @@ export const AlbumPlayer: React.FC<{
   const [coverCdTransition, setCoverCdTransition] = useState('500ms')
 
   return (
-    <StyledMainContainer
+    <Container
       style={{
         minHeight: `${height}px`,
         pointerEvents: isClosedCoverAnimation ? undefined : 'none',
@@ -276,70 +284,90 @@ export const AlbumPlayer: React.FC<{
         </Box>
       </Box>
       {audioEl}
-      <Stack w="full" color="white" px="20px" py="20px" spacing="10px">
-        {data?.album_audios?.length}
-        {data?.album_audios?.map((audio, i) => (
-          <Flex
-            key={i}
-            cursor="pointer"
-            onClick={() => {
-              if (i === willIndex) return
-              onChangeIndex(i)
-            }}
-            style={{ color: i !== willIndex ? '#666' : undefined }}
-          >
-            {i === willIndex ? <StyledPlayingIconSvg /> : null}
-            <Box whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
-              {audio.name}
-            </Box>
-          </Flex>
-        ))}
-      </Stack>
 
-      <HStack
+      <PlayListDrawer
+        width={width}
+        onClose={onCloseList}
+        isOpen={isOpenList}
+        onChangeIndex={onChangeIndex}
+        index={willIndex}
+        data={data}
+      />
+
+      <Flex
+        direction="column"
         mt="auto"
         justify="center"
-        spacing="10px"
         position="fixed"
         bottom="0"
-        height="112px"
+        height="180px"
         bg="#000"
         transition="200ms"
-        maxW={`${CONTAINER_MAX_WIDTH}px`}
+        maxW={`calc(${CONTAINER_MAX_WIDTH}px + var(--removed-body-scroll-bar-size))`}
         w="full"
         left="50%"
         transform="translateX(-50%)"
+        zIndex={10}
       >
-        <ProgressBar
-          progress={progress}
-          progressBarMaxWidth={width}
-          onChangeProgress={onChangeProgress}
-          position="absolute"
-          top="0"
-          left="0"
-          m="0"
-          zIndex={1}
-        />
-        <PlayButton onClick={onPrev} variant="unstyled">
-          <PrevSvg />
-        </PlayButton>
-        <PlayButton
-          onClick={onPlayToggle}
-          variant="unstyled"
-          border="1px solid white"
-          rounded="full"
-          style={{
-            backgroundImage: isPlaying
-              ? 'radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)'
-              : undefined,
-          }}
+        <Flex
+          h="70px"
+          lineHeight="70px"
+          w="full"
+          align="center"
+          onClick={onOpenList}
+          color="white"
+          cursor="pointer"
         >
-          {isPlaying ? <StopSvg /> : <PlaySvg className="play-icon" />}
-        </PlayButton>
-        <PlayButton onClick={onNext} variant="unstyled">
-          <NextSvg />
-        </PlayButton>
-      </HStack>
-    </StyledMainContainer>
+          <Box ml="15px" mr="10px">
+            <PlayingIcon />
+          </Box>
+          <Box whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+            {data?.album_audios?.[willIndex]?.name}
+          </Box>
+          <Box ml="auto" mr="15px">
+            <StyledPlayListSvg />
+          </Box>
+        </Flex>
+        <Flex
+          w="full"
+          height="110px"
+          m="0"
+          justify="center"
+          align="center"
+          position="relative"
+        >
+          <ProgressBar
+            progress={progress}
+            progressBarMaxWidth={width}
+            onChangeProgress={onChangeProgress}
+            position="absolute"
+            top="0"
+            left="0"
+            m="0"
+            zIndex={1}
+          />
+          <PlayButton onClick={onPrev} variant="unstyled" mr="10px">
+            <PrevSvg />
+          </PlayButton>
+          <PlayButton
+            onClick={onPlayToggle}
+            variant="unstyled"
+            border="1px solid white"
+            rounded="full"
+            mr="10px"
+            style={{
+              backgroundImage: isPlaying
+                ? 'radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)'
+                : undefined,
+            }}
+          >
+            {isPlaying ? <StopSvg /> : <PlaySvg className="play-icon" />}
+          </PlayButton>
+          <PlayButton onClick={onNext} variant="unstyled">
+            <NextSvg />
+          </PlayButton>
+        </Flex>
+      </Flex>
+    </Container>
   )
 }

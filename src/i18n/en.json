@@ -100,7 +100,7 @@
       "connect": {
         "unipass": "Connect to UniPass",
         "or-use-email": "(or Register by Email)",
-        "or-use-phone": "(or Register by Phone)",
+        "or-use-phone": "(or Register by Phone, Chinese Only)",
         "flashsigner": "Connect to Flashsigner",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
@@ -223,7 +223,8 @@
       "only-support-ios": "only iOS devices are supported enter the AR mode currently",
       "copy-to-browser": "Please copy the link and open it in your browser to view",
       "no-support-usdz-ok": "OK",
-      "only-the-owner-can-play": "Only the owner can play"
+      "only-the-owner-can-play": "Only the owner can play",
+      "song": "Song"
     },
     "account": {
       "title": "My Account",
