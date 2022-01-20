@@ -1,3 +1,6 @@
+/* eslint-disable import/first */
+require('object.fromentries/auto')
+require('array.prototype.flat/auto')
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
@@ -6,7 +9,6 @@ import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 
 import './index.css'
-require('core-js/features/object/entries')
 
 const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN
 
