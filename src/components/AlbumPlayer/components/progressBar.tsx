@@ -113,9 +113,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         content: '" "',
         display: 'block',
         position: 'absolute',
-        top: 'calc(50% - 25px)',
+        top: 'calc(50% - 15px)',
         left: '0',
-        h: '50px',
+        h: '30px',
         w: 'full',
         rounded: 'full',
         cursor: 'pointer',
@@ -159,17 +159,6 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         left="0"
         position="absolute"
         transformOrigin="center center"
-        _before={{
-          content: '" "',
-          display: 'block',
-          position: 'absolute',
-          top: 'calc(50% - 25px)',
-          left: 'calc(50% - 25px)',
-          h: '50px',
-          w: '50px',
-          rounded: 'full',
-          cursor: 'pointer',
-        }}
         style={{
           transition: isChanging ? '0ms' : '50ms',
           transform: `translateX(${currentProgress * progressBarMaxWidth}px)`,
