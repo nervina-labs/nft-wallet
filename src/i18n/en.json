@@ -100,7 +100,7 @@
       "connect": {
         "unipass": "Connect to UniPass",
         "or-use-email": "(or Register by Email)",
-        "or-use-phone": "(or Register by Phone)",
+        "or-use-phone": "(or Register by Phone, Chinese Only)",
         "flashsigner": "Connect to Flashsigner",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
