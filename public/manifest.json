@@ -1,6 +1,7 @@
 {
   "short_name": "秘宝账户",
   "name": "秘宝账户",
+  "version": "1.0.0",
   "icons": [
     {
       "src": "icons/16.png",

@@ -24,4 +24,4 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-sw.unregister()
+sw.register()
