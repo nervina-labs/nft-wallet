@@ -223,7 +223,8 @@
       "only-support-ios": "only iOS devices are supported enter the AR mode currently",
       "copy-to-browser": "Please copy the link and open it in your browser to view",
       "no-support-usdz-ok": "OK",
-      "only-the-owner-can-play": "Only the owner can play"
+      "only-the-owner-can-play": "Only the owner can play",
+      "song": "Song"
     },
     "account": {
       "title": "My Account",
