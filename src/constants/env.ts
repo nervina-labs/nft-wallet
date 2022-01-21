@@ -1,4 +1,5 @@
 import * as Bowser from 'bowser'
+import { Config } from '@nervina-labs/flashsigner'
 type ChainType = 'mainnet' | 'testnet'
 
 export const BOWSER_BROWSER = Bowser.getParser(window.navigator.userAgent)
@@ -73,16 +74,19 @@ export const UNIPASS_URL = IS_MAINNET
   ? 'https://unipass.xyz'
   : 'https://t.unipass.xyz'
 
-const FLASH_SIGNER_DEV_URL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://flashsigner.work'
+const FLASH_SIGNER_DEV_URL = 'https://flashsigner.work'
 
 export const FLASH_SIGNER_URL =
   process.env.REACT_APP_FLASH_SIGNER_URL ??
   (IS_MAINNET && process.env.NODE_ENV !== 'development'
     ? 'https://flashsigner.com'
     : FLASH_SIGNER_DEV_URL)
+
+if (IS_MAINNET) {
+  Config.setChainType('mainnet')
+} else {
+  Config.setChainType('testnet')
+}
 
 export const RED_ENVELOP_APP_URL = IS_MAINNET
   ? 'https://gift.unipass.xyz'
