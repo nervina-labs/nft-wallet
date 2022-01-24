@@ -38,6 +38,7 @@ export enum RoutePath {
   OrderSuccess = '/order-success',
   OrderStatus = '/order-status',
   RedEnvelope = '/red-envelope',
+  RedEnvelopeRecord = '/red-envelope/records',
   Search = '/search',
   Flashsigner = '/flashsigner',
 }
