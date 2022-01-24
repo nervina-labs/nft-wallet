@@ -19,9 +19,10 @@ import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { NftListDrawer } from './components/nftListDrawer'
 import { useCallback, useState } from 'react'
-import { isSupportWebp, limitNumberInput } from '../../utils'
+import { getNFTQueryParams, isSupportWebp, limitNumberInput } from '../../utils'
 import { NFTToken } from '../../models'
 import { useToast } from '../../hooks/useToast'
+import { useTranslation } from 'react-i18next'
 
 const formItemProps: BoxProps = {
   rounded: '8px',
@@ -67,6 +68,7 @@ export const SendRedEnvelope: React.FC = () => {
   const [puzzleAnswer, setPuzzleAnswer] = useState('')
   const [tabIndex, setTabIndex] = useState<number>(0)
   const toast = useToast()
+  const { i18n } = useTranslation()
 
   const onSubmit = useCallback(async () => {
     const redEnvelopeCount = Number(redEnvelopeCountValue)
@@ -200,6 +202,10 @@ export const SendRedEnvelope: React.FC = () => {
                           customizedSize={{
                             fixed: 'large',
                           }}
+                          srcQueryParams={getNFTQueryParams(
+                            token.n_token_id,
+                            i18n.language
+                          )}
                         />
                         <Flex
                           pl="10px"
