@@ -14,6 +14,7 @@ import {
   Transaction,
   TransactionLogResponse,
   UnsignedTransaction,
+  UnsignedTransactionSendRedEnvelope,
 } from '../models'
 import {
   Issuer,
@@ -943,5 +944,16 @@ export class ServerWalletAPI {
         ...options,
       },
     })
+  }
+
+  async getSendRedEnvelopeTx(
+    tokenUuids: string[]
+  ): Promise<AxiosResponse<UnsignedTransactionSendRedEnvelope>> {
+    return await this.axios.post<UnsignedTransactionSendRedEnvelope>(
+      '/toolbox/redpack_transactions',
+      {
+        token_uuids: tokenUuids,
+      }
+    )
   }
 }

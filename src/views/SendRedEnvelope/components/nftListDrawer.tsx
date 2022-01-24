@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAPI } from '../../../hooks/useAccount'
 import { getNFTQueryParams, isSupportWebp, sleep } from '../../../utils'
 import { Search } from '../../../components/Search'
-import { Query } from '../../../models'
+import { NFTToken, Query } from '../../../models'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as SelectedArrow } from '../../../assets/svg/selected-arrow.svg'
 import { ReactComponent as LeftSvg } from '../../../assets/svg/left.svg'
@@ -28,7 +28,7 @@ export const NftListDrawer: React.FC<{
   isOpen: boolean
   onClose: () => void
   left?: string
-  onChange?: (uuids: string[]) => void
+  onChange?: (selectedTokens: NFTToken[]) => void
 }> = ({ isOpen, onClose, left, onChange }) => {
   const api = useAPI()
   const { t, i18n } = useTranslation('translations')
@@ -40,10 +40,12 @@ export const NftListDrawer: React.FC<{
     },
     [api]
   )
-  const [selectedNftUuids, setSelectedNftUuids] = useState<string[]>([])
-  const selectedNftUuidSet = useMemo(() => new Set(selectedNftUuids), [
-    selectedNftUuids,
-  ])
+  const [selectedTokens, setSelectedTokens] = useState<NFTToken[]>([])
+  const selectedNftUuidSet = useMemo(
+    () => new Set(selectedTokens.map((t) => t.token_uuid)),
+    [selectedTokens]
+  )
+  const [tokenList, setTokenList] = useState<NFTToken[]>([])
   useEffect(() => {
     ;(async () => {
       if (isOpen) {
@@ -54,8 +56,8 @@ export const NftListDrawer: React.FC<{
     })()
   }, [isOpen])
   useEffect(() => {
-    onChange?.(selectedNftUuids)
-  }, [selectedNftUuids, onChange])
+    onChange?.(selectedTokens)
+  }, [selectedTokens, onChange, tokenList])
 
   return (
     <Drawer
@@ -129,6 +131,15 @@ export const NftListDrawer: React.FC<{
           gap="15px"
           pullDownToRefresh={false}
           scrollableTarget="selectNftListContainerId"
+          onDataChange={(data) => {
+            if (!data) return
+            setTokenList(
+              data.pages.reduce<NFTToken[]>(
+                (acc, page) => acc.concat(page.token_list),
+                []
+              )
+            )
+          }}
           renderItems={(pages, i) =>
             pages.token_list.map((item, j) => {
               const selected = selectedNftUuidSet.has(item.token_uuid)
@@ -137,11 +148,12 @@ export const NftListDrawer: React.FC<{
                   key={`${i}-${j}`}
                   mb="20px"
                   onClick={() => {
-                    const removeFn = (id: string) => id !== item.token_uuid
-                    setSelectedNftUuids(
+                    const removeFn = (t: NFTToken) =>
+                      t.token_uuid !== item.token_uuid
+                    setSelectedTokens(
                       selected
-                        ? selectedNftUuids.filter(removeFn)
-                        : selectedNftUuids.concat([item.token_uuid])
+                        ? selectedTokens.filter(removeFn)
+                        : selectedTokens.concat([item])
                     )
                   }}
                 >

@@ -7,18 +7,21 @@ import {
   BoxProps,
   Button,
   Flex,
+  VStack,
   Input,
   TabPanel,
   TabPanels,
   useDisclosure,
 } from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { Drawer, Tab, TabList, Tabs } from '@mibao-ui/components'
+import { Drawer, Tab, TabList, Tabs, Image } from '@mibao-ui/components'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { NftListDrawer } from './components/nftListDrawer'
 import { useCallback, useState } from 'react'
-import { limitNumberInput } from '../../utils'
+import { isSupportWebp, limitNumberInput } from '../../utils'
+import { NFTToken } from '../../models'
+import { useToast } from '../../hooks/useToast'
 
 const formItemProps: BoxProps = {
   rounded: '8px',
@@ -39,6 +42,11 @@ const RightIcon = styled(LeftSvg)`
   right: 10px;
 `
 
+const Container = styled(RainbowBackground)`
+  height: auto;
+  min-height: 100vh;
+`
+
 export const SendRedEnvelope: React.FC = () => {
   const {
     isOpen: isOpenNftList,
@@ -52,18 +60,38 @@ export const SendRedEnvelope: React.FC = () => {
   } = useDisclosure()
   const { width } = useInnerSize()
   const modalLeft = `calc(50% - ${Math.min(width, CONTAINER_MAX_WIDTH) / 2}px)`
-  const [selectedNftUuids, setSelectedNftUuids] = useState<string[]>([])
-  const [redEnvelopeCount, setRedEnvelopeCount] = useState('')
+  const [selectedTokens, setSelectedTokens] = useState<NFTToken[]>([])
+  const [redEnvelopeCountValue, setRedEnvelopeCountValue] = useState('')
   const [greeting, setGreeting] = useState('')
   const [puzzleQuestion, setPuzzleQuestion] = useState('')
   const [puzzleAnswer, setPuzzleAnswer] = useState('')
+  const [tabIndex, setTabIndex] = useState<number>(0)
+  const toast = useToast()
 
-  const onSubmit = useCallback(() => {
-    // TODO: Validation data
+  const onSubmit = useCallback(async () => {
+    const redEnvelopeCount = Number(redEnvelopeCountValue)
+    if (!selectedTokens.length) {
+      toast('请选择秘宝')
+      return
+    }
+    if (!redEnvelopeCount) {
+      toast('请输入红包数量')
+      return
+    }
+    if (tabIndex === 1) {
+      if (!puzzleQuestion) {
+        toast('请输入谜题')
+        return
+      }
+      if (!puzzleAnswer) {
+        toast('请输入谜底')
+        return
+      }
+    }
     // TODO: API
     console.log({
-      selectedNftUuids,
-      redEnvelopeCount,
+      selectedTokens,
+      redEnvelopeCountValue,
       greeting,
       puzzleQuestion,
       puzzleAnswer,
@@ -72,12 +100,14 @@ export const SendRedEnvelope: React.FC = () => {
     greeting,
     puzzleAnswer,
     puzzleQuestion,
-    redEnvelopeCount,
-    selectedNftUuids,
+    redEnvelopeCountValue,
+    selectedTokens,
+    tabIndex,
+    toast,
   ])
 
   return (
-    <RainbowBackground>
+    <Container>
       <Flex direction="column" position="relative" zIndex={2} h="full">
         <Appbar
           transparent
@@ -121,10 +151,14 @@ export const SendRedEnvelope: React.FC = () => {
         <NftListDrawer
           isOpen={isOpenNftList}
           onClose={onCloseNftList}
-          onChange={setSelectedNftUuids}
+          onChange={setSelectedTokens}
           left={modalLeft}
         />
-        <Tabs colorScheme="sendRedEnvelope">
+        <Tabs
+          colorScheme="sendRedEnvelope"
+          onChange={setTabIndex}
+          index={tabIndex}
+        >
           <TabList justifyContent="center" borderBottom="none" mb="25px">
             <Tab px="0" mr="40px" fontSize="14px">
               普通红包
@@ -133,10 +167,85 @@ export const SendRedEnvelope: React.FC = () => {
               谜语红包
             </Tab>
           </TabList>
-          <Box {...formItemProps} position="relative" onClick={onOpenNftList}>
-            选择秘宝
-            <RightIcon />
+          <Box
+            {...formItemProps}
+            bg="rgba(255, 255, 255, 0.5)"
+            rounded="8px"
+            px="0"
+            py="0"
+          >
+            <Box
+              {...formItemProps}
+              position="relative"
+              onClick={onOpenNftList}
+              mx="0"
+            >
+              选择秘宝
+              <RightIcon />
+            </Box>
+
+            {selectedTokens.length > 0 ? (
+              <>
+                <VStack px="10px" spacing="15px">
+                  {selectedTokens.map((token, i) => (
+                    <Box w="full">
+                      <Flex key={i} justify="flex-start" w="full">
+                        <Image
+                          src={token.class_bg_image_url}
+                          w="58px"
+                          h="58px"
+                          rounded="16px"
+                          webp={isSupportWebp()}
+                          resizeScale={300}
+                          customizedSize={{
+                            fixed: 'large',
+                          }}
+                        />
+                        <Flex
+                          pl="10px"
+                          direction="column"
+                          justify="center"
+                          fontSize="14px"
+                        >
+                          <Box
+                            whiteSpace="nowrap"
+                            textOverflow="ellipsis"
+                            overflow="hidden"
+                          >
+                            {token.class_name}
+                          </Box>
+                          <Box
+                            fontSize="12px"
+                            color="#777E90"
+                            whiteSpace="nowrap"
+                            textOverflow="ellipsis"
+                            overflow="hidden"
+                          >
+                            {token.issuer_name}
+                          </Box>
+                        </Flex>
+                      </Flex>
+                      <Box color="#777E90" fontSize="14px" mt="5px">
+                        #{token.n_token_id}
+                      </Box>
+                    </Box>
+                  ))}
+                </VStack>
+                <Box
+                  color="#FF5C00"
+                  px="10px"
+                  pb="15px"
+                  pt="10px"
+                  w="full"
+                  textAlign="right"
+                  fontSize="12px"
+                >
+                  共计：{selectedTokens.length} 秘宝
+                </Box>
+              </>
+            ) : null}
           </Box>
+
           <Flex {...formItemProps} justify="space-between" whiteSpace="nowrap">
             <Box>红包个数</Box>
             <Flex>
@@ -151,13 +260,13 @@ export const SendRedEnvelope: React.FC = () => {
                 _focus={{
                   border: 'none',
                 }}
-                value={redEnvelopeCount}
+                value={redEnvelopeCountValue}
                 onChange={(e) =>
-                  setRedEnvelopeCount(
+                  setRedEnvelopeCountValue(
                     limitNumberInput(
                       e,
-                      redEnvelopeCount,
-                      selectedNftUuids.length
+                      redEnvelopeCountValue,
+                      selectedTokens.length
                     )
                   )
                 }
@@ -242,6 +351,6 @@ export const SendRedEnvelope: React.FC = () => {
           生成秘宝红包
         </Button>
       </Flex>
-    </RainbowBackground>
+    </Container>
   )
 }
