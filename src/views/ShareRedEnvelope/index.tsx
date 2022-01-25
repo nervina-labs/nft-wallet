@@ -4,9 +4,10 @@ import {
   Image,
   ListItem,
   OrderedList,
+  useDisclosure,
   VStack,
 } from '@chakra-ui/react'
-import { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { RainbowBackground } from '../../components/RainbowBackground'
 import { useHtml2Canvas } from '../../hooks/useHtml2Canvas'
@@ -14,7 +15,16 @@ import DEFAULT_RED_ENVELOPE_COVER_PATH from '../../assets/svg/share-red-envelope
 import styled from '@emotion/styled'
 import QRCode from 'qrcode.react'
 import { AppbarSticky, Appbar } from '../../components/Appbar'
-import { Button, Image as MibaoImage } from '@mibao-ui/components'
+import {
+  Button,
+  Image as MibaoImage,
+  Modal,
+  ModalBody,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+} from '@mibao-ui/components'
 
 const Container = styled(RainbowBackground)`
   height: auto;
@@ -26,13 +36,16 @@ const Container = styled(RainbowBackground)`
 
 export const ShareRedEnvelope: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const [src, setSrc] = useState('')
   const { onRender, imgSrc } = useHtml2Canvas()
   const sharePosterRef = useRef<HTMLDivElement>(null)
   const qrcodeValue = 'https://mibao.net'
-  console.log(id, src, setSrc, onRender, imgSrc)
+  const {
+    isOpen: isOpenCopySucceedDialog,
+    onOpen: onOpenCopySucceedDialog,
+    onClose: onCloseCopySucceedDialog,
+  } = useDisclosure()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (sharePosterRef.current) {
       onRender(sharePosterRef.current)
     }
@@ -48,7 +61,7 @@ export const ShareRedEnvelope: React.FC = () => {
         w="0"
         h="0"
         pointerEvents="none"
-        position="absolute"
+        position="fixed"
         top="0"
         left="0"
       >
@@ -56,7 +69,7 @@ export const ShareRedEnvelope: React.FC = () => {
           w="375px"
           h="564px"
           mx="auto"
-          position="absolute"
+          position="fixed"
           zIndex={2}
           bg="#E15F4C"
           ref={sharePosterRef}
@@ -166,11 +179,44 @@ export const ShareRedEnvelope: React.FC = () => {
         mb="calc(20px - var(--safe-area-inset-bottom))"
         size="lg"
         variant="solid"
-        position="sticky"
-        bottom="calc(20px - var(--safe-area-inset-bottom))"
+        onClick={onOpenCopySucceedDialog}
       >
         复制分享链接
       </Button>
+
+      <Modal
+        onClose={onCloseCopySucceedDialog}
+        isOpen={isOpenCopySucceedDialog}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent
+          maxW="sm"
+          style={{
+            width: 'calc(100% - 40px)',
+          }}
+        >
+          <ModalHeader textAlign="center" mt="32px">
+            复制成功
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody py="0" mt="20px">
+            <Box fontSize="14px" textAlign="center">
+              已成功复制到剪切板，去粘贴分享吧！
+            </Box>
+            <Box
+              bg="#F6F9FC"
+              color="primary.600"
+              p="16px"
+              fontSize="12px"
+              textAlign="center"
+              mt="6px"
+            >
+              https://mibao.net 红包口令：恭喜发财
+            </Box>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Container>
   )
 }
