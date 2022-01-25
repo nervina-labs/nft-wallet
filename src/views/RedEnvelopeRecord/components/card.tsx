@@ -1,10 +1,10 @@
 import { Box, Divider, Flex, Heading, HStack } from '@chakra-ui/react'
-import { Issuer, Image, Button } from '@mibao-ui/components'
+import { Issuer, Image, Button, Progress } from '@mibao-ui/components'
 import { isSupportWebp } from '../../../utils'
 import { ReactComponent as RedEnvelopeShare } from '../../../assets/svg/red-envelope-share.svg'
-import { ProgressBar } from './progressBar'
 
 export const Card: React.FC = () => {
+  const isClosed = false
   return (
     <Box
       shadow="0 0 8px rgba(0, 0, 0, 0.08)"
@@ -51,7 +51,13 @@ export const Card: React.FC = () => {
       <Box mt="10px" fontSize="12px">
         领取进度：1/2
       </Box>
-      <ProgressBar progress={20} mt="5px" mb="15px" />
+      <Progress
+        value={20}
+        colorScheme={isClosed ? 'gray' : 'process'}
+        mb="15px"
+        mt="5px"
+        height="8px"
+      />
       <Divider />
       <Flex mt="10px" fontSize="12px" h="25px" lineHeight="25px">
         <Box mr="auto">进行中</Box>
