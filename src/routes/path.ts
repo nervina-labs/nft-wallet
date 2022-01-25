@@ -40,6 +40,7 @@ export enum RoutePath {
   RedEnvelope = '/red-envelope',
   RedEnvelopeRecord = '/red-envelope/records',
   RedEnvelopeDetail = '/red-envelope-detail',
+  ShareRedEnvelope = '/red-envelope/:id/share',
   Search = '/search',
   Flashsigner = '/flashsigner',
 }
