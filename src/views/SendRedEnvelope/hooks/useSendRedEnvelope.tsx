@@ -1,6 +1,6 @@
 import { transformers } from '@lay2/pw-core'
 import { signTransactionWithRedirect } from '@nervina-labs/flashsigner'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
   useAccount,
@@ -21,57 +21,70 @@ export function useSendRedEnvelope() {
   const { walletType, pubkey } = useAccount()
   const signTransaction = useSignTransaction()
   const { replace, push } = useHistory()
+  const [isSending, setSending] = useState(false)
 
   const onSend = useCallback(
     async (formInfo: FormInfoState) => {
-      const auth = await getAuth()
-      const redpackRule =
-        formInfo.puzzleAnswer && formInfo.puzzleQuestion
-          ? {
-              ruleType: 'puzzle' as const,
-              question: formInfo.puzzleQuestion,
-              answer: formInfo.puzzleAnswer,
-            }
-          : undefined
-      const { data } = await api.getSendRedEnvelopeTx(
-        formInfo.tokenUuids,
-        auth,
-        walletType === WalletType.Unipass
-      )
-      const signTx = await signTransaction(data.tx)
-      const { signature } = routeLocation.state ?? {}
-      if (signature) {
-        const rewardAmount = Number(formInfo.rewardAmount) ?? 1
-        const uuid = await api
-          .createRedEnvelopeEvent(formInfo.greeting, rewardAmount, data.tx, {
-            signature,
-            redpackRule,
-          })
-          .then((res) => res.data.uuid)
-        replace(location.pathname + location.search, {})
-        push(`${RoutePath.RedEnvelope}/${uuid}`)
-      } else {
-        if (walletType === WalletType.Flashsigner) {
-          const url = `${location.origin}${RoutePath.Flashsigner}`
-          signTransactionWithRedirect(url, {
-            tx: transformers.TransformTransaction(data.tx) as any,
-            extra: formInfo,
-          })
+      setSending(true)
+      try {
+        const auth = await getAuth()
+        const redpackRule =
+          formInfo.puzzleAnswer && formInfo.puzzleQuestion
+            ? {
+                ruleType: 'puzzle' as const,
+                question: formInfo.puzzleQuestion,
+                answer: formInfo.puzzleAnswer,
+              }
+            : undefined
+        const { data } = await api.getSendRedEnvelopeTx(
+          formInfo.tokenUuids,
+          auth,
+          walletType === WalletType.Unipass
+        )
+        const signTx = await signTransaction(data.tx)
+        const { signature } = routeLocation.state ?? {}
+        if (signature) {
+          const rewardAmount = Number(formInfo.rewardAmount) ?? 1
+          const uuid = await api
+            .createRedEnvelopeEvent(
+              formInfo.greeting,
+              rewardAmount,
+              data.tx,
+              auth,
+              {
+                signature,
+                redpackRule,
+              }
+            )
+            .then((res) => res.data.uuid)
+          replace(location.pathname + location.search, {})
+          push(`${RoutePath.RedEnvelope}/${uuid}/share`)
+        } else {
+          if (walletType === WalletType.Flashsigner) {
+            const url = `${location.origin}${RoutePath.Flashsigner}`
+            signTransactionWithRedirect(url, {
+              tx: transformers.TransformTransaction(data.tx) as any,
+              extra: formInfo,
+            })
+          }
+          if (walletType === WalletType.Unipass) {
+            const url = `${location.origin}${RoutePath.Unipass}`
+            location.href = generateUnipassUrl(
+              UnipassAction.RedEnvelope,
+              url,
+              url,
+              pubkey,
+              signTx,
+              {
+                ...formInfo,
+                tokenUuids: formInfo.tokenUuids.join(','),
+              }
+            )
+          }
         }
-        if (walletType === WalletType.Unipass) {
-          const url = `${location.origin}${RoutePath.Unipass}`
-          location.href = generateUnipassUrl(
-            UnipassAction.RedEnvelope,
-            url,
-            url,
-            pubkey,
-            signTx,
-            {
-              ...formInfo,
-              tokenUuids: formInfo.tokenUuids.join(','),
-            }
-          )
-        }
+        setSending(true)
+      } catch {
+        setSending(false)
       }
     },
     [
@@ -88,13 +101,13 @@ export function useSendRedEnvelope() {
 
   useEffect(() => {
     const { signature, prevState } = routeLocation.state ?? {}
-    if (prevState && signature) {
+    if (prevState && signature && !isSending) {
       onSend({
         ...prevState,
         tokenUuids: prevState.tokenUuids?.split(','),
       })
     }
-  }, [onSend, routeLocation.state])
+  }, [isSending, onSend, routeLocation.state])
 
-  return onSend
+  return { onSend, isSending }
 }

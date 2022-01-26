@@ -73,7 +73,7 @@ export const SendRedEnvelope: React.FC = () => {
   const toast = useToast()
   const { i18n } = useTranslation()
   const { push } = useHistory()
-  const fn = useSendRedEnvelope()
+  const { onSend } = useSendRedEnvelope()
 
   const onSubmit = useCallback(async () => {
     if (!selectedTokens.length) {
@@ -94,23 +94,16 @@ export const SendRedEnvelope: React.FC = () => {
         return
       }
     }
-    await fn({
+    await onSend({
       greeting,
       rewardAmount: rewardAmountValue,
       tokenUuids: selectedTokens.map((t) => t.token_uuid),
       puzzleAnswer,
       puzzleQuestion,
     })
-    console.log({
-      selectedTokens,
-      rewardAmountValue,
-      greeting,
-      puzzleQuestion,
-      puzzleAnswer,
-    })
   }, [
-    fn,
     greeting,
+    onSend,
     puzzleAnswer,
     puzzleQuestion,
     rewardAmountValue,

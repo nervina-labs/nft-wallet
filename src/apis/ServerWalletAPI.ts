@@ -979,6 +979,7 @@ export class ServerWalletAPI {
     greetings: string,
     rewardAmount: number,
     tx: PwTransaction | RPC.RawTransaction,
+    auth: Auth,
     options?: {
       signature: string
       redpackRule?: {
@@ -1002,13 +1003,21 @@ export class ServerWalletAPI {
       ).serializeJson()
       rawTx.witnesses[0] = witness
     }
-    return await this.axios.post<{ uuid: string }>('/toolbox/redpack_events', {
-      redpack_event: {
-        greetings,
-        reward_amount: rewardAmount,
-        signed_tx: JSON.stringify(rawTx),
-        redpack_rule: options?.redpackRule,
+    return await this.axios.post<{ uuid: string }>(
+      '/toolbox/redpack_events',
+      {
+        redpack_event: {
+          greetings,
+          reward_amount: rewardAmount,
+          signed_tx: JSON.stringify(rawTx),
+          redpack_rule: options?.redpackRule,
+        },
       },
-    })
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+      }
+    )
   }
 }
