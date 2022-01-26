@@ -23,6 +23,8 @@ import { getNFTQueryParams, isSupportWebp, limitNumberInput } from '../../utils'
 import { NFTToken } from '../../models'
 import { useToast } from '../../hooks/useToast'
 import { useTranslation } from 'react-i18next'
+import { RoutePath } from '../../routes'
+import { useHistory } from 'react-router-dom'
 
 const formItemProps: BoxProps = {
   rounded: '8px',
@@ -69,6 +71,7 @@ export const SendRedEnvelope: React.FC = () => {
   const [tabIndex, setTabIndex] = useState<number>(0)
   const toast = useToast()
   const { i18n } = useTranslation()
+  const { push } = useHistory()
 
   const onSubmit = useCallback(async () => {
     const redEnvelopeCount = Number(redEnvelopeCountValue)
@@ -142,6 +145,7 @@ export const SendRedEnvelope: React.FC = () => {
             lineHeight="50px"
             borderBottom="1px solid #E1E1E1"
             fontSize="16px"
+            onClick={() => push(RoutePath.RedEnvelopeRecord)}
           >
             红包记录
           </Box>
