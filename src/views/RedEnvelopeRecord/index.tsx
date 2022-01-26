@@ -1,8 +1,8 @@
 import { TabPanel, TabPanels } from '@chakra-ui/react'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { Tabs, Tab, TabList } from '@mibao-ui/components'
-import { Card } from './components/card'
 import { MainContainer } from '../../styles'
+import { Sent } from './components/sent'
 
 export const RedEnvelopeRecord: React.FC = () => {
   return (
@@ -16,7 +16,7 @@ export const RedEnvelopeRecord: React.FC = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <Card />
+              <Sent />
             </TabPanel>
           </TabPanels>
         </Tabs>
