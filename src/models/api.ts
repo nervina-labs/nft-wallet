@@ -33,7 +33,8 @@ export interface UnsignedTransaction {
 }
 
 export interface UnsignedTransactionSendRedEnvelope {
-  unsigned_txs: RPC.RawTransaction[]
+  unsigned_tx: RPC.RawTransaction
+  tx: PwTransaction
 }
 
 export interface UnsignedReddemTransaction {

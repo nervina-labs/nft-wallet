@@ -947,13 +947,68 @@ export class ServerWalletAPI {
   }
 
   async getSendRedEnvelopeTx(
-    tokenUuids: string[]
+    tokenUuids: string[],
+    auth: Auth,
+    isUnipass?: boolean
   ): Promise<AxiosResponse<UnsignedTransactionSendRedEnvelope>> {
-    return await this.axios.post<UnsignedTransactionSendRedEnvelope>(
+    const headers = {
+      auth: JSON.stringify(auth),
+    }
+    const res = await this.axios.post<UnsignedTransactionSendRedEnvelope>(
       '/toolbox/redpack_transactions',
       {
         token_uuids: tokenUuids,
+      },
+      {
+        headers,
       }
     )
+    return {
+      ...res,
+      data: {
+        ...res.data,
+        tx: await rawTransactionToPWTransaction(
+          res.data.unsigned_tx,
+          isUnipass
+        ),
+      },
+    }
+  }
+
+  async createRedEnvelopeEvent(
+    greetings: string,
+    rewardAmount: number,
+    tx: PwTransaction | RPC.RawTransaction,
+    options?: {
+      signature: string
+      redpackRule?: {
+        ruleType: 'puzzle'
+        question: string
+        answer: string
+      }
+    }
+  ) {
+    const rawTx = isPwTransaction(tx)
+      ? (transformers.TransformTransaction(tx) as RPC.RawTransaction)
+      : tx
+    if (options?.signature) {
+      const witnessArgs: WitnessArgs = {
+        lock: options.signature,
+        input_type: '',
+        output_type: '',
+      }
+      const witness = new Reader(
+        SerializeWitnessArgs(normalizers.NormalizeWitnessArgs(witnessArgs))
+      ).serializeJson()
+      rawTx.witnesses[0] = witness
+    }
+    return await this.axios.post<{ uuid: string }>('/toolbox/redpack_events', {
+      redpack_event: {
+        greetings,
+        reward_amount: rewardAmount,
+        signed_tx: JSON.stringify(rawTx),
+        redpack_rule: options?.redpackRule,
+      },
+    })
   }
 }

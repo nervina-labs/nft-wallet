@@ -25,6 +25,7 @@ import { useToast } from '../../hooks/useToast'
 import { useTranslation } from 'react-i18next'
 import { RoutePath } from '../../routes'
 import { useHistory } from 'react-router-dom'
+import { useSendRedEnvelope } from './hooks/useSendRedEnvelope'
 
 const formItemProps: BoxProps = {
   rounded: '8px',
@@ -64,7 +65,7 @@ export const SendRedEnvelope: React.FC = () => {
   const { width } = useInnerSize()
   const modalLeft = `calc(50% - ${Math.min(width, CONTAINER_MAX_WIDTH) / 2}px)`
   const [selectedTokens, setSelectedTokens] = useState<NFTToken[]>([])
-  const [redEnvelopeCountValue, setRedEnvelopeCountValue] = useState('')
+  const [rewardAmountValue, setRewardAmountValue] = useState('')
   const [greeting, setGreeting] = useState('')
   const [puzzleQuestion, setPuzzleQuestion] = useState('')
   const [puzzleAnswer, setPuzzleAnswer] = useState('')
@@ -72,14 +73,14 @@ export const SendRedEnvelope: React.FC = () => {
   const toast = useToast()
   const { i18n } = useTranslation()
   const { push } = useHistory()
+  const fn = useSendRedEnvelope()
 
   const onSubmit = useCallback(async () => {
-    const redEnvelopeCount = Number(redEnvelopeCountValue)
     if (!selectedTokens.length) {
       toast('请选择秘宝')
       return
     }
-    if (!redEnvelopeCount) {
+    if (!Number(rewardAmountValue)) {
       toast('请输入红包数量')
       return
     }
@@ -93,19 +94,26 @@ export const SendRedEnvelope: React.FC = () => {
         return
       }
     }
-    // TODO: API
+    await fn({
+      greeting,
+      rewardAmount: rewardAmountValue,
+      tokenUuids: selectedTokens.map((t) => t.token_uuid),
+      puzzleAnswer,
+      puzzleQuestion,
+    })
     console.log({
       selectedTokens,
-      redEnvelopeCountValue,
+      rewardAmountValue,
       greeting,
       puzzleQuestion,
       puzzleAnswer,
     })
   }, [
+    fn,
     greeting,
     puzzleAnswer,
     puzzleQuestion,
-    redEnvelopeCountValue,
+    rewardAmountValue,
     selectedTokens,
     tabIndex,
     toast,
@@ -194,7 +202,7 @@ export const SendRedEnvelope: React.FC = () => {
               <>
                 <VStack px="10px" spacing="15px">
                   {selectedTokens.map((token, i) => (
-                    <Box w="full">
+                    <Box w="full" key={i}>
                       <Flex key={i} justify="flex-start" w="full">
                         <Image
                           src={token.class_bg_image_url}
@@ -270,12 +278,12 @@ export const SendRedEnvelope: React.FC = () => {
                 _focus={{
                   border: 'none',
                 }}
-                value={redEnvelopeCountValue}
+                value={rewardAmountValue}
                 onChange={(e) =>
-                  setRedEnvelopeCountValue(
+                  setRewardAmountValue(
                     limitNumberInput(
                       e,
-                      redEnvelopeCountValue,
+                      rewardAmountValue,
                       selectedTokens.length
                     )
                   )
