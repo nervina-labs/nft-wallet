@@ -67,6 +67,8 @@ import {
   OpenRedEnvelopeResponse,
   RedEnvelopeRecords,
   RedEnvelopeResponse,
+  RuleType,
+  SentRedEnvelope,
 } from '../models/red-envelope'
 import { isPwTransaction } from '../utils'
 
@@ -983,7 +985,7 @@ export class ServerWalletAPI {
     options?: {
       signature?: string
       redpackRule?: {
-        rule_type: 'puzzle'
+        rule_type: RuleType.puzzle
         question: string
         answer: string
       }
@@ -1013,6 +1015,17 @@ export class ServerWalletAPI {
           redpack_rule: options?.redpackRule,
         },
       },
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+      }
+    )
+  }
+
+  async getRedEnvelopeDetail(uuid: string, auth: Auth) {
+    return await this.axios.get<SentRedEnvelope>(
+      `/toolbox/redpack_events/${uuid}`,
       {
         headers: {
           auth: JSON.stringify(auth),

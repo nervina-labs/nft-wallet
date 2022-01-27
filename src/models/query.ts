@@ -29,5 +29,6 @@ export enum Query {
   RedEnvelope = 'RedEnvelope',
   RedEnvelopeRecords = 'RedEnvelopeRecords',
   SendableEnvelopeNfts = 'SendableEnvelopeNfts',
+  GetRedEnvelopeDetail = 'GetRedEnvelopeDetail',
   Search = 'Search',
 }

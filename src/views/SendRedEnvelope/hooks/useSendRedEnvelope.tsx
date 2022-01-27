@@ -11,6 +11,7 @@ import {
 } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useToast } from '../../../hooks/useToast'
+import { RuleType } from '../../../models'
 import { UnipassAction } from '../../../models/unipass'
 import { RoutePath } from '../../../routes'
 import { generateUnipassUrl } from '../../../utils'
@@ -37,7 +38,7 @@ export function useSendRedEnvelope() {
         const redpackRule =
           formInfo.puzzleAnswer && formInfo.puzzleQuestion
             ? {
-                rule_type: 'puzzle' as const,
+                rule_type: RuleType.puzzle as const,
                 question: formInfo.puzzleQuestion,
                 answer: formInfo.puzzleAnswer,
               }

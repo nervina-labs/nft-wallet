@@ -64,3 +64,19 @@ export interface OpenRedEnvelopeResponse {
   record_uuid: string
   is_special_model: boolean
 }
+
+export interface SentRedEnvelope {
+  uuid: string
+  created_at: string
+  greetings: string
+  state: string
+  progress: {
+    claimed: number
+    total: number
+  }
+  rule_info: {
+    rule_type: RuleType
+    question: string
+  } | null
+  tokens_count: number
+}

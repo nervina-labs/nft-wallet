@@ -25,6 +25,11 @@ import {
   ModalHeader,
   ModalCloseButton,
 } from '@mibao-ui/components'
+import { useAPI } from '../../hooks/useAccount'
+import { useQuery } from 'react-query'
+import { Query, RuleType } from '../../models'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
+import { RoutePath } from '../../routes'
 
 const Container = styled(RainbowBackground)`
   height: auto;
@@ -38,18 +43,30 @@ export const ShareRedEnvelope: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { onRender, imgSrc } = useHtml2Canvas()
   const sharePosterRef = useRef<HTMLDivElement>(null)
-  const qrcodeValue = 'https://mibao.net'
   const {
     isOpen: isOpenCopySucceedDialog,
     onOpen: onOpenCopySucceedDialog,
     onClose: onCloseCopySucceedDialog,
   } = useDisclosure()
+  const api = useAPI()
+  const getAuth = useGetAndSetAuth()
+
+  const { data, isLoading } = useQuery(
+    [Query.GetRedEnvelopeDetail, id],
+    async () => {
+      const auth = await getAuth()
+      const { data } = await api.getRedEnvelopeDetail(id, auth)
+      return data
+    }
+  )
 
   useLayoutEffect(() => {
-    if (sharePosterRef.current) {
+    if (sharePosterRef.current && !isLoading && data) {
       onRender(sharePosterRef.current)
     }
-  }, [id, onRender])
+  }, [id, isLoading, onRender, data])
+
+  const shareUrl = `${location.origin}${RoutePath.RedEnvelope}/${id}`
 
   return (
     <Container>
@@ -105,7 +122,7 @@ export const ShareRedEnvelope: React.FC = () => {
                     }}
                     fgColor="#F9E0B7"
                     bgColor="rgba(0, 0, 0, 0)"
-                    value={qrcodeValue}
+                    value={shareUrl}
                   />
                 </Box>
               </AspectRatio>
@@ -133,14 +150,18 @@ export const ShareRedEnvelope: React.FC = () => {
                   textAlign="center"
                   mt="20px"
                 >
-                  大吉大利好运连连大吉大利好运连连大吉大利
+                  {data?.greetings}
                 </Box>
-                <Box fontSize="14px" mt="20px">
-                  猜中以下谜题，抢数字藏品红包
-                </Box>
-                <Box color="white" fontSize="20px" mt="6px">
-                  「 热爱创作 」
-                </Box>
+                {data?.rule_info?.rule_type === RuleType.puzzle ? (
+                  <>
+                    <Box fontSize="14px" mt="20px">
+                      猜中以下谜题，抢数字藏品红包
+                    </Box>
+                    <Box color="white" fontSize="20px" mt="6px">
+                      {data?.rule_info.question}
+                    </Box>
+                  </>
+                ) : null}
               </VStack>
             </Box>
           </Box>
@@ -212,7 +233,7 @@ export const ShareRedEnvelope: React.FC = () => {
               textAlign="center"
               mt="6px"
             >
-              https://mibao.net 红包口令：恭喜发财
+              {shareUrl}
             </Box>
           </ModalBody>
         </ModalContent>
