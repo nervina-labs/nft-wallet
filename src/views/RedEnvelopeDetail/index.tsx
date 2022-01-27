@@ -7,10 +7,17 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Progress, Image } from '@mibao-ui/components'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useQuery } from 'react-query'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
+import { useAPI } from '../../hooks/useAccount'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
+import { Query, RedEnvelopeState } from '../../models'
 import { MainContainer } from '../../styles'
-import { isSupportWebp } from '../../utils'
+import { formatTime, isSupportWebp } from '../../utils'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -42,12 +49,44 @@ const Container = styled(MainContainer)`
 `
 
 export const RedEnvelopeDetail: React.FC = () => {
-  const isClosed = false
+  const { t, i18n } = useTranslation('translations')
+  const { id } = useParams<{ id: string }>()
+  const api = useAPI()
+  const getAuth = useGetAndSetAuth()
+  const { data } = useQuery([Query.GetSentRedEnvelopeDetail, id], async () => {
+    const auth = await getAuth()
+    const { data } = await api.getSentRedEnvelopeDetail(id, auth)
+    return data
+  })
+  const isClosed =
+    data?.state === RedEnvelopeState.Closed ||
+    data?.state === RedEnvelopeState.Expired
+  const statusText = useMemo(() => {
+    switch (data?.state) {
+      case RedEnvelopeState.Closed:
+        return t('red-envelope-records.state.closed')
+      case RedEnvelopeState.Done:
+        return t('red-envelope-records.state.done')
+      case RedEnvelopeState.Expired:
+        return t('red-envelope-records.state.expired')
+      case RedEnvelopeState.Ongoing:
+        return (
+          <Box color="#0A0B26" as="span">
+            {t('red-envelope-records.state.ongoing')}
+          </Box>
+        )
+    }
+    return ''
+  }, [data?.state, t])
+
+  const progressValue = data
+    ? Math.floor((data.progress.claimed / data.progress.total) * 100)
+    : 0
 
   return (
     <Container position="relative">
       <Box position="relative" zIndex={1}>
-        <Appbar transparent title={'红包详情'} />
+        <Appbar transparent title={t('red-envelope-detail.title')} />
       </Box>
 
       <Box
@@ -77,9 +116,14 @@ export const RedEnvelopeDetail: React.FC = () => {
         <Flex h="110px" justify="space-between" px="20px">
           <Stack spacing="4px" my="auto">
             <Heading fontSize="26px" fontWeight="500" color={'#777E90'}>
-              进行中
+              {statusText}
             </Heading>
-            <Box fontSize="12px">发起时间：2021-07-10 12:12:12</Box>
+            <Box fontSize="12px">
+              {t('red-envelope-detail.generation-time')}{' '}
+              {data?.created_at
+                ? formatTime(data.created_at, i18n.language)
+                : '----:--:--'}
+            </Box>
           </Stack>
         </Flex>
         <Box
@@ -91,17 +135,26 @@ export const RedEnvelopeDetail: React.FC = () => {
           mx="20px"
         >
           <Box fontSize="16px" mb="16px">
-            领取进度
+            {t('red-envelope-detail.progress')}
           </Box>
           <Progress
-            value={20}
+            value={progressValue}
             colorScheme={isClosed ? 'gray' : 'process'}
             mb="8px"
             height="8px"
           />
           <Flex fontSize="12px" justify="space-between">
-            <Box>已领取：1</Box>
-            <Box>剩余：1</Box>
+            <Box>
+              {t('red-envelope-detail.received')}
+              {data?.progress.total}
+            </Box>
+            <Box>
+              {t('red-envelope-detail.received')}
+              {Math.min(
+                data ? data.progress.total - data.progress.claimed : 0,
+                0
+              )}
+            </Box>
           </Flex>
         </Box>
         <Heading
@@ -112,7 +165,7 @@ export const RedEnvelopeDetail: React.FC = () => {
           mx="20px"
           fontWeight="normal"
         >
-          红包包含下面所有NFT
+          {t('red-envelope-detail.contains-the-following-collections')}
         </Heading>
         <VStack spacing="10px" mx="20px">
           <Flex w="full">
@@ -154,7 +207,7 @@ export const RedEnvelopeDetail: React.FC = () => {
               </Box>
             </Flex>
             <Box my="auto" fontSize="14px">
-              已领取
+              {t('red-envelope-detail.item-unreceived')}
             </Box>
           </Flex>
         </VStack>

@@ -748,6 +748,16 @@
       },
       "creator": "发出人"
     },
+    "red-envelope-detail": {
+      "title": "红包详情",
+      "generation-time": "发起时间：",
+      "progress": "领取详情",
+      "received": "已领取：",
+      "unopened": "剩余：",
+      "contains-the-following-collections": "红包包含下面所有秘宝",
+      "item-received": "已领取",
+      "item-unreceived": "未领取"
+    },
     "pwa-guide": {
       "desc": "将我们添加到桌面吧，获得最佳观赏体验，不再错过这些独一无二的艺术品。",
       "ok": "知道了",
