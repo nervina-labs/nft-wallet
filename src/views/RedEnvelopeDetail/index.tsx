@@ -1,12 +1,5 @@
-import {
-  AspectRatio,
-  Box,
-  Flex,
-  Heading,
-  Stack,
-  VStack,
-} from '@chakra-ui/react'
-import { Progress, Image } from '@mibao-ui/components'
+import { AspectRatio, Box, Flex, Heading, Stack } from '@chakra-ui/react'
+import { Progress } from '@mibao-ui/components'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
@@ -17,7 +10,8 @@ import { useAPI } from '../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { Query, RedEnvelopeState } from '../../models'
 import { MainContainer } from '../../styles'
-import { formatTime, isSupportWebp } from '../../utils'
+import { formatTime } from '../../utils'
+import { TokenList } from './components/tokenList'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -76,7 +70,7 @@ export const RedEnvelopeDetail: React.FC = () => {
           </Box>
         )
     }
-    return ''
+    return '-'
   }, [data?.state, t])
 
   const progressValue = data
@@ -167,50 +161,7 @@ export const RedEnvelopeDetail: React.FC = () => {
         >
           {t('red-envelope-detail.contains-the-following-collections')}
         </Heading>
-        <VStack spacing="10px" mx="20px">
-          <Flex w="full">
-            <Image
-              src={
-                'https://oss.jinse.cc/production/7744ffc9-81b1-4c4e-a711-0536eb8bf10a.png'
-              }
-              resizeScale={300}
-              webp={isSupportWebp()}
-              customizedSize={{
-                fixed: 'large',
-              }}
-              w="50px"
-              h="50px"
-              rounded="16px"
-            />
-            <Flex
-              justify="center"
-              fontSize="14px"
-              ml="10px"
-              mr="auto"
-              direction="column"
-            >
-              <Box
-                color="#000"
-                whiteSpace="nowrap"
-                textOverflow="ellipsis"
-                overflow="hidden"
-              >
-                未知世界2 ...
-              </Box>
-              <Box
-                fontSize="12px"
-                whiteSpace="nowrap"
-                textOverflow="ellipsis"
-                overflow="hidden"
-              >
-                #8
-              </Box>
-            </Flex>
-            <Box my="auto" fontSize="14px">
-              {t('red-envelope-detail.item-unreceived')}
-            </Box>
-          </Flex>
-        </VStack>
+        <TokenList uuid={id} />
       </Box>
     </Container>
   )

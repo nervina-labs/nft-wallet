@@ -128,3 +128,18 @@ export interface ReceivedRedEnvelopeRecords {
   records: ReceivedRedEnvelopeRecordItem[]
   meta: ListMeta
 }
+
+export interface SentRedEnvelopeRewordItem {
+  token: {
+    uuid: string
+    n_token_id: number
+    bg_image_url: string
+    name: string
+  }
+  state: 'pending' | 'grabed'
+}
+
+export interface SentRedEnvelopeReword {
+  redpack_reward_plan_items: SentRedEnvelopeRewordItem[]
+  meta: ListMeta
+}

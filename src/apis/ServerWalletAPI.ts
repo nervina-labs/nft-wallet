@@ -71,6 +71,7 @@ import {
   RuleType,
   SentRedEnvelopeDetail,
   SentRedEnvelopeRecords,
+  SentRedEnvelopeReword,
 } from '../models/red-envelope'
 import { isPwTransaction } from '../utils'
 
@@ -1043,7 +1044,7 @@ export class ServerWalletAPI {
       limit?: number
     }
   ) {
-    const page = options?.page ?? 0
+    const page = options?.page ?? 1
     const limit = options?.limit ?? PER_ITEM_LIMIT
     return await this.axios.get<SentRedEnvelopeRecords>(
       '/toolbox/redpack_events',
@@ -1074,10 +1075,34 @@ export class ServerWalletAPI {
       limit?: number
     }
   ) {
-    const page = options?.page ?? 0
+    const page = options?.page ?? 1
     const limit = options?.limit ?? PER_ITEM_LIMIT
     return await this.axios.get<ReceivedRedEnvelopeRecords>(
       '/grabed_redpack_records',
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+        params: {
+          page,
+          limit,
+        },
+      }
+    )
+  }
+
+  async getSentRedEnvelopeDetailRewards(
+    uuid: string,
+    auth: Auth,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) {
+    const page = options?.page ?? 1
+    const limit = options?.limit ?? PER_ITEM_LIMIT
+    return await this.axios.get<SentRedEnvelopeReword>(
+      `/toolbox/redpack_events/${uuid}/reward_plan_items`,
       {
         headers: {
           auth: JSON.stringify(auth),
