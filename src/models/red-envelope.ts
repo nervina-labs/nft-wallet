@@ -90,8 +90,9 @@ export interface SentRedEnvelopeRecordEvent {
     total: number
   }
   tokens_count: number
+  greeting: string
 }
 
 export interface SentRedEnvelopeRecords {
-  redpack_events: SentRedEnvelopeRecordEvent
+  redpack_events: SentRedEnvelopeRecordEvent[]
 }

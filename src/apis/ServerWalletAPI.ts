@@ -1045,4 +1045,12 @@ export class ServerWalletAPI {
       }
     )
   }
+
+  async closeSentRedEnvelope(uuid: string, auth: Auth) {
+    return await this.axios.delete(`/toolbox/redpack_events/${uuid}`, {
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+    })
+  }
 }
