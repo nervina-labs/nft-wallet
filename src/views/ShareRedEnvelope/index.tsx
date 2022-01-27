@@ -30,6 +30,7 @@ import { useQuery } from 'react-query'
 import { Query, RuleType } from '../../models'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { RoutePath } from '../../routes'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled(RainbowBackground)`
   height: auto;
@@ -50,6 +51,7 @@ export const ShareRedEnvelope: React.FC = () => {
   } = useDisclosure()
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
+  const { t } = useTranslation('translations')
 
   const { data, isLoading } = useQuery(
     [Query.GetRedEnvelopeDetail, id],
@@ -71,7 +73,7 @@ export const ShareRedEnvelope: React.FC = () => {
   return (
     <Container>
       <AppbarSticky position="relative" zIndex={1}>
-        <Appbar title="分享红包" transparent />
+        <Appbar title={t('share-red-envelope.title')} transparent />
       </AppbarSticky>
       <Box
         opacity="0"
@@ -142,7 +144,7 @@ export const ShareRedEnvelope: React.FC = () => {
                     overflow: 'initial',
                   }}
                 >
-                  长按识别二维码领取红包
+                  {t('share-red-envelope.qrcode-prompt')}
                 </Box>
                 <Box
                   fontSize="24px"
@@ -155,7 +157,7 @@ export const ShareRedEnvelope: React.FC = () => {
                 {data?.rule_info?.rule_type === RuleType.puzzle ? (
                   <>
                     <Box fontSize="14px" mt="20px">
-                      猜中以下谜题，抢数字藏品红包
+                      {t('share-red-envelope.puzzle-prompt')}
                     </Box>
                     <Box color="white" fontSize="20px" mt="6px">
                       {data?.rule_info.question}
@@ -179,17 +181,17 @@ export const ShareRedEnvelope: React.FC = () => {
         <MibaoImage src={imgSrc} />
       </AspectRatio>
 
-      <Box fontSize="14px" my="24px" w="full" textAlign="center">
-        长按图片添加到「照片」分享给朋友
+      <Box fontSize="14px" my="24px" w="full" textAlign="center" px="20px">
+        {t('share-red-envelope.save-image')}
       </Box>
 
-      <Box fontSize="12px" mt="auto" mb="32px" color="#777e90">
+      <Box fontSize="12px" mt="auto" mb="32px" color="#777e90" px="20px">
         <Box as="span" color="#CAA255">
-          为了保障数字资产安全，红包将在1-3分钟内生成
+          {t('share-red-envelope.wait-text')}
         </Box>
         <OrderedList>
-          <ListItem>您可以保存二维码后随时扫码查看进度分享</ListItem>
-          <ListItem>也可以返回红包页面点击右上角『...』查看与分享</ListItem>
+          <ListItem>{t('share-red-envelope.prompt-list.0')}</ListItem>
+          <ListItem>{t('share-red-envelope.prompt-list.1')}</ListItem>
         </OrderedList>
       </Box>
 
@@ -202,7 +204,7 @@ export const ShareRedEnvelope: React.FC = () => {
         variant="solid"
         onClick={onOpenCopySucceedDialog}
       >
-        复制分享链接
+        {t('share-red-envelope.share-link')}
       </Button>
 
       <Modal
@@ -218,12 +220,12 @@ export const ShareRedEnvelope: React.FC = () => {
           }}
         >
           <ModalHeader textAlign="center" mt="32px">
-            复制成功
+            {t('share-red-envelope.copied-title')}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody py="0" mt="20px">
             <Box fontSize="14px" textAlign="center">
-              已成功复制到剪切板，去粘贴分享吧！
+              {t('share-red-envelope.copied-text')}
             </Box>
             <Box
               bg="#F6F9FC"
