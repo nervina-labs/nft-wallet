@@ -69,7 +69,7 @@ import {
   RedEnvelopeRecords,
   RedEnvelopeResponse,
   RuleType,
-  SentRedEnvelope,
+  SentRedEnvelopeDetail,
   SentRedEnvelopeRecords,
 } from '../models/red-envelope'
 import { isPwTransaction } from '../utils'
@@ -1026,7 +1026,7 @@ export class ServerWalletAPI {
   }
 
   async getSentRedEnvelopeDetail(uuid: string, auth: Auth) {
-    return await this.axios.get<SentRedEnvelope>(
+    return await this.axios.get<SentRedEnvelopeDetail>(
       `/toolbox/redpack_events/${uuid}`,
       {
         headers: {

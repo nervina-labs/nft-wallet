@@ -66,7 +66,7 @@ export interface OpenRedEnvelopeResponse {
   is_special_model: boolean
 }
 
-export interface SentRedEnvelope {
+export interface SentRedEnvelopeDetail {
   uuid: string
   created_at: string
   greetings: string
