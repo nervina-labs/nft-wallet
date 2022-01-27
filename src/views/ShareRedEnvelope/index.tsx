@@ -54,10 +54,10 @@ export const ShareRedEnvelope: React.FC = () => {
   const { t } = useTranslation('translations')
 
   const { data, isLoading } = useQuery(
-    [Query.GetRedEnvelopeDetail, id],
+    [Query.GetSentRedEnvelopeDetail, id],
     async () => {
       const auth = await getAuth()
-      const { data } = await api.getRedEnvelopeDetail(id, auth)
+      const { data } = await api.getSentRedEnvelopeDetail(id, auth)
       return data
     }
   )

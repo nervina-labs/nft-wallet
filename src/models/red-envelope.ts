@@ -80,3 +80,18 @@ export interface SentRedEnvelope {
   } | null
   tokens_count: number
 }
+
+export interface SentRedEnvelopeRecordEvent {
+  uuid: string
+  created_at: string
+  state: RedEnvelopeState
+  progress: {
+    claimed: number
+    total: number
+  }
+  tokens_count: number
+}
+
+export interface SentRedEnvelopeRecords {
+  redpack_events: SentRedEnvelopeRecordEvent
+}
