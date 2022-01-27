@@ -35,6 +35,7 @@ import { SendRedEnvelope } from '../views/SendRedEnvelope'
 import { RedEnvelopeRecord } from '../views/RedEnvelopeRecord'
 import { RedEnvelopeDetail } from '../views/RedEnvelopeDetail'
 import { ShareRedEnvelope } from '../views/ShareRedEnvelope'
+import { RedEnvelopeReceived } from '../views/RedEnvelopeReceived'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -281,7 +282,12 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'RedEnvelopeDetail',
     path: RoutePath.RedEnvelopeDetail,
-    params: '/:id',
+  },
+  {
+    component: RedEnvelopeReceived,
+    exact: true,
+    key: 'RedEnvelopeReceived',
+    path: RoutePath.RedEnvelopeReceived,
   },
   {
     component: ShareRedEnvelope,
