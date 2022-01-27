@@ -726,6 +726,27 @@
       "copied-title": "复制成功",
       "copied-text": "已成功复制到剪切板，去粘贴分享吧！"
     },
+    "red-envelope-records": {
+      "title": "红包记录",
+      "type": {
+        "sent": "发出",
+        "received": "收到"
+      },
+      "state": {
+        "closed": "已关闭",
+        "done": "已领完",
+        "expired": "已过期",
+        "ongoing": "进行中"
+      },
+      "progress": "领取进度：",
+      "close": "关闭",
+      "details": "查看详情",
+      "close-event-confirm": "确定要关闭这个红包吗？",
+      "toast": {
+        "succeed": "关闭成功",
+        "failed": "关闭失败"
+      }
+    },
     "pwa-guide": {
       "desc": "将我们添加到桌面吧，获得最佳观赏体验，不再错过这些独一无二的艺术品。",
       "ok": "知道了",

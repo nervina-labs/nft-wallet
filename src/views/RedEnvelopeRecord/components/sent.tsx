@@ -23,22 +23,22 @@ export const Sent: React.FC = () => {
   const onCloseEvent = useCallback(
     (uuid: string) => {
       onCloseEventDialog({
-        title: '确定要关闭这个红包吗?',
+        title: t('red-envelope-records.close-event-confirm'),
         type: 'warning',
         async onConfirm() {
           try {
             const auth = await getAuth()
             await api.closeSentRedEnvelope(uuid, auth)
             setRetryCount((c) => c + 1)
-            toast('关闭成功')
+            toast(t('red-envelope-records.toast.succeed'))
           } catch {
-            toast('关闭失败')
+            toast(t('red-envelope-records.toast.failed'))
           }
         },
         onCancel() {},
       })
     },
-    [api, getAuth, onCloseEventDialog, toast]
+    [api, getAuth, onCloseEventDialog, t, toast]
   )
 
   return (

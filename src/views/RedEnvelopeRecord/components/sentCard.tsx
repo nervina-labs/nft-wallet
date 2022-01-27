@@ -7,6 +7,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { RoutePath } from '../../../routes'
 import styled from '@emotion/styled'
+import { useTranslation } from 'react-i18next'
 
 export const StyledLink = styled(Link)`
   display: inline-flex;
@@ -18,25 +19,26 @@ export const SentCard: React.FC<{
   data: SentRedEnvelopeRecordEvent
   onCloseEvent: (uuid: string) => void
 }> = ({ data, onCloseEvent }) => {
+  const { t } = useTranslation('translations')
   const isClosed =
     data.state === RedEnvelopeState.Closed ||
     data.state === RedEnvelopeState.Expired
   const statusText = useMemo(() => {
     switch (data.state) {
       case RedEnvelopeState.Closed:
-        return '已关闭'
+        return t('red-envelope-records.state.closed')
       case RedEnvelopeState.Done:
-        return '已领完'
+        return t('red-envelope-records.state.done')
       case RedEnvelopeState.Expired:
-        return '已过期'
+        return t('red-envelope-records.state.expired')
       case RedEnvelopeState.Ongoing:
         return (
           <Box color="#FD6A3C" as="span">
-            进行中
+            {t('red-envelope-records.state.ongoing')}
           </Box>
         )
     }
-  }, [data.state])
+  }, [data.state, t])
 
   return (
     <Box
@@ -76,7 +78,8 @@ export const SentCard: React.FC<{
         />
       </HStack>
       <Box mt="10px" fontSize="12px">
-        领取进度：{data.progress.claimed}/{data.progress.total}
+        {t('red-envelope-records.progress')}
+        {data.progress.claimed}/{data.progress.total}
       </Box>
       <Progress
         value={data.progress.claimed / data.progress.total}
@@ -92,7 +95,7 @@ export const SentCard: React.FC<{
         </Box>
         <StyledLink to={`${RoutePath.RedEnvelope}/${data.uuid}/detail`}>
           <Button colorScheme="black" size="small" px="10px">
-            查看详情
+            {t('red-envelope-records.details')}
           </Button>
         </StyledLink>
         <Button
@@ -101,7 +104,7 @@ export const SentCard: React.FC<{
           px="10px"
           onClick={() => onCloseEvent(data.uuid)}
         >
-          关闭
+          {t('red-envelope-records.close')}
         </Button>
       </Flex>
     </Box>
