@@ -71,26 +71,26 @@ export const SendRedEnvelope: React.FC = () => {
   const [puzzleAnswer, setPuzzleAnswer] = useState('')
   const [tabIndex, setTabIndex] = useState<number>(0)
   const toast = useToast()
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation('translations')
   const { push } = useHistory()
   const { onSend } = useSendRedEnvelope()
 
   const onSubmit = useCallback(async () => {
     if (!selectedTokens.length) {
-      toast('请选择秘宝')
+      toast(t('send-red-envelope.toast.not-nft'))
       return
     }
     if (!Number(rewardAmountValue)) {
-      toast('请输入红包数量')
+      toast(t('send-red-envelope.toast.not-amount'))
       return
     }
     if (tabIndex === 1) {
       if (!puzzleQuestion) {
-        toast('请输入谜题')
+        toast(t('send-red-envelope.toast.not-puzzle-question'))
         return
       }
       if (!puzzleAnswer) {
-        toast('请输入谜底')
+        toast(t('send-red-envelope.toast.not-puzzle-answer'))
         return
       }
     }
@@ -108,6 +108,7 @@ export const SendRedEnvelope: React.FC = () => {
     puzzleQuestion,
     rewardAmountValue,
     selectedTokens,
+    t,
     tabIndex,
     toast,
   ])
@@ -117,7 +118,7 @@ export const SendRedEnvelope: React.FC = () => {
       <Flex direction="column" position="relative" zIndex={2} h="full">
         <Appbar
           transparent
-          title="秘宝红包"
+          title={t('send-red-envelope.title')}
           right={
             <AppbarButton transparent onClick={onOpenMore}>
               <MoreSvg />
@@ -148,10 +149,10 @@ export const SendRedEnvelope: React.FC = () => {
             fontSize="16px"
             onClick={() => push(RoutePath.RedEnvelopeRecord)}
           >
-            红包记录
+            {t('send-red-envelope.more-menus.records')}
           </Box>
           <Box h="50px" lineHeight="50px" fontSize="16px" onClick={onCloseMore}>
-            取消
+            {t('send-red-envelope.more-menus.cancel')}
           </Box>
         </Drawer>
 
@@ -168,10 +169,10 @@ export const SendRedEnvelope: React.FC = () => {
         >
           <TabList justifyContent="center" borderBottom="none" mb="25px">
             <Tab px="0" mr="40px" fontSize="14px">
-              普通红包
+              {t('send-red-envelope.red-envelope-type.normal')}
             </Tab>
             <Tab px="0" fontSize="14px">
-              谜语红包
+              {t('send-red-envelope.red-envelope-type.puzzle')}
             </Tab>
           </TabList>
           <Box
@@ -187,7 +188,7 @@ export const SendRedEnvelope: React.FC = () => {
               onClick={onOpenNftList}
               mx="0"
             >
-              选择秘宝
+              {t('send-red-envelope.form-items.select-nft')}
               <RightIcon />
             </Box>
 
@@ -251,18 +252,22 @@ export const SendRedEnvelope: React.FC = () => {
                   textAlign="right"
                   fontSize="12px"
                 >
-                  共计：{selectedTokens.length} 秘宝
+                  {t('send-red-envelope.form-items.total', {
+                    total: selectedTokens.length,
+                  })}
                 </Box>
               </>
             ) : null}
           </Box>
 
           <Flex {...formItemProps} justify="space-between" whiteSpace="nowrap">
-            <Box>红包个数</Box>
+            <Box>{t('send-red-envelope.form-items.reward-amount')}</Box>
             <Flex>
               <Input
                 bg="rgba(0, 0, 0, 0)"
-                placeholder="填写红包个数"
+                placeholder={t(
+                  'send-red-envelope.form-items.reward-amount-placeholder'
+                )}
                 border="none"
                 h="24px"
                 px="0"
@@ -282,13 +287,15 @@ export const SendRedEnvelope: React.FC = () => {
                   )
                 }
               />
-              个
+              {t('send-red-envelope.form-items.pcs')}
             </Flex>
           </Flex>
           <Flex {...formItemProps} justify="space-between" whiteSpace="nowrap">
-            <Box>祝福语</Box>
+            <Box>{t('send-red-envelope.form-items.greeting')}</Box>
             <Input
-              placeholder="大吉大利，好运连连！"
+              placeholder={t(
+                'send-red-envelope.form-items.greeting-placeholder'
+              )}
               w="full"
               border="none"
               px="0"
@@ -306,7 +313,7 @@ export const SendRedEnvelope: React.FC = () => {
             <TabPanel p="0"></TabPanel>
             <TabPanel {...formItemProps} pt="20px">
               <Box color="#777E90" fontSize="12px" mb="4px">
-                输入红包谜题
+                {t('send-red-envelope.form-items.puzzle-question-field')}
               </Box>
               <Input
                 bg="#EFEFEF"
@@ -320,12 +327,14 @@ export const SendRedEnvelope: React.FC = () => {
                   border: '1px solid #E8E8E8',
                   outline: 'none',
                 }}
-                placeholder="红包谜题"
+                placeholder={t(
+                  'send-red-envelope.form-items.puzzle-question-placeholder'
+                )}
                 value={puzzleQuestion}
                 onChange={(e) => setPuzzleQuestion(e.currentTarget.value)}
               />
               <Box color="#777E90" fontSize="12px" mb="4px" mt="16px">
-                输入红包谜底
+                {t('send-red-envelope.form-items.puzzle-answer-field')}
               </Box>
               <Input
                 bg="#EFEFEF"
@@ -339,12 +348,14 @@ export const SendRedEnvelope: React.FC = () => {
                   border: '1px solid #E8E8E8',
                   outline: 'none',
                 }}
-                placeholder="红包谜底"
+                placeholder={t(
+                  'send-red-envelope.form-items.puzzle-answer-placeholder'
+                )}
                 value={puzzleAnswer}
                 onChange={(e) => setPuzzleAnswer(e.currentTarget.value)}
               />
               <Box color="#777E90" fontSize="12px" mt="8px" textAlign="center">
-                好友输入谜底即可领取秘宝
+                {t('send-red-envelope.form-items.puzzle-prompt')}
               </Box>
             </TabPanel>
           </TabPanels>
@@ -359,7 +370,7 @@ export const SendRedEnvelope: React.FC = () => {
           mb="calc(15px - var(--safe-area-inset-bottom))"
           onClick={onSubmit}
         >
-          生成秘宝红包
+          {t('send-red-envelope.form-items.submit')}
         </Button>
       </Flex>
     </Container>

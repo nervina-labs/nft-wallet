@@ -75,7 +75,9 @@ export const NftListDrawer: React.FC<{
           <Flex align="center" onClick={onClose}>
             <LeftIcon />
           </Flex>
-          <Box fontSize="18px">请选择秘宝</Box>
+          <Box fontSize="18px">
+            {t('send-red-envelope.form-items.select-nft-title')}
+          </Box>
 
           <Box
             className="left"
@@ -83,7 +85,7 @@ export const NftListDrawer: React.FC<{
             fontSize="14px"
             fontWeight="normal"
           >
-            确定
+            {t('send-red-envelope.form-items.ok')}
           </Box>
         </Grid>
       }
@@ -105,7 +107,7 @@ export const NftListDrawer: React.FC<{
         id="selectNftListContainerId"
       >
         <Search
-          placeholder="搜索秘宝名称/创作者名称"
+          placeholder={t('send-red-envelope.form-items.select-nft-search')}
           containerProps={{
             mb: '15px',
             flexShrink: 0,
@@ -117,7 +119,7 @@ export const NftListDrawer: React.FC<{
           enableQuery={isEnableQueryNftList}
           queryFn={querySelectableNftList}
           queryKey={[Query.SendableEnvelopeNfts]}
-          noMoreElement={'没有更多'}
+          noMoreElement={t('no-more')}
           calcDataLength={(data) =>
             data?.pages.reduce(
               (acc, token) => token?.token_list?.length + acc,

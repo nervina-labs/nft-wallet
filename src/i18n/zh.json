@@ -676,6 +676,41 @@
       "try-again": "领取失败，再试一次吧",
       "connect-and-open-it": "连接身份后领取"
     },
+    "send-red-envelope": {
+      "title": "秘宝红包",
+      "more-menus": {
+        "records": "红包记录",
+        "cancel": "取消"
+      },
+      "red-envelope-type": {
+        "normal": "普通红包",
+        "puzzle": "谜语红包"
+      },
+      "form-items": {
+        "select-nft": "选择秘宝",
+        "select-nft-title": "请选择秘宝",
+        "select-nft-search": "搜索秘宝名称/创作者名称",
+        "ok": "确定",
+        "total": "共计： {{total}} 秘宝",
+        "reward-amount": "红包个数",
+        "reward-amount-placeholder": "红包个数",
+        "pcs": "个",
+        "greeting": "祝福语",
+        "greeting-placeholder": "大吉大利，好运连连！",
+        "puzzle-question-field": "输入红包谜题",
+        "puzzle-question-placeholder": "红包谜题",
+        "puzzle-answer-field": "输入红包谜底",
+        "puzzle-answer-placeholder": "红包谜底",
+        "puzzle-prompt": "好友输入谜底即可领取秘宝",
+        "submit": "生成秘宝红包"
+      },
+      "toast": {
+        "not-nft": "请选择秘宝",
+        "not-amount": "请输入红包数量",
+        "not-puzzle-question": "请输入红包谜题",
+        "not-puzzle-answer": "输入红包谜底"
+      }
+    },
     "pwa-guide": {
       "desc": "将我们添加到桌面吧，获得最佳观赏体验，不再错过这些独一无二的艺术品。",
       "ok": "知道了",

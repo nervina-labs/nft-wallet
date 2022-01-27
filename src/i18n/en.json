@@ -676,6 +676,41 @@
       "try-again": "Oops.. an error occurred. Try it again.",
       "connect-and-open-it": "Connect and open it"
     },
+    "send-red-envelope": {
+      "title": "Send Red Packet",
+      "more-menus": {
+        "records": "History",
+        "cancel": "Cancel"
+      },
+      "red-envelope-type": {
+        "normal": "Ordinary",
+        "puzzle": "Riddle"
+      },
+      "form-items": {
+        "select-nft": "Select collections",
+        "select-nft-title": "Select the collections",
+        "select-nft-search": "Search Digital Collection or Issuer",
+        "ok": "Next",
+        "total": "Total: {{total}}",
+        "reward-amount": "Select your works",
+        "reward-amount-placeholder": "Fill in quantity",
+        "pcs": "Pcs",
+        "greeting": "Promotional words",
+        "greeting-placeholder": "大吉大利，好运连连！",
+        "puzzle-question-field": "Set riddle",
+        "puzzle-question-placeholder": "Riddle",
+        "puzzle-answer-field": "Set the answer",
+        "puzzle-answer-placeholder": "Answer",
+        "puzzle-prompt": "Friends input answer to riddle can receive",
+        "submit": "Generate"
+      },
+      "toast": {
+        "not-nft": "No collections selects",
+        "not-amount": "The quantity of Red Packet is not filled in",
+        "not-puzzle-question": "The quantity of riddle is not filled in",
+        "not-puzzle-answer": "The quantity of answer is not filled in"
+      }
+    },
     "pwa-guide": {
       "desc": "Add MIBAO to the desktop for the best experience and no longer miss these unique artworks.",
       "ok": "OK",
