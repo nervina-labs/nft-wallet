@@ -73,7 +73,7 @@ export const SendRedEnvelope: React.FC = () => {
   const toast = useToast()
   const { t, i18n } = useTranslation('translations')
   const { push } = useHistory()
-  const { onSend } = useSendRedEnvelope()
+  const { onSend, isSending } = useSendRedEnvelope()
 
   const onSubmit = useCallback(async () => {
     if (!selectedTokens.length) {
@@ -98,8 +98,12 @@ export const SendRedEnvelope: React.FC = () => {
       greeting,
       rewardAmount: rewardAmountValue,
       tokenUuids: selectedTokens.map((t) => t.token_uuid),
-      puzzleAnswer,
-      puzzleQuestion,
+      ...(tabIndex === 1
+        ? {
+            puzzleAnswer,
+            puzzleQuestion,
+          }
+        : {}),
     })
   }, [
     greeting,
@@ -369,6 +373,7 @@ export const SendRedEnvelope: React.FC = () => {
           mt="auto"
           mb="calc(15px - var(--safe-area-inset-bottom))"
           onClick={onSubmit}
+          isLoading={isSending}
         >
           {t('send-red-envelope.form-items.submit')}
         </Button>

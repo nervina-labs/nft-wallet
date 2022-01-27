@@ -981,9 +981,9 @@ export class ServerWalletAPI {
     tx: PwTransaction | RPC.RawTransaction,
     auth: Auth,
     options?: {
-      signature: string
+      signature?: string
       redpackRule?: {
-        ruleType: 'puzzle'
+        rule_type: 'puzzle'
         question: string
         answer: string
       }

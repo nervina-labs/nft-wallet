@@ -709,7 +709,8 @@
         "not-amount": "请输入红包数量",
         "not-puzzle-question": "请输入红包谜题",
         "not-puzzle-answer": "输入红包谜底"
-      }
+      },
+      "create-failed": "创建失败"
     },
     "pwa-guide": {
       "desc": "将我们添加到桌面吧，获得最佳观赏体验，不再错过这些独一无二的艺术品。",
