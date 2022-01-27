@@ -65,6 +65,7 @@ import { RankingListResponse } from '../models/rank'
 import { PaymentChannel } from '../hooks/useOrder'
 import {
   OpenRedEnvelopeResponse,
+  ReceivedRedEnvelopeRecords,
   RedEnvelopeRecords,
   RedEnvelopeResponse,
   RuleType,
@@ -1035,12 +1036,24 @@ export class ServerWalletAPI {
     )
   }
 
-  async getSentRedEnvelopeRecords(auth: Auth) {
+  async getSentRedEnvelopeRecords(
+    auth: Auth,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) {
+    const page = options?.page ?? 0
+    const limit = options?.limit ?? PER_ITEM_LIMIT
     return await this.axios.get<SentRedEnvelopeRecords>(
       '/toolbox/redpack_events',
       {
         headers: {
           auth: JSON.stringify(auth),
+        },
+        params: {
+          page,
+          limit,
         },
       }
     )
@@ -1052,5 +1065,28 @@ export class ServerWalletAPI {
         auth: JSON.stringify(auth),
       },
     })
+  }
+
+  async getReceivedRedEnvelopeRecords(
+    auth: Auth,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) {
+    const page = options?.page ?? 0
+    const limit = options?.limit ?? PER_ITEM_LIMIT
+    return await this.axios.get<ReceivedRedEnvelopeRecords>(
+      '/grabed_redpack_records',
+      {
+        headers: {
+          auth: JSON.stringify(auth),
+        },
+        params: {
+          page,
+          limit,
+        },
+      }
+    )
   }
 }

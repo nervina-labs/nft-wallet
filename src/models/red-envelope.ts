@@ -1,3 +1,4 @@
+import { AvatarType } from './user'
 import { ListMeta } from '.'
 
 export enum RedEnvelopeState {
@@ -95,4 +96,35 @@ export interface SentRedEnvelopeRecordEvent {
 
 export interface SentRedEnvelopeRecords {
   redpack_events: SentRedEnvelopeRecordEvent[]
+  meta: ListMeta
+}
+
+export interface ReceivedRedEnvelopeRecordItem {
+  uuid: string
+  address: string
+  created_at: string
+  record_items: Array<{
+    n_token_id: number | null
+    is_special_model: boolean
+    bg_image_url: null | string
+  }>
+  greetings: string
+  issuer_info: null | {
+    name: string
+    email: string
+    uuid: string
+    avatar_url: string
+  }
+  user_info: null | {
+    nickname: string
+    address: string
+    avatar_url: string
+    avatar_type: AvatarType
+    avatar_tid: number
+  }
+}
+
+export interface ReceivedRedEnvelopeRecords {
+  records: ReceivedRedEnvelopeRecordItem[]
+  meta: ListMeta
 }

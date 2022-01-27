@@ -726,6 +726,28 @@
       "copied-title": "Copy success",
       "copied-text": "Copy to clipboard successfully, share it!"
     },
+    "red-envelope-records": {
+      "title": "Red Packet History",
+      "type": {
+        "sent": "Sent",
+        "received": "Received"
+      },
+      "state": {
+        "closed": "Closed",
+        "done": "Finished",
+        "expired": "Timeout",
+        "ongoing": "In progress"
+      },
+      "progress": "Rate of progress: ",
+      "close": "Close",
+      "details": "Details",
+      "close-event-confirm": "Are you sure you want to close this Red Packet?",
+      "toast": {
+        "succeed": "Closed successfully",
+        "failed": "Closing failed"
+      },
+      "creator": "Creator"
+    },
     "pwa-guide": {
       "desc": "Add MIBAO to the desktop for the best experience and no longer miss these unique artworks.",
       "ok": "OK",

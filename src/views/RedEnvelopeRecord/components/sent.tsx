@@ -14,11 +14,16 @@ export const Sent: React.FC = () => {
   const getAuth = useGetAndSetAuth()
   const toast = useToast()
   const onCloseEventDialog = useConfirmDialog()
-  const queryFn = useCallback(async () => {
-    const auth = await getAuth()
-    const { data } = await api.getSentRedEnvelopeRecords(auth)
-    return data
-  }, [api, getAuth])
+  const queryFn = useCallback(
+    async ({ pageParam = 1 }) => {
+      const auth = await getAuth()
+      const { data } = await api.getSentRedEnvelopeRecords(auth, {
+        page: pageParam,
+      })
+      return data
+    },
+    [api, getAuth]
+  )
   const [retryCount, setRetryCount] = useState(0) // Used to refresh after closing the event
   const onCloseEvent = useCallback(
     (uuid: string) => {
@@ -45,7 +50,7 @@ export const Sent: React.FC = () => {
     <InfiniteList
       enableQuery
       queryFn={queryFn}
-      queryKey={[Query.SendableEnvelopeNfts, retryCount]}
+      queryKey={[Query.GetSentRedEnvelopeRecords, retryCount]}
       noMoreElement={t('no-more')}
       calcDataLength={(data) =>
         data?.pages.reduce(

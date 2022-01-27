@@ -4,6 +4,7 @@ import { MainContainer } from '../../styles'
 import { Sent } from './components/sent'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Received } from './components/received'
 
 export const RedEnvelopeRecord: React.FC = () => {
   const [tabIndex, setTabIndex] = useState(0)
@@ -21,6 +22,7 @@ export const RedEnvelopeRecord: React.FC = () => {
         </Tabs>
       </AppbarSticky>
       {tabIndex === 0 ? <Sent /> : null}
+      {tabIndex === 1 ? <Received /> : null}
     </MainContainer>
   )
 }

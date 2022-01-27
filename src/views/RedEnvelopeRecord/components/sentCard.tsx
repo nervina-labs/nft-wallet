@@ -1,6 +1,5 @@
-import { Box, Divider, Flex, Heading, HStack } from '@chakra-ui/react'
-import { Image, Button, Progress } from '@mibao-ui/components'
-import { isSupportWebp } from '../../../utils'
+import { Box, Divider, Flex, Heading } from '@chakra-ui/react'
+import { Button, Progress } from '@mibao-ui/components'
 import { ReactComponent as RedEnvelopeShare } from '../../../assets/svg/red-envelope-share.svg'
 import { RedEnvelopeState, SentRedEnvelopeRecordEvent } from '../../../models'
 import { useMemo } from 'react'
@@ -8,6 +7,7 @@ import { Link } from 'react-router-dom'
 import { RoutePath } from '../../../routes'
 import styled from '@emotion/styled'
 import { useTranslation } from 'react-i18next'
+import { CardImageGroup } from './cardImageGroup'
 
 export const StyledLink = styled(Link)`
   display: inline-flex;
@@ -61,22 +61,15 @@ export const SentCard: React.FC<{
       <Heading fontSize="14px" fontWeight="bold" my="10px">
         {data.greeting}
       </Heading>
-      <HStack overflowX="auto" overflowY="hidden" spacing="5px">
-        <Image
-          src={
-            'https://oss.jinse.cc/production/7744ffc9-81b1-4c4e-a711-0536eb8bf10a.png'
-          }
-          resizeScale={300}
-          webp={isSupportWebp()}
-          customizedSize={{
-            fixed: 'large',
-          }}
-          w="60px"
-          minW="60px"
-          h="60px"
-          rounded="16px"
-        />
-      </HStack>
+      <CardImageGroup
+        items={[
+          {
+            src:
+              'https://oss.jinse.cc/production/7744ffc9-81b1-4c4e-a711-0536eb8bf10a.png',
+            tid: null,
+          },
+        ]}
+      />
       <Box mt="10px" fontSize="12px">
         {t('red-envelope-records.progress')}
         {data.progress.claimed}/{data.progress.total}
