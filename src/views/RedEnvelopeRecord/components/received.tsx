@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
@@ -7,7 +6,6 @@ import { Query } from '../../../models'
 import { ReceivedCard } from './receivedCard'
 
 export const Received: React.FC = () => {
-  const { t } = useTranslation('translations')
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
   const queryFn = useCallback(
@@ -25,7 +23,7 @@ export const Received: React.FC = () => {
       enableQuery
       queryFn={queryFn}
       queryKey={[Query.GetReceivedRedEnvelopeRecords]}
-      noMoreElement={t('no-more')}
+      noMoreElement={''}
       calcDataLength={(data) =>
         data?.pages.reduce((acc, item) => item.records.length + acc, 0) ?? 0
       }

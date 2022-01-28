@@ -11,7 +11,6 @@ import { CardImageGroup } from './cardImageGroup'
 export const StyledLink = styled(Link)`
   display: inline-flex;
   height: 100%;
-  margin-right: 10px;
 `
 
 export const ReceivedCard: React.FC<{
@@ -23,7 +22,7 @@ export const ReceivedCard: React.FC<{
       shadow="0 0 8px rgba(0, 0, 0, 0.08)"
       rounded="22px"
       px="15px"
-      py="10px"
+      pb="10px"
       mb="10px"
     >
       <Flex h="52px" justify="space-between" align="center">
@@ -41,10 +40,27 @@ export const ReceivedCard: React.FC<{
               customizedSize={{
                 fixed: 'small',
               }}
+              size="25px"
             />
           </>
         ) : null}
-        <Box color="#999999">发出人</Box>
+        {data.issuer_info ? (
+          <>
+            <Issuer
+              name={data.issuer_info.name}
+              src={data.issuer_info.avatar_url}
+              webp={isSupportWebp()}
+              resizeScale={100}
+              customizedSize={{
+                fixed: 'small',
+              }}
+              size="25px"
+            />
+          </>
+        ) : null}
+        <Box color="#999999" fontSize="12px" ml="auto" whiteSpace="nowrap">
+          发出人
+        </Box>
       </Flex>
       <Divider />
       <Heading fontSize="14px" my="8px">

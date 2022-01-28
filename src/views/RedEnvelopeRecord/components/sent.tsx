@@ -51,7 +51,7 @@ export const Sent: React.FC = () => {
       enableQuery
       queryFn={queryFn}
       queryKey={[Query.GetSentRedEnvelopeRecords, retryCount]}
-      noMoreElement={t('no-more')}
+      noMoreElement={''}
       calcDataLength={(data) =>
         data?.pages.reduce(
           (acc, item) => item.redpack_events.length + acc,

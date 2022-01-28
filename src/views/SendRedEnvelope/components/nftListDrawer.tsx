@@ -119,7 +119,7 @@ export const NftListDrawer: React.FC<{
           enableQuery={isEnableQueryNftList}
           queryFn={querySelectableNftList}
           queryKey={[Query.SendableEnvelopeNfts]}
-          noMoreElement={t('no-more')}
+          noMoreElement={''}
           calcDataLength={(data) =>
             data?.pages.reduce(
               (acc, token) => token?.token_list?.length + acc,
