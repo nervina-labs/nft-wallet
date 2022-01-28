@@ -31,6 +31,7 @@ import { Query, RuleType } from '../../models'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
+import { copyFallback } from '../../utils'
 
 const Container = styled(RainbowBackground)`
   height: auto;
@@ -202,7 +203,10 @@ export const ShareRedEnvelope: React.FC = () => {
         mb="calc(20px - var(--safe-area-inset-bottom))"
         size="lg"
         variant="solid"
-        onClick={onOpenCopySucceedDialog}
+        onClick={() => {
+          onOpenCopySucceedDialog()
+          copyFallback(shareUrl)
+        }}
       >
         {t('share-red-envelope.share-link')}
       </Button>
