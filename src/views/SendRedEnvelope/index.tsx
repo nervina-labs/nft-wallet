@@ -222,6 +222,7 @@ export const SendRedEnvelope: React.FC = () => {
                         <Image
                           src={token.class_bg_image_url}
                           w="58px"
+                          minW="58px"
                           h="58px"
                           rounded="16px"
                           webp={isSupportWebp()}
@@ -239,6 +240,7 @@ export const SendRedEnvelope: React.FC = () => {
                           direction="column"
                           justify="center"
                           fontSize="14px"
+                          w="calc(100% - 58px)"
                         >
                           <Box
                             whiteSpace="nowrap"
