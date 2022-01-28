@@ -202,7 +202,22 @@ export const Records: React.FC<RecordsProps> = ({
     },
     [api, uuid]
   )
-  const fromUsername = data?.issuer_info.name || data?.issuer_info.email || ''
+  const fromUsername = useMemo(() => {
+    const name =
+      data?.issuer_info?.name ||
+      data?.issuer_info?.email ||
+      data?.user_info?.nickname
+    if (!name) {
+      return ellipsisString(data?.user_info?.address ?? '', [5, 5])
+    }
+    return name.length > 10 ? `${name.substring(0, 10)}…` : name
+  }, [
+    data?.issuer_info?.email,
+    data?.issuer_info?.name,
+    data?.user_info?.address,
+    data?.user_info?.nickname,
+  ])
+
   const promotionCopy =
     data?.promotion_copy || t('red-envelope.default-promotion-copy')
   const promotionLink = useMemo(
@@ -222,10 +237,7 @@ export const Records: React.FC<RecordsProps> = ({
     >
       <Box color="white" fontSize="12px" mb="10px" mt="50px" px="20px">
         {t('red-envelope.from-red-envelope', {
-          username:
-            fromUsername.length > 10
-              ? `${fromUsername.substring(0, 10)}…`
-              : fromUsername,
+          username: fromUsername,
         })}
       </Box>
       <StatusText data={data} isAlreadyOpened={isAlreadyOpened} />

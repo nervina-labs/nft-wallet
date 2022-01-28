@@ -51,7 +51,11 @@ export interface RedEnvelopeResponse {
     name: string
     email: string
     uuid: string
-  }
+  } | null
+  user_info: {
+    address: string
+    nickname: string | null
+  } | null
   rule_info: RulePuzzleInfo | RulePasswordInfo | null
   is_current_user_claimed: boolean
   is_claimed_special_model: boolean
