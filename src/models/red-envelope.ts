@@ -96,6 +96,11 @@ export interface SentRedEnvelopeRecordEvent {
     claimed: number
     total: number
   }
+  tokens: Array<{
+    bg_image_url: string | null
+    n_token_id: number
+    uuid: string
+  }>
   tokens_count: number
   greeting: string
 }

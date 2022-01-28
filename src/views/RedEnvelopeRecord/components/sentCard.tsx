@@ -63,13 +63,10 @@ export const SentCard: React.FC<{
         {data.greeting}
       </Heading>
       <CardImageGroup
-        items={[
-          {
-            src:
-              'https://oss.jinse.cc/production/7744ffc9-81b1-4c4e-a711-0536eb8bf10a.png',
-            tid: null,
-          },
-        ]}
+        items={data.tokens.map((token) => ({
+          src: token.bg_image_url === null ? '' : token.bg_image_url,
+          tid: token.n_token_id,
+        }))}
       />
       <Box mt="10px" fontSize="12px">
         {t('red-envelope-records.progress')}
