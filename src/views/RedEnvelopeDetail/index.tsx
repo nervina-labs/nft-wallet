@@ -63,6 +63,7 @@ export const RedEnvelopeDetail: React.FC = () => {
         return t('red-envelope-records.state.done')
       case RedEnvelopeState.Expired:
         return t('red-envelope-records.state.expired')
+      case RedEnvelopeState.Pending:
       case RedEnvelopeState.Ongoing:
         return (
           <Box color="#0A0B26" as="span">

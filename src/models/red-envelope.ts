@@ -7,6 +7,7 @@ export enum RedEnvelopeState {
   Closed = 'closed',
   Done = 'done',
   Expired = 'expired',
+  Pending = 'pending',
 }
 
 export enum RuleType {

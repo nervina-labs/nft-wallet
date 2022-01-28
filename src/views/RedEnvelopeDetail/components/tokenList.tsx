@@ -7,6 +7,13 @@ import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { Query } from '../../../models'
 import { isSupportWebp } from '../../../utils'
 import { Image } from '@mibao-ui/components'
+import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
+
+const StyledLink = styled(Link)`
+  display: flex;
+  margin-bottom: 12px;
+`
 
 export const TokenList: React.FC<{
   uuid: string
@@ -38,11 +45,9 @@ export const TokenList: React.FC<{
       }
       renderItems={(data) =>
         data.redpack_reward_plan_items.map((reward, i) => (
-          <Flex w="full" key={i} mb="12px">
+          <StyledLink key={i} to={`/nft/${reward.token.uuid}`}>
             <Image
-              src={
-                'https://oss.jinse.cc/production/7744ffc9-81b1-4c4e-a711-0536eb8bf10a.png'
-              }
+              src={reward.token.bg_image_url}
               resizeScale={300}
               webp={isSupportWebp()}
               customizedSize={{
@@ -84,7 +89,7 @@ export const TokenList: React.FC<{
                 ? t('red-envelope-detail.item-received')
                 : ''}
             </Box>
-          </Flex>
+          </StyledLink>
         ))
       }
       style={{
