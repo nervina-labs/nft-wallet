@@ -52,6 +52,8 @@ const Container = styled(RainbowBackground)`
   min-height: 100vh;
 `
 
+const TEXT_LIMIT = 20
+
 export const SendRedEnvelope: React.FC = () => {
   const {
     isOpen: isOpenNftList,
@@ -76,6 +78,15 @@ export const SendRedEnvelope: React.FC = () => {
   const { push } = useHistory()
   const { onSend, isSending } = useSendRedEnvelope()
   const { isLogined } = useAccountStatus()
+
+  const getLimitedLengthInputText = useCallback(
+    (currentValue?: string, nextValue?: string) => {
+      console.log({ currentValue, nextValue })
+      if (!nextValue) return ''
+      return (nextValue.length < TEXT_LIMIT ? nextValue : currentValue) ?? ''
+    },
+    []
+  )
 
   const onSubmit = useCallback(async () => {
     if (!selectedTokens.length) {
@@ -316,7 +327,11 @@ export const SendRedEnvelope: React.FC = () => {
                 border: 'none',
               }}
               value={greeting}
-              onChange={(e) => setGreeting(e.currentTarget.value)}
+              onChange={(e) =>
+                setGreeting((v) =>
+                  getLimitedLengthInputText(v, e.target?.value)
+                )
+              }
             />
           </Flex>
           <TabPanels>
@@ -341,7 +356,11 @@ export const SendRedEnvelope: React.FC = () => {
                   'send-red-envelope.form-items.puzzle-question-placeholder'
                 )}
                 value={puzzleQuestion}
-                onChange={(e) => setPuzzleQuestion(e.currentTarget.value)}
+                onChange={(e) =>
+                  setPuzzleQuestion((v) =>
+                    getLimitedLengthInputText(v, e.target?.value)
+                  )
+                }
               />
               <Box color="#777E90" fontSize="12px" mb="4px" mt="16px">
                 {t('send-red-envelope.form-items.puzzle-answer-field')}
@@ -362,7 +381,11 @@ export const SendRedEnvelope: React.FC = () => {
                   'send-red-envelope.form-items.puzzle-answer-placeholder'
                 )}
                 value={puzzleAnswer}
-                onChange={(e) => setPuzzleAnswer(e.currentTarget.value)}
+                onChange={(e) =>
+                  setPuzzleAnswer((v) =>
+                    getLimitedLengthInputText(v, e.target?.value)
+                  )
+                }
               />
               <Box color="#777E90" fontSize="12px" mt="8px" textAlign="center">
                 {t('send-red-envelope.form-items.puzzle-prompt')}
