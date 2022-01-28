@@ -25,12 +25,10 @@ export const RedEnvelopeReceived: React.FC = () => {
     const { data } = await api.getReceivedRedEnvelopeDetail(id, auth)
     return data
   })
-  console.log(new Date())
   const time = data?.created_at
     ? formatTime(`${new Date().getTime()}`, i18n.language)
     : '----:--:--'
 
-  console.log(data)
   return (
     <MainContainer
       bg="linear-gradient(180deg, #F7F7F7 0%, #FFFFFF 100%)"
