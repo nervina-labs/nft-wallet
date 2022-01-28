@@ -76,6 +76,9 @@ export const RedEnvelopeDetail: React.FC = () => {
   const progressValue = data
     ? Math.floor((data.progress.claimed / data.progress.total) * 100)
     : 0
+  const time = data?.created_at
+    ? formatTime(`${new Date(data.created_at).getTime()}`, i18n.language)
+    : '----:--:--'
 
   return (
     <Container position="relative">
@@ -113,10 +116,7 @@ export const RedEnvelopeDetail: React.FC = () => {
               {statusText}
             </Heading>
             <Box fontSize="12px">
-              {t('red-envelope-detail.generation-time')}{' '}
-              {data?.created_at
-                ? formatTime(data.created_at, i18n.language)
-                : '----:--:--'}
+              {t('red-envelope-detail.generation-time')} {time}
             </Box>
           </Stack>
         </Flex>
@@ -140,14 +140,11 @@ export const RedEnvelopeDetail: React.FC = () => {
           <Flex fontSize="12px" justify="space-between">
             <Box>
               {t('red-envelope-detail.received')}
-              {data?.progress.total}
+              {data?.progress.total ?? '-'}
             </Box>
             <Box>
               {t('red-envelope-detail.received')}
-              {Math.min(
-                data ? data.progress.total - data.progress.claimed : 0,
-                0
-              )}
+              {(data ? data.progress.total - data.progress.claimed : 0, '-')}
             </Box>
           </Flex>
         </Box>
