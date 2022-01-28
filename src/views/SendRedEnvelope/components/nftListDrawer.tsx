@@ -24,6 +24,8 @@ const StyledSelectedArrow = styled(SelectedArrow)`
   z-index: 2;
 `
 
+const LIMIT = 100
+
 export const NftListDrawer: React.FC<{
   isOpen: boolean
   onClose: () => void
@@ -96,6 +98,7 @@ export const NftListDrawer: React.FC<{
           left,
           width: '100%',
           maxWidth: CONTAINER_MAX_WIDTH + 'px',
+          paddingBottom: '40px',
         },
       }}
     >
@@ -152,11 +155,12 @@ export const NftListDrawer: React.FC<{
                   onClick={() => {
                     const removeFn = (t: NFTToken) =>
                       t.token_uuid !== item.token_uuid
-                    setSelectedTokens(
-                      selected
-                        ? selectedTokens.filter(removeFn)
-                        : selectedTokens.concat([item])
-                    )
+                    const changedTokens = selected
+                      ? selectedTokens.filter(removeFn)
+                      : selectedTokens.concat([item])
+                    if (changedTokens.length < LIMIT) {
+                      setSelectedTokens(changedTokens)
+                    }
                   }}
                 >
                   <Box
@@ -241,6 +245,20 @@ export const NftListDrawer: React.FC<{
             })
           }
         />
+        <Box
+          position="absolute"
+          bottom="0"
+          left="0"
+          w="full"
+          h="50px"
+          lineHeight="50px"
+          bg="white"
+          textAlign="center"
+          fontSize="14px"
+          zIndex={2}
+        >
+          {t('send-red-envelope.total-nft', { total: selectedTokens.length })}
+        </Box>
       </Flex>
     </Drawer>
   )

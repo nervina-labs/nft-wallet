@@ -710,7 +710,8 @@
         "not-puzzle-question": "The quantity of riddle is not filled in",
         "not-puzzle-answer": "The quantity of answer is not filled in"
       },
-      "create-failed": "Create failed"
+      "create-failed": "Create failed",
+      "total-nft": "Total {{total}} collections"
     },
     "share-red-envelope": {
       "title": "Share Red Packet",
