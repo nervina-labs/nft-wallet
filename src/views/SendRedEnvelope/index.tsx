@@ -24,8 +24,9 @@ import { NFTToken } from '../../models'
 import { useToast } from '../../hooks/useToast'
 import { useTranslation } from 'react-i18next'
 import { RoutePath } from '../../routes'
-import { useHistory } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 import { useSendRedEnvelope } from './hooks/useSendRedEnvelope'
+import { useAccountStatus } from '../../hooks/useAccount'
 
 const formItemProps: BoxProps = {
   rounded: '8px',
@@ -74,6 +75,7 @@ export const SendRedEnvelope: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const { push } = useHistory()
   const { onSend, isSending } = useSendRedEnvelope()
+  const { isLogined } = useAccountStatus()
 
   const onSubmit = useCallback(async () => {
     if (!selectedTokens.length) {
@@ -116,6 +118,10 @@ export const SendRedEnvelope: React.FC = () => {
     tabIndex,
     toast,
   ])
+
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
 
   return (
     <Container>
