@@ -205,7 +205,13 @@ export const SendRedEnvelope: React.FC = () => {
         <NftListDrawer
           isOpen={isOpenNftList}
           onClose={onCloseNftList}
-          onChange={setSelectedTokens}
+          onChange={async (tokens) => {
+            await setSelectedTokens(tokens)
+            const rewardAmount = Number(rewardAmountValue)
+            if (!isNaN(rewardAmount) && rewardAmount > tokens.length) {
+              setRewardAmountValue(`${tokens.length}`)
+            }
+          }}
           left={modalLeft}
         />
         <Tabs
