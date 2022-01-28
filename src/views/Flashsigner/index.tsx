@@ -5,6 +5,7 @@ import { useProfile } from '../../hooks/useProfile'
 import { RoutePath } from '../../routes'
 import { UnipassConfig } from '../../utils'
 import { getResultFromURL, FlashsignerAction } from '@nervina-labs/flashsigner'
+import { FlashsignerAction as LocalFlashsignerAction } from '../../models/flashsigner'
 
 export const Flashsigner: React.FC = () => {
   const history = useHistory()
@@ -31,13 +32,30 @@ export const Flashsigner: React.FC = () => {
         history.replace(extra?.redirect || RoutePath.NFTs)
       },
       onSignTransaction(result) {
+        const action = result.extra?.action as LocalFlashsignerAction
         const { transaction } = result
-        const { uuid } = result.extra
-        const state: Record<string, any> = {
-          tx: transaction,
-          customData: result.extra?.customData,
+        switch (action) {
+          case LocalFlashsignerAction.SendRedEnvelope: {
+            history.replace(`${RoutePath.RedEnvelope}`, {
+              tx: transaction,
+              ...result.extra,
+            })
+            break
+          }
+          case LocalFlashsignerAction.Redeem:
+          default: {
+            const { uuid } = result.extra
+            const state: Record<string, any> = {
+              tx: transaction,
+              customData: result.extra?.customData,
+            }
+            history.replace(
+              `${RoutePath.RedeemResult}/${uuid as string}`,
+              state
+            )
+            break
+          }
         }
-        history.replace(`${RoutePath.RedeemResult}/${uuid as string}`, state)
       },
       onTransferMnft(res) {
         history.replace(`/transfer/${res.extra?.uuid as string}`, {

@@ -12,6 +12,7 @@ import {
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useToast } from '../../../hooks/useToast'
 import { RuleType } from '../../../models'
+import { FlashsignerAction } from '../../../models/flashsigner'
 import { UnipassAction } from '../../../models/unipass'
 import { RoutePath } from '../../../routes'
 import { generateUnipassUrl } from '../../../utils'
@@ -48,39 +49,42 @@ export function useSendRedEnvelope() {
           auth,
           walletType === WalletType.Unipass
         )
-        const signTx = await signTransaction(data.tx)
-        const { signature } = routeLocation.state ?? {}
-        if (!signature) {
-          if (walletType === WalletType.Flashsigner) {
-            const url = `${location.origin}${RoutePath.Flashsigner}`
-            signTransactionWithRedirect(url, {
-              tx: transformers.TransformTransaction(data.tx) as any,
-              extra: formInfo,
-            })
-            return
-          }
-          if (walletType === WalletType.Unipass) {
-            const url = `${location.origin}${RoutePath.Unipass}`
-            location.href = generateUnipassUrl(
-              UnipassAction.RedEnvelope,
-              url,
-              url,
-              pubkey,
-              signTx,
-              {
-                ...formInfo,
-                tokenUuids: formInfo.tokenUuids.join(','),
-              }
-            )
-            return
-          }
+        const { signature, tx } = routeLocation.state ?? {}
+        const signTx =
+          walletType === WalletType.Flashsigner
+            ? tx
+            : await signTransaction(data.tx)
+        if (!tx && walletType === WalletType.Flashsigner) {
+          const url = `${location.origin}${RoutePath.Flashsigner}`
+          signTransactionWithRedirect(url, {
+            tx: transformers.TransformTransaction(data.tx) as any,
+            extra: { action: FlashsignerAction.SendRedEnvelope, ...formInfo },
+          })
+          return
         }
+
+        if (!signature && walletType === WalletType.Unipass) {
+          const url = `${location.origin}${RoutePath.Unipass}`
+          location.href = generateUnipassUrl(
+            UnipassAction.RedEnvelope,
+            url,
+            url,
+            pubkey,
+            signTx,
+            {
+              ...formInfo,
+              tokenUuids: formInfo.tokenUuids.join(','),
+            }
+          )
+          return
+        }
+
         const rewardAmount = Number(formInfo.rewardAmount) ?? 1
         const uuid = await api
           .createRedEnvelopeEvent(
             formInfo.greeting,
             rewardAmount,
-            data.tx,
+            signTx,
             auth,
             {
               signature,
