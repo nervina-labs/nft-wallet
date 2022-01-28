@@ -160,9 +160,6 @@ export const NftListDrawer: React.FC<{
                   }}
                 >
                   <Box
-                    borderWidth="2px"
-                    borderStyle="solid"
-                    borderColor={selected ? 'primary.500' : 'rgba(0, 0, 0, 0)'}
                     _before={
                       selected
                         ? {
@@ -175,6 +172,24 @@ export const NftListDrawer: React.FC<{
                             right: 0,
                             display: 'block',
                             transform: 'rotate(45deg) translate(0%, -80%)',
+                            zIndex: 2,
+                          }
+                        : undefined
+                    }
+                    _after={
+                      selected
+                        ? {
+                            position: 'absolute',
+                            content: '" "',
+                            width: '100%',
+                            height: '100%',
+                            borderStyle: 'solid',
+                            borderWidth: '2px',
+                            borderColor: 'primary.500',
+                            top: 0,
+                            right: 0,
+                            display: 'block',
+                            rounded: 'calc(10% + 5px)',
                             zIndex: 2,
                           }
                         : undefined
