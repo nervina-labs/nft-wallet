@@ -19,7 +19,7 @@ import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { NftListDrawer } from './components/nftListDrawer'
 import { useCallback, useState } from 'react'
-import { getNFTQueryParams, isSupportWebp, limitNumberInput } from '../../utils'
+import { getNFTQueryParams, isSupportWebp } from '../../utils'
 import { NFTToken } from '../../models'
 import { useToast } from '../../hooks/useToast'
 import { useTranslation } from 'react-i18next'
@@ -84,6 +84,31 @@ export const SendRedEnvelope: React.FC = () => {
       console.log({ currentValue, nextValue })
       if (!nextValue) return ''
       return (nextValue.length < TEXT_LIMIT ? nextValue : currentValue) ?? ''
+    },
+    []
+  )
+
+  const limitNumberInput = useCallback(
+    (
+      e: React.ChangeEvent<HTMLInputElement>,
+      currentValue: string,
+      limit: number
+    ) => {
+      const { value } = e.currentTarget
+      if (!value) {
+        return ''
+      }
+      if (!/^\d*$/.test(value)) {
+        return currentValue
+      }
+      const p = +value
+      if (Number.isNaN(p) || p < 1) {
+        return currentValue
+      }
+      if (p > limit) {
+        return `${limit}`
+      }
+      return `${p}`
     },
     []
   )
