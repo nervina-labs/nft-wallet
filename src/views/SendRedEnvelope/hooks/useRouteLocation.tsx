@@ -9,7 +9,9 @@ export interface FormInfoState {
 }
 
 export interface SendRedEnvelopeRouteState {
-  prevState?: Omit<FormInfoState, 'tokenUuids'> & { tokenUuids: string }
+  prevState?: Omit<FormInfoState, 'tokenUuids'> & {
+    tokenUuids: string | string[]
+  }
   signature?: string
   tx?: RPC.RawTransaction
 }

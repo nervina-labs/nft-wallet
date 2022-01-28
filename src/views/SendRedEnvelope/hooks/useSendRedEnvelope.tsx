@@ -117,11 +117,13 @@ export function useSendRedEnvelope() {
   )
 
   useEffect(() => {
-    const { signature, prevState } = routeLocation.state ?? {}
-    if (prevState && signature && !isSending && !error) {
+    const { signature, prevState, tx } = routeLocation.state ?? {}
+    if (prevState && (signature || tx) && !isSending && !error) {
       onSend({
         ...prevState,
-        tokenUuids: prevState.tokenUuids?.split(','),
+        tokenUuids: Array.isArray(prevState.tokenUuids)
+          ? prevState.tokenUuids
+          : prevState.tokenUuids.split(','),
       })
     }
   }, [error, isSending, onSend, routeLocation.state])

@@ -38,7 +38,7 @@ export const Flashsigner: React.FC = () => {
           case LocalFlashsignerAction.SendRedEnvelope: {
             history.replace(`${RoutePath.RedEnvelope}`, {
               tx: transaction,
-              ...result.extra,
+              prevState: result.extra,
             })
             break
           }
