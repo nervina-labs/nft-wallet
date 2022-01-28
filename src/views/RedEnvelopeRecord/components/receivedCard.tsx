@@ -24,6 +24,7 @@ export const ReceivedCard: React.FC<{
       px="15px"
       pb="10px"
       mb="10px"
+      bg="white"
     >
       <Flex h="52px" justify="space-between" align="center">
         {data.user_info ? (

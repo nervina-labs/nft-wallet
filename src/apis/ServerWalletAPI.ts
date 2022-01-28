@@ -65,6 +65,7 @@ import { RankingListResponse } from '../models/rank'
 import { PaymentChannel } from '../hooks/useOrder'
 import {
   OpenRedEnvelopeResponse,
+  ReceivedRedEnvelopeRecordItem,
   ReceivedRedEnvelopeRecords,
   RedEnvelopeRecords,
   RedEnvelopeResponse,
@@ -1110,6 +1111,17 @@ export class ServerWalletAPI {
         params: {
           page,
           limit,
+        },
+      }
+    )
+  }
+
+  async getReceivedRedEnvelopeDetail(uuid: string, auth: Auth) {
+    return await this.axios.get<ReceivedRedEnvelopeRecordItem>(
+      `/grabed_redpack_records/${uuid}`,
+      {
+        headers: {
+          auth: JSON.stringify(auth),
         },
       }
     )

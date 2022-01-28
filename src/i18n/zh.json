@@ -756,7 +756,9 @@
       "unopened": "剩余：",
       "contains-the-following-collections": "红包包含下面所有秘宝",
       "item-received": "已领取",
-      "item-unreceived": "未领取"
+      "item-unreceived": "未领取",
+      "collections-received": "本次红包获得",
+      "received-time": "领取时间："
     },
     "pwa-guide": {
       "desc": "将我们添加到桌面吧，获得最佳观赏体验，不再错过这些独一无二的艺术品。",

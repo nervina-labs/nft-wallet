@@ -48,6 +48,7 @@ export const SentCard: React.FC<{
       py="10px"
       mb="10px"
       position="relative"
+      bg="white"
     >
       <Box position="absolute" top="15px" right="15px">
         {isClosed ? (

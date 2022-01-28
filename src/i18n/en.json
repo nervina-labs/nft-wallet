@@ -756,7 +756,9 @@
       "unopened": "unopened: ",
       "contains-the-following-collections": "Contains the following collections",
       "item-received": "Been received",
-      "item-unreceived": "not been receiving"
+      "item-unreceived": "not been receiving",
+      "collections-received": "Collections Received",
+      "received-time": "Received Time: "
     },
     "pwa-guide": {
       "desc": "Add MIBAO to the desktop for the best experience and no longer miss these unique artworks.",

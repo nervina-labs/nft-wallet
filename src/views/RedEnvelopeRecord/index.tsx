@@ -20,7 +20,7 @@ export const RedEnvelopeRecord: React.FC = () => {
   }, [tabType])
 
   return (
-    <MainContainer>
+    <MainContainer bg="linear-gradient(180deg, #F7F7F7 0%, #FFFFFF 100%)">
       <AppbarSticky>
         <Appbar title={t('red-envelope-records.title')} />
         <Tabs
