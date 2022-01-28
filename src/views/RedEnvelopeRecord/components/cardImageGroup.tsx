@@ -11,7 +11,7 @@ export const CardImageGroup: React.FC<{
 }> = ({ items }) => {
   const { i18n } = useTranslation('translations')
   return (
-    <HStack overflowX="auto" overflowY="hidden" spacing="5px">
+    <HStack overflowX="auto" overflowY="hidden" spacing="5px" h="60px">
       {items.map((item, i) => (
         <Image
           src={item.src === null ? '' : item.src}

@@ -52,6 +52,7 @@ export const ReceivedCard: React.FC<{
               src={data.issuer_info.avatar_url}
               webp={isSupportWebp()}
               resizeScale={100}
+              isVerified={data.issuer_info.verified_info?.is_verified}
               customizedSize={{
                 fixed: 'small',
               }}
@@ -68,13 +69,10 @@ export const ReceivedCard: React.FC<{
         {data.greetings}
       </Heading>
       <CardImageGroup
-        items={[
-          {
-            src:
-              'https://oss.jinse.cc/production/7744ffc9-81b1-4c4e-a711-0536eb8bf10a.png',
-            tid: null,
-          },
-        ]}
+        items={data.record_items.map((record) => ({
+          src: record.bg_image_url === null ? '' : record.bg_image_url,
+          tid: record.n_token_id,
+        }))}
       />
       <Divider />
       <Flex mt="10px" fontSize="12px" h="25px" lineHeight="25px">

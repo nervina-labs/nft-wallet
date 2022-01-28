@@ -1,5 +1,6 @@
 import { AvatarType } from './user'
 import { ListMeta } from '.'
+import { VipInfo } from './class-list'
 
 export enum RedEnvelopeState {
   Ongoing = 'ongoing',
@@ -99,6 +100,12 @@ export interface SentRedEnvelopeRecords {
   meta: ListMeta
 }
 
+export interface ReceivedRedEnvelopeRecordItemIssuerInfo extends VipInfo {
+  name: string
+  email: string
+  uuid: string
+  avatar_url: string
+}
 export interface ReceivedRedEnvelopeRecordItem {
   uuid: string
   address: string
@@ -109,12 +116,7 @@ export interface ReceivedRedEnvelopeRecordItem {
     bg_image_url: null | string
   }>
   greetings: string
-  issuer_info: null | {
-    name: string
-    email: string
-    uuid: string
-    avatar_url: string
-  }
+  issuer_info: null | ReceivedRedEnvelopeRecordItemIssuerInfo
   user_info: null | {
     nickname: string
     address: string
