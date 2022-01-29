@@ -93,7 +93,8 @@ export function useSendRedEnvelope() {
         const rewardAmount = Number(formInfo.rewardAmount) ?? 1
         const uuid = await api
           .createRedEnvelopeEvent(
-            formInfo.greeting,
+            formInfo.greeting ||
+              t('send-red-envelope.form-items.greeting-placeholder'),
             rewardAmount,
             signTx,
             auth,
