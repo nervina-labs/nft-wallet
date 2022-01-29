@@ -13,6 +13,10 @@ export const StyledLink = styled(Link)`
   height: 100%;
 `
 
+export const UserLink = styled(Link)`
+  display: flex;
+`
+
 export const ReceivedCard: React.FC<{
   data: ReceivedRedEnvelopeRecordItem
 }> = ({ data }) => {
@@ -28,7 +32,7 @@ export const ReceivedCard: React.FC<{
     >
       <Flex h="52px" justify="space-between" align="center">
         {data.user_info ? (
-          <>
+          <UserLink to={`/holder/${data.user_info.address}`}>
             <Issuer
               name={
                 data.user_info.nickname ||
@@ -42,11 +46,12 @@ export const ReceivedCard: React.FC<{
                 fixed: 'small',
               }}
               size="25px"
+              href={`/holder/${data.user_info.address}`}
             />
-          </>
+          </UserLink>
         ) : null}
         {data.issuer_info ? (
-          <>
+          <UserLink to={`/issuer/${data.issuer_info.uuid}`}>
             <Issuer
               name={data.issuer_info.name}
               src={data.issuer_info.avatar_url}
@@ -57,8 +62,9 @@ export const ReceivedCard: React.FC<{
                 fixed: 'small',
               }}
               size="25px"
+              href={`/issuer/${data.issuer_info.uuid}`}
             />
-          </>
+          </UserLink>
         ) : null}
         <Box color="#999999" fontSize="12px" ml="auto" whiteSpace="nowrap">
           发出人
