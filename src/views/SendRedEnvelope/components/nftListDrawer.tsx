@@ -230,6 +230,7 @@ export const NftListDrawer: React.FC<{
                     webp={isSupportWebp()}
                     resizeScale={100}
                     customizedSize={{ fixed: 'small' }}
+                    isVerified={item.verified_info?.is_verified}
                   />
                   <Limited
                     count={item.class_total}
