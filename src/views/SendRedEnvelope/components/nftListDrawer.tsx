@@ -6,7 +6,6 @@ import { CONTAINER_MAX_WIDTH } from '../../../constants'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAPI } from '../../../hooks/useAccount'
 import { getNFTQueryParams, isSupportWebp, sleep } from '../../../utils'
-import { Search } from '../../../components/Search'
 import { NFTToken, Query } from '../../../models'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as SelectedArrow } from '../../../assets/svg/selected-arrow.svg'
@@ -112,15 +111,6 @@ export const NftListDrawer: React.FC<{
         overflowY="auto"
         id="selectNftListContainerId"
       >
-        <Search
-          placeholder={t('send-red-envelope.form-items.select-nft-search')}
-          containerProps={{
-            mb: '15px',
-            flexShrink: 0,
-          }}
-          tabIndex={-1}
-          fontSize="14px"
-        />
         <InfiniteList
           enableQuery={isEnableQueryNftList}
           queryFn={querySelectableNftList}
