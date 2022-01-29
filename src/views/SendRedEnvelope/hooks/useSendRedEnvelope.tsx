@@ -100,6 +100,7 @@ export function useSendRedEnvelope() {
         console.error(err)
         setSending(false)
         setError(err)
+        replace(location.pathname + location.search, {})
       }
     },
     [
