@@ -8,11 +8,18 @@ import { RoutePath } from '../../../routes'
 import styled from '@emotion/styled'
 import { useTranslation } from 'react-i18next'
 import { CardImageGroup } from './cardImageGroup'
+import { ChevronRightIcon } from '@chakra-ui/icons'
 
-export const StyledLink = styled(Link)`
+const StyledLink = styled(Link)`
   display: inline-flex;
   height: 100%;
   margin-right: 10px;
+`
+
+const FlexImagesLink = styled(Link)`
+  display: flex;
+  width: 100%;
+  align-items: center;
 `
 
 export const SentCard: React.FC<{
@@ -59,15 +66,21 @@ export const SentCard: React.FC<{
           </Link>
         )}
       </Box>
-      <Heading fontSize="14px" fontWeight="bold" my="10px">
+      <Heading fontSize="14px" fontWeight="bold" my="10px" h="18px">
         {data.greeting}
       </Heading>
-      <CardImageGroup
-        items={data.tokens.map((token) => ({
-          src: token.bg_image_url === null ? '' : token.bg_image_url,
-          tid: token.n_token_id,
-        }))}
-      />
+      <FlexImagesLink to={`${RoutePath.RedEnvelope}/${data.uuid}/detail`}>
+        <CardImageGroup
+          items={data.tokens.map((token) => ({
+            src: token.bg_image_url === null ? '' : token.bg_image_url,
+            tid: token.n_token_id,
+          }))}
+        />
+        {data.tokens_count > data.tokens.length ? (
+          <ChevronRightIcon color="#777E90" ml="auto" />
+        ) : null}
+      </FlexImagesLink>
+
       <Box mt="10px" fontSize="12px">
         {t('red-envelope-records.progress')}
         {data.progress.claimed}/{data.progress.total}
