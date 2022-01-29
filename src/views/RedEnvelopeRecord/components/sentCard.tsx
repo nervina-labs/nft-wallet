@@ -8,7 +8,6 @@ import { RoutePath } from '../../../routes'
 import styled from '@emotion/styled'
 import { useTranslation } from 'react-i18next'
 import { CardImageGroup } from './cardImageGroup'
-import { ChevronRightIcon } from '@chakra-ui/icons'
 
 const StyledLink = styled(Link)`
   display: inline-flex;
@@ -18,7 +17,6 @@ const StyledLink = styled(Link)`
 const FlexImagesLink = styled(Link)`
   display: flex;
   width: 100%;
-  align-items: center;
 `
 
 export const SentCard: React.FC<{
@@ -78,10 +76,8 @@ export const SentCard: React.FC<{
             src: token.bg_image_url === null ? '' : token.bg_image_url,
             tid: token.n_token_id,
           }))}
+          total={data.tokens_count}
         />
-        {data.tokens_count > data.tokens.length ? (
-          <ChevronRightIcon color="#777E90" ml="auto" />
-        ) : null}
       </FlexImagesLink>
 
       <Box mt="10px" fontSize="12px">

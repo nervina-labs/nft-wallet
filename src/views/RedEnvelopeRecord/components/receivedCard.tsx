@@ -17,6 +17,11 @@ export const UserLink = styled(Link)`
   display: flex;
 `
 
+const FlexImagesLink = styled(Link)`
+  display: flex;
+  width: 100%;
+`
+
 export const ReceivedCard: React.FC<{
   data: ReceivedRedEnvelopeRecordItem
 }> = ({ data }) => {
@@ -74,12 +79,15 @@ export const ReceivedCard: React.FC<{
       <Heading fontSize="14px" my="8px">
         {data.greetings}
       </Heading>
-      <CardImageGroup
-        items={data.record_items.map((record) => ({
-          src: record.bg_image_url === null ? '' : record.bg_image_url,
-          tid: record.n_token_id,
-        }))}
-      />
+      <FlexImagesLink to={`${RoutePath.RedEnvelope}/${data.uuid}/received`}>
+        <CardImageGroup
+          items={data.record_items.slice(0, 4).map((record) => ({
+            src: record.bg_image_url === null ? '' : record.bg_image_url,
+            tid: record.n_token_id,
+          }))}
+          total={data.record_items.length}
+        />
+      </FlexImagesLink>
       <Divider mt="10px" />
       <Flex mt="10px" fontSize="12px" h="25px" lineHeight="25px">
         <Box mr="auto" color="#777E90">
