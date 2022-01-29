@@ -105,14 +105,16 @@ export const SentCard: React.FC<{
             {t('red-envelope-records.details')}
           </Button>
         </StyledLink>
-        <Button
-          colorScheme="primary"
-          size="small"
-          px="10px"
-          onClick={() => onCloseEvent(data.uuid)}
-        >
-          {t('red-envelope-records.close')}
-        </Button>
+        {isClosed || data.state === RedEnvelopeState.Done ? null : (
+          <Button
+            colorScheme="primary"
+            size="small"
+            px="10px"
+            onClick={() => onCloseEvent(data.uuid)}
+          >
+            {t('red-envelope-records.close')}
+          </Button>
+        )}
       </Flex>
     </Box>
   )
