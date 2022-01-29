@@ -81,7 +81,6 @@ export const SendRedEnvelope: React.FC = () => {
 
   const getLimitedLengthInputText = useCallback(
     (currentValue?: string, nextValue?: string) => {
-      console.log({ currentValue, nextValue })
       if (!nextValue) return ''
       return (nextValue.length < TEXT_LIMIT ? nextValue : currentValue) ?? ''
     },
