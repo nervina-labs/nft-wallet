@@ -39,7 +39,7 @@ export const NftListDrawer: React.FC<{
     async ({ pageParam = 1 }) => {
       const { data } = await api.getNFTs(pageParam, {
         exclude_banned: true,
-        include_submitting: true,
+        include_submitting: false,
       })
       return data
     },
