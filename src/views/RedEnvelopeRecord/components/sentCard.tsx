@@ -13,7 +13,6 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 const StyledLink = styled(Link)`
   display: inline-flex;
   height: 100%;
-  margin-right: 10px;
 `
 
 const FlexImagesLink = styled(Link)`
@@ -29,7 +28,8 @@ export const SentCard: React.FC<{
   const { t } = useTranslation('translations')
   const isClosed =
     data.state === RedEnvelopeState.Closed ||
-    data.state === RedEnvelopeState.Expired
+    data.state === RedEnvelopeState.Expired ||
+    data.state === RedEnvelopeState.Done
   const statusText = useMemo(() => {
     switch (data.state) {
       case RedEnvelopeState.Closed:
@@ -105,11 +105,12 @@ export const SentCard: React.FC<{
             {t('red-envelope-records.details')}
           </Button>
         </StyledLink>
-        {isClosed || data.state === RedEnvelopeState.Done ? null : (
+        {isClosed ? null : (
           <Button
             colorScheme="primary"
             size="small"
             px="10px"
+            ml="10px"
             onClick={() => onCloseEvent(data.uuid)}
           >
             {t('red-envelope-records.close')}
