@@ -85,7 +85,7 @@ export const RedEnvelopeDetail: React.FC = () => {
     ? Math.floor((data.progress.claimed / data.progress.total) * 100)
     : 0
   const time = data?.created_at
-    ? formatTime(`${new Date(data.created_at).getTime()}`, i18n.language)
+    ? formatTime(data.created_at, i18n.language, true)
     : '----:--:--'
 
   return (

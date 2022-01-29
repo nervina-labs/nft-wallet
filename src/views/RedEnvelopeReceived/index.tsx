@@ -33,7 +33,7 @@ export const RedEnvelopeReceived: React.FC = () => {
     return data
   })
   const time = data?.created_at
-    ? formatTime(`${new Date().getTime()}`, i18n.language)
+    ? formatTime(data.created_at, i18n.language, true)
     : '----:--:--'
   const { isLogined } = useAccountStatus()
 
