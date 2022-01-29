@@ -4,7 +4,6 @@ import {
   Image,
   ListItem,
   OrderedList,
-  useDisclosure,
   VStack,
 } from '@chakra-ui/react'
 import { useLayoutEffect, useRef } from 'react'
@@ -15,16 +14,7 @@ import DEFAULT_RED_ENVELOPE_COVER_PATH from '../../assets/svg/share-red-envelope
 import styled from '@emotion/styled'
 import QRCode from 'qrcode.react'
 import { AppbarSticky, Appbar } from '../../components/Appbar'
-import {
-  Button,
-  Image as MibaoImage,
-  Modal,
-  ModalBody,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-} from '@mibao-ui/components'
+import { Button, Image as MibaoImage } from '@mibao-ui/components'
 import { useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useQuery } from 'react-query'
 import { Query, RuleType } from '../../models'
@@ -32,6 +22,7 @@ import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
 import { copyFallback } from '../../utils'
+import { useToast } from '../../hooks/useToast'
 
 const Container = styled(RainbowBackground)`
   height: auto;
@@ -45,15 +36,11 @@ export const ShareRedEnvelope: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { onRender, imgSrc } = useHtml2Canvas()
   const sharePosterRef = useRef<HTMLDivElement>(null)
-  const {
-    isOpen: isOpenCopySucceedDialog,
-    onOpen: onOpenCopySucceedDialog,
-    onClose: onCloseCopySucceedDialog,
-  } = useDisclosure()
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
   const { isLogined } = useAccountStatus()
   const { t } = useTranslation('translations')
+  const toast = useToast()
 
   const { data, isLoading } = useQuery(
     [Query.GetSentRedEnvelopeDetail, id],
@@ -209,46 +196,12 @@ export const ShareRedEnvelope: React.FC = () => {
         size="lg"
         variant="solid"
         onClick={() => {
-          onOpenCopySucceedDialog()
+          toast(t('share-red-envelope.copied-title'))
           copyFallback(shareUrl)
         }}
       >
         {t('share-red-envelope.share-link')}
       </Button>
-
-      <Modal
-        onClose={onCloseCopySucceedDialog}
-        isOpen={isOpenCopySucceedDialog}
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent
-          maxW="sm"
-          style={{
-            width: 'calc(100% - 40px)',
-          }}
-        >
-          <ModalHeader textAlign="center" mt="32px">
-            {t('share-red-envelope.copied-title')}
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody py="0" mt="20px">
-            <Box fontSize="14px" textAlign="center">
-              {t('share-red-envelope.copied-text')}
-            </Box>
-            <Box
-              bg="#F6F9FC"
-              color="primary.600"
-              p="16px"
-              fontSize="12px"
-              textAlign="center"
-              mt="6px"
-            >
-              {shareUrl}
-            </Box>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
     </Container>
   )
 }
