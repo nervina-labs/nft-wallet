@@ -83,9 +83,11 @@ export const RedEnvelope: React.FC = () => {
       retry: 2,
     }
   )
-  const isOpened =
-    !isLoading &&
-    (data?.is_current_user_claimed || data?.state !== RedEnvelopeState.Ongoing)
+  const isOngoing = [
+    RedEnvelopeState.Ongoing,
+    RedEnvelopeState.Pending,
+  ].includes(data?.state as RedEnvelopeState)
+  const isOpened = !isLoading && (data?.is_current_user_claimed || !isOngoing)
   const onOpenTheRedEnvelope = useCallback<(o?: OnOpenOptions) => void>(
     async (options) => {
       if (isRefetching) return
