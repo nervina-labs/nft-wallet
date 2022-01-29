@@ -3,12 +3,13 @@ import { Progress } from '@mibao-ui/components'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { useParams } from 'react-router-dom'
+import { Redirect, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Appbar } from '../../components/Appbar'
-import { useAPI } from '../../hooks/useAccount'
+import { useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { Query, RedEnvelopeState } from '../../models'
+import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { formatTime } from '../../utils'
 import { TokenList } from './components/tokenList'
@@ -73,6 +74,12 @@ export const RedEnvelopeDetail: React.FC = () => {
     }
     return '-'
   }, [data?.state, t])
+
+  const { isLogined } = useAccountStatus()
+
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
 
   const progressValue = data
     ? Math.floor((data.progress.claimed / data.progress.total) * 100)

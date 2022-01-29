@@ -9,11 +9,12 @@ import {
 } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Redirect, useParams } from 'react-router-dom'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
-import { useAPI } from '../../hooks/useAccount'
+import { useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { Query } from '../../models'
+import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { formatTime, getNFTQueryParams, isSupportWebp } from '../../utils'
 
@@ -34,6 +35,11 @@ export const RedEnvelopeReceived: React.FC = () => {
   const time = data?.created_at
     ? formatTime(`${new Date().getTime()}`, i18n.language)
     : '----:--:--'
+  const { isLogined } = useAccountStatus()
+
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
 
   return (
     <MainContainer

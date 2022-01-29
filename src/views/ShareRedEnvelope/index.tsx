@@ -8,7 +8,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useLayoutEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { Redirect, useParams } from 'react-router-dom'
 import { RainbowBackground } from '../../components/RainbowBackground'
 import { useHtml2Canvas } from '../../hooks/useHtml2Canvas'
 import DEFAULT_RED_ENVELOPE_COVER_PATH from '../../assets/svg/share-red-envelope-cover.svg'
@@ -25,7 +25,7 @@ import {
   ModalHeader,
   ModalCloseButton,
 } from '@mibao-ui/components'
-import { useAPI } from '../../hooks/useAccount'
+import { useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useQuery } from 'react-query'
 import { Query, RuleType } from '../../models'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
@@ -52,6 +52,7 @@ export const ShareRedEnvelope: React.FC = () => {
   } = useDisclosure()
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
+  const { isLogined } = useAccountStatus()
   const { t } = useTranslation('translations')
 
   const { data, isLoading } = useQuery(
@@ -68,6 +69,10 @@ export const ShareRedEnvelope: React.FC = () => {
       onRender(sharePosterRef.current)
     }
   }, [id, isLoading, onRender, data])
+
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
 
   const shareUrl = `${location.origin}${RoutePath.RedEnvelope}/${id}`
 

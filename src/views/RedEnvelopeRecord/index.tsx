@@ -6,6 +6,9 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Received } from './components/received'
 import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
+import { Redirect } from 'react-router-dom'
+import { RoutePath } from '../../routes'
+import { useAccountStatus } from '../../hooks/useAccount'
 
 const TAB_ROUTE_QUERY_SET = ['sent', 'received'] as const
 
@@ -18,6 +21,11 @@ export const RedEnvelopeRecord: React.FC = () => {
     const v = TAB_ROUTE_QUERY_SET.indexOf(tabType)
     return v === -1 ? 0 : v
   }, [tabType])
+  const { isLogined } = useAccountStatus()
+
+  if (!isLogined) {
+    return <Redirect to={RoutePath.Login} />
+  }
 
   return (
     <MainContainer bg="linear-gradient(180deg, #F7F7F7 0%, #FFFFFF 100%)">
