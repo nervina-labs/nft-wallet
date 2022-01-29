@@ -124,6 +124,8 @@ export interface ReceivedRedEnvelopeRecordItem {
     n_token_id: number | null
     is_special_model: boolean
     bg_image_url: null | string
+    name: string
+    uuid: string
   }>
   greetings: string
   issuer_info: null | ReceivedRedEnvelopeRecordItemIssuerInfo

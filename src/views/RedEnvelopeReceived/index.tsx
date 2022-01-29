@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   Box,
   Divider,
@@ -8,19 +9,24 @@ import {
 } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { useAPI } from '../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
+import { Query } from '../../models'
 import { MainContainer } from '../../styles'
 import { formatTime, getNFTQueryParams, isSupportWebp } from '../../utils'
+
+const FlexImageItemLink = styled(Link)`
+  width: 100%;
+`
 
 export const RedEnvelopeReceived: React.FC = () => {
   const { t, i18n } = useTranslation('translations')
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
-  const { data } = useQuery(['123'], async () => {
+  const { data } = useQuery([Query.GetRedEnvelopeReceived], async () => {
     const auth = await getAuth()
     const { data } = await api.getReceivedRedEnvelopeDetail(id, auth)
     return data
@@ -45,7 +51,7 @@ export const RedEnvelopeReceived: React.FC = () => {
         <Divider mb="16px" />
         <VStack spacing="12px">
           {data?.record_items.map((item, i) => (
-            <Flex key={i} w="full">
+            <FlexImageItemLink key={i} to={`/nft/${item.uuid}`}>
               <Image
                 src={item.bg_image_url === null ? '' : item.bg_image_url}
                 resizeScale={300}
@@ -74,7 +80,7 @@ export const RedEnvelopeReceived: React.FC = () => {
                   textOverflow="ellipsis"
                   overflow="hidden"
                 >
-                  {/* {item.name} */}
+                  {item.name}
                 </Box>
                 <Box
                   fontSize="12px"
@@ -85,7 +91,7 @@ export const RedEnvelopeReceived: React.FC = () => {
                   #{item.n_token_id}
                 </Box>
               </Flex>
-            </Flex>
+            </FlexImageItemLink>
           ))}
         </VStack>
         <Divider mt="12px" />

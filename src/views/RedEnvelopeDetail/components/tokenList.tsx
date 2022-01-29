@@ -35,7 +35,7 @@ export const TokenList: React.FC<{
     <InfiniteList
       enableQuery
       queryFn={queryFn}
-      queryKey={[Query.GetSentRedEnvelopeDetailRewards]}
+      queryKey={[Query.GetSentRedEnvelopeDetailRewards, uuid]}
       noMoreElement={t('no-more')}
       calcDataLength={(data) =>
         data?.pages.reduce(
