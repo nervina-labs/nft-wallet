@@ -37,7 +37,10 @@ export const NftListDrawer: React.FC<{
   const [isEnableQueryNftList, setIsEnableQueryNftList] = useState(false)
   const querySelectableNftList = useCallback(
     async ({ pageParam = 1 }) => {
-      const { data } = await api.getNFTs(pageParam, { exclude_banned: true })
+      const { data } = await api.getNFTs(pageParam, {
+        exclude_banned: true,
+        include_submitting: true,
+      })
       return data
     },
     [api]

@@ -133,6 +133,7 @@ export class ServerWalletAPI {
     options?: {
       address?: string
       exclude_banned?: boolean
+      include_submitting?: boolean
     }
   ): Promise<AxiosResponse<NFT>> {
     return await this.axios.get(
@@ -142,6 +143,7 @@ export class ServerWalletAPI {
           page,
           limit: PER_ITEM_LIMIT,
           exclude_banned: options?.exclude_banned,
+          include_submitting: options?.include_submitting,
         },
       }
     )
