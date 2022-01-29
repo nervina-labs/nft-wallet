@@ -3,8 +3,8 @@ import {
   Divider,
   Flex,
   Heading,
-  HStack,
   Image,
+  VStack,
 } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'
@@ -16,7 +16,7 @@ import { MainContainer } from '../../styles'
 import { formatTime, getNFTQueryParams, isSupportWebp } from '../../utils'
 
 export const RedEnvelopeReceived: React.FC = () => {
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTranslation('translations')
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
@@ -43,9 +43,9 @@ export const RedEnvelopeReceived: React.FC = () => {
           {t('red-envelope-detail.collections-received')}
         </Heading>
         <Divider mb="16px" />
-        <HStack spacing="10px">
+        <VStack spacing="12px">
           {data?.record_items.map((item, i) => (
-            <Flex w="full" key={i} mb="12px">
+            <Flex key={i} w="full">
               <Image
                 src={item.bg_image_url === null ? '' : item.bg_image_url}
                 resizeScale={300}
@@ -87,7 +87,8 @@ export const RedEnvelopeReceived: React.FC = () => {
               </Flex>
             </Flex>
           ))}
-        </HStack>
+        </VStack>
+        <Divider mt="12px" />
         <Box h="43px" lineHeight="43px" fontSize="12px" color="#777E90">
           {t('red-envelope-detail.received-time')}
           {time}

@@ -74,7 +74,7 @@ export const ReceivedCard: React.FC<{
           tid: record.n_token_id,
         }))}
       />
-      <Divider />
+      <Divider mt="10px" />
       <Flex mt="10px" fontSize="12px" h="25px" lineHeight="25px">
         <Box mr="auto" color="#777E90">
           {t('red-envelope-records.state.done')}
