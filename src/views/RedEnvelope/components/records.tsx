@@ -241,32 +241,38 @@ export const Records: React.FC<RecordsProps> = ({
         })}
       </Box>
       <StatusText data={data} isAlreadyOpened={isAlreadyOpened} />
-      <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="50px" px="20px">
-        {promotionCopy}
-      </Box>
-      {promotionLink === data?.promotion_link ? (
-        <Button
-          as="a"
-          variant="solid"
-          bg="#F9E0B7"
-          minW="150px"
-          _hover={{
-            bg: '#F9E0B7',
-          }}
-          _active={{
-            bg: '#dac4a0',
-            transition: '0s',
-          }}
-          href={promotionLink}
-          target="_blank"
-        >
-          {t('red-envelope.promotion-link')}
-        </Button>
-      ) : (
-        <LinkStyled to={promotionLink || RoutePath.NFTs}>
-          {t('red-envelope.promotion-link')}
-        </LinkStyled>
-      )}
+      <Flex direction="column" h="114px">
+        {data?.is_current_user_claimed || data?.promotion_copy ? (
+          <>
+            <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="auto" px="20px">
+              {promotionCopy}
+            </Box>
+            {promotionLink === data?.promotion_link ? (
+              <Button
+                as="a"
+                variant="solid"
+                bg="#F9E0B7"
+                minW="150px"
+                _hover={{
+                  bg: '#F9E0B7',
+                }}
+                _active={{
+                  bg: '#dac4a0',
+                  transition: '0s',
+                }}
+                href={promotionLink}
+                target="_blank"
+              >
+                {t('red-envelope.promotion-link')}
+              </Button>
+            ) : (
+              <LinkStyled to={promotionLink || RoutePath.NFTs}>
+                {t('red-envelope.promotion-link')}
+              </LinkStyled>
+            )}
+          </>
+        ) : null}
+      </Flex>
 
       <Divider
         borderBottomColor="rgba(239, 239, 239, 0.2)"
