@@ -20,6 +20,7 @@ import { formatTime, getNFTQueryParams, isSupportWebp } from '../../utils'
 
 const FlexImageItemLink = styled(Link)`
   width: 100%;
+  display: flex;
 `
 
 export const RedEnvelopeReceived: React.FC = () => {
