@@ -11,7 +11,7 @@ import {
 } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useToast } from '../../../hooks/useToast'
-import { RuleType } from '../../../models'
+import { RuleType, UnsignedTransactionSendRedEnvelope } from '../../../models'
 import { FlashsignerAction } from '../../../models/flashsigner'
 import { UnipassAction } from '../../../models/unipass'
 import { RoutePath } from '../../../routes'
@@ -29,6 +29,20 @@ export function useSendRedEnvelope() {
   const [error, setError] = useState<any>()
   const toast = useToast()
   const { t } = useTranslation('translations')
+
+  const getSignTx = useCallback(
+    async (data: UnsignedTransactionSendRedEnvelope) => {
+      const { tx } = routeLocation.state ?? {}
+      if (walletType === WalletType.Flashsigner) {
+        return tx
+      }
+      if (walletType === WalletType.Unipass) {
+        return data.tx
+      }
+      return await signTransaction(data.tx)
+    },
+    [routeLocation.state, signTransaction, walletType]
+  )
 
   const onSend = useCallback(
     async (formInfo: FormInfoState) => {
@@ -50,10 +64,7 @@ export function useSendRedEnvelope() {
           walletType === WalletType.Unipass
         )
         const { signature, tx } = routeLocation.state ?? {}
-        const signTx =
-          walletType === WalletType.Flashsigner
-            ? tx
-            : await signTransaction(data.tx)
+        const signTx = await getSignTx(data)
         if (!tx && walletType === WalletType.Flashsigner) {
           const url = `${location.origin}${RoutePath.Flashsigner}`
           signTransactionWithRedirect(url, {
@@ -106,11 +117,11 @@ export function useSendRedEnvelope() {
     [
       api,
       getAuth,
+      getSignTx,
       pubkey,
       push,
       replace,
       routeLocation.state,
-      signTransaction,
       t,
       toast,
       walletType,
