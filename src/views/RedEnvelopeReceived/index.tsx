@@ -28,7 +28,7 @@ export const RedEnvelopeReceived: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
-  const { data } = useQuery([Query.GetRedEnvelopeReceived], async () => {
+  const { data } = useQuery([Query.GetRedEnvelopeReceived, id], async () => {
     const auth = await getAuth()
     const { data } = await api.getReceivedRedEnvelopeDetail(id, auth)
     return data
