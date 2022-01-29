@@ -711,7 +711,7 @@
         "not-puzzle-answer": "输入红包谜底"
       },
       "create-failed": "创建失败",
-      "total-nft": "共计 {total} 个秘宝"
+      "total-nft": "共计 {{total}} 个秘宝"
     },
     "share-red-envelope": {
       "title": "分享红包",

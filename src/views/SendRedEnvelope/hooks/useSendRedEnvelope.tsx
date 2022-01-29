@@ -32,12 +32,12 @@ export function useSendRedEnvelope() {
 
   const getSignTx = useCallback(
     async (data: UnsignedTransactionSendRedEnvelope) => {
-      const { tx } = routeLocation.state ?? {}
+      const { tx, signature } = routeLocation.state ?? {}
       if (walletType === WalletType.Flashsigner) {
         return tx
       }
       if (walletType === WalletType.Unipass) {
-        return data.tx
+        return signature ? data.tx : await signTransaction(data.tx)
       }
       return await signTransaction(data.tx)
     },
