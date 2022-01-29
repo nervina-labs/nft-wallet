@@ -674,7 +674,8 @@
       "error-puzzle": "The answer is wrong. Guess it again.",
       "default-promotion-copy": "View my collected digital collections",
       "try-again": "Oops.. an error occurred. Try it again.",
-      "connect-and-open-it": "Connect and open it"
+      "connect-and-open-it": "Connect and open it",
+      "generating": "The red envelope is still being generated. It will come soon……"
     },
     "send-red-envelope": {
       "title": "Send Red Packet",
