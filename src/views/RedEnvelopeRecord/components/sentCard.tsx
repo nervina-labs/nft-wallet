@@ -46,6 +46,9 @@ export const SentCard: React.FC<{
         )
     }
   }, [data.state, t])
+  const progressValue = data
+    ? Math.floor((data.progress.claimed / data.progress.total) * 100)
+    : 0
 
   return (
     <Box
@@ -86,7 +89,7 @@ export const SentCard: React.FC<{
         {data.progress.claimed}/{data.progress.total}
       </Box>
       <Progress
-        value={data.progress.claimed / data.progress.total}
+        value={progressValue}
         colorScheme={isClosed ? 'gray' : 'process'}
         mb="15px"
         mt="5px"
