@@ -693,11 +693,11 @@
         "select-nft-search": "Search Digital Collection or Issuer",
         "ok": "Next",
         "total": "Total: {{total}}",
-        "reward-amount": "Select your works",
+        "reward-amount": "Quantity of Red Packet",
         "reward-amount-placeholder": "Fill in quantity",
         "pcs": "Pcs",
         "greeting": "Promotional words",
-        "greeting-placeholder": "大吉大利，好运连连！",
+        "greeting-placeholder": "Good luck!",
         "puzzle-question-field": "Set riddle",
         "puzzle-question-placeholder": "Riddle",
         "puzzle-answer-field": "Set the answer",
@@ -748,7 +748,7 @@
         "succeed": "Closed successfully",
         "failed": "Closing failed"
       },
-      "creator": "Creator"
+      "creator": "Sender"
     },
     "red-envelope-detail": {
       "title": "Details",

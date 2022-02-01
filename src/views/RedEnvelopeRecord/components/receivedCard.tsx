@@ -72,7 +72,7 @@ export const ReceivedCard: React.FC<{
           </UserLink>
         ) : null}
         <Box color="#999999" fontSize="12px" ml="auto" whiteSpace="nowrap">
-          发出人
+          {t('red-envelope-records.creator')}
         </Box>
       </Flex>
       <Divider />
