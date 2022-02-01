@@ -36,7 +36,7 @@ export const TokenList: React.FC<{
       enableQuery
       queryFn={queryFn}
       queryKey={[Query.GetSentRedEnvelopeDetailRewards, uuid]}
-      noMoreElement={t('no-more')}
+      noMoreElement={''}
       calcDataLength={(data) =>
         data?.pages.reduce(
           (acc, item) => item.redpack_reward_plan_items.length + acc,
