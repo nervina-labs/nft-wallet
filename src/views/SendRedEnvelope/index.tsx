@@ -79,14 +79,6 @@ export const SendRedEnvelope: React.FC = () => {
   const { onSend, isSending } = useSendRedEnvelope()
   const { isLogined } = useAccountStatus()
 
-  const getLimitedLengthInputText = useCallback(
-    (currentValue?: string, nextValue?: string) => {
-      if (!nextValue) return ''
-      return (nextValue.length <= TEXT_LIMIT ? nextValue : currentValue) ?? ''
-    },
-    []
-  )
-
   const limitNumberInput = useCallback(
     (
       e: React.ChangeEvent<HTMLInputElement>,
@@ -359,11 +351,8 @@ export const SendRedEnvelope: React.FC = () => {
                 border: 'none',
               }}
               value={greeting}
-              onChange={(e) =>
-                setGreeting((v) =>
-                  getLimitedLengthInputText(v, e.target?.value)
-                )
-              }
+              onChange={(e) => setGreeting(e.target?.value)}
+              maxLength={TEXT_LIMIT}
             />
           </Flex>
           <TabPanels>
@@ -388,11 +377,8 @@ export const SendRedEnvelope: React.FC = () => {
                   'send-red-envelope.form-items.puzzle-question-placeholder'
                 )}
                 value={puzzleQuestion}
-                onChange={(e) =>
-                  setPuzzleQuestion((v) =>
-                    getLimitedLengthInputText(v, e.target?.value)
-                  )
-                }
+                onChange={(e) => setPuzzleQuestion(e.target?.value)}
+                maxLength={TEXT_LIMIT}
               />
               <Box color="#777E90" fontSize="12px" mb="4px" mt="16px">
                 {t('send-red-envelope.form-items.puzzle-answer-field')}
@@ -413,11 +399,8 @@ export const SendRedEnvelope: React.FC = () => {
                   'send-red-envelope.form-items.puzzle-answer-placeholder'
                 )}
                 value={puzzleAnswer}
-                onChange={(e) =>
-                  setPuzzleAnswer((v) =>
-                    getLimitedLengthInputText(v, e.target?.value)
-                  )
-                }
+                onChange={(e) => setPuzzleAnswer(e.target?.value)}
+                maxLength={TEXT_LIMIT}
               />
               <Box color="#777E90" fontSize="12px" mt="8px" textAlign="center">
                 {t('send-red-envelope.form-items.puzzle-prompt')}
