@@ -742,7 +742,7 @@
       },
       "state": {
         "closed": "已关闭",
-        "done": "已领完",
+        "done": "已领取",
         "expired": "已过期",
         "ongoing": "进行中"
       },
