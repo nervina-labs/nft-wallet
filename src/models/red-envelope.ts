@@ -8,6 +8,7 @@ export enum RedEnvelopeState {
   Done = 'done',
   Expired = 'expired',
   Pending = 'pending',
+  Received = 'grabed',
 }
 
 export enum RedpackType {
@@ -156,7 +157,7 @@ export interface SentRedEnvelopeRewordItem {
     bg_image_url: string
     name: string
   }
-  state: 'pending' | 'grabed'
+  state: RedEnvelopeState
 }
 
 export interface SentRedEnvelopeReword {

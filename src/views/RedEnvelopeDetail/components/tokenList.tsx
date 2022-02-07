@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
-import { Query } from '../../../models'
+import { Query, RedEnvelopeState } from '../../../models'
 import { isSupportWebp } from '../../../utils'
 import { Image } from '@mibao-ui/components'
 import styled from '@emotion/styled'
@@ -82,7 +82,8 @@ export const TokenList: React.FC<{
               </Box>
             </Flex>
             <Box my="auto" fontSize="14px">
-              {reward.state === 'pending'
+              {reward.state === RedEnvelopeState.Pending ||
+              reward.state === RedEnvelopeState.Closed
                 ? t('red-envelope-detail.item-unreceived')
                 : ''}
               {reward.state === 'grabed'
