@@ -10,6 +10,11 @@ export enum RedEnvelopeState {
   Pending = 'pending',
 }
 
+export enum RedpackType {
+  Wallet = 'wallet-redpack',
+  Saas = 'saas-redpack',
+}
+
 export enum RuleType {
   password = 'password',
   puzzle = 'puzzle',
@@ -60,6 +65,7 @@ export interface RedEnvelopeResponse {
   rule_info: RulePuzzleInfo | RulePasswordInfo | null
   is_current_user_claimed: boolean
   is_claimed_special_model: boolean
+  redpack_type: RedpackType
 }
 
 export interface RedEnvelopeRecords {

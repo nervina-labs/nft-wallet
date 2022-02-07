@@ -675,7 +675,13 @@
       "default-promotion-copy": "查看领取的数字藏品",
       "try-again": "领取失败，再试一次吧",
       "connect-and-open-it": "连接身份后领取",
-      "generating": "红包还在生成中，马上就来……"
+      "generating": "红包还在生成中，马上就来……",
+      "icons": {
+        "my-collections": "我的藏品",
+        "send-red-packet": "我也发红包",
+        "follow-us": "关注我们"
+      },
+      "scan-code-followed-official-account": "扫一扫关注公众号"
     },
     "send-red-envelope": {
       "title": "发盲盒红包",

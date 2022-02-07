@@ -1,9 +1,7 @@
-import { Box, Button, Divider, Flex, Spinner } from '@chakra-ui/react'
-import styled from '@emotion/styled'
+import { Box, Divider, Flex, Spinner } from '@chakra-ui/react'
 import { Image } from '@mibao-ui/components'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
 import { ReactComponent as RedEnvelopeHiddenModelIcon } from '../../../assets/svg/red-envelope-hidden-model.svg'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
@@ -13,14 +11,11 @@ import {
   RedEnvelopeRecord,
   RedEnvelopeResponse,
   RedEnvelopeState,
+  RedpackType,
 } from '../../../models'
-import { RoutePath } from '../../../routes'
-import {
-  ellipsisString,
-  formatTime,
-  isSupportWebp,
-  removeCurrentUrlOrigin,
-} from '../../../utils'
+import { ellipsisString, formatTime, isSupportWebp } from '../../../utils'
+import { Extension } from './extension'
+import { Promotion } from './promotion'
 
 interface RecordsProps {
   uuid: string
@@ -28,22 +23,6 @@ interface RecordsProps {
   address?: string
   isAlreadyOpened?: boolean
 }
-
-const LinkStyled = styled(Link)`
-  display: block;
-  background-color: #f9e0b7;
-  min-width: 150px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  border-radius: 8px;
-  padding: 0 20px;
-  font-weight: bold;
-  :active {
-    background-color: #dac4a0;
-    transition: 0s;
-  }
-`
 
 const StatusText: React.FC<{
   data?: RedEnvelopeResponse
@@ -218,15 +197,9 @@ export const Records: React.FC<RecordsProps> = ({
     data?.user_info?.nickname,
   ])
 
-  const promotionCopy =
-    data?.promotion_copy || t('red-envelope.default-promotion-copy')
-  const promotionLink = useMemo(
-    () =>
-      data?.promotion_link
-        ? removeCurrentUrlOrigin(data.promotion_link)
-        : undefined,
-    [data?.promotion_link]
-  )
+  const isShowPromotion =
+    (data?.is_current_user_claimed || data?.promotion_copy) &&
+    data.redpack_type === RedpackType.Saas
 
   return (
     <Flex
@@ -241,38 +214,12 @@ export const Records: React.FC<RecordsProps> = ({
         })}
       </Box>
       <StatusText data={data} isAlreadyOpened={isAlreadyOpened} />
-      <Flex direction="column" h="114px">
-        {data?.is_current_user_claimed || data?.promotion_copy ? (
-          <>
-            <Box color="#F9E0B7" fontSize="16px" mb="10px" mt="auto" px="20px">
-              {promotionCopy}
-            </Box>
-            {promotionLink === data?.promotion_link ? (
-              <Button
-                as="a"
-                variant="solid"
-                bg="#F9E0B7"
-                minW="150px"
-                _hover={{
-                  bg: '#F9E0B7',
-                }}
-                _active={{
-                  bg: '#dac4a0',
-                  transition: '0s',
-                }}
-                href={promotionLink}
-                target="_blank"
-              >
-                {t('red-envelope.promotion-link')}
-              </Button>
-            ) : (
-              <LinkStyled to={promotionLink || RoutePath.NFTs}>
-                {t('red-envelope.promotion-link')}
-              </LinkStyled>
-            )}
-          </>
-        ) : null}
-      </Flex>
+      {isShowPromotion ? (
+        <Promotion copy={data.promotion_copy} link={data.promotion_link} />
+      ) : null}
+      {data?.redpack_type === RedpackType.Wallet ? (
+        <Extension greeting={data.greetings} />
+      ) : null}
 
       <Divider
         borderBottomColor="rgba(239, 239, 239, 0.2)"

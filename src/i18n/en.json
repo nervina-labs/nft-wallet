@@ -675,7 +675,13 @@
       "default-promotion-copy": "View my collected digital collections",
       "try-again": "Oops.. an error occurred. Try it again.",
       "connect-and-open-it": "Connect and open it",
-      "generating": "The red envelope is still being generated. It will come soon……"
+      "generating": "The red envelope is still being generated. It will come soon……",
+      "icons": {
+        "my-collections": "My collections",
+        "send-red-packet": "Send Red Packet",
+        "follow-us": "Follow us"
+      },
+      "scan-code-followed-official-account": "Scan code followed official account"
     },
     "send-red-envelope": {
       "title": "Send Red Packet",
