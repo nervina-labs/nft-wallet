@@ -16,6 +16,7 @@ const LeftIcon = styled(LeftSvg)`
   height: 16px;
   object-fit: contain;
 `
+
 const StyledSelectedArrow = styled(SelectedArrow)`
   position: absolute;
   top: 5px;
@@ -45,9 +46,10 @@ export const NftListDrawer: React.FC<{
     [api]
   )
   const [selectedTokens, setSelectedTokens] = useState<NFTToken[]>([])
-  const selectedNftUuidSet = useMemo(
-    () => new Set(selectedTokens.map((t) => t.token_uuid)),
-    [selectedTokens]
+  const [selectingTokens, setSelectingTokens] = useState<NFTToken[]>([])
+  const selectingNftUuidSet = useMemo(
+    () => new Set(selectingTokens.map((t) => t.token_uuid)),
+    [selectingTokens]
   )
   const [tokenList, setTokenList] = useState<NFTToken[]>([])
   useEffect(() => {
@@ -62,6 +64,11 @@ export const NftListDrawer: React.FC<{
   useEffect(() => {
     onChange?.(selectedTokens)
   }, [selectedTokens, onChange, tokenList])
+
+  const onConfirm = useCallback(() => {
+    setSelectedTokens(selectingTokens)
+    onClose()
+  }, [onClose, selectingTokens])
 
   return (
     <Drawer
@@ -85,7 +92,7 @@ export const NftListDrawer: React.FC<{
 
           <Box
             className="left"
-            onClick={onClose}
+            onClick={onConfirm}
             fontSize="14px"
             fontWeight="normal"
           >
@@ -140,7 +147,7 @@ export const NftListDrawer: React.FC<{
           }}
           renderItems={(pages, i) =>
             pages.token_list.map((item, j) => {
-              const selected = selectedNftUuidSet.has(item.token_uuid)
+              const selected = selectingNftUuidSet.has(item.token_uuid)
               return (
                 <Box
                   key={`${i}-${j}`}
@@ -149,10 +156,10 @@ export const NftListDrawer: React.FC<{
                     const removeFn = (t: NFTToken) =>
                       t.token_uuid !== item.token_uuid
                     const changedTokens = selected
-                      ? selectedTokens.filter(removeFn)
-                      : selectedTokens.concat([item])
+                      ? selectingTokens.filter(removeFn)
+                      : selectingTokens.concat([item])
                     if (changedTokens.length < LIMIT) {
-                      setSelectedTokens(changedTokens)
+                      setSelectingTokens(changedTokens)
                     }
                   }}
                 >
@@ -251,7 +258,7 @@ export const NftListDrawer: React.FC<{
           fontSize="14px"
           zIndex={2}
         >
-          {t('send-red-envelope.total-nft', { total: selectedTokens.length })}
+          {t('send-red-envelope.total-nft', { total: selectingTokens.length })}
         </Box>
       </Flex>
     </Drawer>
