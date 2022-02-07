@@ -55,12 +55,13 @@ export const NftListDrawer: React.FC<{
   useEffect(() => {
     ;(async () => {
       if (isOpen) {
+        setSelectingTokens(selectedTokens)
         setIsEnableQueryNftList(false)
         await sleep(600) // Wait the drawer animation
         setIsEnableQueryNftList(true)
       }
     })()
-  }, [isOpen])
+  }, [isOpen, selectedTokens])
   useEffect(() => {
     onChange?.(selectedTokens)
   }, [selectedTokens, onChange, tokenList])
