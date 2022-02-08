@@ -681,7 +681,7 @@
         "send-red-packet": "Send Red Packet",
         "follow-us": "Follow us"
       },
-      "scan-code-followed-official-account": "Scan code followed official account"
+      "scan-code-followed-official-account": "Scan and follow official account"
     },
     "send-red-envelope": {
       "title": "Send Red Packet",
@@ -722,7 +722,7 @@
     },
     "share-red-envelope": {
       "title": "Share Red Packet",
-      "qrcode-prompt": "recognizes QR code to get Red Packet",
+      "qrcode-prompt": "Recognize QR code to get Red Packet",
       "puzzle-prompt": "Guess the following riddle to get Red Packet",
       "save-image": "Long press the picture to add to \"Photos\" share with friends",
       "wait-text": "To ensure the security of digital assets, Red Packet will be generated within 1-3 minutes: ",
