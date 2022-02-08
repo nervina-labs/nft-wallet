@@ -651,7 +651,8 @@
       "let-s-go-to-explore": "去探索页面"
     },
     "red-envelope": {
-      "title-1": "您有一个数字藏品红包待领取",
+      "title-normal": "您有一个数字藏品红包待领取",
+      "title-riddle": "您有一个数字藏品谜语红包待领取",
       "hidden-model": "隐藏款",
       "from-red-envelope": "来自 {{username}} 分享的数字藏品红包",
       "promotion-link": "点击去看看",

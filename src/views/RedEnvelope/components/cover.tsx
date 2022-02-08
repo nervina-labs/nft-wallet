@@ -59,7 +59,9 @@ export const Cover: React.FC<CoverProps> = ({
       flex="1"
     >
       <Heading fontSize="16px" color="white" mb="10px" mt="25px">
-        {t('red-envelope.title-1')}
+        {data?.rule_info?.rule_type === RuleType.puzzle
+          ? t('red-envelope.title-riddle')
+          : t('red-envelope.title-normal')}
       </Heading>
       <Heading
         fontSize="24px"
