@@ -753,7 +753,8 @@
       "close-event-confirm": "Are you sure you want to close this Red Packet?",
       "toast": {
         "succeed": "Closed successfully",
-        "failed": "Closing failed"
+        "failed": "Closing failed",
+        "event-close-count-exceeded": "Do not frequently close: ("
       },
       "creator": "Sender"
     },
