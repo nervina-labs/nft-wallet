@@ -28,7 +28,7 @@ export function useSendRedEnvelope() {
   const [isSending, setSending] = useState(false)
   const [error, setError] = useState<any>()
   const toast = useToast()
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
 
   const getSignTx = useCallback(
     async (data: UnsignedTransactionSendRedEnvelope) => {
@@ -71,6 +71,7 @@ export function useSendRedEnvelope() {
           signTransactionWithRedirect(url, {
             tx: transformers.TransformTransaction(data.tx) as any,
             extra: { action: FlashsignerAction.SendRedEnvelope, ...formInfo },
+            locale: i18n.language,
           })
           return
         }
