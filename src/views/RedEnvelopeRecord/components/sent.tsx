@@ -8,6 +8,8 @@ import { useToast } from '../../../hooks/useToast'
 import { Query } from '../../../models'
 import { SentCard } from './sentCard'
 
+const EVENT_CLOSE_COUNT_EXCEEDED_CODE = 1090
+
 export const Sent: React.FC = () => {
   const { t } = useTranslation('translations')
   const api = useAPI()
@@ -36,8 +38,13 @@ export const Sent: React.FC = () => {
             await api.closeSentRedEnvelope(uuid, auth)
             setRetryCount((c) => c + 1)
             toast(t('red-envelope-records.toast.succeed'))
-          } catch {
-            toast(t('red-envelope-records.toast.failed'))
+          } catch (e: any) {
+            const code = e?.response?.data?.code
+            if (code === EVENT_CLOSE_COUNT_EXCEEDED_CODE) {
+              toast(t('red-envelope-records.toast.event-close-count-exceeded'))
+            } else {
+              toast(t('red-envelope-records.toast.failed'))
+            }
           }
         },
         onCancel() {},

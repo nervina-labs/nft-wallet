@@ -754,7 +754,8 @@
       "close-event-confirm": "确定要关闭这个红包吗？",
       "toast": {
         "succeed": "关闭成功",
-        "failed": "关闭失败"
+        "failed": "关闭失败",
+        "event-close-count-exceeded": "请勿频繁关闭 : ("
       },
       "creator": "发出人"
     },
