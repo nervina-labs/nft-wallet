@@ -744,6 +744,7 @@
       "state": {
         "closed": "Closed",
         "done": "Finished",
+        "received": "Received",
         "expired": "Timeout",
         "ongoing": "In progress"
       },

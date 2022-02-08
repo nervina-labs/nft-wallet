@@ -91,7 +91,7 @@ export const ReceivedCard: React.FC<{
       <Divider mt="10px" />
       <Flex mt="10px" fontSize="12px" h="25px" lineHeight="25px">
         <Box mr="auto" color="#777E90">
-          {t('red-envelope-records.state.done')}
+          {t('red-envelope-records.state.received')}
         </Box>
         <StyledLink to={`${RoutePath.RedEnvelope}/${data.uuid}/received`}>
           <Button colorScheme="black" size="small" px="10px">
