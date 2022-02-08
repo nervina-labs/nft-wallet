@@ -108,7 +108,7 @@ export const Cover: React.FC<CoverProps> = ({
       ) : null}
 
       {data?.state === RedEnvelopeState.Pending ? (
-        <Box textAlign="center" fontSize="16px" mt="50px" color="white">
+        <Box textAlign="center" fontSize="16px" my="50px" color="white">
           <Box fontSize="36px">😉</Box>
           {t('red-envelope.generating')}
         </Box>
