@@ -121,6 +121,7 @@ export function useSendRedEnvelope() {
       api,
       getAuth,
       getSignTx,
+      i18n.language,
       pubkey,
       push,
       replace,
