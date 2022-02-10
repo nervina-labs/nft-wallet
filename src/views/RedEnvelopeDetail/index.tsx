@@ -152,7 +152,7 @@ export const RedEnvelopeDetail: React.FC = () => {
             </Box>
             <Box>
               {t('red-envelope-detail.received')}
-              {data?.progress.total ?? '-'}
+              {data?.progress.claimed ?? '-'}
             </Box>
           </Flex>
         </Box>
