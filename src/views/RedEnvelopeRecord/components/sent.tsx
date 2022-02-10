@@ -57,7 +57,7 @@ export const Sent: React.FC = () => {
     <InfiniteList
       enableQuery
       queryFn={queryFn}
-      queryKey={[Query.GetSentRedEnvelopeRecords, retryCount]}
+      queryKey={[Query.GetSentRedEnvelopeRecords, api, retryCount]}
       noMoreElement={''}
       calcDataLength={(data) =>
         data?.pages.reduce(
@@ -70,6 +70,9 @@ export const Sent: React.FC = () => {
           <SentCard data={event} key={i} onCloseEvent={onCloseEvent} />
         ))
       }
+      queryOptions={{
+        cacheTime: 0,
+      }}
       style={{
         padding: '0 20px',
         marginTop: '16px',

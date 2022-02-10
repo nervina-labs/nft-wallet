@@ -22,7 +22,7 @@ export const Received: React.FC = () => {
     <InfiniteList
       enableQuery
       queryFn={queryFn}
-      queryKey={[Query.GetReceivedRedEnvelopeRecords]}
+      queryKey={[Query.GetReceivedRedEnvelopeRecords, api]}
       noMoreElement={''}
       calcDataLength={(data) =>
         data?.pages.reduce((acc, item) => item.records.length + acc, 0) ?? 0
@@ -30,6 +30,9 @@ export const Received: React.FC = () => {
       renderItems={(data) =>
         data.records.map((record, i) => <ReceivedCard data={record} key={i} />)
       }
+      queryOptions={{
+        cacheTime: 0,
+      }}
       style={{
         padding: '0 20px',
         marginTop: '16px',
