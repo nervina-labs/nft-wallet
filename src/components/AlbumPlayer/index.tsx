@@ -279,7 +279,6 @@ export const AlbumPlayer: React.FC<{
               w="full"
               h="full"
               zIndex={1}
-              tid={data.n_token_id}
             />
           </Box>
         </Box>

@@ -70,12 +70,12 @@ export const useSignRedeem = () => {
         if (walletType === WalletType.Flashsigner) {
           const url = `${location.origin}${RoutePath.Flashsigner}`
           UnipassConfig.setRedirectUri(`${RoutePath.RedeemResult}/${id}`)
-          const state: Record<string, any> = {
+          const state: Record<string, string> = {
             prevPathname: reactLocation.pathname,
             uuid: id,
           }
           if (customData) {
-            state.customData = customData
+            state.customData = encodeURIComponent(JSON.stringify(customData))
           }
           signTransactionWithRedirect(url, {
             tx: transformers.TransformTransaction(tx) as any,
