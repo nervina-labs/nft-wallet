@@ -19,7 +19,7 @@ import { useInnerSize } from '../../hooks/useInnerSize'
 import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { NftListDrawer } from './components/nftListDrawer'
 import { useCallback, useState } from 'react'
-import { getNFTQueryParams, isSupportWebp } from '../../utils'
+import { getNFTQueryParams, isSupportWebp, UnipassConfig } from '../../utils'
 import { NFTToken } from '../../models'
 import { useToast } from '../../hooks/useToast'
 import { useTranslation } from 'react-i18next'
@@ -147,6 +147,7 @@ export const SendRedEnvelope: React.FC = () => {
   ])
 
   if (!isLogined) {
+    UnipassConfig.setRedirectUri(location.pathname)
     return <Redirect to={RoutePath.Login} />
   }
 
