@@ -347,7 +347,7 @@
         "desc": "Buy and hold your Digital Collection"
       },
       "red-envelope": {
-        "title": "Unipass Red Pocket",
+        "title": "Send Red Pocket",
         "desc": "Send Collection red pockets"
       },
       "ticket": {
@@ -651,7 +651,8 @@
       "let-s-go-to-explore": "Let's go to explore"
     },
     "red-envelope": {
-      "title-1": "Open your Digital Collection Red Packet",
+      "title-normal": "You have a mystery box Red Packet with Digital Collection to receive.",
+      "title-riddle": "You have a riddle Red Packet with Digital Collection to receive.",
       "hidden-model": "Special Edition",
       "from-red-envelope": "The Red Packet from {{username}}",
       "promotion-link": "Click to have a look",
@@ -674,7 +675,101 @@
       "error-puzzle": "The answer is wrong. Guess it again.",
       "default-promotion-copy": "View my collected digital collections",
       "try-again": "Oops.. an error occurred. Try it again.",
-      "connect-and-open-it": "Connect and open it"
+      "connect-and-open-it": "Connect and open it",
+      "generating": "The red envelope is still being generated. It will come soon……",
+      "icons": {
+        "my-collections": "My collections",
+        "send-red-packet": "Send Red Packet",
+        "follow-us": "Follow us"
+      },
+      "scan-code-followed-official-account": "Scan and follow official account"
+    },
+    "send-red-envelope": {
+      "title": "Send Red Packet",
+      "more-menus": {
+        "records": "History",
+        "cancel": "Cancel"
+      },
+      "red-envelope-type": {
+        "normal": "Ordinary",
+        "puzzle": "Riddle"
+      },
+      "form-items": {
+        "select-nft": "Select collections",
+        "select-nft-title": "Select the collections",
+        "select-nft-search": "Search Digital Collection or Issuer",
+        "ok": "Next",
+        "total": "Total: {{total}}",
+        "reward-amount": "Quantity of Red Packet",
+        "reward-amount-placeholder": "Fill in quantity",
+        "pcs": "Pcs",
+        "greeting": "Promotional words",
+        "greeting-placeholder": "Good luck!",
+        "puzzle-question-field": "Set riddle",
+        "puzzle-question-placeholder": "Riddle",
+        "puzzle-answer-field": "Set the answer",
+        "puzzle-answer-placeholder": "Answer",
+        "puzzle-prompt": "Friends input answer to riddle can receive",
+        "submit": "Generate"
+      },
+      "toast": {
+        "not-nft": "No collections selects",
+        "not-amount": "The quantity of Red Packet is not filled in",
+        "not-puzzle-question": "The quantity of riddle is not filled in",
+        "not-puzzle-answer": "The quantity of answer is not filled in"
+      },
+      "create-failed": "Create failed",
+      "total-nft": "Total {{total}} collections"
+    },
+    "share-red-envelope": {
+      "title": "Share Red Packet",
+      "qrcode-prompt": "Long press and scan the QR code to get Red Packet",
+      "puzzle-prompt": "Guess the following riddle to get Red Packet",
+      "save-image": "Long press the picture to add to \"Photos\" share with friends",
+      "wait-text": "To ensure the security of digital assets, Red Packet will be generated within 1-3 minutes: ",
+      "prompt-list": [
+        "You can save the QR code and scan the progress at any time",
+        "You can click『...』in the upper right corner to view and share on the Red Packet page"
+      ],
+      "share-link": "Copy the link",
+      "copied-title": "Copy success",
+      "copied-text": "Copy to clipboard successfully, share it!"
+    },
+    "red-envelope-records": {
+      "title": "Red Packet History",
+      "type": {
+        "sent": "Sent",
+        "received": "Received"
+      },
+      "state": {
+        "closed": "Closed",
+        "done": "Finished",
+        "received": "Received",
+        "expired": "Timeout",
+        "ongoing": "In progress"
+      },
+      "progress": "Rate of progress: ",
+      "close": "Close",
+      "details": "Details",
+      "close-event-confirm": "Are you sure you want to close this Red Packet?",
+      "toast": {
+        "succeed": "Closed successfully",
+        "failed": "Closing failed",
+        "event-close-count-exceeded": "Do not frequently close: ("
+      },
+      "creator": "Sender"
+    },
+    "red-envelope-detail": {
+      "title": "Details",
+      "generation-time": "Generation time: ",
+      "progress": "Progress",
+      "received": "Been received: ",
+      "unopened": "unopened: ",
+      "contains-the-following-collections": "Contains the following collections",
+      "item-received": "Been received",
+      "item-unreceived": "not been receiving",
+      "collections-received": "Collections Received",
+      "received-time": "Received Time: "
     },
     "pwa-guide": {
       "desc": "Add MIBAO to the desktop for the best experience and no longer miss these unique artworks.",

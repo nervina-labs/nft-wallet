@@ -52,6 +52,8 @@ const Container = styled(MainContainer)`
   }
 `
 
+const WAIT_PENDING_TIME = 2000
+
 export const RedEnvelope: React.FC = () => {
   useThemeColor('#E94030')
   const { id } = useParams<{ id: string }>()
@@ -83,9 +85,11 @@ export const RedEnvelope: React.FC = () => {
       retry: 2,
     }
   )
-  const isOpened =
-    !isLoading &&
-    (data?.is_current_user_claimed || data?.state !== RedEnvelopeState.Ongoing)
+  const isOngoing = [
+    RedEnvelopeState.Ongoing,
+    RedEnvelopeState.Pending,
+  ].includes(data?.state as RedEnvelopeState)
+  const isOpened = !isLoading && (data?.is_current_user_claimed || !isOngoing)
   const onOpenTheRedEnvelope = useCallback<(o?: OnOpenOptions) => void>(
     async (options) => {
       if (isRefetching) return
@@ -184,6 +188,19 @@ export const RedEnvelope: React.FC = () => {
     onOpenTheRedEnvelope,
     isOpenedWithError,
   ])
+
+  useEffect(() => {
+    if (data?.state !== RedEnvelopeState.Pending) {
+      return
+    }
+    const timer = setInterval(() => {
+      refetch()
+      if (data?.state !== RedEnvelopeState.Pending) {
+        clearInterval(timer)
+      }
+    }, WAIT_PENDING_TIME)
+    return () => clearInterval(timer)
+  }, [data?.state, refetch])
 
   if (error?.response?.status === 404) {
     return <Redirect to={RoutePath.NotFound} />
