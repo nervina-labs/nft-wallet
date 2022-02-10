@@ -62,7 +62,7 @@ export const Extension: React.FC<{ greeting?: string }> = ({ greeting }) => {
       </HStack>
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
-        <ModalContent maxW="90%">
+        <ModalContent w="90%">
           <ModalCloseButton />
           <ModalBody pb="0">
             <Heading fontSize="20px" textAlign="center">
