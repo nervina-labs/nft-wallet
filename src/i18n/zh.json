@@ -347,8 +347,8 @@
         "desc": "购买数字收藏品就到秘宝店铺"
       },
       "red-envelope": {
-        "title": "UniPass 红包",
-        "desc": "为朋友发送随机秘宝红包，没有账户也能收"
+        "title": "发盲盒红包",
+        "desc": "为朋友发送秘宝红包送上一份特殊礼物"
       },
       "ticket": {
         "title": "UniPass 门票",
@@ -651,7 +651,8 @@
       "let-s-go-to-explore": "去探索页面"
     },
     "red-envelope": {
-      "title-1": "您有一个数字藏品红包待领取",
+      "title-normal": "您有一个数字藏品红包待领取",
+      "title-riddle": "您有一个数字藏品谜语红包待领取",
       "hidden-model": "隐藏款",
       "from-red-envelope": "来自 {{username}} 分享的数字藏品红包",
       "promotion-link": "点击去看看",
@@ -674,7 +675,101 @@
       "error-puzzle": "谜底错误哦，再猜猜看",
       "default-promotion-copy": "查看领取的数字藏品",
       "try-again": "领取失败，再试一次吧",
-      "connect-and-open-it": "连接身份后领取"
+      "connect-and-open-it": "连接身份后领取",
+      "generating": "红包还在生成中，马上就来……",
+      "icons": {
+        "my-collections": "我的藏品",
+        "send-red-packet": "我也发红包",
+        "follow-us": "关注我们"
+      },
+      "scan-code-followed-official-account": "扫一扫关注公众号"
+    },
+    "send-red-envelope": {
+      "title": "发盲盒红包",
+      "more-menus": {
+        "records": "红包记录",
+        "cancel": "取消"
+      },
+      "red-envelope-type": {
+        "normal": "普通红包",
+        "puzzle": "谜语红包"
+      },
+      "form-items": {
+        "select-nft": "选择秘宝",
+        "select-nft-title": "请选择秘宝",
+        "select-nft-search": "搜索秘宝名称/创作者名称",
+        "ok": "确定",
+        "total": "共计： {{total}} 秘宝",
+        "reward-amount": "红包个数",
+        "reward-amount-placeholder": "红包个数",
+        "pcs": "个",
+        "greeting": "祝福语",
+        "greeting-placeholder": "大吉大利，好运连连！",
+        "puzzle-question-field": "输入红包谜题",
+        "puzzle-question-placeholder": "红包谜题",
+        "puzzle-answer-field": "输入红包谜底",
+        "puzzle-answer-placeholder": "红包谜底",
+        "puzzle-prompt": "好友输入谜底即可领取秘宝",
+        "submit": "生成秘宝红包"
+      },
+      "toast": {
+        "not-nft": "请选择秘宝",
+        "not-amount": "请输入红包数量",
+        "not-puzzle-question": "请输入红包谜题",
+        "not-puzzle-answer": "输入红包谜底"
+      },
+      "create-failed": "创建失败",
+      "total-nft": "共计 {{total}} 个秘宝"
+    },
+    "share-red-envelope": {
+      "title": "分享红包",
+      "qrcode-prompt": "长按识别二维码领取红包",
+      "puzzle-prompt": "猜中以下谜题，抢数字藏品红包",
+      "save-image": "长按图片添加到 「照片」 分享给朋友",
+      "wait-text": "为了保障数字资产安全，红包将在 1-3 分钟内生成",
+      "prompt-list": [
+        "您可以保存二维码后随时扫码查看进度分享",
+        "也可以返回红包页面点击右上角『...』查看与分享"
+      ],
+      "share-link": "复制分享链接",
+      "copied-title": "复制成功",
+      "copied-text": "已成功复制到剪切板，去粘贴分享吧！"
+    },
+    "red-envelope-records": {
+      "title": "红包记录",
+      "type": {
+        "sent": "发出",
+        "received": "收到"
+      },
+      "state": {
+        "closed": "已关闭",
+        "done": "已领完",
+        "received": "已领取",
+        "expired": "已过期",
+        "ongoing": "进行中"
+      },
+      "progress": "领取进度：",
+      "close": "关闭",
+      "details": "查看详情",
+      "close-event-confirm": "确定要关闭这个红包吗？",
+      "toast": {
+        "succeed": "关闭成功",
+        "failed": "关闭失败",
+        "event-close-count-exceeded": "请勿频繁关闭 : ("
+      },
+      "creator": "发出人"
+    },
+    "red-envelope-detail": {
+      "title": "红包详情",
+      "generation-time": "发起时间：",
+      "progress": "领取详情",
+      "received": "已领取：",
+      "unopened": "剩余：",
+      "contains-the-following-collections": "红包包含下面所有秘宝",
+      "item-received": "已领取",
+      "item-unreceived": "未领取",
+      "collections-received": "本次红包获得",
+      "received-time": "领取时间："
     },
     "pwa-guide": {
       "desc": "将我们添加到桌面吧，获得最佳观赏体验，不再错过这些独一无二的艺术品。",
