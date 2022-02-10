@@ -121,7 +121,6 @@ export function useSendRedEnvelope() {
       api,
       getAuth,
       getSignTx,
-      i18n.language,
       pubkey,
       push,
       replace,
@@ -129,6 +128,7 @@ export function useSendRedEnvelope() {
       t,
       toast,
       walletType,
+      i18n.language,
     ]
   )
 
