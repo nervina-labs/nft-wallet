@@ -2,11 +2,7 @@ import { Box, Flex, Heading, Input } from '@chakra-ui/react'
 import { Button } from '@mibao-ui/components'
 import styled from '@emotion/styled'
 import { useState } from 'react'
-import {
-  RedEnvelopeResponse,
-  RedEnvelopeState,
-  RuleType,
-} from '../../../models'
+import { RedEnvelopeResponse, RuleType } from '../../../models'
 import { useTranslation } from 'react-i18next'
 import { ellipsisString } from '../../../utils'
 
@@ -59,9 +55,7 @@ export const Cover: React.FC<CoverProps> = ({
       flex="1"
     >
       <Heading fontSize="16px" color="white" mb="10px" mt="25px">
-        {data?.rule_info?.rule_type === RuleType.puzzle
-          ? t('red-envelope.title-riddle')
-          : t('red-envelope.title-normal')}
+        {t('red-envelope.title-1')}
       </Heading>
       <Heading
         fontSize="24px"
@@ -107,35 +101,27 @@ export const Cover: React.FC<CoverProps> = ({
         />
       ) : null}
 
-      {data?.state === RedEnvelopeState.Pending ? (
-        <Box textAlign="center" fontSize="16px" my="50px" color="white">
-          <Box fontSize="36px">😉</Box>
-          {t('red-envelope.generating')}
-        </Box>
-      ) : (
-        <Button
-          isFullWidth
-          mt={data?.rule_info !== null ? '14px' : '30px'}
-          color="#F9E0B7"
-          borderColor="#F9E0B7"
-          _hover={{
-            bg: 'rgba(0, 0, 0, 0.1)',
-          }}
-          _active={{
-            bg: 'rgba(0, 0, 0, 0.2)',
-            transition: '0s',
-          }}
-          size="lg"
-          fontSize="16px"
-          onClick={() => onOpen?.({ input: inputValue })}
-          isLoading={isOpening}
-        >
-          {isLogined
-            ? t('red-envelope.submit')
-            : t('red-envelope.connect-and-open-it')}
-        </Button>
-      )}
-
+      <Button
+        isFullWidth
+        mt={data?.rule_info !== null ? '14px' : '30px'}
+        color="#F9E0B7"
+        borderColor="#F9E0B7"
+        _hover={{
+          bg: 'rgba(0, 0, 0, 0.1)',
+        }}
+        _active={{
+          bg: 'rgba(0, 0, 0, 0.2)',
+          transition: '0s',
+        }}
+        size="lg"
+        fontSize="16px"
+        onClick={() => onOpen?.({ input: inputValue })}
+        isLoading={isOpening}
+      >
+        {isLogined
+          ? t('red-envelope.submit')
+          : t('red-envelope.connect-and-open-it')}
+      </Button>
       <Box color="white" fontSize="16px" mb="6px" mt="auto">
         {t('red-envelope.bottom-text')}
       </Box>
