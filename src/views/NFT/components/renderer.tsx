@@ -14,7 +14,7 @@ import {
   Preview,
   useDisclosure,
 } from '@mibao-ui/components'
-import { isTokenClass, TokenClass } from '../../../models/class-list'
+import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as CardbackSvg } from '../../../assets/svg/card-back.svg'
 import { ReactComponent as LockSvg } from '../../../assets/svg/lock.svg'
 import { ReactComponent as NftPlaySvg } from '../../../assets/svg/nft-play.svg'
@@ -337,7 +337,6 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
             left="0"
             position="absolute"
             zIndex={2}
-            tid={!isTokenClass(detail) ? detail.n_token_id : undefined}
           />
           <Box
             position="absolute"

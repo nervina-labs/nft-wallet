@@ -2,9 +2,6 @@ import { AspectRatio, Box, BoxProps, Image } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import CDPath from '../../assets/album-player/cd.png'
 import CDLightPath from '../../assets/album-player/cd-light.png'
-import { Image as MibaoImage } from '@mibao-ui/components'
-import { getNFTQueryParams, isSupportWebp } from '../../utils'
-import { useTranslation } from 'react-i18next'
 
 const CDContainer = styled(Box)`
   @keyframes cd-run {
@@ -29,11 +26,9 @@ const CDContainer = styled(Box)`
 export interface CDProps extends BoxProps {
   isPlaying?: boolean
   src: string
-  tid?: number
 }
 
-export const CD: React.FC<CDProps> = ({ isPlaying, src, tid, ...props }) => {
-  const { i18n } = useTranslation('translations')
+export const CD: React.FC<CDProps> = ({ isPlaying, src, ...props }) => {
   return (
     <CDContainer position="relative" {...props}>
       <Box
@@ -52,28 +47,20 @@ export const CD: React.FC<CDProps> = ({ isPlaying, src, tid, ...props }) => {
           zIndex={1}
         />
         <AspectRatio
-          w="32%"
+          w="32.5%"
           ratio={1 / 1}
           top="50%"
           left="50%"
-          transform="translate(-50%, -50%)"
+          transform="translate(calc(-50% + 1px), -50%)"
           zIndex={1}
           position="absolute"
         >
           <Box>
-            <MibaoImage
-              w="full"
-              h="full"
+            <Image
               objectFit="cover"
               src={src}
               draggable="false"
               rounded="full"
-              resizeScale={300}
-              webp={isSupportWebp()}
-              srcQueryParams={getNFTQueryParams(tid, i18n.language)}
-              customizedSize={{
-                fixed: 'large',
-              }}
             />
             <Box
               position="absolute"

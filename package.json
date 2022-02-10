@@ -28,7 +28,7 @@
     "@lay2/pw-core": "0.4.0-alpha.8",
     "@metamask/detect-provider": "^1.2.0",
     "@mibao-ui/components": "0.0.34",
-    "@nervina-labs/flashsigner": "^0.1.6",
+    "@nervina-labs/flashsigner": "^0.1.2",
     "@nervosnetwork/ckb-sdk-core": "^0.101.0",
     "@nervosnetwork/ckb-sdk-utils": "^0.101.0",
     "@sentry/react": "^6.9.0",

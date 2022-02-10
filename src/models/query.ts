@@ -28,11 +28,5 @@ export enum Query {
   RankingList = 'RankingList',
   RedEnvelope = 'RedEnvelope',
   RedEnvelopeRecords = 'RedEnvelopeRecords',
-  SendableEnvelopeNfts = 'SendableEnvelopeNfts',
-  GetSentRedEnvelopeDetail = 'GetSentRedEnvelopeDetail',
-  GetSentRedEnvelopeRecords = 'GetSentRedEnvelopeRecords',
-  GetReceivedRedEnvelopeRecords = 'GetReceivedRedEnvelopeRecords',
-  GetSentRedEnvelopeDetailRewards = 'GetSentRedEnvelopeDetailRewards',
-  GetRedEnvelopeReceived = 'GetRedEnvelopeReceived',
   Search = 'Search',
 }
