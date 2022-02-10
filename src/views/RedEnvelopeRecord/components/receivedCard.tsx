@@ -43,7 +43,11 @@ export const ReceivedCard: React.FC<{
                 data.user_info.nickname ||
                 ellipsisString(data.user_info.address, [8, 8])
               }
-              src={data.user_info.avatar_url}
+              src={
+                data.user_info.avatar_url === null
+                  ? ''
+                  : data.user_info.avatar_url
+              }
               type={data.user_info.avatar_type}
               webp={isSupportWebp()}
               resizeScale={100}
@@ -59,7 +63,11 @@ export const ReceivedCard: React.FC<{
           <UserLink to={`/issuer/${data.issuer_info.uuid}`}>
             <Issuer
               name={data.issuer_info.name}
-              src={data.issuer_info.avatar_url}
+              src={
+                data.issuer_info.avatar_url === null
+                  ? ''
+                  : data.issuer_info.avatar_url
+              }
               webp={isSupportWebp()}
               resizeScale={100}
               isVerified={data.issuer_info.verified_info?.is_verified}
