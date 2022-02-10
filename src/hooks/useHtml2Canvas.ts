@@ -22,7 +22,6 @@ export function useHtml2Canvas(options?: {
       const scrollTop =
         document.documentElement.scrollTop || document.body.scrollTop
       setIsLoading(true)
-      setImgSrc(undefined)
       html2canvas(element, {
         useCORS: true,
         allowTaint: true,

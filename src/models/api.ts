@@ -32,6 +32,11 @@ export interface UnsignedTransaction {
   token_ckb_transaction_uuid: string
 }
 
+export interface UnsignedTransactionSendRedEnvelope {
+  unsigned_tx: RPC.RawTransaction
+  tx: PwTransaction
+}
+
 export interface UnsignedReddemTransaction {
   unsigned_tx: RPC.RawTransaction
   redemption_event_uuid: string
