@@ -31,6 +31,15 @@ export const Flashsigner: React.FC = () => {
         )
         history.replace(extra?.redirect || RoutePath.NFTs)
       },
+      onSignMessage(result) {
+        const action = result.extra?.action as LocalFlashsignerAction
+        if (action === LocalFlashsignerAction.SendRedEnvelope) {
+          history.replace(`${RoutePath.RedEnvelope}`, {
+            signature: result.signature,
+            ...result.extra,
+          })
+        }
+      },
       onSignTransaction(result) {
         const action = result.extra?.action as LocalFlashsignerAction
         const { transaction } = result
