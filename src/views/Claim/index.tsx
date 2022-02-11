@@ -1,18 +1,12 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
-import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
-import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
-import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-success.svg'
+import Adidas from '../../assets/img/adidas.jpg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN, IS_MOBILE_ETH_WALLET } from '../../constants'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
-import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { getHelpUnipassUrl } from '../../data/help'
-import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import { UnipassConfig } from '../../utils'
 import { Query } from '../../models'
 import { useQuery } from 'react-query'
@@ -29,7 +23,6 @@ import { LoginButton } from '../../components/LoginButton'
 import { Box } from '@chakra-ui/layout'
 
 const Container = styled(MainContainer)`
-  padding-top: 10px;
   min-height: calc(100% - 10px);
   max-width: 500px;
   flex-direction: column;
@@ -162,7 +155,7 @@ export const Claim: React.FC = () => {
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isFlashsignerLogin, setIsFlashsignerLogin] = useState(false)
   const onConfirm = useConfirmDialog()
-  const { t, i18n } = useTranslation('translations')
+  const { t } = useTranslation('translations')
   const { login } = useLogin()
   const api = useAPI()
   const { walletType } = useAccount()
@@ -282,10 +275,10 @@ export const Claim: React.FC = () => {
   )
 
   const imgs = {
-    [SubmitStatus.Unlogin]: <AddressesSvg />,
-    [SubmitStatus.Claiming]: <AddrSuccess />,
-    [SubmitStatus.Claimed]: <AddrDup />,
-    [SubmitStatus.Success]: <ClaimSuccessSvg />,
+    [SubmitStatus.Unlogin]: <img src={Adidas} />,
+    [SubmitStatus.Claiming]: <img src={Adidas} />,
+    [SubmitStatus.Claimed]: <img src={Adidas} />,
+    [SubmitStatus.Success]: <img src={Adidas} />,
   }
 
   const [code, setCode] = useState(id ?? '')
@@ -310,47 +303,10 @@ export const Claim: React.FC = () => {
               size="lg"
             >
               <Box py="8px">
-                <Box fontSize="16px">{t('login.connect.flashsigner')}</Box>
-                <Box fontSize="12px">{t('login.connect.or-use-phone')}</Box>
+                <Box fontSize="16px">手机号注册</Box>
               </Box>
             </LoginButton>
           )}
-          <LoginButton
-            isLoading={isUnipassLogining}
-            disabled={isUnipassLogining || isMetamaskLoging}
-            onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
-            variant={IS_IMTOKEN ? 'outline' : 'solid'}
-          >
-            {t('login.connect.unipass')}
-          </LoginButton>
-          <LoginButton
-            disabled={isUnipassLogining || isMetamaskLoging}
-            isLoading={isMetamaskLoging}
-            onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
-            variant={!IS_IMTOKEN ? 'outline' : 'solid'}
-          >
-            {IS_IMTOKEN ? (
-              <>
-                {t('login.connect.connect')}
-                <ImtokenSvg className="imtoken" />
-              </>
-            ) : (
-              t('login.connect.metamask')
-            )}
-          </LoginButton>
-          <div
-            className="question"
-            onClick={() => {
-              history.push(
-                `${RoutePath.Help}?url=${encodeURIComponent(
-                  getHelpUnipassUrl(i18n.language)
-                )}`
-              )
-            }}
-          >
-            <QuestionSvg />
-            <span>{t('help.question')}</span>
-          </div>
         </>
       )
     }
@@ -413,7 +369,6 @@ export const Claim: React.FC = () => {
     isUnipassLogining,
     isMetamaskLoging,
     loginBtnOnClick,
-    i18n,
     claim,
     code,
     isClaiming,
