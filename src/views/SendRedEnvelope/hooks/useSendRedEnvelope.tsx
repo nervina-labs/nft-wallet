@@ -1,5 +1,9 @@
 import { transformers } from '@lay2/pw-core'
-import { signTransactionWithRedirect } from '@nervina-labs/flashsigner'
+import {
+  appendSignatureToTransaction,
+  signMessageWithRedirect,
+  transactionToMessage,
+} from '@nervina-labs/flashsigner'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
@@ -32,9 +36,13 @@ export function useSendRedEnvelope() {
 
   const getSignTx = useCallback(
     async (data: UnsignedTransactionSendRedEnvelope) => {
-      const { tx, signature } = routeLocation.state ?? {}
+      const { signature } = routeLocation.state ?? {}
       if (walletType === WalletType.Flashsigner) {
-        return tx
+        return appendSignatureToTransaction(
+          data.unsigned_tx,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          signature!
+        )
       }
       if (walletType === WalletType.Unipass) {
         return signature ? data.tx : await signTransaction(data.tx)
@@ -64,13 +72,22 @@ export function useSendRedEnvelope() {
           walletType === WalletType.Unipass ||
             walletType === WalletType.Flashsigner
         )
-        const { signature, tx } = routeLocation.state ?? {}
+        const { signature } = routeLocation.state ?? {}
         const signTx = await getSignTx(data)
-        if (!tx && walletType === WalletType.Flashsigner) {
+        if (!signature && walletType === WalletType.Flashsigner) {
           const url = `${location.origin}${RoutePath.Flashsigner}`
-          signTransactionWithRedirect(url, {
-            tx: transformers.TransformTransaction(data.tx) as any,
-            extra: { action: FlashsignerAction.SendRedEnvelope, ...formInfo },
+          signMessageWithRedirect(url, {
+            isRaw: false,
+            message: transactionToMessage(
+              transformers.TransformTransaction(data.tx) as any
+            ),
+            extra: {
+              action: FlashsignerAction.SendRedEnvelope,
+              prevState: {
+                ...formInfo,
+                tokenUuids: formInfo.tokenUuids.join(','),
+              },
+            },
             locale: i18n.language,
           })
           return
@@ -101,7 +118,8 @@ export function useSendRedEnvelope() {
             signTx,
             auth,
             {
-              signature,
+              signature:
+                walletType === WalletType.Flashsigner ? undefined : signature,
               redpackRule,
             }
           )
