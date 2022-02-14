@@ -22,6 +22,8 @@ import { RoutePath } from '../../../routes'
 import { generateUnipassUrl } from '../../../utils'
 import { FormInfoState, useRouteLocation } from './useRouteLocation'
 
+const METAMASK_USER_DENIED_MESSAGE_SIGNATURE_CODE = 4001
+
 export function useSendRedEnvelope() {
   const api = useAPI()
   const routeLocation = useRouteLocation()
@@ -130,11 +132,16 @@ export function useSendRedEnvelope() {
         push(`${RoutePath.RedEnvelope}/${uuid}/share`)
         setSending(true)
       } catch (err) {
-        toast(`${t('send-red-envelope.create-failed')}: ${err as string}`)
         console.error(err)
         setSending(false)
         setError(err)
         replace(location.pathname + location.search, {})
+        if (
+          (err as any)?.code === METAMASK_USER_DENIED_MESSAGE_SIGNATURE_CODE
+        ) {
+          return
+        }
+        toast(`${t('send-red-envelope.create-failed')}: ${err as string}`)
       }
     },
     [
