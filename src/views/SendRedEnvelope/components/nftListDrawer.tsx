@@ -24,7 +24,7 @@ const StyledSelectedArrow = styled(SelectedArrow)`
   z-index: 2;
 `
 
-const LIMIT = 100
+const LIMIT = 50
 
 export const NftListDrawer: React.FC<{
   isOpen: boolean
