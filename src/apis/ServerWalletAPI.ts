@@ -370,9 +370,16 @@ export class ServerWalletAPI {
     return data
   }
 
-  async getProfile(address?: string): Promise<UserResponse> {
+  async getProfile(address: string, auth?: Auth): Promise<UserResponse> {
     try {
-      const { data } = await this.axios.get(`/users/${address ?? this.address}`)
+      const { data } = await this.axios.get(
+        `/users/${address || this.address}`,
+        {
+          headers: {
+            auth: auth ? JSON.stringify(auth) : '',
+          },
+        }
+      )
       return data
     } catch (error) {
       return Object.create(null)
