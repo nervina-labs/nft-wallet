@@ -159,7 +159,7 @@ export const NftListDrawer: React.FC<{
                     const changedTokens = selected
                       ? selectingTokens.filter(removeFn)
                       : selectingTokens.concat([item])
-                    if (changedTokens.length < LIMIT) {
+                    if (changedTokens.length <= LIMIT) {
                       setSelectingTokens(changedTokens)
                     }
                   }}
