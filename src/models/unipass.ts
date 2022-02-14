@@ -3,6 +3,7 @@ export enum UnipassAction {
   Login = 'login',
   SignTx = 'sign-tx',
   Redeem = 'redeem',
+  RedEnvelope = 'red-envelope',
 }
 
 export interface UnipassData {

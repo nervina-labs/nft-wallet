@@ -31,6 +31,11 @@ import { Ranking } from '../views/Ranking'
 import { ExploreAll } from '../views/ExploreAll'
 import { OrderStatus } from '../views/OrderStatus'
 import { Flashsigner } from '../views/Flashsigner'
+import { SendRedEnvelope } from '../views/SendRedEnvelope'
+import { RedEnvelopeRecord } from '../views/RedEnvelopeRecord'
+import { RedEnvelopeDetail } from '../views/RedEnvelopeDetail'
+import { ShareRedEnvelope } from '../views/ShareRedEnvelope'
+import { RedEnvelopeReceived } from '../views/RedEnvelopeReceived'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -267,11 +272,41 @@ export const routes: MibaoRouterProps[] = [
     params: '/:id',
   },
   {
+    component: RedEnvelopeRecord,
+    exact: true,
+    key: 'RedEnvelopeRecord',
+    path: RoutePath.RedEnvelopeRecord,
+  },
+  {
+    component: RedEnvelopeDetail,
+    exact: true,
+    key: 'RedEnvelopeDetail',
+    path: RoutePath.RedEnvelopeDetail,
+  },
+  {
+    component: RedEnvelopeReceived,
+    exact: true,
+    key: 'RedEnvelopeReceived',
+    path: RoutePath.RedEnvelopeReceived,
+  },
+  {
+    component: ShareRedEnvelope,
+    exact: true,
+    key: 'RedEnvelopeDetail',
+    path: RoutePath.ShareRedEnvelope,
+  },
+  {
     component: RedEnvelope,
     exact: true,
     key: 'RedEnvelop',
     path: RoutePath.RedEnvelope,
     params: '/:id',
+  },
+  {
+    component: SendRedEnvelope,
+    exact: true,
+    key: 'SendRedEnvelope',
+    path: RoutePath.RedEnvelope,
   },
   {
     component: Search,

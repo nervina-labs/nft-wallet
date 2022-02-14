@@ -97,6 +97,20 @@ export const Unipass: React.FC = () => {
         history.replace(`${RoutePath.RedeemResult}/${id}`, state)
         break
       }
+      case UnipassAction.RedEnvelope: {
+        const data = unipassInfo?.data as UnipassSignData
+        if (code === 200) {
+          history.replace(RoutePath.RedEnvelope, {
+            signature: `0x01${data.sig.replace('0x', '')}`,
+            prevState,
+          })
+          break
+        }
+        history.replace(RoutePath.RedEnvelope, {
+          prevState,
+        })
+        break
+      }
       default:
         break
     }

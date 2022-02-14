@@ -26,7 +26,11 @@ export function generateUnipassUrl(
     furl.searchParams.set('redirect', redirectUri)
     failURL = furl.href
   }
-  if (action === UnipassAction.SignTx || action === UnipassAction.Redeem) {
+  if (
+    action === UnipassAction.SignTx ||
+    action === UnipassAction.Redeem ||
+    action === UnipassAction.RedEnvelope
+  ) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     surl.searchParams.set(
       'prev_state',

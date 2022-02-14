@@ -74,3 +74,22 @@ export function isInStandaloneMode() {
     document.referrer.includes('android-app://')
   )
 }
+
+export function limitNumberInput(
+  e: React.ChangeEvent<HTMLInputElement>,
+  currentValue: string,
+  limit: number
+): string {
+  const { value } = e.currentTarget
+  if (!value) {
+    return ''
+  }
+  if (!/^\d*$/.test(value)) {
+    return currentValue
+  }
+  const p = +value
+  if (Number.isNaN(p) || p < 1 || p > limit) {
+    return currentValue
+  }
+  return `${p}`
+}
