@@ -88,6 +88,7 @@ export function useSendRedEnvelope() {
                 tokenUuids: formInfo.tokenUuids.join(','),
               },
             },
+            isReplace: true as any,
             locale: i18n.language,
           })
           return
