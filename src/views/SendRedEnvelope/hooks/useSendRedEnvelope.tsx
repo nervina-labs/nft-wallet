@@ -90,6 +90,7 @@ export function useSendRedEnvelope() {
             },
             isReplace: true as any,
             locale: i18n.language,
+            failUrl: location.href,
           })
           return
         }
