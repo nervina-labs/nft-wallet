@@ -5,7 +5,7 @@ import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { Query, RedEnvelopeState } from '../../../models'
-import { isSupportWebp } from '../../../utils'
+import { getNFTQueryParams, isSupportWebp } from '../../../utils'
 import { Image } from '@mibao-ui/components'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
@@ -18,7 +18,7 @@ const StyledLink = styled(Link)`
 export const TokenList: React.FC<{
   uuid: string
 }> = ({ uuid }) => {
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const api = useAPI()
   const getAuth = useGetAndSetAuth()
   const queryFn = useCallback(
@@ -56,6 +56,10 @@ export const TokenList: React.FC<{
               w="50px"
               h="50px"
               rounded="16px"
+              srcQueryParams={getNFTQueryParams(
+                reward.token.n_token_id,
+                i18n.language
+              )}
             />
             <Flex
               justify="center"
