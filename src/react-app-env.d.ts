@@ -24,7 +24,6 @@ declare module '*.gif' {
 
 declare module '*.jpg' {
   const src: string
-  export = src
 }
 
 declare module '*.jpeg' {
