@@ -162,7 +162,9 @@
         "no-camera": "No camera found",
         "contract-address": "Unable to transfer Digital Collection to an Ethereum contract address",
         "camera-auth": "No camera permission, please refresh the page to re-authorize",
-        "ios-webkit": "Please upgrade your operating system to iOS 14.3+, or use Safari to scan QR code"
+        "ios-webkit": "Please upgrade your operating system to iOS 14.3+, or use Safari to scan QR code",
+        "upgrade": "Please wait 2-3 minutes before proceeding to upgrade your NFT account.",
+        "continuous-transfer": "A transaction is currently in progress, please wait 2-3 minutes before proceeding."
       },
       "das": {
         "not-register": "This DAS is not registered",

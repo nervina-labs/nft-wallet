@@ -10,8 +10,8 @@ import React, {
 } from 'react'
 import { Redirect, useHistory, useLocation, useParams } from 'react-router'
 import {
-  TransferMnftOptions,
   transferMnftWithRedirect,
+  transferCotaNftWithRedirect,
 } from '@nervina-labs/flashsigner'
 import classnames from 'classnames'
 import { Appbar } from '../../components/Appbar'
@@ -64,6 +64,8 @@ export enum FailedMessage {
   NoCamera = 'no-camera',
   ContractAddress = 'contract-address',
   IOSWebkit = 'ios-webkit',
+  Upgrade = 'upgrade',
+  ContinuousTransfer = 'continuous-transfer',
 }
 
 export interface TransferState {
@@ -273,18 +275,32 @@ export const Transfer: React.FC = () => {
           stopTranfer(true)
         } else {
           const url = `${location.origin}${RoutePath.Flashsigner}`
-          const options = buildFlashsignerOptions({
-            classId: nftDetail?.class_id!,
-            issuerId: `${nftDetail?.n_issuer_id!}`,
-            tokenId: `${nftDetail?.n_token_id!}`,
-            fromAddress: address,
-            toAddress: finalUsedAddress,
-            extra: {
-              uuid: id,
-              ckbAddress: finalUsedAddress,
-            },
-          })
-          transferMnftWithRedirect(url, options as TransferMnftOptions)
+          if (nftDetail?.script_type === 'cota') {
+            const options = buildFlashsignerOptions({
+              tokenIndex: `${nftDetail?.n_token_id!}`,
+              cotaId: nftDetail?.class_id!,
+              fromAddress: address,
+              toAddress: finalUsedAddress,
+              extra: {
+                uuid: id,
+                ckbAddress: finalUsedAddress,
+              },
+            })
+            transferCotaNftWithRedirect(url, options)
+          } else {
+            const options = buildFlashsignerOptions({
+              classId: nftDetail?.class_id!,
+              issuerId: `${nftDetail?.n_issuer_id!}`,
+              tokenId: `${nftDetail?.n_token_id!}`,
+              fromAddress: address,
+              toAddress: finalUsedAddress,
+              extra: {
+                uuid: id,
+                ckbAddress: finalUsedAddress,
+              },
+            })
+            transferMnftWithRedirect(url, options)
+          }
         }
         return
       }
@@ -295,7 +311,16 @@ export const Transfer: React.FC = () => {
           walletType === WalletType.Unipass
         )
         .catch((err) => {
-          stopTranfer(false, FailedMessage.TranferFail)
+          let msg: FailedMessage = FailedMessage.TranferFail
+          if (err?.response?.data?.code === 1092) {
+            msg = FailedMessage.Upgrade
+          } else if (
+            err?.response?.data?.code === 1095 ||
+            err?.response?.data?.code === 1029
+          ) {
+            msg = FailedMessage.ContinuousTransfer
+          }
+          stopTranfer(false, msg)
           throw new Error(err)
         })
 

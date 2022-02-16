@@ -51,6 +51,7 @@ export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
   description: string
   bg_image_url: string
   class_uuid: string
+  script_type: 'cota' | 'm_nft'
   class_id: string
   n_issuer_id: string
   is_redeemed?: boolean

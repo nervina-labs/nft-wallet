@@ -2192,10 +2192,13 @@
   resolved "https://registry.yarnpkg.com/@mibao-ui/components/-/components-0.0.34.tgz#b710d13f4634bfd2588795e5bf47c3126d2124f2"
   integrity sha512-2jp61zUuBtsGJKKI2My96O97VWpHyheWDOoAIVNc3p1lq02Kp5bR+7uqZhKU7qoa5jUxVeNvxx+U+/6mRUboLg==
 
-"@nervina-labs/flashsigner@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@nervina-labs/flashsigner/-/flashsigner-0.1.6.tgz#753c3e94df12c78612d20e238cbc41b73225b88f"
-  integrity sha512-g8pQJODZKbCkEWS5aNg7eMffM3zr4u9ZyuGIVumnI8Jsm80/MsGvZpq8JGHMSTaoSRtYBPYNmEbrx7U1yijXwg==
+"@nervina-labs/flashsigner@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@nervina-labs/flashsigner/-/flashsigner-0.2.1.tgz#59b2c41ee8a30f7690bef9cec7b472bc23ea7695"
+  integrity sha512-7qoFZS/doLXQET01dji48f+f2b7XMgouDJV9vaVjvLDr7LoMS+Fl0E2sJJfoWTk3GEqwMm8fcsteiwMDRIoGQA==
+  dependencies:
+    url-parse "^1.5.4"
+    url-shim "^1.0.1"
 
 "@nervosnetwork/ckb-sdk-core@^0.101.0":
   version "0.101.0"
@@ -12661,9 +12664,22 @@ url-parse@^1.4.3:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
+url-parse@^1.5.4:
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.6.tgz#b2a41d5a233645f3c31204cc8be60e76a15230a2"
+  integrity sha512-xj3QdUJ1DttD1LeSfvJlU1eiF1RvBSBfUu8GplFGdUzSO28y5yUtEl7wb//PI4Af6qh0o/K8545vUmucRrfWsw==
+  dependencies:
+    querystringify "^2.1.1"
+    requires-port "^1.0.0"
+
 url-set-query@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/url-set-query/-/url-set-query-1.0.0.tgz"
+
+url-shim@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/url-shim/-/url-shim-1.0.1.tgz#8842662b0f2edef8df4ebbe507466f04f771eb1b"
+  integrity sha512-8nwZkCP7pbI8ifcifTZSLRO3W+CWuh/mafPvc7utPRqgxAORnsZIzQ5K8LUsHiQ4mTtJrKRAJmW2ZHxQk0rKUA==
 
 url-to-options@^1.0.1:
   version "1.0.1"
