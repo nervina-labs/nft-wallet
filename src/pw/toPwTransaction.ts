@@ -13,7 +13,9 @@ import {
   Builder,
   CHAIN_SPECS,
   RPC as ToolKitRpc,
+  Reader,
 } from '@lay2/pw-core'
+import { core } from '@ckb-lumos/base'
 import RPC from '@nervosnetwork/ckb-sdk-rpc'
 import { IS_MAINNET, NODE_URL } from '../constants'
 
@@ -79,6 +81,26 @@ export async function rawTransactionToPWTransaction(
       )
   )
 
+  const witnessArg = !isUnipass
+    ? IS_MAINNET
+      ? Builder.WITNESS_ARGS.RawSecp256k1
+      : Builder.WITNESS_ARGS.Secp256k1
+    : UnipassWitnessArgs
+
+  const oldWitnessArg = new core.WitnessArgs(new Reader(rawTx.witnesses[0]))
+  const inputType = oldWitnessArg.getInputType()
+  const outputType = oldWitnessArg.getOutputType()
+  if (inputType.hasValue()) {
+    witnessArg.input_type = new Reader(
+      inputType.value().raw()
+    ).serializeJson()
+  }
+  if (outputType.hasValue()) {
+    witnessArg.output_type = new Reader(
+      outputType.value().raw()
+    ).serializeJson()
+  }
+
   const tx = new Transaction(
     new RawTransaction(
       inputs,
@@ -88,11 +110,7 @@ export async function rawTransactionToPWTransaction(
       // rawTx.version
     ),
     [
-      !isUnipass
-        ? IS_MAINNET
-          ? Builder.WITNESS_ARGS.RawSecp256k1
-          : Builder.WITNESS_ARGS.Secp256k1
-        : UnipassWitnessArgs,
+      witnessArg,
     ]
   )
 

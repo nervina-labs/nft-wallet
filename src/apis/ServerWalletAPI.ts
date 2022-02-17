@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { core } from '@ckb-lumos/base'
 import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
 import {
   ClassSortType,
@@ -396,10 +397,28 @@ export class ServerWalletAPI {
       ? (transformers.TransformTransaction(tx) as RPC.RawTransaction)
       : tx
     if (sig) {
+      const [oldWitness] = rawTx.witnesses
       const witnessArgs: WitnessArgs = {
         lock: sig,
         input_type: '',
         output_type: '',
+      }
+      try {
+        const wa = new core.WitnessArgs(new Reader(oldWitness))
+        const inputType = wa.getInputType()
+        const outputType = wa.getOutputType()
+        if (inputType.hasValue()) {
+          witnessArgs.input_type = new Reader(
+            inputType.value().raw()
+          ).serializeJson()
+        }
+        if (outputType.hasValue()) {
+          witnessArgs.output_type = new Reader(
+            outputType.value().raw()
+          ).serializeJson()
+        }
+      } catch (error) {
+        //
       }
       const witness = new Reader(
         SerializeWitnessArgs(normalizers.NormalizeWitnessArgs(witnessArgs))
