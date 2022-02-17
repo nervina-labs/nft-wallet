@@ -416,7 +416,7 @@ export const SendRedEnvelope: React.FC = () => {
           w="calc(100% - 40px)"
           h="48px"
           mt="auto"
-          mb="calc(15px - var(--safe-area-inset-bottom))"
+          mb="30px"
           onClick={onSubmit}
           isLoading={isSending}
         >

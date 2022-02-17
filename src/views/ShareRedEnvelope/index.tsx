@@ -98,29 +98,28 @@ export const ShareRedEnvelope: React.FC = () => {
                 zIndex={0}
                 objectFit="cover"
               />
-              <AspectRatio
-                rounded="20px"
-                bg="#EA5A5A"
-                border="1px solid #F9E0B7"
-                w="34%"
-                ratio={1 / 1}
+              <Box
+                p="15px"
+                w="128px"
+                h="128px"
                 position="absolute"
                 left="50%"
                 top="30%"
                 transform="translateX(-50%)"
+                rounded="20px"
+                bg="#EA5A5A"
+                border="1px solid #F9E0B7"
               >
-                <Box p="15px">
-                  <QRCode
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                    }}
-                    fgColor="#F9E0B7"
-                    bgColor="rgba(0, 0, 0, 0)"
-                    value={shareUrl}
-                  />
-                </Box>
-              </AspectRatio>
+                <QRCode
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  fgColor="#F9E0B7"
+                  bgColor="rgba(0, 0, 0, 0)"
+                  value={shareUrl}
+                />
+              </Box>
               <VStack
                 position="absolute"
                 top="55%"
@@ -192,7 +191,7 @@ export const ShareRedEnvelope: React.FC = () => {
         colorScheme="primary"
         w="calc(100% - 40px)"
         mx="auto"
-        mb="calc(20px - var(--safe-area-inset-bottom))"
+        mb="30px                                                      "
         size="lg"
         variant="solid"
         onClick={() => {

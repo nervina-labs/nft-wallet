@@ -24,7 +24,7 @@ const StyledSelectedArrow = styled(SelectedArrow)`
   z-index: 2;
 `
 
-const LIMIT = 100
+const LIMIT = 50
 
 export const NftListDrawer: React.FC<{
   isOpen: boolean
@@ -153,13 +153,16 @@ export const NftListDrawer: React.FC<{
                 <Box
                   key={`${i}-${j}`}
                   mb="20px"
+                  opacity={
+                    selectingTokens.length >= LIMIT && !selected ? 0.5 : 1
+                  }
                   onClick={() => {
                     const removeFn = (t: NFTToken) =>
                       t.token_uuid !== item.token_uuid
                     const changedTokens = selected
                       ? selectingTokens.filter(removeFn)
                       : selectingTokens.concat([item])
-                    if (changedTokens.length < LIMIT) {
+                    if (changedTokens.length <= LIMIT) {
                       setSelectingTokens(changedTokens)
                     }
                   }}
