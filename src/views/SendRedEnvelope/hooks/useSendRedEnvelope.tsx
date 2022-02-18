@@ -134,7 +134,7 @@ export function useSendRedEnvelope() {
         push(`${RoutePath.RedEnvelope}/${uuid}/share`)
         setSending(true)
       } catch (err: any) {
-        if (err?.response?.data?.code === 'invalid_signature') {
+        if (err?.response?.data?.code === 2022) {
           unipassDialog()
         } else {
           toast(`${t('send-red-envelope.create-failed')}: ${err as string}`)
