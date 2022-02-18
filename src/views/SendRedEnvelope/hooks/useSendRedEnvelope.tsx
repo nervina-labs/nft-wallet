@@ -15,6 +15,7 @@ import {
 } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useToast } from '../../../hooks/useToast'
+import { useUnipassV2Dialog } from '../../../hooks/useUnipassV2Dialog'
 import { RuleType, UnsignedTransactionSendRedEnvelope } from '../../../models'
 import { FlashsignerAction } from '../../../models/flashsigner'
 import { UnipassAction } from '../../../models/unipass'
@@ -52,6 +53,7 @@ export function useSendRedEnvelope() {
     [routeLocation.state, signTransaction, walletType]
   )
 
+  const unipassDialog = useUnipassV2Dialog()
   const onSend = useCallback(
     async (formInfo: FormInfoState) => {
       setSending(true)
@@ -127,8 +129,12 @@ export function useSendRedEnvelope() {
         replace(location.pathname + location.search, {})
         push(`${RoutePath.RedEnvelope}/${uuid}/share`)
         setSending(true)
-      } catch (err) {
-        toast(`${t('send-red-envelope.create-failed')}: ${err as string}`)
+      } catch (err: any) {
+        if (err?.response?.data?.code === 'invalid_signature') {
+          unipassDialog()
+        } else {
+          toast(`${t('send-red-envelope.create-failed')}: ${err as string}`)
+        }
         console.error(err)
         setSending(false)
         setError(err)
@@ -147,6 +153,7 @@ export function useSendRedEnvelope() {
       toast,
       walletType,
       i18n.language,
+      unipassDialog,
     ]
   )
 

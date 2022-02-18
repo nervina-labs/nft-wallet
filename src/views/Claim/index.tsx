@@ -27,6 +27,7 @@ import {
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Box } from '@chakra-ui/layout'
+import { useUnipassV2Dialog } from '../../hooks/useUnipassV2Dialog'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -248,6 +249,7 @@ export const Claim: React.FC = () => {
 
   const [isClaimError, setIsClaimError] = useState(false)
   const [isClaiming, setIsClaiming] = useState(false)
+  const unipassDialog = useUnipassV2Dialog()
   const claim = useCallback(
     async (code: string) => {
       setIsClaiming(true)
@@ -258,6 +260,8 @@ export const Claim: React.FC = () => {
         const errorCode = error?.response?.data.code
         if (errorCode === 1022) {
           setSubmitStatus(SubmitStatus.Claimed)
+        } else if (errorCode === 2022) {
+          unipassDialog()
         } else {
           setIsClaimError(true)
         }
@@ -265,7 +269,7 @@ export const Claim: React.FC = () => {
         setIsClaiming(false)
       }
     },
-    [api]
+    [api, unipassDialog]
   )
 
   useQuery(
