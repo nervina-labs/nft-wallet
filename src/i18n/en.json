@@ -37,6 +37,7 @@
           "desc-issuer": "Enjoy the Digital Works of the MIBAO Creators",
           "collected": "Collected"
         },
+        "unipass-v2-error": "The currently logged-in account does not support receiving this type of NFT, please log in again",
         "wx": {
           "nft": {
             "title": "",
