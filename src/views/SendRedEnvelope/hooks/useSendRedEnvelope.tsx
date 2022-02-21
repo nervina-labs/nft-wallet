@@ -17,9 +17,7 @@ import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { useToast } from '../../../hooks/useToast'
 import { RuleType, UnsignedTransactionSendRedEnvelope } from '../../../models'
 import { FlashsignerAction } from '../../../models/flashsigner'
-import { UnipassAction } from '../../../models/unipass'
 import { RoutePath } from '../../../routes'
-import { generateUnipassUrl } from '../../../utils'
 import { FormInfoState, useRouteLocation } from './useRouteLocation'
 
 const METAMASK_USER_DENIED_MESSAGE_SIGNATURE_CODE = 4001
@@ -28,7 +26,7 @@ export function useSendRedEnvelope() {
   const api = useAPI()
   const routeLocation = useRouteLocation()
   const getAuth = useGetAndSetAuth()
-  const { walletType, pubkey } = useAccount()
+  const { walletType } = useAccount()
   const signTransaction = useSignTransaction()
   const { replace, push } = useHistory()
   const [isSending, setSending] = useState(false)
@@ -97,22 +95,6 @@ export function useSendRedEnvelope() {
           return
         }
 
-        if (!signature && walletType === WalletType.Unipass) {
-          const url = `${location.origin}${RoutePath.Unipass}`
-          location.href = generateUnipassUrl(
-            UnipassAction.RedEnvelope,
-            url,
-            url,
-            pubkey,
-            signTx,
-            {
-              ...formInfo,
-              tokenUuids: formInfo.tokenUuids.join(','),
-            }
-          )
-          return
-        }
-
         const rewardAmount = Number(formInfo.rewardAmount) ?? 1
         const uuid = await api
           .createRedEnvelopeEvent(
@@ -148,7 +130,6 @@ export function useSendRedEnvelope() {
       api,
       getAuth,
       getSignTx,
-      pubkey,
       push,
       replace,
       routeLocation.state,

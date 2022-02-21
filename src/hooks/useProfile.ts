@@ -6,6 +6,7 @@ import i18n from '../i18n'
 import { Auth, User } from '../models/user'
 import { UnipassConfig } from '../utils'
 import {
+  accountAtom,
   useAccount,
   useAPI,
   useLogin,
@@ -99,8 +100,7 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
         if (!signature) {
           UnipassConfig.setRedirectUri(location.pathname + location.search)
           signature = await signMessage(message)
-          // we don't need set unipass profile auth in here
-          if (signature.includes('N/A') || walletType === WalletType.Unipass) {
+          if (signature.includes('N/A')) {
             throw new Error('signing: user denied')
           } else {
             setProfile({
@@ -118,6 +118,18 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
           } catch (error) {
             const p = await loginMetamask()
             addr = p.address?.addressString
+          }
+        }
+
+        if (walletType === WalletType.Unipass) {
+          const account = get(accountAtom)
+          return {
+            address: addr,
+            message,
+            signature,
+            pubkey: account?.pubkey,
+            key_type: 'RsaPubkey',
+            username: account?.username,
           }
         }
 

@@ -386,7 +386,7 @@ export const Login: React.FC = () => {
           {IS_MOBILE_ETH_WALLET ? null : (
             <LoginButton
               className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
-              isLoading={isUnipassLogining}
+              isLoading={isFlashsignerLogin}
               disabled={
                 isUnipassLogining ||
                 isMetamaskLoging ||
@@ -407,7 +407,7 @@ export const Login: React.FC = () => {
           )}
           <LoginButton
             className={'connect'}
-            isLoading={isFlashsignerLogin}
+            isLoading={isUnipassLogining}
             disabled={
               isUnipassLogining ||
               isMetamaskLoging ||

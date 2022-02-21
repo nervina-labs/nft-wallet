@@ -10,7 +10,7 @@ import {
   RedeemEventItem,
 } from '../models/redeem'
 import { RoutePath } from '../routes'
-import { generateUnipassRedeemUrl, noop, UnipassConfig } from '../utils'
+import { noop, UnipassConfig } from '../utils'
 import {
   useAccount,
   useAPI,
@@ -49,7 +49,7 @@ export interface TransferState {
 export const useSignRedeem = () => {
   const history = useHistory()
   const api = useAPI()
-  const { walletType, pubkey } = useAccount()
+  const { walletType } = useAccount()
   const signTransaction = useSignTransaction()
   const reactLocation = useLocation<TransferState>()
   const confirmDialog = useConfirmDialog()
@@ -87,30 +87,10 @@ export const useSignRedeem = () => {
           throw new Error(err)
         })
 
-        if (walletType === WalletType.Unipass) {
-          const url = `${location.origin}${RoutePath.Unipass}`
-          UnipassConfig.setRedirectUri(`${RoutePath.RedeemResult}/${id}`)
-          const state: Record<string, string> = {
-            prevPathname: reactLocation.pathname,
-            uuid: id,
-          }
-          if (customData) {
-            state.customData = encodeURIComponent(JSON.stringify(customData))
-          }
-          location.href = generateUnipassRedeemUrl(
-            url,
-            url,
-            pubkey,
-            signTx,
-            state
-          )
-          return
-        } else {
-          history.replace(`${RoutePath.RedeemResult}/${id}`, {
-            tx: signTx,
-            customData,
-          })
-        }
+        history.replace(`${RoutePath.RedeemResult}/${id}`, {
+          tx: signTx,
+          customData,
+        })
       } catch (error) {
         setIsRedeeming(false)
         toast(t('exchange.error'))
@@ -120,7 +100,6 @@ export const useSignRedeem = () => {
     [
       api,
       history,
-      pubkey,
       signTransaction,
       walletType,
       reactLocation.pathname,

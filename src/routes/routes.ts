@@ -9,7 +9,6 @@ import { Profile } from '../views/Profile'
 import { ImagePreview } from '../views/Profile/ImagePreview'
 import { Explore } from '../views/Explore/index'
 import { Help } from '../views/Help'
-import { Unipass } from '../views/Unipass'
 import { Apps } from '../views/Apps'
 import { AddressCollector } from '../views/AddressCollector'
 import { Collection } from '../views/Collection'
@@ -139,12 +138,6 @@ export const routes: MibaoRouterProps[] = [
     exact: false,
     key: 'License',
     path: RoutePath.License,
-  },
-  {
-    component: Unipass,
-    exact: false,
-    key: 'Unipass',
-    path: RoutePath.Unipass,
   },
   {
     component: Apps,

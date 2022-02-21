@@ -71,7 +71,7 @@ export function pubkeyToAddress(pubkey: string): string {
 
   const script = new Script(PW_CODE_HASH, hashHex, HashType.type)
   return script
-    .toAddress(IS_MAINNET ? AddressPrefix.ckb : AddressPrefix.ckt)
+    .toAddress(IS_MAINNET ? AddressPrefix.Mainnet : AddressPrefix.Testnet)
     .toCKBAddress()
 }
 

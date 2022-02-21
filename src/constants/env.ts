@@ -1,5 +1,8 @@
 import * as Bowser from 'bowser'
 import { Config } from '@nervina-labs/flashsigner'
+import UP from 'up-core-test'
+import UPCKB from 'up-ckb-alpha-test'
+
 type ChainType = 'mainnet' | 'testnet'
 
 export const BOWSER_BROWSER = Bowser.getParser(window.navigator.userAgent)
@@ -105,3 +108,20 @@ export const ISSUER_ID_REG = /^ISSUER-.{40}$/
 export const TOKEN_CLASS_ID_REG = /^0x.{48}$/
 export const IS_SUPPORT_AR =
   !IS_WEXIN && document.createElement('a').relList.supports('ar')
+
+export const UNIPASS_CODE_HASH = IS_MAINNET
+  ? '0xd01f5152c267b7f33b9795140c2467742e8424e49ebe2331caec197f7281b60a'
+  : '0x3e1eb7ed4809b2d60650be96a40abfbdafb3fb942b7b37ec7709e64e2cd0a783'
+
+UPCKB.config({
+  upLockCodeHash: UNIPASS_CODE_HASH,
+})
+if (IS_MAINNET) {
+  UP.config({
+    domain: 'app.unipass.id',
+  })
+} else {
+  UP.config({
+    domain: 't.app.unipass.id',
+  })
+}

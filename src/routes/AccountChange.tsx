@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useGetAndSetAuth, useProfile } from '../hooks/useProfile'
-import { UnipassConfig } from '../utils'
 import { useAccount, useAccountStatus, WalletType } from '../hooks/useAccount'
 import { RoutePath } from './path'
 import {
@@ -14,7 +13,6 @@ import { useWechatShare } from '../hooks/useWechat'
 import { useToast } from '../hooks/useToast'
 
 const allowWithoutAuthList = new Set([
-  RoutePath.Unipass,
   RoutePath.Explore,
   RoutePath.Apps,
   RoutePath.AddressCollector,
@@ -79,7 +77,7 @@ export const AccountChange: React.FC = ({ children }) => {
       !isSigning.current
     ) {
       if (
-        (WalletType.Unipass === walletType && pubkey) ||
+        WalletType.Unipass === walletType ||
         WalletType.Metamask === walletType
       ) {
         isSigning.current = true
@@ -89,9 +87,6 @@ export const AccountChange: React.FC = ({ children }) => {
           content: t('auth.content'),
           okText: t('auth.ok'),
           onConfirm: async () => {
-            if (pathInForceAuthList && WalletType.Unipass === walletType) {
-              UnipassConfig.setRedirectUri(location.pathname + location.search)
-            }
             try {
               await getAuth()
               if (WalletType.Metamask === walletType) {
