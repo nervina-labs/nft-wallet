@@ -52,13 +52,16 @@ export const IS_MOBILE =
     /Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i
   ) !== null
 
-const IS_STANDALONE =
+export const IS_STANDALONE =
   window.matchMedia('(display-mode: standalone)').matches ||
   (window.navigator as any).standalone ||
   document.referrer.includes('android-app://')
 
 export const IS_MOBILE_ETH_WALLET =
   (w.ethereum || w.web3) && IS_MOBILE && IS_STANDALONE
+
+export const IS_UNIPASS_NOT_AVAILABLE =
+  IS_WEXIN || IS_MOBILE_ETH_WALLET || IS_MOBILE_ETH_WALLET
 
 export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 

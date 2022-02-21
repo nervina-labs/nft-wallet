@@ -5,7 +5,11 @@ import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
 import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { IS_IMTOKEN, IS_MOBILE_ETH_WALLET } from '../../constants'
+import {
+  IS_IMTOKEN,
+  IS_MOBILE_ETH_WALLET,
+  IS_UNIPASS_NOT_AVAILABLE,
+} from '../../constants'
 import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
@@ -346,14 +350,16 @@ export const AddressCollector: React.FC = () => {
               </Box>
             </LoginButton>
           )}
-          <LoginButton
-            isLoading={isUnipassLogining}
-            disabled={isUnipassLogining || isMetamaskLoging}
-            onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
-            variant={IS_IMTOKEN ? 'outline' : 'solid'}
-          >
-            {t('login.connect.unipass')}
-          </LoginButton>
+          {IS_UNIPASS_NOT_AVAILABLE ? null : (
+            <LoginButton
+              isLoading={isUnipassLogining}
+              disabled={isUnipassLogining || isMetamaskLoging}
+              onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+              variant={IS_IMTOKEN ? 'outline' : 'solid'}
+            >
+              {t('login.connect.unipass')}
+            </LoginButton>
+          )}
           <LoginButton
             disabled={isUnipassLogining || isMetamaskLoging}
             isLoading={isMetamaskLoging}
