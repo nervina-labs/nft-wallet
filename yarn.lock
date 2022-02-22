@@ -2857,6 +2857,13 @@
   version "3.0.4"
   resolved "https://registry.npmjs.org/@types/minimatch/-/minimatch-3.0.4.tgz"
 
+"@types/node-rsa@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@types/node-rsa/-/node-rsa-1.1.1.tgz#c3649c0ae7fdb93d3e65076a08d3fc9feb017a67"
+  integrity sha512-itzxtaBgk4OMbrCawVCvas934waMZWjW17v7EYgFVlfYS/cl0/P7KZdojWCq9SDJMI5cnLQLUP8ayhVCTY8TEg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/node@*":
   version "14.14.37"
   resolved "https://registry.npmjs.org/@types/node/-/node-14.14.37.tgz"
@@ -3628,6 +3635,13 @@ asn1.js@^5.2.0:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
     safer-buffer "^2.1.0"
+
+asn1@^0.2.4:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/asn1/-/asn1-0.2.6.tgz#0d3a7bb6e64e02a90c0303b31f292868ea09a08d"
+  integrity sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ==
+  dependencies:
+    safer-buffer "~2.1.0"
 
 asn1@~0.2.3:
   version "0.2.4"
@@ -9267,6 +9281,13 @@ node-notifier@^8.0.0:
 node-releases@^1.1.61, node-releases@^1.1.70:
   version "1.1.71"
   resolved "https://registry.npmjs.org/node-releases/-/node-releases-1.1.71.tgz"
+
+node-rsa@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/node-rsa/-/node-rsa-1.1.1.tgz#efd9ad382097782f506153398496f79e4464434d"
+  integrity sha512-Jd4cvbJMryN21r5HgxQOpMEqv+ooke/korixNNK3mGqfGJmy0M77WDDzo/05969+OkMy3XW1UuZsSmW9KQm7Fw==
+  dependencies:
+    asn1 "^0.2.4"
 
 normalize-package-data@^2.3.2, normalize-package-data@^2.5.0:
   version "2.5.0"

@@ -29,6 +29,7 @@ import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { UPCoreSimpleProvier } from '../pw/UProvider'
 import { useProfile } from './useProfile'
 import { addWitnessArgType } from '../pw/toPwTransaction'
+import { verifyUniPassSig } from '../pw/verify'
 
 export enum WalletType {
   Unipass = 'Unipass',
@@ -333,6 +334,7 @@ export function useSignMessage() {
             new UPAuthMessage('PLAIN_MSG', acc.username, msg)
           )
           console.log('res.sig', res.sig)
+          verifyUniPassSig(acc.username, msg, res)
           // // eslint-disable-next-line no-debugger
           // debugger
           setAccount({
@@ -342,6 +344,7 @@ export function useSignMessage() {
           })
           return res.sig
         } catch (error) {
+          console.log('unipass verify error:\t', error)
           return 'N/A'
         }
       }

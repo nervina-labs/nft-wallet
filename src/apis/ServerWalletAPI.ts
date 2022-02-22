@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { core } from '@ckb-lumos/base'
 import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
