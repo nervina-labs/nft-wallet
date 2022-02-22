@@ -21,20 +21,18 @@ import {
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Box } from '@chakra-ui/layout'
+import { Image } from '@chakra-ui/image'
 
 const Container = styled(MainContainer)`
-  min-height: calc(100% - 10px);
+  min-height: 100vh;
   max-width: 500px;
   flex-direction: column;
   display: flex;
   .bg {
-    svg {
+    img {
       width: 100%;
       max-width: 100%;
     }
-    position: relative;
-    display: flex;
-    justify-content: center;
   }
 
   .question {
@@ -275,10 +273,10 @@ export const Claim: React.FC = () => {
   )
 
   const imgs = {
-    [SubmitStatus.Unlogin]: <img src={Adidas} />,
-    [SubmitStatus.Claiming]: <img src={Adidas} />,
-    [SubmitStatus.Claimed]: <img src={Adidas} />,
-    [SubmitStatus.Success]: <img src={Adidas} />,
+    [SubmitStatus.Unlogin]: <Image src={Adidas} />,
+    [SubmitStatus.Claiming]: <Image src={Adidas} />,
+    [SubmitStatus.Claimed]: <Image src={Adidas} />,
+    [SubmitStatus.Success]: <Image src={Adidas} />,
   }
 
   const [code, setCode] = useState(id ?? '')
