@@ -1,6 +1,16 @@
 import { atom, useAtom } from 'jotai'
 import { loginWithRedirect } from '@nervina-labs/flashsigner'
-import { Address, DefaultSigner, Provider, Transaction } from '@lay2/pw-core'
+import {
+  Address,
+  CellDep,
+  DefaultSigner,
+  Provider,
+  Transaction,
+  OutPoint,
+  Builder,
+  Amount,
+  AmountUnit,
+} from '@lay2/pw-core'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import dayjs from 'dayjs'
@@ -17,6 +27,7 @@ import { RoutePath } from '../routes'
 import { buildFlashsignerOptions } from '../utils'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { UPCoreSimpleProvier } from '../pw/UProvider'
+import { useProfile } from './useProfile'
 
 export enum WalletType {
   Unipass = 'Unipass',
@@ -25,7 +36,7 @@ export enum WalletType {
   Flashsigner = 'flashsigner',
 }
 
-export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key_v2'
+export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key_v3'
 
 export interface UnipassAccount {
   address: string
@@ -120,15 +131,16 @@ export function useSetAccount() {
 export function useLogout() {
   const setAccount = useSetAccount()
   const [provider, setProvider] = useAtom(providerAtom)
-
+  const { setProfile } = useProfile()
   return useCallback(
     (h?: History<unknown>) => {
+      setProfile(null)
       setProvider(null)
       setAccount(null)
       // localStorage.clear()
       provider?.close()
     },
-    [provider, setAccount, setProvider]
+    [provider, setAccount, setProvider, setProfile]
   )
 }
 
@@ -156,7 +168,6 @@ export function useLogin() {
   )
 
   const loginUnipass = useCallback(async () => {
-    // eslint-disable-next-line no-debugger
     const account = await UP.connect({ email: true })
     const address = UPCKB.getCKBAddress(account.username)
     setAccount({
@@ -221,11 +232,29 @@ export function useSignTransaction() {
   const { loginMetamask } = useLogin()
   const signUnipass = useCallback(async (tx: Transaction) => {
     UP.initPop()
-    const acc = await UP.connect()
-    const provider = new UPCoreSimpleProvier(acc.username, UNIPASS_CODE_HASH)
-    const signer = new DefaultSigner(provider)
+    tx = new Transaction(tx.raw, [Builder.WITNESS_ARGS.RawSecp256k1])
+    const account = await UP.connect()
+    const oldCellDeps = tx.raw.cellDeps.map(
+      (cd) =>
+        new CellDep(
+          cd.depType,
+          new OutPoint(cd.outPoint.txHash, cd.outPoint.index)
+        )
+    )
+    const { outputs } = tx.raw
+    const changeOutput = outputs[outputs.length - 1]
+    changeOutput.capacity = changeOutput.capacity.sub(
+      new Amount('1000', AmountUnit.shannon)
+    )
+    tx.raw.cellDeps = []
+    const provider = new UPCoreSimpleProvier(
+      account.username,
+      UNIPASS_CODE_HASH
+    )
     const { usernameHash } = provider
+    const signer = new DefaultSigner(provider)
     const signedTx = await signer.sign(tx)
+    signedTx.raw.cellDeps = oldCellDeps
     const assetLockProof = await fetchAssetLockProof(usernameHash)
     const completedSignedTx = completeTxWithProof(
       signedTx,

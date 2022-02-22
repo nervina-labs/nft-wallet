@@ -123,8 +123,16 @@ if (IS_MAINNET) {
   UP.config({
     domain: 'app.unipass.id',
   })
+  UPCKB.config({
+    upLockCodeHash: UNIPASS_CODE_HASH,
+    upSnapshotUrl: 'https://aggregator.unipass.id/snapshot/',
+  })
 } else {
   UP.config({
     domain: 't.app.unipass.id',
+  })
+  UPCKB.config({
+    upLockCodeHash: UNIPASS_CODE_HASH,
+    upSnapshotUrl: 'https://t.aggregator.unipass.id/dev/snapshot/',
   })
 }

@@ -32,8 +32,8 @@ export interface Auths {
   [key: string]: Profile
 }
 
-const profileAtom = atomWithStorage<Auths | null>(
-  'mibao_account_profile_v2',
+export const profileAtom = atomWithStorage<Auths | null>(
+  'mibao_account_profile_v3',
   null
 )
 
@@ -42,16 +42,19 @@ export function useProfile() {
   const [profile, _setProfile] = useAtom(profileAtom)
 
   const setProfile = useCallback(
-    (p: Partial<Profile>, addr = '') => {
+    (p: Partial<Profile> | null, addr = '') => {
       return _setProfile((prevProfile) => {
         const auth = prevProfile?.[address || addr]
         return {
           ...prevProfile,
           ...{
-            [address || addr]: {
-              ...auth,
-              ...p,
-            },
+            [address || addr]:
+              p === null
+                ? null
+                : {
+                    ...auth,
+                    ...p,
+                  },
           },
         }
       })
@@ -127,7 +130,7 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
             address: addr,
             message,
             signature,
-            pubkey: account?.pubkey,
+            pub_key: account?.pubkey,
             key_type: 'RsaPubkey',
             username: account?.username,
           }
