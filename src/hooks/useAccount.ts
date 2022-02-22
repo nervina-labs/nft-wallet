@@ -133,15 +133,19 @@ export function useLogout() {
   const setAccount = useSetAccount()
   const [provider, setProvider] = useAtom(providerAtom)
   const { setProfile } = useProfile()
+  const { walletType } = useAccount()
   return useCallback(
     (h?: History<unknown>) => {
       setProfile(null)
       setProvider(null)
       setAccount(null)
+      if (walletType === WalletType.Unipass) {
+        UP.disconnect()
+      }
       // localStorage.clear()
       provider?.close()
     },
-    [provider, setAccount, setProvider, setProfile]
+    [provider, setAccount, setProvider, setProfile, walletType]
   )
 }
 

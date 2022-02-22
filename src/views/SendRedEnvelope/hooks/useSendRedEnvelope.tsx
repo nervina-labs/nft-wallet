@@ -44,9 +44,6 @@ export function useSendRedEnvelope() {
           signature!
         )
       }
-      if (walletType === WalletType.Unipass) {
-        return signature ? data.tx : await signTransaction(data.tx)
-      }
       return await signTransaction(data.tx)
     },
     [routeLocation.state, signTransaction, walletType]
