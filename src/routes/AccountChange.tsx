@@ -70,6 +70,12 @@ export const AccountChange: React.FC = ({ children }) => {
     const pathInAllowList = [...allowWithoutAuthList].some((p) =>
       location.pathname.startsWith(p)
     )
+    console.log(
+      !pathInAllowList || pathInForceAuthList,
+      isLogined,
+      !isAuthenticated,
+      !isSigning.current
+    )
     if (
       isLogined &&
       !isAuthenticated &&
@@ -94,6 +100,8 @@ export const AccountChange: React.FC = ({ children }) => {
               }
             } catch (error) {
               //
+            } finally {
+              isSigning.current = false
             }
           },
         })
