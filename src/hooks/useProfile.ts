@@ -66,7 +66,7 @@ export function useProfile() {
     if (profile == null) {
       return false
     }
-    return !!profile[address]
+    return !!profile[address]?.auth
   }, [address, profile])
 
   return {
@@ -84,13 +84,15 @@ export function createMessage() {
 }
 
 export function useGetAndSetAuth(): () => Promise<Auth> {
-  const { profile, setProfile } = useProfile()
+  const { setProfile } = useProfile()
   const signMessage = useSignMessage()
-  const { address, walletType } = useAccount()
+  const { walletType } = useAccount()
   const { loginMetamask } = useLogin()
   return useAtomCallback(
     useCallback(
-      async (get) => {
+      async (get, set) => {
+        const address = get(accountAtom)?.address || ''
+        const profile = get(profileAtom)
         const auth = profile?.[address]
         let signature = auth?.auth
         let message = auth?.message
@@ -142,7 +144,7 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
           signature,
         }
       },
-      [signMessage, walletType, address, profile, setProfile, loginMetamask]
+      [signMessage, walletType, setProfile, loginMetamask]
     )
   )
 }
