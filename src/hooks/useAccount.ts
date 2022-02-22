@@ -327,10 +327,14 @@ export function useSignMessage() {
     async (msg: string) => {
       if (walletType === WalletType.Unipass) {
         try {
+          console.info('start authorize')
           const acc = await UP.connect({ email: true })
           const res = await UP.authorize(
             new UPAuthMessage('PLAIN_MSG', acc.username, msg)
           )
+          console.log('res.sig', res.sig)
+          // // eslint-disable-next-line no-debugger
+          // debugger
           setAccount({
             address: UPCKB.getCKBAddress(acc.username).toCKBAddress(),
             pubkey: res.pubkey,
