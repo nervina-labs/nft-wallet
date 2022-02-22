@@ -35,6 +35,26 @@ const UnipassWitnessArgs = {
   output_type: '',
 }
 
+export const addWitnessArgType = (wa: typeof Builder.WITNESS_ARGS.RawSecp256k1, witness: string) => {
+  const witnessArg = {
+    ...wa,
+  }
+  const oldWitnessArg = new core.WitnessArgs(new Reader(witness))
+  const inputType = oldWitnessArg.getInputType()
+  const outputType = oldWitnessArg.getOutputType()
+  if (inputType.hasValue()) {
+    witnessArg.input_type = new Reader(
+      inputType.value().raw()
+    ).serializeJson()
+  }
+  if (outputType.hasValue()) {
+    witnessArg.output_type = new Reader(
+      outputType.value().raw()
+    ).serializeJson()
+  }
+  return witnessArg
+}
+
 export async function rawTransactionToPWTransaction(
   rawTx: RPC.RawTransaction,
   isUnipass = true

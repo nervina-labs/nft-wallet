@@ -28,6 +28,7 @@ import { buildFlashsignerOptions } from '../utils'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { UPCoreSimpleProvier } from '../pw/UProvider'
 import { useProfile } from './useProfile'
+import { addWitnessArgType } from '../pw/toPwTransaction'
 
 export enum WalletType {
   Unipass = 'Unipass',
@@ -232,7 +233,14 @@ export function useSignTransaction() {
   const { loginMetamask } = useLogin()
   const signUnipass = useCallback(async (tx: Transaction) => {
     UP.initPop()
-    tx = new Transaction(tx.raw, [Builder.WITNESS_ARGS.RawSecp256k1])
+    const witnessArg = addWitnessArgType(
+      {
+        ...Builder.WITNESS_ARGS.RawSecp256k1,
+      },
+      tx.witnesses[0]
+    )
+
+    tx = new Transaction(tx.raw, [witnessArg])
     const account = await UP.connect()
     const oldCellDeps = tx.raw.cellDeps.map(
       (cd) =>
