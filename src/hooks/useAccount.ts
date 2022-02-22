@@ -140,6 +140,7 @@ export function useLogout() {
       setProvider(null)
       setAccount(null)
       if (walletType === WalletType.Unipass) {
+        sessionStorage.clear()
         UP.disconnect()
       }
       // localStorage.clear()
