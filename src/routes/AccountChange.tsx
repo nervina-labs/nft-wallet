@@ -14,7 +14,7 @@ import { useWechatShare } from '../hooks/useWechat'
 const allowWithoutAuthList = new Set([
   RoutePath.Explore,
   RoutePath.Apps,
-  RoutePath.AddressCollector,
+  // RoutePath.AddressCollector,
   RoutePath.Claim,
   RoutePath.NotFound,
   RoutePath.Redeem,
