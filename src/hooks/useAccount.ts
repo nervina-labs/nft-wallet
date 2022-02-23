@@ -174,6 +174,7 @@ export function useLogin() {
   )
 
   const loginUnipass = useCallback(async () => {
+    UP.initPop()
     const account = await UP.connect({ email: true })
     const address = UPCKB.getCKBAddress(account.username)
     setAccount({
@@ -327,6 +328,7 @@ export function useSignMessage() {
     async (msg: string) => {
       if (walletType === WalletType.Unipass) {
         try {
+          UP.initPop()
           const acc = await UP.connect({ email: true })
           const res = await UP.authorize(
             new UPAuthMessage('PLAIN_MSG', acc.username, msg)
