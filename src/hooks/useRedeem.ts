@@ -62,7 +62,7 @@ export const useSignRedeem = () => {
       setIsRedeeming(true)
       try {
         const { tx } = await api
-          .getRedeemTransaction(id, walletType === WalletType.Unipass)
+          .getRedeemTransaction(id, walletType)
           .catch((err) => {
             throw new Error(err)
           })
@@ -187,6 +187,7 @@ export const useSendRedeem = () => {
 
   const [isSending, setIsSending] = useAtom(isSendingAtom)
   const { id } = useParams<{ id: string }>()
+  const { walletType } = useAccount()
   const sendRedeemTransaction = useCallback(async () => {
     const { tx, customData, signature } = reactLocation.state
     try {
@@ -194,14 +195,14 @@ export const useSendRedeem = () => {
         await api.redeem({ tx, uuid: id, customData })
       }
       if (signature) {
-        const { tx } = await api.getRedeemTransaction(id, true)
+        const { tx } = await api.getRedeemTransaction(id, walletType)
         await api.redeem({ tx, uuid: id, customData, sig: signature })
       }
     } catch (error) {
       //
     }
     setIsSending(true)
-  }, [api, reactLocation.state, id, setIsSending])
+  }, [api, reactLocation.state, id, setIsSending, walletType])
 
   return {
     isSending,

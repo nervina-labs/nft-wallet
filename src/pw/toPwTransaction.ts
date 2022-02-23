@@ -18,6 +18,7 @@ import {
 import { core } from '@ckb-lumos/base'
 import RPC from '@nervosnetwork/ckb-sdk-rpc'
 import { IS_MAINNET, NODE_URL } from '../constants'
+import { WalletType } from '../hooks/useAccount'
 
 const chainSpec = IS_MAINNET ? CHAIN_SPECS.Lina : CHAIN_SPECS.Aggron
 
@@ -37,8 +38,10 @@ const UnipassWitnessArgs = {
 
 export async function rawTransactionToPWTransaction(
   rawTx: RPC.RawTransaction,
-  isUnipass = true
+  walletType?: WalletType
 ): Promise<Transaction> {
+  const isUnipass = walletType === WalletType.Unipass
+  const isPwCore = walletType === WalletType.Metamask
   const [input]: any[] = rawTx.inputs
   const inputs = input.lock == null && input.type == null ? await Promise.all(
     rawTx.inputs.map(
@@ -105,7 +108,7 @@ export async function rawTransactionToPWTransaction(
     new RawTransaction(
       inputs,
       outputs,
-      cellDeps.concat(!isUnipass ? pwDeps : [])
+      cellDeps.concat(isPwCore ? pwDeps : [])
       // rawTx.header_deps,
       // rawTx.version
     ),

@@ -10,7 +10,7 @@ import { ReactComponent as SuccessSvg } from '../../assets/svg/order-success.svg
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { RoutePath } from '../../routes'
 import { formatTime } from '../../utils'
-import { useAPI } from '../../hooks/useAccount'
+import { useAccount, useAPI } from '../../hooks/useAccount'
 import { RainbowBackground } from '../../components/RainbowBackground'
 import { AspectRatio, Box, Center, Flex, Heading } from '@chakra-ui/react'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
@@ -54,6 +54,7 @@ export const RedeemResult: React.FC = () => {
   const resultFlag = useRouteQuery<ResultFlag>('result', ResultFlag.None)
   const { id } = useParams<{ id: string }>()
   const location = useLocation<TransferState>()
+  const { walletType } = useAccount()
   const { t, i18n } = useTranslation('translations')
   const transfer = useCallback(async () => {
     const { signature = '', tx, customData } = location?.state
@@ -65,7 +66,7 @@ export const RedeemResult: React.FC = () => {
       })
       return data
     }
-    const { tx: unsignTx } = await api.getRedeemTransaction(id, true)
+    const { tx: unsignTx } = await api.getRedeemTransaction(id, walletType)
     const { data } = await api.redeem({
       uuid: id,
       customData,

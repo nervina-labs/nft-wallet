@@ -325,11 +325,7 @@ export const Transfer: React.FC = () => {
         return
       }
       const { tx } = await api
-        .getTransferNftTransaction(
-          id,
-          sentAddress,
-          walletType === WalletType.Unipass
-        )
+        .getTransferNftTransaction(id, sentAddress, walletType)
         .catch((err) => {
           let msg: FailedMessage = FailedMessage.TranferFail
           if (err?.response?.data?.code === 1092) {
