@@ -44,6 +44,7 @@ export interface NFTToken extends VipInfo, CardBack {
   is_issuer_banned: boolean
   is_class_banned: boolean
   n_token_id: number
+  script_type: 'cota' | 'm_nft'
 }
 
 export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
