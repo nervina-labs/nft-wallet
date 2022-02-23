@@ -99,6 +99,8 @@ export const AccountChange: React.FC = ({ children }) => {
               }
             } catch (error) {
               //
+            } finally {
+              isSigning.current = false
             }
           },
         })

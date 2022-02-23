@@ -61,8 +61,8 @@ export const NFTs: React.FC = () => {
     if (isUserLoading) {
       return false
     }
-    return user?.guide_finished === false
-  }, [user, isUserLoading])
+    return !user?.guide_finished && isAuthenticated
+  }, [user, isUserLoading, isAuthenticated])
 
   useTrackDidMount(isHolder ? 'home' : 'collector')
 
