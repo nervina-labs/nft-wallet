@@ -174,7 +174,7 @@ export function useLogin() {
   )
 
   const loginUnipass = useCallback(async () => {
-    UP.initPop()
+    // UP.initPop()
     const account = await UP.connect({ email: true })
     const address = UPCKB.getCKBAddress(account.username)
     setAccount({
@@ -257,7 +257,7 @@ export function useSignTransaction() {
     const { outputs } = tx.raw
     const changeOutput = outputs[outputs.length - 1]
     changeOutput.capacity = changeOutput.capacity.sub(
-      new Amount('3500', AmountUnit.shannon)
+      new Amount('4500', AmountUnit.shannon)
     )
     tx.raw.cellDeps = []
     const provider = new UPCoreSimpleProvier(
@@ -327,7 +327,7 @@ export function useSignMessage() {
     async (msg: string) => {
       if (walletType === WalletType.Unipass) {
         try {
-          UP.initPop()
+          // UP.initPop()
           const acc = await UP.connect({ email: true })
           const res = await UP.authorize(
             new UPAuthMessage('PLAIN_MSG', acc.username, msg)
