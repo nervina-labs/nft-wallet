@@ -70,8 +70,7 @@ export function useSendRedEnvelope() {
         const { data } = await api.getSendRedEnvelopeTx(
           formInfo.tokenUuids,
           auth,
-          walletType === WalletType.Unipass ||
-            walletType === WalletType.Flashsigner
+          walletType
         )
         const { signature } = routeLocation.state ?? {}
         const signTx = await getSignTx(data)

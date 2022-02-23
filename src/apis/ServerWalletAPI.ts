@@ -76,6 +76,7 @@ import {
   SentRedEnvelopeReword,
 } from '../models/red-envelope'
 import { isPwTransaction } from '../utils'
+import { WalletType } from '../hooks/useAccount'
 
 function randomid(length = 10): string {
   let result = ''
@@ -330,7 +331,7 @@ export class ServerWalletAPI {
   async getTransferNftTransaction(
     uuid: string,
     toAddress: string,
-    isUnipass = true
+    walletType?: WalletType
   ): Promise<NFTTransaction> {
     // eslint-disable-next-line prettier/prettier
     const { data } = await this.axios.get<any, AxiosResponse<UnsignedTransaction>>('/token_ckb_transactions/new', {
@@ -341,7 +342,7 @@ export class ServerWalletAPI {
       },
     })
 
-    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, isUnipass)
+    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, walletType)
     return {
       tx,
       uuid: data.token_ckb_transaction_uuid,
@@ -625,7 +626,7 @@ export class ServerWalletAPI {
 
   async getRedeemTransaction(
     uuid: string,
-    isUnipass = true
+    walletType?: WalletType
   ): Promise<NFTTransaction> {
     const { data } = await this.axios.get(
       `/redemption_events/${uuid}/records/new`,
@@ -636,7 +637,7 @@ export class ServerWalletAPI {
         },
       }
     )
-    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, isUnipass)
+    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, walletType)
 
     return {
       tx,
@@ -983,7 +984,7 @@ export class ServerWalletAPI {
   async getSendRedEnvelopeTx(
     tokenUuids: string[],
     auth: Auth,
-    isUnipass?: boolean
+    walletType?: WalletType
   ): Promise<AxiosResponse<UnsignedTransactionSendRedEnvelope>> {
     const headers = {
       auth: JSON.stringify(auth),
@@ -1003,7 +1004,7 @@ export class ServerWalletAPI {
         ...res.data,
         tx: await rawTransactionToPWTransaction(
           res.data.unsigned_tx,
-          isUnipass
+          walletType
         ),
       },
     }
