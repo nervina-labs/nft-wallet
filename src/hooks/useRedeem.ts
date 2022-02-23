@@ -17,6 +17,7 @@ import {
   useSignTransaction,
   WalletType,
 } from './useAccount'
+import UP from 'up-core-test'
 import { useConfirmDialog } from './useConfirmDialog'
 import { useToast } from './useToast'
 import { trackLabels, useTrackClick } from './useTrack'
@@ -59,6 +60,9 @@ export const useSignRedeem = () => {
   const toast = useToast()
   const confirmRedeem = useCallback(
     async ({ customData, id, onConfirmError }: ConfirmRedeemProps) => {
+      if (walletType === WalletType.Unipass) {
+        UP.initPop()
+      }
       setIsRedeeming(true)
       try {
         const { tx } = await api
@@ -168,6 +172,8 @@ export const useSendRedeem = () => {
   const { id } = useParams<{ id: string }>()
   const sendRedeemTransaction = useCallback(async () => {
     const { tx, customData, signature } = reactLocation.state
+    // eslint-disable-next-line no-debugger
+    debugger
     try {
       if (tx) {
         await api.redeem({ tx, uuid: id, customData })

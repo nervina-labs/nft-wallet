@@ -101,6 +101,7 @@ export const RedEnvelope: React.FC = () => {
         })
         return
       }
+      console.log('is fetching')
       setIsRefetching(true)
       const auth = await getAuth().catch((err) => {
         setIsRefetching(false)
@@ -111,6 +112,8 @@ export const RedEnvelope: React.FC = () => {
           input: options?.input,
         })
         .then(async () => {
+          // eslint-disable-next-line no-debugger
+          debugger
           if (isOpened) return
           let i = 0
           for (; i < 3; i++) {

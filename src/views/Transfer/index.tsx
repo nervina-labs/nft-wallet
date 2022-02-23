@@ -27,6 +27,7 @@ import {
   buildFlashsignerOptions,
   isUnipassV2Address,
 } from '../../utils'
+import UP from 'up-core-test'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
@@ -267,6 +268,9 @@ export const Transfer: React.FC = () => {
   }, [confirmDialog, finalUsedAddress, t, nftDetail?.script_type])
 
   const sendNFT = useCallback(async () => {
+    if (walletType === WalletType.Unipass) {
+      UP.initPop()
+    }
     setIsSendingNFT(true)
     try {
       const isFinalUsedAddressTypeEth =

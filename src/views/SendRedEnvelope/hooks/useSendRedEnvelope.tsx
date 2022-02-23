@@ -7,6 +7,7 @@ import {
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
+import UP from 'up-core-test'
 import {
   useAccount,
   useAPI,
@@ -51,6 +52,9 @@ export function useSendRedEnvelope() {
 
   const onSend = useCallback(
     async (formInfo: FormInfoState) => {
+      if (walletType === WalletType.Unipass) {
+        UP.initPop()
+      }
       setSending(true)
       setError(undefined)
       try {

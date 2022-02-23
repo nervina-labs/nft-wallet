@@ -56,6 +56,8 @@ export const RedeemResult: React.FC = () => {
   const location = useLocation<TransferState>()
   const { t, i18n } = useTranslation('translations')
   const transfer = useCallback(async () => {
+    // eslint-disable-next-line no-debugger
+    debugger
     const { signature = '', tx, customData } = location?.state
     if (tx) {
       const { data } = await api.redeem({
@@ -85,6 +87,7 @@ export const RedeemResult: React.FC = () => {
       staleTime: Infinity,
     }
   )
+  console.log(isError)
   const isSucceed = !isError && data
   const hasCustomData = !!location.state?.customData
   const resultProps = isSucceed

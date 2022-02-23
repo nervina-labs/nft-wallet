@@ -238,7 +238,6 @@ export function useSignTransaction() {
   const [provider, setProvider] = useAtom(providerAtom)
   const { loginMetamask } = useLogin()
   const signUnipass = useCallback(async (tx: Transaction) => {
-    UP.initPop()
     const witnessArg = addWitnessArgType(
       {
         ...Builder.WITNESS_ARGS.RawSecp256k1,
