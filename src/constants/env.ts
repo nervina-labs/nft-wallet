@@ -2,6 +2,7 @@ import * as Bowser from 'bowser'
 import { Config } from '@nervina-labs/flashsigner'
 import UP from 'up-core-test'
 import UPCKB from 'up-ckb-alpha-test'
+import PWCore, { ChainID, CHAIN_SPECS } from '@lay2/pw-core'
 
 type ChainType = 'mainnet' | 'testnet'
 
@@ -136,3 +137,6 @@ if (IS_MAINNET) {
     upSnapshotUrl: 'https://t.aggregator.unipass.id/dev/snapshot/',
   })
 }
+
+PWCore.chainId = IS_MAINNET ? ChainID.ckb : ChainID.ckb_testnet
+PWCore.config = IS_MAINNET ? CHAIN_SPECS.Lina : CHAIN_SPECS.Aggron
