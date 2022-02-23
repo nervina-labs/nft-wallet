@@ -1,8 +1,17 @@
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 import { Transaction as PwTransaction } from '@lay2/pw-core'
-import { UNIPASS_URL } from '../constants'
+import { PW_CODE_HASH, UNIPASS_URL } from '../constants'
 import { UnipassAction } from '../models/unipass'
 import i18n from '../i18n'
+import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
+
+export function isUnipassV2Address(address: string) {
+  try {
+    return addressToScript(address).codeHash === PW_CODE_HASH
+  } catch (error) {
+    return false
+  }
+}
 
 export function generateUnipassUrl(
   action: UnipassAction,

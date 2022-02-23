@@ -26,6 +26,7 @@ import {
   verifyDasAddress,
   generateUnipassSignTxUrl,
   buildFlashsignerOptions,
+  isUnipassV2Address,
 } from '../../utils'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
@@ -236,9 +237,7 @@ export const Transfer: React.FC = () => {
     },
     [confirmDialog, buildFailedMessage, history, t]
   )
-  const transferOnClick = useCallback(async () => {
-    setIsDrawerOpen(true)
-  }, [])
+
   const { id } = useParams<{ id: string }>()
 
   const getAuth = useGetAndSetAuth()
@@ -255,6 +254,27 @@ export const Transfer: React.FC = () => {
   const nftDetail = useMemo(() => {
     return routerLocation.state?.nftDetail ?? remoteNftDetail
   }, [routerLocation.state, remoteNftDetail])
+
+  const transferOnClick = useCallback(async () => {
+    if (
+      isUnipassV2Address(finalUsedAddress) &&
+      nftDetail?.script_type === 'cota'
+    ) {
+      confirmDialog({
+        type: 'warning',
+        title: t('transfer.error.unipass-v2'),
+        okText: t('auth.ok'),
+        onCancel() {
+          // do nothing
+        },
+        onConfirm() {
+          setIsDrawerOpen(true)
+        },
+      })
+    } else {
+      setIsDrawerOpen(true)
+    }
+  }, [confirmDialog, finalUsedAddress, t, nftDetail?.script_type])
 
   const sendNFT = useCallback(async () => {
     setIsSendingNFT(true)
