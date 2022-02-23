@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useGetAndSetAuth, useProfile } from '../hooks/useProfile'
@@ -10,7 +10,6 @@ import {
   useConfirmDialog,
 } from '../hooks/useConfirmDialog'
 import { useWechatShare } from '../hooks/useWechat'
-import { useToast } from '../hooks/useToast'
 
 const allowWithoutAuthList = new Set([
   RoutePath.Explore,
@@ -50,7 +49,6 @@ export const AccountChange: React.FC = ({ children }) => {
   const isSigning = useRef(false)
   const onOpenConfirm = useConfirmDialog()
   const onCloseConfirm = useCloseConfirmDialog()
-  const toast = useToast()
   const [t] = useTranslation('translations')
   const wechatShare = useWechatShare()
   useEffect(() => {
@@ -62,6 +60,28 @@ export const AccountChange: React.FC = ({ children }) => {
     return unlisten
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const signForVerify = useCallback(async () => {
+    isSigning.current = true
+    await onOpenConfirm({
+      type: 'text',
+      title: t('auth.title'),
+      content: t('auth.content'),
+      okText: t('auth.ok'),
+      onConfirm: async () => {
+        try {
+          await getAuth()
+          if (WalletType.Flashsigner !== walletType) {
+            onCloseConfirm()
+          }
+        } catch (error) {
+          onCloseConfirm()
+        } finally {
+          isSigning.current = false
+        }
+      },
+    })
+  }, [getAuth, onCloseConfirm, onOpenConfirm, t, walletType])
 
   useEffect(() => {
     const pathInForceAuthList = forceAuthList.has(
@@ -80,23 +100,7 @@ export const AccountChange: React.FC = ({ children }) => {
         WalletType.Unipass === walletType ||
         WalletType.Metamask === walletType
       ) {
-        isSigning.current = true
-        onOpenConfirm({
-          type: 'text',
-          title: t('auth.title'),
-          content: t('auth.content'),
-          okText: t('auth.ok'),
-          onConfirm: async () => {
-            try {
-              await getAuth()
-              if (WalletType.Metamask === walletType) {
-                onCloseConfirm()
-              }
-            } catch (error) {
-              //
-            }
-          },
-        })
+        signForVerify()
       }
     }
   }, [
@@ -108,10 +112,7 @@ export const AccountChange: React.FC = ({ children }) => {
     isLogined,
     pubkey,
     t,
-    getAuth,
-    onOpenConfirm,
-    onCloseConfirm,
-    toast,
+    signForVerify,
   ])
 
   return <>{children}</>
