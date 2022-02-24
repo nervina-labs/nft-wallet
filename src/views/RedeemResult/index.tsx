@@ -74,7 +74,7 @@ export const RedeemResult: React.FC = () => {
       sig: signature,
     })
     return data
-  }, [id, api, location?.state])
+  }, [id, api, location?.state, walletType])
   const { data, isError, isLoading } = useQuery(
     [Query.SendRedeem, id, api, resultFlag],
     transfer,
