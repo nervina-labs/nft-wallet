@@ -38,6 +38,13 @@ export const Flashsigner: React.FC = () => {
             signature: result.signature,
             ...result.extra,
           })
+        } else if (action === LocalFlashsignerAction.Redeem) {
+          const { uuid } = result.extra
+          const state: Record<string, any> = {
+            signature: result.signature,
+            customData: result.extra?.customData,
+          }
+          history.replace(`${RoutePath.RedeemResult}/${uuid as string}`, state)
         }
       },
       onSignTransaction(result) {

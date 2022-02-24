@@ -2,8 +2,11 @@ import { Transaction, transformers } from '@lay2/pw-core'
 import { atom, useAtom } from 'jotai'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory, useLocation, useParams } from 'react-router'
-import { signTransactionWithRedirect } from '@nervina-labs/flashsigner'
+import { useHistory, useLocation } from 'react-router'
+import {
+  signMessageWithRedirect,
+  transactionToMessage,
+} from '@nervina-labs/flashsigner'
 import {
   CustomRedeemParams,
   CustomRewardType,
@@ -20,6 +23,7 @@ import {
 import { useConfirmDialog } from './useConfirmDialog'
 import { useToast } from './useToast'
 import { trackLabels, useTrackClick } from './useTrack'
+import { FlashsignerAction } from '../models/flashsigner'
 
 export interface onRedeemProps {
   deliverType?: CustomRewardType
@@ -37,7 +41,6 @@ export interface ConfirmRedeemProps {
 }
 
 const isSigningAtom = atom(false)
-const isSendingAtom = atom(false)
 
 export interface TransferState {
   signature?: string
@@ -77,9 +80,15 @@ export const useSignRedeem = () => {
           if (customData) {
             state.customData = customData
           }
-          signTransactionWithRedirect(url, {
-            tx: transformers.TransformTransaction(tx) as any,
-            extra: state,
+          signMessageWithRedirect(url, {
+            isRaw: false,
+            message: transactionToMessage(
+              transformers.TransformTransaction(tx) as any
+            ),
+            extra: {
+              ...state,
+              action: FlashsignerAction.Redeem,
+            },
           })
           return
         }
@@ -178,34 +187,5 @@ export const useSignRedeem = () => {
     onRedeem,
     confirmRedeem,
     isRedeeming,
-  }
-}
-
-export const useSendRedeem = () => {
-  const api = useAPI()
-  const reactLocation = useLocation<TransferState>()
-
-  const [isSending, setIsSending] = useAtom(isSendingAtom)
-  const { id } = useParams<{ id: string }>()
-  const { walletType } = useAccount()
-  const sendRedeemTransaction = useCallback(async () => {
-    const { tx, customData, signature } = reactLocation.state
-    try {
-      if (tx) {
-        await api.redeem({ tx, uuid: id, customData })
-      }
-      if (signature) {
-        const { tx } = await api.getRedeemTransaction(id, walletType)
-        await api.redeem({ tx, uuid: id, customData, sig: signature })
-      }
-    } catch (error) {
-      //
-    }
-    setIsSending(true)
-  }, [api, reactLocation.state, id, setIsSending, walletType])
-
-  return {
-    isSending,
-    sendRedeemTransaction,
   }
 }
