@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
@@ -7,6 +7,14 @@ import { RoutePath } from '../../routes'
 import { copyFallback, truncateMiddle } from '../../utils'
 import { useToast } from '../../hooks/useToast'
 import { trackLabels, useTrackClick } from '../../hooks/useTrack'
+import { useAccount, WalletType } from '../../hooks/useAccount'
+import {
+  AddressPrefix,
+  addressToScript,
+  fullPayloadToAddress,
+  AddressType,
+} from '@nervosnetwork/ckb-sdk-utils'
+import { IS_MAINNET } from '../../constants'
 
 const Container = styled.div`
   height: 32px;
@@ -52,22 +60,38 @@ export const Addressbar: React.FC<AddressbarProps> = ({
   const toast = useToast()
   const [t] = useTranslation('translations')
   const trackCopy = useTrackClick('home', 'click')
+  const { walletType } = useAccount()
+  const displayAddress = useMemo(() => {
+    if (walletType === WalletType.Flashsigner) {
+      return address
+    }
+    const script = addressToScript(address)
+    return fullPayloadToAddress({
+      args: script.args,
+      type:
+        script.hashType === 'data'
+          ? AddressType.DataCodeHash
+          : AddressType.TypeCodeHash,
+      codeHash: script.codeHash,
+      prefix: IS_MAINNET ? AddressPrefix.Mainnet : AddressPrefix.Testnet,
+    })
+  }, [walletType, address])
   return (
     <Container className="address-bar">
       <div
         className="address"
         onClick={() => {
-          copyFallback(address)
+          copyFallback(displayAddress)
           toast(t('info.copied'))
           trackCopy(trackLabels.home.copy)
         }}
       >
-        {truncateMiddle(address, 8, 5)}
+        {truncateMiddle(displayAddress, 8, 5)}
       </div>
       <div
         className="qrcode"
         onClick={() => {
-          history.push(RoutePath.Account + '/' + address)
+          history.push(RoutePath.Account + '/' + displayAddress)
           trackCopy(trackLabels.home.qrcode)
         }}
       >
