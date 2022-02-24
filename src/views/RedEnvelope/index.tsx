@@ -128,7 +128,7 @@ export const RedEnvelope: React.FC = () => {
             throw new Error('try it again')
           }
         })
-        .catch((err: AxiosError) => {
+        .catch(async (err: AxiosError) => {
           const ignoreCodeSet = new Set([1069, 1070, 1071])
           const response =
             err.request && typeof err?.request?.response === 'string'
@@ -136,6 +136,10 @@ export const RedEnvelope: React.FC = () => {
               : err?.request?.response
           if (response.code === 2022) {
             unipassDialog()
+            return
+          }
+          if (response.code === 1068) {
+            await refetch()
             return
           }
           if (!ignoreCodeSet.has(response?.code)) {
