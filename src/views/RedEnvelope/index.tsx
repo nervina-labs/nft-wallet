@@ -115,13 +115,13 @@ export const RedEnvelope: React.FC = () => {
         .then(async () => {
           if (isOpened) return
           let i = 0
-          for (; i < 3; i++) {
+          for (; i < 10; i++) {
             const res = await refetch()
             const isPolling =
               !res.data?.is_current_user_claimed &&
               res.data?.state === RedEnvelopeState.Ongoing
             if (!isPolling) break
-            await sleep(1000)
+            await sleep(1500)
           }
           setIsRefetching(false)
           if (i >= 3) {
