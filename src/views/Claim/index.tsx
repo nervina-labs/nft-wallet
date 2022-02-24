@@ -295,7 +295,7 @@ export const Claim: React.FC = () => {
   const [code, setCode] = useState(id ?? '')
 
   const actions = useMemo(() => {
-    if (SubmitStatus.Unlogin === submitStatus) {
+    if (SubmitStatus.Unlogin === submitStatus || !isLogined) {
       return (
         <>
           <p className="desc">{t('claim.tips')}</p>
@@ -423,6 +423,7 @@ export const Claim: React.FC = () => {
     isClaiming,
     isClaimError,
     isFlashsignerLogin,
+    isLogined,
   ])
 
   if (claimCodeError) {

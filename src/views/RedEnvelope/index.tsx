@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next'
 import { sleep, UnipassConfig } from '../../utils'
 import { useToast } from '../../hooks/useToast'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { useUnipassV2Dialog } from '../../hooks/useUnipassV2Dialog'
 
 const Container = styled(MainContainer)`
   background-color: #e15f4c;
@@ -85,6 +86,7 @@ export const RedEnvelope: React.FC = () => {
       retry: 2,
     }
   )
+  const unipassDialog = useUnipassV2Dialog()
   const isOngoing = [
     RedEnvelopeState.Ongoing,
     RedEnvelopeState.Pending,
@@ -132,6 +134,10 @@ export const RedEnvelope: React.FC = () => {
             err.request && typeof err?.request?.response === 'string'
               ? JSON.parse(err.request.response)
               : err?.request?.response
+          if (response.code === 2022) {
+            unipassDialog()
+            return
+          }
           if (!ignoreCodeSet.has(response?.code)) {
             if (data?.rule_info?.rule_type === RuleType.password) {
               toast(t('red-envelope.error-password'))
@@ -165,6 +171,7 @@ export const RedEnvelope: React.FC = () => {
       refetch,
       t,
       toast,
+      unipassDialog,
     ]
   )
 

@@ -10,6 +10,7 @@ export const useUnipassV2Dialog = () => {
     confirmDialog({
       type: 'error',
       title: t('common.unipass-v2-error'),
+      okText: t('common.relogin'),
       onConfirm() {
         logout()
       },

@@ -16,6 +16,8 @@
         "mainnet": "主网",
         "testnet": "测试网"
       },
+      "unipass-v2-error": "当前地址不支持领取此种类型的秘宝，请重新连接 Flashsigner 或以太坊环境",
+      "relogin": "重新登录",
       "share": {
         "copy": "点击复制链接并分享至社交媒体",
         "close": "关闭",
@@ -37,7 +39,6 @@
           "desc-issuer": "欣赏秘宝创作者的数字作品",
           "collected": "已收藏秘宝"
         },
-        "unipass-v2-error": "当前地址不支持领取此种类型的秘宝，请重新登录",
         "wx": {
           "nft": {
             "title": "",
