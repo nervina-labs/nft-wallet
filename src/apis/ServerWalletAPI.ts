@@ -642,6 +642,7 @@ export class ServerWalletAPI {
     return {
       tx,
       uuid: data.redemption_event_uuid,
+      unSignedTx: data.unsigned_tx,
     }
   }
 
