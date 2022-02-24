@@ -22,10 +22,11 @@ import { Records } from './components/records'
 import { useCallback, useEffect, useState } from 'react'
 import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { useTranslation } from 'react-i18next'
-import { sleep, UnipassConfig } from '../../utils'
+import { UnipassConfig } from '../../utils'
 import { useToast } from '../../hooks/useToast'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useUnipassV2Dialog } from '../../hooks/useUnipassV2Dialog'
+import { concat, defer, delay, from, switchMap, takeWhile } from 'rxjs'
 
 const Container = styled(MainContainer)`
   background-color: #e15f4c;
@@ -108,58 +109,66 @@ export const RedEnvelope: React.FC = () => {
         setIsRefetching(false)
         throw err
       })
-      await api
-        .openRedEnvelopeEvent(id, address, auth, {
-          input: options?.input,
-        })
-        .then(async () => {
-          if (isOpened) return
-          let i = 0
-          for (; i < 10; i++) {
-            const res = await refetch()
-            const isPolling =
+
+      const refetchFn = defer(() => from(refetch()))
+      concat(
+        from(
+          api.openRedEnvelopeEvent(id, address, auth, {
+            input: options?.input,
+          })
+        ).pipe(switchMap(() => refetchFn)),
+        ...new Array(3).fill(0).map(() => refetchFn.pipe(delay(1500)))
+      )
+        .pipe(
+          takeWhile(
+            (res) =>
               !res.data?.is_current_user_claimed &&
               res.data?.state === RedEnvelopeState.Ongoing
-            if (!isPolling) break
-            await sleep(1500)
-          }
-          setIsRefetching(false)
-          if (i >= 3) {
-            throw new Error('try it again')
-          }
-        })
-        .catch(async (err: AxiosError) => {
-          const ignoreCodeSet = new Set([1069, 1070, 1071])
-          const response =
-            err.request && typeof err?.request?.response === 'string'
-              ? JSON.parse(err.request.response)
-              : err?.request?.response
-          if (response.code === 2022) {
-            unipassDialog()
-            return
-          }
-          if (response.code === 1068) {
-            await refetch()
-            return
-          }
-          if (!ignoreCodeSet.has(response?.code)) {
-            if (data?.rule_info?.rule_type === RuleType.password) {
-              toast(t('red-envelope.error-password'))
-            } else if (data?.rule_info?.rule_type === RuleType.puzzle) {
-              toast(t('red-envelope.error-puzzle'))
-            } else if (err.response?.status === 400) {
-              toast(t('red-envelope.error-conditions'))
-            } else {
-              toast(t('red-envelope.try-again'))
+          )
+        )
+        .subscribe({
+          next(res) {
+            const isRunning =
+              !res.data?.is_current_user_claimed &&
+              res.data?.state === RedEnvelopeState.Ongoing
+            if (!isRunning) {
+              setIsRefetch(true)
+              setIsRefetching(false)
             }
-          }
-          setIsRefetching(false)
-          setIsOpenedWithError(true)
-          throw err
-        })
-        .finally(() => {
-          setIsRefetch(true)
-          setIsRefetching(false)
+          },
+          async error(err) {
+            console.error({ err })
+            const ignoreCodeSet = new Set([1069, 1070, 1071])
+            const response =
+              err.request && typeof err?.request?.response === 'string'
+                ? JSON.parse(err.request.response)
+                : err?.request?.response
+            if (response?.code === 2022) {
+              unipassDialog()
+              return
+            }
+            if (response?.code === 1068) {
+              await refetch()
+              return
+            }
+            if (!ignoreCodeSet.has(response?.code)) {
+              if (
+                data?.rule_info?.rule_type === RuleType.password &&
+                response.code === 1064
+              ) {
+                toast(t('red-envelope.error-password'))
+              } else if (data?.rule_info?.rule_type === RuleType.puzzle) {
+                toast(t('red-envelope.error-puzzle'))
+              } else if (err.response?.status === 400) {
+                toast(t('red-envelope.error-conditions'))
+              } else {
+                toast(t('red-envelope.try-again'))
+              }
+            }
+            setIsRefetching(false)
+            setIsOpenedWithError(true)
+            setIsRefetch(true)
+          },
         })
     },
     [
@@ -169,7 +178,6 @@ export const RedEnvelope: React.FC = () => {
       getAuth,
       id,
       isLogined,
-      isOpened,
       isRefetching,
       push,
       refetch,
