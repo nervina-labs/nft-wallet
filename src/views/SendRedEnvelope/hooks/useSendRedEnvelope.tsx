@@ -58,8 +58,6 @@ export function useSendRedEnvelope() {
   const unipassDialog = useUnipassV2Dialog()
   const onSend = useCallback(
     async (formInfo: FormInfoState) => {
-      // eslint-disable-next-line no-debugger
-      debugger
       setSending(true)
       setError(undefined)
       try {

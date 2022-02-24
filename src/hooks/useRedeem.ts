@@ -64,11 +64,7 @@ export const useSignRedeem = () => {
     async ({ customData, id, onConfirmError }: ConfirmRedeemProps) => {
       setIsRedeeming(true)
       try {
-        const { tx } = await api
-          .getRedeemTransaction(id, walletType)
-          .catch((err) => {
-            throw new Error(err)
-          })
+        const { tx } = await api.getRedeemTransaction(id, walletType)
 
         if (walletType === WalletType.Flashsigner) {
           const url = `${location.origin}${RoutePath.Flashsigner}`
@@ -120,7 +116,11 @@ export const useSignRedeem = () => {
             customData,
           })
         }
-      } catch (error) {
+      } catch (error: any) {
+        if (error?.response?.data?.code === 1032) {
+          toast(t('exchange.not-on-chain'))
+          return
+        }
         setIsRedeeming(false)
         toast(t('exchange.error'))
         await onConfirmError?.()
