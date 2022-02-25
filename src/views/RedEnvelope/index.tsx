@@ -26,7 +26,18 @@ import { UnipassConfig } from '../../utils'
 import { useToast } from '../../hooks/useToast'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useUnipassV2Dialog } from '../../hooks/useUnipassV2Dialog'
-import { concat, defer, delay, from, switchMap, takeWhile } from 'rxjs'
+import {
+  concat,
+  defer,
+  delay,
+  from,
+  lastValueFrom,
+  scan,
+  switchMap,
+  takeWhile,
+  tap,
+} from 'rxjs'
+import { ErrorCode } from '../../utils/error'
 
 const Container = styled(MainContainer)`
   background-color: #e15f4c;
@@ -93,6 +104,7 @@ export const RedEnvelope: React.FC = () => {
     RedEnvelopeState.Pending,
   ].includes(data?.state as RedEnvelopeState)
   const isOpened = !isLoading && (data?.is_current_user_claimed || !isOngoing)
+  const [isClickedOpenButton, setIsClickedOpenButton] = useState(false)
   const onOpenTheRedEnvelope = useCallback<(o?: OnOpenOptions) => void>(
     async (options) => {
       if (isRefetching) return
@@ -110,65 +122,75 @@ export const RedEnvelope: React.FC = () => {
         throw err
       })
 
-      const refetchFn = defer(() => from(refetch()))
-      concat(
-        from(
-          api.openRedEnvelopeEvent(id, address, auth, {
-            input: options?.input,
-          })
-        ).pipe(switchMap(() => refetchFn)),
-        ...new Array(3).fill(0).map(() => refetchFn.pipe(delay(1500)))
-      )
-        .pipe(
-          takeWhile(
-            (res) =>
-              !res.data?.is_current_user_claimed &&
-              res.data?.state === RedEnvelopeState.Ongoing
-          )
+      const refetchFn = defer(() => from(refetch())).pipe(delay(1500))
+      const POLLING_TIMES = 10
+      const openAndReload = concat(
+        isClickedOpenButton
+          ? refetchFn
+          : from(
+              api.openRedEnvelopeEvent(id, address, auth, {
+                input: options?.input,
+              })
+            ).pipe(
+              tap(() => setIsClickedOpenButton(true)),
+              switchMap(() => refetchFn)
+            ),
+        ...new Array(POLLING_TIMES).fill(0).map(() => refetchFn)
+      ).pipe(
+        scan((_, item, i) => {
+          if (POLLING_TIMES <= i) {
+            throw new Error('try again')
+          }
+          return item
+        }),
+        takeWhile(
+          (res) =>
+            !res.data?.is_current_user_claimed &&
+            res.data?.state === RedEnvelopeState.Ongoing
         )
-        .subscribe({
-          next(res) {
-            const isRunning =
-              !res.data?.is_current_user_claimed &&
-              res.data?.state === RedEnvelopeState.Ongoing
-            if (!isRunning) {
-              setIsRefetch(true)
-              setIsRefetching(false)
+      )
+      await lastValueFrom(openAndReload)
+        .then(() => {
+          setIsRefetch(true)
+          setIsRefetching(false)
+        })
+        .catch(async (err) => {
+          console.error({ err })
+          const ignoreCodeSet = new Set([
+            ErrorCode.RedEnvelopeClosed,
+            ErrorCode.RedEnvelopeDone,
+            ErrorCode.RedEnvelopeNotPending,
+          ])
+          const response =
+            err.request && typeof err?.request?.response === 'string'
+              ? JSON.parse(err.request.response)
+              : err?.request?.response
+          const code = response?.code
+          if (code === 2022) {
+            unipassDialog()
+            return
+          }
+          if (code === ErrorCode.RedEnvelopeClaimed) {
+            await refetch()
+            return
+          }
+          if (!ignoreCodeSet.has(response?.code)) {
+            if (
+              data?.rule_info?.rule_type === RuleType.password &&
+              code === ErrorCode.RedEnvelopeRuleMatch
+            ) {
+              toast(t('red-envelope.error-password'))
+            } else if (data?.rule_info?.rule_type === RuleType.puzzle) {
+              toast(t('red-envelope.error-puzzle'))
+            } else if (err.response?.status === 400) {
+              toast(t('red-envelope.error-conditions'))
+            } else {
+              toast(t('red-envelope.try-again'))
             }
-          },
-          async error(err) {
-            console.error({ err })
-            const ignoreCodeSet = new Set([1069, 1070, 1071])
-            const response =
-              err.request && typeof err?.request?.response === 'string'
-                ? JSON.parse(err.request.response)
-                : err?.request?.response
-            if (response?.code === 2022) {
-              unipassDialog()
-              return
-            }
-            if (response?.code === 1068) {
-              await refetch()
-              return
-            }
-            if (!ignoreCodeSet.has(response?.code)) {
-              if (
-                data?.rule_info?.rule_type === RuleType.password &&
-                response.code === 1064
-              ) {
-                toast(t('red-envelope.error-password'))
-              } else if (data?.rule_info?.rule_type === RuleType.puzzle) {
-                toast(t('red-envelope.error-puzzle'))
-              } else if (err.response?.status === 400) {
-                toast(t('red-envelope.error-conditions'))
-              } else {
-                toast(t('red-envelope.try-again'))
-              }
-            }
-            setIsRefetching(false)
-            setIsOpenedWithError(true)
-            setIsRefetch(true)
-          },
+          }
+          setIsRefetching(false)
+          setIsOpenedWithError(true)
+          setIsRefetch(true)
         })
     },
     [
@@ -177,6 +199,7 @@ export const RedEnvelope: React.FC = () => {
       data?.rule_info?.rule_type,
       getAuth,
       id,
+      isClickedOpenButton,
       isLogined,
       isRefetching,
       push,
