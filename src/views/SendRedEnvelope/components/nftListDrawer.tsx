@@ -149,14 +149,19 @@ export const NftListDrawer: React.FC<{
           renderItems={(pages, i) =>
             pages.token_list.map((item, j) => {
               const selected = selectingNftUuidSet.has(item.token_uuid)
+              const notSelectable =
+                (selectingTokens.length >= LIMIT && !selected) ||
+                item.script_type === 'cota'
               return (
                 <Box
                   key={`${i}-${j}`}
                   mb="20px"
-                  opacity={
-                    selectingTokens.length >= LIMIT && !selected ? 0.5 : 1
-                  }
+                  opacity={notSelectable ? 0.5 : 1}
+                  cursor={notSelectable ? 'not-allowed' : 'pointer'}
                   onClick={() => {
+                    if (item.script_type === 'cota') {
+                      return
+                    }
                     const removeFn = (t: NFTToken) =>
                       t.token_uuid !== item.token_uuid
                     const changedTokens = selected

@@ -1634,6 +1634,30 @@
   dependencies:
     "@chakra-ui/utils" "1.8.3"
 
+"@ckb-lumos/base@^0.17.0-rc8":
+  version "0.17.0-rc8"
+  resolved "https://registry.yarnpkg.com/@ckb-lumos/base/-/base-0.17.0-rc8.tgz#7f7490a2e028f609aeb3f96fb400a7836df9a187"
+  integrity sha512-SN/GAxJfO59mF2mcJId2kBEbcQldJ7cIGm4Yf2nC7BmXkc8x+95BpZCWSSQ8EGcGJoWzcOTRlE71s06aUxx5+g==
+  dependencies:
+    "@ckb-lumos/bi" "^0.17.0-rc8"
+    "@ckb-lumos/toolkit" "^0.17.0-rc8"
+    "@types/lodash.isequal" "^4.5.5"
+    blake2b "^2.1.3"
+    js-xxhash "^1.0.4"
+    lodash.isequal "^4.5.0"
+
+"@ckb-lumos/bi@^0.17.0-rc8":
+  version "0.17.0-rc8"
+  resolved "https://registry.yarnpkg.com/@ckb-lumos/bi/-/bi-0.17.0-rc8.tgz#0d6273aa111f3013f2076118af94aefcf0eb36fd"
+  integrity sha512-ZHH+EydVmkVm2cw9Ytys0u5qN8M4mE+EwcVWZnrJ5PXrsOiS+jRlHCj6vrf546Sn/uBwQ6s3NZ3VhTzGN/nubw==
+  dependencies:
+    jsbi "^4.1.0"
+
+"@ckb-lumos/toolkit@^0.17.0-rc8":
+  version "0.17.0-rc8"
+  resolved "https://registry.yarnpkg.com/@ckb-lumos/toolkit/-/toolkit-0.17.0-rc8.tgz#66ecd2d7cc97384db10c329d3f3b768158eab3ba"
+  integrity sha512-xrIfUWq2J8bYAGmwTpSa4aavP705lyMTl6ErHvAT83K5rzgIONeM1dRKlVSJpwBOgrFKi9qbzEgsLU/GUm1QYw==
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.npmjs.org/@cnakazawa/watch/-/watch-1.0.4.tgz"
@@ -2165,15 +2189,16 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@lay2/pw-core@0.4.0-alpha.8":
-  version "0.4.0-alpha.8"
-  resolved "https://registry.npmjs.org/@lay2/pw-core/-/pw-core-0.4.0-alpha.8.tgz"
+"@lay2/pw-core@0.4.0-alpha.13":
+  version "0.4.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/@lay2/pw-core/-/pw-core-0.4.0-alpha.13.tgz#8e5978288aa0a5e5f063826956bb7963dfba274e"
+  integrity sha512-2dBH2lResdhmqb6rpnK4hkEYrwhGSqgTd1RmPpXWzcce5yFSfbtPHVzm3Vex3U956+vJZtPxvQmnMXegq6/aCw==
   dependencies:
-    "@nervosnetwork/ckb-sdk-utils" "^0.41.1"
+    "@nervosnetwork/ckb-sdk-utils" "0.101.0"
     "@scatterjs/core" "^2.7.53"
     "@scatterjs/eosjs2" "^1.5.35"
     axios "^0.19.2"
-    bech32 "^1.1.4"
+    bech32 "2.0.0"
     blake2b "^2.1.3"
     bs58 "^4.0.1"
     cross-fetch "^3.1.4"
@@ -2192,10 +2217,13 @@
   resolved "https://registry.yarnpkg.com/@mibao-ui/components/-/components-0.0.34.tgz#b710d13f4634bfd2588795e5bf47c3126d2124f2"
   integrity sha512-2jp61zUuBtsGJKKI2My96O97VWpHyheWDOoAIVNc3p1lq02Kp5bR+7uqZhKU7qoa5jUxVeNvxx+U+/6mRUboLg==
 
-"@nervina-labs/flashsigner@^0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@nervina-labs/flashsigner/-/flashsigner-0.1.8.tgz#18d6e59bd5d5e151c2ff22a145c4a44b9b2dd029"
-  integrity sha512-X/EKVdw2q7WgCLq93/YtxJ/tMDr2SVKygcvGSUn9cEBQvJ1LsdC/fpqaC2d4xF6AOmwL1Vw/xDf/1PxuqTH/fQ==
+"@nervina-labs/flashsigner@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@nervina-labs/flashsigner/-/flashsigner-0.2.1.tgz#59b2c41ee8a30f7690bef9cec7b472bc23ea7695"
+  integrity sha512-7qoFZS/doLXQET01dji48f+f2b7XMgouDJV9vaVjvLDr7LoMS+Fl0E2sJJfoWTk3GEqwMm8fcsteiwMDRIoGQA==
+  dependencies:
+    url-parse "^1.5.4"
+    url-shim "^1.0.1"
 
 "@nervosnetwork/ckb-sdk-core@^0.101.0":
   version "0.101.0"
@@ -2227,23 +2255,10 @@
     jsbi "3.1.3"
     tslib "2.3.1"
 
-"@nervosnetwork/ckb-sdk-utils@^0.41.1":
-  version "0.41.1"
-  resolved "https://registry.npmjs.org/@nervosnetwork/ckb-sdk-utils/-/ckb-sdk-utils-0.41.1.tgz"
-  dependencies:
-    "@nervosnetwork/ckb-types" "0.41.1"
-    elliptic "6.5.4"
-    jsbi "3.1.3"
-    tslib "2.0.1"
-
 "@nervosnetwork/ckb-types@0.101.0":
   version "0.101.0"
   resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-types/-/ckb-types-0.101.0.tgz#84c5f590bd8e2e06fdf56bab0c09995da0ada4ca"
   integrity sha512-J82ANP44TvdYY1fCEom9RodMIFJYCb2oteSCU1TD9bY3tZZFrhRi+Muz0qh6f9wrR5F3NzdXQD8wJoPZ3Exr9Q==
-
-"@nervosnetwork/ckb-types@0.41.1":
-  version "0.41.1"
-  resolved "https://registry.npmjs.org/@nervosnetwork/ckb-types/-/ckb-types-0.41.1.tgz"
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -2655,6 +2670,13 @@
 "@types/json5@^0.0.29":
   version "0.0.29"
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"
+
+"@types/lodash.isequal@^4.5.5":
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/@types/lodash.isequal/-/lodash.isequal-4.5.5.tgz#4fed1b1b00bef79e305de0352d797e9bb816c8ff"
+  integrity sha512-4IKbinG7MGP131wRfceK6W4E/Qt3qssEFLF30LnJbjYiSfHGGRU/Io8YxXrZX109ir+iDETC8hw8QsDijukUVg==
+  dependencies:
+    "@types/lodash" "*"
 
 "@types/lodash.mergewith@4.6.6":
   version "4.6.6"
@@ -3779,10 +3801,6 @@ bech32@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/bech32/-/bech32-2.0.0.tgz#078d3686535075c8c79709f054b1b226a133b355"
   integrity sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==
-
-bech32@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.npmjs.org/bech32/-/bech32-1.1.4.tgz"
 
 bfj@^7.0.2:
   version "7.0.2"
@@ -8148,6 +8166,11 @@ js-sha3@0.8.0, js-sha3@^0.8.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz"
 
+js-xxhash@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/js-xxhash/-/js-xxhash-1.0.4.tgz#ce465d8a5c038167a07aa35a855c0bd792fe8e06"
+  integrity sha512-S/6Oo7ruxx5k8m4qlMnbpwQdJjRsvvfcIhIk1dA9c5y5GNhYHKYKu9krEK3QgBax6CxJuf4gRL2opgLkdzWIKg==
+
 js-yaml@^3.13.1:
   version "3.14.1"
   resolved "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.1.tgz"
@@ -8162,6 +8185,11 @@ jsbi@3.1.3:
 jsbi@^3.1.4:
   version "3.1.4"
   resolved "https://registry.npmjs.org/jsbi/-/jsbi-3.1.4.tgz"
+
+jsbi@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/jsbi/-/jsbi-4.1.0.tgz#f0c25ed8881bc09891334b03a3952efaa7add337"
+  integrity sha512-384Z4keIsJtYpnVggsxaB255MZctILbxv+ihtwoWPF7KNOlYHn1LFpRnUw5qsAspUAA2+I7qzjVJxVYtHVjxNw==
 
 jsbn@~0.1.0:
   version "0.1.1"
@@ -8440,6 +8468,11 @@ lodash.debounce@^4.0.8:
 lodash.flatten@^4.4.0:
   version "4.4.0"
   resolved "https://registry.npmjs.org/lodash.flatten/-/lodash.flatten-4.4.0.tgz"
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
 
 lodash.memoize@^4.1.2:
   version "4.1.2"
@@ -12400,10 +12433,6 @@ tsconfig-paths@^3.9.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/tslib/-/tslib-2.0.1.tgz"
-
 tslib@2.3.1, tslib@^2.1.0:
   version "2.3.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
@@ -12664,9 +12693,22 @@ url-parse@^1.4.3:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
+url-parse@^1.5.4:
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.6.tgz#b2a41d5a233645f3c31204cc8be60e76a15230a2"
+  integrity sha512-xj3QdUJ1DttD1LeSfvJlU1eiF1RvBSBfUu8GplFGdUzSO28y5yUtEl7wb//PI4Af6qh0o/K8545vUmucRrfWsw==
+  dependencies:
+    querystringify "^2.1.1"
+    requires-port "^1.0.0"
+
 url-set-query@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/url-set-query/-/url-set-query-1.0.0.tgz"
+
+url-shim@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/url-shim/-/url-shim-1.0.1.tgz#8842662b0f2edef8df4ebbe507466f04f771eb1b"
+  integrity sha512-8nwZkCP7pbI8ifcifTZSLRO3W+CWuh/mafPvc7utPRqgxAORnsZIzQ5K8LUsHiQ4mTtJrKRAJmW2ZHxQk0rKUA==
 
 url-to-options@^1.0.1:
   version "1.0.1"
