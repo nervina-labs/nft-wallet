@@ -264,12 +264,6 @@ export const Transfer: React.FC = () => {
         type: 'warning',
         title: t('transfer.error.unipass-v2'),
         okText: t('auth.ok'),
-        onCancel() {
-          // do nothing
-        },
-        onConfirm() {
-          setIsDrawerOpen(true)
-        },
       })
     } else {
       setIsDrawerOpen(true)
