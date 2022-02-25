@@ -168,13 +168,9 @@ export const RedEnvelope: React.FC = () => {
           const code = response?.code
           if (code === 2022) {
             unipassDialog()
-            return
-          }
-          if (code === ErrorCode.RedEnvelopeClaimed) {
+          } else if (code === ErrorCode.RedEnvelopeClaimed) {
             await refetch()
-            return
-          }
-          if (
+          } else if (
             !ignoreCodeSet.has(response?.code) &&
             err?.name !== 'EmptyError'
           ) {
