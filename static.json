@@ -3,6 +3,11 @@
   "routes": {
     "/**": "index.html"
   },
+  "proxy": {
+    "/doc": {
+      "origin": "http://blog.mibao.net/doc"
+    }
+  },
   "headers": {
     "/": {
       "Cache-Control": "no-cache,must-revalidate,proxy-revalidate,max-age=300"
