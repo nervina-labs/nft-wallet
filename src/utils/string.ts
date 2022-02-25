@@ -1,4 +1,4 @@
-import { ISSUER_ID_REG, TOKEN_CLASS_ID_REG } from '../constants'
+import { ISSUER_ID_REG, TOKEN_CLASS_ID_REGS } from '../constants'
 
 export function verifyEmail(email: string) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -64,5 +64,5 @@ export function isIssuerId(str: string): boolean {
 }
 
 export function isTokenClassId(str: string): boolean {
-  return TOKEN_CLASS_ID_REG.test(str)
+  return TOKEN_CLASS_ID_REGS.some((r) => r.test(str))
 }

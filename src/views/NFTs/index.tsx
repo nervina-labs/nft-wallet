@@ -16,12 +16,14 @@ import { useTrackDidMount } from '../../hooks/useTrack'
 import { useWechatShare } from '../../hooks/useWechat'
 import { useTranslation } from 'react-i18next'
 import { useIsLiteAtom } from '../../hooks/useLite'
+import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
   const api = useAPI()
   const { isLogined } = useAccountStatus()
   const { address: localAddress } = useAccount()
+  const { isAuthenticated } = useProfile()
   const address = useMemo(
     () => (params.address ? params.address : localAddress),
     [localAddress, params.address]
@@ -32,15 +34,21 @@ export const NFTs: React.FC = () => {
   const [t] = useTranslation('translations')
   const matchHome = useRouteMatch(RoutePath.NFTs)
   const [isLite] = useIsLiteAtom()
+  const getAuth = useGetAndSetAuth()
   const { data: user, isLoading: isUserLoading } = useQuery(
-    [Query.Profile, address, api],
-    async () => await api.getProfile(address),
+    [Query.Profile, address, api, isAuthenticated],
+    async () => {
+      if (isAuthenticated) {
+        const auth = await getAuth()
+        return await api.getProfile(address, auth)
+      }
+    },
     {
       enabled: !!address,
       onSuccess: (d) => {
         wechatShare({
           title: t('common.share.wx.collector.title', {
-            name: d.nickname || t('holder.title'),
+            name: d?.nickname || t('holder.title'),
           }),
           desc: t(`common.share.wx.${matchHome ? 'home' : 'collector'}.desc`),
           link: `${location.origin}${RoutePath.Holder}/${address}`,
@@ -53,8 +61,8 @@ export const NFTs: React.FC = () => {
     if (isUserLoading) {
       return false
     }
-    return !user?.guide_finished
-  }, [user, isUserLoading])
+    return !user?.guide_finished && isAuthenticated
+  }, [user, isUserLoading, isAuthenticated])
 
   useTrackDidMount(isHolder ? 'home' : 'collector')
 

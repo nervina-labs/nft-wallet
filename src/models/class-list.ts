@@ -56,6 +56,7 @@ export interface TokenClass extends VipInfo, ClassLikes, CardBack {
     url: string
   }
   thumbnail_url?: string
+  script_type: 'cota' | 'm_nft'
 }
 
 export function isTokenClass(data: any): data is TokenClass {

@@ -10,7 +10,7 @@ import { DrawerAction } from './DrawerAction'
 import { ProfilePath, RoutePath } from '../../routes'
 import { getRegionFromCode, SetRegion } from './SetRegion'
 import { useRouteMatch } from 'react-router-dom'
-import { useSetServerProfile } from '../../hooks/useProfile'
+import { useGetAndSetAuth, useSetServerProfile } from '../../hooks/useProfile'
 import { useQuery, useQueryClient } from 'react-query'
 import { Query } from '../../models'
 import { DrawerImage } from './DrawerImage'
@@ -79,11 +79,13 @@ export const Profile: React.FC = () => {
 
   const matchDesc = useRouteMatch(ProfilePath.Description)
   const matchUsername = useRouteMatch(ProfilePath.Username)
+  const getAuth = useGetAndSetAuth()
 
   const { data: user, refetch } = useQuery(
     [Query.Profile, address],
     async () => {
-      const profile = await api.getProfile()
+      const auth = await getAuth()
+      const profile = await api.getProfile('', auth)
       return profile
     },
     {

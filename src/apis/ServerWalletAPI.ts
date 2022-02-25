@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { core } from '@ckb-lumos/base'
 import { PER_ITEM_LIMIT, SERVER_URL } from '../constants'
 import {
   ClassSortType,
@@ -75,6 +76,7 @@ import {
   SentRedEnvelopeReword,
 } from '../models/red-envelope'
 import { isPwTransaction } from '../utils'
+import { WalletType } from '../hooks/useAccount'
 
 function randomid(length = 10): string {
   let result = ''
@@ -329,7 +331,7 @@ export class ServerWalletAPI {
   async getTransferNftTransaction(
     uuid: string,
     toAddress: string,
-    isUnipass = true
+    walletType?: WalletType
   ): Promise<NFTTransaction> {
     // eslint-disable-next-line prettier/prettier
     const { data } = await this.axios.get<any, AxiosResponse<UnsignedTransaction>>('/token_ckb_transactions/new', {
@@ -340,7 +342,7 @@ export class ServerWalletAPI {
       },
     })
 
-    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, isUnipass)
+    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, walletType)
     return {
       tx,
       uuid: data.token_ckb_transaction_uuid,
@@ -370,9 +372,16 @@ export class ServerWalletAPI {
     return data
   }
 
-  async getProfile(address?: string): Promise<UserResponse> {
+  async getProfile(address: string, auth?: Auth): Promise<UserResponse> {
     try {
-      const { data } = await this.axios.get(`/users/${address ?? this.address}`)
+      const { data } = await this.axios.get(
+        `/users/${address || this.address}`,
+        {
+          headers: {
+            auth: auth ? JSON.stringify(auth) : '',
+          },
+        }
+      )
       return data
     } catch (error) {
       return Object.create(null)
@@ -389,10 +398,28 @@ export class ServerWalletAPI {
       ? (transformers.TransformTransaction(tx) as RPC.RawTransaction)
       : tx
     if (sig) {
+      const [oldWitness] = rawTx.witnesses
       const witnessArgs: WitnessArgs = {
         lock: sig,
         input_type: '',
         output_type: '',
+      }
+      try {
+        const wa = new core.WitnessArgs(new Reader(oldWitness))
+        const inputType = wa.getInputType()
+        const outputType = wa.getOutputType()
+        if (inputType.hasValue()) {
+          witnessArgs.input_type = new Reader(
+            inputType.value().raw()
+          ).serializeJson()
+        }
+        if (outputType.hasValue()) {
+          witnessArgs.output_type = new Reader(
+            outputType.value().raw()
+          ).serializeJson()
+        }
+      } catch (error) {
+        //
       }
       const witness = new Reader(
         SerializeWitnessArgs(normalizers.NormalizeWitnessArgs(witnessArgs))
@@ -599,7 +626,7 @@ export class ServerWalletAPI {
 
   async getRedeemTransaction(
     uuid: string,
-    isUnipass = true
+    walletType?: WalletType
   ): Promise<NFTTransaction> {
     const { data } = await this.axios.get(
       `/redemption_events/${uuid}/records/new`,
@@ -610,11 +637,12 @@ export class ServerWalletAPI {
         },
       }
     )
-    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, isUnipass)
+    const tx = await rawTransactionToPWTransaction(data.unsigned_tx, walletType)
 
     return {
       tx,
       uuid: data.redemption_event_uuid,
+      unSignedTx: data.unsigned_tx,
     }
   }
 
@@ -957,7 +985,7 @@ export class ServerWalletAPI {
   async getSendRedEnvelopeTx(
     tokenUuids: string[],
     auth: Auth,
-    isUnipass?: boolean
+    walletType?: WalletType
   ): Promise<AxiosResponse<UnsignedTransactionSendRedEnvelope>> {
     const headers = {
       auth: JSON.stringify(auth),
@@ -977,7 +1005,7 @@ export class ServerWalletAPI {
         ...res.data,
         tx: await rawTransactionToPWTransaction(
           res.data.unsigned_tx,
-          isUnipass
+          walletType
         ),
       },
     }

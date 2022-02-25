@@ -44,6 +44,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({ info }) => {
         }
         w="50px"
         h="50px"
+        minW="50px"
         resizeScale={300}
         webp={isSupportWebp()}
         fallbackSrc={FALLBACK}
