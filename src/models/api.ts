@@ -45,6 +45,7 @@ export interface UnsignedReddemTransaction {
 export interface NFTTransaction {
   tx: PwTransaction
   uuid: string
+  unSignedTx?: RPC.RawTransaction
 }
 
 export enum ClassSortType {

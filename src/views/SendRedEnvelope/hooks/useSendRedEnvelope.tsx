@@ -73,8 +73,7 @@ export function useSendRedEnvelope() {
         const { data } = await api.getSendRedEnvelopeTx(
           formInfo.tokenUuids,
           auth,
-          walletType === WalletType.Unipass ||
-            walletType === WalletType.Flashsigner
+          walletType
         )
         const { signature } = routeLocation.state ?? {}
         const signTx = await getSignTx(data)
@@ -135,7 +134,7 @@ export function useSendRedEnvelope() {
         setSending(true)
       } catch (err: any) {
         if (err?.response?.data?.code === 2022) {
-          unipassDialog()
+          await unipassDialog()
         } else {
           toast(`${t('send-red-envelope.create-failed')}: ${err as string}`)
         }

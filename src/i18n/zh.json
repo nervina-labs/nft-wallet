@@ -16,6 +16,8 @@
         "mainnet": "主网",
         "testnet": "测试网"
       },
+      "unipass-v2-error": "当前地址不支持领取此种类型的秘宝，请重新连接 Flashsigner 或以太坊环境",
+      "relogin": "重新登录",
       "share": {
         "copy": "点击复制链接并分享至社交媒体",
         "close": "关闭",
@@ -37,7 +39,6 @@
           "desc-issuer": "欣赏秘宝创作者的数字作品",
           "collected": "已收藏秘宝"
         },
-        "unipass-v2-error": "当前地址不支持领取此种类型的秘宝，请重新登录",
         "wx": {
           "nft": {
             "title": "",
@@ -151,6 +152,7 @@
         "rescan": "重新扫描"
       },
       "error": {
+        "unipass-v2": "当前识别到该接收方地址是 Unipass v2 生成的地址，请使用 Unipass v3 新版本生成的地址",
         "eth": "请输入正确的以太坊地址",
         "ckb": "请输入正确的 CKB 地址",
         "self": "无法转让秘宝给自己",
@@ -163,7 +165,9 @@
         "no-camera": "没有找到摄像头",
         "contract-address": "无法转让到以太坊合约地址",
         "camera-auth": "没有摄像头权限，请刷新页面重新授权",
-        "ios-webkit": "请升级操作系统至 iOS 14.3+，或使用 Safari 浏览器进行扫码"
+        "ios-webkit": "请升级操作系统至 iOS 14.3+，或使用 Safari 浏览器进行扫码",
+        "upgrade": "当前正在升级您的秘宝账户，请稍等 2-3 分钟后再进行操作。",
+        "continuous-transfer": "当前有笔交易正在进行中，请稍等 2-3 分钟后再进行操作。"
       },
       "das": {
         "not-register": "当前 DAS 还未注册",
@@ -434,6 +438,7 @@
       "title": "兑换中心",
       "count": "{{count}} 个",
       "redeemed": "已兑",
+      "not-on-chain": "您的秘宝还在接收中，请稍后再试",
       "flashsigner": "Flashsigner 用户目前暂时不支持参与兑换。近期会支持，请关注社区通知",
       "nft-prize": "奖品包含下面所有秘宝",
       "blind-prize": "奖品随机包含下面的 {{count}} 个秘宝",

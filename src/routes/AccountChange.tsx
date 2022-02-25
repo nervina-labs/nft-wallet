@@ -11,6 +11,7 @@ import {
   useConfirmDialog,
 } from '../hooks/useConfirmDialog'
 import { useWechatShare } from '../hooks/useWechat'
+import { useToast } from '../hooks/useToast'
 
 const allowWithoutAuthList = new Set([
   RoutePath.Unipass,
@@ -51,6 +52,7 @@ export const AccountChange: React.FC = ({ children }) => {
   const isSigning = useRef(false)
   const onOpenConfirm = useConfirmDialog()
   const onCloseConfirm = useCloseConfirmDialog()
+  const toast = useToast()
   const [t] = useTranslation('translations')
   const wechatShare = useWechatShare()
   useEffect(() => {
@@ -86,17 +88,20 @@ export const AccountChange: React.FC = ({ children }) => {
           title: t('auth.title'),
           content: t('auth.content'),
           okText: t('auth.ok'),
-          onConfirm: () => {
+          onConfirm: async () => {
             if (pathInForceAuthList && WalletType.Unipass === walletType) {
               UnipassConfig.setRedirectUri(location.pathname + location.search)
             }
-            getAuth()
-              .then(() => {
-                if (WalletType.Metamask === walletType) {
-                  onCloseConfirm()
-                }
-              })
-              .catch(Boolean)
+            try {
+              await getAuth()
+              if (WalletType.Metamask === walletType) {
+                onCloseConfirm()
+              }
+            } catch (error) {
+              //
+            } finally {
+              isSigning.current = false
+            }
           },
         })
       }
@@ -113,6 +118,7 @@ export const AccountChange: React.FC = ({ children }) => {
     getAuth,
     onOpenConfirm,
     onCloseConfirm,
+    toast,
   ])
 
   return <>{children}</>

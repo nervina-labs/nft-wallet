@@ -1,10 +1,14 @@
 import { UnipassConfig } from './unipass'
-import { TransferMnftOptions, LoginOptions } from '@nervina-labs/flashsigner'
+import {
+  TransferMnftOptions,
+  LoginOptions,
+  TransferCotaNftOptions,
+} from '@nervina-labs/flashsigner'
 import i18n from '../i18n'
 
-export function buildFlashsignerOptions(
-  options?: TransferMnftOptions | LoginOptions
-) {
+export function buildFlashsignerOptions<
+  T extends TransferMnftOptions | TransferCotaNftOptions | LoginOptions
+>(options?: T): T {
   const extra = {
     ...options?.extra,
   }
@@ -22,5 +26,5 @@ export function buildFlashsignerOptions(
     res.extra = extra
   }
 
-  return res
+  return res as T
 }
