@@ -46,6 +46,7 @@ export const NftList: React.FC<{
           renderer_type: c.renderer_type,
           card_back_content_exist: c.card_back_content_exist,
           card_back_content: c.card_back_content,
+          script_type: c.script_type,
         })),
       }
     },

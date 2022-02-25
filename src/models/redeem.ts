@@ -164,7 +164,7 @@ export interface CustomRedeemParams {
 export interface RedeemParams {
   customData?: CustomRedeemParams
   sig?: string
-  tx: PwTransaction
+  tx: PwTransaction | RPC.RawTransaction
   uuid: string
 }
 

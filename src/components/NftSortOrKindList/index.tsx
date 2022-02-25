@@ -108,7 +108,7 @@ export const NftSortOrKindList: React.FC<{
           <Box
             right="6px"
             w="84px"
-            h="40px"
+            h="1px"
             position="absolute"
             top="calc(100% + 8px)"
           >

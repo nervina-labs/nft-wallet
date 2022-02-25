@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { getHelpCenterUrl } from '../../data/help'
 import { useAccount, useAPI } from '../../hooks/useAccount'
+import { useGetAndSetAuth } from '../../hooks/useProfile'
 
 export interface IntroProps {
   show: boolean
@@ -18,6 +19,7 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
   const api = useAPI()
   const { address } = useAccount()
   const history = useHistory()
+  const getAuth = useGetAndSetAuth()
   const steps: IStep[] = useMemo(() => {
     return [
       {
@@ -90,7 +92,7 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
       lang={i18n.language === 'en' ? 'en' : 'zh'}
       nextText={t('guide.next')}
       okText={t('guide.done')}
-      afterStepChange={(stepIndex) => {
+      afterStepChange={async (stepIndex) => {
         if (stepIndex === 1) {
           requestAnimationFrame(() => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -110,7 +112,8 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
               modal.style.borderStyle = 'none'
             }
           })
-          api.setProfile({ guide_finished: 'true' }).catch(Boolean)
+          const auth = await getAuth()
+          api.setProfile({ guide_finished: 'true' }, { auth }).catch(Boolean)
         }
       }}
     />
