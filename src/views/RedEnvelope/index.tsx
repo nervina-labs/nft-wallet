@@ -174,7 +174,10 @@ export const RedEnvelope: React.FC = () => {
             await refetch()
             return
           }
-          if (!ignoreCodeSet.has(response?.code)) {
+          if (
+            !ignoreCodeSet.has(response?.code) &&
+            err?.name !== 'EmptyError'
+          ) {
             if (
               data?.rule_info?.rule_type === RuleType.password &&
               code === ErrorCode.RedEnvelopeRuleMatch
