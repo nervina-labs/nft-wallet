@@ -3,9 +3,9 @@
   "routes": {
     "/**": "index.html"
   },
-  "proxy": {
-    "/doc": {
-      "origin": "http://blog.mibao.net/doc"
+  "proxies": {
+    "/doc/": {
+      "origin": "http://blog.mibao.net/doc/"
     }
   },
   "headers": {
