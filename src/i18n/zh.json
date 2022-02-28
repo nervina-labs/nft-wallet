@@ -411,6 +411,7 @@
       "sold-out": "Sold out"
     },
     "claim": {
+      "sign-up": "手机号注册",
       "tips": "You have a Collection to be claimed",
       "login": "Please log in to Mibao first",
       "last-step": "Only one step left to claim a Collection",
