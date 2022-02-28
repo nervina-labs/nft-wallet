@@ -421,7 +421,7 @@
       "claimed": "Opps～该数字藏品已被领走",
       "go-home": "马上查看领取的数字藏品",
       "go-explore": "去看看我的数字藏品",
-      "placeholder": "请输入领取密码"
+      "placeholder": "请输入领取码"
     },
     "issuer": {
       "created": "已创作",
