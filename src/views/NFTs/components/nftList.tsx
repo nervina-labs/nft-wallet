@@ -1,15 +1,16 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { NFTToken, Query, TransactionStatus } from '../../../models'
 import { Empty } from '../empty'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuerySearch } from '../../../hooks/useRouteQuery'
 import { IssuerList } from '../IssuerList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
-import { useAPI } from '../../../hooks/useAccount'
+import { useAccount, useAPI } from '../../../hooks/useAccount'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { Card } from '../card'
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from '@mibao-ui/components'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
+import { generateOldAddress } from '../../../utils'
 
 const ListTypeSet = ['owned', 'liked', 'follow'] as const
 type ListType = typeof ListTypeSet[number]
@@ -22,6 +23,10 @@ export const NftList: React.FC<{
   const { t } = useTranslation('translations')
   const [listType, setListType] = useRouteQuerySearch<ListType>('list', 'owned')
   const filterIndex = ListTypeSet.findIndex((l) => l === listType)
+  const { walletType } = useAccount()
+  const displayAddress = useMemo(() => {
+    return generateOldAddress(address, walletType)
+  }, [address, walletType])
 
   const getLikeData = useCallback(
     async ({ pageParam }) => {
@@ -125,7 +130,7 @@ export const NftList: React.FC<{
                     <Card
                       token={token}
                       key={token.token_uuid || `${i}.${j}`}
-                      address={address}
+                      address={displayAddress}
                       isClass={false}
                       showTokenID
                       isHolder={isHolder}

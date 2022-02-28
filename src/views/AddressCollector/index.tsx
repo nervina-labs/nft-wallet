@@ -204,7 +204,7 @@ export const AddressCollector: React.FC = () => {
         return
       }
       try {
-        await api.submitAddress(id, auth)
+        await api.submitAddress(id, walletType, auth)
         setSubmitStatus(SubmitStatus.Success)
       } catch (error: any) {
         const data = error?.response?.data
