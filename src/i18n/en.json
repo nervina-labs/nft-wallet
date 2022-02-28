@@ -435,7 +435,7 @@
       "empty": "Ahhh ~ The issuer haven't created Digital Collection yet"
     },
     "exchange": {
-      "home": "My collections",
+      "home": "My collection",
       "title": "Redeem Center",
       "count": "{{count}}",
       "redeemed": "Redeemed",
