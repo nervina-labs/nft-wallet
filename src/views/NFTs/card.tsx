@@ -124,6 +124,7 @@ export const Card: React.FC<CardProps> = ({
     isHolder ? holderTrackName : collectorTrackName,
     'click'
   )
+
   return (
     <Box position="relative" w="100%" mb="35px" px="20px">
       <Label address={address} nft={token} />
