@@ -348,11 +348,7 @@ export const Claim: React.FC = () => {
         ) : null}
         <LoginButton
           onClick={() => {
-            history.push(
-              submitStatus === SubmitStatus.Success
-                ? RoutePath.NFTs
-                : RoutePath.Explore
-            )
+            history.push(RoutePath.NFTs)
           }}
         >
           {t(
