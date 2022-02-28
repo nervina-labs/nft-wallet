@@ -75,7 +75,7 @@ import {
   SentRedEnvelopeRecords,
   SentRedEnvelopeReword,
 } from '../models/red-envelope'
-import { isPwTransaction } from '../utils'
+import { generateOldAddress, isPwTransaction } from '../utils'
 import { WalletType } from '../hooks/useAccount'
 
 function randomid(length = 10): string {
@@ -226,6 +226,7 @@ export class ServerWalletAPI {
 
   async submitAddress(
     uuid: string,
+    walletType: WalletType,
     auth: Auth
   ): Promise<AxiosResponse<{ code: number }>> {
     const url = `/address_packages/${uuid}/items`
@@ -233,7 +234,7 @@ export class ServerWalletAPI {
       `${SERVER_URL}${url}`.replace('/wallet/', '/saas/'),
       {
         auth,
-        address: this.address,
+        address: generateOldAddress(this.address, walletType),
       },
       {
         headers: {

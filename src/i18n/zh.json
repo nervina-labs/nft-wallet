@@ -413,15 +413,15 @@
     "claim": {
       "tips": "您有一个秘宝待领取",
       "login": "请先连接秘宝",
-      "last-step": "您离领取还差最后一步",
+      "last-step": "一步马上领取您的数字藏品！",
       "error": "领取码错误",
       "confirm": "确认领取",
-      "continue": "您还可以继续操作",
+      "continue": "您还可以进行以下操作",
       "success": "领取成功",
-      "claimed": "Opps～秘宝已被领走",
-      "go-home": "进入秘宝查看",
-      "go-explore": "发现更多秘宝",
-      "placeholder": "请输入领取密码"
+      "claimed": "Opps～该数字藏品已被领走",
+      "go-home": "马上查看领取的数字藏品",
+      "go-explore": "去看看我的数字藏品",
+      "placeholder": "请输入领取码"
     },
     "issuer": {
       "created": "已创作",
@@ -435,6 +435,7 @@
       "empty": "啊哦～暂未创作秘宝"
     },
     "exchange": {
+      "home": "我的数字藏品",
       "title": "兑换中心",
       "count": "{{count}} 个",
       "redeemed": "已兑",
