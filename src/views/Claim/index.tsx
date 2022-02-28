@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Adidas from '../../assets/img/adidas.jpg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN, IS_MOBILE_ETH_WALLET } from '../../constants'
-import { Redirect, useHistory, useParams } from 'react-router-dom'
+import { Redirect, useHistory, useParams, Link } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
 import { UnipassConfig } from '../../utils'
@@ -330,6 +330,9 @@ export const Claim: React.FC = () => {
           >
             {t('claim.confirm')}
           </LoginButton>
+          <Box textDecoration="underline" color="blue">
+            <Link to={RoutePath.NFTs}>{t('exchange.home')}</Link>
+          </Box>
         </>
       )
     }

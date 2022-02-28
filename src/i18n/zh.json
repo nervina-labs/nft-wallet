@@ -430,6 +430,7 @@
       "empty": "啊哦～暂未创作秘宝"
     },
     "exchange": {
+      "home": "我的藏品",
       "title": "兑换中心",
       "count": "{{count}} 个",
       "redeemed": "已兑",
