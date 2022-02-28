@@ -8,6 +8,7 @@ import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
 import { getNFTQueryParams, isSupportWebp } from '../../utils'
 import { trackLabels, useTrackClick } from '../../hooks/useTrack'
+import { useAccount } from '../../hooks/useAccount'
 export interface CardProps {
   token: NFTToken
   isClass: boolean
@@ -45,8 +46,9 @@ interface LabelResult {
   text: string
 }
 
-const Label: React.FC<LabelProps> = ({ nft, address }) => {
+const Label: React.FC<LabelProps> = ({ nft }) => {
   const { t } = useTranslation('translations')
+  const { address, displayAddress } = useAccount()
   if (nft.tx_state === TransactionStatus.Committed) {
     return null
   }
@@ -61,7 +63,7 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
   }
 
   if (
-    address === nft?.to_address &&
+    (address === nft?.to_address || displayAddress === nft?.to_address) &&
     nft.tx_state === TransactionStatus.Pending
   ) {
     status = LabelStatus.Receiving
