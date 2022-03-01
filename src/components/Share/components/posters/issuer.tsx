@@ -54,7 +54,7 @@ export const Issuer: React.FC<IssuerProps & PosterProps> = ({
     avatarUrl,
     {
       fallbackImg: FallbackAvatarPath,
-      usePreviewUrl: 100,
+      size: 100,
       toBlob: true,
     }
   )

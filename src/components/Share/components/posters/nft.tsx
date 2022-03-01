@@ -44,7 +44,7 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
     issuer.avatarUrl ?? '',
     {
       fallbackImg: FallbackAvatarPath,
-      usePreviewUrl: 100,
+      size: 100,
       toBlob: true,
     }
   )
