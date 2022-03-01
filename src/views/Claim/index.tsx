@@ -7,7 +7,7 @@ import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-success.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN, IS_MOBILE_ETH_WALLET } from '../../constants'
-import { Redirect, useHistory, useParams } from 'react-router-dom'
+import { Link, Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -380,6 +380,9 @@ export const Claim: React.FC = () => {
           >
             {t('claim.confirm')}
           </LoginButton>
+          <Box textDecoration="underline" color="blue">
+            <Link to={RoutePath.NFTs}>{t('exchange.home')}</Link>
+          </Box>
         </>
       )
     }
@@ -395,11 +398,7 @@ export const Claim: React.FC = () => {
         ) : null}
         <LoginButton
           onClick={() => {
-            history.push(
-              submitStatus === SubmitStatus.Success
-                ? RoutePath.NFTs
-                : RoutePath.Explore
-            )
+            history.push(RoutePath.NFTs)
           }}
         >
           {t(
