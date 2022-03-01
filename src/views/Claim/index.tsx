@@ -253,7 +253,9 @@ export const Claim: React.FC = () => {
 
   const { isReady, isSuccess, captcha, setIsSuccess } = useGeeTest(
     `#${captchId}`,
-    submitStatus === SubmitStatus.Claiming && claimCodeError == null
+    submitStatus === SubmitStatus.Claiming &&
+      claimCodeError == null &&
+      isLogined
   )
 
   const [isClaimError, setIsClaimError] = useState(false)

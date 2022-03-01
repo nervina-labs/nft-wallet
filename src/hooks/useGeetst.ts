@@ -24,7 +24,7 @@ export const useGeeTest = (
   const api = useAPI()
 
   useQuery(
-    [Query.InitGeeTest, i18n.language, api],
+    [Query.InitGeeTest, i18n.language, api, enabled],
     async () => {
       const { data } = await api.initGeeTest()
       return data
