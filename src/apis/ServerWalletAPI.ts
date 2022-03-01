@@ -16,6 +16,8 @@ import {
   TransactionLogResponse,
   UnsignedTransaction,
   UnsignedTransactionSendRedEnvelope,
+  GeeTestResponse,
+  GeeTestOptions,
 } from '../models'
 import {
   Issuer,
@@ -491,10 +493,14 @@ export class ServerWalletAPI {
     return await this.axios.get(`/token_claim_codes/${uuid}`)
   }
 
-  async claim(uuid: string): Promise<AxiosResponse<void>> {
+  async claim(
+    uuid: string,
+    geetest: GeeTestOptions
+  ): Promise<AxiosResponse<void>> {
     return await this.axios.post('/token_claim_codes', {
       to_address: this.address,
       code: uuid,
+      geetest,
     })
   }
 
@@ -981,6 +987,10 @@ export class ServerWalletAPI {
         ...options,
       },
     })
+  }
+
+  public async initGeeTest() {
+    return await this.axios.get<GeeTestResponse>('/geetests')
   }
 
   async getSendRedEnvelopeTx(
