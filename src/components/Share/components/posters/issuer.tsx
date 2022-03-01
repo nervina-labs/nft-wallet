@@ -48,6 +48,7 @@ export const Issuer: React.FC<IssuerProps & PosterProps> = ({
     coverImage,
     {
       toBlob: true,
+      size: 600,
     }
   )
   const { data: issuerAvatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(

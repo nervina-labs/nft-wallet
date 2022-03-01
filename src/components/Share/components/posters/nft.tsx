@@ -38,6 +38,7 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
     bgImgUrl,
     {
       toBlob: true,
+      size: 600,
     }
   )
   const { data: avatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
