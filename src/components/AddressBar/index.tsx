@@ -54,7 +54,7 @@ export const Addressbar: React.FC<AddressbarProps> = ({
   const trackCopy = useTrackClick('home', 'click')
   const matchHolder = useRouteMatch(`${RoutePath.Holder}`)
   const displayAddress = useMemo(() => {
-    if (matchHolder !== null) {
+    if (matchHolder == null) {
       return generateOldAddress(address)
     }
     return address
