@@ -8,18 +8,19 @@ import styled from '@emotion/styled'
 import { useHistory } from 'react-router'
 import { getNFTQueryParams, isSupportWebp } from '../../utils'
 import { trackLabels, useTrackClick } from '../../hooks/useTrack'
-import { useAccount } from '../../hooks/useAccount'
 export interface CardProps {
   token: NFTToken
   isClass: boolean
   address: string
   isHolder: boolean
   showTokenID: boolean
+  displayAddress: string
 }
 
 interface LabelProps {
   nft: NFTToken
   address: string
+  displayAddress: string
 }
 
 const LabelContainer = styled(Tag)`
@@ -46,9 +47,8 @@ interface LabelResult {
   text: string
 }
 
-const Label: React.FC<LabelProps> = ({ nft }) => {
+const Label: React.FC<LabelProps> = ({ nft, address, displayAddress }) => {
   const { t } = useTranslation('translations')
-  const { address, displayAddress } = useAccount()
   if (nft.tx_state === TransactionStatus.Committed) {
     return null
   }
@@ -108,6 +108,7 @@ export const Card: React.FC<CardProps> = ({
   address,
   showTokenID,
   isHolder,
+  displayAddress,
 }) => {
   const { t, i18n } = useTranslation('translations')
   const isBanned = token.is_issuer_banned || token.is_class_banned
@@ -129,7 +130,7 @@ export const Card: React.FC<CardProps> = ({
 
   return (
     <Box position="relative" w="100%" mb="35px" px="20px">
-      <Label address={address} nft={token} />
+      <Label address={address} nft={token} displayAddress={displayAddress} />
       <NFTCard
         w="100%"
         isIssuerBanned={token.is_issuer_banned}
