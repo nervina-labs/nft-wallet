@@ -1,8 +1,42 @@
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 import { Transaction as PwTransaction } from '@lay2/pw-core'
-import { UNIPASS_URL } from '../constants'
+import { IS_MAINNET, PW_CODE_HASH, UNIPASS_URL } from '../constants'
 import { UnipassAction } from '../models/unipass'
 import i18n from '../i18n'
+import {
+  addressToScript,
+  fullPayloadToAddress,
+  AddressType,
+  AddressPrefix,
+} from '@nervosnetwork/ckb-sdk-utils'
+import { WalletType } from '../hooks/useAccount'
+
+export function isUnipassV2Address(address: string) {
+  try {
+    return addressToScript(address).codeHash === PW_CODE_HASH
+  } catch (error) {
+    return false
+  }
+}
+
+export function generateOldAddress(
+  address: string,
+  walletType: WalletType | undefined
+): string {
+  if (walletType === WalletType.Flashsigner) {
+    return address
+  }
+  const script = addressToScript(address)
+  return fullPayloadToAddress({
+    args: script.args,
+    type:
+      script.hashType === 'data'
+        ? AddressType.DataCodeHash
+        : AddressType.TypeCodeHash,
+    codeHash: script.codeHash,
+    prefix: IS_MAINNET ? AddressPrefix.Mainnet : AddressPrefix.Testnet,
+  })
+}
 
 export function generateUnipassUrl(
   action: UnipassAction,

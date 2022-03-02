@@ -7,7 +7,7 @@ import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-success.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { IS_IMTOKEN, IS_MOBILE_ETH_WALLET } from '../../constants'
-import { Redirect, useHistory, useParams } from 'react-router-dom'
+import { Link, Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -27,6 +27,7 @@ import {
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Box } from '@chakra-ui/layout'
+import { useUnipassV2Dialog } from '../../hooks/useUnipassV2Dialog'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -248,6 +249,7 @@ export const Claim: React.FC = () => {
 
   const [isClaimError, setIsClaimError] = useState(false)
   const [isClaiming, setIsClaiming] = useState(false)
+  const unipassDialog = useUnipassV2Dialog()
   const claim = useCallback(
     async (code: string) => {
       setIsClaiming(true)
@@ -258,6 +260,8 @@ export const Claim: React.FC = () => {
         const errorCode = error?.response?.data.code
         if (errorCode === 1022) {
           setSubmitStatus(SubmitStatus.Claimed)
+        } else if (errorCode === 2022) {
+          unipassDialog()
         } else {
           setIsClaimError(true)
         }
@@ -265,7 +269,7 @@ export const Claim: React.FC = () => {
         setIsClaiming(false)
       }
     },
-    [api]
+    [api, unipassDialog]
   )
 
   useQuery(
@@ -291,7 +295,7 @@ export const Claim: React.FC = () => {
   const [code, setCode] = useState(id ?? '')
 
   const actions = useMemo(() => {
-    if (SubmitStatus.Unlogin === submitStatus) {
+    if (SubmitStatus.Unlogin === submitStatus || !isLogined) {
       return (
         <>
           <p className="desc">{t('claim.tips')}</p>
@@ -376,6 +380,9 @@ export const Claim: React.FC = () => {
           >
             {t('claim.confirm')}
           </LoginButton>
+          <Box textDecoration="underline" color="blue">
+            <Link to={RoutePath.NFTs}>{t('exchange.home')}</Link>
+          </Box>
         </>
       )
     }
@@ -391,11 +398,7 @@ export const Claim: React.FC = () => {
         ) : null}
         <LoginButton
           onClick={() => {
-            history.push(
-              submitStatus === SubmitStatus.Success
-                ? RoutePath.NFTs
-                : RoutePath.Explore
-            )
+            history.push(RoutePath.NFTs)
           }}
         >
           {t(
@@ -419,6 +422,7 @@ export const Claim: React.FC = () => {
     isClaiming,
     isClaimError,
     isFlashsignerLogin,
+    isLogined,
   ])
 
   if (claimCodeError) {

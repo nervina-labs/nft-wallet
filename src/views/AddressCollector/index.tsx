@@ -27,6 +27,7 @@ import {
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Box } from '@chakra-ui/layout'
+import { useUnipassV2Dialog } from '../../hooks/useUnipassV2Dialog'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -173,7 +174,7 @@ export const AddressCollector: React.FC = () => {
   }
 
   const [isNotFound, setIsNotFound] = useState(false)
-
+  const unipassDialog = useUnipassV2Dialog()
   const submit = useCallback(
     async (walletType: WalletType): Promise<void> => {
       setLoading(true, walletType)
@@ -203,7 +204,7 @@ export const AddressCollector: React.FC = () => {
         return
       }
       try {
-        await api.submitAddress(id, auth)
+        await api.submitAddress(id, walletType, auth)
         setSubmitStatus(SubmitStatus.Success)
       } catch (error: any) {
         const data = error?.response?.data
@@ -213,6 +214,8 @@ export const AddressCollector: React.FC = () => {
         }
         if (data?.code === 1091) {
           setSubmitStatus(SubmitStatus.Duplicate)
+        } else if (data?.code === 2022) {
+          unipassDialog()
         } else {
           onConfirm({
             type: 'error',
@@ -222,7 +225,7 @@ export const AddressCollector: React.FC = () => {
       }
       setLoading(false, walletType)
     },
-    [isAuthenticated, getAuth, id, onConfirm, t, api]
+    [isAuthenticated, getAuth, id, onConfirm, t, api, unipassDialog]
   )
 
   const loginBtnOnClick = useCallback(

@@ -1,3 +1,4 @@
+import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomCallback } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
@@ -5,9 +6,9 @@ import i18n from '../i18n'
 import { Auth, User } from '../models/user'
 import { UnipassConfig } from '../utils'
 import {
-  providerAtom,
   useAccount,
   useAPI,
+  useLogin,
   useSignMessage,
   WalletType,
 } from './useAccount'
@@ -82,10 +83,10 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
   const { profile, setProfile } = useProfile()
   const signMessage = useSignMessage()
   const { address, walletType } = useAccount()
+  const { loginMetamask } = useLogin()
   return useAtomCallback(
     useCallback(
       async (get) => {
-        const provider = get(providerAtom)
         const auth = profile?.[address]
         let signature = auth?.auth
         let message = auth?.message
@@ -109,17 +110,24 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
           }
         }
 
-        const addr =
-          walletType !== WalletType.Metamask
-            ? address
-            : (provider?.address?.addressString as string)
+        let addr = address
+
+        if (walletType === WalletType.Metamask) {
+          try {
+            addr = addressToScript(address).args
+          } catch (error) {
+            const p = await loginMetamask()
+            addr = p.address?.addressString
+          }
+        }
+
         return {
           address: addr,
           message,
           signature,
         }
       },
-      [signMessage, walletType, address, profile, setProfile]
+      [signMessage, walletType, address, profile, setProfile, loginMetamask]
     )
   )
 }
