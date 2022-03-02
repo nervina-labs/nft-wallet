@@ -1,13 +1,12 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router'
+import { useHistory, useRouteMatch } from 'react-router'
 import styled from 'styled-components'
 import { ReactComponent as QrcodeSvg } from '../../assets/svg/qrcode.svg'
 import { RoutePath } from '../../routes'
 import { copyFallback, generateOldAddress, truncateMiddle } from '../../utils'
 import { useToast } from '../../hooks/useToast'
 import { trackLabels, useTrackClick } from '../../hooks/useTrack'
-import { useAccount } from '../../hooks/useAccount'
 
 const Container = styled.div`
   height: 32px;
@@ -53,11 +52,13 @@ export const Addressbar: React.FC<AddressbarProps> = ({
   const toast = useToast()
   const [t] = useTranslation('translations')
   const trackCopy = useTrackClick('home', 'click')
-  const { walletType } = useAccount()
+  const matchHolder = useRouteMatch(`${RoutePath.Holder}`)
   const displayAddress = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return generateOldAddress(address, walletType!)
-  }, [walletType, address])
+    if (matchHolder !== null) {
+      return generateOldAddress(address)
+    }
+    return address
+  }, [address, matchHolder])
   return (
     <Container className="address-bar">
       <div
