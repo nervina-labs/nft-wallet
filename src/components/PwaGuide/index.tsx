@@ -1,106 +1,75 @@
-import { Box, Flex, Image } from '@chakra-ui/react'
-import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { Box, Flex, Image, Text } from '@chakra-ui/react'
+import { useObservable } from 'rxjs-hooks'
+import { fromEvent, scan, tap, throttleTime } from 'rxjs'
 import EyePath from '../../assets/img/ios-pwa-guide-eye.png'
-import { ReactComponent as PwaGuideAddSvg } from '../../assets/svg/ios-pwa-guide-add-icon.svg'
-import { ReactComponent as PwaGuideShareSvg } from '../../assets/svg/ios-pwa-guide-share-icon.svg'
+import { ReactComponent as PwaLogo } from '../../assets/svg/pwa-logo.svg'
+import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import styled from '@emotion/styled'
-import { Button } from '@mibao-ui/components'
-import { CloseIcon } from '@chakra-ui/icons'
-import { useEffect, useState } from 'react'
-import { isInStandaloneMode } from '../../utils'
-import { IS_IMTOKEN, IS_IPHONE, IS_SAFARI, IS_WEXIN } from '../../constants'
 import { useTranslation } from 'react-i18next'
+import { usePwaGuide } from '../../hooks/usePwaGuide'
+import { useState } from 'react'
 
-const Tips = styled(Box)`
-  svg {
-    height: 20px;
-    width: auto;
-    display: inline-block;
-    margin: 0 5px;
+const Container = styled(Flex)`
+  position: fixed;
+  bottom: 0;
+  height: 40px;
+  align-items: center;
+  z-index: 11;
+  background-color: #fff;
+  width: 100%;
+  background-color: white;
+  max-width: 500px;
+  padding: 0 20px;
+  transition: 300ms;
+
+  &.hide {
+    transform: translateY(50px);
   }
 `
 
 export const PwaGuide: React.FC = () => {
   const { t } = useTranslation('translations')
-  const [
-    isClosedPwaGuideFromLocal,
-    setIsClosedPwaGuideFromLocal,
-  ] = useLocalStorage(
-    'is_closed_pwa_guide_from_local',
-    !(
-      !isInStandaloneMode() &&
-      IS_IPHONE &&
-      IS_SAFARI &&
-      !IS_WEXIN &&
-      !IS_IMTOKEN
+  const { isPwaInstalled, installPwa, isPwaInstallable } = usePwaGuide()
+  const [isClose, setIsClose] = useState(false)
+
+  const [isHide, setIsHide] = useState(false)
+  useObservable(() =>
+    fromEvent(window, 'scroll').pipe(
+      throttleTime(200),
+      scan((acc) => [acc[1], window.scrollY], [window.scrollY, window.scrollY]),
+      tap(([prev, curr]) => {
+        setIsHide(prev < curr && curr > 200)
+      })
     )
   )
-  const [isClosedPwaGuide, setIsClosedPwaGuide] = useState(
-    isClosedPwaGuideFromLocal
-  )
-  useEffect(() => {
-    setIsClosedPwaGuide(isClosedPwaGuideFromLocal)
-  }, [isClosedPwaGuideFromLocal])
 
-  if (isClosedPwaGuide) {
+  if (isPwaInstalled || isClose || !isPwaInstallable) {
     return null
   }
 
   return (
-    <Flex
-      position="fixed"
-      bottom="90px"
-      zIndex={10}
-      w="80%"
-      maxW="315px"
-      left="50%"
-      transform="translateX(-50%)"
-      bg="#fff"
-      rounded="22px"
-      shadow="0 4px 20px rgb(168 193 221 / 50%)"
-      px="15px"
-      pt="30px"
-      pb="10px"
-      fontSize="14px"
-      direction="column"
-    >
-      <CloseIcon
-        position="absolute"
-        top="15px"
-        right="20px"
-        w="10px"
-        h="10px"
-        onClick={() => setIsClosedPwaGuideFromLocal(true)}
-        color="primary.600"
-      />
+    <Container className={!isHide ? 'hide' : ''}>
       <Image
         src={EyePath}
         position="absolute"
-        top="0"
-        left="0"
-        w="128px"
-        transform="translate(-30px, -30px)"
+        bottom="10px"
+        w="60px"
+        left="3px"
       />
-      {t('pwa-guide.desc')}
-      <Tips fontWeight="300" mt="10px">
-        <Box as="span" mr="10px">
-          {t('pwa-guide.step-1')}
-          <PwaGuideShareSvg />
-        </Box>
-        {t('pwa-guide.step-2.1')}
-        <PwaGuideAddSvg />
-        {t('pwa-guide.step-2.2')}
-      </Tips>
-      <Button
-        variant="link"
-        ml="auto"
-        colorScheme="primary"
-        fontSize="14px"
-        mt="5px"
-        onClick={() => setIsClosedPwaGuide(true)}
+      <Box position="relative" mr="10px">
+        <PwaLogo />
+      </Box>
+      <Text
+        fontSize="12px"
+        color="#5065E5"
+        onClick={installPwa}
+        cursor={'pointer'}
       >
-        {t('pwa-guide.ok')}
-      </Button>
-    </Flex>
+        {t('pwa-guide.android')}
+      </Text>
+      <Box marginLeft="auto" cursor="pointer" onClick={() => setIsClose(true)}>
+        <CloseSvg />
+      </Box>
+    </Container>
   )
 }
