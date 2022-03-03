@@ -4,10 +4,12 @@ import { fromEvent, scan, tap, throttleTime } from 'rxjs'
 import EyePath from '../../assets/img/ios-pwa-guide-eye.png'
 import { ReactComponent as PwaLogo } from '../../assets/svg/pwa-logo.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
+import { ReactComponent as AddIcon } from '../../assets/svg/ios-pwa-guide-add-icon.svg'
 import styled from '@emotion/styled'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { usePwaGuide } from '../../hooks/usePwaGuide'
 import { useState } from 'react'
+import { IS_IPHONE } from '../../constants'
 
 const Container = styled(Flex)`
   position: fixed;
@@ -65,7 +67,18 @@ export const PwaGuide: React.FC = () => {
         onClick={installPwa}
         cursor={'pointer'}
       >
-        {t('pwa-guide.android')}
+        {IS_IPHONE ? (
+          <Trans
+            ns="translations"
+            i18nKey="pwa-guide.ios"
+            t={t}
+            components={{
+              comp: <AddIcon />,
+            }}
+          />
+        ) : (
+          t('pwa-guide.android')
+        )}
       </Text>
       <Box marginLeft="auto" cursor="pointer" onClick={() => setIsClose(true)}>
         <CloseSvg />
