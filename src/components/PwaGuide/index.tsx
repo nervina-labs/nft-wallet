@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Text } from '@chakra-ui/react'
+import { Box, Flex, Image, Center } from '@chakra-ui/react'
 import { useObservable } from 'rxjs-hooks'
 import { fromEvent, scan, tap, throttleTime } from 'rxjs'
 import EyePath from '../../assets/img/ios-pwa-guide-eye.png'
@@ -61,8 +61,8 @@ export const PwaGuide: React.FC = () => {
       <Box position="relative" mr="10px">
         <PwaLogo />
       </Box>
-      <Text
-        fontSize="12px"
+      <Center
+        fontSize={IS_IPHONE ? '10px' : '12px'}
         color="#5065E5"
         onClick={installPwa}
         cursor={'pointer'}
@@ -79,7 +79,7 @@ export const PwaGuide: React.FC = () => {
         ) : (
           t('pwa-guide.android')
         )}
-      </Text>
+      </Center>
       <Box marginLeft="auto" cursor="pointer" onClick={() => setIsClose(true)}>
         <CloseSvg />
       </Box>
