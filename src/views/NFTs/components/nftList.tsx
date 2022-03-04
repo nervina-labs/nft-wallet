@@ -130,7 +130,8 @@ export const NftList: React.FC<{
                     <Card
                       token={token}
                       key={token.token_uuid || `${i}.${j}`}
-                      address={displayAddress}
+                      address={address}
+                      displayAddress={displayAddress}
                       isClass={false}
                       showTokenID
                       isHolder={isHolder}
@@ -165,6 +166,7 @@ export const NftList: React.FC<{
                       isClass
                       showTokenID={false}
                       isHolder={isHolder}
+                      displayAddress={displayAddress}
                     />
                   ))
                 }}
