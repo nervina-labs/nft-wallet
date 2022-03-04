@@ -345,6 +345,7 @@ export const Login: React.FC = () => {
       </div>
       <LoginButton
         h={'40px'}
+        minH={'40px'}
         mt={!IS_DESKTOP || i18n.language === 'en' ? '5%' : '15%'}
         onClick={() => {
           if (!isLicenseChecked) {
