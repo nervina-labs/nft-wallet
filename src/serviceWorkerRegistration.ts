@@ -62,6 +62,11 @@ export function register(config?: Config) {
   }
 }
 
+const updateIsReadyInfo =
+  navigator?.language === 'zh-CN'
+    ? '新版本已更新完毕，请关闭所有标签页后重新打开此页面'
+    : 'A new version is available and will be used when all tabs for this page are closed.'
+
 function registerValidSW(swUrl: string, config?: Config) {
   navigator.serviceWorker
     .register(swUrl)
@@ -82,9 +87,7 @@ function registerValidSW(swUrl: string, config?: Config) {
                   'tabs for this page are closed. See https://cra.link/PWA.'
               )
 
-              alert(
-                'A new version is available and will be used when all tabs for this page are closed.'
-              )
+              alert(updateIsReadyInfo)
 
               // Execute callback
               if (config && config.onUpdate) {
