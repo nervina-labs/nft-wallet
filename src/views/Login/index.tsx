@@ -344,7 +344,7 @@ export const Login: React.FC = () => {
         </Swiper>
       </div>
       <LoginButton
-        h={40}
+        h={'40px'}
         mt={!IS_DESKTOP || i18n.language === 'en' ? '5%' : '15%'}
         onClick={() => {
           if (!isLicenseChecked) {
