@@ -214,7 +214,7 @@ export const Transfer: React.FC = () => {
   const confirmDialog = useConfirmDialog()
 
   const stopTranfer = useCallback(
-    (isSuccess: boolean, msg?: FailedMessage): void => {
+    (isSuccess: boolean, msg?: FailedMessage, code?: string): void => {
       setIsSendingNFT(false)
       setIsDrawerOpen(false)
       if (isSuccess) {
@@ -232,6 +232,7 @@ export const Transfer: React.FC = () => {
         confirmDialog({
           type: 'warning',
           title: buildFailedMessage(msg),
+          description: code || undefined,
         })
       }
     },
@@ -324,13 +325,10 @@ export const Transfer: React.FC = () => {
           let msg: FailedMessage = FailedMessage.TranferFail
           if (err?.response?.data?.code === 1092) {
             msg = FailedMessage.Upgrade
-          } else if (
-            err?.response?.data?.code === 1095 ||
-            err?.response?.data?.code === 1029
-          ) {
+          } else if (err?.response?.data?.code === 1095) {
             msg = FailedMessage.ContinuousTransfer
           }
-          stopTranfer(false, msg)
+          stopTranfer(false, msg, err?.response?.data?.code)
           throw new Error(err)
         })
 
