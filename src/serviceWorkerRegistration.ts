@@ -64,7 +64,7 @@ export function register(config?: Config) {
 
 const updateIsReadyInfo =
   navigator?.language === 'zh-CN'
-    ? '新版本已更新完毕，请关闭所有标签页后重新打开此页面'
+    ? '新版本已更新完毕，请关闭此页面的所有标签页后重新打开'
     : 'A new version is available and will be used when all tabs for this page are closed.'
 
 function registerValidSW(swUrl: string, config?: Config) {
