@@ -10,6 +10,7 @@ import {
   AddressPrefix,
 } from '@nervosnetwork/ckb-sdk-utils'
 import { WalletType } from '../hooks/useAccount'
+import { Config } from '@nervina-labs/flashsigner'
 
 export function isUnipassV2Address(address: string) {
   try {
@@ -19,23 +20,32 @@ export function isUnipassV2Address(address: string) {
   }
 }
 
+const flashsignerLockCodeHash = Config.getFlashsignerLock().codeHash
+
 export function generateOldAddress(
   address: string,
-  walletType: WalletType | undefined
+  walletType?: WalletType | undefined
 ): string {
-  if (walletType === WalletType.Flashsigner) {
+  if (address === '') {
     return address
   }
-  const script = addressToScript(address)
-  return fullPayloadToAddress({
-    args: script.args,
-    type:
-      script.hashType === 'data'
-        ? AddressType.DataCodeHash
-        : AddressType.TypeCodeHash,
-    codeHash: script.codeHash,
-    prefix: IS_MAINNET ? AddressPrefix.Mainnet : AddressPrefix.Testnet,
-  })
+  try {
+    const script = addressToScript(address)
+    if (script.codeHash === flashsignerLockCodeHash) {
+      return address
+    }
+    return fullPayloadToAddress({
+      args: script.args,
+      type:
+        script.hashType === 'data'
+          ? AddressType.DataCodeHash
+          : AddressType.TypeCodeHash,
+      codeHash: script.codeHash,
+      prefix: IS_MAINNET ? AddressPrefix.Mainnet : AddressPrefix.Testnet,
+    })
+  } catch (error) {
+    return address
+  }
 }
 
 export function generateUnipassUrl(

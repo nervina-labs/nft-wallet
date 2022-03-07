@@ -35,4 +35,5 @@ export enum Query {
   GetSentRedEnvelopeDetailRewards = 'GetSentRedEnvelopeDetailRewards',
   GetRedEnvelopeReceived = 'GetRedEnvelopeReceived',
   Search = 'Search',
+  InitGeeTest = 'InitGeeTest',
 }
