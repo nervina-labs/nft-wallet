@@ -232,7 +232,7 @@ export const Transfer: React.FC = () => {
         confirmDialog({
           type: 'warning',
           title: buildFailedMessage(msg),
-          description: code || undefined,
+          description: code ? t('transfer.error-code', { code }) : undefined,
         })
       }
     },
