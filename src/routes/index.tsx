@@ -17,7 +17,6 @@ import { MibaoProvider, mibaoTheme } from '@mibao-ui/components'
 import { extendTheme } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import NFTFallbackImg from '../assets/img/nft-fallback.png'
-import { PwaGuide } from '../components/PwaGuide'
 import { HiddenBar } from '../components/HiddenBar'
 import { useLite } from '../hooks/useLite'
 export * from './path'
@@ -112,7 +111,6 @@ export const Routers: React.FC = () => {
           </AccountChange>
         </RouterProvider>
       </BrowserRouter>
-      <PwaGuide />
     </MibaoProvider>
   )
 }
