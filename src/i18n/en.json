@@ -184,7 +184,8 @@
       "submitted": "Transfer transaction submitted",
       "tips": "On-chain confirmation may take 1-2 minutes",
       "confirm": "Confirm",
-      "signing": "Signing"
+      "signing": "Signing",
+      "error-code": "Error code: {{code}}"
     },
     "404": {
       "title": "Page is missing",
