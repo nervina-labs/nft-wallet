@@ -184,7 +184,8 @@
       "submitted": "已提交转让交易",
       "tips": "提示: 链上确认可能需要半分钟时间",
       "confirm": "确认",
-      "signing": "签名中"
+      "signing": "签名中",
+      "error-code": "错误代码： {{code}}"
     },
     "404": {
       "title": "页面丢失",
