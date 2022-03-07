@@ -1,6 +1,12 @@
 import { atom, useAtom } from 'jotai'
 import { useMemo } from 'react'
-import { IS_IPHONE, IS_MOBILE, IS_STANDALONE, IS_WEXIN } from '../constants'
+import {
+  IS_CHROME,
+  IS_IPHONE,
+  IS_MOBILE,
+  IS_STANDALONE,
+  IS_WEXIN,
+} from '../constants'
 import { useDidMount } from './useDidMount'
 
 /**
@@ -61,7 +67,10 @@ export const usePwaGuide = () => {
 
   const isPwaInstallable = useMemo(() => {
     return (
-      (!!pwaPrompt || IS_IPHONE) && IS_MOBILE && !IS_WEXIN && !IS_STANDALONE
+      (!!pwaPrompt || (IS_IPHONE && !IS_CHROME)) &&
+      IS_MOBILE &&
+      !IS_WEXIN &&
+      !IS_STANDALONE
     )
   }, [pwaPrompt])
 

@@ -4,12 +4,14 @@ import { fromEvent, scan, tap, throttleTime } from 'rxjs'
 import EyePath from '../../assets/img/ios-pwa-guide-eye.png'
 import { ReactComponent as PwaLogo } from '../../assets/svg/pwa-logo.svg'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
-import { ReactComponent as AddIcon } from '../../assets/svg/ios-pwa-guide-add-icon.svg'
+import { ReactComponent as AddIcon } from '../../assets/svg/ios-pwa-guide-share-icon.svg'
 import styled from '@emotion/styled'
 import { Trans, useTranslation } from 'react-i18next'
 import { usePwaGuide } from '../../hooks/usePwaGuide'
 import { useState } from 'react'
 import { IS_IPHONE } from '../../constants'
+import { useRouteMatch } from 'react-router'
+import { RoutePath } from '../../routes'
 
 const Container = styled(Flex)`
   position: fixed;
@@ -33,6 +35,7 @@ export const PwaGuide: React.FC = () => {
   const { t } = useTranslation('translations')
   const { isPwaInstalled, installPwa, isPwaInstallable } = usePwaGuide()
   const [isClose, setIsClose] = useState(false)
+  const matchHome = useRouteMatch(RoutePath.NFTs)
 
   const [isHide, setIsHide] = useState(false)
   useObservable(() =>
@@ -70,14 +73,14 @@ export const PwaGuide: React.FC = () => {
         {IS_IPHONE ? (
           <Trans
             ns="translations"
-            i18nKey="pwa-guide.ios"
+            i18nKey={`pwa-guide.ios${matchHome ? '-home' : ''}`}
             t={t}
             components={{
               comp: <AddIcon />,
             }}
           />
         ) : (
-          t('pwa-guide.android')
+          t(`pwa-guide.android${matchHome ? '-home' : ''}`)
         )}
       </Center>
       <Box marginLeft="auto" cursor="pointer" onClick={() => setIsClose(true)}>
