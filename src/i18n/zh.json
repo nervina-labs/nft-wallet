@@ -663,7 +663,7 @@
       "title-riddle": "您有一个数字藏品谜语红包待领取",
       "hidden-model": "隐藏款",
       "from-red-envelope": "来自 {{username}} 分享的数字藏品红包",
-      "promotion-link": "点击去看看",
+      "promotion-link": "查看我的红包",
       "record-count-text": "共 {{total}} 个红包，已被领取 {{claimed}} 个，还剩 {{remain}} 个",
       "puzzle-title": "谜题",
       "puzzle-answer": "谜底",
@@ -686,7 +686,7 @@
       "connect-and-open-it": "连接身份后领取",
       "generating": "红包还在生成中，马上就来……",
       "icons": {
-        "my-collections": "我的藏品",
+        "my-collections": "查看我的红包",
         "send-red-packet": "我也发红包",
         "follow-us": "关注我们"
       },
