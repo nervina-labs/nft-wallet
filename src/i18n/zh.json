@@ -686,7 +686,7 @@
       "connect-and-open-it": "连接身份后领取",
       "generating": "红包还在生成中，马上就来……",
       "icons": {
-        "my-collections": "我的藏品",
+        "my-collections": "查看我的红包",
         "send-red-packet": "我也发红包",
         "follow-us": "关注我们"
       },
