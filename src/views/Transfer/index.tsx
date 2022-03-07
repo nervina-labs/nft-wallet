@@ -283,7 +283,11 @@ export const Transfer: React.FC = () => {
         const { tx } = routerLocation.state ?? {}
         if (tx) {
           await api.transfer(id, tx, sentAddress).catch((err) => {
-            stopTranfer(false, FailedMessage.TranferFail)
+            stopTranfer(
+              false,
+              FailedMessage.TranferFail,
+              err?.response?.data?.code
+            )
             console.log(err)
             throw err
           })
@@ -333,7 +337,7 @@ export const Transfer: React.FC = () => {
         })
 
       const signTx = await signTransaction(tx).catch((err) => {
-        stopTranfer(false, FailedMessage.SignFail)
+        stopTranfer(false, FailedMessage.SignFail, err?.response?.data?.code)
         throw new Error(err)
       })
 
@@ -341,7 +345,11 @@ export const Transfer: React.FC = () => {
         const { signature } = routerLocation.state ?? {}
         if (signature) {
           await api.transfer(id, tx, sentAddress, signature).catch((err) => {
-            stopTranfer(false, FailedMessage.TranferFail)
+            stopTranfer(
+              false,
+              FailedMessage.TranferFail,
+              err?.response?.data?.code
+            )
             console.log(err)
             throw err
           })
@@ -356,7 +364,11 @@ export const Transfer: React.FC = () => {
       } else {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await api.transfer(id, signTx, sentAddress).catch((err) => {
-          stopTranfer(false, FailedMessage.TranferFail)
+          stopTranfer(
+            false,
+            FailedMessage.TranferFail,
+            err?.response?.data?.code
+          )
           console.log(err)
           throw err
         })
