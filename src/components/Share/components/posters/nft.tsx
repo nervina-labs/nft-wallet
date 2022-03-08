@@ -52,7 +52,10 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
   const [nftName] = useTextEllipsis(name, 150)
   const [issuerName] = useTextEllipsis(issuer.name, 240)
   const ref = useRef<HTMLDivElement>(null)
-  usePosterLoader(ref.current, onLoaded, bgImageUrlLoading || avatarUrlLoading)
+
+  const isLoading = bgImageUrlLoading || avatarUrlLoading
+
+  usePosterLoader(ref, onLoaded, isLoading)
 
   return (
     <Box position="relative" w="340px" h="509px" ref={ref}>

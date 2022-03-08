@@ -59,7 +59,8 @@ export const Issuer: React.FC<IssuerProps & PosterProps> = ({
       toBlob: true,
     }
   )
-  usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)
+  const isLoading = avatarUrlLoading || coverImageLoading
+  usePosterLoader(ref, onLoaded, isLoading)
   const [issuerName] = useTextEllipsis(username, 300)
   const [verifiedTitleEllipsis] = useTextEllipsis(verifiedTitle ?? '', 300)
   const [descEllipsis] = useTextEllipsis(desc ?? '', 900)

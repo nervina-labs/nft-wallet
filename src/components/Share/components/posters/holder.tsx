@@ -59,7 +59,8 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
       toBlob: true,
     }
   )
-  usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)
+  const isLoding = avatarUrlLoading || coverImageLoading
+  usePosterLoader(ref, onLoaded, isLoding)
   const [issuerName] = useTextEllipsis(username, 300)
   const [descEllipsis] = useTextEllipsis(
     (desc || '').split('\n').slice(0, 5).join('\n'),
