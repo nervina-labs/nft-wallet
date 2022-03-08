@@ -236,7 +236,10 @@
       "copy-to-browser": "请复制链接到浏览器中打开\n然后再进入 AR 模式查看",
       "no-support-usdz-ok": "好吧",
       "only-the-owner-can-play": "当前藏品仅持有人能播放",
-      "song": "曲目"
+      "song": "曲目",
+      "pack-event-count": "共 {{count}} 款",
+      "pack-event-collected": "已收集 {{count}} 款",
+      "belonging-pack-event": "所属套装："
     },
     "account": {
       "title": "我的帐号",

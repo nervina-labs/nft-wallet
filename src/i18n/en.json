@@ -441,7 +441,10 @@
       "more": "More",
       "sale-empty": "Ahhh ~ No Digaital Collection on sale",
       "empty": "Ahhh ~ The issuer haven't created Digital Collection yet",
-      "pack-event-count": "共 {{count}} 款"
+      "song": "曲目",
+      "pack-event-count": "共 {{count}} 款",
+      "pack-event-collected": "已收集 {{count}} 款",
+      "belonging-pack-event": "所属套装："
     },
     "exchange": {
       "title": "Redeem Center",
