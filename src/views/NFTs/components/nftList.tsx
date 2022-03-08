@@ -10,8 +10,9 @@ import { InfiniteList } from '../../../components/InfiniteList'
 import { Card } from '../card'
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from '@mibao-ui/components'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
+import { PackEventList } from './packEventList'
 
-const ListTypeSet = ['owned', 'liked', 'follow'] as const
+const ListTypeSet = ['owned', 'liked', 'follow', 'pack_event'] as const
 type ListType = typeof ListTypeSet[number]
 
 export const NftList: React.FC<{
@@ -102,6 +103,16 @@ export const NftList: React.FC<{
           >
             {t('follow.follow')}
           </Tab>
+          {!isHolder ? (
+            <Tab
+              onClick={() => {
+                setListType('pack_event')
+                trackTab(trackLabels.home.switch.packEvent)
+              }}
+            >
+              {t('nfts.pack-event')}
+            </Tab>
+          ) : null}
         </TabList>
         <TabPanels pt="20px">
           <TabPanel p={0}>
@@ -171,8 +182,10 @@ export const NftList: React.FC<{
               <IssuerList isFollow={listType === 'follow'} address={address} />
             ) : null}
           </TabPanel>
+          {!isHolder ? <TabPanel p={0} /> : null}
         </TabPanels>
       </Tabs>
+      {!isHolder && listType === 'pack_event' ? <PackEventList /> : null}
     </section>
   )
 }

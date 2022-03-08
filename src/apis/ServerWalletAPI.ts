@@ -77,6 +77,7 @@ import {
 } from '../models/red-envelope'
 import { isPwTransaction } from '../utils'
 import { WalletType } from '../hooks/useAccount'
+import { PackEventListResponse, PackEventState } from '../models/pack-event'
 
 function randomid(length = 10): string {
   let result = ''
@@ -1155,5 +1156,25 @@ export class ServerWalletAPI {
         },
       }
     )
+  }
+
+  async getPackEventList(
+    auth: Auth,
+    options?: {
+      page?: number
+      limit?: number
+      state?: PackEventState
+    }
+  ) {
+    return await this.axios.get<PackEventListResponse>('/pack_events', {
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+      params: {
+        page: options?.page || 1,
+        limit: options?.limit || PER_ITEM_LIMIT,
+        state: options?.state,
+      },
+    })
   }
 }

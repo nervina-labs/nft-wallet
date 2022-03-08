@@ -141,7 +141,14 @@
       "link": "Explore Digital Collection Meta-universe",
       "welcome": "Welcome to Digital Collection universe",
       "hi": "Hi, Collector",
-      "share": "Share"
+      "share": "Share",
+      "pack-event": "套装",
+      "pack-event-text": {
+        "collecting": "收集中",
+        "collected": "已集齐",
+        "collection-progress": "收集进度",
+        "total": "{{total}} 个套装"
+      }
     },
     "transfer": {
       "scan": {

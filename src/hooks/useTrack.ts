@@ -84,6 +84,7 @@ export const trackLabels = {
       hold: '持有',
       like: '赞过',
       follow: '关注',
+      packEvent: '套装',
     },
     'to-nft': '点击进入NFT详情页',
     'to-issuer': '点击进入创作者个人主页',
