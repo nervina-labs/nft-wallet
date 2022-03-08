@@ -47,7 +47,7 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
   const { data: coverImageUrl, isLoading: coverImageLoading } = useUrlToBase64(
     coverImage ?? '',
     {
-      usePreviewUrl: 600,
+      size: 600,
       toBlob: true,
     }
   )
@@ -55,11 +55,12 @@ export const Holder: React.FC<HolderProps & PosterProps> = ({
     avatarUrl ?? '',
     {
       fallbackImg: FallbackAvatarPath,
-      usePreviewUrl: 100,
+      size: 100,
       toBlob: true,
     }
   )
-  usePosterLoader(ref.current, onLoaded, avatarUrlLoading || coverImageLoading)
+  const isLoding = avatarUrlLoading || coverImageLoading
+  usePosterLoader(ref, onLoaded, isLoding)
   const [issuerName] = useTextEllipsis(username, 300)
   const [descEllipsis] = useTextEllipsis(
     (desc || '').split('\n').slice(0, 5).join('\n'),
