@@ -36,5 +36,6 @@ export enum Query {
   GetRedEnvelopeReceived = 'GetRedEnvelopeReceived',
   Search = 'Search',
   PackEventList = 'PackEventList',
+  IssuerPackEventList = 'IssuerPackEventList',
   PackEventDetail = 'PackEventDetail',
 }

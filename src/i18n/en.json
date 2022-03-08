@@ -433,13 +433,15 @@
     "issuer": {
       "created": "Created",
       "selling": "Selling",
+      "pack-event": "创建的套装",
       "title": "Issuer",
       "follower": "Follower",
       "like": "Like",
       "no-data": "No data",
       "more": "More",
       "sale-empty": "Ahhh ~ No Digaital Collection on sale",
-      "empty": "Ahhh ~ The issuer haven't created Digital Collection yet"
+      "empty": "Ahhh ~ The issuer haven't created Digital Collection yet",
+      "pack-event-count": "共 {{count}} 款"
     },
     "exchange": {
       "title": "Redeem Center",

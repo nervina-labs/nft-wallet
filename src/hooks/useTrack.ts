@@ -122,6 +122,7 @@ export const trackLabels = {
     switch: {
       creartor: '已创作',
       onsell: '在售',
+      packEvent: '套装',
     },
     share: '分享',
     follow: '关注',

@@ -49,3 +49,13 @@ export interface PackEventDetailResponse {
     uuid: string
   } & VipInfo
 }
+
+export interface IssuerPackEventResponse {
+  pack_events: Array<{
+    uuid: string
+    name: string
+    cover_image_url: string
+    pack_options_count: number
+  }>
+  meta: ListMeta
+}

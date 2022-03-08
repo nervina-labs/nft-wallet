@@ -433,13 +433,15 @@
     "issuer": {
       "created": "已创作",
       "selling": "在售",
+      "pack-event": "创建的套装",
       "title": "创作者个人主页",
       "follower": "粉丝",
       "like": "获赞",
       "no-data": "无数据",
       "more": "更多",
       "sale-empty": "啊哦～暂无售卖的作品",
-      "empty": "啊哦～暂未创作秘宝"
+      "empty": "啊哦～暂未创作秘宝",
+      "pack-event-count": "共 {{count}} 款"
     },
     "exchange": {
       "title": "兑换中心",

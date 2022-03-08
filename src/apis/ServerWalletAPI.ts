@@ -78,6 +78,7 @@ import {
 import { isPwTransaction } from '../utils'
 import { WalletType } from '../hooks/useAccount'
 import {
+  IssuerPackEventResponse,
   PackEventDetailResponse,
   PackEventListResponse,
   PackEventState,
@@ -1188,6 +1189,24 @@ export class ServerWalletAPI {
       {
         headers: {
           auth: JSON.stringify(auth),
+        },
+      }
+    )
+  }
+
+  async getIssuerPackEventList(
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) {
+    return await this.axios.get<IssuerPackEventResponse>(
+      `/issuers/${uuid}/pack_events`,
+      {
+        params: {
+          page: options?.page || 1,
+          limit: options?.limit || PER_ITEM_LIMIT,
         },
       }
     )

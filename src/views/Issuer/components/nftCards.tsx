@@ -28,6 +28,9 @@ import {
   useTrackClick,
   useTrackEvent,
 } from '../../../hooks/useTrack'
+import { PackEventList } from './packEventList'
+
+const TabTypes = [...PRODUCT_STATUE_SET, 'pack_event'] as const
 
 interface CardProps {
   token: IssuerTokenClass
@@ -84,21 +87,20 @@ const Card: React.FC<CardProps> = ({ token, locale, gotoClass }) => {
 
 export const NftCards: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const [productState, setProductState] = useRouteQuerySearch<ProductState>(
-    'productState',
-    'product_state'
-  )
+  const [productState, setProductState] = useRouteQuerySearch<
+    typeof TabTypes[number]
+  >('type', 'product_state')
   const { push } = useHistory()
   const api = useAPI()
   const { t, i18n } = useTranslation('translations')
-  const [index, setIndex] = useState(
-    PRODUCT_STATUE_SET.findIndex((item) => item === productState) || 0
-  )
   const trackTab = useTrackClick('issuer', 'switchover')
+  const [index, setIndex] = useState(
+    TabTypes.findIndex((item) => item === productState) || 0
+  )
 
   const onChange = useCallback(
     (index) => {
-      setProductState(PRODUCT_STATUE_SET[index])
+      setProductState(TabTypes[index])
       setIndex(index)
     },
     [setProductState]
@@ -116,9 +118,13 @@ export const NftCards: React.FC = () => {
   )
   const queryFn = useCallback(
     async ({ pageParam = 1 }) => {
-      const { data } = await api.getIssuerTokenClass(id, productState, {
-        page: pageParam,
-      })
+      const { data } = await api.getIssuerTokenClass(
+        id,
+        productState as ProductState,
+        {
+          page: pageParam,
+        }
+      )
       return data
     },
     [api, id, productState]
@@ -154,6 +160,13 @@ export const NftCards: React.FC = () => {
             }
           >
             {t('issuer.selling')}
+          </Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.issuer.switch.packEvent)
+            }
+          >
+            {t('issuer.pack-event')}
           </Tab>
         </TabList>
         <TabPanels>
@@ -232,6 +245,9 @@ export const NftCards: React.FC = () => {
                 }}
               />
             ) : null}
+          </TabPanel>
+          <TabPanel px="5px">
+            {index === 2 ? <PackEventList id={id} /> : null}
           </TabPanel>
         </TabPanels>
       </Tabs>
