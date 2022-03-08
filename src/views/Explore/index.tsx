@@ -9,6 +9,7 @@ import { useRouteQuerySearch } from '../../hooks/useRouteQuery'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import LogoPath from '../../assets/svg/explore-logo.svg'
 import { useTrackEvent, useTrackDidMount } from '../../hooks/useTrack'
+import { PwaGuide } from '../../components/PwaGuide'
 
 export const Explore: React.FC = () => {
   const [mode, setMode] = useRouteQuerySearch<'pro' | 'lite'>('mode', 'pro')
@@ -45,6 +46,7 @@ export const Explore: React.FC = () => {
 
       {mode === 'lite' ? <Lite /> : <Pro />}
       <HiddenBarFill />
+      <PwaGuide />
     </MainContainer>
   )
 }

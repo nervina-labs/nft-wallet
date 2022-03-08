@@ -38,4 +38,5 @@ export enum Query {
   PackEventList = 'PackEventList',
   IssuerPackEventList = 'IssuerPackEventList',
   PackEventDetail = 'PackEventDetail',
+  InitGeeTest = 'InitGeeTest',
 }

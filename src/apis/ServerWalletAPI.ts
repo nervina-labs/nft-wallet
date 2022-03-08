@@ -16,6 +16,8 @@ import {
   TransactionLogResponse,
   UnsignedTransaction,
   UnsignedTransactionSendRedEnvelope,
+  GeeTestResponse,
+  GeeTestOptions,
 } from '../models'
 import {
   Issuer,
@@ -75,7 +77,7 @@ import {
   SentRedEnvelopeRecords,
   SentRedEnvelopeReword,
 } from '../models/red-envelope'
-import { isPwTransaction } from '../utils'
+import { generateOldAddress, isPwTransaction } from '../utils'
 import { WalletType } from '../hooks/useAccount'
 import {
   IssuerPackEventResponse,
@@ -232,6 +234,7 @@ export class ServerWalletAPI {
 
   async submitAddress(
     uuid: string,
+    walletType: WalletType,
     auth: Auth
   ): Promise<AxiosResponse<{ code: number }>> {
     const url = `/address_packages/${uuid}/items`
@@ -239,7 +242,7 @@ export class ServerWalletAPI {
       `${SERVER_URL}${url}`.replace('/wallet/', '/saas/'),
       {
         auth,
-        address: this.address,
+        address: generateOldAddress(this.address, walletType),
       },
       {
         headers: {
@@ -496,10 +499,14 @@ export class ServerWalletAPI {
     return await this.axios.get(`/token_claim_codes/${uuid}`)
   }
 
-  async claim(uuid: string): Promise<AxiosResponse<void>> {
+  async claim(
+    uuid: string,
+    geetest: GeeTestOptions
+  ): Promise<AxiosResponse<void>> {
     return await this.axios.post('/token_claim_codes', {
       to_address: this.address,
       code: uuid,
+      geetest,
     })
   }
 
@@ -986,6 +993,10 @@ export class ServerWalletAPI {
         ...options,
       },
     })
+  }
+
+  public async initGeeTest() {
+    return await this.axios.get<GeeTestResponse>('/geetests')
   }
 
   async getSendRedEnvelopeTx(

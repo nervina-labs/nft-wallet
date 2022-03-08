@@ -63,10 +63,16 @@ export const Share: React.FC<ShareProps> = ({
     },
     [toast]
   )
-  const { imgSrc, reload, onRender } = useHtml2Canvas({
-    onError: onRenderError,
-    toBlob: !(IS_ANDROID && IS_WEXIN),
-  })
+
+  const option = useMemo(
+    () => ({
+      onError: onRenderError,
+      toBlob: !(IS_ANDROID && IS_WEXIN),
+    }),
+    [onRenderError]
+  )
+
+  const { imgSrc, reload, onRender } = useHtml2Canvas(option)
   useEffect(() => {
     if (imgSrc) {
       setPosterState(PosterState.Created)

@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 
 export function usePosterLoader<E extends HTMLDivElement>(
-  posterElement: E | null,
+  ref: React.RefObject<E>,
   onLoad: (el: E) => void,
   loading = true
 ) {
   useEffect(() => {
-    if (posterElement && !loading) {
-      onLoad(posterElement)
+    if (ref.current && !loading) {
+      onLoad(ref.current)
     }
-  }, [onLoad, posterElement, loading])
+  }, [onLoad, ref, loading])
 }
