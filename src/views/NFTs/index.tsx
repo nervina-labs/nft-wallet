@@ -17,6 +17,7 @@ import { useWechatShare } from '../../hooks/useWechat'
 import { useTranslation } from 'react-i18next'
 import { useIsLiteAtom } from '../../hooks/useLite'
 import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
+import { PwaGuide } from '../../components/PwaGuide'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -90,6 +91,7 @@ export const NFTs: React.FC = () => {
         <>
           <Intro show={showGuide} />
           <HiddenBarFill />
+          <PwaGuide />
         </>
       )}
     </Container>

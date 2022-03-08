@@ -3,6 +3,7 @@
     "common": {
       "beian": "浙ICP备2021006943号-3",
       "login": "Connect to the identity manager",
+      "geetest-error": "Verification error, please refresh the page and try again",
       "actions": {
         "confirm": "Confirm",
         "cancel": "Cancel",
@@ -662,7 +663,7 @@
       "title-riddle": "You have a riddle Red Packet with Digital Collection to receive.",
       "hidden-model": "Special Edition",
       "from-red-envelope": "The Red Packet from {{username}}",
-      "promotion-link": "Click to have a look",
+      "promotion-link": "Check out my Red Packet",
       "record-count-text": "{{total}} in total, {{claimed}} claimed, {{remain}} left",
       "puzzle-title": "Riddle",
       "puzzle-answer": "Answer",
@@ -685,7 +686,7 @@
       "connect-and-open-it": "Connect and open it",
       "generating": "The red envelope is still being generated. It will come soon……",
       "icons": {
-        "my-collections": "My collections",
+        "my-collections": "My Redpacket",
         "send-red-packet": "Send Red Packet",
         "follow-us": "Follow us"
       },
