@@ -36,6 +36,7 @@ import { RedEnvelopeRecord } from '../views/RedEnvelopeRecord'
 import { RedEnvelopeDetail } from '../views/RedEnvelopeDetail'
 import { ShareRedEnvelope } from '../views/ShareRedEnvelope'
 import { RedEnvelopeReceived } from '../views/RedEnvelopeReceived'
+import { PackEvent } from '../views/PackEvent'
 
 const PDFViewer = lazy(async () => await import('../views/PDFViewer'))
 
@@ -319,5 +320,12 @@ export const routes: MibaoRouterProps[] = [
     exact: true,
     key: 'Flashsigner',
     path: RoutePath.Flashsigner,
+  },
+  {
+    component: PackEvent,
+    exact: true,
+    key: 'PackEvent',
+    path: RoutePath.PackEvent,
+    params: '/:id',
   },
 ]

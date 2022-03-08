@@ -1,3 +1,4 @@
+import { VipInfo } from './class-list'
 import { ListMeta } from './nft'
 
 export enum PackEventState {
@@ -20,4 +21,31 @@ export interface PackEventListRecord {
 export interface PackEventListResponse {
   pack_event_records: PackEventListRecord[]
   meta: ListMeta
+}
+
+export interface PackEventDetailResponse {
+  pack_event_info: {
+    uuid: string
+    name: string
+    cover_image_url: string
+    pack_options_count: number
+    is_banned: boolean
+    description: string
+  }
+  state: string
+  record_items_count: number
+  pack_options: Array<{
+    token_class: {
+      bg_image_url: string
+      uuid: string
+      is_banned: boolean
+    }
+    is_collected: boolean
+    is_special_model: boolean
+  }>
+  issuer_info: {
+    name: string
+    avatar_url: string
+    uuid: string
+  } & VipInfo
 }

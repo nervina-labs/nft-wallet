@@ -792,6 +792,12 @@
         "1": "2.click",
         "2": ""
       }
+    },
+    "pack-event": {
+      "collection-progress": "收集进度",
+      "collected": "已集齐",
+      "has-token-class": "包含藏品：",
+      "special-token-class": "隐藏款："
     }
   }
 }

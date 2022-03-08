@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { useRouteQuerySearch } from '../../../hooks/useRouteQuery'
 import { PackEventState } from '../../../models/pack-event'
+import { RoutePath } from '../../../routes'
 
 export const StyledLink = styled(Link)``
 
@@ -84,7 +85,10 @@ export const PackEventList: React.FC<{}> = () => {
         }}
         renderItems={(group, i) => {
           return group.pack_event_records.map((record, j: number) => (
-            <StyledLink to={'/'} key={`${i}-${j}`}>
+            <StyledLink
+              to={`${RoutePath.PackEvent}/${record.pack_event_info.uuid}`}
+              key={`${i}-${j}`}
+            >
               <Flex
                 mb="20px"
                 rounded="20px"
