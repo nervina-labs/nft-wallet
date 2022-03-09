@@ -269,10 +269,6 @@ export class ServerWalletAPI {
       params.sort = 'recommended'
       params.order = 'desc'
     }
-    if (sortType === ClassSortType.OnSale) {
-      params.sort = sortType
-      params.order = 'desc'
-    }
     if (this.address) {
       params.address = this.address
     }
@@ -554,9 +550,6 @@ export class ServerWalletAPI {
     const params: Record<string, unknown> = {
       page,
       limit: PER_ITEM_LIMIT,
-    }
-    if (sortType === ClassSortType.OnSale) {
-      params.sort = ClassSortType.OnSale
     }
     if (sortType === ClassSortType.Latest) {
       params.sort = ClassSortType.Latest

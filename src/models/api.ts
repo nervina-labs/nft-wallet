@@ -52,7 +52,6 @@ export enum ClassSortType {
   Recommend = 'recommended',
   Latest = 'latest',
   Likes = 'likes',
-  OnSale = 'on_sale',
 }
 
 export interface SpecialCategories {
