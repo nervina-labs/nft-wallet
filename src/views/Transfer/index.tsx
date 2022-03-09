@@ -54,6 +54,7 @@ import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoadableComponent } from '../../components/GlobalLoader'
 import type Scaner from '../../components/QRcodeScaner'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
+import { useIsCotaCellReady } from '../../hooks/useIsCotaCellReady'
 
 const QrcodeScaner = lazy(
   async () => await import('../../components/QRcodeScaner')
@@ -194,6 +195,8 @@ export const Transfer: React.FC = () => {
     return ckbAddressType
   }, [isDasAddress, selectedDasAccount, ckbAddressType, address])
 
+  const { detectIsReady } = useIsCotaCellReady()
+
   const textareaOnChange = useCallback(
     async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       let val = e.target.value
@@ -246,10 +249,13 @@ export const Transfer: React.FC = () => {
 
   const getAuth = useGetAndSetAuth()
   const { data: remoteNftDetail, failureCount } = useQuery(
-    [Query.NFTDetail, id, api, getAuth],
+    [Query.NFTDetail, id, api, getAuth, isRedirectFromSigner],
     async () => {
       const auth = await getAuth()
       const { data } = await api.getNFTDetail(id, auth)
+      if (!isRedirectFromSigner) {
+        await detectIsReady(data)
+      }
       return data
     },
     { enabled: id != null && routerLocation.state?.nftDetail == null }
