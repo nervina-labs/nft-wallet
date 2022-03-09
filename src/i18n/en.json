@@ -169,7 +169,7 @@
         "ios-webkit": "Please upgrade your operating system to iOS 14.3+, or use Safari to scan QR code",
         "upgrade": "Please wait 2-3 minutes before proceeding to upgrade your NFT account.",
         "continuous-transfer": "A transaction is currently in progress, please wait 2-3 minutes before proceeding.",
-        "cota-not-ready": "To provide a better experience, we are upgrading and deploying the CoTA Smart Contract for all MIBAO accounts, <b>which may take a few minutes.<b/>\n Please try again later ；))",
+        "cota-not-ready": "To provide a better experience, we are upgrading and deploying the CoTA Smart Contract for all MIBAO accounts, <b>which may take a few minutes.<b/>\n Please try again later :)",
         "cota-status": "Can not transfer this NFT。Error code：{{code}}",
         "cota-not-ready-ok": "OK"
       },

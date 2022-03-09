@@ -56,7 +56,10 @@ registerRoute(
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
 )
 
-registerRoute(({ url }) => url.pathname === '/', new NetworkOnly())
+registerRoute(
+  ({ url }) => url.pathname === '/' || url.pathname === '/explore',
+  new NetworkOnly()
+)
 
 // An example runtime caching route for requests that aren't handled by the
 // precache, in this case same-origin .png requests like those from in public/
