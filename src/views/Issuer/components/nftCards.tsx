@@ -116,12 +116,12 @@ export const NftCards: React.FC = () => {
   )
   const queryFn = useCallback(
     async ({ pageParam = 1 }) => {
-      const { data } = await api.getIssuerTokenClass(id, productState, {
+      const { data } = await api.getIssuerTokenClass(id, {
         page: pageParam,
       })
       return data
     },
-    [api, id, productState]
+    [api, id]
   )
   const clientIsSupportWebp = useMemo(() => isSupportWebp(), [])
 
@@ -147,13 +147,6 @@ export const NftCards: React.FC = () => {
             }
           >
             {t('issuer.created')}
-          </Tab>
-          <Tab
-            onClick={async () =>
-              await trackTab(trackLabels.issuer.switch.onsell)
-            }
-          >
-            {t('issuer.selling')}
           </Tab>
         </TabList>
         <TabPanels>
@@ -209,7 +202,7 @@ export const NftCards: React.FC = () => {
                 enableQuery
                 queryFn={queryFn}
                 queryKey={[Query.Issuers, api, id, productState]}
-                emptyElement={<Empty type="on_sale" />}
+                emptyElement={<Empty />}
                 noMoreElement={t('common.actions.pull-to-down')}
                 calcDataLength={(data) =>
                   data?.pages.reduce(

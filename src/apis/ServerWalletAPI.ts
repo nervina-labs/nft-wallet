@@ -676,10 +676,10 @@ export class ServerWalletAPI {
 
   async getIssuerTokenClass(
     uuid: string,
-    productState: ProductState = 'product_state',
     options?: {
       limit?: number
       page?: number
+      productState?: ProductState
     }
   ) {
     const limit = options?.limit ?? PER_ITEM_LIMIT
@@ -689,7 +689,7 @@ export class ServerWalletAPI {
       {
         params: {
           address: this.address,
-          product_state: productState,
+          product_state: options?.productState || 'product_state',
           limit,
           page,
         },
