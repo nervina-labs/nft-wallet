@@ -247,16 +247,16 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
   detail,
 }) => {
   const { t, i18n } = useTranslation('translations')
-  const hasCardBack =
-    detail?.card_back_content_exist || detail?.class_card_back_content_exist
-  const [showCardBackContent, setShowCardBackContent] = useState(false)
-  const cardbackContent =
-    detail?.class_card_back_content ?? detail?.card_back_content
-  const hasCardback = Boolean(
+  const hasCardBack = Boolean(
     detail?.card_back_content_exist || detail?.class_card_back_content_exist
   )
+  const [showCardBackContent, setShowCardBackContent] = useState(false)
+  const [showCardBackInitd, setShowCardBackInitd] = useState(false)
+
+  const cardbackContent =
+    detail?.class_card_back_content ?? detail?.card_back_content
   const { id } = useParams<{ id?: string }>()
-  const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardback)
+  const { tiltAngleYInitial, shouldReverseTilt } = useTilt(hasCardBack)
   const {
     isOpen: isOpenPreview,
     onOpen: onOpenPreview,
@@ -388,7 +388,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
         ) : null}
       </>
     )
-  }, [detail?.renderer, detail?.renderer_type, hasPlayIcon, imgUrl, tidParams])
+  }, [detail, hasPlayIcon, imgUrl, tidParams])
 
   return (
     <Flex
@@ -435,12 +435,14 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           >
             {imageEl}
           </Box>
-          {hasCardback ? (
-            <CardBack
-              clickable={showCardBackContent}
-              content={cardbackContent}
-            />
-          ) : null}
+          {hasCardBack && (
+            <Box opacity={showCardBackInitd ? 1 : 0}>
+              <CardBack
+                clickable={showCardBackContent}
+                content={cardbackContent}
+              />
+            </Box>
+          )}
         </Box>
       </TiltContainer>
       {detail ? (
@@ -523,6 +525,7 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
               if (!showCardBackContent) {
                 trackCardBack(id)
               }
+              setShowCardBackInitd(true)
               setShowCardBackContent((bool) => !bool)
             }}
           >
