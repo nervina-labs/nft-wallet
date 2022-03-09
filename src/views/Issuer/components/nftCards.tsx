@@ -132,7 +132,7 @@ export const NftCards: React.FC = () => {
       <Tabs
         colorScheme="black"
         align="space-around"
-        defaultIndex={index}
+        defaultIndex={0}
         onChange={onChange}
       >
         <TabList
