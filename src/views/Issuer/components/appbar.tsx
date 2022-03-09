@@ -37,7 +37,7 @@ export const Appbar: React.FC = () => {
   const { data: listData } = useQuery(
     [Query.Issuers, api, id, 'product_state'],
     async () => {
-      const { data } = await api.getIssuerTokenClass(id, 'product_state', {
+      const { data } = await api.getIssuerTokenClass(id, {
         page: 1,
       })
       return { pages: [data] }
