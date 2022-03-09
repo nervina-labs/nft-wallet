@@ -362,8 +362,8 @@ export const Renderer: React.FC<{ detail?: NFTDetail | TokenClass }> = ({
           fallbackSrc={FALLBACK_SRC}
           zIndex={2}
           srcQueryParams={tidParams}
-          minW="100px"
-          minH="100px"
+          minW="200px"
+          minH="200px"
           cursor="pointer"
         />
         {hasPlayIcon ? (
