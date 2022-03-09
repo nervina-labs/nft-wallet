@@ -18,6 +18,7 @@ import {
   UnsignedTransactionSendRedEnvelope,
   GeeTestResponse,
   GeeTestOptions,
+  CotaCellStatus,
 } from '../models'
 import {
   Issuer,
@@ -224,6 +225,15 @@ export class ServerWalletAPI {
         headers: { auth: JSON.stringify(auth) },
       }
     )
+  }
+
+  async isCotaCellReady(auth: Auth) {
+    return await this.axios.get<CotaCellStatus>('/cota_cell', {
+      params: {
+        address: this.address,
+      },
+      headers: { auth: JSON.stringify(auth) },
+    })
   }
 
   async submitAddress(

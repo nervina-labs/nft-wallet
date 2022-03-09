@@ -13,6 +13,10 @@ export enum TransactionDirection {
   Receive = 'receive',
 }
 
+export interface CotaCellStatus {
+  human_state: 'not_on_chain' | 'occupied' | 'idle'
+}
+
 export interface Tx extends VipInfo {
   from_address: string
   to_address: string
