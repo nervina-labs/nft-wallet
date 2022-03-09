@@ -25,6 +25,7 @@ import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 import { Button, Flex } from '@chakra-ui/react'
 import { OffSiteProductInfoButton } from './offSiteProductInfoButton'
 import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
+import { useIsCotaCellReady } from '../../../hooks/useIsCotaCellReady'
 
 const TranferOrBuy: React.FC<{
   uuid: string
@@ -33,11 +34,15 @@ const TranferOrBuy: React.FC<{
 }> = ({ uuid, detail, isClass }) => {
   const { t } = useTranslation('translations')
   const { push } = useHistory()
-  const tranfer = useCallback(() => {
-    push(`/transfer/${uuid}`, {
-      nftDetail: detail,
-    })
-  }, [push, uuid, detail])
+  const { detectIsReady, isDetecting } = useIsCotaCellReady()
+  const tranfer = useCallback(async () => {
+    const isReady = await detectIsReady(detail as NFTDetail)
+    if (isReady) {
+      push(`/transfer/${uuid}`, {
+        nftDetail: detail,
+      })
+    }
+  }, [push, detectIsReady, uuid, detail])
   const { address } = useAccount()
 
   const ownCurrentToken = useMemo(() => {
@@ -161,6 +166,7 @@ const TranferOrBuy: React.FC<{
       onClick={tranfer}
       fontWeight="normal"
       fontSize="14px"
+      isLoading={isDetecting}
     >
       <Box as="span" mr="10px">
         {t('nft.transfer')}
