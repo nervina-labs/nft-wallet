@@ -54,6 +54,7 @@ import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoadableComponent } from '../../components/GlobalLoader'
 import type Scaner from '../../components/QRcodeScaner'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
+import { useIsCotaCellReady } from '../../hooks/useIsCotaCellReady'
 
 const QrcodeScaner = lazy(
   async () => await import('../../components/QRcodeScaner')
@@ -194,6 +195,8 @@ export const Transfer: React.FC = () => {
     return ckbAddressType
   }, [isDasAddress, selectedDasAccount, ckbAddressType, address])
 
+  const { detectIsReady } = useIsCotaCellReady()
+
   const textareaOnChange = useCallback(
     async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       let val = e.target.value
@@ -214,7 +217,7 @@ export const Transfer: React.FC = () => {
   const confirmDialog = useConfirmDialog()
 
   const stopTranfer = useCallback(
-    (isSuccess: boolean, msg?: FailedMessage): void => {
+    (isSuccess: boolean, msg?: FailedMessage, code?: string): void => {
       setIsSendingNFT(false)
       setIsDrawerOpen(false)
       if (isSuccess) {
@@ -232,6 +235,10 @@ export const Transfer: React.FC = () => {
         confirmDialog({
           type: 'warning',
           title: buildFailedMessage(msg),
+          description:
+            code && Number(code) !== 1095
+              ? t('transfer.error-code', { code })
+              : undefined,
         })
       }
     },
@@ -242,10 +249,13 @@ export const Transfer: React.FC = () => {
 
   const getAuth = useGetAndSetAuth()
   const { data: remoteNftDetail, failureCount } = useQuery(
-    [Query.NFTDetail, id, api, getAuth],
+    [Query.NFTDetail, id, api, getAuth, isRedirectFromSigner],
     async () => {
       const auth = await getAuth()
       const { data } = await api.getNFTDetail(id, auth)
+      if (!isRedirectFromSigner) {
+        await detectIsReady(data)
+      }
       return data
     },
     { enabled: id != null && routerLocation.state?.nftDetail == null }
@@ -282,7 +292,11 @@ export const Transfer: React.FC = () => {
         const { tx } = routerLocation.state ?? {}
         if (tx) {
           await api.transfer(id, tx, sentAddress).catch((err) => {
-            stopTranfer(false, FailedMessage.TranferFail)
+            stopTranfer(
+              false,
+              FailedMessage.TranferFail,
+              err?.response?.data?.code
+            )
             console.log(err)
             throw err
           })
@@ -324,18 +338,15 @@ export const Transfer: React.FC = () => {
           let msg: FailedMessage = FailedMessage.TranferFail
           if (err?.response?.data?.code === 1092) {
             msg = FailedMessage.Upgrade
-          } else if (
-            err?.response?.data?.code === 1095 ||
-            err?.response?.data?.code === 1029
-          ) {
+          } else if (err?.response?.data?.code === 1095) {
             msg = FailedMessage.ContinuousTransfer
           }
-          stopTranfer(false, msg)
+          stopTranfer(false, msg, err?.response?.data?.code)
           throw new Error(err)
         })
 
       const signTx = await signTransaction(tx).catch((err) => {
-        stopTranfer(false, FailedMessage.SignFail)
+        stopTranfer(false, FailedMessage.SignFail, err?.response?.data?.code)
         throw new Error(err)
       })
 
@@ -343,7 +354,11 @@ export const Transfer: React.FC = () => {
         const { signature } = routerLocation.state ?? {}
         if (signature) {
           await api.transfer(id, tx, sentAddress, signature).catch((err) => {
-            stopTranfer(false, FailedMessage.TranferFail)
+            stopTranfer(
+              false,
+              FailedMessage.TranferFail,
+              err?.response?.data?.code
+            )
             console.log(err)
             throw err
           })
@@ -358,7 +373,11 @@ export const Transfer: React.FC = () => {
       } else {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await api.transfer(id, signTx, sentAddress).catch((err) => {
-          stopTranfer(false, FailedMessage.TranferFail)
+          stopTranfer(
+            false,
+            FailedMessage.TranferFail,
+            err?.response?.data?.code
+          )
           console.log(err)
           throw err
         })

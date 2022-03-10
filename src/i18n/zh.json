@@ -168,7 +168,10 @@
         "camera-auth": "没有摄像头权限，请刷新页面重新授权",
         "ios-webkit": "请升级操作系统至 iOS 14.3+，或使用 Safari 浏览器进行扫码",
         "upgrade": "当前正在升级您的秘宝账户，请稍等 2-3 分钟后再进行操作。",
-        "continuous-transfer": "当前有笔交易正在进行中，请稍等 2-3 分钟后再进行操作。"
+        "continuous-transfer": "当前有笔交易正在进行中，请稍等 2-3 分钟后再进行操作。",
+        "cota-not-ready": "为了提供更好的使用体验，我们正在为所有秘宝用户帐号升级和部署CoTA智能合约，<b>可能需等待几分钟</b>。\n 请稍后重试 ：)",
+        "cota-status": "无法转让此秘宝。错误代码：{{code}}",
+        "cota-not-ready-ok": "好的，等会儿回来"
       },
       "das": {
         "not-register": "当前 DAS 还未注册",
@@ -184,7 +187,8 @@
       "submitted": "已提交转让交易",
       "tips": "提示: 链上确认可能需要半分钟时间",
       "confirm": "确认",
-      "signing": "签名中"
+      "signing": "签名中",
+      "error-code": "错误代码： {{code}}"
     },
     "404": {
       "title": "页面丢失",
