@@ -1,9 +1,9 @@
 name: DEPLOY PRODUCTION
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types:
+      - published
 
 jobs:
   deploy:
@@ -14,6 +14,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Get commit message
+      - name: Get commit message
+        run: |
+          COMMIT_MESSAGE=$(git log --format=%s -n 1)
+          echo "commitmsg=${COMMIT_MESSAGE}" >> $GITHUB_ENV
+      - name: Show commit message
+        run : echo "$commitmsg"
+
+      - name: Check commit message
+        if: startsWith( env.commitmsg , 'chore(release):' )
+        run: |
+          echo "Publish by pushing must provide parameter named tag, just like: chore(release): publish 1.0 --tag=beta"
+          exit 1
+
       - name: Deploy to dokku
         id: deploy
         uses: idoberko2/dokku-deploy-github-action@v1
@@ -22,14 +36,3 @@ jobs:
           dokku-host: ${{ secrets.DOKKU_HOST_PROD }}
           app-name: 'wallet'
           remote-branch: 'master'
-
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H%M%S')"
-
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: ${{ steps.date.outputs.date }}
