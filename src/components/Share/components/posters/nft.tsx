@@ -38,20 +38,24 @@ export const Nft: React.FC<NftProps & PosterProps> = ({
     bgImgUrl,
     {
       toBlob: true,
+      size: 600,
     }
   )
   const { data: avatarUrl, isLoading: avatarUrlLoading } = useUrlToBase64(
     issuer.avatarUrl ?? '',
     {
       fallbackImg: FallbackAvatarPath,
-      usePreviewUrl: 100,
+      size: 100,
       toBlob: true,
     }
   )
   const [nftName] = useTextEllipsis(name, 150)
   const [issuerName] = useTextEllipsis(issuer.name, 240)
   const ref = useRef<HTMLDivElement>(null)
-  usePosterLoader(ref.current, onLoaded, bgImageUrlLoading || avatarUrlLoading)
+
+  const isLoading = bgImageUrlLoading || avatarUrlLoading
+
+  usePosterLoader(ref, onLoaded, isLoading)
 
   return (
     <Box position="relative" w="340px" h="509px" ref={ref}>

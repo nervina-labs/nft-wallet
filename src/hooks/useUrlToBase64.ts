@@ -15,36 +15,46 @@ export function useUrlToBase64<
   options?: {
     fallbackImg?: string
     toBlob?: boolean
-    usePreviewUrl?: number
+    size?: number
   }
 ) {
   const api = useAPI()
   const fallbackImg = options?.fallbackImg ?? FallbackImgPath
   const toDataUrlFromApi = useCallback(
     async (url?: string) => {
-      if (url && URL_CACHE_MAP.has(url)) {
-        return URL_CACHE_MAP.get(url)
-      }
-      const previewUrl = options?.usePreviewUrl
-        ? getImagePreviewUrl(url, options.usePreviewUrl)
-        : url
-      if (!previewUrl) {
+      if (!url) {
         return fallbackImg
       }
-      const result = await toDataUrl(previewUrl, { toBlob: options?.toBlob })
+
+      if (URL_CACHE_MAP.has(url)) {
+        return URL_CACHE_MAP.get(url)
+      }
+
+      let imgSrc = url
+      let imgSrcProxy = getImagePreviewUrl(url, 600)
+
+      if (options?.size) {
+        imgSrc = getImagePreviewUrl(url, options.size)
+        imgSrcProxy = imgSrc
+      }
+
+      const result = await toDataUrl(imgSrc, { toBlob: options?.toBlob })
         .catch(async () => {
-          const base64Content = (await api.getUrlBase64(previewUrl)).data.result
+          const base64Content = (await api.getUrlBase64(imgSrcProxy)).data
+            .result
           return base64Content
             ? `data:image/jpeg;base64,${base64Content}`
             : fallbackImg
         })
         .catch(() => fallbackImg)
+
       if (url) {
         URL_CACHE_MAP.set(url, result)
       }
+
       return result
     },
-    [api, fallbackImg, options?.toBlob, options?.usePreviewUrl]
+    [api, fallbackImg, options?.toBlob, options?.size]
   )
 
   return useQuery(
