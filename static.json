@@ -10,7 +10,7 @@
   },
   "headers": {
     "/": {
-      "Cache-Control": "no-cache,must-revalidate,proxy-revalidate,max-age=300"
+      "Cache-Control": "no-cache,must-revalidate,proxy-revalidate,max-age=300,stale-while-revalidate=600,stale-if-error=600"
     },
     "/static/**": {
       "Cache-Control": "public, max-age=512000"
