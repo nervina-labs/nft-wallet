@@ -83,7 +83,7 @@ export async function rawTransactionToPWTransaction(
     new RawTransaction(
       inputs,
       outputs,
-      cellDeps.concat(!isUnipass ? pwDeps : [])
+      cellDeps.concat([])
       // rawTx.header_deps,
       // rawTx.version
     ),
