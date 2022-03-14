@@ -36,10 +36,6 @@ export const NftSortOrKindList: React.FC<{
   const sortKinds: SortWithLabel[] = useMemo(
     () => [
       {
-        value: SortType.OnSale,
-        label: t('explore.on-sale'),
-      },
-      {
         value: SortType.Latest,
         label: t('explore.latest'),
       },
@@ -64,7 +60,7 @@ export const NftSortOrKindList: React.FC<{
       ] as const,
     [t]
   )
-  const [sort, setSort] = useRouteQuerySearch<SortType>('sort', SortType.OnSale)
+  const [sort, setSort] = useRouteQuerySearch<SortType>('sort', SortType.Latest)
   const [sortLabel, setSortLabel] = useState<string>(
     sortKinds.find((s) => s.value === sort)?.label ?? sortKinds[0].label
   )
@@ -108,7 +104,7 @@ export const NftSortOrKindList: React.FC<{
           <Box
             right="6px"
             w="84px"
-            h="40px"
+            h="1px"
             position="absolute"
             top="calc(100% + 8px)"
           >

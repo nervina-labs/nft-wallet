@@ -31,6 +31,9 @@ import {
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Box } from '@chakra-ui/layout'
+import { useUnipassV2Dialog } from '../../hooks/useUnipassV2Dialog'
+import { useGeeTest } from '../../hooks/useGeetst'
+import { Skeleton } from '@chakra-ui/skeleton'
 
 const Container = styled(MainContainer)`
   padding-top: 10px;
@@ -161,6 +164,8 @@ enum ErrorMsg {
   SubmitFail = 'submit-fail',
 }
 
+const captchId = 'gt-container'
+
 export const Claim: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
@@ -250,18 +255,36 @@ export const Claim: React.FC = () => {
     }
   )
 
+  const { isReady, isSuccess, captcha, setIsSuccess } = useGeeTest(
+    `#${captchId}`,
+    submitStatus === SubmitStatus.Claiming &&
+      claimCodeError == null &&
+      isLogined
+  )
+
   const [isClaimError, setIsClaimError] = useState(false)
   const [isClaiming, setIsClaiming] = useState(false)
+  const unipassDialog = useUnipassV2Dialog()
   const claim = useCallback(
     async (code: string) => {
       setIsClaiming(true)
+      const geetest = captcha as any
       try {
-        await api.claim(code)
+        const result = geetest.getValidate()
+        await api.claim(code, {
+          challenge: result.geetest_challenge,
+          validate: result.geetest_validate,
+          seccode: result.geetest_seccode,
+        })
         setSubmitStatus(SubmitStatus.Success)
       } catch (error: any) {
         const errorCode = error?.response?.data.code
+        geetest.reset()
+        setIsSuccess(false)
         if (errorCode === 1022) {
           setSubmitStatus(SubmitStatus.Claimed)
+        } else if (errorCode === 2022) {
+          unipassDialog()
         } else {
           setIsClaimError(true)
         }
@@ -269,20 +292,7 @@ export const Claim: React.FC = () => {
         setIsClaiming(false)
       }
     },
-    [api]
-  )
-
-  useQuery(
-    [Query.Claim, claim, id, claimCodeError],
-    async () => {
-      await claim(id)
-    },
-    {
-      enabled: id != null && claimCodeError === null && isLogined,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
+    [api, unipassDialog, captcha, setIsSuccess]
   )
 
   const imgs = {
@@ -295,7 +305,7 @@ export const Claim: React.FC = () => {
   const [code, setCode] = useState(id ?? '')
 
   const actions = useMemo(() => {
-    if (SubmitStatus.Unlogin === submitStatus) {
+    if (SubmitStatus.Unlogin === submitStatus || !isLogined) {
       return (
         <>
           <p className="desc">{t('claim.tips')}</p>
@@ -375,13 +385,20 @@ export const Claim: React.FC = () => {
             }}
             value={code}
           />
+          <Skeleton isLoaded={isReady}>
+            <Box id={captchId} height="50px" w="280px" />
+          </Skeleton>
           <LoginButton
+            mt="12px"
             onClick={async () => await claim(code)}
-            disabled={isClaiming || isClaimError}
+            disabled={isClaiming || isClaimError || !isSuccess || !isReady}
             isLoading={isClaiming}
           >
             {t('claim.confirm')}
           </LoginButton>
+          <Box textDecoration="underline" color="blue">
+            <Link to={RoutePath.NFTs}>{t('exchange.home')}</Link>
+          </Box>
         </>
       )
     }
@@ -397,11 +414,7 @@ export const Claim: React.FC = () => {
         ) : null}
         <LoginButton
           onClick={() => {
-            history.push(
-              submitStatus === SubmitStatus.Success
-                ? RoutePath.NFTs
-                : RoutePath.Explore
-            )
+            history.push(RoutePath.NFTs)
           }}
         >
           {t(
@@ -425,6 +438,9 @@ export const Claim: React.FC = () => {
     isClaiming,
     isClaimError,
     isFlashsignerLogin,
+    isLogined,
+    isReady,
+    isSuccess,
   ])
 
   if (claimCodeError) {

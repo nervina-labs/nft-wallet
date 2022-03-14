@@ -13,7 +13,7 @@ export const Lite: React.FC = () => {
   const { t } = useTranslation('translations')
   const api = useAPI()
   const [currentTag] = useRouteQuerySearch<string>('tag', 'all')
-  const [sort] = useRouteQuerySearch<SortType>('sort', SortType.OnSale)
+  const [sort] = useRouteQuerySearch<SortType>('sort', SortType.Latest)
   const queryFn = useCallback(
     async ({ pageParam = 0 }) => {
       const { data } = await api.getClassListByTagId(

@@ -78,12 +78,20 @@ export function useAccount() {
     return account?.walletType
   }, [account?.walletType])
 
+  const displayAddress = useMemo(() => {
+    if (address) {
+      return generateOldAddress(address, walletType)
+    }
+    return ''
+  }, [walletType, address])
+
   return {
     address,
     email,
     walletType,
     pubkey,
     account,
+    displayAddress,
   }
 }
 

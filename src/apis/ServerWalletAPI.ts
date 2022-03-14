@@ -16,6 +16,9 @@ import {
   TransactionLogResponse,
   UnsignedTransaction,
   UnsignedTransactionSendRedEnvelope,
+  GeeTestResponse,
+  GeeTestOptions,
+  CotaCellStatus,
 } from '../models'
 import {
   Issuer,
@@ -75,7 +78,7 @@ import {
   SentRedEnvelopeRecords,
   SentRedEnvelopeReword,
 } from '../models/red-envelope'
-import { isPwTransaction } from '../utils'
+import { generateOldAddress, isPwTransaction } from '../utils'
 import { WalletType } from '../hooks/useAccount'
 
 function randomid(length = 10): string {
@@ -224,8 +227,18 @@ export class ServerWalletAPI {
     )
   }
 
+  async isCotaCellReady(auth: Auth) {
+    return await this.axios.get<CotaCellStatus>('/cota_cell', {
+      params: {
+        address: this.address,
+      },
+      headers: { auth: JSON.stringify(auth) },
+    })
+  }
+
   async submitAddress(
     uuid: string,
+    walletType: WalletType,
     auth: Auth
   ): Promise<AxiosResponse<{ code: number }>> {
     const url = `/address_packages/${uuid}/items`
@@ -233,7 +246,7 @@ export class ServerWalletAPI {
       `${SERVER_URL}${url}`.replace('/wallet/', '/saas/'),
       {
         auth,
-        address: this.address,
+        address: generateOldAddress(this.address, walletType),
       },
       {
         headers: {
@@ -264,10 +277,6 @@ export class ServerWalletAPI {
     }
     if (sortType === ClassSortType.Recommend) {
       params.sort = 'recommended'
-      params.order = 'desc'
-    }
-    if (sortType === ClassSortType.OnSale) {
-      params.sort = sortType
       params.order = 'desc'
     }
     if (this.address) {
@@ -490,10 +499,14 @@ export class ServerWalletAPI {
     return await this.axios.get(`/token_claim_codes/${uuid}`)
   }
 
-  async claim(uuid: string): Promise<AxiosResponse<void>> {
+  async claim(
+    uuid: string,
+    geetest: GeeTestOptions
+  ): Promise<AxiosResponse<void>> {
     return await this.axios.post('/token_claim_codes', {
       to_address: this.address,
       code: uuid,
+      geetest,
     })
   }
 
@@ -547,9 +560,6 @@ export class ServerWalletAPI {
     const params: Record<string, unknown> = {
       page,
       limit: PER_ITEM_LIMIT,
-    }
-    if (sortType === ClassSortType.OnSale) {
-      params.sort = ClassSortType.OnSale
     }
     if (sortType === ClassSortType.Latest) {
       params.sort = ClassSortType.Latest
@@ -642,6 +652,7 @@ export class ServerWalletAPI {
     return {
       tx,
       uuid: data.redemption_event_uuid,
+      unSignedTx: data.unsigned_tx,
     }
   }
 
@@ -675,10 +686,10 @@ export class ServerWalletAPI {
 
   async getIssuerTokenClass(
     uuid: string,
-    productState: ProductState = 'product_state',
     options?: {
       limit?: number
       page?: number
+      productState?: ProductState
     }
   ) {
     const limit = options?.limit ?? PER_ITEM_LIMIT
@@ -688,7 +699,7 @@ export class ServerWalletAPI {
       {
         params: {
           address: this.address,
-          product_state: productState,
+          product_state: options?.productState || 'product_state',
           limit,
           page,
         },
@@ -979,6 +990,10 @@ export class ServerWalletAPI {
         ...options,
       },
     })
+  }
+
+  public async initGeeTest() {
+    return await this.axios.get<GeeTestResponse>('/geetests')
   }
 
   async getSendRedEnvelopeTx(

@@ -14,11 +14,13 @@ export interface CardProps {
   address: string
   isHolder: boolean
   showTokenID: boolean
+  displayAddress: string
 }
 
 interface LabelProps {
   nft: NFTToken
   address: string
+  displayAddress: string
 }
 
 const LabelContainer = styled(Tag)`
@@ -45,7 +47,7 @@ interface LabelResult {
   text: string
 }
 
-const Label: React.FC<LabelProps> = ({ nft, address }) => {
+const Label: React.FC<LabelProps> = ({ nft, address, displayAddress }) => {
   const { t } = useTranslation('translations')
   if (nft.tx_state === TransactionStatus.Committed) {
     return null
@@ -61,7 +63,7 @@ const Label: React.FC<LabelProps> = ({ nft, address }) => {
   }
 
   if (
-    address === nft?.to_address &&
+    (address === nft?.to_address || displayAddress === nft?.to_address) &&
     nft.tx_state === TransactionStatus.Pending
   ) {
     status = LabelStatus.Receiving
@@ -106,6 +108,7 @@ export const Card: React.FC<CardProps> = ({
   address,
   showTokenID,
   isHolder,
+  displayAddress,
 }) => {
   const { t, i18n } = useTranslation('translations')
   const isBanned = token.is_issuer_banned || token.is_class_banned
@@ -124,9 +127,10 @@ export const Card: React.FC<CardProps> = ({
     isHolder ? holderTrackName : collectorTrackName,
     'click'
   )
+
   return (
     <Box position="relative" w="100%" mb="35px" px="20px">
-      <Label address={address} nft={token} />
+      <Label address={address} nft={token} displayAddress={displayAddress} />
       <NFTCard
         w="100%"
         isIssuerBanned={token.is_issuer_banned}

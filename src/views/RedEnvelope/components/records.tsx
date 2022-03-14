@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as RedEnvelopeHiddenModelIcon } from '../../../assets/svg/red-envelope-hidden-model.svg'
 import { InfiniteList } from '../../../components/InfiniteList'
-import { useAPI } from '../../../hooks/useAccount'
+import { useAccount, useAPI } from '../../../hooks/useAccount'
 import {
   Query,
   RecordItem,
@@ -13,7 +13,12 @@ import {
   RedEnvelopeState,
   RedpackType,
 } from '../../../models'
-import { ellipsisString, formatTime, isSupportWebp } from '../../../utils'
+import {
+  ellipsisString,
+  formatTime,
+  generateOldAddress,
+  isSupportWebp,
+} from '../../../utils'
 import { Extension } from './extension'
 import { Promotion } from './promotion'
 
@@ -70,6 +75,7 @@ const RewardRecord: React.FC<{
   address?: string
   data: RedEnvelopeRecord
 }> = ({ address, data }) => {
+  const { walletType } = useAccount()
   const { t, i18n } = useTranslation('translations')
   const [imageUrl, hasSpecialModel, specialCount] = useMemo(() => {
     const { specialRecord, specialCount } = data.record_items.reduce<{
@@ -111,7 +117,9 @@ const RewardRecord: React.FC<{
       userSelect="none"
     >
       <Flex justify="center" direction="column">
-        <Box w="full">{ellipsisString(data.address, [8, 5])}</Box>
+        <Box w="full">
+          {ellipsisString(generateOldAddress(data.address, walletType), [8, 5])}
+        </Box>
         <Box fontSize="12px" w="full">
           {formatTime(data.created_at, i18n.language, true)}
         </Box>

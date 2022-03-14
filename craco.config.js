@@ -12,12 +12,12 @@ module.exports = {
     configure: (webpackConfig) => {
       if (process.env.NODE_ENV === 'production') {
         // remove console in production
-        const TerserPlugin = webpackConfig.optimization.minimizer.find(
-          (i) => i.constructor.name === 'TerserPlugin'
-        )
-        if (TerserPlugin) {
-          TerserPlugin.options.terserOptions.compress.drop_console = true
-        }
+        // const TerserPlugin = webpackConfig.optimization.minimizer.find(
+        //   (i) => i.constructor.name === 'TerserPlugin'
+        // )
+        // if (TerserPlugin) {
+        //   TerserPlugin.options.terserOptions.compress.drop_console = true
+        // }
         if (process.env.ANALYZE_BUNDLE) {
           webpackConfig.plugins.push(new BundleAnalyzerPlugin())
         }

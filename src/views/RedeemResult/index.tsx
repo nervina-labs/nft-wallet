@@ -10,13 +10,14 @@ import { ReactComponent as SuccessSvg } from '../../assets/svg/order-success.svg
 import { ReactComponent as FailSvg } from '../../assets/svg/fail.svg'
 import { RoutePath } from '../../routes'
 import { formatTime } from '../../utils'
-import { useAccount, useAPI } from '../../hooks/useAccount'
+import { useAccount, useAPI, WalletType } from '../../hooks/useAccount'
 import { RainbowBackground } from '../../components/RainbowBackground'
 import { AspectRatio, Box, Center, Flex, Heading } from '@chakra-ui/react'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { Button } from '@mibao-ui/components'
 import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
 import { Link } from 'react-router-dom'
+import { appendSignatureToTransaction } from '@nervina-labs/flashsigner'
 
 export enum ResultFlag {
   None = 'none',
@@ -68,6 +69,16 @@ export const RedeemResult: React.FC = () => {
       })
       return data
     }
+    if (walletType === WalletType.Flashsigner && signature) {
+      const { unSignedTx } = await api.getRedeemTransaction(id, walletType)
+      const { data } = await api.redeem({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        tx: appendSignatureToTransaction(unSignedTx!, signature),
+        uuid: id,
+        customData,
+      })
+      return data
+    }
     const { tx: unsignTx } = await api.getRedeemTransaction(id, walletType)
     const { data } = await api.redeem({
       uuid: id,
@@ -76,7 +87,7 @@ export const RedeemResult: React.FC = () => {
       sig: signature,
     })
     return data
-  }, [id, api, location?.state])
+  }, [id, api, location?.state, walletType])
   const { data, isError, isLoading } = useQuery(
     [Query.SendRedeem, id, api, resultFlag],
     transfer,

@@ -3,6 +3,7 @@
     "common": {
       "beian": "浙ICP备2021006943号-3",
       "login": "Connect to the identity manager",
+      "geetest-error": "Verification error, please refresh the page and try again",
       "actions": {
         "confirm": "Confirm",
         "cancel": "Cancel",
@@ -11,6 +12,8 @@
         "pull-down-refresh": " Pull down to refresh",
         "release-refresh": " Release to refresh"
       },
+      "unipass-v2-error": "The currently logged-in account does not support receiving this type of NFT, please log in with Flashsigner or Eth wallet",
+      "relogin": "Relogin",
       "creator": "Creator",
       "chain": {
         "mainnet": "Mainnet",
@@ -165,7 +168,10 @@
         "camera-auth": "No camera permission, please refresh the page to re-authorize",
         "ios-webkit": "Please upgrade your operating system to iOS 14.3+, or use Safari to scan QR code",
         "upgrade": "Please wait 2-3 minutes before proceeding to upgrade your NFT account.",
-        "continuous-transfer": "A transaction is currently in progress, please wait 2-3 minutes before proceeding."
+        "continuous-transfer": "A transaction is currently in progress, please wait 2-3 minutes before proceeding.",
+        "cota-not-ready": "To provide a better experience, we are upgrading and deploying the CoTA Smart Contract for all MIBAO accounts, <b>which may take a few minutes.<b/>\n Please try again later :)",
+        "cota-status": "Can not transfer this NFT。Error code：{{code}}",
+        "cota-not-ready-ok": "OK"
       },
       "das": {
         "not-register": "This DAS is not registered",
@@ -181,7 +187,8 @@
       "submitted": "Transfer transaction submitted",
       "tips": "On-chain confirmation may take 1-2 minutes",
       "confirm": "Confirm",
-      "signing": "Signing"
+      "signing": "Signing",
+      "error-code": "Error code: {{code}}"
     },
     "404": {
       "title": "Page is missing",
@@ -417,8 +424,8 @@
       "continue": "You can continue",
       "success": "Claimed successfully",
       "claimed": "Opps～this Collection has already been claimed",
-      "go-home": "View in Mibao",
-      "go-explore": "Discover more Digital Collections",
+      "go-home": "Check out my Digital Collection now",
+      "go-explore": "Go check out my Digital Collection",
       "placeholder": "Please enter the claim code"
     },
     "issuer": {
@@ -433,9 +440,11 @@
       "empty": "Ahhh ~ The issuer haven't created Digital Collection yet"
     },
     "exchange": {
+      "home": "My collection",
       "title": "Redeem Center",
       "count": "{{count}}",
       "redeemed": "Redeemed",
+      "not-on-chain": "Your NFT is still being received, please try again later",
       "flashsigner": "Flashsigner users are not supported to participate in the redemption for now. Please pay attention to the community notice as it will be supported in the near future.",
       "nft-prize": "The prize includes all the following Digital Collections",
       "blind-prize": "The prize randomly includes {{count}} Digital Collections below",
@@ -658,7 +667,7 @@
       "title-riddle": "You have a riddle Red Packet with Digital Collection to receive.",
       "hidden-model": "Special Edition",
       "from-red-envelope": "The Red Packet from {{username}}",
-      "promotion-link": "Click to have a look",
+      "promotion-link": "Check out my Red Packet",
       "record-count-text": "{{total}} in total, {{claimed}} claimed, {{remain}} left",
       "puzzle-title": "Riddle",
       "puzzle-answer": "Answer",
@@ -681,7 +690,7 @@
       "connect-and-open-it": "Connect and open it",
       "generating": "The red envelope is still being generated. It will come soon……",
       "icons": {
-        "my-collections": "My collections",
+        "my-collections": "My Redpacket",
         "send-red-packet": "Send Red Packet",
         "follow-us": "Follow us"
       },
