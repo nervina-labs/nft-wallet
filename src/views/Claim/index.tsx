@@ -11,7 +11,7 @@ import {
   IS_MOBILE_ETH_WALLET,
   IS_UNIPASS_NOT_AVAILABLE,
 } from '../../constants'
-import { Redirect, useHistory, useParams } from 'react-router-dom'
+import { Link, Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
