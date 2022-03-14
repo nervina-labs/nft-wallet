@@ -66,7 +66,7 @@ export const RouteSwitch: React.FC = () => {
 export const Routers: React.FC = () => {
   const { t } = useTranslation('translations')
   const theme = useMemo(() => {
-    const font = `"PingFang SC", Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    const font = `"PingFang SC", Poppins, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
       "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
       sans-serif`
 
