@@ -20,7 +20,7 @@ import { IS_MAINNET, NODE_URL } from '../constants'
 const chainSpec = IS_MAINNET ? CHAIN_SPECS.Lina : CHAIN_SPECS.Aggron
 
 const pwDeps = [chainSpec.defaultLock.cellDep, chainSpec.pwLock.cellDep]
-
+console.log(pwDeps)
 export const toolkitRPC = new ToolKitRpc(NODE_URL)
 
 // const Secp256R1BinOutPoint = new OutPoint(
