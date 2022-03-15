@@ -1,4 +1,4 @@
-import { Box, Flex, Heading } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -48,30 +48,31 @@ export const PackEventList: React.FC<{
               overflow="hidden"
               mx="20px"
               shadow="0px 4px 16px rgba(0, 0, 0, 0.08)"
-              p="15px"
+              p="12px"
             >
               <Image
                 src={event.cover_image_url}
-                w="100px"
-                h="100px"
+                w="96px"
+                h="96px"
                 rounded="10px"
               />
               <Flex
-                w="calc(100% - 100px - 15px)"
-                ml="15px"
+                w="calc(100% - 96px - 15px)"
+                ml="20px"
                 flex={1}
                 direction="column"
                 justify="space-between"
               >
-                <Heading
+                <Text
                   fontSize="16px"
                   noOfLines={2}
                   overflow="hidden"
                   textOverflow="ellipsis"
+                  mt="4px"
                 >
                   {event.name}
-                </Heading>
-                <Box fontSize="12px">
+                </Text>
+                <Box fontSize="12px" color="#777E90">
                   {t('issuer.pack-event-count', {
                     count: event.pack_options_count,
                   })}
