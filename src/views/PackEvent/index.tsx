@@ -6,7 +6,15 @@ import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { Query } from '../../models'
 import { MainContainer } from '../../styles'
 import { Heading, Image, Issuer, Progress } from '@mibao-ui/components'
-import { Box, Flex, Grid, Skeleton, SkeletonText, Text } from '@chakra-ui/react'
+import {
+  AspectRatio,
+  Box,
+  Flex,
+  Grid,
+  Skeleton,
+  SkeletonText,
+  Text,
+} from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useMemo } from 'react'
 import { PackEventDetailResponse } from '../../models/pack-event'
@@ -127,19 +135,20 @@ export const PackEvent: React.FC = () => {
       <AppbarSticky position="fixed">
         <Appbar transparent></Appbar>
       </AppbarSticky>
-      <Image
-        src={data?.cover_image_url}
-        w="full"
-        maxH="500px"
-        minH="200px"
-        customizedSize={{
-          fixed: 'large',
-        }}
-        resizeScale={1000}
-      />
+      <AspectRatio ratio={1 / 1} w="full">
+        <Image
+          src={data?.cover_image_url}
+          w="full"
+          h="full"
+          customizedSize={{
+            fixed: 'large',
+          }}
+          resizeScale={1000}
+        />
+      </AspectRatio>
       <Skeleton isLoaded={!isLoading} mt="20px" mx="20px" minH="24px">
         <Heading
-          fontSize="20px"
+          fontSize="16px"
           textOverflow="ellipsis"
           overflow="hidden"
           noOfLines={2}
@@ -147,15 +156,38 @@ export const PackEvent: React.FC = () => {
           {data?.name}
         </Heading>
       </Skeleton>
-      <SkeletonText isLoaded={!isLoading} noOfLines={2} mx="20px" mt="20px">
-        <Text fontSize="14px">{data?.description}</Text>
+      <SkeletonText isLoaded={!isLoading} noOfLines={2} mx="20px" mt="10px">
+        <Text fontSize="14px" color="#777E90">
+          {data?.description}
+        </Text>
       </SkeletonText>
-      <Flex fontSize="14px" justify="space-between" mx="20px" mt="40px">
-        <Skeleton w="56px" h="21px" isLoaded={!isLoading}>
+      <Box mx="20px" mt="32px">
+        <Link to={`/issuer/${data?.issuer_info.uuid ?? ''}`}>
+          <Issuer
+            src={
+              data?.issuer_info.avatar_url === null
+                ? ''
+                : data?.issuer_info.avatar_url
+            }
+            name={data?.issuer_info.name ?? ''}
+            verifiedTitle={data?.issuer_info.verified_info?.verified_title}
+            isVerified={data?.issuer_info.verified_info?.is_verified}
+            size="48px"
+          />
+        </Link>
+      </Box>
+      <Flex justify="space-between" mx="20px" mt="40px">
+        <Skeleton
+          w="56px"
+          h="21px"
+          isLoaded={!isLoading}
+          fontSize="16px"
+          whiteSpace="nowrap"
+        >
           {t('pack-event.collection-progress')}
         </Skeleton>
         {data ? (
-          <Box>
+          <Box fontSize="12px">
             {data.current_user_record_info.record_items_count <=
             data.pack_options_count
               ? `${data.current_user_record_info.record_items_count} / ${data.pack_options_count}`
@@ -176,30 +208,15 @@ export const PackEvent: React.FC = () => {
           />
         ) : null}
       </Skeleton>
-      <Box mx="20px" mt="32px">
-        <Link to={`/issuer/${data?.issuer_info.uuid ?? ''}`}>
-          <Issuer
-            src={
-              data?.issuer_info.avatar_url === null
-                ? ''
-                : data?.issuer_info.avatar_url
-            }
-            name={data?.issuer_info.name ?? ''}
-            verifiedTitle={data?.issuer_info.verified_info?.verified_title}
-            isVerified={data?.issuer_info.verified_info?.is_verified}
-            size="48px"
-          />
-        </Link>
-      </Box>
       <Skeleton
         w="80px"
         h="21px"
         mx="20px"
-        mb="15px"
+        mb="10px"
         mt="40px"
         isLoaded={!isLoading}
       >
-        <Heading fontSize="16px">{t('pack-event.has-token-class')}</Heading>
+        <Text fontSize="16px">{t('pack-event.has-token-class')}</Text>
       </Skeleton>
       <TokenClassList tokenClasses={normalTokenClass} isLoading={isLoading} />
       {specialTokenClass.length ? (
@@ -208,7 +225,7 @@ export const PackEvent: React.FC = () => {
             w="80px"
             h="21px"
             mx="20px"
-            mb="15px"
+            mb="10px"
             mt="40px"
             isLoaded={!isLoading}
           >
