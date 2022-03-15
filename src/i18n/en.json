@@ -148,7 +148,7 @@
         "collecting": "收集中",
         "collected": "已集齐",
         "collection-progress": "收集进度",
-        "total": "{{total}} 个套装"
+        "total": "• {{total}} 个套装"
       }
     },
     "transfer": {

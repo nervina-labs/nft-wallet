@@ -1,5 +1,13 @@
-import { Box, Flex, Heading, Tab, TabList, Tabs } from '@chakra-ui/react'
-import { useCallback, useState } from 'react'
+import {
+  Box,
+  Flex,
+  Heading,
+  Tab,
+  TabList,
+  TabProps,
+  Tabs,
+} from '@chakra-ui/react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InfiniteList } from '../../../components/InfiniteList'
 import { useAPI } from '../../../hooks/useAccount'
@@ -12,8 +20,14 @@ import styled from '@emotion/styled'
 import { useRouteQuerySearch } from '../../../hooks/useRouteQuery'
 import { PackEventState } from '../../../models/pack-event'
 import { RoutePath } from '../../../routes'
+import { ReactComponent as CollectedSvg } from '../../../assets/svg/pack-event-collected.svg'
 
 export const StyledLink = styled(Link)``
+
+const tabSelectedProps: TabProps = {
+  bg: '#F6F8FA',
+  rounded: '6px',
+}
 
 export const PackEventList: React.FC<{}> = () => {
   const { t } = useTranslation('translations')
@@ -35,6 +49,13 @@ export const PackEventList: React.FC<{}> = () => {
     },
     [api, getAuth, packEventState]
   )
+  const tabIndex = useMemo(
+    () =>
+      [PackEventState.Pending, PackEventState.Completed].indexOf(
+        packEventState
+      ),
+    [packEventState]
+  )
 
   return (
     <>
@@ -45,22 +66,29 @@ export const PackEventList: React.FC<{}> = () => {
         lineHeight="30px"
         mb="20px"
       >
-        <Box fontSize="12px" fontWeight="bold">
+        <Box fontSize="12px" fontWeight="bold" color="#777E90">
           {total !== -1 ? t('nfts.pack-event-text.total', { total }) : null}
         </Box>
-        <Tabs
-          variant="solid-rounded"
-          colorScheme="gray"
-          size="sm"
-          index={[PackEventState.Pending, PackEventState.Completed].indexOf(
-            packEventState
-          )}
-        >
+        <Tabs variant="nostyled" colorScheme="gray" size="sm" index={tabIndex}>
           <TabList h="30px">
-            <Tab onClick={() => setPackEventState(PackEventState.Pending)}>
+            <Tab
+              onClick={() => setPackEventState(PackEventState.Pending)}
+              color="#777E90"
+              px="6px"
+              py="4px"
+              fontSize="12px"
+              {...(tabIndex === 0 ? tabSelectedProps : {})}
+            >
               {t('nfts.pack-event-text.collecting')}
             </Tab>
-            <Tab onClick={() => setPackEventState(PackEventState.Completed)}>
+            <Tab
+              onClick={() => setPackEventState(PackEventState.Completed)}
+              color="#777E90"
+              px="6px"
+              py="4px"
+              fontSize="12px"
+              {...(tabIndex === 1 ? tabSelectedProps : {})}
+            >
               {t('nfts.pack-event-text.collected')}
             </Tab>
           </TabList>
@@ -83,66 +111,80 @@ export const PackEventList: React.FC<{}> = () => {
             ) ?? 0
           )
         }}
-        renderItems={(group, i) => {
-          return group.pack_event_records.map((record, j: number) => (
-            <StyledLink
-              to={`${RoutePath.PackEvent}/${record.pack_event_info.uuid}`}
-              key={`${i}-${j}`}
-            >
-              <Flex
-                mb="20px"
-                rounded="20px"
-                overflow="hidden"
-                mx="20px"
-                shadow="0px 4px 16px rgba(0, 0, 0, 0.08)"
-                p="15px"
+        renderItems={(group, i) =>
+          group.pack_event_records.map((record, j: number) => {
+            const isCollected =
+              record.record_items_count >=
+              record.pack_event_info.pack_options_count
+            return (
+              <StyledLink
+                to={`${RoutePath.PackEvent}/${record.pack_event_info.uuid}`}
+                key={`${i}-${j}`}
               >
-                <Image
-                  src={record.pack_event_info.cover_image_url}
-                  w="100px"
-                  h="100px"
-                  rounded="10px"
-                />
                 <Flex
-                  w="calc(100% - 100px - 15px)"
-                  ml="15px"
-                  flex={1}
-                  direction="column"
-                  justify="space-between"
+                  mb="20px"
+                  rounded="20px"
+                  overflow="hidden"
+                  mx="20px"
+                  shadow="0px 4px 16px rgba(0, 0, 0, 0.08)"
+                  p="12px"
                 >
-                  <Heading
-                    fontSize="16px"
-                    noOfLines={2}
-                    overflow="hidden"
-                    textOverflow="ellipsis"
+                  <Image
+                    src={record.pack_event_info.cover_image_url}
+                    w="100px"
+                    h="100px"
+                    rounded="10px"
+                  />
+                  <Flex
+                    w="calc(100% - 100px - 15px)"
+                    ml="15px"
+                    flex={1}
+                    direction="column"
+                    justify="space-between"
+                    pt="4px"
                   >
-                    {record.pack_event_info.name}
-                  </Heading>
-                  <Box>
-                    <Progress
-                      value={Math.floor(
-                        (record.record_items_count /
-                          record.pack_event_info.pack_options_count) *
-                          100
-                      )}
-                      colorScheme="primary"
-                      height="8px"
-                    />
-                    <Flex justify="space-between" fontSize="12px" mt="10px">
-                      <Box>{t('nfts.pack-event-text.collection-progress')}</Box>
-                      <Box>
-                        {record.record_items_count >=
-                        record.pack_event_info.pack_options_count
-                          ? t('nfts.pack-event-text.collected')
-                          : `${record.record_items_count} / ${record.pack_event_info.pack_options_count}`}
-                      </Box>
-                    </Flex>
-                  </Box>
+                    <Heading
+                      fontSize="16px"
+                      noOfLines={2}
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                    >
+                      {record.pack_event_info.name}
+                    </Heading>
+                    <Box color="#777E90">
+                      <Progress
+                        value={Math.floor(
+                          (record.record_items_count /
+                            record.pack_event_info.pack_options_count) *
+                            100
+                        )}
+                        colorScheme="primary"
+                        height="8px"
+                      />
+                      <Flex justify="space-between" fontSize="12px" mt="10px">
+                        <Box>
+                          {t('nfts.pack-event-text.collection-progress')}
+                        </Box>
+                        <Box>
+                          {isCollected ? (
+                            <Flex color="#FFC635" alignItem="center">
+                              <Box mr="4px" my="auto">
+                                <CollectedSvg />
+                              </Box>
+                              {t('nfts.pack-event-text.collected')}{' '}
+                            </Flex>
+                          ) : (
+                            `${record.record_items_count} / ${record.pack_event_info.pack_options_count}`
+                          )}
+                        </Box>
+                      </Flex>
+                    </Box>
+                  </Flex>
                 </Flex>
-              </Flex>
-            </StyledLink>
-          ))
-        }}
+              </StyledLink>
+            )
+          })
+        }
       />
     </>
   )
