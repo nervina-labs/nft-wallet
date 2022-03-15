@@ -39,4 +39,5 @@ export enum Query {
   IssuerPackEventList = 'IssuerPackEventList',
   PackEventDetail = 'PackEventDetail',
   InitGeeTest = 'InitGeeTest',
+  DetectCotaCell = 'DetectCotaCell',
 }

@@ -52,14 +52,13 @@ export enum ClassSortType {
   Recommend = 'recommended',
   Latest = 'latest',
   Likes = 'likes',
-  OnSale = 'on_sale',
 }
 
 export interface SpecialCategories {
   special_categories: SpecialAssets[]
 }
 
-export const PRODUCT_STATUE_SET = ['product_state', 'on_sale'] as const
+export const PRODUCT_STATUE_SET = ['product_state'] as const
 export type ProductState = typeof PRODUCT_STATUE_SET[number]
 
 export interface PaginationOptions {

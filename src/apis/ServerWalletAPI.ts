@@ -18,6 +18,7 @@ import {
   UnsignedTransactionSendRedEnvelope,
   GeeTestResponse,
   GeeTestOptions,
+  CotaCellStatus,
 } from '../models'
 import {
   Issuer,
@@ -232,6 +233,15 @@ export class ServerWalletAPI {
     )
   }
 
+  async isCotaCellReady(auth: Auth) {
+    return await this.axios.get<CotaCellStatus>('/cota_cell', {
+      params: {
+        address: this.address,
+      },
+      headers: { auth: JSON.stringify(auth) },
+    })
+  }
+
   async submitAddress(
     uuid: string,
     walletType: WalletType,
@@ -273,10 +283,6 @@ export class ServerWalletAPI {
     }
     if (sortType === ClassSortType.Recommend) {
       params.sort = 'recommended'
-      params.order = 'desc'
-    }
-    if (sortType === ClassSortType.OnSale) {
-      params.sort = sortType
       params.order = 'desc'
     }
     if (this.address) {
@@ -561,9 +567,6 @@ export class ServerWalletAPI {
       page,
       limit: PER_ITEM_LIMIT,
     }
-    if (sortType === ClassSortType.OnSale) {
-      params.sort = ClassSortType.OnSale
-    }
     if (sortType === ClassSortType.Latest) {
       params.sort = ClassSortType.Latest
     }
@@ -689,10 +692,10 @@ export class ServerWalletAPI {
 
   async getIssuerTokenClass(
     uuid: string,
-    productState: ProductState = 'product_state',
     options?: {
       limit?: number
       page?: number
+      productState?: ProductState
     }
   ) {
     const limit = options?.limit ?? PER_ITEM_LIMIT
@@ -702,7 +705,7 @@ export class ServerWalletAPI {
       {
         params: {
           address: this.address,
-          product_state: productState,
+          product_state: options?.productState || 'product_state',
           limit,
           page,
         },
