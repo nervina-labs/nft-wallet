@@ -108,10 +108,8 @@ const NftDetailTab: React.FC<{
       <TabPanels minH="200px">
         <TabPanel p="20px">
           <SkeletonText isLoaded={!isLoading} spacing={4} noOfLines={3}>
-            {(detail as NFTDetail)?.pack_event_info ? (
-              <PackEventInfo
-                packEventInfo={(detail as NFTDetail).pack_event_info}
-              />
+            {detail?.pack_event_info ? (
+              <PackEventInfo packEventInfo={detail.pack_event_info} />
             ) : null}
             <Description description={detail?.description} />
           </SkeletonText>
