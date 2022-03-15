@@ -24,17 +24,17 @@ export interface PackEventListResponse {
 }
 
 export interface PackEventDetailResponse {
-  pack_event_info: {
-    uuid: string
-    name: string
-    cover_image_url: string
-    pack_options_count: number
-    is_banned: boolean
-    description: string
+  uuid: string
+  name: string
+  description: string | null
+  cover_image_url: string
+  pack_options_count: number
+  is_banned: boolean
+  current_user_record_info: {
+    state: PackEventState
+    record_items_count: number
   }
-  state: string
-  record_items_count: number
-  pack_options: Array<{
+  pack_options_info: Array<{
     token_class: {
       bg_image_url: string
       uuid: string

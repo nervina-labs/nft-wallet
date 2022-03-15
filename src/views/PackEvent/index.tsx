@@ -13,7 +13,7 @@ import { PackEventDetailResponse } from '../../models/pack-event'
 import { Link, Redirect } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 
-type PackOptionTokenClasses = PackEventDetailResponse['pack_options']
+type PackOptionTokenClasses = PackEventDetailResponse['pack_options_info']
 type NormalTokenClassAndSpecialTokenClass = [
   PackOptionTokenClasses,
   PackOptionTokenClasses
@@ -104,10 +104,10 @@ export const PackEvent: React.FC = () => {
     normalTokenClass,
     specialTokenClass,
   ] = useMemo<NormalTokenClassAndSpecialTokenClass>(() => {
-    if (!data?.pack_options) {
+    if (!data?.pack_options_info) {
       return [[], []]
     }
-    return data?.pack_options.reduce<NormalTokenClassAndSpecialTokenClass>(
+    return data?.pack_options_info.reduce<NormalTokenClassAndSpecialTokenClass>(
       (acc, tokenClass) => {
         return [
           acc[0].concat(tokenClass.is_special_model ? [] : [tokenClass]),
@@ -116,7 +116,7 @@ export const PackEvent: React.FC = () => {
       },
       [[], []]
     )
-  }, [data?.pack_options])
+  }, [data?.pack_options_info])
 
   if (error && failureCount >= 3) {
     return <Redirect to={RoutePath.NotFound} />
@@ -128,7 +128,7 @@ export const PackEvent: React.FC = () => {
         <Appbar transparent></Appbar>
       </AppbarSticky>
       <Image
-        src={data?.pack_event_info.cover_image_url}
+        src={data?.cover_image_url}
         w="full"
         maxH="500px"
         minH="200px"
@@ -144,11 +144,11 @@ export const PackEvent: React.FC = () => {
           overflow="hidden"
           noOfLines={2}
         >
-          {data?.pack_event_info.name}
+          {data?.name}
         </Heading>
       </Skeleton>
       <SkeletonText isLoaded={!isLoading} noOfLines={2} mx="20px" mt="20px">
-        <Text fontSize="14px">{data?.pack_event_info.description}</Text>
+        <Text fontSize="14px">{data?.description}</Text>
       </SkeletonText>
       <Flex fontSize="14px" justify="space-between" mx="20px" mt="40px">
         <Skeleton w="56px" h="21px" isLoaded={!isLoading}>
@@ -156,8 +156,9 @@ export const PackEvent: React.FC = () => {
         </Skeleton>
         {data ? (
           <Box>
-            {data.record_items_count <= data.pack_event_info.pack_options_count
-              ? `${data.record_items_count} / ${data.pack_event_info.pack_options_count}`
+            {data.current_user_record_info.record_items_count <=
+            data.pack_options_count
+              ? `${data.current_user_record_info.record_items_count} / ${data.pack_options_count}`
               : t('pack-event.collected')}
           </Box>
         ) : null}
@@ -166,8 +167,8 @@ export const PackEvent: React.FC = () => {
         {data ? (
           <Progress
             value={Math.floor(
-              (data?.record_items_count /
-                data?.pack_event_info.pack_options_count) *
+              (data?.current_user_record_info.record_items_count /
+                data?.pack_options_count) *
                 100
             )}
             colorScheme="primary"
