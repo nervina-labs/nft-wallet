@@ -1,6 +1,7 @@
 import { Box, Flex, Grid, Image } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import Bg from '../../assets/share/bg/pack-event.png'
+import Collected from '../../assets/img/pack-event-collected.png'
 import { PackEventDetailResponse } from '../../models/pack-event'
 import { PosterOnLoaded } from '../Share/share.interface'
 import FallbackAvatarPath from '../../assets/img/fallback.png'
@@ -93,6 +94,10 @@ export const PackEventPoster: React.FC<{
     rendered,
   ])
 
+  const isCollected =
+    data.current_user_record_info &&
+    data.current_user_record_info?.record_items_count >= data.pack_options_count
+
   return (
     <Box ref={ref} position="relative" w="340px" h="509px">
       <Image src={Bg} />
@@ -170,8 +175,10 @@ export const PackEventPoster: React.FC<{
       <Box position="absolute" top="400px" left="30px" w="280px">
         <Progress
           value={
-            data.current_user_record_info.record_items_count /
-            data.pack_options_count
+            data.current_user_record_info
+              ? data.current_user_record_info?.record_items_count /
+                data.pack_options_count
+              : 0
           }
           height="8px"
           w="full"
@@ -179,10 +186,24 @@ export const PackEventPoster: React.FC<{
         />
         <Flex justify="space-between" color="#fff" fontSize="12px" mt="4px">
           <Box>{t('pack-event.collection-progress')}</Box>
-          <Box>
-            {data.current_user_record_info.record_items_count} /{' '}
-            {data.pack_options_count}
-          </Box>
+          {isCollected ? (
+            <Flex align="center" color="#FFC635" position="relative" pl="18px">
+              <Image
+                src={Collected}
+                w="auto"
+                h="14px"
+                position="absolute"
+                top="2px"
+                left="0"
+              />
+              {t('pack-event.collected')}
+            </Flex>
+          ) : (
+            <Box>
+              {data.current_user_record_info?.record_items_count || 0} /{' '}
+              {data.pack_options_count}
+            </Box>
+          )}
         </Flex>
       </Box>
       <Flex position="absolute" bottom="16px" right="30px">

@@ -30,7 +30,7 @@ export interface PackEventDetailResponse {
   cover_image_url: string
   pack_options_count: number
   is_banned: boolean
-  current_user_record_info: {
+  current_user_record_info?: {
     state: PackEventState
     record_items_count: number
   }

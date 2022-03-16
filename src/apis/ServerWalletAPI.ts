@@ -1197,12 +1197,17 @@ export class ServerWalletAPI {
     })
   }
 
-  async getPackEventById(uuid: string, auth: Auth) {
+  async getPackEventById(
+    uuid: string,
+    options?: {
+      auth?: Auth
+    }
+  ) {
     return await this.axios.get<PackEventDetailResponse>(
       `/pack_events/${uuid}`,
       {
         headers: {
-          auth: JSON.stringify(auth),
+          ...(options?.auth ? { auth: JSON.stringify(options.auth) } : {}),
         },
       }
     )

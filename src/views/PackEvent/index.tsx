@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router'
-import { useAPI } from '../../hooks/useAccount'
+import { useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { Query } from '../../models'
 import { MainContainer } from '../../styles'
@@ -99,12 +99,13 @@ export const PackEvent: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { t } = useTranslation('translations')
   const api = useAPI()
+  const { isLogined } = useAccountStatus()
   const getAuth = useGetAndSetAuth()
   const { data, isLoading, error, failureCount } = useQuery(
-    [Query.PackEventDetail, id, api],
+    [Query.PackEventDetail, id, api, isLogined],
     async () => {
-      const auth = await getAuth()
-      const { data } = await api.getPackEventById(id, auth)
+      const auth = isLogined ? await getAuth() : undefined
+      const { data } = await api.getPackEventById(id, { auth })
       return data
     }
   )
@@ -184,20 +185,20 @@ export const PackEvent: React.FC = () => {
         >
           {t('pack-event.collection-progress')}
         </Skeleton>
-        {data ? (
+        {data?.current_user_record_info ? (
           <Box fontSize="12px">
-            {data.current_user_record_info.record_items_count <=
-            data.pack_options_count
-              ? `${data.current_user_record_info.record_items_count} / ${data.pack_options_count}`
+            {data?.current_user_record_info?.record_items_count <=
+            data?.pack_options_count
+              ? `${data?.current_user_record_info?.record_items_count} / ${data?.pack_options_count}`
               : t('pack-event.collected')}
           </Box>
         ) : null}
       </Flex>
       <Skeleton h="8px" mx="20px" mt="10px" isLoaded={!isLoading}>
-        {data ? (
+        {data?.current_user_record_info ? (
           <Progress
             value={Math.floor(
-              (data?.current_user_record_info.record_items_count /
+              (data?.current_user_record_info?.record_items_count /
                 data?.pack_options_count) *
                 100
             )}
