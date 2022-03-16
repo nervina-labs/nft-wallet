@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router'
-import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { useAPI } from '../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { Query } from '../../models'
@@ -20,6 +19,7 @@ import { useMemo } from 'react'
 import { PackEventDetailResponse } from '../../models/pack-event'
 import { Link, Redirect } from 'react-router-dom'
 import { RoutePath } from '../../routes'
+import { Appbar } from './components/appbar'
 
 type PackOptionTokenClasses = PackEventDetailResponse['pack_options_info']
 type NormalTokenClassAndSpecialTokenClass = [
@@ -132,9 +132,7 @@ export const PackEvent: React.FC = () => {
 
   return (
     <MainContainer pb="40px">
-      <AppbarSticky position="fixed">
-        <Appbar transparent></Appbar>
-      </AppbarSticky>
+      <Appbar data={data} id={id} />
       <AspectRatio ratio={1 / 1} w="full">
         <Image
           src={data?.cover_image_url}

@@ -812,7 +812,9 @@
       "collection-progress": "收集进度",
       "collected": "已集齐",
       "has-token-class": "包含藏品：",
-      "special-token-class": "隐藏款："
+      "special-token-class": "隐藏款：",
+      "collecting-digital-collection-sets": "正在收集数字藏品套装",
+      "let-go-to-collect": "一起来收集吧"
     }
   }
 }
