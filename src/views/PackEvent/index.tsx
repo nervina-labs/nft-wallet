@@ -131,6 +131,11 @@ export const PackEvent: React.FC = () => {
     return <Redirect to={RoutePath.NotFound} />
   }
 
+  const isCollected =
+    data?.current_user_record_info &&
+    data?.current_user_record_info?.record_items_count >=
+      data?.pack_options_count
+
   return (
     <MainContainer pb="40px">
       <Appbar data={data} id={id} />
@@ -185,23 +190,26 @@ export const PackEvent: React.FC = () => {
         >
           {t('pack-event.collection-progress')}
         </Skeleton>
-        {data?.current_user_record_info ? (
+        {data ? (
           <Box fontSize="12px">
-            {data?.current_user_record_info?.record_items_count <=
-            data?.pack_options_count
-              ? `${data?.current_user_record_info?.record_items_count} / ${data?.pack_options_count}`
-              : t('pack-event.collected')}
+            {isCollected
+              ? t('pack-event.collected')
+              : `${data?.current_user_record_info?.record_items_count || 0} / ${
+                  data?.pack_options_count
+                }`}
           </Box>
         ) : null}
       </Flex>
       <Skeleton h="8px" mx="20px" mt="10px" isLoaded={!isLoading}>
-        {data?.current_user_record_info ? (
+        {data ? (
           <Progress
-            value={Math.floor(
-              (data?.current_user_record_info?.record_items_count /
-                data?.pack_options_count) *
-                100
-            )}
+            value={
+              data?.current_user_record_info
+                ? (data?.current_user_record_info?.record_items_count /
+                    data?.pack_options_count) *
+                  100
+                : 0
+            }
             colorScheme="primary"
             height="8px"
           />
@@ -215,7 +223,9 @@ export const PackEvent: React.FC = () => {
         mt="40px"
         isLoaded={!isLoading}
       >
-        <Text fontSize="16px">{t('pack-event.has-token-class')}</Text>
+        <Text fontSize="16px" whiteSpace="nowrap">
+          {t('pack-event.has-token-class')}
+        </Text>
       </Skeleton>
       <TokenClassList tokenClasses={normalTokenClass} isLoading={isLoading} />
       {specialTokenClass.length ? (

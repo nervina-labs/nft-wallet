@@ -175,9 +175,10 @@ export const PackEventPoster: React.FC<{
       <Box position="absolute" top="400px" left="30px" w="280px">
         <Progress
           value={
-            data.current_user_record_info
-              ? data.current_user_record_info?.record_items_count /
-                data.pack_options_count
+            data?.current_user_record_info
+              ? (data?.current_user_record_info?.record_items_count /
+                  data?.pack_options_count) *
+                100
               : 0
           }
           height="8px"
