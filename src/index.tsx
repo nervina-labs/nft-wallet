@@ -28,5 +28,5 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
+console.log('unregister execute')
 sw.unregister()
-console.log('unregister')

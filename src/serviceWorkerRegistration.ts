@@ -148,6 +148,7 @@ export function unregister() {
     navigator.serviceWorker.ready
       .then((registration) => {
         registration.unregister()
+        console.log('unregister finish')
       })
       .catch((error) => {
         console.error(error.message)
