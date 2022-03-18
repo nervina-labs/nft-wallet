@@ -81,7 +81,7 @@ if (IS_MAINNET) {
 } else {
   Config.setChainType('testnet')
   Config.setFlashsignerURL(
-    'https://flashsigner-git-fix-dup-account-issue-nervina.vercel.app'
+    'https://flashsigner-git-fea-login-with-qrcode-nervina.vercel.app'
   )
 }
 
