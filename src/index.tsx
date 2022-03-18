@@ -29,3 +29,4 @@ ReactDOM.render(
 )
 
 sw.unregister()
+console.log('unregister')
