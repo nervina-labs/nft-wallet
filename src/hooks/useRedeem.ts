@@ -13,13 +13,14 @@ import {
   RedeemEventItem,
 } from '../models/redeem'
 import { RoutePath } from '../routes'
-import { generateUnipassRedeemUrl, noop, UnipassConfig } from '../utils'
+import { noop, UnipassConfig } from '../utils'
 import {
   useAccount,
   useAPI,
   useSignTransaction,
   WalletType,
 } from './useAccount'
+import UP from 'up-core-test'
 import { useConfirmDialog } from './useConfirmDialog'
 import { useToast } from './useToast'
 import { trackLabels, useTrackClick } from './useTrack'
@@ -52,7 +53,7 @@ export interface TransferState {
 export const useSignRedeem = () => {
   const history = useHistory()
   const api = useAPI()
-  const { walletType, pubkey } = useAccount()
+  const { walletType } = useAccount()
   const signTransaction = useSignTransaction()
   const reactLocation = useLocation<TransferState>()
   const confirmDialog = useConfirmDialog()
@@ -62,6 +63,9 @@ export const useSignRedeem = () => {
   const toast = useToast()
   const confirmRedeem = useCallback(
     async ({ customData, id, onConfirmError }: ConfirmRedeemProps) => {
+      if (walletType === WalletType.Unipass) {
+        UP.initPop()
+      }
       setIsRedeeming(true)
       try {
         const { tx } = await api.getRedeemTransaction(id, walletType)
@@ -92,35 +96,11 @@ export const useSignRedeem = () => {
           throw new Error(err)
         })
 
-        if (walletType === WalletType.Unipass) {
-          const url = `${location.origin}${RoutePath.Unipass}`
-          UnipassConfig.setRedirectUri(`${RoutePath.RedeemResult}/${id}`)
-          const state: Record<string, string> = {
-            prevPathname: reactLocation.pathname,
-            uuid: id,
-          }
-          if (customData) {
-            state.customData = encodeURIComponent(JSON.stringify(customData))
-          }
-          location.href = generateUnipassRedeemUrl(
-            url,
-            url,
-            pubkey,
-            signTx,
-            state
-          )
-          return
-        } else {
-          history.replace(`${RoutePath.RedeemResult}/${id}`, {
-            tx: signTx,
-            customData,
-          })
-        }
-      } catch (error: any) {
-        if (error?.response?.data?.code === 1032) {
-          toast(t('exchange.not-on-chain'))
-          return
-        }
+        history.replace(`${RoutePath.RedeemResult}/${id}`, {
+          tx: signTx,
+          customData,
+        })
+      } catch (error) {
         setIsRedeeming(false)
         toast(t('exchange.error'))
         await onConfirmError?.()
@@ -129,7 +109,6 @@ export const useSignRedeem = () => {
     [
       api,
       history,
-      pubkey,
       signTransaction,
       walletType,
       reactLocation.pathname,

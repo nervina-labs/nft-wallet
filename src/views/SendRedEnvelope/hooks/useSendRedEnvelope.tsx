@@ -7,6 +7,7 @@ import {
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
+import UP from 'up-core-test'
 import {
   useAccount,
   useAPI,
@@ -18,9 +19,7 @@ import { useToast } from '../../../hooks/useToast'
 import { useUnipassV2Dialog } from '../../../hooks/useUnipassV2Dialog'
 import { RuleType, UnsignedTransactionSendRedEnvelope } from '../../../models'
 import { FlashsignerAction } from '../../../models/flashsigner'
-import { UnipassAction } from '../../../models/unipass'
 import { RoutePath } from '../../../routes'
-import { generateUnipassUrl } from '../../../utils'
 import { FormInfoState, useRouteLocation } from './useRouteLocation'
 
 const METAMASK_USER_DENIED_MESSAGE_SIGNATURE_CODE = 4001
@@ -29,7 +28,7 @@ export function useSendRedEnvelope() {
   const api = useAPI()
   const routeLocation = useRouteLocation()
   const getAuth = useGetAndSetAuth()
-  const { walletType, pubkey } = useAccount()
+  const { walletType } = useAccount()
   const signTransaction = useSignTransaction()
   const { replace, push } = useHistory()
   const [isSending, setSending] = useState(false)
@@ -47,9 +46,6 @@ export function useSendRedEnvelope() {
           signature!
         )
       }
-      if (walletType === WalletType.Unipass) {
-        return signature ? data.tx : await signTransaction(data.tx)
-      }
       return await signTransaction(data.tx)
     },
     [routeLocation.state, signTransaction, walletType]
@@ -58,6 +54,9 @@ export function useSendRedEnvelope() {
   const unipassDialog = useUnipassV2Dialog()
   const onSend = useCallback(
     async (formInfo: FormInfoState) => {
+      if (walletType === WalletType.Unipass) {
+        UP.initPop()
+      }
       setSending(true)
       setError(undefined)
       try {
@@ -95,22 +94,6 @@ export function useSendRedEnvelope() {
             locale: i18n.language,
             failUrl: location.href,
           })
-          return
-        }
-
-        if (!signature && walletType === WalletType.Unipass) {
-          const url = `${location.origin}${RoutePath.Unipass}`
-          location.href = generateUnipassUrl(
-            UnipassAction.RedEnvelope,
-            url,
-            url,
-            pubkey,
-            signTx,
-            {
-              ...formInfo,
-              tokenUuids: formInfo.tokenUuids.join(','),
-            }
-          )
           return
         }
 
@@ -154,7 +137,6 @@ export function useSendRedEnvelope() {
       api,
       getAuth,
       getSignTx,
-      pubkey,
       push,
       replace,
       routeLocation.state,

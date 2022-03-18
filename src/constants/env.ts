@@ -1,5 +1,9 @@
 import * as Bowser from 'bowser'
 import { Config } from '@nervina-labs/flashsigner'
+import UP from 'up-core-test'
+import UPCKB from 'up-ckb-alpha-test'
+import PWCore, { ChainID, CHAIN_SPECS } from '@lay2/pw-core'
+
 type ChainType = 'mainnet' | 'testnet'
 
 export const BOWSER_BROWSER = Bowser.getParser(window.navigator.userAgent)
@@ -57,6 +61,9 @@ export const IS_STANDALONE =
 export const IS_MOBILE_ETH_WALLET =
   (w.ethereum || w.web3) && IS_MOBILE && IS_STANDALONE
 
+export const IS_UNIPASS_NOT_AVAILABLE =
+  IS_WEXIN || IS_MOBILE_ETH_WALLET || IS_MOBILE_ETH_WALLET
+
 export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 
 export const IS_MAC_SAFARI = IS_SAFARI && !IS_IPHONE
@@ -105,3 +112,31 @@ export const ISSUER_ID_REG = /^ISSUER-.{40}$/
 export const TOKEN_CLASS_ID_REGS = [/^0x.{48}$/, /^0x.{40}/]
 export const IS_SUPPORT_AR =
   !IS_WEXIN && document.createElement('a').relList.supports('ar')
+
+export const UNIPASS_CODE_HASH = IS_MAINNET
+  ? '0xd01f5152c267b7f33b9795140c2467742e8424e49ebe2331caec197f7281b60a'
+  : '0x3e1eb7ed4809b2d60650be96a40abfbdafb3fb942b7b37ec7709e64e2cd0a783'
+
+UPCKB.config({
+  upLockCodeHash: UNIPASS_CODE_HASH,
+})
+if (IS_MAINNET) {
+  UP.config({
+    domain: 'app.unipass.id',
+  })
+  UPCKB.config({
+    upLockCodeHash: UNIPASS_CODE_HASH,
+    upSnapshotUrl: 'https://aggregator.unipass.id/snapshot/',
+  })
+} else {
+  UP.config({
+    domain: 't.app.unipass.id',
+  })
+  UPCKB.config({
+    upLockCodeHash: UNIPASS_CODE_HASH,
+    upSnapshotUrl: 'https://t.aggregator.unipass.id/dev/snapshot/',
+  })
+}
+
+PWCore.chainId = IS_MAINNET ? ChainID.ckb : ChainID.ckb_testnet
+PWCore.config = IS_MAINNET ? CHAIN_SPECS.Lina : CHAIN_SPECS.Aggron
