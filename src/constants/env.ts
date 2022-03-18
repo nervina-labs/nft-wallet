@@ -80,9 +80,9 @@ if (IS_MAINNET) {
   Config.setChainType('mainnet')
 } else {
   Config.setChainType('testnet')
-  Config.setFlashsignerURL(
-    'https://flashsigner-git-fix-safari-connect-fail-nervina.vercel.app'
-  )
+  if (FLASH_SIGNER_URL) {
+    Config.setFlashsignerURL(FLASH_SIGNER_URL)
+  }
 }
 
 export const RED_ENVELOP_APP_URL = IS_MAINNET
