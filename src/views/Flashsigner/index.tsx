@@ -12,10 +12,12 @@ export const Flashsigner: React.FC = () => {
   const setFlashsignerAccount = useSetAccount()
   const { setProfile, profile } = useProfile()
 
+  console.log('test0')
   useEffect(() => {
     getResultFromURL<any>({
       onLogin(res) {
         UnipassConfig.clear()
+        console.log('test1')
         const { address, pubkey, signature, message, extra } = res
         setFlashsignerAccount({
           pubkey,
@@ -29,6 +31,7 @@ export const Flashsigner: React.FC = () => {
           },
           address
         )
+        console.log('test2')
         history.replace(extra?.redirect || RoutePath.NFTs)
       },
       onSignMessage(result) {
