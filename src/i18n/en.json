@@ -143,12 +143,12 @@
       "welcome": "Welcome to Digital Collection universe",
       "hi": "Hi, Collector",
       "share": "Share",
-      "pack-event": "套装",
+      "pack-event": "Collections",
       "pack-event-text": {
-        "collecting": "收集中",
-        "collected": "已集齐",
-        "collection-progress": "收集进度",
-        "total": "• {{total}} 个套装"
+        "collecting": "Collecting",
+        "collected": "Completed",
+        "collection-progress": "Collection progress",
+        "total": "• {{total}} collections"
       }
     },
     "transfer": {
@@ -438,7 +438,7 @@
     "issuer": {
       "created": "Created",
       "selling": "Selling",
-      "pack-event": "创建的套装",
+      "pack-event": "Made",
       "title": "Issuer",
       "follower": "Follower",
       "like": "Like",
@@ -446,10 +446,10 @@
       "more": "More",
       "sale-empty": "Ahhh ~ No Digaital Collection on sale",
       "empty": "Ahhh ~ The issuer haven't created Digital Collection yet",
-      "song": "曲目",
-      "pack-event-count": "共 {{count}} 款",
-      "pack-event-collected": "已收集 {{count}} 款",
-      "belonging-pack-event": "所属套装："
+      "song": "Song",
+      "pack-event-count": "Contain {{count}} works",
+      "pack-event-collected": "Collected {{count}} works",
+      "belonging-pack-event": "Belong to："
     },
     "exchange": {
       "home": "My collection",
@@ -805,12 +805,12 @@
       }
     },
     "pack-event": {
-      "collection-progress": "我的收集进度",
-      "collected": "已集齐",
-      "has-token-class": "包含藏品：",
-      "special-token-class": "隐藏款：",
-      "collecting-digital-collection-sets": "正在收集数字藏品套装",
-      "let-go-to-collect": "一起来收集吧"
+      "collection-progress": "My Collection progress",
+      "collected": "Completed",
+      "has-token-class": "Contain: ",
+      "special-token-class": "Special editions: ",
+      "collecting-digital-collection-sets": "Collecting Digital Collections",
+      "let-go-to-collect": "Join me to collect"
     }
   }
 }
