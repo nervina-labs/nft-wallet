@@ -15,6 +15,7 @@ import { addParamsToUrl, getNFTQueryParams } from '../../utils'
 import { useTextEllipsis } from '../Share/hooks/useTextEllipsis'
 import { Progress } from '@mibao-ui/components'
 import QRCode from 'qrcode.react'
+import PackEventSpecialModalPath from '../../assets/img/pack-event-special.png'
 
 function useUserInfo() {
   const api = useAPI()
@@ -61,7 +62,11 @@ export const PackEventPoster: React.FC<{
   const { data: images, isLoading: isLoadingImages } = useUrlToBase64(
     data.pack_options_info
       .slice(0, 9)
-      .map((pack) => pack.token_class.bg_image_url),
+      .map((pack) =>
+        pack.is_special_model && !pack.is_collected
+          ? PackEventSpecialModalPath
+          : pack.token_class.bg_image_url
+      ),
     {
       size: 600,
       toBlob: true,

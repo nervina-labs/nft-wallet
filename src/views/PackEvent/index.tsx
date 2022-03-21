@@ -26,6 +26,7 @@ import { PackEventDetailResponse } from '../../models/pack-event'
 import { Link, Redirect } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { Appbar } from './components/appbar'
+import PackEventSpecialModalPath from '../../assets/img/pack-event-special.png'
 
 type PackOptionTokenClasses = PackEventDetailResponse['pack_options_info']
 type NormalTokenClassAndSpecialTokenClass = [
@@ -57,26 +58,44 @@ const TokenClassList: React.FC<{
       )),
     []
   )
-  const tokenClassesEl = tokenClasses.map((item, i) => (
-    <Link key={i} to={`/class/${item.token_class.uuid}`}>
-      <NftImage
-        src={
-          item.token_class.bg_image_url === null
-            ? ''
-            : item.token_class.bg_image_url
-        }
-        w="100%"
-        h="100%"
-        rounded="10px"
-        opacity={item.is_collected ? 1 : 0.5}
-        customizedSize={{
-          fixed: 'large',
-        }}
-        resizeScale={600}
-        isBaned={item.token_class.is_banned}
-      />
-    </Link>
-  ))
+  const tokenClassesEl = tokenClasses.map((item, i) => {
+    if (item.is_special_model && !item.is_collected) {
+      return (
+        <NftImage
+          src={PackEventSpecialModalPath}
+          w="100%"
+          h="100%"
+          rounded="10px"
+          opacity={item.is_collected ? 1 : 0.5}
+          customizedSize={{
+            fixed: 'large',
+          }}
+          resizeScale={600}
+          isBaned={item.token_class.is_banned}
+        />
+      )
+    }
+    return (
+      <Link key={i} to={`/class/${item.token_class.uuid}`}>
+        <NftImage
+          src={
+            item.token_class.bg_image_url === null
+              ? ''
+              : item.token_class.bg_image_url
+          }
+          w="100%"
+          h="100%"
+          rounded="10px"
+          opacity={item.is_collected ? 1 : 0.5}
+          customizedSize={{
+            fixed: 'large',
+          }}
+          resizeScale={600}
+          isBaned={item.token_class.is_banned}
+        />
+      </Link>
+    )
+  })
 
   return (
     <Grid templateColumns="repeat(3, 1fr)" gap="15px" mx="20px">
