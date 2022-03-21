@@ -16,6 +16,7 @@ import {
   Box,
   Flex,
   Grid,
+  Icon,
   Skeleton,
   SkeletonText,
   Text,
@@ -27,6 +28,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { Appbar } from './components/appbar'
 import PackEventSpecialModalPath from '../../assets/img/pack-event-special.png'
+import { ReactComponent as CollectedSvg } from '../../assets/svg/pack-event-collected.svg'
 
 type PackOptionTokenClasses = PackEventDetailResponse['pack_options_info']
 type NormalTokenClassAndSpecialTokenClass = [
@@ -137,10 +139,10 @@ export const PackEvent: React.FC = () => {
     return <Redirect to={RoutePath.NotFound} />
   }
 
-  const isCollected =
-    data?.current_user_record_info &&
-    data?.current_user_record_info?.record_items_count >=
-      data?.pack_options_count
+  const isCollected = true
+  // data?.current_user_record_info &&
+  // data?.current_user_record_info?.record_items_count >=
+  //   data?.pack_options_count
 
   return (
     <MainContainer pb="40px">
@@ -198,11 +200,16 @@ export const PackEvent: React.FC = () => {
         </Skeleton>
         {data ? (
           <Box fontSize="12px">
-            {isCollected
-              ? t('pack-event.collected')
-              : `${data?.current_user_record_info?.record_items_count || 0} / ${
-                  data?.pack_options_count
-                }`}
+            {isCollected ? (
+              <Flex align="center" color="#FFC635">
+                <Icon as={CollectedSvg} mr="6px" my="auto" />
+                {t('pack-event.collected')}
+              </Flex>
+            ) : (
+              `${data?.current_user_record_info?.record_items_count || 0} / ${
+                data?.pack_options_count
+              }`
+            )}
           </Box>
         ) : null}
       </Flex>
