@@ -9,6 +9,7 @@ import { ReactComponent as ShareSvg } from '../../../assets/svg/share.svg'
 import { Suspense } from 'react'
 import Share from '../../../components/Share'
 import { PackEventPoster } from '../../../components/PackEventPoster'
+import { RoutePath } from '../../../routes'
 
 export const Appbar: React.FC<{
   data?: PackEventDetailResponse
@@ -43,12 +44,12 @@ export const Appbar: React.FC<{
           <Share
             isOpen={isOpenShare}
             onClose={onCloseShare}
-            shareUrl={`${window.location.origin}/RoutePath.PackEvent/${id}`}
+            shareUrl={`${window.location.origin}/${RoutePath.PackEvent}/${id}`}
             poster={(onLoaded) => (
               <PackEventPoster
                 onLoaded={onLoaded}
                 data={data}
-                shareUrl={`${window.location.origin}/RoutePath.PackEvent/${id}`}
+                shareUrl={`${window.location.origin}/${RoutePath.PackEvent}/${id}`}
               />
             )}
           />
