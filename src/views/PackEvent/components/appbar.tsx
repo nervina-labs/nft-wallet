@@ -44,12 +44,12 @@ export const Appbar: React.FC<{
           <Share
             isOpen={isOpenShare}
             onClose={onCloseShare}
-            shareUrl={`${window.location.origin}/${RoutePath.PackEvent}/${id}`}
+            shareUrl={`${window.location.origin}${RoutePath.PackEvent}/${id}`}
             poster={(onLoaded) => (
               <PackEventPoster
                 onLoaded={onLoaded}
                 data={data}
-                shareUrl={`${window.location.origin}/${RoutePath.PackEvent}/${id}`}
+                shareUrl={`${window.location.origin}${RoutePath.PackEvent}/${id}`}
               />
             )}
           />
