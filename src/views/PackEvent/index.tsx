@@ -4,7 +4,13 @@ import { useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { Query } from '../../models'
 import { MainContainer } from '../../styles'
-import { Heading, Image, Issuer, Progress } from '@mibao-ui/components'
+import {
+  Heading,
+  Image,
+  Issuer,
+  NftImage,
+  Progress,
+} from '@mibao-ui/components'
 import {
   AspectRatio,
   Box,
@@ -53,38 +59,22 @@ const TokenClassList: React.FC<{
   )
   const tokenClassesEl = tokenClasses.map((item, i) => (
     <Link key={i} to={`/class/${item.token_class.uuid}`}>
-      <Box
+      <NftImage
+        src={
+          item.token_class.bg_image_url === null
+            ? ''
+            : item.token_class.bg_image_url
+        }
         w="100%"
-        h="auto"
-        _before={{
-          height: '0',
-          content: '" "',
-          display: 'block',
-          paddingBottom: '100%',
+        h="100%"
+        rounded="10px"
+        opacity={item.is_collected ? 1 : 0.5}
+        customizedSize={{
+          fixed: 'large',
         }}
-        position="relative"
-      >
-        <Image
-          src={
-            item.token_class.bg_image_url === null
-              ? ''
-              : item.token_class.bg_image_url
-          }
-          w="100%"
-          h="100%"
-          rounded="10px"
-          opacity={item.is_collected ? 1 : 0.5}
-          containerProps={{
-            position: 'absolute',
-            top: '0',
-            left: '0',
-          }}
-          customizedSize={{
-            fixed: 'large',
-          }}
-          resizeScale={600}
-        />
-      </Box>
+        resizeScale={600}
+        isBaned={item.token_class.is_banned}
+      />
     </Link>
   ))
 
