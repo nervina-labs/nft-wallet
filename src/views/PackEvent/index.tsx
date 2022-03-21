@@ -59,40 +59,37 @@ const TokenClassList: React.FC<{
     []
   )
   const tokenClassesEl = tokenClasses.map((item, i) => {
-    if (item.is_special_model && !item.is_collected) {
-      return (
-        <NftImage
-          src={PackEventSpecialModalPath}
-          w="100%"
-          h="100%"
-          rounded="10px"
-          opacity={item.is_collected ? 1 : 0.5}
-          customizedSize={{
-            fixed: 'large',
-          }}
-          resizeScale={600}
-          isBaned={item.token_class.is_banned}
-        />
-      )
+    const bgImageUrl =
+      item.token_class.bg_image_url === null
+        ? ''
+        : item.token_class.bg_image_url
+    const src =
+      item.is_special_model && !item.is_collected
+        ? PackEventSpecialModalPath
+        : bgImageUrl
+    const nftImageEl = (
+      <NftImage
+        src={src}
+        w="100%"
+        h="100%"
+        rounded="10px"
+        opacity={item.is_collected ? 1 : 0.5}
+        customizedSize={{
+          fixed: 'large',
+        }}
+        resizeScale={600}
+        isBaned={item.token_class.is_banned}
+      />
+    )
+    if (
+      (item.is_special_model && !item.is_collected) ||
+      item.token_class.is_banned
+    ) {
+      return nftImageEl
     }
     return (
       <Link key={i} to={`/class/${item.token_class.uuid}`}>
-        <NftImage
-          src={
-            item.token_class.bg_image_url === null
-              ? ''
-              : item.token_class.bg_image_url
-          }
-          w="100%"
-          h="100%"
-          rounded="10px"
-          opacity={item.is_collected ? 1 : 0.5}
-          customizedSize={{
-            fixed: 'large',
-          }}
-          resizeScale={600}
-          isBaned={item.token_class.is_banned}
-        />
+        {nftImageEl}
       </Link>
     )
   })
