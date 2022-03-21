@@ -35,7 +35,6 @@ export const NftCards: React.FC = () => {
   const { t } = useTranslation('translations')
   const index = useMemo(() => {
     const i = TabTypes.findIndex((item) => item === productState)
-    console.log(i, productState)
     return i !== -1 ? i : 0
   }, [productState])
   const trackTab = useTrackClick('issuer', 'switchover')

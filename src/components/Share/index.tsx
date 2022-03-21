@@ -50,7 +50,7 @@ enum PosterState {
 function posterIsReactNode(
   poster: ShareProps['poster']
 ): poster is DefaultPoster {
-  if (poster) return false
+  if (!poster) return false
   return Object.hasOwnProperty.call(poster, 'type')
 }
 
