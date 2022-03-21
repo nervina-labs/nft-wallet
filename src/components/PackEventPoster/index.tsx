@@ -160,6 +160,7 @@ export const PackEventPoster: React.FC<{
               h="70px"
               w="70px"
               objectFit="cover"
+              opacity={data.pack_options_info[i].is_collected ? 1 : 0.5}
             />
           ))}
       </Grid>
