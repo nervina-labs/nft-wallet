@@ -80,7 +80,7 @@ if (IS_MAINNET) {
   Config.setChainType('mainnet')
 } else {
   Config.setChainType('testnet')
-  Config.setFlashsignerURL('https://flashsigner-fthw8thei-nervina.vercel.app')
+  Config.setFlashsignerURL('https://flashsigner-c83jxh1fe-nervina.vercel.app')
 }
 
 export const RED_ENVELOP_APP_URL = IS_MAINNET
