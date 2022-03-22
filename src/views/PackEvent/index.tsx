@@ -115,6 +115,9 @@ export const PackEvent: React.FC = () => {
       const auth = isLogined ? await getAuth() : undefined
       const { data } = await api.getPackEventById(id, { auth })
       return data
+    },
+    {
+      cacheTime: 0,
     }
   )
   const [
