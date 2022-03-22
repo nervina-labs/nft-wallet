@@ -139,10 +139,10 @@ export const PackEvent: React.FC = () => {
     return <Redirect to={RoutePath.NotFound} />
   }
 
-  const isCollected = true
-  // data?.current_user_record_info &&
-  // data?.current_user_record_info?.record_items_count >=
-  //   data?.pack_options_count
+  const isCollected =
+    data?.current_user_record_info &&
+    data?.current_user_record_info?.record_items_count >=
+      data?.pack_options_count
 
   return (
     <MainContainer pb="40px">
@@ -251,7 +251,7 @@ export const PackEvent: React.FC = () => {
             mt="40px"
             isLoaded={!isLoading}
           >
-            <Heading fontSize="16px">
+            <Heading fontSize="16px" whiteSpace="nowrap">
               {t('pack-event.special-token-class')}
             </Heading>
           </Skeleton>

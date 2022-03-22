@@ -241,7 +241,10 @@
       "copy-to-browser": "Please copy the link and open it in your browser to view",
       "no-support-usdz-ok": "OK",
       "only-the-owner-can-play": "Only the owner can play",
-      "song": "Song"
+      "song": "Song",
+      "pack-event-count": "Contain {{count}} works",
+      "pack-event-collected": "Collected {{count}} works",
+      "belonging-pack-event": "Belong to："
     },
     "account": {
       "title": "My Account",
@@ -446,10 +449,7 @@
       "more": "More",
       "sale-empty": "Ahhh ~ No Digaital Collection on sale",
       "empty": "Ahhh ~ The issuer haven't created Digital Collection yet",
-      "song": "Song",
-      "pack-event-count": "Contain {{count}} works",
-      "pack-event-collected": "Collected {{count}} works",
-      "belonging-pack-event": "Belong to："
+      "pack-event-count": "Contain {{count}} works"
     },
     "exchange": {
       "home": "My collection",
