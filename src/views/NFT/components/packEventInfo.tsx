@@ -10,9 +10,6 @@ export const PackEventInfo: React.FC<{
   packEventInfo?: NFTDetail['pack_event_info'] | TokenClass['pack_event_info']
 }> = ({ packEventInfo }) => {
   const { t } = useTranslation('translations')
-  const isTokenClass =
-    typeof (packEventInfo as NFTDetail['pack_event_info'])
-      ?.pack_event_record_items_count === 'undefined'
 
   return (
     <>
@@ -49,14 +46,6 @@ export const PackEventInfo: React.FC<{
                     count: packEventInfo?.pack_options_count,
                   })}
                 </Box>
-                {!isTokenClass ? (
-                  <Box ml="10px">
-                    {t('nft.pack-event-collected', {
-                      count: (packEventInfo as NFTDetail['pack_event_info'])
-                        ?.pack_event_record_items_count,
-                    })}
-                  </Box>
-                ) : null}
               </Flex>
             </Flex>
           </Flex>
