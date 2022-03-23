@@ -150,7 +150,9 @@
         "collected": "已集齐",
         "collection-progress": "收集进度",
         "total": "• {{total}} 个套装"
-      }
+      },
+      "no-pack-event": "尚未参与任何套装收集",
+      "no-more-pack-event": "没有更多套装了"
     },
     "transfer": {
       "scan": {
@@ -450,7 +452,8 @@
       "more": "更多",
       "sale-empty": "啊哦～暂无售卖的作品",
       "empty": "啊哦～暂未创作秘宝",
-      "pack-event-count": "共 {{count}} 款"
+      "pack-event-count": "共 {{count}} 款",
+      "no-pack-events": "啊哈~发行人还没有创建过套装"
     },
     "exchange": {
       "home": "我的数字藏品",

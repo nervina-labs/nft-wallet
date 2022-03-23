@@ -150,7 +150,9 @@
         "collected": "Completed",
         "collection-progress": "Collection progress",
         "total": "• {{total}} collections"
-      }
+      },
+      "no-pack-event": "You havn't participated in any collection yet",
+      "no-more-pack-event": "No More Collection"
     },
     "transfer": {
       "scan": {
@@ -450,7 +452,8 @@
       "more": "More",
       "sale-empty": "Ahhh ~ No Digaital Collection on sale",
       "empty": "Ahhh ~ The issuer haven't created Digital Collection yet",
-      "pack-event-count": "Contain {{count}} works"
+      "pack-event-count": "Contain {{count}} works",
+      "no-pack-events": "Ahhh ~ The issuer haven't created Collection yet"
     },
     "exchange": {
       "home": "My collection",

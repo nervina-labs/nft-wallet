@@ -29,7 +29,7 @@ export const PackEventList: React.FC<{
       queryFn={getPackEventData}
       queryKey={[Query.PackEventList, id]}
       enableQuery
-      emptyElement={<Empty />}
+      emptyElement={<Empty description={t('issuer.no-pack-events')} />}
       noMoreElement={t('common.actions.pull-to-down')}
       calcDataLength={(data) => {
         return (

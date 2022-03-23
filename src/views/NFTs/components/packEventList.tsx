@@ -98,8 +98,8 @@ export const PackEventList: React.FC<{}> = () => {
         queryFn={getPackEventData}
         queryKey={[Query.PackEventList, packEventState]}
         enableQuery
-        emptyElement={<Empty />}
-        noMoreElement={t('common.actions.pull-to-down')}
+        emptyElement={<Empty description={t('nfts.no-pack-event')} />}
+        noMoreElement={t('nfts.no-more-pack-event')}
         onDataChange={(data) => {
           setTotal(data?.pages[0].meta.total_count ?? 0)
         }}
