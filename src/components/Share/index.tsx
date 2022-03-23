@@ -56,7 +56,7 @@ export const Share: React.FC<ShareProps> = ({
   poster,
   reloadByRoute,
 }) => {
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const [posterState, setPosterState] = useState(PosterState.None)
   const toast = useToast()
   const onRenderError = useCallback(
@@ -257,7 +257,7 @@ export const Share: React.FC<ShareProps> = ({
                     bg="rgba(0,0,0,0.5)"
                     mt="20px"
                     h="40px"
-                    fontSize="14px"
+                    fontSize={i18n.language !== 'en' ? '14px' : '12px'}
                     textAlign="center"
                     lineHeight="40px"
                     w="100%"
