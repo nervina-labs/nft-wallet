@@ -24,13 +24,14 @@ import {
   verifyCkbAddress,
   verifyEthAddress,
   verifyDasAddress,
+  generateUnipassSignTxUrl,
   buildFlashsignerOptions,
   isUnipassV2Address,
 } from '../../utils'
-import UP from 'up-core-test'
 import { useWidth } from '../../hooks/useWidth'
 import { useQuery } from 'react-query'
 import { CONTAINER_MAX_WIDTH, IS_IPHONE, IS_MAINNET } from '../../constants'
+import UnipassProvider from '../../pw/UnipassProvider'
 import { Address, AddressType } from '@lay2/pw-core'
 import { useTranslation } from 'react-i18next'
 import { AccountRecord } from 'das-sdk'
@@ -43,6 +44,7 @@ import {
   useAccount,
   useAccountStatus,
   useAPI,
+  useProvider,
   useSignTransaction,
   WalletType,
 } from '../../hooks/useAccount'
@@ -129,7 +131,8 @@ export const Transfer: React.FC = () => {
   const signTransaction = useSignTransaction()
   const api = useAPI()
   const { isLogined, prevAddress } = useAccountStatus()
-  const { address, walletType } = useAccount()
+  const { address, walletType, pubkey } = useAccount()
+  const provider = useProvider()
   const prevState = routerLocation.state?.prevState
   const isRedirectFromSigner =
     !!routerLocation.state?.signature || !!routerLocation.state?.tx
@@ -159,10 +162,16 @@ export const Transfer: React.FC = () => {
   )
 
   useEffect(() => {
-    if (prevAddress && address && prevAddress !== address) {
+    if (
+      prevAddress &&
+      address &&
+      prevAddress !== address &&
+      provider instanceof UnipassProvider
+    ) {
+      provider.terminate()
       history.replace(RoutePath.NFT)
     }
-  }, [prevAddress, address, history])
+  }, [prevAddress, address, provider, history])
 
   const ckbAddressType = useMemo(() => {
     return verifyAddress(ckbAddress, address)
@@ -272,9 +281,6 @@ export const Transfer: React.FC = () => {
   }, [confirmDialog, finalUsedAddress, t, nftDetail?.script_type])
 
   const sendNFT = useCallback(async () => {
-    if (walletType === WalletType.Unipass) {
-      UP.initPop()
-    }
     setIsSendingNFT(true)
     try {
       const isFinalUsedAddressTypeEth =
@@ -344,11 +350,38 @@ export const Transfer: React.FC = () => {
         throw new Error(err)
       })
 
-      await api.transfer(id, signTx, sentAddress).catch((err) => {
-        stopTranfer(false, FailedMessage.TranferFail)
-        console.log(err)
-        throw err
-      })
+      if (walletType === WalletType.Unipass) {
+        const { signature } = routerLocation.state ?? {}
+        if (signature) {
+          await api.transfer(id, tx, sentAddress, signature).catch((err) => {
+            stopTranfer(
+              false,
+              FailedMessage.TranferFail,
+              err?.response?.data?.code
+            )
+            console.log(err)
+            throw err
+          })
+        } else {
+          const url = `${location.origin}${RoutePath.Unipass}`
+          location.href = generateUnipassSignTxUrl(url, url, pubkey, signTx, {
+            uuid: id,
+            ckbAddress: sentAddress,
+          })
+          return
+        }
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await api.transfer(id, signTx, sentAddress).catch((err) => {
+          stopTranfer(
+            false,
+            FailedMessage.TranferFail,
+            err?.response?.data?.code
+          )
+          console.log(err)
+          throw err
+        })
+      }
     } catch (error) {
       console.log(error)
       return
@@ -362,6 +395,7 @@ export const Transfer: React.FC = () => {
     api,
     walletType,
     routerLocation.state,
+    pubkey,
     stopTranfer,
     address,
     nftDetail,

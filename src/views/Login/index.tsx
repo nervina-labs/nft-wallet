@@ -7,7 +7,6 @@ import {
   IS_DESKTOP,
   IS_IMTOKEN,
   IS_MOBILE_ETH_WALLET,
-  IS_UNIPASS_NOT_AVAILABLE,
   IS_WEBKIT,
 } from '../../constants'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
@@ -389,7 +388,7 @@ export const Login: React.FC = () => {
           {IS_MOBILE_ETH_WALLET ? null : (
             <LoginButton
               className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
-              isLoading={isFlashsignerLogin}
+              isLoading={isUnipassLogining}
               disabled={
                 isUnipassLogining ||
                 isMetamaskLoging ||
@@ -408,26 +407,24 @@ export const Login: React.FC = () => {
               </Box>
             </LoginButton>
           )}
-          {IS_UNIPASS_NOT_AVAILABLE ? null : (
-            <LoginButton
-              className={'connect'}
-              isLoading={isUnipassLogining}
-              disabled={
-                isUnipassLogining ||
-                isMetamaskLoging ||
-                isWalletConnectLoging ||
-                isFlashsignerLogin
-              }
-              onClick={loginUnipass}
-              variant={'outline'}
-              size="lg"
-            >
-              <Box py="8px">
-                <Box fontSize="16px">{t('login.connect.unipass')}</Box>
-                <Box fontSize="12px">{t('login.connect.or-use-email')}</Box>
-              </Box>
-            </LoginButton>
-          )}
+          <LoginButton
+            className={'connect'}
+            isLoading={isFlashsignerLogin}
+            disabled={
+              isUnipassLogining ||
+              isMetamaskLoging ||
+              isWalletConnectLoging ||
+              isFlashsignerLogin
+            }
+            onClick={loginUnipass}
+            variant={'outline'}
+            size="lg"
+          >
+            <Box py="8px">
+              <Box fontSize="16px">{t('login.connect.unipass')}</Box>
+              <Box fontSize="12px">{t('login.connect.or-use-email')}</Box>
+            </Box>
+          </LoginButton>
           <LoginButton
             className={`${IS_IMTOKEN ? 'recommend' : ''} connect`}
             disabled={

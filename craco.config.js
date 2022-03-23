@@ -3,10 +3,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 
 module.exports = {
   babel: {
-    plugins: [
-      'babel-plugin-styled-components',
-      '@babel/plugin-proposal-class-properties',
-    ],
+    plugins: ['babel-plugin-styled-components'],
   },
   webpack: {
     configure: (webpackConfig) => {
