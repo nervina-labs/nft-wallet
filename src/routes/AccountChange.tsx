@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useGetAndSetAuth, useProfile } from '../hooks/useProfile'
+import { UnipassConfig } from '../utils'
 import { useAccount, useAccountStatus, WalletType } from '../hooks/useAccount'
 import { RoutePath } from './path'
 import {
@@ -10,11 +11,13 @@ import {
   useConfirmDialog,
 } from '../hooks/useConfirmDialog'
 import { useWechatShare } from '../hooks/useWechat'
+import { useToast } from '../hooks/useToast'
 
 const allowWithoutAuthList = new Set([
+  RoutePath.Unipass,
   RoutePath.Explore,
   RoutePath.Apps,
-  // RoutePath.AddressCollector,
+  RoutePath.AddressCollector,
   RoutePath.Claim,
   RoutePath.NotFound,
   RoutePath.Redeem,
@@ -49,6 +52,7 @@ export const AccountChange: React.FC = ({ children }) => {
   const isSigning = useRef(false)
   const onOpenConfirm = useConfirmDialog()
   const onCloseConfirm = useCloseConfirmDialog()
+  const toast = useToast()
   const [t] = useTranslation('translations')
   const wechatShare = useWechatShare()
   useEffect(() => {
@@ -60,28 +64,6 @@ export const AccountChange: React.FC = ({ children }) => {
     return unlisten
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const signForVerify = useCallback(async () => {
-    isSigning.current = true
-    await onOpenConfirm({
-      type: 'text',
-      title: t('auth.title'),
-      content: t('auth.content'),
-      okText: t('auth.ok'),
-      onConfirm: async () => {
-        try {
-          await getAuth()
-          if (WalletType.Flashsigner !== walletType) {
-            onCloseConfirm()
-          }
-        } catch (error) {
-          onCloseConfirm()
-        } finally {
-          isSigning.current = false
-        }
-      },
-    })
-  }, [getAuth, onCloseConfirm, onOpenConfirm, t, walletType])
 
   useEffect(() => {
     const pathInForceAuthList = forceAuthList.has(
@@ -97,10 +79,31 @@ export const AccountChange: React.FC = ({ children }) => {
       !isSigning.current
     ) {
       if (
-        WalletType.Unipass === walletType ||
+        (WalletType.Unipass === walletType && pubkey) ||
         WalletType.Metamask === walletType
       ) {
-        signForVerify()
+        isSigning.current = true
+        onOpenConfirm({
+          type: 'text',
+          title: t('auth.title'),
+          content: t('auth.content'),
+          okText: t('auth.ok'),
+          onConfirm: async () => {
+            if (pathInForceAuthList && WalletType.Unipass === walletType) {
+              UnipassConfig.setRedirectUri(location.pathname + location.search)
+            }
+            try {
+              await getAuth()
+              if (WalletType.Metamask === walletType) {
+                onCloseConfirm()
+              }
+            } catch (error) {
+              //
+            } finally {
+              isSigning.current = false
+            }
+          },
+        })
       }
     }
   }, [
@@ -112,7 +115,10 @@ export const AccountChange: React.FC = ({ children }) => {
     isLogined,
     pubkey,
     t,
-    signForVerify,
+    getAuth,
+    onOpenConfirm,
+    onCloseConfirm,
+    toast,
   ])
 
   return <>{children}</>

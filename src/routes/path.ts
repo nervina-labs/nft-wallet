@@ -14,6 +14,7 @@ export enum RoutePath {
   Explore = '/explore',
   ExploreAll = '/explore/all',
   Help = '/help',
+  Unipass = '/unipass',
   Apps = '/apps',
   License = '/license',
   AddressCollector = '/addresses',
