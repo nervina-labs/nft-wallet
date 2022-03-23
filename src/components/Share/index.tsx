@@ -254,12 +254,12 @@ export const Share: React.FC<ShareProps> = ({
                 )}
                 {!!imgSrc && (
                   <Box
-                    bg="#0B0B0B"
+                    bg="rgba(0,0,0,0.5)"
                     mt="20px"
-                    h="50px"
-                    fontSize="20px"
+                    h="40px"
+                    fontSize="16px"
                     textAlign="center"
-                    lineHeight="50px"
+                    lineHeight="40px"
                     w="100%"
                     color="white"
                     borderRadius="76px"
