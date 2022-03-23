@@ -24,6 +24,7 @@
         "close": "Close",
         "copied": "Copied",
         "cancel": "Cancel",
+        "long-press-or-save": "Long press the image to share or add to Photos",
         "icons": {
           "copy": "Copy Link",
           "download": "Downloads",

@@ -257,14 +257,14 @@ export const Share: React.FC<ShareProps> = ({
                     bg="rgba(0,0,0,0.5)"
                     mt="20px"
                     h="40px"
-                    fontSize="16px"
+                    fontSize="14px"
                     textAlign="center"
                     lineHeight="40px"
                     w="100%"
                     color="white"
                     borderRadius="76px"
                   >
-                    长按图片分享或存储到相册
+                    {t('common.share.long-press-or-save')}
                   </Box>
                 )}
               </Box>
