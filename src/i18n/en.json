@@ -73,7 +73,8 @@
       },
       "baned": {
         "nft": "Invalid Digital Collection",
-        "issuer": "Invalid creator"
+        "issuer": "Invalid creator",
+        "pack-event": "Invalid Collection"
       },
       "colon": ":",
       "title": "MIBAO",

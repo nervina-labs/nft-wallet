@@ -130,7 +130,11 @@ export const PackEventList: React.FC<{}> = () => {
                   p="12px"
                 >
                   <Image
-                    src={record.pack_event_info.cover_image_url}
+                    src={
+                      record.pack_event_info.is_banned
+                        ? ''
+                        : record.pack_event_info.cover_image_url
+                    }
                     w="100px"
                     h="100px"
                     rounded="10px"
@@ -148,37 +152,45 @@ export const PackEventList: React.FC<{}> = () => {
                       noOfLines={2}
                       overflow="hidden"
                       textOverflow="ellipsis"
+                      color={
+                        record.pack_event_info.is_banned ? 'red.600' : undefined
+                      }
+                      mb="auto"
                     >
-                      {record.pack_event_info.name}
+                      {record.pack_event_info.is_banned
+                        ? t('common.baned.pack-event')
+                        : record.pack_event_info.name}
                     </Heading>
-                    <Box color="#777E90">
-                      <Progress
-                        value={Math.floor(
-                          (record.record_items_count /
-                            record.pack_event_info.pack_options_count) *
-                            100
-                        )}
-                        colorScheme="primary"
-                        height="8px"
-                      />
-                      <Flex justify="space-between" fontSize="12px" mt="10px">
-                        <Box>
-                          {t('nfts.pack-event-text.collection-progress')}
-                        </Box>
-                        <Box>
-                          {isCollected ? (
-                            <Flex color="#FFC635" alignItem="center">
-                              <Box mr="4px" my="auto">
-                                <CollectedSvg />
-                              </Box>
-                              {t('nfts.pack-event-text.collected')}{' '}
-                            </Flex>
-                          ) : (
-                            `${record.record_items_count} / ${record.pack_event_info.pack_options_count}`
+                    {!record.pack_event_info.is_banned ? (
+                      <Box color="#777E90">
+                        <Progress
+                          value={Math.floor(
+                            (record.record_items_count /
+                              record.pack_event_info.pack_options_count) *
+                              100
                           )}
-                        </Box>
-                      </Flex>
-                    </Box>
+                          colorScheme="primary"
+                          height="8px"
+                        />
+                        <Flex justify="space-between" fontSize="12px" mt="10px">
+                          <Box>
+                            {t('nfts.pack-event-text.collection-progress')}
+                          </Box>
+                          <Box>
+                            {isCollected ? (
+                              <Flex color="#FFC635" alignItem="center">
+                                <Box mr="4px" my="auto">
+                                  <CollectedSvg />
+                                </Box>
+                                {t('nfts.pack-event-text.collected')}{' '}
+                              </Flex>
+                            ) : (
+                              `${record.record_items_count} / ${record.pack_event_info.pack_options_count}`
+                            )}
+                          </Box>
+                        </Flex>
+                      </Box>
+                    ) : null}
                   </Flex>
                 </Flex>
               </StyledLink>
