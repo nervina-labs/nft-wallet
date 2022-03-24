@@ -32,6 +32,8 @@ import { Tag, TagLabel } from '@chakra-ui/react'
 import { RoutePath } from '../../../routes'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 import styled from 'styled-components'
+import { Description } from './description'
+import { PackEventInfo } from './packEventInfo'
 
 const LinkFlex = styled(Link)`
   display: flex;
@@ -106,14 +108,10 @@ const NftDetailTab: React.FC<{
       <TabPanels minH="200px">
         <TabPanel p="20px">
           <SkeletonText isLoaded={!isLoading} spacing={4} noOfLines={3}>
-            <Box
-              fontSize="14px"
-              color="#777E90"
-              userSelect="text"
-              whiteSpace="pre-wrap"
-            >
-              {detail?.description ? detail?.description : t('nft.no-desc')}
-            </Box>
+            {detail?.pack_event_info ? (
+              <PackEventInfo packEventInfo={detail.pack_event_info} />
+            ) : null}
+            <Description description={detail?.description} />
           </SkeletonText>
         </TabPanel>
         <TabPanel p="20px" opacity={isLoading ? 0 : 1}>

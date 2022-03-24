@@ -80,6 +80,12 @@ import {
 } from '../models/red-envelope'
 import { generateOldAddress, isPwTransaction } from '../utils'
 import { WalletType } from '../hooks/useAccount'
+import {
+  IssuerPackEventResponse,
+  PackEventDetailResponse,
+  PackEventListResponse,
+  PackEventState,
+} from '../models/pack-event'
 
 function randomid(length = 10): string {
   let result = ''
@@ -1166,6 +1172,60 @@ export class ServerWalletAPI {
       {
         headers: {
           auth: JSON.stringify(auth),
+        },
+      }
+    )
+  }
+
+  async getPackEventList(
+    auth: Auth,
+    options?: {
+      page?: number
+      limit?: number
+      state?: PackEventState
+    }
+  ) {
+    return await this.axios.get<PackEventListResponse>('/pack_events', {
+      headers: {
+        auth: JSON.stringify(auth),
+      },
+      params: {
+        page: options?.page || 1,
+        limit: options?.limit || PER_ITEM_LIMIT,
+        state: options?.state,
+      },
+    })
+  }
+
+  async getPackEventById(
+    uuid: string,
+    options?: {
+      auth?: Auth
+    }
+  ) {
+    return await this.axios.get<PackEventDetailResponse>(
+      `/pack_events/${uuid}`,
+      {
+        headers: {
+          ...(options?.auth ? { auth: JSON.stringify(options.auth) } : {}),
+        },
+      }
+    )
+  }
+
+  async getIssuerPackEventList(
+    uuid: string,
+    options?: {
+      page?: number
+      limit?: number
+    }
+  ) {
+    return await this.axios.get<IssuerPackEventResponse>(
+      `/issuers/${uuid}/pack_events`,
+      {
+        params: {
+          page: options?.page || 1,
+          limit: options?.limit || PER_ITEM_LIMIT,
         },
       }
     )
