@@ -28,7 +28,8 @@ const Container = styled.div`
 
 export const Empty: React.FC<{
   showExplore?: boolean
-}> = ({ showExplore = true }) => {
+  description?: string
+}> = ({ showExplore = true, description }) => {
   const { t } = useTranslation('translations')
   const listTag = useRouteQuery<string>('list', '')
   const isLiked = listTag === 'liked'
@@ -58,7 +59,7 @@ export const Empty: React.FC<{
       }}
     >
       {img}
-      <div className="desc">{desc}</div>
+      <div className="desc">{description || desc}</div>
     </Container>
   )
 }

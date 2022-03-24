@@ -44,6 +44,7 @@ export enum RoutePath {
   ShareRedEnvelope = '/red-envelope/:id/share',
   Search = '/search',
   Flashsigner = '/flashsigner',
+  PackEvent = '/pack-event',
 }
 
 export enum ProfilePath {

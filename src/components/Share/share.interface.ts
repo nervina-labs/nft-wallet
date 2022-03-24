@@ -1,9 +1,12 @@
+import { ReactNode } from 'react'
 import { HolderProps } from './components/posters/holder'
 import { IssuerProps } from './components/posters/issuer'
 import { NftProps } from './components/posters/nft'
 
+export type PosterOnLoaded = (el: HTMLDivElement) => void
+
 export interface PosterProps {
-  onLoaded: (el: HTMLDivElement) => void
+  onLoaded: PosterOnLoaded
   shareUrl?: string
 }
 
@@ -28,10 +31,14 @@ export interface HolderPoster {
   data: HolderProps
 }
 
+export type PosterFn = (onLoaded: PosterOnLoaded) => ReactNode
+
 export interface ShareProps {
   isOpen: boolean
   onClose: () => void
   shareUrl: string
-  poster?: NftPoster | IssuerPoster | HolderPoster
+  poster?: DefaultPoster | PosterFn
   reloadByRoute?: boolean
 }
+
+export type DefaultPoster = NftPoster | IssuerPoster | HolderPoster

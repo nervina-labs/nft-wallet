@@ -35,6 +35,9 @@ export enum Query {
   GetSentRedEnvelopeDetailRewards = 'GetSentRedEnvelopeDetailRewards',
   GetRedEnvelopeReceived = 'GetRedEnvelopeReceived',
   Search = 'Search',
+  PackEventList = 'PackEventList',
+  IssuerPackEventList = 'IssuerPackEventList',
+  PackEventDetail = 'PackEventDetail',
   InitGeeTest = 'InitGeeTest',
   DetectCotaCell = 'DetectCotaCell',
 }
