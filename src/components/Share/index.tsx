@@ -183,7 +183,13 @@ export const Share: React.FC<ShareProps> = ({
         {isOpen ? (
           <>
             {creatingPoster ? (
-              <Box position="fixed" top="0" left="0" opacity="0">
+              <Box
+                position="fixed"
+                top="0"
+                left="0"
+                opacity="0"
+                fontFamily="Poppins"
+              >
                 {posterIsReactNode(poster) ? (
                   <>
                     {poster.type === PosterType.Nft && (
