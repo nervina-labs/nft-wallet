@@ -74,7 +74,8 @@
       },
       "baned": {
         "nft": "Invalid Digital Collection",
-        "issuer": "Invalid creator"
+        "issuer": "Invalid creator",
+        "pack-event": "Invalid Collection"
       },
       "colon": ":",
       "title": "MIBAO",
@@ -143,7 +144,16 @@
       "link": "Explore Digital Collection Meta-universe",
       "welcome": "Welcome to Digital Collection universe",
       "hi": "Hi, Collector",
-      "share": "Share"
+      "share": "Share",
+      "pack-event": "Collections",
+      "pack-event-text": {
+        "collecting": "Collecting",
+        "collected": "Completed",
+        "collection-progress": "Collection progress",
+        "total": "• {{total}} collections"
+      },
+      "no-pack-event": "You havn't participated in any collection yet",
+      "no-more-pack-event": "No More Collection"
     },
     "transfer": {
       "scan": {
@@ -235,7 +245,10 @@
       "copy-to-browser": "Please copy the link and open it in your browser to view",
       "no-support-usdz-ok": "OK",
       "only-the-owner-can-play": "Only the owner can play",
-      "song": "Song"
+      "song": "Song",
+      "pack-event-count": "Contain {{count}} works",
+      "pack-event-collected": "Collected {{count}} works",
+      "belonging-pack-event": "Belong to："
     },
     "account": {
       "title": "My Account",
@@ -432,13 +445,16 @@
     "issuer": {
       "created": "Created",
       "selling": "Selling",
+      "pack-event": "Made",
       "title": "Issuer",
       "follower": "Follower",
       "like": "Like",
       "no-data": "No data",
       "more": "More",
       "sale-empty": "Ahhh ~ No Digaital Collection on sale",
-      "empty": "Ahhh ~ The issuer haven't created Digital Collection yet"
+      "empty": "Ahhh ~ The issuer haven't created Digital Collection yet",
+      "pack-event-count": "Contain {{count}} works",
+      "no-pack-events": "Ahhh ~ The issuer haven't created Collection yet"
     },
     "exchange": {
       "home": "My collection",
@@ -792,6 +808,14 @@
         "1": "2.click",
         "2": ""
       }
+    },
+    "pack-event": {
+      "collection-progress": "My Collection progress",
+      "collected": "Completed",
+      "has-token-class": "Contain: ",
+      "special-token-class": "Special editions: ",
+      "collecting-digital-collection-sets": "Collecting Digital Collections",
+      "let-go-to-collect": "Join me to collect"
     }
   }
 }

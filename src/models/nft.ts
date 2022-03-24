@@ -83,4 +83,11 @@ export interface NFTDetail extends ClassLikes, VipInfo, CardBack {
     name: string
     url: string
   }>
+  pack_event_info: {
+    uuid: string
+    name: string
+    cover_image_url: string
+    pack_options_count: number
+    pack_event_record_items_count: number
+  }
 }

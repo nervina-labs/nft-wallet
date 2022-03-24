@@ -25,7 +25,7 @@ import { useToast } from '../../hooks/useToast'
 import { Issuer } from './components/posters/issuer'
 import { Holder } from './components/posters/holder'
 import styled from '@emotion/styled'
-import { PosterType, ShareProps } from './share.interface'
+import { DefaultPoster, PosterType, ShareProps } from './share.interface'
 import { useHistory } from 'react-router-dom'
 import { IS_ANDROID, IS_WEXIN } from '../../constants'
 
@@ -47,6 +47,13 @@ enum PosterState {
   None,
   Creating,
   Created,
+}
+
+function posterIsReactNode(
+  poster: ShareProps['poster']
+): poster is DefaultPoster {
+  if (!poster) return false
+  return Object.hasOwnProperty.call(poster, 'type')
 }
 
 export const Share: React.FC<ShareProps> = ({
@@ -183,26 +190,32 @@ export const Share: React.FC<ShareProps> = ({
                 opacity="0"
                 fontFamily="Poppins"
               >
-                {poster.type === PosterType.Nft && (
-                  <Nft
-                    {...poster.data}
-                    shareUrl={shareUrl}
-                    onLoaded={onRender}
-                  />
-                )}
-                {poster.type === PosterType.Issuer && (
-                  <Issuer
-                    {...poster.data}
-                    shareUrl={shareUrl}
-                    onLoaded={onRender}
-                  />
-                )}
-                {poster.type === PosterType.Holder && (
-                  <Holder
-                    {...poster.data}
-                    shareUrl={shareUrl}
-                    onLoaded={onRender}
-                  />
+                {posterIsReactNode(poster) ? (
+                  <>
+                    {poster.type === PosterType.Nft && (
+                      <Nft
+                        {...poster.data}
+                        shareUrl={shareUrl}
+                        onLoaded={onRender}
+                      />
+                    )}
+                    {poster.type === PosterType.Issuer && (
+                      <Issuer
+                        {...poster.data}
+                        shareUrl={shareUrl}
+                        onLoaded={onRender}
+                      />
+                    )}
+                    {poster.type === PosterType.Holder && (
+                      <Holder
+                        {...poster.data}
+                        shareUrl={shareUrl}
+                        onLoaded={onRender}
+                      />
+                    )}
+                  </>
+                ) : (
+                  poster(onRender)
                 )}
               </Box>
             ) : null}

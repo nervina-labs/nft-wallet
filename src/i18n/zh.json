@@ -74,7 +74,8 @@
       },
       "baned": {
         "nft": "该秘宝暂不予显示",
-        "issuer": "该创作者暂不予显示"
+        "issuer": "该创作者暂不予显示",
+        "pack-event": "该套装暂不予显示"
       },
       "colon": "：",
       "title": "秘宝账户",
@@ -143,7 +144,16 @@
       "link": "探索秘宝的广阔宇宙",
       "welcome": "欢迎来到秘宝宇宙",
       "hi": "Hi 秘宝收藏家",
-      "share": "分享"
+      "share": "分享",
+      "pack-event": "套装",
+      "pack-event-text": {
+        "collecting": "收集中",
+        "collected": "已集齐",
+        "collection-progress": "收集进度",
+        "total": "• {{total}} 个套装"
+      },
+      "no-pack-event": "尚未参与任何套装收集",
+      "no-more-pack-event": "没有更多套装了"
     },
     "transfer": {
       "scan": {
@@ -235,7 +245,10 @@
       "copy-to-browser": "请复制链接到浏览器中打开\n然后再进入 AR 模式查看",
       "no-support-usdz-ok": "好吧",
       "only-the-owner-can-play": "当前藏品仅持有人能播放",
-      "song": "曲目"
+      "song": "曲目",
+      "pack-event-count": "共 {{count}} 款",
+      "pack-event-collected": "已收集 {{count}} 款",
+      "belonging-pack-event": "所属套装："
     },
     "account": {
       "title": "我的帐号",
@@ -432,13 +445,16 @@
     "issuer": {
       "created": "已创作",
       "selling": "在售",
+      "pack-event": "创建的套装",
       "title": "创作者个人主页",
       "follower": "粉丝",
       "like": "获赞",
       "no-data": "无数据",
       "more": "更多",
       "sale-empty": "啊哦～暂无售卖的作品",
-      "empty": "啊哦～暂未创作秘宝"
+      "empty": "啊哦～暂未创作秘宝",
+      "pack-event-count": "共 {{count}} 款",
+      "no-pack-events": "啊哈~发行人还没有创建过套装"
     },
     "exchange": {
       "home": "我的数字藏品",
@@ -796,6 +812,14 @@
         "1": "2.点击",
         "2": "即可"
       }
+    },
+    "pack-event": {
+      "collection-progress": "我的收集进度",
+      "collected": "已集齐",
+      "has-token-class": "包含藏品：",
+      "special-token-class": "隐藏款：",
+      "collecting-digital-collection-sets": "正在收集数字藏品套装",
+      "let-go-to-collect": "一起来收集吧"
     }
   }
 }

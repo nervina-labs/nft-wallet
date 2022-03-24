@@ -11,7 +11,7 @@ import {
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuerySearch } from '../../../hooks/useRouteQuery'
-import { PRODUCT_STATUE_SET, ProductState, Query } from '../../../models'
+import { PRODUCT_STATUE_SET, Query } from '../../../models'
 import { useHistory } from 'react-router-dom'
 import { useAPI } from '../../../hooks/useAccount'
 import { useParams } from 'react-router'
@@ -21,18 +21,20 @@ import FALLBACK from '../../../assets/img/nft-fallback.png'
 import { Empty } from './empty'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
+import { PackEventList } from './packEventList'
+
+const TabTypes = [...PRODUCT_STATUE_SET, 'pack_event'] as const
 
 export const NftCards: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const [productState, setProductState] = useRouteQuerySearch<ProductState>(
-    'productState',
-    'product_state'
-  )
+  const [productState, setProductState] = useRouteQuerySearch<
+    typeof TabTypes[number]
+  >('type', 'product_state')
   const { push } = useHistory()
   const api = useAPI()
   const { t } = useTranslation('translations')
   const index = useMemo(() => {
-    const i = PRODUCT_STATUE_SET.findIndex((item) => item === productState)
+    const i = TabTypes.findIndex((item) => item === productState)
     return i !== -1 ? i : 0
   }, [productState])
   const trackTab = useTrackClick('issuer', 'switchover')
@@ -66,7 +68,7 @@ export const NftCards: React.FC = () => {
         colorScheme="black"
         align="space-around"
         index={index}
-        onChange={(i) => setProductState(PRODUCT_STATUE_SET[i])}
+        onChange={(i) => setProductState(TabTypes[i])}
       >
         <TabList
           position="sticky"
@@ -80,6 +82,13 @@ export const NftCards: React.FC = () => {
             }
           >
             {t('issuer.created')}
+          </Tab>
+          <Tab
+            onClick={async () =>
+              await trackTab(trackLabels.issuer.switch.packEvent)
+            }
+          >
+            {t('issuer.pack-event')}
           </Tab>
         </TabList>
         <TabPanels>
@@ -128,6 +137,9 @@ export const NftCards: React.FC = () => {
                 }}
               />
             ) : null}
+          </TabPanel>
+          <TabPanel px="5px">
+            {index === 1 ? <PackEventList id={id} /> : null}
           </TabPanel>
         </TabPanels>
       </Tabs>

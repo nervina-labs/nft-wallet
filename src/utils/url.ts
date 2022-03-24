@@ -64,20 +64,26 @@ export function getImagePreviewUrl<U extends string | undefined>(
   if (!url) {
     return url as any
   }
-  const urlObj = new URL(url)
-  const isOssHost = OSS_IMG_HOSTS.some((host) => url?.startsWith(host))
-  const isSvgOrWebp = /\.(svg|webp)$/i.test(urlObj.pathname)
-  if (!isOssHost || isSvgOrWebp) {
+  try {
+    const urlObj = new URL(url)
+    const isOssHost = OSS_IMG_HOSTS.some((host) => url?.startsWith(host))
+    const isSvgOrWebp = /\.(svg|webp)$/i.test(urlObj.pathname)
+    if (!isOssHost || isSvgOrWebp) {
+      return url as any
+    }
+    const webpParam = isSupportWebp()
+      ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP
+      : ''
+    const params: {
+      [key in typeof OSS_IMG_PROCESS_QUERY_KEY]?: string
+    } = {}
+    params[
+      OSS_IMG_PROCESS_QUERY_KEY
+    ] = `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webpParam}`
+    return addParamsToUrl(url, params) as any
+  } catch {
     return url as any
   }
-  const webpParam = isSupportWebp() ? OSS_IMG_PROCESS_QUERY_KEY_FORMAT_WEBP : ''
-  const params: {
-    [key in typeof OSS_IMG_PROCESS_QUERY_KEY]?: string
-  } = {}
-  params[
-    OSS_IMG_PROCESS_QUERY_KEY
-  ] = `${OSS_IMG_PROCESS_QUERY_KEY_SCALE}${size}${webpParam}`
-  return addParamsToUrl(url, params) as any
 }
 
 export const getNFTQueryParams = (
