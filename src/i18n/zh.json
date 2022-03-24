@@ -24,6 +24,7 @@
         "close": "关闭",
         "copied": "复制成功",
         "cancel": "取消",
+        "long-press-or-save": "长按图片分享或存储到相册",
         "icons": {
           "copy": "复制链接",
           "download": "下载",

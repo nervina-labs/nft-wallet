@@ -2,6 +2,7 @@ import { Button } from '@mibao-ui/components'
 import {
   Box,
   Center,
+  CloseButton,
   Drawer,
   DrawerContent,
   DrawerOverlay,
@@ -12,6 +13,7 @@ import {
 import CopyLinkPath from '../../assets/share/icons/copy-link.svg'
 import CreatePosterPath from '../../assets/share/icons/create-poster.svg'
 import LoadingPath from '../../assets/share/icons/loading.svg'
+import LoadingPathWhite from '../../assets/share/icons/loading-white.png'
 import DownloadPath from '../../assets/share/icons/download.svg'
 import MorePath from '../../assets/share/icons/more.svg'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -61,7 +63,7 @@ export const Share: React.FC<ShareProps> = ({
   poster,
   reloadByRoute,
 }) => {
-  const { t } = useTranslation('translations')
+  const { t, i18n } = useTranslation('translations')
   const [posterState, setPosterState] = useState(PosterState.None)
   const toast = useToast()
   const onRenderError = useCallback(
@@ -211,15 +213,31 @@ export const Share: React.FC<ShareProps> = ({
                 )}
               </Box>
             ) : null}
-
+            {showPoster && !!imgSrc && (
+              <Box top="20px" left="20px" zIndex={999} position="absolute">
+                <CloseButton
+                  color="white"
+                  size="lg"
+                  h="50px"
+                  w="50px"
+                  border="none"
+                  onClick={() => {
+                    setPosterState(PosterState.None)
+                    reload()
+                    onClose?.()
+                  }}
+                />
+              </Box>
+            )}
             {showPoster ? (
-              <Center
+              <Box
                 position="absolute"
                 bottom="211px"
                 maxW="500px"
                 left="50%"
-                transform="translateX(-50%)"
-                h="calc(100% - 231px)"
+                top="50%"
+                transform="translate(-50%, -48%)"
+                h="90%"
                 zIndex={'calc(var(--chakra-zIndices-modal) + 1)'}
                 p="20px"
                 w="100%"
@@ -234,77 +252,107 @@ export const Share: React.FC<ShareProps> = ({
                   objectFit="contain"
                   rounded="20px"
                 />
-              </Center>
+                {!imgSrc && (
+                  <IconContainer
+                    position="absolute"
+                    top="50%"
+                    left="50%"
+                    mt="-25px"
+                    ml="-25px"
+                    w="50px"
+                    h="50px"
+                    src={LoadingPathWhite}
+                    className="loading"
+                  />
+                )}
+                {!!imgSrc && (
+                  <Box
+                    bg="rgba(0,0,0,0.5)"
+                    mt="20px"
+                    h="40px"
+                    fontSize={i18n.language !== 'en' ? '14px' : '12px'}
+                    textAlign="center"
+                    lineHeight="40px"
+                    w="100%"
+                    color="white"
+                    borderRadius="76px"
+                  >
+                    {t('common.share.long-press-or-save')}
+                  </Box>
+                )}
+              </Box>
             ) : null}
 
-            <Flex
-              bg="linear-gradient(0deg, rgba(255, 255, 255, 0.8) 100%, #F2F2F2 100%);"
-              w="full"
-              maxW="500px"
-              mx="auto"
-              rounded="22px 22px 0 0"
-              py="30px"
-              direction="column"
-              mt="auto"
-            >
-              <Flex overflowX="auto" overflowY="hidden" shrink={0}>
-                {items.map((item, i) => (
-                  <Flex
-                    direction="column"
-                    ml="10px"
-                    minW="56px"
-                    key={i}
-                    onClick={item.action}
-                    w="80px"
-                    cursor="pointer"
-                  >
-                    <Center
-                      w="56px"
-                      h="56px"
-                      bg="white"
-                      rounded="8px"
-                      p="12px"
-                      mx="auto"
-                    >
-                      <IconContainer
-                        src={item.icon}
-                        className={
-                          item.id === 'poster' && creatingPoster
-                            ? 'loading'
-                            : ''
-                        }
-                      />
-                    </Center>
-                    <Box
-                      fontSize="12px"
-                      whiteSpace="nowrap"
-                      color="#777E90"
-                      mt="8px"
-                      textAlign="center"
-                    >
-                      {item.text}
-                    </Box>
-                  </Flex>
-                ))}
-              </Flex>
-
-              <Button
-                isFullWidth
-                mt="25px"
-                variant="solid"
-                size="lg"
-                bg="white"
-                rounded="44px"
-                h="44px"
-                fontSize="18px"
-                fontWeight="normal"
-                onClick={onClose}
-                mx="20px"
-                w="calc(100% - 40px)"
+            {!showPoster && (
+              <Flex
+                bg="linear-gradient(0deg, rgba(255, 255, 255, 0.8) 100%, #F2F2F2 100%);"
+                w="full"
+                maxW="500px"
+                mx="auto"
+                rounded="22px 22px 0 0"
+                py="30px"
+                direction="column"
+                mt="auto"
               >
-                {t('common.share.cancel')}
-              </Button>
-            </Flex>
+                <Flex overflowX="auto" overflowY="hidden" shrink={0}>
+                  {items.map((item, i) => (
+                    <Flex
+                      direction="column"
+                      ml="10px"
+                      minW="56px"
+                      key={i}
+                      onClick={item.action}
+                      w="80px"
+                      cursor="pointer"
+                    >
+                      <Center
+                        w="56px"
+                        h="56px"
+                        bg="white"
+                        rounded="8px"
+                        p="12px"
+                        mx="auto"
+                      >
+                        <IconContainer
+                          src={item.icon}
+                          className={
+                            item.id === 'poster' && creatingPoster
+                              ? 'loading'
+                              : ''
+                          }
+                        />
+                      </Center>
+                      <Box
+                        fontSize="12px"
+                        whiteSpace="nowrap"
+                        color="#777E90"
+                        mt="8px"
+                        textAlign="center"
+                      >
+                        {item.text}
+                      </Box>
+                    </Flex>
+                  ))}
+                </Flex>
+
+                <Button
+                  isFullWidth
+                  mt="25px"
+                  variant="solid"
+                  size="lg"
+                  bg="white"
+                  rounded="44px"
+                  h="44px"
+                  fontSize="18px"
+                  fontWeight="normal"
+                  onClick={onClose}
+                  mx="20px"
+                  w="calc(100% - 40px)"
+                >
+                  {t('common.share.cancel')}
+                </Button>
+              </Flex>
+            )}
           </>
         ) : null}
       </DrawerContent>
