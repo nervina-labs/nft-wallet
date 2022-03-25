@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { useIsLiteAtom } from '../../hooks/useLite'
 import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { PwaGuide } from '../../components/PwaGuide'
+import { generateOldAddress } from '../../utils'
 
 export const NFTs: React.FC = () => {
   const params = useParams<{ address?: string }>()
@@ -37,11 +38,14 @@ export const NFTs: React.FC = () => {
   const [isLite] = useIsLiteAtom()
   const getAuth = useGetAndSetAuth()
   const { data: user, isLoading: isUserLoading } = useQuery(
-    [Query.Profile, address, api, isAuthenticated],
+    [Query.Profile, address, api, isAuthenticated, matchHome],
     async () => {
       if (isAuthenticated) {
         const auth = await getAuth()
-        return await api.getProfile(address, auth)
+        return await api.getProfile(
+          matchHome ? generateOldAddress(address) : address,
+          auth
+        )
       }
     },
     {

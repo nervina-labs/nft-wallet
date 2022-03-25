@@ -7,7 +7,7 @@ import { Query } from '../../models'
 import { useGetAndSetAuth } from '../../hooks/useProfile'
 import { useTranslation } from 'react-i18next'
 import { Empty } from './empty'
-import { truncateMiddle } from '../../utils'
+import { generateOldAddress, truncateMiddle } from '../../utils'
 import { RoutePath } from '../../routes'
 import { useAPI } from '../../hooks/useAccount'
 import { Issuer as RawIssuer, Text } from '@mibao-ui/components'
@@ -91,21 +91,19 @@ export const IssuerList: React.FC<IssuerListProps> = ({
   const getAuth = useGetAndSetAuth()
   const api = useAPI()
   const { t } = useTranslation('translations')
+  const matchHome = useRouteMatch(RoutePath.NFTs)
+  const isHome = !!matchHome?.isExact
 
   const getRemoteData = useCallback(
     async ({ pageParam = 1 }) => {
       const { data } = await api.getFollowIssuers({
-        address,
+        address: isHome ? generateOldAddress(address) : address,
         page: pageParam,
       })
       return data
     },
-    [api, address]
+    [api, address, isHome]
   )
-
-  const matchHome = useRouteMatch(RoutePath.NFTs)
-  const isHome = !!matchHome?.isExact
-
   const [count, setCount] = useState<number>()
 
   if (!isFollow) {

@@ -16,11 +16,9 @@ import {
 import { useUpdateAtom } from 'jotai/utils'
 import { useAccount, useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
-import { IS_WEXIN } from '../../../constants'
 import { RoutePath } from '../../../routes'
 import { UnipassConfig, verifyCkbAddress } from '../../../utils'
-import { Query, TransactionStatus } from '../../../models'
-import { useQuery } from 'react-query'
+import { TransactionStatus } from '../../../models'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 import { Button, Flex } from '@chakra-ui/react'
 import { OffSiteProductInfoButton } from './offSiteProductInfoButton'
@@ -67,21 +65,6 @@ const TranferOrBuy: React.FC<{
   const { isLogined } = useAccountStatus()
   const history = useHistory()
 
-  const { data: user } = useQuery(
-    [Query.Tags, api],
-    async () => {
-      const auth = await getAuth()
-      const data = await api.getProfile('', auth)
-      return data
-    },
-    {
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      enabled: IS_WEXIN,
-    }
-  )
-
   const trackBuy = useTrackClick('nft-detail', 'click')
 
   const orderOnClick = useCallback(async () => {
@@ -92,14 +75,6 @@ const TranferOrBuy: React.FC<{
     if (!isLogined) {
       UnipassConfig.setRedirectUri(location.pathname)
       history.push(RoutePath.Login)
-      return
-    }
-    if (!user?.open_id && IS_WEXIN) {
-      const auth = await getAuth()
-      const {
-        data: { oauth_url: authUrl },
-      } = await api.getWechatOauthUrl(auth)
-      location.href = authUrl
       return
     }
     setProductId(detail?.product_on_sale_uuid)
@@ -123,7 +98,6 @@ const TranferOrBuy: React.FC<{
     getAuth,
     history,
     isLogined,
-    user,
     trackBuy,
     uuid,
   ])

@@ -11,6 +11,9 @@ export function truncateMiddle(
   tailLength = takeLength,
   pad = '...'
 ): string {
+  if (!str) {
+    return ''
+  }
   if (takeLength + tailLength >= str.length) return str
   return `${str.slice(0, takeLength)}${pad}${str.slice(-tailLength)}`
 }

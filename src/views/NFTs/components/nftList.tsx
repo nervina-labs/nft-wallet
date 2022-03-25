@@ -31,7 +31,9 @@ export const NftList: React.FC<{
 
   const getLikeData = useCallback(
     async ({ pageParam }) => {
-      const { data } = await api.getUserLikesClassList(pageParam, { address })
+      const { data } = await api.getUserLikesClassList(pageParam, {
+        address: !isHolder ? displayAddress : address,
+      })
       return {
         meta: data.meta,
         token_list: data.class_list.map<NFTToken>((c) => ({

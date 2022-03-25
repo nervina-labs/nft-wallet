@@ -176,12 +176,12 @@ export class ServerWalletAPI {
     const params: Record<string, unknown> = {
       include_submitting: true,
     }
-    if (this.address) {
-      params.address = this.address
+    if (this.oldFormatAddress) {
+      params.address = this.oldFormatAddress
     }
     const headers: { auth?: string } = {}
     if (auth) {
-      headers.auth = JSON.stringify(auth)
+      headers.auth = JSON.stringify(this.getOldFormatAuth(auth))
     }
     return await this.axios.get<NFTDetail>(`/tokens/${uuid}`, {
       params,
@@ -339,12 +339,12 @@ export class ServerWalletAPI {
     auth?: Auth
   ): Promise<AxiosResponse<TokenClass>> {
     const params: Record<string, string | number> = {}
-    if (this.address) {
-      params.address = this.address
+    if (this.oldFormatAddress) {
+      params.address = this.oldFormatAddress
     }
     const headers: Record<string, any> = {}
     if (auth) {
-      headers.auth = JSON.stringify(auth)
+      headers.auth = JSON.stringify(this.getOldFormatAuth(auth))
     }
     return await this.axios.get(`/token_classes/${uuid}`, {
       params,
