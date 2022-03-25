@@ -29,6 +29,9 @@ export function generateOldAddress(
   if (address === '') {
     return address
   }
+  if (address?.startsWith('0x')) {
+    return address
+  }
   try {
     const script = addressToScript(address)
     if (script.codeHash === flashsignerLockCodeHash) {

@@ -130,13 +130,22 @@ async function writeFormData(
 
 export class ServerWalletAPI {
   private readonly address: string
+  private readonly oldFormatAddress: string
   private readonly axios: AxiosInstance
 
   private readonly orderCallbackURL = `${location.origin}${RoutePath.OrderSuccess}`
 
   constructor(address: string) {
     this.address = address
+    this.oldFormatAddress = generateOldAddress(address)
     this.axios = axios.create({ baseURL: SERVER_URL })
+  }
+
+  private getOldFormatAuth(auth: Auth): Auth {
+    return {
+      ...auth,
+      address: generateOldAddress(auth.address),
+    }
   }
 
   async getNFTs(
@@ -221,14 +230,14 @@ export class ServerWalletAPI {
     like: boolean,
     auth: Auth
   ): Promise<AxiosResponse<{ liked: boolean }>> {
-    const url = `/token_classes/${uuid}/toggle_likes/${this.address}`
+    const url = `/token_classes/${uuid}/toggle_likes/${this.oldFormatAddress}`
     return await this.axios.put(
       url,
       {
         auth,
       },
       {
-        headers: { auth: JSON.stringify(auth) },
+        headers: { auth: JSON.stringify(this.getOldFormatAuth(auth)) },
       }
     )
   }
@@ -302,7 +311,7 @@ export class ServerWalletAPI {
       limit: PER_ITEM_LIMIT,
     }
     return await this.axios.get(
-      `/liked_token_classes/${options?.address ?? this.address}`,
+      `/liked_token_classes/${options?.address ?? this.oldFormatAddress}`,
       {
         params,
       }
@@ -377,23 +386,29 @@ export class ServerWalletAPI {
       'Content-Type': 'multipart/form-data',
     }
     if (options?.auth) {
-      await writeFormData(options?.auth as any, 'auth', fd)
-      headers.auth = JSON.stringify(options?.auth)
+      const auth = this.getOldFormatAuth(options.auth)
+      await writeFormData(auth as any, 'auth', fd)
+      headers.auth = JSON.stringify(auth)
     }
-    const { data } = await this.axios.put(`/users/${this.address}`, fd, {
-      headers,
-    })
+    const { data } = await this.axios.put(
+      `/users/${this.oldFormatAddress}`,
+      fd,
+      {
+        headers,
+      }
+    )
 
     return data
   }
 
   async getProfile(address: string, auth?: Auth): Promise<UserResponse> {
+    // todo
     try {
       const { data } = await this.axios.get(
-        `/users/${address || this.address}`,
+        `/users/${address || this.oldFormatAddress}`,
         {
           headers: {
-            auth: auth ? JSON.stringify(auth) : '',
+            auth: auth ? JSON.stringify(this.getOldFormatAuth(auth)) : '',
           },
         }
       )
@@ -521,13 +536,13 @@ export class ServerWalletAPI {
     auth: Auth
   ): Promise<AxiosResponse<FollowerResponse>> {
     return await this.axios.put(
-      `/issuers/${uuid}/toggle_follows/${this.address}`,
+      `/issuers/${uuid}/toggle_follows/${this.oldFormatAddress}`,
       {
-        auth,
+        auth: this.getOldFormatAuth(auth),
       },
       {
         headers: {
-          auth: JSON.stringify(auth),
+          auth: JSON.stringify(this.getOldFormatAuth(auth)),
         },
       }
     )
@@ -539,6 +554,7 @@ export class ServerWalletAPI {
     page?: number
     limit?: number
   }): Promise<AxiosResponse<IssuersResponse>> {
+    // todo
     const page = options?.page ?? 0
     const limit = options?.limit ?? PER_ITEM_LIMIT
     const params: Record<string, unknown> = {
@@ -547,10 +563,10 @@ export class ServerWalletAPI {
     }
     const headers: { auth?: string } = {}
     if (options?.auth) {
-      headers.auth = JSON.stringify(options?.auth)
+      headers.auth = JSON.stringify(this.getOldFormatAuth(options?.auth))
     }
     return await this.axios.get(
-      `/followed_issuers/${options?.address ?? this.address}`,
+      `/followed_issuers/${options?.address ?? this.oldFormatAddress}`,
       {
         headers,
         params,
@@ -573,12 +589,15 @@ export class ServerWalletAPI {
     if (sortType === ClassSortType.Likes) {
       params.sort = ClassSortType.Likes
     }
-    return await this.axios.get(`/followed_token_classes/${this.address}`, {
-      headers: {
-        auth: JSON.stringify(auth),
-      },
-      params,
-    })
+    return await this.axios.get(
+      `/followed_token_classes/${this.oldFormatAddress}`,
+      {
+        headers: {
+          auth: JSON.stringify(this.getOldFormatAuth(auth)),
+        },
+        params,
+      }
+    )
   }
 
   async getIssuerInfo(uuid: string): Promise<AxiosResponse<IssuerInfo>> {
@@ -1187,7 +1206,7 @@ export class ServerWalletAPI {
   ) {
     return await this.axios.get<PackEventListResponse>('/pack_events', {
       headers: {
-        auth: JSON.stringify(auth),
+        auth: JSON.stringify(this.getOldFormatAuth(auth)),
       },
       params: {
         page: options?.page || 1,
@@ -1207,7 +1226,7 @@ export class ServerWalletAPI {
       `/pack_events/${uuid}`,
       {
         headers: {
-          ...(options?.auth ? { auth: JSON.stringify(options.auth) } : {}),
+          ...(options?.auth ? { auth: JSON.stringify(this.oldFormatAddress) } : {}),
         },
       }
     )
