@@ -51,7 +51,7 @@ export function useAccount() {
   const account = useAtomValue(accountAtom)
 
   const address = useMemo(() => {
-    return account?.address ?? ''
+    return generateOldAddress(account?.address || '')
   }, [account?.address])
 
   const pubkey = useMemo(() => {

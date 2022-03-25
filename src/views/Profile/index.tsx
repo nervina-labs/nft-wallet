@@ -111,7 +111,11 @@ export const Profile: React.FC = () => {
     <TakePhoto />
   ) : (
     <Container>
-      <Appbar title={t('profile.title')} right={<div />} />
+      <Appbar
+        title={t('profile.title')}
+        right={<div />}
+        onLeftClick={() => history.replace(RoutePath.NFTs)}
+      />
       <section className="main">
         <Center flexDirection="column" my="24px">
           <Avatar
