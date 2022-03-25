@@ -1226,7 +1226,7 @@ export class ServerWalletAPI {
       `/pack_events/${uuid}`,
       {
         headers: {
-          ...(options?.auth ? { auth: JSON.stringify(this.oldFormatAddress) } : {}),
+          ...(options?.auth ? { auth: JSON.stringify(options.auth) } : {}),
         },
       }
     )
