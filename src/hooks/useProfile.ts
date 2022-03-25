@@ -32,7 +32,7 @@ export interface Auths {
 }
 
 const profileAtom = atomWithStorage<Auths | null>(
-  'mibao_account_profile_v2',
+  'mibao_account_profile_v2.2',
   null
 )
 
