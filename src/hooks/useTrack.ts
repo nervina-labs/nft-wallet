@@ -59,6 +59,7 @@ export const actions = {
 
 export const trackLabels = {
   login: {
+    flashsigner: '通过flashsigner登录',
     unipass: '通过unipass登录',
     eth: '通过以太坊环境登录',
   },
