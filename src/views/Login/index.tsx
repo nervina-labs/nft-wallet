@@ -258,6 +258,13 @@ export const Login: React.FC = () => {
 
   useTrackDidMount('login')
 
+  const loginFlashsigner = useTrackEvent(
+    'login',
+    'click',
+    trackLabels.login.flashsigner,
+    loginBtnOnClick.bind(null, WalletType.Flashsigner)
+  )
+
   const loginUnipass = useTrackEvent(
     'login',
     'click',
@@ -395,9 +402,7 @@ export const Login: React.FC = () => {
                 isWalletConnectLoging ||
                 isFlashsignerLogin
               }
-              onClick={async () =>
-                await loginBtnOnClick(WalletType.Flashsigner)
-              }
+              onClick={loginFlashsigner}
               variant={IS_IMTOKEN ? 'outline' : 'solid'}
               size="lg"
             >
