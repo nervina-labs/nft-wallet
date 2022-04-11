@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+import { Image } from '@chakra-ui/react'
 import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
 import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
@@ -30,10 +31,11 @@ import { Box } from '@chakra-ui/layout'
 import { useUnipassV2Dialog } from '../../hooks/useUnipassV2Dialog'
 import { useGeeTest } from '../../hooks/useGeetst'
 import { Skeleton } from '@chakra-ui/skeleton'
+import { useRouteQuery } from '../../hooks/useRouteQuery'
+import { useDidMount } from '../../hooks/useDidMount'
 
 const Container = styled(MainContainer)`
-  padding-top: 10px;
-  min-height: calc(100% - 10px);
+  min-height: 100vh;
   max-width: 500px;
   flex-direction: column;
   display: flex;
@@ -45,6 +47,13 @@ const Container = styled(MainContainer)`
     position: relative;
     display: flex;
     justify-content: center;
+  }
+
+  .bg-img {
+    img {
+      width: 100%;
+      max-width: 100%;
+    }
   }
 
   .question {
@@ -160,15 +169,47 @@ enum ErrorMsg {
   SubmitFail = 'submit-fail',
 }
 
+enum ConnectFlag {
+  All = 0,
+  Flashsigner = 1 << 0,
+  Unipass = 1 << 1,
+  Metamask = 1 << 2,
+}
+
 const captchId = 'gt-container'
+const MAX_ROUTE_QUERY_CHAR = 16
 
 export const Claim: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isFlashsignerLogin, setIsFlashsignerLogin] = useState(false)
+  const flag = useRouteQuery('connect', '0')
+  const connectFlag = useMemo(() => {
+    const f = parseInt(flag) as ConnectFlag
+    if (isNaN(f)) {
+      return ConnectFlag.All
+    }
+    return f >= 8 || f <= 0 ? ConnectFlag.All : f
+  }, [flag])
   const onConfirm = useConfirmDialog()
   const { t, i18n } = useTranslation('translations')
+  const documentTitle = useRouteQuery('title', t('common.title'))
+  const bgImg = useRouteQuery<string>('image', '')
+  useDidMount(() => {
+    if (documentTitle.length <= MAX_ROUTE_QUERY_CHAR) {
+      document.title = documentTitle
+    }
+  })
+  const _nftName = useRouteQuery('name', t('claim.nft-name'))
+  const nftName =
+    _nftName.length > MAX_ROUTE_QUERY_CHAR ? t('claim.nft-name') : _nftName
   const { login } = useLogin()
+  const _collection = useRouteQuery('name', t('claim.collection'))
+  const collection =
+    _collection.length > MAX_ROUTE_QUERY_CHAR
+      ? t('claim.claim.collection')
+      : _collection
+
   const api = useAPI()
   const { walletType } = useAccount()
   const { isLogined } = useAccountStatus()
@@ -199,8 +240,11 @@ export const Claim: React.FC = () => {
     async (targetType = WalletType.Unipass) => {
       setLoading(true, targetType)
       if (WalletType.Metamask !== targetType) {
+        const url = new URL(location.href)
         UnipassConfig.setRedirectUri(
-          id ? `${RoutePath.Claim}/${id}` : RoutePath.Claim
+          id
+            ? `${RoutePath.Claim}/${id}${url.search}`
+            : `${RoutePath.Claim}${url.search}`
         )
       }
       try {
@@ -292,75 +336,106 @@ export const Claim: React.FC = () => {
   )
 
   const imgs = {
-    [SubmitStatus.Unlogin]: <AddressesSvg />,
-    [SubmitStatus.Claiming]: <AddrSuccess />,
-    [SubmitStatus.Claimed]: <AddrDup />,
-    [SubmitStatus.Success]: <ClaimSuccessSvg />,
+    [SubmitStatus.Unlogin]: bgImg ? <Image src={bgImg} /> : <AddressesSvg />,
+    [SubmitStatus.Claiming]: bgImg ? <Image src={bgImg} /> : <AddrSuccess />,
+    [SubmitStatus.Claimed]: bgImg ? <Image src={bgImg} /> : <AddrDup />,
+    [SubmitStatus.Success]: bgImg ? <Image src={bgImg} /> : <ClaimSuccessSvg />,
   }
 
   const [code, setCode] = useState(id ?? '')
+
+  const loginBtns = useMemo(() => {
+    const btns: Array<JSX.Element | null> = []
+
+    if (
+      connectFlag & ConnectFlag.Flashsigner ||
+      connectFlag === ConnectFlag.All
+    ) {
+      btns.push(
+        IS_MOBILE_ETH_WALLET ? null : (
+          <LoginButton
+            className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
+            isLoading={isUnipassLogining}
+            disabled={
+              isUnipassLogining || isMetamaskLoging || isFlashsignerLogin
+            }
+            onClick={async () => await loginBtnOnClick(WalletType.Flashsigner)}
+            variant={IS_IMTOKEN ? 'outline' : 'solid'}
+            size="lg"
+          >
+            <Box py="8px">
+              <Box fontSize="16px">{t('login.connect.flashsigner')}</Box>
+              <Box fontSize="12px">{t('login.connect.or-use-phone')}</Box>
+            </Box>
+          </LoginButton>
+        )
+      )
+    }
+    if (connectFlag & ConnectFlag.Unipass || connectFlag === ConnectFlag.All) {
+      btns.push(
+        <LoginButton
+          isLoading={isUnipassLogining}
+          disabled={isUnipassLogining || isMetamaskLoging}
+          onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+          variant={IS_IMTOKEN ? 'outline' : 'solid'}
+        >
+          {t('login.connect.unipass')}
+        </LoginButton>
+      )
+    }
+    if (connectFlag & ConnectFlag.Metamask || connectFlag === ConnectFlag.All) {
+      btns.push(
+        <LoginButton
+          disabled={isUnipassLogining || isMetamaskLoging}
+          isLoading={isMetamaskLoging}
+          onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+          variant={!IS_IMTOKEN ? 'outline' : 'solid'}
+        >
+          {IS_IMTOKEN ? (
+            <>
+              {t('login.connect.connect')}
+              <ImtokenSvg className="imtoken" />
+            </>
+          ) : (
+            t('login.connect.metamask')
+          )}
+        </LoginButton>
+      )
+    }
+    return btns
+  }, [
+    connectFlag,
+    isFlashsignerLogin,
+    isMetamaskLoging,
+    isUnipassLogining,
+    loginBtnOnClick,
+    t,
+  ])
+
+  const showMetamaskOrUnipass = false
 
   const actions = useMemo(() => {
     if (SubmitStatus.Unlogin === submitStatus || !isLogined) {
       return (
         <>
-          <p className="desc">{t('claim.tips')}</p>
+          <p className="desc">{t('claim.tips', { nftName })}</p>
           <p>{t('claim.login')}</p>
-          {IS_MOBILE_ETH_WALLET ? null : (
-            <LoginButton
-              className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
-              isLoading={isUnipassLogining}
-              disabled={
-                isUnipassLogining || isMetamaskLoging || isFlashsignerLogin
-              }
-              onClick={async () =>
-                await loginBtnOnClick(WalletType.Flashsigner)
-              }
-              variant={IS_IMTOKEN ? 'outline' : 'solid'}
-              size="lg"
+          {loginBtns}
+          {showMetamaskOrUnipass ? (
+            <div
+              className="question"
+              onClick={() => {
+                history.push(
+                  `${RoutePath.Help}?url=${encodeURIComponent(
+                    getHelpUnipassUrl(i18n.language)
+                  )}`
+                )
+              }}
             >
-              <Box py="8px">
-                <Box fontSize="16px">{t('login.connect.flashsigner')}</Box>
-                <Box fontSize="12px">{t('login.connect.or-use-phone')}</Box>
-              </Box>
-            </LoginButton>
-          )}
-          <LoginButton
-            isLoading={isUnipassLogining}
-            disabled={isUnipassLogining || isMetamaskLoging}
-            onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
-            variant={IS_IMTOKEN ? 'outline' : 'solid'}
-          >
-            {t('login.connect.unipass')}
-          </LoginButton>
-          <LoginButton
-            disabled={isUnipassLogining || isMetamaskLoging}
-            isLoading={isMetamaskLoging}
-            onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
-            variant={!IS_IMTOKEN ? 'outline' : 'solid'}
-          >
-            {IS_IMTOKEN ? (
-              <>
-                {t('login.connect.connect')}
-                <ImtokenSvg className="imtoken" />
-              </>
-            ) : (
-              t('login.connect.metamask')
-            )}
-          </LoginButton>
-          <div
-            className="question"
-            onClick={() => {
-              history.push(
-                `${RoutePath.Help}?url=${encodeURIComponent(
-                  getHelpUnipassUrl(i18n.language)
-                )}`
-              )
-            }}
-          >
-            <QuestionSvg />
-            <span>{t('help.question')}</span>
-          </div>
+              <QuestionSvg />
+              <span>{t('help.question')}</span>
+            </div>
+          ) : null}
         </>
       )
     }
@@ -368,7 +443,9 @@ export const Claim: React.FC = () => {
       return (
         <>
           <p className={classNames('desc', { error: isClaimError })}>
-            {isClaimError ? t('claim.error') : t('claim.last-step')}
+            {isClaimError
+              ? t('claim.error')
+              : t('claim.last-step', { collection })}
           </p>
           <input
             className={classNames('input', { error: isClaimError })}
@@ -401,7 +478,7 @@ export const Claim: React.FC = () => {
         <p className="desc">
           {submitStatus === SubmitStatus.Success
             ? t('claim.success')
-            : t('claim.claimed')}
+            : t('claim.claimed', { collection })}
         </p>
         {submitStatus === SubmitStatus.Success ? (
           <p>{t('claim.continue')}</p>
@@ -414,7 +491,8 @@ export const Claim: React.FC = () => {
           {t(
             `claim.${
               submitStatus === SubmitStatus.Success ? 'go-home' : 'go-explore'
-            }`
+            }`,
+            { collection }
           )}
         </LoginButton>
       </>
@@ -423,18 +501,18 @@ export const Claim: React.FC = () => {
     submitStatus,
     t,
     history,
-    isUnipassLogining,
-    isMetamaskLoging,
-    loginBtnOnClick,
     i18n,
     claim,
     code,
     isClaiming,
     isClaimError,
-    isFlashsignerLogin,
     isLogined,
     isReady,
     isSuccess,
+    loginBtns,
+    showMetamaskOrUnipass,
+    nftName,
+    collection,
   ])
 
   if (claimCodeError) {
@@ -443,7 +521,7 @@ export const Claim: React.FC = () => {
 
   return (
     <Container>
-      <div className="bg">{imgs[submitStatus]}</div>
+      <div className={bgImg ? 'bg-img' : 'bg'}>{imgs[submitStatus]}</div>
       <div className="action">{actions}</div>
     </Container>
   )
