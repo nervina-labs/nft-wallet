@@ -442,7 +442,7 @@
       "success": "Claimed successfully",
       "claimed": "Opps～this {{collection}} has already been claimed",
       "go-home": "Check out my {{collection}} now",
-      "go-explore": "Go check out my {{collection}}",
+      "go-explore": "Go check out my Digital Collection",
       "placeholder": "Please enter the claim code"
     },
     "issuer": {
