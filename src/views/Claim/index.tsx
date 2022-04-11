@@ -407,10 +407,7 @@ export const Claim: React.FC = () => {
     t,
   ])
 
-  const showMetamaskOrUnipass =
-    connectFlag & ConnectFlag.Metamask ||
-    connectFlag & ConnectFlag.Unipass ||
-    (connectFlag === ConnectFlag.All && false)
+  const showMetamaskOrUnipass = false
 
   const actions = useMemo(() => {
     if (SubmitStatus.Unlogin === submitStatus || !isLogined) {
