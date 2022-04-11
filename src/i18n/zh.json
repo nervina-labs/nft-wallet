@@ -442,7 +442,7 @@
       "success": "领取成功",
       "claimed": "Opps～该{{collection}}已被领走",
       "go-home": "马上查看领取的{{collection}}",
-      "go-explore": "去看看我的{{collection}}",
+      "go-explore": "去看看我的数字藏品",
       "placeholder": "请输入领取码"
     },
     "issuer": {
