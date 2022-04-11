@@ -105,7 +105,7 @@
       "connect": {
         "unipass": "Connect to UniPass",
         "or-use-email": "(or Register by Email)",
-        "or-use-phone": "(or Register by Phone, Chinese Only)",
+        "or-use-phone": "(or Register by Phone)",
         "flashsigner": "Connect to Flashsigner",
         "metamask": "Connect to Ethereum Environment",
         "wallet-connect": "Connect to Wallet Connect",
@@ -430,15 +430,18 @@
       "sold-out": "Sold out"
     },
     "claim": {
-      "tips": "You have a Collection to be claimed",
-      "login": "Please log in to Mibao first",
-      "last-step": "Only one step left to claim a Collection",
+      "nft-name": "Collection",
+      "collection": "Collection",
+      "home": "My {{collection}}",
+      "tips": "You have a {{nftName}} to be claimed",
+      "login": "Please log in first",
+      "last-step": "Only one step left to claim a {{collection}}",
       "error": "Claim code error",
       "confirm": "Confirm",
       "continue": "You can continue",
       "success": "Claimed successfully",
-      "claimed": "Opps～this Collection has already been claimed",
-      "go-home": "Check out my Digital Collection now",
+      "claimed": "Opps～this {{collection}} has already been claimed",
+      "go-home": "Check out my {{collection}} now",
       "go-explore": "Go check out my Digital Collection",
       "placeholder": "Please enter the claim code"
     },
