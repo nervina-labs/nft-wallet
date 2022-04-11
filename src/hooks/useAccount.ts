@@ -208,8 +208,6 @@ export function useLogin() {
         case WalletType.Flashsigner:
           return await new Promise<Provider>((resolve) => {
             const url = `${location.origin}${RoutePath.Flashsigner}`
-            // eslint-disable-next-line no-debugger
-            debugger
             loginWithRedirect(url, buildFlashsignerOptions())
             resolve(provider as Provider)
           })
