@@ -432,7 +432,7 @@
     "claim": {
       "nft-name": "秘宝",
       "collection": "数字藏品",
-      "tips": "您有一个{{collection}}待领取",
+      "tips": "您有一个{{nftName}}待领取",
       "login": "请先连接账户",
       "last-step": "一步马上领取您的{{collection}}！",
       "error": "领取码错误",
