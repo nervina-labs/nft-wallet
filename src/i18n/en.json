@@ -430,6 +430,7 @@
       "sold-out": "Sold out"
     },
     "claim": {
+      "nft-name": "MIBAO",
       "tips": "You have a {{nftName}} to be claimed",
       "login": "Please log in first",
       "last-step": "Only one step left to claim a Collection",

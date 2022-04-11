@@ -186,7 +186,10 @@ export const Claim: React.FC = () => {
   const flag = useRouteQuery('connect', '0')
   const connectFlag = useMemo(() => {
     const f = parseInt(flag) as ConnectFlag
-    return isNaN(f) ? ConnectFlag.All : f
+    if (isNaN(f)) {
+      return ConnectFlag.All
+    }
+    return f >= 8 ? ConnectFlag.All : f
   }, [flag])
   const onConfirm = useConfirmDialog()
   const { t, i18n } = useTranslation('translations')
@@ -232,8 +235,11 @@ export const Claim: React.FC = () => {
     async (targetType = WalletType.Unipass) => {
       setLoading(true, targetType)
       if (WalletType.Metamask !== targetType) {
+        const url = new URL(location.href)
         UnipassConfig.setRedirectUri(
-          id ? `${RoutePath.Claim}/${id}` : RoutePath.Claim
+          id
+            ? `${RoutePath.Claim}/${id}${url.search}`
+            : `${RoutePath.Claim}${url.search}`
         )
       }
       try {
@@ -404,7 +410,7 @@ export const Claim: React.FC = () => {
   const showMetamaskOrUnipass =
     connectFlag & ConnectFlag.Metamask ||
     connectFlag & ConnectFlag.Unipass ||
-    connectFlag === ConnectFlag.All
+    (connectFlag === ConnectFlag.All && false)
 
   const actions = useMemo(() => {
     if (SubmitStatus.Unlogin === submitStatus || !isLogined) {
