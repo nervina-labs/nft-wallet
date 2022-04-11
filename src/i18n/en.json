@@ -430,8 +430,8 @@
       "sold-out": "Sold out"
     },
     "claim": {
-      "tips": "You have a Collection to be claimed",
-      "login": "Please log in to Mibao first",
+      "tips": "You have a {{nftName}} to be claimed",
+      "login": "Please log in first",
       "last-step": "Only one step left to claim a Collection",
       "error": "Claim code error",
       "confirm": "Confirm",
