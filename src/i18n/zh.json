@@ -431,16 +431,17 @@
     },
     "claim": {
       "nft-name": "秘宝",
-      "tips": "您有一个{{nftName}}待领取",
+      "collection": "数字藏品",
+      "tips": "您有一个{{collection}}待领取",
       "login": "请先连接账户",
-      "last-step": "一步马上领取您的数字藏品！",
+      "last-step": "一步马上领取您的{{collection}}！",
       "error": "领取码错误",
       "confirm": "确认领取",
       "continue": "您还可以进行以下操作",
       "success": "领取成功",
-      "claimed": "Opps～该数字藏品已被领走",
-      "go-home": "马上查看领取的数字藏品",
-      "go-explore": "去看看我的数字藏品",
+      "claimed": "Opps～该{{collection}}已被领走",
+      "go-home": "马上查看领取的{{collection}}",
+      "go-explore": "去看看我的{{collection}}",
       "placeholder": "请输入领取码"
     },
     "issuer": {

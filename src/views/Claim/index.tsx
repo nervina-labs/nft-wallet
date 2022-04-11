@@ -189,7 +189,7 @@ export const Claim: React.FC = () => {
     if (isNaN(f)) {
       return ConnectFlag.All
     }
-    return f >= 8 ? ConnectFlag.All : f
+    return f >= 8 || f <= 0 ? ConnectFlag.All : f
   }, [flag])
   const onConfirm = useConfirmDialog()
   const { t, i18n } = useTranslation('translations')
@@ -204,6 +204,11 @@ export const Claim: React.FC = () => {
   const nftName =
     _nftName.length > MAX_ROUTE_QUERY_CHAR ? t('claim.nft-name') : _nftName
   const { login } = useLogin()
+  const _collection = useRouteQuery('name', t('claim.collection'))
+  const collection =
+    _collection.length > MAX_ROUTE_QUERY_CHAR
+      ? t('claim.claim.collection')
+      : _collection
 
   const api = useAPI()
   const { walletType } = useAccount()
@@ -438,7 +443,9 @@ export const Claim: React.FC = () => {
       return (
         <>
           <p className={classNames('desc', { error: isClaimError })}>
-            {isClaimError ? t('claim.error') : t('claim.last-step')}
+            {isClaimError
+              ? t('claim.error')
+              : t('claim.last-step', { collection })}
           </p>
           <input
             className={classNames('input', { error: isClaimError })}
@@ -471,7 +478,7 @@ export const Claim: React.FC = () => {
         <p className="desc">
           {submitStatus === SubmitStatus.Success
             ? t('claim.success')
-            : t('claim.claimed')}
+            : t('claim.claimed', { collection })}
         </p>
         {submitStatus === SubmitStatus.Success ? (
           <p>{t('claim.continue')}</p>
@@ -484,7 +491,8 @@ export const Claim: React.FC = () => {
           {t(
             `claim.${
               submitStatus === SubmitStatus.Success ? 'go-home' : 'go-explore'
-            }`
+            }`,
+            { collection }
           )}
         </LoginButton>
       </>
@@ -504,6 +512,7 @@ export const Claim: React.FC = () => {
     loginBtns,
     showMetamaskOrUnipass,
     nftName,
+    collection,
   ])
 
   if (claimCodeError) {

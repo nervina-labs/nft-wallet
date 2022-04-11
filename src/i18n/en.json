@@ -430,17 +430,17 @@
       "sold-out": "Sold out"
     },
     "claim": {
-      "nft-name": "MIBAO",
+      "nft-name": "Collection",
       "tips": "You have a {{nftName}} to be claimed",
       "login": "Please log in first",
-      "last-step": "Only one step left to claim a Collection",
+      "last-step": "Only one step left to claim a {{collection}}",
       "error": "Claim code error",
       "confirm": "Confirm",
       "continue": "You can continue",
       "success": "Claimed successfully",
-      "claimed": "Opps～this Collection has already been claimed",
-      "go-home": "Check out my Digital Collection now",
-      "go-explore": "Go check out my Digital Collection",
+      "claimed": "Opps～this {{collection}} has already been claimed",
+      "go-home": "Check out my {{collection}} now",
+      "go-explore": "Go check out my {{collection}}",
       "placeholder": "Please enter the claim code"
     },
     "issuer": {
