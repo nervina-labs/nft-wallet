@@ -12,13 +12,13 @@ import i18n from './i18n'
 
 IntryUrl.set(location.href.split('#')[0])
 const App: React.FC = () => {
-  const queryClient = useMemo(() => {
+  const qc = useMemo(() => {
     return new QueryClient()
   }, [])
 
   return (
     <I18nextProvider i18n={i18n}>
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={qc}>
         <JotaiProvider>
           <Routers />
         </JotaiProvider>
