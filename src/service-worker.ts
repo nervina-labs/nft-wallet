@@ -27,7 +27,7 @@ clientsClaim()
 // even if you decide not to use precaching. See https://cra.link/PWA
 precacheAndRoute(self.__WB_MANIFEST)
 const log = console.log
-log('Verion: v2.3.1')
+log('Verion: v2.3.2')
 
 // Set up App Shell-style routing, so that all navigation requests
 // are fulfilled with your index.html shell. Learn more at
@@ -49,6 +49,10 @@ registerRoute(
     // If this looks like a URL for a resource, because it contains
     // a file extension, skip.
     if (url.pathname.match(fileExtensionRegexp)) {
+      return false
+    }
+
+    if (url.pathname.endsWith('.js')) {
       return false
     }
 
