@@ -1,0 +1,24 @@
+name: DEPLOY TO PROD
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed
+      
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: request yunxiao url
+        env:
+          FLOW_WEBHOOK_URL: ${{ secrets.FLOW_WEBHOOK_URL }}
+        run: |
+          curl -s --header "Content-Type: application/json" --request POST --data '{}' $FLOW_WEBHOOK_URL
+        
+        
