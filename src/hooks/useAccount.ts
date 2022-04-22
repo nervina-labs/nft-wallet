@@ -172,7 +172,8 @@ export function useLogin() {
         logout()
         return
       }
-      const ckbAddress = addr.toCKBAddress()
+      const newAddress = addr.toCKBAddress()
+      const ckbAddress = generateOldAddress(newAddress)
       setAccount({
         address: ckbAddress,
         walletType: walletType ?? WalletType.Metamask,
@@ -203,8 +204,9 @@ export function useLogin() {
     const Web3 = (await import('web3')).default
     const web3 = new Web3(provider)
     const p = await new Web3Provider(web3, web3WalletAddressOnChange).init()
+    const address = generateOldAddress(p.address.toCKBAddress())
     setAccount({
-      address: p.address.toCKBAddress(),
+      address,
       walletType: WalletType.Metamask,
     })
     setProvider(p)
@@ -265,7 +267,7 @@ export function useSignTransaction() {
     const { outputs } = tx.raw
     const changeOutput = outputs[outputs.length - 1]
     changeOutput.capacity = changeOutput.capacity.sub(
-      new Amount('4500', AmountUnit.shannon)
+      new Amount('8500', AmountUnit.shannon)
     )
     tx.raw.cellDeps = []
     const provider = new UPCoreSimpleProvier(
