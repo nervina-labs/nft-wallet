@@ -443,44 +443,6 @@ export const Claim: React.FC = () => {
               <span>{t('help.question')}</span>
             </div>
           ) : null}
-          {IS_UNIPASS_NOT_AVAILABLE ? null : (
-            <LoginButton
-              isLoading={isUnipassLogining}
-              disabled={isUnipassLogining || isMetamaskLoging}
-              onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
-              variant={IS_IMTOKEN ? 'outline' : 'solid'}
-            >
-              {t('login.connect.unipass')}
-            </LoginButton>
-          )}
-          <LoginButton
-            disabled={isUnipassLogining || isMetamaskLoging}
-            isLoading={isMetamaskLoging}
-            onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
-            variant={!IS_IMTOKEN ? 'outline' : 'solid'}
-          >
-            {IS_IMTOKEN ? (
-              <>
-                {t('login.connect.connect')}
-                <ImtokenSvg className="imtoken" />
-              </>
-            ) : (
-              t('login.connect.metamask')
-            )}
-          </LoginButton>
-          <div
-            className="question"
-            onClick={() => {
-              history.push(
-                `${RoutePath.Help}?url=${encodeURIComponent(
-                  getHelpUnipassUrl(i18n.language)
-                )}`
-              )
-            }}
-          >
-            <QuestionSvg />
-            <span>{t('help.question')}</span>
-          </div>
         </>
       )
     }
@@ -558,9 +520,6 @@ export const Claim: React.FC = () => {
     showMetamaskOrUnipass,
     nftName,
     collection,
-    isMetamaskLoging,
-    isUnipassLogining,
-    loginBtnOnClick,
   ])
 
   if (claimCodeError) {
