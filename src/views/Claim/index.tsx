@@ -7,7 +7,11 @@ import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import { ReactComponent as ClaimSuccessSvg } from '../../assets/svg/claim-success.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { IS_IMTOKEN, IS_MOBILE_ETH_WALLET } from '../../constants'
+import {
+  IS_IMTOKEN,
+  IS_MOBILE_ETH_WALLET,
+  IS_UNIPASS_NOT_AVAILABLE,
+} from '../../constants'
 import { Link, Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
@@ -371,7 +375,10 @@ export const Claim: React.FC = () => {
         )
       )
     }
-    if (connectFlag & ConnectFlag.Unipass || connectFlag === ConnectFlag.All) {
+    if (
+      (connectFlag & ConnectFlag.Unipass || connectFlag === ConnectFlag.All) &&
+      !IS_UNIPASS_NOT_AVAILABLE
+    ) {
       btns.push(
         <LoginButton
           isLoading={isUnipassLogining}
@@ -436,6 +443,44 @@ export const Claim: React.FC = () => {
               <span>{t('help.question')}</span>
             </div>
           ) : null}
+          {IS_UNIPASS_NOT_AVAILABLE ? null : (
+            <LoginButton
+              isLoading={isUnipassLogining}
+              disabled={isUnipassLogining || isMetamaskLoging}
+              onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+              variant={IS_IMTOKEN ? 'outline' : 'solid'}
+            >
+              {t('login.connect.unipass')}
+            </LoginButton>
+          )}
+          <LoginButton
+            disabled={isUnipassLogining || isMetamaskLoging}
+            isLoading={isMetamaskLoging}
+            onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
+            variant={!IS_IMTOKEN ? 'outline' : 'solid'}
+          >
+            {IS_IMTOKEN ? (
+              <>
+                {t('login.connect.connect')}
+                <ImtokenSvg className="imtoken" />
+              </>
+            ) : (
+              t('login.connect.metamask')
+            )}
+          </LoginButton>
+          <div
+            className="question"
+            onClick={() => {
+              history.push(
+                `${RoutePath.Help}?url=${encodeURIComponent(
+                  getHelpUnipassUrl(i18n.language)
+                )}`
+              )
+            }}
+          >
+            <QuestionSvg />
+            <span>{t('help.question')}</span>
+          </div>
         </>
       )
     }
@@ -513,6 +558,9 @@ export const Claim: React.FC = () => {
     showMetamaskOrUnipass,
     nftName,
     collection,
+    isMetamaskLoging,
+    isUnipassLogining,
+    loginBtnOnClick,
   ])
 
   if (claimCodeError) {

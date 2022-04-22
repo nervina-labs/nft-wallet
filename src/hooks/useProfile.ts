@@ -6,6 +6,7 @@ import i18n from '../i18n'
 import { Auth, User } from '../models/user'
 import { UnipassConfig } from '../utils'
 import {
+  accountAtom,
   useAccount,
   useAPI,
   useLogin,
@@ -31,8 +32,8 @@ export interface Auths {
   [key: string]: Profile
 }
 
-const profileAtom = atomWithStorage<Auths | null>(
-  'mibao_account_profile_v2.2',
+export const profileAtom = atomWithStorage<Auths | null>(
+  'mibao_account_profile_v3',
   null
 )
 
@@ -41,16 +42,19 @@ export function useProfile() {
   const [profile, _setProfile] = useAtom(profileAtom)
 
   const setProfile = useCallback(
-    (p: Partial<Profile>, addr = '') => {
+    (p: Partial<Profile> | null, addr = '') => {
       return _setProfile((prevProfile) => {
         const auth = prevProfile?.[address || addr]
         return {
           ...prevProfile,
           ...{
-            [address || addr]: {
-              ...auth,
-              ...p,
-            },
+            [address || addr]:
+              p === null
+                ? null
+                : {
+                    ...auth,
+                    ...p,
+                  },
           },
         }
       })
@@ -62,7 +66,7 @@ export function useProfile() {
     if (profile == null) {
       return false
     }
-    return !!profile[address]
+    return !!profile[address]?.auth
   }, [address, profile])
 
   return {
@@ -80,13 +84,15 @@ export function createMessage() {
 }
 
 export function useGetAndSetAuth(): () => Promise<Auth> {
-  const { profile, setProfile } = useProfile()
+  const { setProfile } = useProfile()
   const signMessage = useSignMessage()
-  const { address, walletType } = useAccount()
+  const { walletType } = useAccount()
   const { loginMetamask } = useLogin()
   return useAtomCallback(
     useCallback(
-      async (get) => {
+      async (get, set) => {
+        const address = get(accountAtom)?.address || ''
+        const profile = get(profileAtom)
         const auth = profile?.[address]
         let signature = auth?.auth
         let message = auth?.message
@@ -99,8 +105,7 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
         if (!signature) {
           UnipassConfig.setRedirectUri(location.pathname + location.search)
           signature = await signMessage(message)
-          // we don't need set unipass profile auth in here
-          if (signature.includes('N/A') || walletType === WalletType.Unipass) {
+          if (signature.includes('N/A')) {
             throw new Error('signing: user denied')
           } else {
             setProfile({
@@ -121,13 +126,25 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
           }
         }
 
+        if (walletType === WalletType.Unipass) {
+          const account = get(accountAtom)
+          return {
+            address: addr,
+            message,
+            signature,
+            pub_key: account?.pubkey,
+            key_type: 'RsaPubkey',
+            username: account?.username,
+          }
+        }
+
         return {
           address: addr,
           message,
           signature,
         }
       },
-      [signMessage, walletType, address, profile, setProfile, loginMetamask]
+      [signMessage, walletType, setProfile, loginMetamask]
     )
   )
 }
