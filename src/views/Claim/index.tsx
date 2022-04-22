@@ -264,7 +264,7 @@ export const Claim: React.FC = () => {
           }
         }
         await login(targetType)
-        if (targetType === WalletType.Metamask) {
+        if (targetType !== WalletType.Flashsigner) {
           setSubmitStatus(SubmitStatus.Claiming)
         }
         setLoading(false, targetType)
