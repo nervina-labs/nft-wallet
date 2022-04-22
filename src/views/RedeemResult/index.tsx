@@ -58,8 +58,6 @@ export const RedeemResult: React.FC = () => {
   const { walletType } = useAccount()
   const { t, i18n } = useTranslation('translations')
   const transfer = useCallback(async () => {
-    // eslint-disable-next-line no-debugger
-    debugger
     const { signature = '', tx, customData } = location?.state
     if (tx) {
       const { data } = await api.redeem({
