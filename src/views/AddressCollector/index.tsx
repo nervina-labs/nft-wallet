@@ -5,7 +5,11 @@ import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
 import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { IS_IMTOKEN, IS_MOBILE_ETH_WALLET } from '../../constants'
+import {
+  IS_IMTOKEN,
+  IS_MOBILE_ETH_WALLET,
+  IS_UNIPASS_NOT_AVAILABLE,
+} from '../../constants'
 import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
@@ -21,7 +25,6 @@ import {
   useAccountStatus,
   useAPI,
   useLogin,
-  useProvider,
   WalletType,
 } from '../../hooks/useAccount'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
@@ -150,7 +153,6 @@ export const AddressCollector: React.FC = () => {
   const api = useAPI()
   const { walletType, address } = useAccount()
   const { isLogined } = useAccountStatus()
-  const provider = useProvider()
   const { isAuthenticated } = useProfile()
   const getAuth = useGetAndSetAuth()
   const { id } = useParams<{ id: string }>()
@@ -231,10 +233,6 @@ export const AddressCollector: React.FC = () => {
   const loginBtnOnClick = useCallback(
     async (targetType = WalletType.Unipass) => {
       setLoading(true, targetType)
-      if (walletType === targetType && isLogined) {
-        await submit(targetType)
-        return
-      }
       if (WalletType.Metamask !== targetType) {
         UnipassConfig.setRedirectUri(
           id
@@ -287,28 +285,11 @@ export const AddressCollector: React.FC = () => {
   )
 
   useLayoutEffect(() => {
-    if (isLogined && walletType && address && isAddressPackageExist) {
-      if (
-        walletType === WalletType.Metamask &&
-        provider?.address?.addressString
-      ) {
-        submit(walletType).catch(Boolean)
-      }
-      if (
-        walletType === WalletType.Unipass ||
-        walletType === WalletType.Flashsigner
-      ) {
-        submit(walletType).catch(Boolean)
-      }
+    if (isLogined && isAddressPackageExist && isAuthenticated && walletType) {
+      submit(walletType).catch(Boolean)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    walletType,
-    isLogined,
-    address,
-    provider?.address?.addressString,
-    isAddressPackageExist,
-  ])
+  }, [walletType, isLogined, isAddressPackageExist, isAuthenticated, address])
 
   const imgs = {
     [SubmitStatus.None]: <AddressesSvg />,
@@ -333,7 +314,7 @@ export const AddressCollector: React.FC = () => {
           {IS_MOBILE_ETH_WALLET ? null : (
             <LoginButton
               className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
-              isLoading={isUnipassLogining}
+              isLoading={false}
               disabled={
                 isUnipassLogining || isMetamaskLoging || isFlashsignerLogin
               }
@@ -349,14 +330,16 @@ export const AddressCollector: React.FC = () => {
               </Box>
             </LoginButton>
           )}
-          <LoginButton
-            isLoading={isUnipassLogining}
-            disabled={isUnipassLogining || isMetamaskLoging}
-            onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
-            variant={IS_IMTOKEN ? 'outline' : 'solid'}
-          >
-            {t('login.connect.unipass')}
-          </LoginButton>
+          {IS_UNIPASS_NOT_AVAILABLE ? null : (
+            <LoginButton
+              isLoading={isUnipassLogining}
+              disabled={isUnipassLogining}
+              onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
+              variant={IS_IMTOKEN ? 'outline' : 'solid'}
+            >
+              {t('login.connect.unipass')}
+            </LoginButton>
+          )}
           <LoginButton
             disabled={isUnipassLogining || isMetamaskLoging}
             isLoading={isMetamaskLoging}

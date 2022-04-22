@@ -116,6 +116,7 @@ export const RedEnvelope: React.FC = () => {
         })
         return
       }
+      console.log('is fetching')
       setIsRefetching(true)
       const auth = await getAuth().catch((err) => {
         setIsRefetching(false)

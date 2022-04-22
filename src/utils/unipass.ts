@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-extraneous-class */
-import { Transaction as PwTransaction } from '@lay2/pw-core'
+import PWCore, { Transaction as PwTransaction } from '@lay2/pw-core'
 import { IS_MAINNET, PW_CODE_HASH, UNIPASS_URL } from '../constants'
 import { UnipassAction } from '../models/unipass'
 import i18n from '../i18n'
@@ -10,7 +10,6 @@ import {
   AddressPrefix,
 } from '@nervosnetwork/ckb-sdk-utils'
 import { WalletType } from '../hooks/useAccount'
-import { Config } from '@nervina-labs/flashsigner'
 
 export function isUnipassV2Address(address: string) {
   try {
@@ -19,8 +18,6 @@ export function isUnipassV2Address(address: string) {
     return false
   }
 }
-
-const flashsignerLockCodeHash = Config.getFlashsignerLock().codeHash
 
 export function generateOldAddress(
   address: string,
@@ -31,7 +28,7 @@ export function generateOldAddress(
   }
   try {
     const script = addressToScript(address)
-    if (script.codeHash === flashsignerLockCodeHash) {
+    if (script.codeHash !== PWCore.config.pwLock.script.codeHash) {
       return address
     }
     return fullPayloadToAddress({
