@@ -26,6 +26,7 @@ import {
   verifyDasAddress,
   buildFlashsignerOptions,
   isUnipassV2Address,
+  generateOldAddress,
 } from '../../utils'
 import UP from 'up-core-test'
 import { useWidth } from '../../hooks/useWidth'
@@ -110,7 +111,9 @@ function verifyAddress(address: string, self?: string): AddressVerifiedType {
   }
   // eth
   if (verifyEthAddress(address)) {
-    const eth2ckbAddress = new Address(address, AddressType.eth).toCKBAddress()
+    const eth2ckbAddress = generateOldAddress(
+      new Address(address, AddressType.eth).toCKBAddress()
+    )
     if (self === eth2ckbAddress) {
       return AddressVerifiedType.self
     }
