@@ -13,6 +13,7 @@
         "release-refresh": " Release to refresh"
       },
       "unipass-v2-error": "The currently logged-in account does not support receiving this type of NFT, please log in with Flashsigner or Eth wallet",
+      "unipass-wechat": "UniPass is not supported in the current environment, please connect to UniPass in your browser.",
       "relogin": "Relogin",
       "creator": "Creator",
       "chain": {
