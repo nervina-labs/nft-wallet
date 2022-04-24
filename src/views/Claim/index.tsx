@@ -11,6 +11,7 @@ import {
   IS_IMTOKEN,
   IS_MOBILE_ETH_WALLET,
   IS_UNIPASS_NOT_AVAILABLE,
+  IS_WEXIN,
 } from '../../constants'
 import { Link, Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
@@ -262,6 +263,14 @@ export const Claim: React.FC = () => {
             setLoading(false, targetType)
             return
           }
+        }
+        if (targetType === WalletType.Unipass && IS_WEXIN) {
+          setLoading(false, targetType)
+          onConfirm({
+            type: 'error',
+            title: t('common.unipass-wechat'),
+          })
+          return
         }
         await login(targetType)
         if (targetType !== WalletType.Flashsigner) {
