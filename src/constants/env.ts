@@ -62,7 +62,7 @@ export const IS_MOBILE_ETH_WALLET =
   (w.ethereum || w.web3) && IS_MOBILE && IS_STANDALONE
 
 export const IS_UNIPASS_NOT_AVAILABLE =
-  IS_WEXIN || IS_MOBILE_ETH_WALLET || IS_MOBILE_ETH_WALLET
+  IS_MOBILE_ETH_WALLET || IS_MOBILE_ETH_WALLET
 
 export const IS_TOKEN_POCKET = navigator.userAgent.includes('TokenPocket')
 

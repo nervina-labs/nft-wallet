@@ -18,6 +18,7 @@
         "testnet": "测试网"
       },
       "unipass-v2-error": "当前地址不支持领取此种类型的秘宝，请重新连接 Flashsigner 或以太坊环境",
+      "unipass-wechat": "当前环境中暂不支持 UniPass，请在浏览器连接 UniPass",
       "relogin": "重新登录",
       "share": {
         "copy": "点击复制链接并分享至社交媒体",

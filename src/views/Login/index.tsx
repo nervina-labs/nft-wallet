@@ -9,6 +9,7 @@ import {
   IS_MOBILE_ETH_WALLET,
   IS_UNIPASS_NOT_AVAILABLE,
   IS_WEBKIT,
+  IS_WEXIN,
 } from '../../constants'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
@@ -237,6 +238,14 @@ export const Login: React.FC = () => {
             setLoading(false, walletType)
             return
           }
+        }
+        if (walletType === WalletType.Unipass && IS_WEXIN) {
+          setLoading(false, walletType)
+          onConfirm({
+            type: 'error',
+            title: t('common.unipass-wechat'),
+          })
+          return
         }
         await login(walletType)
         setLoading(false, walletType)
