@@ -226,14 +226,21 @@ export const Transfer: React.FC = () => {
           },
         })
       } else {
-        confirmDialog({
-          type: 'warning',
-          title: buildFailedMessage(msg),
-          description:
-            code && Number(code) !== 1095
-              ? t('transfer.error-code', { code })
-              : undefined,
-        })
+        if (code && Number(code) === 1106) {
+          confirmDialog({
+            type: 'error',
+            description: t('transfer.error.cota-bug'),
+          })
+        } else {
+          confirmDialog({
+            type: 'warning',
+            title: buildFailedMessage(msg),
+            description:
+              code && Number(code) !== 1095
+                ? t('transfer.error-code', { code })
+                : undefined,
+          })
+        }
       }
     },
     [confirmDialog, buildFailedMessage, history, t]
