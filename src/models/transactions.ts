@@ -6,6 +6,7 @@ export enum TransactionStatus {
   Pending = 'pending',
   Committed = 'committed',
   Submitting = 'submitting',
+  Rejected = 'rejected',
 }
 
 export enum TransactionDirection {
