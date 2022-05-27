@@ -211,6 +211,7 @@ const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
       tx.on_chain_timestamp != null
     )
   }, [tx.tx_state, tx.on_chain_timestamp])
+  console.log(tx.tx_state)
 
   const dayInst = dayjs(Number(tx.on_chain_timestamp + '000'))
   return (
