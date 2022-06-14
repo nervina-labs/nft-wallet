@@ -25,6 +25,8 @@ import { MainContainer } from '../../styles'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { useHistory } from 'react-router'
 import { RoutePath } from '../../routes'
+import { Center } from '@chakra-ui/react'
+import { CloseIcon } from '@chakra-ui/icons'
 
 const Container = styled(MainContainer)`
   display: flex;
@@ -142,12 +144,19 @@ interface ListItemProps {
 const ListItem: React.FC<ListItemProps> = ({ tx, className }) => {
   const [t, i18n] = useTranslation('translations')
   const isBanned = tx.is_class_banned || tx.is_issuer_banned
-  const icon =
-    tx.tx_direction === TransactionDirection.Receive ? (
-      <img src={ReceivePng} />
-    ) : (
-      <img src={SendPng} />
-    )
+  const icon = useMemo(() => {
+    if (tx.tx_state === TransactionStatus.Rejected) {
+      return (
+        <Center w="42px" h="42px" rounded="100%" bg="#f5f5f5">
+          <CloseIcon color="red.500" />
+        </Center>
+      )
+    }
+    if (tx.tx_direction === TransactionDirection.Receive) {
+      return <img src={ReceivePng} />
+    }
+    return <img src={SendPng} />
+  }, [tx.tx_direction])
 
   const vipTitle = tx?.verified_info?.verified_title
   const vt = useMemo(() => {
