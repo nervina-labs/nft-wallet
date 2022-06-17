@@ -128,8 +128,8 @@ export async function rawTransactionToPWTransaction(
     new RawTransaction(
       inputs,
       outputs,
-      cellDeps.concat(isPwCore ? pwDeps : [])
-      // rawTx.header_deps,
+      cellDeps.concat(isPwCore ? pwDeps : []),
+      rawTx.header_deps,
       // rawTx.version
     ),
     [
