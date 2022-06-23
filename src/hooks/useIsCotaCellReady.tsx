@@ -33,7 +33,7 @@ export const useIsCotaCellReady = () => {
                 <Text whiteSpace="pre-line">
                   <Trans
                     ns="translations"
-                    i18nKey="transfer.error.cota-bug"
+                    i18nKey="transfer.error.cota-not-ready"
                     t={t}
                     components={{
                       b: (
