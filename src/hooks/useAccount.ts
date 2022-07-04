@@ -267,7 +267,7 @@ export function useSignTransaction() {
     const { outputs } = tx.raw
     const changeOutput = outputs[outputs.length - 1]
     changeOutput.capacity = changeOutput.capacity.sub(
-      new Amount('8500', AmountUnit.shannon)
+      new Amount('16e3', AmountUnit.shannon)
     )
     tx.raw.cellDeps = []
     const provider = new UPCoreSimpleProvier(
