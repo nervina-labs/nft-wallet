@@ -38,7 +38,7 @@ export const profileAtom = atomWithStorage<Auths | null>(
 )
 
 export function useProfile() {
-  const { address } = useAccount()
+  const { address, walletType, pubkey } = useAccount()
   const [profile, _setProfile] = useAtom(profileAtom)
 
   const setProfile = useCallback(
@@ -66,8 +66,11 @@ export function useProfile() {
     if (profile == null) {
       return false
     }
+    if (walletType === WalletType.Unipass && !pubkey) {
+      return false
+    }
     return !!profile[address]?.auth
-  }, [address, profile])
+  }, [address, profile, walletType, pubkey])
 
   return {
     profile,
@@ -102,7 +105,11 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
             message,
           })
         }
-        if (!signature) {
+        const account = get(accountAtom)
+        if (
+          !signature ||
+          (walletType === WalletType.Unipass && !account?.pubkey)
+        ) {
           UnipassConfig.setRedirectUri(location.pathname + location.search)
           signature = await signMessage(message)
           if (signature.includes('N/A')) {
@@ -127,7 +134,6 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
         }
 
         if (walletType === WalletType.Unipass) {
-          const account = get(accountAtom)
           return {
             address: addr,
             message,
