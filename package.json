@@ -39,7 +39,7 @@
     "array.prototype.flat": "^1.2.5",
     "axios": "0.21.2",
     "bowser": "^2.11.0",
-    "byte-guide": "^1.0.5",
+    "byte-guide": "1.0.7",
     "china-division": "^2.3.1",
     "classnames": "^2.3.1",
     "clipboard-polyfill": "^3.0.3",
