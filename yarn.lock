@@ -4289,9 +4289,10 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz"
 
-byte-guide@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.npmjs.org/byte-guide/-/byte-guide-1.0.5.tgz"
+byte-guide@1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/byte-guide/-/byte-guide-1.0.7.tgz#ec855ab90bed46018e273c1b37f1aed8b3403da9"
+  integrity sha512-d2qzEek778UELhtN8jS8L/XR4tD4SY33xtvdISI4hqO2xEbkCUkg79oy9Ib3pkZjbB3ZPp8fJKEX5x3iWCsunA==
 
 bytebuffer@5.0.1:
   version "5.0.1"
