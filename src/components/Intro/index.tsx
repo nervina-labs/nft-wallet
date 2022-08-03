@@ -105,7 +105,7 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
         >
           <CloseButton size="md" />
         </Center>,
-        document.getElementById('main') as Element
+        document.getElementById('main') ?? document.body
       )}
       lang={i18n.language === 'en' ? 'en' : 'zh'}
       nextText={t('guide.next')}
