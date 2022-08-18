@@ -11,7 +11,7 @@ import LogoPath from '../../assets/svg/explore-logo.svg'
 import { useTrackEvent, useTrackDidMount } from '../../hooks/useTrack'
 import { PwaGuide } from '../../components/PwaGuide'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { atom, useAtom } from 'jotai'
 
 const isShowWarningAtom = atom(true)
@@ -36,7 +36,15 @@ export const Explore: React.FC = () => {
     if (isShow) {
       confirmDialog({
         type: 'text',
-        title: t('explore.warning'),
+        description: (
+          <Trans
+            i18nKey="explore.warning"
+            t={t}
+            components={{
+              a: <a style={{ color: '#4E52F5' }}></a>,
+            }}
+          />
+        ),
       })
 
       setIsShow(false)
