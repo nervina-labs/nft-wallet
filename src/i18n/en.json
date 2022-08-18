@@ -330,7 +330,8 @@
       "collections": "Featured by Mibao",
       "issuers": "Hot Creators",
       "home": "Home",
-      "more": "More"
+      "more": "More",
+      "warning": "Mibao wallet is going to upgrade the brand and domain name to token.city. During the upgrade progress, the service may suffer unavailable temporarily, your data and assets will stay intact."
     },
     "menu": {
       "profile": "Profile",
