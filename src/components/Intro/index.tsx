@@ -1,7 +1,10 @@
 import React, { useMemo, useState } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import Guide, { IStep } from 'byte-guide'
+import { createPortal } from 'react-dom'
 import { useHistory } from 'react-router-dom'
+import { Center } from '@mibao-ui/components'
+import { CloseButton } from '@chakra-ui/react'
 import { RoutePath } from '../../routes'
 import { getHelpCenterUrl } from '../../data/help'
 import { useAccount, useAPI } from '../../hooks/useAccount'
@@ -89,6 +92,21 @@ export const Intro: React.FC<IntroProps> = ({ show }) => {
       localKey={GUIDE_STORAGE_KEY + address}
       closable={false}
       arrow={showArrow}
+      closeEle={createPortal(
+        <Center
+          fontSize="28px"
+          zIndex={999999}
+          position="absolute"
+          top="20px"
+          cursor="pointer"
+          right="20px"
+          bg="white"
+          borderRadius="8px"
+        >
+          <CloseButton size="md" />
+        </Center>,
+        document.getElementById('main') ?? document.body
+      )}
       lang={i18n.language === 'en' ? 'en' : 'zh'}
       nextText={t('guide.next')}
       okText={t('guide.done')}
