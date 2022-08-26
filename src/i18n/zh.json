@@ -1,7 +1,6 @@
 {
   "translations": {
     "common": {
-      "beian": "浙ICP备2021006943号-3",
       "login": "连接身份管理器",
       "geetest-error": "验证错误，请刷新页面后重试",
       "actions": {
