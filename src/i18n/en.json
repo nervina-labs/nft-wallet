@@ -1,7 +1,6 @@
 {
   "translations": {
     "common": {
-      "beian": "浙ICP备2021006943号-3",
       "login": "Connect to the identity manager",
       "geetest-error": "Verification error, please refresh the page and try again",
       "actions": {
