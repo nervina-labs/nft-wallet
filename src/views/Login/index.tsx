@@ -8,7 +8,6 @@ import {
   IS_IMTOKEN,
   IS_MOBILE_ETH_WALLET,
   IS_UNIPASS_NOT_AVAILABLE,
-  IS_WEBKIT,
   IS_WEXIN,
 } from '../../constants'
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
@@ -40,7 +39,6 @@ import { Autoplay } from 'swiper'
 import Slide1 from '../../assets/img/login/slide-1.png'
 import Slide2 from '../../assets/img/login/slide-2.png'
 import Slide3 from '../../assets/img/login/slide-3.png'
-import classNames from 'classnames'
 import {
   trackLabels,
   useTrackEvent,
@@ -506,17 +504,6 @@ export const Login: React.FC = () => {
           />
         </CheckBoxStyled>
       </div>
-      {i18n.language !== 'en' ? (
-        <footer className={classNames('beian', { normal: IS_WEBKIT })}>
-          <a
-            href="https://beian.miit.gov.cn/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('common.beian')}
-          </a>
-        </footer>
-      ) : null}
     </Container>
   )
 }

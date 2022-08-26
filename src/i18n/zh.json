@@ -1,7 +1,6 @@
 {
   "translations": {
     "common": {
-      "beian": "浙ICP备2021006943号-3",
       "login": "连接身份管理器",
       "geetest-error": "验证错误，请刷新页面后重试",
       "actions": {
@@ -330,8 +329,7 @@
       "collections": "秘宝精选",
       "issuers": "最受欢迎创作者",
       "home": "首页",
-      "more": "更多",
-      "warning": "秘宝钱包将在 8.26 前后进行品牌升级，请牢记新的域名 <a>token.city</a>，在升级过程中服务有可能临时中断，您的资产和数据不会受到任何影响。"
+      "more": "更多"
     },
     "menu": {
       "profile": "个人资料",
