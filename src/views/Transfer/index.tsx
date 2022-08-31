@@ -683,6 +683,6 @@ export const Transfer: React.FC = () => {
       </Drawer>
     </Container>
   ) : (
-    <Redirect to={RoutePath.Explore} />
+    <Redirect to={RoutePath.NFTs} />
   )
 }

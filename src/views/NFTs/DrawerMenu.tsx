@@ -5,7 +5,6 @@ import { CONTAINER_MAX_WIDTH } from '../../constants'
 import { useHistory } from 'react-router-dom'
 import { RoutePath } from '../../routes'
 import { useTranslation } from 'react-i18next'
-import { ReactComponent as OrderSvg } from '../../assets/svg/home/order.svg'
 import { ReactComponent as ProfileSvg } from '../../assets/svg/home/profile.svg'
 import { ReactComponent as TxSvg } from '../../assets/svg/home/tx.svg'
 import { ReactComponent as LocaleSvg } from '../../assets/svg/home/locale.svg'
@@ -76,14 +75,6 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
 
   const list = useMemo(() => {
     return [
-      {
-        text: t('menu.order'),
-        icon: <OrderSvg />,
-        onClick: () => {
-          history.push(RoutePath.Orders)
-          trackList(trackLabels.home.orders)
-        },
-      },
       {
         text: t('menu.profile'),
         icon: <ProfileSvg />,

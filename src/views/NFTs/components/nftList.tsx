@@ -83,6 +83,7 @@ export const NftList: React.FC<{
           className="filters"
           top={!isHolder ? '0' : `${HEADER_HEIGHT}px`}
           position="sticky"
+          display="none"
         >
           <Tab
             onClick={() => {

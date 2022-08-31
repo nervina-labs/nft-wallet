@@ -15,7 +15,6 @@ import { NftList } from './components/nftList'
 import { useTrackDidMount } from '../../hooks/useTrack'
 import { useWechatShare } from '../../hooks/useWechat'
 import { useTranslation } from 'react-i18next'
-import { useIsLiteAtom } from '../../hooks/useLite'
 import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { PwaGuide } from '../../components/PwaGuide'
 
@@ -34,7 +33,6 @@ export const NFTs: React.FC = () => {
   const wechatShare = useWechatShare()
   const [t] = useTranslation('translations')
   const matchHome = useRouteMatch(RoutePath.NFTs)
-  const [isLite] = useIsLiteAtom()
   const getAuth = useGetAndSetAuth()
   const { data: user, isLoading: isUserLoading } = useQuery(
     [Query.Profile, address, api, isAuthenticated],
@@ -68,10 +66,7 @@ export const NFTs: React.FC = () => {
   useTrackDidMount(isHolder ? 'home' : 'collector')
 
   if (!isLogined && !isHolder) {
-    if (isLite) {
-      return <Redirect to={RoutePath.Login} />
-    }
-    return <Redirect to={RoutePath.Explore} />
+    return <Redirect to={RoutePath.Login} />
   }
   if (params.address === localAddress && isLogined) {
     return <Redirect to={RoutePath.NFTs} />

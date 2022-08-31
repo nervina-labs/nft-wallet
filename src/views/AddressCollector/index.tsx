@@ -377,7 +377,7 @@ export const AddressCollector: React.FC = () => {
         <p>{t('addresses.continue')}</p>
         <LoginButton
           onClick={() => {
-            history.push(RoutePath.Explore)
+            history.push(RoutePath.NFTs)
           }}
         >
           {t('addresses.explore')}

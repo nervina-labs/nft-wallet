@@ -13,15 +13,11 @@ import {
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
-import { useTranslation, Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { getHelpUnipassUrl } from '../../data/help'
-import { getLicenseUrl } from '../../data/license'
-import { UnipassConfig } from '../../utils'
-import { useToast } from '../../hooks/useToast'
 import { useAccountStatus, useLogin, WalletType } from '../../hooks/useAccount'
 import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
-import { Appbar, AppbarButton } from '../../components/Appbar'
-import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
+import { Appbar } from '../../components/Appbar'
 import {
   Drawer,
   useDisclosure,
@@ -31,7 +27,7 @@ import {
   Flex,
   Heading,
 } from '@mibao-ui/components'
-import { AspectRatio, Box, Checkbox } from '@chakra-ui/react'
+import { AspectRatio, Box } from '@chakra-ui/react'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js'
@@ -168,13 +164,6 @@ const Container = styled(RainbowBackground)`
   }
 `
 
-const CheckBoxStyled = styled(Checkbox)`
-  .chakra-checkbox__control:not([data-checked]) {
-    border: 1px solid #23262f;
-    border-radius: 1px;
-  }
-`
-
 enum ErrorMsg {
   NotSupport = 'not-support',
   Imtoken = 'refuse',
@@ -189,8 +178,6 @@ export const Login: React.FC = () => {
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isFlashsignerLogin, setIsFlashsignerLogin] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
-  const [isLicenseChecked, setIsLicenseChecked] = useState(false)
-  const toast = useToast()
   const history = useHistory()
   const location = useLocation<{ redirect?: string }>()
   const redirectUrl = location?.state?.redirect
@@ -312,20 +299,7 @@ export const Login: React.FC = () => {
   return (
     <Container ref={containerRef}>
       <div className="header">
-        <Appbar
-          transparent
-          left={
-            <AppbarButton
-              onClick={() => {
-                UnipassConfig.clear()
-                history.replace(RoutePath.Explore)
-              }}
-            >
-              <BackSvg />
-            </AppbarButton>
-          }
-          title={<FullLogo />}
-        />
+        <Appbar transparent title={<FullLogo />} />
       </div>
       <div className="logo">
         <Swiper
@@ -363,16 +337,6 @@ export const Login: React.FC = () => {
         minH="40px"
         mt={!IS_DESKTOP || i18n.language === 'en' ? '5%' : '15%'}
         onClick={() => {
-          if (!isLicenseChecked) {
-            toast(t('license.warn'), {
-              textProps: {
-                fontSize: '12px',
-                px: '20px',
-                py: '5px',
-              },
-            })
-            return
-          }
           drawerOnOpen()
         }}
       >
@@ -475,35 +439,6 @@ export const Login: React.FC = () => {
           </Link>
         </Center>
       </Drawer>
-
-      <div className="license">
-        <CheckBoxStyled
-          isChecked={isLicenseChecked}
-          size="sm"
-          iconSize="12px"
-          onChange={() => setIsLicenseChecked(!isLicenseChecked)}
-        >
-          <Trans
-            ns="translations"
-            i18nKey="license.agree"
-            t={t}
-            components={{
-              a: (
-                <span
-                  style={{ color: '#5065E5' }}
-                  onClick={() => {
-                    history.push(
-                      `${RoutePath.License}?url=${encodeURIComponent(
-                        getLicenseUrl(i18n.language)
-                      )}`
-                    )
-                  }}
-                />
-              ),
-            }}
-          />
-        </CheckBoxStyled>
-      </div>
     </Container>
   )
 }

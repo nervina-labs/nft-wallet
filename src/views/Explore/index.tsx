@@ -10,6 +10,9 @@ import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import LogoPath from '../../assets/svg/explore-logo.svg'
 import { useTrackEvent, useTrackDidMount } from '../../hooks/useTrack'
 import { PwaGuide } from '../../components/PwaGuide'
+import { useAccountStatus } from '../../hooks/useAccount'
+import { Redirect } from 'react-router'
+import { RoutePath } from '../../routes'
 
 export const Explore: React.FC = () => {
   const [mode, setMode] = useRouteQuerySearch<'pro' | 'lite'>('mode', 'pro')
@@ -23,6 +26,15 @@ export const Explore: React.FC = () => {
   useScrollRestoration()
 
   useTrackDidMount('explore')
+  const { isLogined } = useAccountStatus()
+  const isPro = mode === 'pro'
+  if (isLogined) {
+    return <Redirect to={RoutePath.NFTs} push={false} />
+  }
+
+  if (isPro) {
+    return <Redirect to={RoutePath.Login} push={false} />
+  }
 
   return (
     <MainContainer>
