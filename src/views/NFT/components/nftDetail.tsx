@@ -27,7 +27,7 @@ import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 import { isSupportWebp } from '../../../utils'
-import { Tag, TagLabel } from '@chakra-ui/react'
+// import { Tag, TagLabel } from '@chakra-ui/react'
 import { RoutePath } from '../../../routes'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 import styled from 'styled-components'
@@ -177,11 +177,11 @@ export const NftDetail: React.FC<{
                 unlimitedText={t('common.limit.unlimit')}
                 locale={i18n.language}
               />
-              {detail?.is_redeemed ? (
+              {/* {detail?.is_redeemed ? (
                 <Tag variant="outline" size="sm" colorScheme="green" ml="15px">
                   <TagLabel>{t('exchange.redeemed')}</TagLabel>
                 </Tag>
-              ) : null}
+              ) : null} */}
             </Flex>
           </Box>
           {isOwned && isNft ? (

@@ -1,10 +1,5 @@
 {
   "translations": {
-    "404": {
-      "title": "页面丢失",
-      "not-found": "您所寻找的页面不存在",
-      "back": "返回我的 NFT"
-    },
     "common": {
       "login": "连接身份管理器",
       "geetest-error": "验证错误，请刷新页面后重试",
@@ -42,7 +37,7 @@
           "desc-1": "长按识别二维码",
           "desc-nft": "一起欣赏这份 NFT",
           "desc-holder": "围观我发现的 NFT 收藏家",
-          "desc-my": "来Token.city欣赏我的 NFT",
+          "desc-my": "来 Token.city 欣赏我的 NFT",
           "desc-issuer": "欣赏创作者的 NFT",
           "collected": "已收藏 NFT"
         },
@@ -61,7 +56,7 @@
           },
           "home": {
             "title": "{{name}}的主页",
-            "desc": "来Token.city欣赏我收藏的 NFT 吧"
+            "desc": "来 Token.city 欣赏我收藏的 NFT 吧"
           },
           "others": {
             "title": "Token.city - 打造元宇宙价值层基础设施",
@@ -83,7 +78,7 @@
         "pack-event": "该套装暂不予显示"
       },
       "colon": "：",
-      "title": "Token.city账户",
+      "title": "Token.city 账户",
       "description": "随时随地查看并管理你的 NFT",
       "img-lost": "图片失联",
       "card-back": "该 NFT 卡背设置有信息，仅持有人可见",
@@ -105,7 +100,7 @@
       "no-data": "啊哦～暂无任何信息"
     },
     "login": {
-      "title": "Token.city账户",
+      "title": "Token.city 账户",
       "select": "选择您的连接方式",
       "connect": {
         "unipass": "连接 UniPass",
@@ -147,7 +142,7 @@
       "no-data": "尚未拥有任何 NFT",
       "no-likes": "尚未赞过任何 NFT",
       "link": "探索 NFT 的广阔宇宙",
-      "welcome": "欢迎来到Token.city宇宙",
+      "welcome": "欢迎来到 Token.city 宇宙",
       "hi": "Hi NFT 收藏家",
       "share": "分享",
       "pack-event": "套装",
@@ -174,8 +169,8 @@
         "ckb": "请输入正确的 CKB 地址",
         "self": "无法转让 NFT 给自己",
         "das": "请输入 DAS 地址并选择一个解析结果",
-        "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开「Token.city账户」应用，方可查看收到的 NFT",
-        "short-address": "当前接收方地址不是在Token.city应用生成的地址，切勿使用交易所等应用生成的 CKB 地址",
+        "receive-eth": "当前接收方地址为以太坊地址，请提醒接收方需要用相应的以太坊钱包打开 Token.city 账户应用，方可查看收到的 NFT",
+        "short-address": "当前接收方地址不是在 Token.city 应用生成的地址，切勿使用交易所等应用生成的 CKB 地址",
         "common": "请输入正确的 CKB 地址/以太坊地址/DAS 账户",
         "sign-fail": "签名失败，请重新签名",
         "tranfer-fail": "发送失败，请检查当前网络情况，重新发送",
@@ -183,12 +178,12 @@
         "contract-address": "无法转让到以太坊合约地址",
         "camera-auth": "没有摄像头权限，请刷新页面重新授权",
         "ios-webkit": "请升级操作系统至 iOS 14.3+，或使用 Safari 浏览器进行扫码",
-        "upgrade": "当前正在升级您的Token.city账户，请稍等 2-3 分钟后再进行操作。",
+        "upgrade": "当前正在升级您的 Token.city 账户，请稍等 2-3 分钟后再进行操作。",
         "continuous-transfer": "当前有笔交易正在进行中，请稍等 2-3 分钟后再进行操作。",
-        "cota-not-ready": "为了提供更好的使用体验，我们正在为首次使用的Token.city用户帐号升级和部署CoTA智能合约，<b>可能需等待几分钟</b>。\n 请稍后重试 ：)",
-        "cota-status": "无法转让此 NFT。错误代码：{{code}}",
+        "cota-not-ready": "为了提供更好的使用体验，我们正在为首次使用的 Token.city 用户帐号升级和部署 CoTA 智能合约，<b>可能需等待几分钟</b>。\n 请稍后重试：)",
+        "cota-status": "无法转让此 NFT。错误代码： {{code}}",
         "cota-not-ready-ok": "好的，等会儿回来",
-        "cota-bug": "CoTA 合约存在一个正在修复的错误，导致您的账户暂时无法转赠，您可以正常接收资产，预计1~2周后修复，您的资产不会有任何损失，修复后可以正常转赠，感谢您的理解"
+        "cota-bug": "CoTA 合约存在一个正在修复的错误，导致您的账户暂时无法转赠，您可以正常接收资产，预计 1~2 周后修复，您的资产不会有任何损失，修复后可以正常转赠，感谢您的理解"
       },
       "das": {
         "not-register": "当前 DAS 还未注册",
@@ -206,6 +201,11 @@
       "confirm": "确认",
       "signing": "签名中",
       "error-code": "错误代码： {{code}}"
+    },
+    "404": {
+      "title": "页面丢失",
+      "not-found": "您所寻找的页面不存在",
+      "back": "返回我的 NFT"
     },
     "transactions": {
       "no-data": "暂无更多记录...",
@@ -237,7 +237,7 @@
       "no-more-transaction-history": "没有更多记录了",
       "external-product": {
         "go-to-see": "去看看",
-        "not-official-website": "非Token.city官方网页，请确认是否继续访问",
+        "not-official-website": "非 Token.city 官方网页，请确认是否继续访问",
         "upcoming-visit": "即将访问",
         "go-to-link": "确认访问"
       },
@@ -347,7 +347,7 @@
     },
     "guide": {
       "one": {
-        "title": "1. 查看CKB地址",
+        "title": "1. 查看 CKB 地址",
         "desc": "点击查看地址，发送方可通过您的 CKB 地址将 NFT 发送给您"
       },
       "two": {
@@ -385,7 +385,7 @@
       },
       "exchange": {
         "title": "兑换",
-        "desc": "收集NFT兑换其他商品或者限量版 NFT"
+        "desc": "收集 NFT 兑换其他商品或者限量版 NFT"
       },
       "exhibition": {
         "title": "虚拟展厅",
@@ -409,7 +409,7 @@
       "submited": "地址已提交成功，感谢您的参与！",
       "duplicate": "地址已经提交，请勿重复提交",
       "continue": "您还可以继续操作",
-      "explore": "回到首页",
+      "explore": "探索 NFT",
       "select": "请选择一种提交方式（连接成功即自动提交)",
       "errors": {
         "not-support": "当前环境不支持连接以太坊",
@@ -436,12 +436,12 @@
       "tips": "您有一个{{nftName}}待领取",
       "home": "我的{{collection}}",
       "login": "请先连接账户",
-      "last-step": "一步马上领取您的{{collection}}！",
+      "last-step": "一步马上领取您的{{collection}}!",
       "error": "领取码错误",
       "confirm": "确认领取",
       "continue": "您还可以进行以下操作",
       "success": "领取成功",
-      "claimed": "Opps～该{{collection}}已被领走",
+      "claimed": "Opps~ 该{{collection}}已被领走",
       "go-home": "马上查看领取的{{collection}}",
       "go-explore": "去看看我的 NFT",
       "placeholder": "请输入领取码"
@@ -455,10 +455,10 @@
       "like": "获赞",
       "no-data": "无数据",
       "more": "更多",
-      "sale-empty": "啊哦～暂无售卖的作品",
-      "empty": "啊哦～暂未创作NFT",
+      "sale-empty": "啊哦～暂无售卖的 NFT",
+      "empty": "啊哦~ 暂未创作 NFT",
       "pack-event-count": "共 {{count}} 款",
-      "no-pack-events": "啊哈~发行人还没有创建过套装"
+      "no-pack-events": "啊哈~ 发行人还没有创建过套装"
     },
     "exchange": {
       "home": "我的 NFT",
@@ -566,7 +566,7 @@
         "held": "当前可兑换"
       },
       "warning": "兑换不会销毁您持有的 NFT，但会对其进行标记，标记过的 NFT 无法再次参与其他任何兑换活动。",
-      "warning-destroyed": "兑换将会销毁您参与兑换的 NFT ，该操作不可逆，一经销毁将无法找回",
+      "warning-destroyed": "兑换将会销毁您参与兑换的 NFT，该操作不可逆，一经销毁将无法找回",
       "check": {
         "price": "查看奖品",
         "comment": "查看奖品和留言",
@@ -676,7 +676,7 @@
       "end": "已经拉到底啦~",
       "login": {
         "desc-1": "啊哦～您还未连接你的身份管理器",
-        "desc-2": "请连接 Token City 后，查看您关注的精彩内容",
+        "desc-2": "请连接 NFT 后，查看您关注的精彩内容",
         "login": "连接"
       },
       "no-data": "尚未关注任何创作者",
@@ -746,7 +746,7 @@
         "submit": "生成 NFT 红包"
       },
       "toast": {
-        "not-nft": "请选择NFT",
+        "not-nft": "请选择 NFT",
         "not-amount": "请输入红包数量",
         "not-puzzle-question": "请输入红包谜题",
         "not-puzzle-answer": "输入红包谜底"
@@ -805,10 +805,10 @@
       "received-time": "领取时间："
     },
     "pwa-guide": {
-      "ios": "点击下方 <comp></comp> 选择『添加到主屏幕』，别错过最新的 NFT",
-      "ios-home": "点击下方 <comp></comp> 选择『添加到主屏幕』，随时管理您的数字资产",
-      "android": "免下载安装『Token.city』，别错过最新的 NFT : )",
-      "android-home": "免下载安装『Token.city』，随时管理您的数字资产 : )",
+      "ios": "点击下方 <comp></comp> 选择「添加到主屏幕」，别错过最新的 NFT",
+      "ios-home": "点击下方 <comp></comp> 选择「添加到主屏幕」，随时管理您的 NFT",
+      "android": "免下载安装 Token.city ， 别错过最新的 NFT: )",
+      "android-home": "免下载安装 Token.city ，随时管理您的 NFT: )",
       "desc": "将我们添加到桌面吧，获得最佳观赏体验，不再错过这些独一无二的艺术品。",
       "ok": "知道了",
       "step-1": "1.点击下方",
@@ -820,9 +820,9 @@
     "pack-event": {
       "collection-progress": "我的收集进度",
       "collected": "已集齐",
-      "has-token-class": "包含 NFT：",
+      "has-token-class": "包含 NFT: ",
       "special-token-class": "隐藏款：",
-      "collecting-digital-collection-sets": "正在收集NFT套装",
+      "collecting-digital-collection-sets": "正在收集 NFT 套装",
       "let-go-to-collect": "一起来收集吧"
     }
   }
