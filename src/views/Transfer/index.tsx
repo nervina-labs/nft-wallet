@@ -48,11 +48,11 @@ import {
   WalletType,
 } from '../../hooks/useAccount'
 import { Button, Drawer } from '@mibao-ui/components'
-import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
+import FullLogo from '../../assets/img/new-logo.png'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoadableComponent } from '../../components/GlobalLoader'
 import type Scaner from '../../components/QRcodeScaner'
-import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
+import { Alert, AlertIcon, AlertDescription, Image } from '@chakra-ui/react'
 import { useIsCotaCellReady } from '../../hooks/useIsCotaCellReady'
 
 const QrcodeScaner = lazy(
@@ -626,7 +626,7 @@ export const Transfer: React.FC = () => {
         </div>
       </section>
       <footer className="footer">
-        <FullLogo />
+        <Image src={FullLogo} w="auto" h="36px" />
       </footer>
       <Drawer
         placement="bottom"
