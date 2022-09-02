@@ -8,11 +8,11 @@ import { useTranslation } from 'react-i18next'
 import { ReactComponent as ProfileSvg } from '../../assets/svg/home/profile.svg'
 import { ReactComponent as TxSvg } from '../../assets/svg/home/tx.svg'
 import { ReactComponent as LocaleSvg } from '../../assets/svg/home/locale.svg'
-import { ReactComponent as HelpSvg } from '../../assets/svg/home/help.svg'
+// import { ReactComponent as HelpSvg } from '../../assets/svg/home/help.svg'
 import { ReactComponent as LogoutSvg } from '../../assets/svg/home/logout.svg'
 import { DrawerAction } from '../Profile/DrawerAction'
 import { LocalCache } from '../../cache'
-import { getHelpCenterUrl } from '../../data/help'
+// import { getHelpCenterUrl } from '../../data/help'
 import { useLogout } from '../../hooks/useAccount'
 import { Drawer, Stack, StackDivider, Text, Flex } from '@mibao-ui/components'
 import { trackLabels, useTrackClick } from '../../hooks/useTrack'
@@ -100,18 +100,18 @@ export const DrawerMenu: React.FC<DrawerConfigProps> = ({
           trackList(trackLabels.home.language)
         },
       },
-      {
-        text: t('menu.help'),
-        icon: <HelpSvg />,
-        onClick: () => {
-          history.push(
-            `${RoutePath.Help}?url=${encodeURIComponent(
-              getHelpCenterUrl(i18n.language)
-            )}`
-          )
-          trackList(trackLabels.home.help)
-        },
-      },
+      // {
+      //   text: t('menu.help'),
+      //   icon: <HelpSvg />,
+      //   onClick: () => {
+      //     history.push(
+      //       `${RoutePath.Help}?url=${encodeURIComponent(
+      //         getHelpCenterUrl(i18n.language)
+      //       )}`
+      //     )
+      //     trackList(trackLabels.home.help)
+      //   },
+      // },
       {
         text: t('menu.logout'),
         icon: <LogoutSvg />,

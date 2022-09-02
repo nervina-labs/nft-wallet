@@ -1,5 +1,5 @@
 import { RedEnvelope } from './../views/RedEnvelope/index'
-import { Search } from './../views/Search/index'
+// import { Search } from './../views/Search/index'
 import { RouteProps } from 'react-router-dom'
 import { Login } from '../views/Login'
 import { NFT } from '../views/NFT'
@@ -8,16 +8,16 @@ import { Transfer } from '../views/Transfer'
 import { Profile } from '../views/Profile'
 import { ImagePreview } from '../views/Profile/ImagePreview'
 import { Explore } from '../views/Explore/index'
-import { Help } from '../views/Help'
-import { Apps } from '../views/Apps'
+// import { Help } from '../views/Help'
+// import { Apps } from '../views/Apps'
 import { AddressCollector } from '../views/AddressCollector'
-import { Collection } from '../views/Collection'
+// import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
-import { Redeem } from '../views/Redeem'
+// import { Redeem } from '../views/Redeem'
 import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
-import { MyRedeem } from '../views/Redeem/My'
+// import { MyRedeem } from '../views/Redeem/My'
 import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
@@ -26,8 +26,8 @@ import { lazy } from 'react'
 import { Orders } from '../views/Orders'
 import { OrderSuccess } from '../views/OrderSuccess'
 import { OrderDetail } from '../views/OrderDetail'
-import { Ranking } from '../views/Ranking'
-import { ExploreAll } from '../views/ExploreAll'
+// import { Ranking } from '../views/Ranking'
+// import { ExploreAll } from '../views/ExploreAll'
 import { OrderStatus } from '../views/OrderStatus'
 import { Flashsigner } from '../views/Flashsigner'
 import { SendRedEnvelope } from '../views/SendRedEnvelope'
@@ -122,30 +122,30 @@ export const routes: MibaoRouterProps[] = [
     key: 'Explore',
     path: RoutePath.Explore,
   },
-  {
-    component: ExploreAll,
-    exact: true,
-    key: 'ExploreAll',
-    path: RoutePath.ExploreAll,
-  },
-  {
-    component: Help,
-    exact: false,
-    key: 'Help',
-    path: RoutePath.Help,
-  },
-  {
-    component: Help,
-    exact: false,
-    key: 'License',
-    path: RoutePath.License,
-  },
-  {
-    component: Apps,
-    exact: true,
-    key: 'Apps',
-    path: RoutePath.Apps,
-  },
+  // {
+  //   component: ExploreAll,
+  //   exact: true,
+  //   key: 'ExploreAll',
+  //   path: RoutePath.ExploreAll,
+  // },
+  // {
+  //   component: Help,
+  //   exact: false,
+  //   key: 'Help',
+  //   path: RoutePath.Help,
+  // },
+  // {
+  //   component: Help,
+  //   exact: false,
+  //   key: 'License',
+  //   path: RoutePath.License,
+  // },
+  // {
+  //   component: Apps,
+  //   exact: true,
+  //   key: 'Apps',
+  //   path: RoutePath.Apps,
+  // },
   {
     component: Claim,
     exact: true,
@@ -172,32 +172,32 @@ export const routes: MibaoRouterProps[] = [
     path: RoutePath.CNY2022,
     params: '/:id',
   },
-  {
-    component: Collection,
-    exact: true,
-    key: 'Collection',
-    path: RoutePath.Collection,
-    params: '/:id',
-  },
-  {
-    component: Ranking,
-    exact: true,
-    key: 'Ranking',
-    path: RoutePath.RankingList,
-    params: '/:id',
-  },
-  {
-    component: Redeem,
-    exact: true,
-    key: 'Redeem',
-    path: RoutePath.Redeem,
-  },
-  {
-    component: MyRedeem,
-    exact: true,
-    key: 'MyRedeem',
-    path: RoutePath.MyRedeem,
-  },
+  // {
+  //   component: Collection,
+  //   exact: true,
+  //   key: 'Collection',
+  //   path: RoutePath.Collection,
+  //   params: '/:id',
+  // },
+  // {
+  //   component: Ranking,
+  //   exact: true,
+  //   key: 'Ranking',
+  //   path: RoutePath.RankingList,
+  //   params: '/:id',
+  // },
+  // {
+  //   component: Redeem,
+  //   exact: true,
+  //   key: 'Redeem',
+  //   path: RoutePath.Redeem,
+  // },
+  // {
+  //   component: MyRedeem,
+  //   exact: true,
+  //   key: 'MyRedeem',
+  //   path: RoutePath.MyRedeem,
+  // },
   {
     component: RedeemDetail,
     exact: false,
@@ -302,12 +302,12 @@ export const routes: MibaoRouterProps[] = [
     key: 'SendRedEnvelope',
     path: RoutePath.RedEnvelope,
   },
-  {
-    component: Search,
-    exact: false,
-    key: 'Search',
-    path: RoutePath.Search,
-  },
+  // {
+  //   component: Search,
+  //   exact: false,
+  //   key: 'Search',
+  //   path: RoutePath.Search,
+  // },
   {
     component: Flashsigner,
     exact: true,

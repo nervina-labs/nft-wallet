@@ -7,7 +7,6 @@ import { RoutePath } from '../../routes'
 import { HiddenBarFill } from '../../components/HiddenBar'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { Container } from './styled'
-import { Intro } from '../../components/Intro'
 import { Info } from './info'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { Appbar } from './components/appbar'
@@ -56,13 +55,6 @@ export const NFTs: React.FC = () => {
     }
   )
 
-  const showGuide = useMemo(() => {
-    if (isUserLoading) {
-      return false
-    }
-    return !user?.guide_finished && isAuthenticated
-  }, [user, isUserLoading, isAuthenticated])
-
   useTrackDidMount(isHolder ? 'home' : 'collector')
 
   if (!isLogined && !isHolder) {
@@ -84,7 +76,6 @@ export const NFTs: React.FC = () => {
       <NftList isHolder={isHolder} address={address} />
       {!isHolder && (
         <>
-          <Intro show={showGuide} />
           <HiddenBarFill />
           <PwaGuide />
         </>

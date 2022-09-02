@@ -10,11 +10,9 @@ import {
   IS_UNIPASS_NOT_AVAILABLE,
   IS_WEXIN,
 } from '../../constants'
-import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import detectEthereumProvider from '@metamask/detect-provider'
-import { Redirect, useHistory, useLocation, Link } from 'react-router-dom'
+import { Redirect, useHistory, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { getHelpUnipassUrl } from '../../data/help'
 import { useAccountStatus, useLogin, WalletType } from '../../hooks/useAccount'
 import FullLogo from '../../assets/img/new-logo.png'
 import { Appbar } from '../../components/Appbar'
@@ -296,6 +294,7 @@ export const Login: React.FC = () => {
         <Appbar
           transparent
           title={<Image src={FullLogo} w="auto" h="100%" />}
+          left={<div />}
         />
       </div>
       <div className="logo">
@@ -422,18 +421,6 @@ export const Login: React.FC = () => {
               t('login.connect.metamask')
             )}
           </LoginButton>
-          <Link
-            to={`${RoutePath.Help}?url=${encodeURIComponent(
-              getHelpUnipassUrl(i18n.language)
-            )}`}
-          >
-            <Center>
-              <QuestionSvg />
-              <Text fontSize="12px" ml="4px">
-                {t('help.question')}
-              </Text>
-            </Center>
-          </Link>
         </Center>
       </Drawer>
     </Container>
