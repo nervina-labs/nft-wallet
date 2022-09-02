@@ -1,6 +1,6 @@
 import { Flex } from '@mibao-ui/components'
 import { Box, Image } from '@chakra-ui/react'
-import Logo from '../../../assets/share/logo.png'
+import Logo from '../../../assets/img/new-logo.png'
 import QRCode from 'qrcode.react'
 import { useTranslation } from 'react-i18next'
 
@@ -11,7 +11,7 @@ export const Footer: React.FC<{
   const { t } = useTranslation('translations')
   return (
     <Flex justify="space-between" mt="auto">
-      <Image src={Logo} w="40px" h="40px" objectFit="contain" />
+      <Image src={Logo} h="26px" objectFit="contain" mt="10px" />
 
       <Box
         fontSize="12px"

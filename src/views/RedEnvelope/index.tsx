@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { AspectRatio, Box } from '@mibao-ui/components'
 import { Center, Flex, Image, Spinner } from '@chakra-ui/react'
 import { MainContainer } from '../../styles'
-import DEFAULT_RED_ENVELOPE_COVER_PATH from '../../assets/svg/red-envelope-cover.svg'
 import { useThemeColor } from '../../hooks/useThemeColor'
 import { useInnerSize } from '../../hooks/useInnerSize'
 import { Cover, OnOpenOptions } from './components/cover'
@@ -284,14 +283,6 @@ export const RedEnvelope: React.FC = () => {
               bgColor="#E94030"
             >
               <Flex>
-                <Image
-                  src={DEFAULT_RED_ENVELOPE_COVER_PATH}
-                  position="absolute"
-                  w="calc(100% / 3 + 2px)"
-                  h={coverHeight}
-                  bottom="0"
-                  zIndex={0}
-                />
                 {data?.cover_image_url ? (
                   <Image
                     src={data?.cover_image_url}

@@ -14,7 +14,7 @@ import detectEthereumProvider from '@metamask/detect-provider'
 import { Redirect, useHistory, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAccountStatus, useLogin, WalletType } from '../../hooks/useAccount'
-import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
+import FullLogo from '../../assets/img/new-logo.png'
 import { Appbar } from '../../components/Appbar'
 import {
   Drawer,
@@ -25,13 +25,12 @@ import {
   Flex,
   Heading,
 } from '@mibao-ui/components'
-import { AspectRatio, Box } from '@chakra-ui/react'
+import { AspectRatio, Box, Image } from '@chakra-ui/react'
 import { useConfirmDialog } from '../../hooks/useConfirmDialog'
 import { LoginButton } from '../../components/LoginButton'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js'
 import { Autoplay } from 'swiper'
 import Slide1 from '../../assets/img/login/slide-1.png'
-import Slide2 from '../../assets/img/login/slide-2.png'
 import Slide3 from '../../assets/img/login/slide-3.png'
 import {
   trackLabels,
@@ -279,11 +278,6 @@ export const Login: React.FC = () => {
       desc2: '',
     },
     {
-      src: Slide2,
-      desc1: '',
-      desc2: '',
-    },
-    {
       src: Slide3,
       desc1: '',
       desc2: '',
@@ -297,7 +291,11 @@ export const Login: React.FC = () => {
   return (
     <Container ref={containerRef}>
       <div className="header">
-        <Appbar transparent title={<FullLogo />} left={<div />} />
+        <Appbar
+          transparent
+          title={<Image src={FullLogo} w="auto" h="100%" />}
+          left={<div />}
+        />
       </div>
       <div className="logo">
         <Swiper
