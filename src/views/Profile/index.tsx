@@ -104,7 +104,7 @@ export const Profile: React.FC = () => {
   const showCamera = !!location.state?.showCamera
 
   if (!isLogined) {
-    return <Redirect to={RoutePath.Explore} />
+    return <Redirect to={RoutePath.NFTs} />
   }
 
   return showCamera ? (

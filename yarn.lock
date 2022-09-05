@@ -2375,10 +2375,10 @@
   version "1.2.0"
   resolved "https://registry.npmjs.org/@metamask/detect-provider/-/detect-provider-1.2.0.tgz"
 
-"@mibao-ui/components@0.0.34":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/@mibao-ui/components/-/components-0.0.34.tgz#b710d13f4634bfd2588795e5bf47c3126d2124f2"
-  integrity sha512-2jp61zUuBtsGJKKI2My96O97VWpHyheWDOoAIVNc3p1lq02Kp5bR+7uqZhKU7qoa5jUxVeNvxx+U+/6mRUboLg==
+"@mibao-ui/components@0.0.35":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@mibao-ui/components/-/components-0.0.35.tgz#0175665b56499d2d65bd7728f9d116bae0eee7ce"
+  integrity sha512-CnX9t+a10k6CjS9UdAe+6KROQ+euN3KGO1JSf3O9p9zTw73kav3gOSu4WuDY0g49M/XGWzVHPbTfukUX68TpmA==
 
 "@nervina-labs/flashsigner@^0.2.1":
   version "0.2.1"

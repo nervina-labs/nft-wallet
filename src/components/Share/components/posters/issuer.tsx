@@ -142,12 +142,6 @@ export const Issuer: React.FC<IssuerProps & PosterProps> = ({
           />
           {verifiedTitleEllipsis}
         </Flex>
-        <Box mt="15px" fontSize="12px" fontWeight="200">
-          <Box as="span" mr="5px">
-            {t('issuer.follower')}: {follow}
-          </Box>
-          {t('issuer.like')}: {like}
-        </Box>
         <DescContainer>{descEllipsis}</DescContainer>
         {shareUrl && (
           <Footer url={shareUrl} text={t('common.share.poster.desc-issuer')} />

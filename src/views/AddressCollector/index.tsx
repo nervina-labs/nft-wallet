@@ -15,8 +15,6 @@ import { Redirect, useHistory, useParams } from 'react-router-dom'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
-import { getHelpUnipassUrl } from '../../data/help'
-import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg'
 import { UnipassConfig } from '../../utils'
 import { Query } from '../../models'
 import { useQuery } from 'react-query'
@@ -147,7 +145,7 @@ export const AddressCollector: React.FC = () => {
   const [submitStatus, setSubmitStatus] = useState(SubmitStatus.None)
   const [isFlashsignerLogin, setIsFlashsignerLogin] = useState(false)
   const onConfirm = useConfirmDialog()
-  const { t, i18n } = useTranslation('translations')
+  const { t } = useTranslation('translations')
 
   const { login } = useLogin()
   const api = useAPI()
@@ -355,19 +353,6 @@ export const AddressCollector: React.FC = () => {
               t('login.connect.metamask')
             )}
           </LoginButton>
-          <div
-            className="question"
-            onClick={() => {
-              history.push(
-                `${RoutePath.Help}?url=${encodeURIComponent(
-                  getHelpUnipassUrl(i18n.language)
-                )}`
-              )
-            }}
-          >
-            <QuestionSvg />
-            <span>{t('help.question')}</span>
-          </div>
         </>
       )
     }
@@ -377,7 +362,7 @@ export const AddressCollector: React.FC = () => {
         <p>{t('addresses.continue')}</p>
         <LoginButton
           onClick={() => {
-            history.push(RoutePath.Explore)
+            history.push(RoutePath.NFTs)
           }}
         >
           {t('addresses.explore')}
@@ -391,7 +376,6 @@ export const AddressCollector: React.FC = () => {
     isUnipassLogining,
     isMetamaskLoging,
     loginBtnOnClick,
-    i18n,
     desc,
     isFlashsignerLogin,
   ])

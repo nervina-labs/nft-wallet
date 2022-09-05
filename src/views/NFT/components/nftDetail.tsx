@@ -18,7 +18,6 @@ import { TokenClass } from '../../../models/class-list'
 import { ReactComponent as OwnedSealSvg } from '../../../assets/svg/owned-seal.svg'
 import { ReactComponent as OwnedSealENSvg } from '../../../assets/svg/owned-seal-en.svg'
 import { ReactComponent as AvatarVerifiedSvg } from '../../../assets/svg/avatar-verified.svg'
-import { Follow } from '../../../components/Follow'
 import { useTranslation } from 'react-i18next'
 import { useRouteQuery } from '../../../hooks/useRouteQuery'
 import { useCallback, useState } from 'react'
@@ -28,12 +27,11 @@ import { HolderList } from './holdersList'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 import FallbackAvatarSrc from '../../../assets/svg/fallback.svg'
 import { isSupportWebp } from '../../../utils'
-import { Tag, TagLabel } from '@chakra-ui/react'
+// import { Tag, TagLabel } from '@chakra-ui/react'
 import { RoutePath } from '../../../routes'
 import { trackLabels, useTrackClick } from '../../../hooks/useTrack'
 import styled from 'styled-components'
 import { Description } from './description'
-import { PackEventInfo } from './packEventInfo'
 
 const LinkFlex = styled(Link)`
   display: flex;
@@ -108,9 +106,6 @@ const NftDetailTab: React.FC<{
       <TabPanels minH="200px">
         <TabPanel p="20px">
           <SkeletonText isLoaded={!isLoading} spacing={4} noOfLines={3}>
-            {detail?.pack_event_info ? (
-              <PackEventInfo packEventInfo={detail.pack_event_info} />
-            ) : null}
             <Description description={detail?.description} />
           </SkeletonText>
         </TabPanel>
@@ -159,8 +154,6 @@ export const NftDetail: React.FC<{
     !detail?.is_issuer_banned &&
     detail?.verified_info?.is_verified
 
-  const trackFollow = useTrackClick('nft-detail-follow', 'click')
-
   return (
     <Box py="20px">
       <SkeletonText isLoaded={!isLoading} noOfLines={2} spacing={2} px="20px">
@@ -184,11 +177,11 @@ export const NftDetail: React.FC<{
                 unlimitedText={t('common.limit.unlimit')}
                 locale={i18n.language}
               />
-              {detail?.is_redeemed ? (
+              {/* {detail?.is_redeemed ? (
                 <Tag variant="outline" size="sm" colorScheme="green" ml="15px">
                   <TagLabel>{t('exchange.redeemed')}</TagLabel>
                 </Tag>
-              ) : null}
+              ) : null} */}
             </Flex>
           </Box>
           {isOwned && isNft ? (
@@ -200,7 +193,7 @@ export const NftDetail: React.FC<{
       </SkeletonText>
 
       <Grid
-        templateColumns="calc(100% - 100px) auto"
+        templateColumns="calc(100% - 65px) auto"
         mt="25px"
         px="20px"
         cursor="pointer"
@@ -241,7 +234,7 @@ export const NftDetail: React.FC<{
               direction="column"
               h="100%"
               ml="18px"
-              w="calc(100% - 48px - 18px)"
+              w="calc(100%)"
             >
               <Box
                 fontSize="14px"
@@ -266,19 +259,6 @@ export const NftDetail: React.FC<{
             </Flex>
           )}
         </LinkFlex>
-        <Flex justifyContent="flex-end">
-          <Skeleton isLoaded={!isLoading} borderRadius="12px" my="auto">
-            <Follow
-              followed={detail?.issuer_info?.issuer_followed === true}
-              uuid={detail?.issuer_info?.uuid ?? ''}
-              afterToggle={async () => {
-                trackFollow(uuid)
-                await refetch()
-              }}
-              isPrimary
-            />
-          </Skeleton>
-        </Flex>
       </Grid>
 
       <NftDetailTab

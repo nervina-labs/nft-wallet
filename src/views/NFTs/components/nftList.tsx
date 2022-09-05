@@ -22,7 +22,10 @@ export const NftList: React.FC<{
 }> = ({ address, isHolder }) => {
   const api = useAPI()
   const { t } = useTranslation('translations')
-  const [listType, setListType] = useRouteQuerySearch<ListType>('list', 'owned')
+  const [listType, setListType] = useRouteQuerySearch<ListType>(
+    '_list',
+    'owned'
+  )
   const filterIndex = ListTypeSet.findIndex((l) => l === listType)
   const { walletType } = useAccount()
   const displayAddress = useMemo(() => {
@@ -83,6 +86,7 @@ export const NftList: React.FC<{
           className="filters"
           top={!isHolder ? '0' : `${HEADER_HEIGHT}px`}
           position="sticky"
+          display="none"
         >
           <Tab
             onClick={() => {
