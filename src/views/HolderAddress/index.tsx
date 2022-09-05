@@ -2,9 +2,9 @@ import React from 'react'
 import { Info } from '../Info'
 import { Appbar, AppbarSticky } from '../../components/Appbar'
 import { useParams } from 'react-router'
-import { ReactComponent as FullLogo } from '../../assets/svg/full-logo.svg'
 import { RainbowBackground } from '../../components/RainbowBackground'
-import { Box, Center } from '@chakra-ui/react'
+import { Box, Center, Image } from '@chakra-ui/react'
+import FullLogo from '../../assets/img/new-logo.png'
 
 export const HolderAddress: React.FC = () => {
   const { address } = useParams<{ address: string }>()
@@ -21,8 +21,8 @@ export const HolderAddress: React.FC = () => {
       <Box position="relative" zIndex={2} px="24px" pb="30px">
         <Info address={address} />
       </Box>
-      <Center pb="20px" mt="auto">
-        <FullLogo />
+      <Center pb="50px" mt="auto">
+        <Image src={FullLogo} w="auto" h="36px" />
       </Center>
     </RainbowBackground>
   )

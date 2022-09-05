@@ -1,14 +1,13 @@
 {
   "translations": {
     "common": {
-      "beian": "浙ICP备2021006943号-3",
       "login": "Connect to the identity manager",
       "geetest-error": "Verification error, please refresh the page and try again",
       "actions": {
         "confirm": "Confirm",
         "cancel": "Cancel",
         "loading": "Loading",
-        "pull-to-down": "No More Digital Collection",
+        "pull-to-down": "No More NFT",
         "pull-down-refresh": " Pull down to refresh",
         "release-refresh": " Release to refresh"
       },
@@ -36,32 +35,32 @@
         "long-press-to-save": "Long press to save",
         "poster": {
           "desc-1": "Scan the QR code",
-          "desc-nft": "Enjoy the Digital Collection",
-          "desc-holder": "To see the MIBAO Collector I found",
-          "desc-my": "Come and see my Digital Collections at MIBAO",
-          "desc-issuer": "Enjoy the Digital Works of the MIBAO Creators",
+          "desc-nft": "Enjoy the NFT",
+          "desc-holder": "To see the NFT Collector I found",
+          "desc-my": "Come and see my NFTs at Token.city",
+          "desc-issuer": "Enjoy the NFTs of the Creators",
           "collected": "Collected"
         },
         "wx": {
           "nft": {
             "title": "",
-            "desc": "Enjoy this Digital Collection"
+            "desc": "Enjoy this NFT"
           },
           "issuer": {
             "title": "{{name}}’s homepage",
-            "desc": "Enjoy the Digital Works of this MIBAO Creator."
+            "desc": "Enjoy the Digital Works of this Creator."
           },
           "collector": {
             "title": "{{name}}’s homepage",
-            "desc": "Enjoy the Digital Collections of this MIBAO Collector."
+            "desc": "Enjoy the NFTs of this Collector."
           },
           "home": {
             "title": "{{name}}’s homepage",
-            "desc": "Enjoy my Digital Collections on MIBAO."
+            "desc": "Enjoy my NFTs on Token.city."
           },
           "others": {
-            "title": "MIBAO - Build value layer for metaverse",
-            "desc": "Compliance, easy-to-use, real-chain Digital Collection solutions."
+            "title": "Token.city - Build value layer for metaverse",
+            "desc": "Compliance, easy-to-use, real-chain NFT solutions."
           }
         }
       },
@@ -74,15 +73,15 @@
         "weibo-no-desc": "Weibo verification"
       },
       "baned": {
-        "nft": "Invalid Digital Collection",
+        "nft": "Invalid NFT",
         "issuer": "Invalid creator",
-        "pack-event": "Invalid Collection"
+        "pack-event": "Invalid NFT"
       },
       "colon": ":",
-      "title": "MIBAO",
-      "description": "View and manage your Digital Collections anytime, anywhere",
+      "title": "Token.city",
+      "description": "View and manage your NFTs anytime, anywhere",
       "img-lost": "Image lost",
-      "card-back": "Include card back content which can only be revealed by the owner of this collection",
+      "card-back": "Include card back content which can only be revealed by the owner of this NFT",
       "show-detail": "Show Detail",
       "3d": {
         "tips-title": "TIPS: ",
@@ -90,18 +89,18 @@
       }
     },
     "search": {
-      "search-placeholder": "Search Digital Collection or Creator",
+      "search-placeholder": "Search NFT or Creator",
       "search-placeholder-issuer": "Search Creator",
-      "search-placeholder-token-class": "Search Digital Collection",
+      "search-placeholder-token-class": "Search NFT",
       "cancel": "Cancel",
       "issuer": "Creator",
-      "token-class": "Digital Collection",
-      "more-token-class": "More Digital Collections",
+      "token-class": "NFT",
+      "more-token-class": "More NFTs",
       "more-issuer": "More Creators",
       "no-data": "No data"
     },
     "login": {
-      "title": "MIBAO",
+      "title": "Token.city",
       "select": "Select your connection method",
       "connect": {
         "unipass": "Connect to UniPass",
@@ -118,21 +117,17 @@
       },
       "slides": {
         "1": {
-          "line-1": "Share Digital Collection",
+          "line-1": "Share NFT",
           "line-2": "With your friends"
         },
         "2": {
-          "line-1": "Manage your Digital Collections",
-          "line-2": "Explore Metaverse"
-        },
-        "3": {
-          "line-1": "View and manage your Digital Collections",
+          "line-1": "View and manage your NFTs",
           "line-2": "Anywhere, anytime"
         }
       }
     },
     "nfts": {
-      "title": "My Digital Collections",
+      "title": "My NFTs",
       "owned": "Owned",
       "liked": "Liked",
       "status": {
@@ -140,18 +135,18 @@
         "receiving": "Receiving",
         "tranferring": "Transferring"
       },
-      "no-data": "Awwww... You do not yet own any Digital Collection",
-      "no-likes": "You have not yet liked any Digital Collection",
-      "link": "Explore Digital Collection Meta-universe",
-      "welcome": "Welcome to Digital Collection universe",
+      "no-data": "Awwww... You do not yet own any NFT",
+      "no-likes": "You have not yet liked any NFT",
+      "link": "Explore NFT Meta-universe",
+      "welcome": "Welcome to NFT universe",
       "hi": "Hi, Collector",
       "share": "Share",
-      "pack-event": "Collections",
+      "pack-event": "NFTs",
       "pack-event-text": {
         "collecting": "Collecting",
         "collected": "Completed",
         "collection-progress": "Collection progress",
-        "total": "• {{total}} collections"
+        "total": "• {{total}} NFTs"
       },
       "no-pack-event": "You havn't participated in any collection yet",
       "no-more-pack-event": "No More Collection"
@@ -168,20 +163,20 @@
         "unipass-v2": "The recipient address is currently recognized as a Unipass v2 generated address, please use the address generated by the new Unipass v3 version",
         "eth": "Please enter the correct Ethereum address",
         "ckb": "Please enter the correct CKB address",
-        "self": "Unable to transfer Digital Collection to yourself",
+        "self": "Unable to transfer NFT to yourself",
         "das": "Please enter DAS and select a result",
-        "receive-eth": "This address is an Ethereum address, please remind the receiver to open MIBAO with Ethereum wallet to view the Collection received",
+        "receive-eth": "This address is an Ethereum address, please remind the receiver to open Token.city with Ethereum wallet to view the NFT received",
         "common": "Please enter the correct CKB address/ETH address/DAS Account",
-        "short-address": "This address is not generated by Mibao. Do not use CKB addresses generated by other applications such as exchanges",
+        "short-address": "This address is not generated by Token.city. Do not use CKB addresses generated by other applications such as exchanges",
         "sign-fail": "Transaction rejected",
         "tranfer-fail": "Fail to send transaction, please check network conditions and resend",
         "no-camera": "No camera found",
-        "contract-address": "Unable to transfer Digital Collection to an Ethereum contract address",
+        "contract-address": "Unable to transfer NFT to an Ethereum contract address",
         "camera-auth": "No camera permission, please refresh the page to re-authorize",
         "ios-webkit": "Please upgrade your operating system to iOS 14.3+, or use Safari to scan QR code",
         "upgrade": "Please wait 2-3 minutes before proceeding to upgrade your NFT account.",
         "continuous-transfer": "A transaction is currently in progress, please wait 2-3 minutes before proceeding.",
-        "cota-not-ready": "To provide a better experience, we are upgrading and deploying the CoTA Smart Contract for the MIBAO accounts with the first transfer action, <b>which may take a few minutes.<b/>\n Please try again later :)",
+        "cota-not-ready": "To provide a better experience, we are upgrading and deploying the CoTA Smart Contract for the Token.city accounts with the first transfer action, <b>which may take a few minutes.<b/>\n Please try again later :)",
         "cota-status": "Can not transfer this NFT。Error code：{{code}}",
         "cota-not-ready-ok": "OK",
         "cota-bug": "There is a known bug in the CoTA script, we’re sorry that you cannot proceed the action now. It should take 1~2 weeks to fix the bug. Your assets are safe, you could transfer the NFTs as soon as we fixed the bug. Thanks for your understanding."
@@ -206,7 +201,7 @@
     "404": {
       "title": "Page is missing",
       "not-found": "The page you are looking for does not exist",
-      "back": "Back to my Collection"
+      "back": "Back to my NFT"
     },
     "transactions": {
       "no-data": "No record...",
@@ -219,17 +214,17 @@
       }
     },
     "info": {
-      "title": "Use this address to receive Digital Collection",
+      "title": "Use this address to receive NFT",
       "copy": "Copy",
       "copied": "Copied"
     },
     "nft": {
-      "title": "Digital Collection Details",
+      "title": "NFT Details",
       "transfer": "Transfer",
       "desc": "Desc",
       "transaction-history": "Tx Logs",
       "tx_hash": "Tx Hash",
-      "lock": "Include card back content which can only be revealed by the owner of this collection",
+      "lock": "Include card back content which can only be revealed by the owner of this NFT",
       "no-desc": "No description",
       "no-holder": "No collector",
       "holder": "Collectors",
@@ -238,7 +233,7 @@
       "no-more-transaction-history": "No more logs",
       "external-product": {
         "go-to-see": "Take a look",
-        "not-official-website": "This is not an official MIBAO page，confirm that you want to visit this page.",
+        "not-official-website": "This is not an official Token.city page，confirm that you want to visit this page.",
         "upcoming-visit": "You're going to visit this page.",
         "go-to-link": "Continue"
       },
@@ -257,7 +252,7 @@
       "info": "Address",
       "transactions": "Activity",
       "warning": "This address only supports Nervos assets, please do not receive other chain assets",
-      "qrcode": "Use this QR code to receive Digital Collection",
+      "qrcode": "Use this QR code to receive NFT",
       "address": "CKB address"
     },
     "holder": {
@@ -274,7 +269,7 @@
       "description": "Description",
       "input": "Please enter",
       "select": "Please select ",
-      "choose-nft-avatar": "Choose Collection",
+      "choose-nft-avatar": "Choose NFT",
       "user-name": {
         "edit": "Edit Name",
         "desc": "2-24 characters",
@@ -299,7 +294,7 @@
       "avatar": {
         "camera": "Take a Photo",
         "photo-lib": "Pick from Library",
-        "nft": "Choose Collection as Avatar"
+        "nft": "Choose NFT as Avatar"
       },
       "save": "Save",
       "cancel": "Cancel",
@@ -327,11 +322,10 @@
       "recommended": "Recommended",
       "hotest": "Hot",
       "title-recommended": "Recommended",
-      "collections": "Featured by Mibao",
+      "collections": "Featured by Token.city",
       "issuers": "Hot Creators",
       "home": "Home",
-      "more": "More",
-      "warning": "Mibao wallet is going to upgrade the brand and domain name to <a>token.city</a>. During the upgrade progress, the service may suffer unavailable temporarily, your data and assets will stay intact."
+      "more": "More"
     },
     "menu": {
       "profile": "Profile",
@@ -350,11 +344,11 @@
     "guide": {
       "one": {
         "title": "1. View CKB address",
-        "desc": "Click to view the address. Use this address to receive Digital Collection"
+        "desc": "Click to view the address. Use this address to receive NFT"
       },
       "two": {
-        "title": "2. View my Collections",
-        "desc": "Here you can view the Digital Collections you own and liked"
+        "title": "2. View my NFTs",
+        "desc": "Here you can view the NFTs you own and liked"
       },
       "three": {
         "title": "3. More functions",
@@ -370,16 +364,16 @@
     "apps": {
       "welcome": "Welcome to settle in and build the ecosystem together",
       "shop": {
-        "title": "Mibao Shop",
-        "desc": "Buy and hold your Digital Collection"
+        "title": "NFT Shop",
+        "desc": "Buy and hold your NFT"
       },
       "red-envelope": {
         "title": "Send Red Pocket",
-        "desc": "Send Collection red pockets"
+        "desc": "Send NFT red pockets"
       },
       "ticket": {
         "title": "UniPass Ticket",
-        "desc": "Show your Collections ticket, get the follow-up utility"
+        "desc": "Show your NFTs ticket, get the follow-up utility"
       },
       "dao": {
         "title": "Mi·DAO",
@@ -387,7 +381,7 @@
       },
       "exchange": {
         "title": "Prize Redeem",
-        "desc": "Collect Digital Collections to redeem prize"
+        "desc": "Collect NFTs to redeem prize"
       },
       "exhibition": {
         "title": "Exhibition hall",
@@ -395,7 +389,7 @@
       },
       "vip": {
         "title": "VIP Community",
-        "desc": "Only can be accessed by holding a special Digital Collection"
+        "desc": "Only can be accessed by holding a special NFT"
       }
     },
     "resource": {
@@ -411,7 +405,7 @@
       "submited": "The address has been submitted successfully！",
       "duplicate": "The address has already been submitted",
       "continue": "You can",
-      "explore": "Explore More Digital Collections",
+      "explore": "Explore More NFTs",
       "select": "Please select one method (automatically submit after successful connection)",
       "errors": {
         "not-support": "The current environment does not support connecting to Ethereum",
@@ -425,16 +419,16 @@
       "ok": "OK"
     },
     "shop": {
-      "title": "Mibao Shop",
+      "title": "NFT Shop",
       "scan": "Scan by Wechat",
-      "desc": "Enter Mibao Shop",
+      "desc": "Enter NFT Shop",
       "save": "Save Image",
       "buy": "Buy",
       "sold-out": "Sold out"
     },
     "claim": {
-      "nft-name": "Collection",
-      "collection": "Collection",
+      "nft-name": "NFT",
+      "collection": "NFT",
       "home": "My {{collection}}",
       "tips": "You have a {{nftName}} to be claimed",
       "login": "Please log in first",
@@ -445,7 +439,7 @@
       "success": "Claimed successfully",
       "claimed": "Opps～this {{collection}} has already been claimed",
       "go-home": "Check out my {{collection}} now",
-      "go-explore": "Go check out my Digital Collection",
+      "go-explore": "Go check out my NFT",
       "placeholder": "Please enter the claim code"
     },
     "issuer": {
@@ -457,24 +451,24 @@
       "like": "Like",
       "no-data": "No data",
       "more": "More",
-      "sale-empty": "Ahhh ~ No Digaital Collection on sale",
-      "empty": "Ahhh ~ The issuer haven't created Digital Collection yet",
+      "sale-empty": "Ahhh ~ No NFT on sale",
+      "empty": "Ahhh ~ The issuer haven't created NFT yet",
       "pack-event-count": "Contain {{count}} works",
-      "no-pack-events": "Ahhh ~ The issuer haven't created Collection yet"
+      "no-pack-events": "Ahhh ~ The issuer haven't created NFT yet"
     },
     "exchange": {
-      "home": "My collection",
+      "home": "My NFT",
       "title": "Redeem Center",
       "count": "{{count}}",
       "redeemed": "Redeemed",
       "not-on-chain": "Your NFT is still being received, please try again later",
       "flashsigner": "Flashsigner users are not supported to participate in the redemption for now. Please pay attention to the community notice as it will be supported in the near future.",
-      "nft-prize": "The prize includes all the following Digital Collections",
-      "blind-prize": "The prize randomly includes {{count}} Digital Collections below",
+      "nft-prize": "The prize includes all the following NFTs",
+      "blind-prize": "The prize randomly includes {{count}} NFTs below",
       "other-prize": "The organizer will give out the prize after you submit the redeem",
       "redeem-time": "Time: ",
       "type": {
-        "token": "Digital Collection",
+        "token": "NFT",
         "blind_box": "Mystery Box",
         "custom": "Others"
       },
@@ -514,12 +508,12 @@
         }
       },
       "alert": {
-        "normal-title": "Redemption will not destroy the Digital Collection you participate in redemption",
-        "destroy-title": "Redemption will destroy your Digital Collection participating in the redemption",
-        "normal-desc": "It will be marked, and the marked Digital Collection cannot participate in other exchanges again.",
+        "normal-title": "Redemption will not destroy the NFT you participate in redemption",
+        "destroy-title": "Redemption will destroy your NFT participating in the redemption",
+        "normal-desc": "It will be marked, and the marked NFT cannot participate in other exchanges again.",
         "destroy-desc": "This operation is irreversible and cannot be retrieved once destroyed.",
-        "normal": "The Digital Collection participating in the activity will be still owned by redeemer but marked as redeemed on chain. Redeemed Digital Collection cannot be involved in other redeem activities anymore.",
-        "destroy": "The Digital Collection participating in the activity will be destroyed and cannot be retrieved once destroyed.",
+        "normal": "The NFT participating in the activity will be still owned by redeemer but marked as redeemed on chain. Redeemed NFT cannot be involved in other redeem activities anymore.",
+        "destroy": "The NFT participating in the activity will be destroyed and cannot be retrieved once destroyed.",
         "confirm": "Confirm",
         "cancel": "Cancel"
       },
@@ -560,15 +554,15 @@
           "price": "Prizes",
           "requirement": "Rules"
         },
-        "condition": "Only users who own the following Digital Collections can participate in the activity"
+        "condition": "Only users who own the following NFTs can participate in the activity"
       },
       "condition": {
-        "nft": "Digital Collection",
+        "nft": "NFT",
         "needed": "Need to own",
         "held": "Owned"
       },
-      "warning": "The Digital Collection participating in the activity will be still owned by redeemer but marked as redeemed on chain. Redeemed Digital Collection cannot be involved in other redeem activities anymore",
-      "warning-destroyed": "The Digital Collections participating in the activity will be destroyed and cannot be retrieved once destroyed",
+      "warning": "The NFT participating in the activity will be still owned by redeemer but marked as redeemed on chain. Redeemed NFT cannot be involved in other redeem activities anymore",
+      "warning-destroyed": "The NFTs participating in the activity will be destroyed and cannot be retrieved once destroyed",
       "check": {
         "price": "View prizes",
         "comment": " View prizes and comments",
@@ -588,7 +582,7 @@
         "go-back": "Back to redeem center",
         "error": "Please check your network and redeem rules",
         "redeeming": "Redeeming",
-        "succeed-desc": "You have redeemed successfully\nclick the button to view the redeemed Digital Collection"
+        "succeed-desc": "You have redeemed successfully\nclick the button to view the redeemed NFT"
       }
     },
     "orders": {
@@ -618,7 +612,7 @@
       "paid-payment": "Final pay: ",
       "needed-payment": "Pay: ",
       "success": "Paid successfully",
-      "send-soon": "Digital Collection will be sent to your address soon",
+      "send-soon": "NFT will be sent to your address soon",
       "be-patient": "Please be patient",
       "check": "Check my order",
       "countdown": "Please pay within {{minutes}} minites {{seconds}} seconds, overtime orders will be automatically closed",
@@ -635,7 +629,7 @@
         "confirm-title": "Payment",
         "select-more": "More",
         "channel": "Payment method",
-        "warning": "Please complete the payment within 5 minutes. After the payment is successful, the system will automatically send the Digital Collection to your address. This process may take 2-3 minutes, please be patient.",
+        "warning": "Please complete the payment within 5 minutes. After the payment is successful, the system will automatically send the NFT to your address. This process may take 2-3 minutes, please be patient.",
         "place-order-error": "The purchase failed, please check your network",
         "submit-order-error": "Failed to submit the order, please check your network",
         "reject-payment-error": "Payment error, please pay again",
@@ -651,7 +645,7 @@
         "cancel-confirm": "Continue",
         "cancel-quit": "Cancel",
         "delete-title": "Cancel the order?",
-        "delete-desc": "Your order has been submitted successfully\nIf you cancel the order, you will not receive the Digital Collection",
+        "delete-desc": "Your order has been submitted successfully\nIf you cancel the order, you will not receive the NFT",
         "delete-confirm": "Pay",
         "delete-quit": "Cancel",
         "contact": "For order questions, please contact:",
@@ -677,17 +671,17 @@
       "count": "• Following {{count}} creators",
       "end": "The end~",
       "login": {
-        "desc-1": "Oops ~ You have not connected to your identity manager, please connect to MIBAO and enjoy the collections you following",
+        "desc-1": "Oops ~ You have not connected to your identity manager, please connect to Token.city and enjoy the NFTs you following",
         "desc-2": "",
         "login": "Connect"
       },
       "no-data": "You haven't followed any creators",
-      "no-on-sale": "There are no collections on sale",
+      "no-on-sale": "There are no NFTs on sale",
       "let-s-go-to-explore": "Let's go to explore"
     },
     "red-envelope": {
-      "title-normal": "You have a mystery box Red Packet with Digital Collection to receive.",
-      "title-riddle": "You have a riddle Red Packet with Digital Collection to receive.",
+      "title-normal": "You have a mystery box Red Packet with NFT to receive.",
+      "title-riddle": "You have a riddle Red Packet with NFT to receive.",
       "hidden-model": "Special Edition",
       "from-red-envelope": "The Red Packet from {{username}}",
       "promotion-link": "Check out my Red Packet",
@@ -703,12 +697,12 @@
       "message-closed": "The Red Packet has been closed by the generator.",
       "message-expired": "The Red Packet is no longer valid.",
       "message-empty": "Came too late, good luck next time",
-      "message-succeed": "Congratulations! You got the digital collection",
+      "message-succeed": "Congratulations! You got the NFT",
       "message-already-opened": "You have already grabbed this red packet",
       "error-conditions": "Does not meet the requirement",
       "error-password": "The secret signal is wrong. Try it again.",
       "error-puzzle": "The answer is wrong. Guess it again.",
-      "default-promotion-copy": "View my collected digital collections",
+      "default-promotion-copy": "View my collected NFTs",
       "try-again": "Oops.. an error occurred. Try it again.",
       "connect-and-open-it": "Connect and open it",
       "generating": "The red envelope is still being generated. It will come soon……",
@@ -730,9 +724,9 @@
         "puzzle": "Riddle"
       },
       "form-items": {
-        "select-nft": "Select collections",
-        "select-nft-title": "Select the collections",
-        "select-nft-search": "Search Digital Collection or Issuer",
+        "select-nft": "Select NFTs",
+        "select-nft-title": "Select the NFTs",
+        "select-nft-search": "Search NFT or Issuer",
         "ok": "Next",
         "total": "Total: {{total}}",
         "reward-amount": "Quantity of Red Packet",
@@ -748,13 +742,13 @@
         "submit": "Generate"
       },
       "toast": {
-        "not-nft": "No collections selects",
+        "not-nft": "No NFTs selects",
         "not-amount": "The quantity of Red Packet is not filled in",
         "not-puzzle-question": "The quantity of riddle is not filled in",
         "not-puzzle-answer": "The quantity of answer is not filled in"
       },
       "create-failed": "Create failed",
-      "total-nft": "Total {{total}} collections"
+      "total-nft": "Total {{total}} NFTs"
     },
     "share-red-envelope": {
       "title": "Share Red Packet",
@@ -800,14 +794,14 @@
       "progress": "Progress",
       "received": "Been received: ",
       "unopened": "unopened: ",
-      "contains-the-following-collections": "Contains the following collections",
+      "contains-the-following-collections": "Contains the following NFTs",
       "item-received": "Been received",
       "item-unreceived": "not been receiving",
-      "collections-received": "Collections Received",
+      "collections-received": "NFTs Received",
       "received-time": "Received Time: "
     },
     "pwa-guide": {
-      "desc": "Add MIBAO to the desktop for the best experience and no longer miss these unique artworks.",
+      "desc": "Add Token.city to the desktop for the best experience and no longer miss these unique artworks.",
       "ok": "OK",
       "step-1": "1.click the",
       "step-2": {
@@ -820,7 +814,7 @@
       "collected": "Completed",
       "has-token-class": "Contain: ",
       "special-token-class": "Special editions: ",
-      "collecting-digital-collection-sets": "Collecting Digital Collections",
+      "collecting-digital-collection-sets": "Collecting NFTs",
       "let-go-to-collect": "Join me to collect"
     }
   }

@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Center,
-  Flex,
   Grid,
   Skeleton,
   SkeletonCircle,
@@ -13,8 +12,7 @@ import {
 import React, { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router'
 import { useIssuerInfo } from '../hooks/useIssuerInfo'
-import { Follow } from '../../../components/Follow'
-import { formatCount, isSupportWebp } from '../../../utils'
+import { isSupportWebp } from '../../../utils'
 import { useTranslation } from 'react-i18next'
 import { SocialMediaType } from '../../../models/issuer'
 import { Description } from './description'
@@ -30,11 +28,6 @@ import TwitterSvg from '../../../assets/svg/issuer-twitter.svg'
 import styled from 'styled-components'
 import { Redirect } from 'react-router-dom'
 import { RoutePath } from '../../../routes'
-import {
-  trackLabels,
-  useTrackClick,
-  useTrackDidMount,
-} from '../../../hooks/useTrack'
 import { HEADER_HEIGHT } from '../../../components/Appbar'
 
 const IssuerIcon = styled.div`
@@ -61,39 +54,13 @@ const SocialMediaIconMap: { [key in SocialMediaType]: string } = {
   twitter: TwitterSvg,
 }
 
-const FollowerWithLike: React.FC<{
-  follows: number
-  likes: number
-}> = ({ follows, likes }) => {
-  const { t, i18n } = useTranslation('translations')
-  return (
-    <Flex bg="var(--input-bg-color)" h="88px" borderRadius="22px">
-      <Stack h="60px" my="auto" w="50%" spacing={0}>
-        <Center fontSize="24px">{formatCount(follows, i18n.language)}</Center>
-        <Center color="var(--secondary-font-color)" fontSize="14px">
-          {t('issuer.follower')}
-        </Center>
-      </Stack>
-      <Box h="64px" bg="#e1e1e1" w="1px" my="auto" />
-      <Stack h="60px" my="auto" w="50%" spacing={0}>
-        <Center fontSize="24px">{formatCount(likes, i18n.language)}</Center>
-        <Center color="var(--secondary-font-color)" fontSize="14px">
-          {t('issuer.like')}
-        </Center>
-      </Stack>
-    </Flex>
-  )
-}
-
 export const IssuerInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { t } = useTranslation('translations')
-  const { data, refetch, isLoading, error, failureCount } = useIssuerInfo(id)
+  const { data, isLoading, error, failureCount } = useIssuerInfo(id)
   const gotoMetaUrl = useCallback((url: string) => {
     window.location.href = url
   }, [])
-  useTrackDidMount('issuer', id)
-  const trackSNS = useTrackClick('issuer', 'click')
   const socialMediaIcons = useMemo(() => {
     return data?.social_media?.map((media, i) => (
       <Center
@@ -105,7 +72,6 @@ export const IssuerInfo: React.FC = () => {
         textAlign="center"
         lineHeight="30px"
         onClick={() => {
-          trackSNS(media.social_type)
           gotoMetaUrl(media.url)
         }}
         key={i}
@@ -117,9 +83,7 @@ export const IssuerInfo: React.FC = () => {
         />
       </Center>
     ))
-  }, [data?.social_media, gotoMetaUrl, trackSNS])
-
-  const trackFollow = useTrackClick('issuer-follow', 'click')
+  }, [data?.social_media, gotoMetaUrl])
 
   if (error && failureCount >= 3) {
     return <Redirect to={RoutePath.NotFound} />
@@ -176,19 +140,6 @@ export const IssuerInfo: React.FC = () => {
                 )}
               </Box>
             </SkeletonText>
-            <Flex justifyContent="flex-end">
-              <Skeleton isLoaded={!isLoading} borderRadius="12px">
-                <Follow
-                  followed={data?.issuer_followed === true}
-                  uuid={id}
-                  afterToggle={async () => {
-                    trackFollow(trackLabels.issuer.follow)
-                    await refetch()
-                  }}
-                  isPrimary
-                />
-              </Skeleton>
-            </Flex>
           </Grid>
         </Grid>
 
@@ -213,13 +164,6 @@ export const IssuerInfo: React.FC = () => {
             <Description content={data?.description} />
           ) : null}
         </SkeletonText>
-
-        <Skeleton isLoaded={!isLoading} borderRadius="22px">
-          <FollowerWithLike
-            likes={data?.issuer_likes ?? 0}
-            follows={data?.issuer_follows ?? 0}
-          />
-        </Skeleton>
 
         <Stack align="center" direction="row" justify="center">
           {isLoading && !socialMediaIcons && (

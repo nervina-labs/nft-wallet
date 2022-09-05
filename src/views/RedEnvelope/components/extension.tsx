@@ -6,8 +6,9 @@ import {
   VStack,
   Text,
   Image,
+  Box,
 } from '@chakra-ui/react'
-import { ReactComponent as MyNftSvg } from '../../../assets/svg/red-envelope-icon/my-nft.svg'
+import { ReactComponent as MyNftSvg } from '../../../assets/svg/logo-pi.svg'
 import { ReactComponent as RedEnvelopeSvg } from '../../../assets/svg/red-envelope-icon/red-envelope.svg'
 import { ReactComponent as FollowUsSvg } from '../../../assets/svg/red-envelope-icon/follow-us.svg'
 import NervinaWxOfficialAccountQrcodePath from '../../../assets/img/nervina-wx-official-account-qrcode.jpg'
@@ -40,7 +41,9 @@ export const Extension: React.FC<{ greeting?: string }> = ({ greeting }) => {
         <Link to={RoutePath.NFTs}>
           <VStack>
             <Center rounded="18px" w="58px" h="58px" bg="white">
-              <MyNftSvg />
+              <Box w="36px" h="36px">
+                <MyNftSvg />
+              </Box>
             </Center>
             <Center>{t('red-envelope.icons.my-collections')}</Center>
           </VStack>

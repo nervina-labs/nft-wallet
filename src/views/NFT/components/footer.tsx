@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Box, Like } from '@mibao-ui/components'
+import { Box } from '@mibao-ui/components'
 import { useTranslation } from 'react-i18next'
-import { useLike } from '../../../hooks/useLikeStatus'
 import { isTokenClass, TokenClass } from '../../../models/class-list'
 import { NFTDetail } from '../../../models/nft'
 import { useHistory } from 'react-router-dom'
@@ -182,16 +181,6 @@ export const Footer: React.FC<{
   detail?: NFTDetail | TokenClass
   isClass?: boolean
 }> = ({ detail, uuid, hidden, isClass }) => {
-  const { i18n } = useTranslation('translations')
-  const { likeCount, isLikeLoading, toggleLike, isLiked } = useLike({
-    count: Number(detail?.class_likes) ?? 0,
-    liked: detail?.class_liked || false,
-    locale: i18n.language,
-    uuid: (detail as NFTDetail)?.class_uuid ?? uuid,
-  })
-
-  const trackLike = useTrackClick('nft-detail', 'click')
-
   return (
     <>
       <Flex
@@ -217,17 +206,7 @@ export const Footer: React.FC<{
         borderTop="1px solid #e1e1e1"
         zIndex={5}
       >
-        <Like
-          likeCount={likeCount}
-          isLiked={isLiked}
-          isLoading={isLikeLoading}
-          onClick={async (e) => {
-            await toggleLike(e)
-            trackLike(trackLabels.nftDetail.like)
-          }}
-          my="auto"
-        />
-
+        <Box />
         <TranferOrBuy uuid={uuid} detail={detail} isClass={isClass} />
       </Flex>
       <Box h="94px" />

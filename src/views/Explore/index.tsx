@@ -1,7 +1,7 @@
 import { Box, Flex } from '@mibao-ui/components'
 import { Switch, Image as RowImage } from '@chakra-ui/react'
 import { Lite } from './components/lite'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { MainContainer } from '../../styles'
 import { Pro } from './components/pro'
 import { HiddenBarFill } from '../../components/HiddenBar'
@@ -10,16 +10,11 @@ import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import LogoPath from '../../assets/svg/explore-logo.svg'
 import { useTrackEvent, useTrackDidMount } from '../../hooks/useTrack'
 import { PwaGuide } from '../../components/PwaGuide'
-import { useConfirmDialog } from '../../hooks/useConfirmDialog'
-import { Trans, useTranslation } from 'react-i18next'
-import { atom, useAtom } from 'jotai'
-
-const isShowWarningAtom = atom(true)
+import { useAccountStatus } from '../../hooks/useAccount'
+import { Redirect } from 'react-router'
+import { RoutePath } from '../../routes'
 
 export const Explore: React.FC = () => {
-  const [t] = useTranslation('translations')
-  const confirmDialog = useConfirmDialog()
-  const [isShow, setIsShow] = useAtom(isShowWarningAtom)
   const [mode, setMode] = useRouteQuerySearch<'pro' | 'lite'>('mode', 'pro')
   const clickLite = useTrackEvent('explore', 'click', 'Lite')
   const onChangeMode = useCallback(() => {
@@ -31,26 +26,15 @@ export const Explore: React.FC = () => {
   useScrollRestoration()
 
   useTrackDidMount('explore')
+  const { isLogined } = useAccountStatus()
+  const isPro = mode === 'pro'
+  if (isLogined) {
+    return <Redirect to={RoutePath.NFTs} push={false} />
+  }
 
-  useEffect(() => {
-    if (isShow) {
-      confirmDialog({
-        type: 'text',
-        description: (
-          <Trans
-            i18nKey="explore.warning"
-            t={t}
-            components={{
-              a: <a style={{ color: '#4E52F5' }}></a>,
-            }}
-          />
-        ),
-      })
-
-      setIsShow(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isShow])
+  if (isPro) {
+    return <Redirect to={RoutePath.Login} push={false} />
+  }
 
   return (
     <MainContainer>

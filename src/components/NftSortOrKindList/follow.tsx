@@ -18,7 +18,6 @@ import { Link, useHistory } from 'react-router-dom'
 import { ReactComponent as EmptySvg } from '../../assets/svg/follow-empty.svg'
 import { ReactComponent as UnFollowSvg } from '../../assets/svg/unfollow.svg'
 import { isSupportWebp } from '../../utils'
-import { RoutePath } from '../../routes'
 import { useTrackEvent } from '../../hooks/useTrack'
 import styled from '@emotion/styled'
 
@@ -154,9 +153,6 @@ export const Follow: React.FC<{
           <Box color="#777E90" mb="16px">
             {t('follow.no-data')}
           </Box>
-          <Link to={RoutePath.Explore} style={{ textDecoration: 'underline' }}>
-            {t('follow.let-s-go-to-explore')}
-          </Link>
         </Box>
       }
       noMoreElement={t('common.actions.pull-to-down')}
