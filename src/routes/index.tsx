@@ -17,15 +17,12 @@ import { MibaoProvider, mibaoTheme } from '@mibao-ui/components'
 import { extendTheme } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import NFTFallbackImg from '../assets/img/nft-fallback.png'
-import { HiddenBar } from '../components/HiddenBar'
-import { useLite } from '../hooks/useLite'
 export * from './path'
 
 export const RouteSwitch: React.FC = () => {
   const { walletType } = useAccount()
   const { isLogined } = useAccountStatus()
   const { login } = useLogin()
-  const { isLite } = useLite()
   useEffect(() => {
     if (isLogined && walletType && walletType === WalletType.Metamask) {
       login(walletType).catch((e) => {
@@ -48,17 +45,16 @@ export const RouteSwitch: React.FC = () => {
         <Redirect
           exact
           from={RoutePath.Launch}
-          to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
+          to={isLogined ? RoutePath.NFTs : RoutePath.Login}
         />
         <Redirect
           exact
           from="/nfts"
-          to={isLogined ? RoutePath.NFTs : RoutePath.Explore}
+          to={isLogined ? RoutePath.NFTs : RoutePath.Login}
         />
         <Route path="/alipay.htm" />
         <Route component={NotFound} path="*" />
       </Switch>
-      {isLite ? null : <HiddenBar />}
     </>
   )
 }

@@ -75,6 +75,7 @@ export const NftCards: React.FC = () => {
           top={`${HEADER_HEIGHT}px`}
           zIndex={99}
           bg={'white'}
+          display="none"
         >
           <Tab
             onClick={async () =>

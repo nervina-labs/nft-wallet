@@ -7,7 +7,6 @@ import { RoutePath } from '../../routes'
 import { HiddenBarFill } from '../../components/HiddenBar'
 import { useScrollRestoration } from '../../hooks/useScrollRestoration'
 import { Container } from './styled'
-import { Intro } from '../../components/Intro'
 import { Info } from './info'
 import { useAccount, useAccountStatus, useAPI } from '../../hooks/useAccount'
 import { Appbar } from './components/appbar'
@@ -15,7 +14,6 @@ import { NftList } from './components/nftList'
 import { useTrackDidMount } from '../../hooks/useTrack'
 import { useWechatShare } from '../../hooks/useWechat'
 import { useTranslation } from 'react-i18next'
-import { useIsLiteAtom } from '../../hooks/useLite'
 import { useGetAndSetAuth, useProfile } from '../../hooks/useProfile'
 import { PwaGuide } from '../../components/PwaGuide'
 
@@ -34,7 +32,6 @@ export const NFTs: React.FC = () => {
   const wechatShare = useWechatShare()
   const [t] = useTranslation('translations')
   const matchHome = useRouteMatch(RoutePath.NFTs)
-  const [isLite] = useIsLiteAtom()
   const getAuth = useGetAndSetAuth()
   const { data: user, isLoading: isUserLoading } = useQuery(
     [Query.Profile, address, api, isAuthenticated],
@@ -58,20 +55,10 @@ export const NFTs: React.FC = () => {
     }
   )
 
-  const showGuide = useMemo(() => {
-    if (isUserLoading) {
-      return false
-    }
-    return !user?.guide_finished && isAuthenticated
-  }, [user, isUserLoading, isAuthenticated])
-
   useTrackDidMount(isHolder ? 'home' : 'collector')
 
   if (!isLogined && !isHolder) {
-    if (isLite) {
-      return <Redirect to={RoutePath.Login} />
-    }
-    return <Redirect to={RoutePath.Explore} />
+    return <Redirect to={RoutePath.Login} />
   }
   if (params.address === localAddress && isLogined) {
     return <Redirect to={RoutePath.NFTs} />
@@ -89,7 +76,6 @@ export const NFTs: React.FC = () => {
       <NftList isHolder={isHolder} address={address} />
       {!isHolder && (
         <>
-          <Intro show={showGuide} />
           <HiddenBarFill />
           <PwaGuide />
         </>
