@@ -21,7 +21,7 @@ i18n.use(initReactI18next).init({
 })
 
 if (browserLanguage === 'en') {
-  document.title = 'Mibao'
+  document.title = 'Token City'
 }
 
 export default i18n
