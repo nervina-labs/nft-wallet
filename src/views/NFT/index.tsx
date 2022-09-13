@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { addressToScript } from '@nervosnetwork/ckb-sdk-utils'
 import { Appbar } from '../../components/Appbar'
 import { ReactComponent as BackSvg } from '../../assets/svg/back.svg'
 import { ReactComponent as BuySvg } from '../../assets/svg/buy.svg'
@@ -308,8 +309,9 @@ export const NFT: React.FC = () => {
     }
     return (
       address !== '' &&
+      typeof detail.to_address === 'string' &&
       detail.tx_state !== 'pending' &&
-      address === detail.to_address
+      addressToScript(address).args === addressToScript(detail.to_address).args
     )
   }, [address, detail])
 
