@@ -380,6 +380,9 @@ export const Transfer: React.FC = () => {
 
   const getAlertMsg = useCallback(
     (addr: string, type: AddressVerifiedType): [AlertLevel, string] => {
+      if (type === AddressVerifiedType.self) {
+        return [AlertLevel.error, t('transfer.error.self')]
+      }
       if (addr.startsWith('0x') && type === AddressVerifiedType.unsupported) {
         return [AlertLevel.error, t('transfer.error.eth')]
       }
@@ -396,9 +399,6 @@ export const Transfer: React.FC = () => {
       }
       if (type === AddressVerifiedType.eth) {
         return [AlertLevel.info, t('transfer.error.receive-eth')]
-      }
-      if (type === AddressVerifiedType.self) {
-        return [AlertLevel.error, t('transfer.error.self')]
       }
       return [AlertLevel.error, t('transfer.error.common')]
     },
