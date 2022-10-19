@@ -8,7 +8,6 @@ import './gt'
 import * as sw from './serviceWorkerRegistration'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
-import { IS_SAFARI, IS_WEXIN } from './constants'
 
 import './index.css'
 
@@ -29,8 +28,4 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-if (IS_SAFARI || IS_WEXIN) {
-  sw.unregister()
-} else {
-  sw.register()
-}
+sw.unregister()
