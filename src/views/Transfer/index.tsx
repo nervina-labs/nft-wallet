@@ -276,10 +276,20 @@ export const Transfer: React.FC = () => {
         title: t('transfer.error.unipass-v2'),
         okText: t('auth.ok'),
       })
+    } else if (
+      walletType === WalletType.Flashsigner &&
+      finalUsedAddress.length > 97 &&
+      nftDetail?.script_type === 'm_nft'
+    ) {
+      confirmDialog({
+        type: 'warning',
+        title: t('transfer.error.flashsigner-mnft'),
+        okText: t('auth.ok'),
+      })
     } else {
       setIsDrawerOpen(true)
     }
-  }, [confirmDialog, finalUsedAddress, t, nftDetail?.script_type])
+  }, [confirmDialog, finalUsedAddress, t, walletType, nftDetail?.script_type])
 
   const sendNFT = useCallback(async () => {
     if (walletType === WalletType.Unipass) {

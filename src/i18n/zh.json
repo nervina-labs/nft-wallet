@@ -161,6 +161,7 @@
       },
       "error": {
         "unipass-v2": "当前识别到该接收方地址是 Unipass v2 生成的地址，请使用 Unipass v3 新版本生成的地址",
+        "flashsigner-mnft": "当前不支持转让 mNFT 到 CKB lock 占用超过 133 CKB 的地址",
         "eth": "请输入正确的以太坊地址",
         "ckb": "请输入正确的 CKB 地址",
         "self": "无法转让 NFT 给自己",
