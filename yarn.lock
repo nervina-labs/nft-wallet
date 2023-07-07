@@ -2352,6 +2352,11 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@joyid/ckb@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@joyid/ckb/-/ckb-0.0.1.tgz#e7b6b85b5993dfad0ce09e3daeaebd977cafd625"
+  integrity sha512-odepND3+NUjwpNK8cBxfeASRWFO6ixZTb4ICo87CpmKXc/uJUzERmPyLiMG0bl+Rx9VwIeGDfLbZNFFNnitrZw==
+
 "@lay2/pw-core@0.4.0-alpha.13", "@lay2/pw-core@^0.4.0-alpha.13":
   version "0.4.0-alpha.13"
   resolved "https://registry.yarnpkg.com/@lay2/pw-core/-/pw-core-0.4.0-alpha.13.tgz#8e5978288aa0a5e5f063826956bb7963dfba274e"
