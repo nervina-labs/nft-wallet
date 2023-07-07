@@ -14,10 +14,10 @@ import { AddressCollector } from '../views/AddressCollector'
 // import { Collection } from '../views/Collection'
 import { Claim } from '../views/Claim'
 import { Issuer } from '../views/Issuer'
-// import { Redeem } from '../views/Redeem'
+import { Redeem } from '../views/Redeem'
 import { RedeemDetail } from '../views/RedeemDetail'
 import { HolderAddress } from '../views/HolderAddress'
-// import { MyRedeem } from '../views/Redeem/My'
+import { MyRedeem } from '../views/Redeem/My'
 import { RedeemPrize } from '../views/RedeemPrize'
 import { RedeemResult } from '../views/RedeemResult'
 import { RoutePath } from './path'
@@ -186,18 +186,18 @@ export const routes: MibaoRouterProps[] = [
   //   path: RoutePath.RankingList,
   //   params: '/:id',
   // },
-  // {
-  //   component: Redeem,
-  //   exact: true,
-  //   key: 'Redeem',
-  //   path: RoutePath.Redeem,
-  // },
-  // {
-  //   component: MyRedeem,
-  //   exact: true,
-  //   key: 'MyRedeem',
-  //   path: RoutePath.MyRedeem,
-  // },
+  {
+    component: Redeem,
+    exact: true,
+    key: 'Redeem',
+    path: RoutePath.Redeem,
+  },
+  {
+    component: MyRedeem,
+    exact: true,
+    key: 'MyRedeem',
+    path: RoutePath.MyRedeem,
+  },
   {
     component: RedeemDetail,
     exact: false,
