@@ -13,12 +13,7 @@ import {
   useSetProductId,
 } from '../../../hooks/useOrder'
 import { useUpdateAtom } from 'jotai/utils'
-import {
-  useAccount,
-  useAccountStatus,
-  useAPI,
-  WalletType,
-} from '../../../hooks/useAccount'
+import { useAccount, useAccountStatus, useAPI } from '../../../hooks/useAccount'
 import { useGetAndSetAuth } from '../../../hooks/useProfile'
 import { IS_WEXIN } from '../../../constants'
 import { RoutePath } from '../../../routes'
@@ -38,22 +33,15 @@ const TranferOrBuy: React.FC<{
 }> = ({ uuid, detail, isClass }) => {
   const { t } = useTranslation('translations')
   const { push } = useHistory()
-  const { walletType } = useAccount()
   const { detectIsReady, isDetecting } = useIsCotaCellReady()
   const tranfer = useCallback(async () => {
-    if (walletType === WalletType.JoyID) {
-      push(`/transfer/${uuid}`, {
-        nftDetail: detail,
-      })
-      return
-    }
     const isReady = await detectIsReady(detail as NFTDetail)
     if (isReady) {
       push(`/transfer/${uuid}`, {
         nftDetail: detail,
       })
     }
-  }, [push, detectIsReady, uuid, detail, walletType])
+  }, [push, detectIsReady, uuid, detail])
   const { address } = useAccount()
 
   const ownCurrentToken = useMemo(() => {

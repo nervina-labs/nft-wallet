@@ -175,7 +175,6 @@ export const Login: React.FC = () => {
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isFlashsignerLogin, setIsFlashsignerLogin] = useState(false)
   const [isWalletConnectLoging, setIsWalletConnectLoging] = useState(false)
-  const [isJoyideLoging, setIsJoyideLoging] = useState(false)
   const history = useHistory()
   const location = useLocation<{ redirect?: string }>()
   const redirectUrl = location?.state?.redirect
@@ -201,9 +200,6 @@ export const Login: React.FC = () => {
         break
       case WalletType.Flashsigner:
         setIsFlashsignerLogin(loading)
-        break
-      case WalletType.JoyID:
-        setIsJoyideLoging(loading)
         break
       default:
         setIsUnipassLoging(loading)
@@ -259,13 +255,6 @@ export const Login: React.FC = () => {
     'click',
     trackLabels.login.flashsigner,
     loginBtnOnClick.bind(null, WalletType.Flashsigner)
-  )
-
-  const loginJoyID = useTrackEvent(
-    'login',
-    'click',
-    trackLabels.login.flashsigner,
-    loginBtnOnClick.bind(null, WalletType.JoyID)
   )
 
   const loginUnipass = useTrackEvent(
@@ -340,29 +329,14 @@ export const Login: React.FC = () => {
         </Swiper>
       </div>
       <LoginButton
-        // className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
+        h="40px"
+        minH="40px"
         mt={!IS_DESKTOP || i18n.language === 'en' ? '5%' : '15%'}
-        isLoading={isJoyideLoging}
-        disabled={isJoyideLoging}
-        onClick={loginJoyID}
-        size="lg"
-      >
-        <Box py="8px">
-          <Box fontSize="16px">{t('login.connect.joyid')}</Box>
-          <Box fontSize="12px">{t('login.connect.or-biometrics')}</Box>
-        </Box>
-      </LoginButton>
-      <LoginButton
-        mt="16px"
-        color="#5065E5"
-        fontWeight="bold"
-        textDecor="underline"
         onClick={() => {
           drawerOnOpen()
         }}
-        variant="unstyled"
       >
-        {t('login.connect.more')}
+        {t('common.login')}
       </LoginButton>
       <Drawer
         placement="bottom"
@@ -388,7 +362,7 @@ export const Login: React.FC = () => {
           </Text>
           {IS_MOBILE_ETH_WALLET ? null : (
             <LoginButton
-              className="connect"
+              className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
               isLoading={isFlashsignerLogin}
               disabled={
                 isUnipassLogining ||
@@ -397,7 +371,7 @@ export const Login: React.FC = () => {
                 isFlashsignerLogin
               }
               onClick={loginFlashsigner}
-              variant="outline"
+              variant={IS_IMTOKEN ? 'outline' : 'solid'}
               size="lg"
             >
               <Box py="8px">

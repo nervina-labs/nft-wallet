@@ -102,9 +102,6 @@ export const TICKET_APP_URL = IS_MAINNET
 export const WECHAT_APP_ID =
   process.env.REACT_APP_WECHAT_APP_ID ?? 'wx32f5170ce791de49'
 
-export const JOYID_APP_URL =
-  process.env.REACT_APP_JOYID_APP_URL ?? 'https://app.joyid.dev'
-
 export const WEAPP_ID = process.env.REACT_APP_WEAPP_ID ?? ''
 export const DAS_INDEXER_URL =
   process.env.REACT_APP_DAS_INDEXER_URL ?? 'https://das.nervina.cn'
