@@ -291,6 +291,12 @@ export const Transfer: React.FC = () => {
         to: toAddress,
         tokenKey: nftDetail?.token_key,
       })
+      try {
+        const auth = await getAuth()
+        await api.isCotaCellReady(auth)
+      } catch (error) {
+        //
+      }
       await api.sendJoyIDTransaction(
         rpc.paramsFormatter.toRawTransaction(tx),
         nftDetail?.class_id!,
@@ -299,7 +305,7 @@ export const Transfer: React.FC = () => {
         toAddress
       )
     },
-    [address, nftDetail, api]
+    [address, nftDetail, api, getAuth]
   )
 
   const sendNFT = useCallback(async () => {
