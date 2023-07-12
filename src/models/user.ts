@@ -21,6 +21,7 @@ export interface Auth {
   address: string
   message: string
   signature: string
+  pubkey?: string
 }
 
 export interface Profile {

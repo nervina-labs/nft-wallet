@@ -107,6 +107,19 @@ export function useGetAndSetAuth(): () => Promise<Auth> {
         }
         const account = get(accountAtom)
         if (
+          walletType === WalletType.JoyID &&
+          account &&
+          signature &&
+          message
+        ) {
+          return {
+            address: account.address,
+            message,
+            signature,
+            pub_key: account.pubkey,
+          }
+        }
+        if (
           !signature ||
           (walletType === WalletType.Unipass && !account?.pubkey)
         ) {

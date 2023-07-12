@@ -1142,6 +1142,28 @@ export class ServerWalletAPI {
     )
   }
 
+  async sendJoyIDTransaction(
+    tx: any,
+    classId: string,
+    tokenId: number,
+    fromAddress: string,
+    toAddress: string
+  ) {
+    return await axios.post(
+      `${SERVER_URL}/cota_token_transactions`.replace(
+        '/wallet/',
+        '/flash_signer/'
+      ),
+      {
+        cota_id: classId,
+        token_index: tokenId,
+        from_address: fromAddress,
+        to_address: toAddress,
+        signed_tx: JSON.stringify(tx),
+      }
+    )
+  }
+
   async getSentRedEnvelopeDetailRewards(
     uuid: string,
     auth: Auth,

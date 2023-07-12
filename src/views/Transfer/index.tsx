@@ -54,6 +54,8 @@ import { LoadableComponent } from '../../components/GlobalLoader'
 import type Scaner from '../../components/QRcodeScaner'
 import { Alert, AlertIcon, AlertDescription, Image } from '@chakra-ui/react'
 import { useIsCotaCellReady } from '../../hooks/useIsCotaCellReady'
+import { signCotaNFTTx } from '@joyid/ckb'
+import { rpc } from '../../pw/toPwTransaction'
 
 const QrcodeScaner = lazy(
   async () => await import('../../components/QRcodeScaner')
@@ -67,6 +69,7 @@ export enum FailedMessage {
   IOSWebkit = 'ios-webkit',
   Upgrade = 'upgrade',
   ContinuousTransfer = 'continuous-transfer',
+  JoyIDMnftOnly = 'joyid-mnft-only',
 }
 
 export interface TransferState {
@@ -291,6 +294,30 @@ export const Transfer: React.FC = () => {
     }
   }, [confirmDialog, finalUsedAddress, t, walletType, nftDetail?.script_type])
 
+  const sendJoyIDNFT = useCallback(
+    async (toAddress: string) => {
+      const tx = await signCotaNFTTx({
+        from: address,
+        to: toAddress,
+        tokenKey: nftDetail?.token_key,
+      })
+      try {
+        const auth = await getAuth()
+        await api.isCotaCellReady(auth)
+      } catch (error) {
+        //
+      }
+      await api.sendJoyIDTransaction(
+        rpc.paramsFormatter.toRawTransaction(tx),
+        nftDetail?.class_id!,
+        nftDetail?.n_token_id!,
+        address,
+        toAddress
+      )
+    },
+    [address, nftDetail, api, getAuth]
+  )
+
   const sendNFT = useCallback(async () => {
     if (walletType === WalletType.Unipass) {
       UP.initPop()
@@ -302,6 +329,15 @@ export const Transfer: React.FC = () => {
       const sentAddress = isFinalUsedAddressTypeEth
         ? new Address(finalUsedAddress, AddressType.eth).toCKBAddress()
         : finalUsedAddress
+      if (walletType === WalletType.JoyID) {
+        if (nftDetail?.script_type !== 'cota') {
+          stopTranfer(false, FailedMessage.JoyIDMnftOnly)
+          return
+        }
+        await sendJoyIDNFT(sentAddress)
+        stopTranfer(true)
+        return
+      }
       if (walletType === WalletType.Flashsigner) {
         const { tx } = routerLocation.state ?? {}
         if (tx) {
@@ -369,7 +405,18 @@ export const Transfer: React.FC = () => {
         console.log(err)
         throw err
       })
-    } catch (error) {
+    } catch (error: any) {
+      if (error instanceof Error) {
+        if (
+          error.message.includes('User Rejected') ||
+          error.message.includes('Popup closed')
+        ) {
+          stopTranfer(false, FailedMessage.SignFail)
+        } else {
+          //
+          stopTranfer(false, FailedMessage.TranferFail)
+        }
+      }
       console.log(error)
       return
     }
@@ -385,6 +432,7 @@ export const Transfer: React.FC = () => {
     stopTranfer,
     address,
     nftDetail,
+    sendJoyIDNFT,
   ])
 
   const closeDrawer = (): void => setIsDrawerOpen(false)
