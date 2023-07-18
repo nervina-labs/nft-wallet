@@ -521,7 +521,8 @@ export const Transfer: React.FC = () => {
       if (
         (addr.startsWith('ckt') || addr.startsWith('ckb')) &&
         addr.length !== 95 &&
-        addr.length !== 97
+        addr.length !== 97 &&
+        addr.length !== 100
       ) {
         return [AlertLevel.info, t('transfer.error.short-address')]
       }
@@ -545,7 +546,8 @@ export const Transfer: React.FC = () => {
       (finalUsedAddressType === AddressVerifiedType.eth && valid) ||
       (valid &&
         finalUsedAddress.length !== 95 &&
-        finalUsedAddress.length !== 97)
+        finalUsedAddress.length !== 97 &&
+        finalUsedAddress.length !== 100)
     let level = ''
     let alertMsg = ''
     if (showAlert) {
