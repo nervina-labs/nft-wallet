@@ -295,7 +295,7 @@ export const Transfer: React.FC = () => {
   }, [confirmDialog, finalUsedAddress, t, walletType, nftDetail?.script_type])
 
   const sendJoyIDNFT = useCallback(
-    async (toAddress: string) => {
+    async (toAddress: string, isCota = true) => {
       const tx = await signCotaNFTTx({
         from: address,
         to: toAddress,
@@ -303,7 +303,9 @@ export const Transfer: React.FC = () => {
       })
       try {
         const auth = await getAuth()
-        await api.isCotaCellReady(auth)
+        if (isCota) {
+          await api.isCotaCellReady(auth)
+        }
       } catch (error) {
         //
       }
@@ -330,11 +332,11 @@ export const Transfer: React.FC = () => {
         ? new Address(finalUsedAddress, AddressType.eth).toCKBAddress()
         : finalUsedAddress
       if (walletType === WalletType.JoyID) {
-        if (nftDetail?.script_type !== 'cota') {
-          stopTranfer(false, FailedMessage.JoyIDMnftOnly)
-          return
-        }
-        await sendJoyIDNFT(sentAddress)
+        // if (nftDetail?.script_type !== 'cota') {
+        //   stopTranfer(false, FailedMessage.JoyIDMnftOnly)
+        //   return
+        // }
+        await sendJoyIDNFT(sentAddress, nftDetail?.script_type === 'cota')
         stopTranfer(true)
         return
       }
