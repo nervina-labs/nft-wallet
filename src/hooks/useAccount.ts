@@ -11,6 +11,7 @@ import {
   Amount,
   AmountUnit,
 } from '@lay2/pw-core'
+import { connect } from '@joyid/ckb'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import dayjs from 'dayjs'
@@ -27,7 +28,7 @@ import { RoutePath } from '../routes'
 import { buildFlashsignerOptions, generateOldAddress } from '../utils'
 import { ServerWalletAPI } from '../apis/ServerWalletAPI'
 import { UPCoreSimpleProvier } from '../pw/UProvider'
-import { useProfile } from './useProfile'
+import { createMessage, useProfile } from './useProfile'
 import { addWitnessArgType } from '../pw/toPwTransaction'
 
 export enum WalletType {
@@ -35,6 +36,7 @@ export enum WalletType {
   Metamask = 'Metamask',
   WalletConnect = 'WalletConnect',
   Flashsigner = 'flashsigner',
+  JoyID = 'JoyID',
 }
 
 export const UNIPASS_ACCOUNT_KEY = 'unipass_account_key_v3'
@@ -163,6 +165,7 @@ export function useLogin() {
   const { walletType } = useAccount()
   const setAccount = useSetAccount()
   const [provider, setProvider] = useAtom(providerAtom)
+  const { setProfile } = useProfile()
   const web3WalletAddressOnChange = useCallback(
     (addr?: Address) => {
       if (walletType !== WalletType.Metamask) {
@@ -213,6 +216,26 @@ export function useLogin() {
     return p
   }, [setAccount, web3WalletAddressOnChange, setProvider])
 
+  const loginJoyID = useCallback(async () => {
+    const res = await connect({
+      redirectURL: location.href,
+      challenge: JSON.stringify(createMessage()),
+    } as any)
+    const { address, message, pubkey, signature } = res
+    setAccount({
+      address,
+      walletType: WalletType.JoyID,
+      pubkey,
+    })
+    setProfile(
+      {
+        auth: signature,
+        message: message,
+      },
+      address
+    )
+  }, [setAccount, setProfile])
+
   const login = useCallback(
     async (walletType: WalletType = WalletType.Unipass) => {
       provider?.close()
@@ -230,11 +253,13 @@ export function useLogin() {
           return await loginMetamask()
         case WalletType.WalletConnect:
           return await loginMetamask()
+        case WalletType.JoyID:
+          return await loginJoyID()
         default:
           return await loginUnipass()
       }
     },
-    [loginMetamask, loginUnipass, provider]
+    [loginMetamask, loginUnipass, provider, loginJoyID]
   )
 
   return {

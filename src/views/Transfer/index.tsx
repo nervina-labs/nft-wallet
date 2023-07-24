@@ -54,6 +54,8 @@ import { LoadableComponent } from '../../components/GlobalLoader'
 import type Scaner from '../../components/QRcodeScaner'
 import { Alert, AlertIcon, AlertDescription, Image } from '@chakra-ui/react'
 import { useIsCotaCellReady } from '../../hooks/useIsCotaCellReady'
+import { signCotaNFTTx } from '@joyid/ckb'
+import { rpc } from '../../pw/toPwTransaction'
 
 const QrcodeScaner = lazy(
   async () => await import('../../components/QRcodeScaner')
@@ -67,6 +69,7 @@ export enum FailedMessage {
   IOSWebkit = 'ios-webkit',
   Upgrade = 'upgrade',
   ContinuousTransfer = 'continuous-transfer',
+  JoyIDMnftOnly = 'joyid-mnft-only',
 }
 
 export interface TransferState {
@@ -276,10 +279,46 @@ export const Transfer: React.FC = () => {
         title: t('transfer.error.unipass-v2'),
         okText: t('auth.ok'),
       })
+    } else if (
+      walletType === WalletType.Flashsigner &&
+      finalUsedAddress.length > 97 &&
+      nftDetail?.script_type === 'm_nft'
+    ) {
+      confirmDialog({
+        type: 'warning',
+        title: t('transfer.error.flashsigner-mnft'),
+        okText: t('auth.ok'),
+      })
     } else {
       setIsDrawerOpen(true)
     }
-  }, [confirmDialog, finalUsedAddress, t, nftDetail?.script_type])
+  }, [confirmDialog, finalUsedAddress, t, walletType, nftDetail?.script_type])
+
+  const sendJoyIDNFT = useCallback(
+    async (toAddress: string, isCota = true) => {
+      const tx = await signCotaNFTTx({
+        from: address,
+        to: toAddress,
+        tokenKey: nftDetail?.token_key,
+      })
+      try {
+        const auth = await getAuth()
+        if (isCota) {
+          await api.isCotaCellReady(auth)
+        }
+      } catch (error) {
+        //
+      }
+      await api.sendJoyIDTransaction(
+        rpc.paramsFormatter.toRawTransaction(tx),
+        nftDetail?.class_id!,
+        nftDetail?.n_token_id!,
+        address,
+        toAddress
+      )
+    },
+    [address, nftDetail, api, getAuth]
+  )
 
   const sendNFT = useCallback(async () => {
     if (walletType === WalletType.Unipass) {
@@ -292,6 +331,15 @@ export const Transfer: React.FC = () => {
       const sentAddress = isFinalUsedAddressTypeEth
         ? new Address(finalUsedAddress, AddressType.eth).toCKBAddress()
         : finalUsedAddress
+      if (walletType === WalletType.JoyID) {
+        // if (nftDetail?.script_type !== 'cota') {
+        //   stopTranfer(false, FailedMessage.JoyIDMnftOnly)
+        //   return
+        // }
+        await sendJoyIDNFT(sentAddress, nftDetail?.script_type === 'cota')
+        stopTranfer(true)
+        return
+      }
       if (walletType === WalletType.Flashsigner) {
         const { tx } = routerLocation.state ?? {}
         if (tx) {
@@ -359,7 +407,18 @@ export const Transfer: React.FC = () => {
         console.log(err)
         throw err
       })
-    } catch (error) {
+    } catch (error: any) {
+      if (error instanceof Error) {
+        if (
+          error.message.includes('User Rejected') ||
+          error.message.includes('Popup closed')
+        ) {
+          stopTranfer(false, FailedMessage.SignFail)
+        } else {
+          //
+          stopTranfer(false, FailedMessage.TranferFail)
+        }
+      }
       console.log(error)
       return
     }
@@ -375,6 +434,7 @@ export const Transfer: React.FC = () => {
     stopTranfer,
     address,
     nftDetail,
+    sendJoyIDNFT,
   ])
 
   const closeDrawer = (): void => setIsDrawerOpen(false)
@@ -473,7 +533,8 @@ export const Transfer: React.FC = () => {
       if (
         (addr.startsWith('ckt') || addr.startsWith('ckb')) &&
         addr.length !== 95 &&
-        addr.length !== 97
+        addr.length !== 97 &&
+        addr.length !== 100
       ) {
         return [AlertLevel.info, t('transfer.error.short-address')]
       }
@@ -497,7 +558,8 @@ export const Transfer: React.FC = () => {
       (finalUsedAddressType === AddressVerifiedType.eth && valid) ||
       (valid &&
         finalUsedAddress.length !== 95 &&
-        finalUsedAddress.length !== 97)
+        finalUsedAddress.length !== 97 &&
+        finalUsedAddress.length !== 100)
     let level = ''
     let alertMsg = ''
     if (showAlert) {

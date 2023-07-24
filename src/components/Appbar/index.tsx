@@ -51,7 +51,7 @@ export const Appbar: React.ForwardRefExoticComponent<AppbarProps> = React.forwar
         boxSizing="border-box"
       >
         {leftEl}
-        <Center h="40px" fontSize="18px" mt="30px">
+        <Center h="100%" fontSize="18px">
           {title}
         </Center>
         {right}

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { Image } from '@chakra-ui/react'
+import { Image, useDisclosure, Center, Text } from '@chakra-ui/react'
 import { ReactComponent as AddressesSvg } from '../../assets/svg/address.svg'
 import { ReactComponent as AddrSuccess } from '../../assets/svg/addr-success.svg'
 import { ReactComponent as AddrDup } from '../../assets/svg/addr-dup.svg'
@@ -12,8 +12,10 @@ import {
   IS_MOBILE_ETH_WALLET,
   IS_UNIPASS_NOT_AVAILABLE,
   IS_WEXIN,
+  CONTAINER_MAX_WIDTH,
 } from '../../constants'
 import { Link, Redirect, useHistory, useParams } from 'react-router-dom'
+import { Drawer } from '@mibao-ui/components'
 import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import { MainContainer } from '../../styles'
@@ -38,6 +40,7 @@ import { useGeeTest } from '../../hooks/useGeetst'
 import { Skeleton } from '@chakra-ui/skeleton'
 import { useRouteQuery } from '../../hooks/useRouteQuery'
 import { useDidMount } from '../../hooks/useDidMount'
+import { useInnerSize } from '../../hooks/useInnerSize'
 
 const Container = styled(MainContainer)`
   min-height: 100vh;
@@ -188,6 +191,12 @@ export const Claim: React.FC = () => {
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
   const [isFlashsignerLogin, setIsFlashsignerLogin] = useState(false)
+  const [isJoyideLoging, setIsJoyideLoging] = useState(false)
+  const {
+    isOpen: isDrawerOpen,
+    onOpen: drawerOnOpen,
+    onClose: drawerOnClose,
+  } = useDisclosure()
   const flag = useRouteQuery('connect', '0')
   const connectFlag = useMemo(() => {
     const f = parseInt(flag) as ConnectFlag
@@ -197,6 +206,7 @@ export const Claim: React.FC = () => {
     return f >= 8 || f <= 0 ? ConnectFlag.All : f
   }, [flag])
   const onConfirm = useConfirmDialog()
+  const { width } = useInnerSize()
   const { t, i18n } = useTranslation('translations')
   const documentTitle = useRouteQuery('title', t('common.title'))
   const bgImg = useRouteQuery<string>('image', '')
@@ -234,6 +244,9 @@ export const Claim: React.FC = () => {
         break
       case WalletType.Flashsigner:
         setIsFlashsignerLogin(loading)
+        break
+      case WalletType.JoyID:
+        setIsJoyideLoging(loading)
         break
       default:
         setIsUnipassLoging(loading)
@@ -357,6 +370,40 @@ export const Claim: React.FC = () => {
 
   const [code, setCode] = useState(id ?? '')
 
+  const loginArea = useMemo(() => {
+    return (
+      <>
+        <LoginButton
+          mt="24px"
+          // className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
+          isLoading={isJoyideLoging}
+          disabled={isJoyideLoging}
+          onClick={async () => {
+            await loginBtnOnClick(WalletType.JoyID)
+          }}
+          size="lg"
+        >
+          <Box py="8px">
+            <Box fontSize="16px">{t('login.connect.joyid')}</Box>
+            <Box fontSize="12px">{t('login.connect.or-biometrics')}</Box>
+          </Box>
+        </LoginButton>
+        <LoginButton
+          mt="16px"
+          color="#5065E5"
+          fontWeight="bold"
+          textDecor="underline"
+          onClick={() => {
+            drawerOnOpen()
+          }}
+          variant="unstyled"
+        >
+          {t('login.connect.more')}
+        </LoginButton>
+      </>
+    )
+  }, [t, drawerOnOpen, loginBtnOnClick, isJoyideLoging])
+
   const loginBtns = useMemo(() => {
     const btns: Array<JSX.Element | null> = []
 
@@ -367,13 +414,12 @@ export const Claim: React.FC = () => {
       btns.push(
         IS_MOBILE_ETH_WALLET ? null : (
           <LoginButton
-            className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
             isLoading={isUnipassLogining}
             disabled={
               isUnipassLogining || isMetamaskLoging || isFlashsignerLogin
             }
             onClick={async () => await loginBtnOnClick(WalletType.Flashsigner)}
-            variant={IS_IMTOKEN ? 'outline' : 'solid'}
+            variant="outline"
             size="lg"
           >
             <Box py="8px">
@@ -393,7 +439,7 @@ export const Claim: React.FC = () => {
           isLoading={isUnipassLogining}
           disabled={isUnipassLogining || isMetamaskLoging}
           onClick={loginBtnOnClick.bind(null, WalletType.Unipass)}
-          variant={IS_IMTOKEN ? 'outline' : 'solid'}
+          variant="outline"
         >
           {t('login.connect.unipass')}
         </LoginButton>
@@ -405,7 +451,7 @@ export const Claim: React.FC = () => {
           disabled={isUnipassLogining || isMetamaskLoging}
           isLoading={isMetamaskLoging}
           onClick={loginBtnOnClick.bind(null, WalletType.Metamask)}
-          variant={!IS_IMTOKEN ? 'outline' : 'solid'}
+          variant="outline"
         >
           {IS_IMTOKEN ? (
             <>
@@ -436,7 +482,7 @@ export const Claim: React.FC = () => {
         <>
           <p className="desc">{t('claim.tips', { nftName })}</p>
           <p>{t('claim.login')}</p>
-          {loginBtns}
+          {loginArea}
           {showMetamaskOrUnipass ? (
             <div
               className="question"
@@ -525,7 +571,7 @@ export const Claim: React.FC = () => {
     isLogined,
     isReady,
     isSuccess,
-    loginBtns,
+    loginArea,
     showMetamaskOrUnipass,
     nftName,
     collection,
@@ -539,6 +585,31 @@ export const Claim: React.FC = () => {
     <Container>
       <div className={bgImg ? 'bg-img' : 'bg'}>{imgs[submitStatus]}</div>
       <div className="action">{actions}</div>
+      <Drawer
+        placement="bottom"
+        isOpen={isDrawerOpen}
+        onClose={drawerOnClose}
+        hasOverlay
+        rounded="lg"
+        contentProps={{
+          width: '100%',
+          overflow: 'hidden',
+          style: {
+            left: `calc(50% - calc(${Math.min(
+              width,
+              CONTAINER_MAX_WIDTH
+            )}px / 2))`,
+            maxWidth: `${CONTAINER_MAX_WIDTH}px`,
+          },
+        }}
+      >
+        <Center flexDirection="column" my="24px">
+          <Text fontSize="16px" mb="32px">
+            {t('login.select')}
+          </Text>
+          {loginBtns}
+        </Center>
+      </Drawer>
     </Container>
   )
 }

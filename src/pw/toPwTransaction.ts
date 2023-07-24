@@ -25,6 +25,7 @@ const chainSpec = IS_MAINNET ? CHAIN_SPECS.Lina : CHAIN_SPECS.Aggron
 const pwDeps = [chainSpec.defaultLock.cellDep, chainSpec.pwLock.cellDep]
 
 export const toolkitRPC = new ToolKitRpc(NODE_URL)
+export const rpc = new RPC(NODE_URL)
 
 // const Secp256R1BinOutPoint = new OutPoint(
 //   '0x9687ac5e311d009df1505459afc83a55c46496eb292fc11e4f6c24df5dfd4de5',
