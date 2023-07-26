@@ -299,13 +299,25 @@ export const Transfer: React.FC = () => {
       } catch (error) {
         //
       }
-      await api.sendJoyIDTransaction(
-        rpc.paramsFormatter.toRawTransaction(tx),
-        nftDetail?.class_id!,
-        nftDetail?.n_token_id!,
-        address,
-        toAddress
-      )
+      const formatedTx = rpc.paramsFormatter.toRawTransaction(tx)
+      if (nftDetail?.script_type === 'cota') {
+        await api.sendJoyIDTransaction(
+          formatedTx,
+          nftDetail?.class_id!,
+          nftDetail?.n_token_id!,
+          address,
+          toAddress
+        )
+      } else {
+        await api.sendJoyIDMnft(
+          nftDetail?.n_issuer_id!,
+          nftDetail?.class_id!,
+          nftDetail?.n_token_id as any,
+          address,
+          toAddress,
+          formatedTx
+        )
+      }
     },
     [address, nftDetail, api, getAuth]
   )
