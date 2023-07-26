@@ -1164,6 +1164,30 @@ export class ServerWalletAPI {
     )
   }
 
+  public async sendJoyIDMnft(
+    issuerId: string,
+    classId: string,
+    tokenId: string,
+    fromAddress: string,
+    toAddress: string,
+    tx: any
+  ) {
+    return await axios.post(
+      `${SERVER_URL}/token_ckb_transactions`.replace(
+        '/wallet/',
+        '/flash_signer/'
+      ),
+      {
+        n_issuer_id: issuerId,
+        class_id: classId,
+        n_token_id: tokenId,
+        from_address: fromAddress,
+        to_address: toAddress,
+        signed_tx: JSON.stringify(tx),
+      }
+    )
+  }
+
   async getSentRedEnvelopeDetailRewards(
     uuid: string,
     auth: Auth,
