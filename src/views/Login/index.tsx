@@ -4,7 +4,6 @@ import { ReactComponent as ImtokenSvg } from '../../assets/svg/imtoken.svg'
 import { RoutePath } from '../../routes'
 import {
   CONTAINER_MAX_WIDTH,
-  IS_DESKTOP,
   IS_IMTOKEN,
   IS_MOBILE_ETH_WALLET,
   IS_UNIPASS_NOT_AVAILABLE,
@@ -41,12 +40,12 @@ import { RainbowBackground } from '../../components/RainbowBackground'
 import { useInnerSize } from '../../hooks/useInnerSize'
 
 const Container = styled(RainbowBackground)`
-  justify-content: flex-start;
+  justify-content: center;
   display: flex;
   align-items: center;
   flex-direction: column;
   overflow-x: hidden;
-  min-height: 100vh;
+  max-height: 100vh;
 
   .close {
     width: 24px;
@@ -169,7 +168,7 @@ enum ErrorMsg {
 export const Login: React.FC = () => {
   const { login } = useLogin()
   const { isLogined } = useAccountStatus()
-  const { t, i18n } = useTranslation('translations')
+  const { t } = useTranslation('translations')
   const onConfirm = useConfirmDialog()
   const [isUnipassLogining, setIsUnipassLoging] = useState(false)
   const [isMetamaskLoging, setIsMetamaskLoging] = useState(false)
@@ -304,7 +303,7 @@ export const Login: React.FC = () => {
       <div className="header">
         <Appbar
           transparent
-          title={<Image src={FullLogo} w="auto" h="100%" />}
+          title={<Image src={FullLogo} w="100px" h="40px" />}
           left={<div />}
         />
       </div>
@@ -341,7 +340,7 @@ export const Login: React.FC = () => {
       </div>
       <LoginButton
         // className={`${IS_IMTOKEN ? '' : 'recommend'} connect`}
-        mt={!IS_DESKTOP || i18n.language === 'en' ? '5%' : '15%'}
+        mt="5%"
         isLoading={isJoyideLoging}
         disabled={isJoyideLoging}
         onClick={loginJoyID}
@@ -353,7 +352,8 @@ export const Login: React.FC = () => {
         </Box>
       </LoginButton>
       <LoginButton
-        mt="16px"
+        mt={0}
+        mb={0}
         color="#5065E5"
         fontWeight="bold"
         textDecor="underline"
